@@ -444,8 +444,7 @@ export class QaPage {
       const probe = globalThis.__qaSpeechSynthesisProbe
       if (!probe) return null
       return {
-        voiceMode: probe.voiceMode,
-        voices: probe.voices.map((voice) => ({ ...voice })),
+        availableVoices: probe.availableVoices.map((voice) => ({ ...voice })),
         utterances: probe.utterances.map((utterance) => ({ ...utterance })),
         pauseCount: probe.pauseCount,
         resumeCount: probe.resumeCount,
@@ -506,25 +505,19 @@ export const fakeAssessmentClockScript = `(() => {
   }
 })()`
 
-export function fakeSpeechSynthesisScript(voiceMode) {
-  if (voiceMode !== 'one' && voiceMode !== 'two') {
-    throw new Error(`Unsupported QA TTS voice mode: ${voiceMode}`)
-  }
-  const voiceCount = voiceMode === 'one' ? 1 : 2
-
+export function fakeNeutralSpeechSynthesisScript() {
   return `(() => {
     const voices = ${JSON.stringify(
-      Array.from({ length: voiceCount }, (_, index) => ({
+      Array.from({ length: 2 }, (_, index) => ({
         default: index === 0,
         lang: 'en-US',
         localService: true,
-        name: `QA Local Voice ${String.fromCharCode(65 + index)}`,
-        voiceURI: `qa-local-${String.fromCharCode(97 + index)}`,
+        name: `QA Diagnostic Voice ${String.fromCharCode(65 + index)}`,
+        voiceURI: `qa-diagnostic-${String.fromCharCode(97 + index)}`,
       })),
     )}
     const probe = {
-      voiceMode: ${JSON.stringify(voiceMode)},
-      voices: voices.map((voice) => ({ ...voice })),
+      availableVoices: voices.map((voice) => ({ ...voice })),
       utterances: [],
       pauseCount: 0,
       resumeCount: 0,

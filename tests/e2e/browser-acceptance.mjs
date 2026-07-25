@@ -1,24 +1,24 @@
 import assert from 'node:assert/strict'
 import {
   fakeAssessmentClockScript,
-  fakeSpeechSynthesisScript,
+  fakeNeutralSpeechSynthesisScript,
   launchQaChrome,
 } from './lib/cdp-browser.mjs'
 
 const baseUrl = new URL(
   process.env.QA_BASE_URL ?? 'http://127.0.0.1:4173/',
 )
-const ttsVoiceMode = process.env.QA_TTS_VOICE_MODE ?? null
+const ttsNeutralProbe =
+  process.env.QA_TTS_NEUTRAL_PROBE === '1'
 assert.ok(
-  ttsVoiceMode === null ||
-    ttsVoiceMode === 'one' ||
-    ttsVoiceMode === 'two',
-  'QA_TTS_VOICE_MODE must be either one or two.',
+  process.env.QA_TTS_NEUTRAL_PROBE === undefined ||
+    process.env.QA_TTS_NEUTRAL_PROBE === '1',
+  'QA_TTS_NEUTRAL_PROBE must be 1 when provided.',
 )
 const qa = await launchQaChrome()
 const evidence = {
   baseUrl: baseUrl.href,
-  ttsVoiceMode,
+  ttsNeutralProbe,
   checkpoints: [],
 }
 
@@ -37,110 +37,52 @@ function storedListeningSession(databases, taskId) {
   )?.value
 }
 
-function assertDialogueVoiceProbe(
-  voiceMode,
+function assertContinuousNeutralSpeechProbe(
   question,
   playback,
   utterances,
 ) {
-  const firstSegmentIndex = question.segments.findIndex(
-    (segment) => segment.id === playback.currentSegmentId,
+  const expectedText = question.segments
+    .map((segment) => segment.text.trim())
+    .filter((text) => text.length > 0)
+    .join(' ')
+  assert.equal(
+    utterances.length,
+    1,
+    'A full dialogue must create exactly one continuous utterance.',
   )
-  assert.notEqual(
-    firstSegmentIndex,
-    -1,
-    'The active listening segment was not found in the question.',
+  const utterance = utterances[0]
+  assert.equal(
+    utterance.text,
+    expectedText,
+    'The continuous utterance did not preserve transcript order.',
   )
-  const expectedSegments = question.segments.slice(firstSegmentIndex)
-  assert.deepEqual(
-    utterances.map((utterance) => utterance.text),
-    expectedSegments.map((segment) => segment.text),
-    'The production route did not send the exact dialogue lines to SpeechSynthesisUtterance.',
-  )
-
-  for (const [index, segment] of expectedSegments.entries()) {
+  for (const segment of question.segments) {
     if (segment.speaker) {
       assert.equal(
-        utterances[index].text.startsWith(`${segment.speaker}:`),
+        utterance.text.includes(`${segment.speaker}:`),
         false,
         `The spoken text contains the speaker label ${segment.speaker}:`,
       )
     }
   }
-
-  const speakers = expectedSegments.map((segment) => segment.speaker)
-  const abaIndex = speakers.findIndex(
-    (speaker, index) =>
-      speaker &&
-      speaker === speakers[index + 2] &&
-      speaker !== speakers[index + 1],
-  )
-  assert.notEqual(
-    abaIndex,
-    -1,
-    'The production dialogue did not expose an A/B/A speaker sequence.',
-  )
-
-  const profilesBySpeaker = new Map()
-  expectedSegments.forEach((segment, index) => {
-    if (!segment.speaker) return
-    const utterance = utterances[index]
-    const profile = {
-      voiceId: utterance.voiceId,
-      pitch: utterance.pitch,
-      rate: utterance.rate,
-    }
-    const existing = profilesBySpeaker.get(segment.speaker)
-    if (existing) {
-      assert.deepEqual(
-        profile,
-        existing,
-        `Speaker ${segment.speaker} changed voice profile within one dialogue.`,
-      )
-    } else {
-      profilesBySpeaker.set(segment.speaker, profile)
-    }
-  })
-
-  const profiles = [...profilesBySpeaker.values()]
-  assert.ok(profiles.length >= 2)
-  if (voiceMode === 'two') {
-    assert.notEqual(
-      profiles[0].voiceId,
-      profiles[1].voiceId,
-      'Two local en-US voices were exposed, but the dialogue speakers shared one voice.',
-    )
-  } else {
-    assert.equal(
-      new Set(profiles.map((profile) => profile.voiceId)).size,
-      1,
-      'The one-voice fallback did not keep the available voice.',
-    )
-    assert.notDeepEqual(
-      [profiles[0].pitch, profiles[0].rate],
-      [profiles[1].pitch, profiles[1].rate],
-      'The one-voice fallback did not distinguish speakers by pitch/rate.',
-    )
-    assert.ok(
-      Math.abs(profiles[0].pitch - profiles[1].pitch) <= 0.12 &&
-        Math.abs(profiles[0].rate - profiles[1].rate) <= 0.05,
-      'The one-voice pitch/rate fallback is not mild.',
-    )
-  }
+  assert.equal(utterance.lang, 'en-US')
+  assert.equal(utterance.voiceId, null)
+  assert.equal(utterance.pitch, 1)
+  assert.equal(utterance.rate, playback.rate)
 
   return {
-    speakers,
-    utterances,
-    profiles: Object.fromEntries(profilesBySpeaker),
+    expectedText,
+    utterance,
   }
 }
 
 try {
   await qa.page.initialize()
   await qa.page.addInitScript(fakeAssessmentClockScript)
-  if (ttsVoiceMode) {
+  if (ttsNeutralProbe) {
     await qa.page.addInitScript(
-      fakeSpeechSynthesisScript(ttsVoiceMode),
+      fakeNeutralSpeechSynthesisScript(),
     )
   }
   await qa.page.setViewport(390, 844)
@@ -387,19 +329,19 @@ try {
   })
 
   let dictationRaceExercised = false
-  let dialogueVoiceProfileExercised = false
+  let dialogueNeutralUtteranceExercised = false
   for (let question = 0; question < 10; question += 1) {
     if ((await qa.page.bodyText()).includes('听力任务已完成')) {
       break
     }
     let answerSubmitted = false
-    const listeningSessionBeforePlayback = ttsVoiceMode
+    const listeningSessionBeforePlayback = ttsNeutralProbe
       ? storedListeningSession(
           await qa.page.dumpIndexedDb(),
           secondTaskId,
         )
       : null
-    const speechProbeBeforePlayback = ttsVoiceMode
+    const speechProbeBeforePlayback = ttsNeutralProbe
       ? await qa.page.speechSynthesisSnapshot()
       : null
     await qa.page.clickByText('播放音频')
@@ -414,8 +356,8 @@ try {
       listeningSessionBeforePlayback.questionIndex
     ]
     if (
-      ttsVoiceMode &&
-      !dialogueVoiceProfileExercised &&
+      ttsNeutralProbe &&
+      !dialogueNeutralUtteranceExercised &&
       activeQuestion?.playbackPolicy.sequenceMode === 'all-segments'
     ) {
       const speechProbeAfterPlayback =
@@ -425,19 +367,17 @@ try {
       const utterances = speechProbeAfterPlayback.utterances.slice(
         speechProbeBeforePlayback.utterances.length,
       )
-      const dialogueEvidence = assertDialogueVoiceProbe(
-        ttsVoiceMode,
+      const dialogueEvidence = assertContinuousNeutralSpeechProbe(
         activeQuestion,
         listeningSessionBeforePlayback.playback,
         utterances,
       )
-      checkpoint('listening-dialogue-voice-profiles', {
-        localEnUsVoiceCount:
-          speechProbeAfterPlayback.voices.length,
-        voiceMode: ttsVoiceMode,
+      checkpoint('listening-dialogue-continuous-neutral-utterance', {
+        availableVoiceCount:
+          speechProbeAfterPlayback.availableVoices.length,
         ...dialogueEvidence,
       })
-      dialogueVoiceProfileExercised = true
+      dialogueNeutralUtteranceExercised = true
     }
     const listeningInteractive = await qa.page.interactiveElements()
     if (
@@ -626,11 +566,11 @@ try {
     true,
     'The production listening task did not expose keyword dictation.',
   )
-  if (ttsVoiceMode) {
+  if (ttsNeutralProbe) {
     assert.equal(
-      dialogueVoiceProfileExercised,
+      dialogueNeutralUtteranceExercised,
       true,
-      'The production listening task did not expose a full-scene dialogue voice-profile checkpoint.',
+      'The production listening task did not expose a continuous neutral full-dialogue utterance checkpoint.',
     )
   }
   await qa.page.waitFor(

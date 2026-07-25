@@ -1,22 +1,16 @@
 import { describe, expect, it } from 'vitest'
 import {
   ListeningPlaybackController,
+  type ListeningPlaybackRate,
   type ListeningPlaybackState,
   type ListeningQuestion,
   type ListeningSpeechCallbacks,
   type ListeningSpeechCapabilities,
   type ListeningSpeechPort,
   type ListeningSpeechRequest,
-  type ListeningSpeechVoice,
   type ListeningTrainingUnit,
 } from '../../src/features/listening/index.ts'
 import { releasedCatalogs } from './fixtures/production-course.ts'
-
-const TWO_LOCAL_EN_US_VOICES = [
-  { id: 'qa-local-a', locale: 'en-US', localService: true },
-  { id: 'qa-local-b', locale: 'en-US', localService: true },
-] as const
-const ONE_LOCAL_EN_US_VOICE = TWO_LOCAL_EN_US_VOICES.slice(0, 1)
 
 class RecordingSpeech implements ListeningSpeechPort {
   readonly requests: ListeningSpeechRequest[] = []
@@ -27,24 +21,22 @@ class RecordingSpeech implements ListeningSpeechPort {
   private paused = false
   private speaking = false
 
-  constructor(
-    private readonly availableVoices:
-      readonly ListeningSpeechVoice[],
-  ) {}
-
   capabilities(): ListeningSpeechCapabilities {
     return {
       supported: true,
       voicesKnown: true,
-      enUsVoiceAvailable: this.availableVoices.length > 0,
-      localEnUsVoiceCount: this.availableVoices.length,
+      enUsVoiceAvailable: true,
+      localEnUsVoiceCount: 2,
       pauseResumeAvailable: true,
       supportedRates: [0.75, 1, 1.25],
     }
   }
 
-  voices(): readonly ListeningSpeechVoice[] {
-    return this.availableVoices
+  voices() {
+    return [
+      { id: 'diagnostic-a', locale: 'en-US', localService: true },
+      { id: 'diagnostic-b', locale: 'en-US', localService: true },
+    ] as const
   }
 
   speak(
@@ -114,6 +106,23 @@ function fullSceneQuestion(
   return question
 }
 
+function firstDialogueQuestion(): ListeningQuestion {
+  const unit = releasedCatalogs().listening.units.find(
+    (entry) => entry.activityType === 'listening-dialogue',
+  )
+  if (!unit) {
+    throw new Error('The released course has no listening dialogue.')
+  }
+  return fullSceneQuestion(unit)
+}
+
+function continuousText(question: ListeningQuestion): string {
+  return question.segments
+    .map((segment) => segment.text.trim())
+    .filter((text) => text.length > 0)
+    .join(' ')
+}
+
 function initialPlayback(
   question: ListeningQuestion,
 ): ListeningPlaybackState {
@@ -127,16 +136,24 @@ function initialPlayback(
   }
 }
 
-function completeScene(
-  speech: RecordingSpeech,
-  segmentCount: number,
-): void {
-  for (let index = 0; index < segmentCount; index += 1) {
-    speech.completeCurrent()
+function createController(
+  question = firstDialogueQuestion(),
+): {
+  readonly controller: ListeningPlaybackController
+  readonly speech: RecordingSpeech
+} {
+  const speech = new RecordingSpeech()
+  return {
+    speech,
+    controller: new ListeningPlaybackController({
+      question,
+      initialState: initialPlayback(question),
+      speech,
+    }),
   }
 }
 
-describe('released listening dialogue voice acceptance', () => {
+describe('released listening continuous speech acceptance', () => {
   it('keeps all 21 dialogue speaker labels outside 143 spoken lines', () => {
     const dialogueUnits = releasedCatalogs().listening.units.filter(
       (unit) => unit.activityType === 'listening-dialogue',
@@ -163,40 +180,32 @@ describe('released listening dialogue voice acceptance', () => {
         })),
       )
       for (const segment of question.segments) {
-        expect(segment.speaker).not.toBeNull()
-        expect(segment.text).not.toContain(
-          `${segment.speaker}:`,
-        )
+        expect(segment.text).not.toContain(`${segment.speaker}:`)
       }
     }
   })
 
-  it('auto-continues A/B/A with stable distinct voices when two local voices exist', () => {
-    const unit = releasedCatalogs().listening.units.find(
-      (entry) => entry.activityType === 'listening-dialogue',
-    )
-    expect(unit).toBeDefined()
-    const question = fullSceneQuestion(unit!)
-    const speech = new RecordingSpeech(TWO_LOCAL_EN_US_VOICES)
-    const controller = new ListeningPlaybackController({
-      question,
-      initialState: initialPlayback(question),
-      speech,
-    })
+  it('submits a full dialogue as one ordered neutral request', () => {
+    const question = firstDialogueQuestion()
+    const { controller, speech } = createController(question)
 
     controller.toggle()
-    completeScene(speech, question.segments.length)
 
-    expect(controller.snapshot.status).toBe('ended')
-    expect(speech.requests.map(({ text }) => text)).toEqual(
-      question.segments.map(({ text }) => text),
+    expect(speech.requests).toEqual([
+      {
+        text: continuousText(question),
+        locale: 'en-US',
+        rate: 1,
+      },
+    ])
+    expect(speech.requests[0]).not.toHaveProperty('voiceId')
+    expect(speech.requests[0]).not.toHaveProperty('pitch')
+    expect(speech.requests[0].text).not.toMatch(
+      /(?:Maya|Leo|Staff):/u,
     )
-    expect(
-      question.segments.slice(0, 3).map(({ speaker }) => speaker),
-    ).toEqual(['Maya', 'Leo', 'Maya'])
-    expect(speech.requests[0].voiceId).toBe('qa-local-a')
-    expect(speech.requests[1].voiceId).toBe('qa-local-b')
-    expect(speech.requests[2].voiceId).toBe('qa-local-a')
+
+    speech.completeCurrent()
+    expect(controller.snapshot.status).toBe('ended')
     expect(
       question.segments.every(
         (segment) =>
@@ -205,102 +214,78 @@ describe('released listening dialogue voice acceptance', () => {
     ).toBe(true)
   })
 
-  it('uses one stable voice with a mild stable pitch/rate distinction when only one voice exists', () => {
-    const unit = releasedCatalogs().listening.units.find(
-      (entry) => entry.activityType === 'listening-dialogue',
-    )
-    expect(unit).toBeDefined()
-    const question = fullSceneQuestion(unit!)
-    const speech = new RecordingSpeech(ONE_LOCAL_EN_US_VOICE)
-    const controller = new ListeningPlaybackController({
-      question,
-      initialState: initialPlayback(question),
-      speech,
-    })
+  it.each([0.75, 1, 1.25] as const)(
+    'keeps the exact user-selected %s rate',
+    (rate: ListeningPlaybackRate) => {
+      const question = firstDialogueQuestion()
+      const { controller, speech } = createController(question)
 
+      controller.setRate(rate)
+      controller.toggle()
+
+      expect(speech.requests).toEqual([
+        {
+          text: continuousText(question),
+          locale: 'en-US',
+          rate,
+        },
+      ])
+    },
+  )
+
+  it('reads only the explicitly selected sentence body', () => {
+    const question = firstDialogueQuestion()
+    const selected = question.segments[1]
+    const { controller, speech } = createController(question)
+
+    controller.selectSegment(selected.id)
     controller.toggle()
-    completeScene(speech, question.segments.length)
 
-    expect(
-      new Set(speech.requests.map(({ voiceId }) => voiceId)),
-    ).toEqual(new Set(['qa-local-a']))
-    expect({
-      voiceId: speech.requests[0].voiceId,
-      pitch: speech.requests[0].pitch,
-      rate: speech.requests[0].rate,
-    }).toEqual({
-      voiceId: speech.requests[2].voiceId,
-      pitch: speech.requests[2].pitch,
-      rate: speech.requests[2].rate,
-    })
-    expect([
-      speech.requests[0].pitch,
-      speech.requests[0].rate,
-    ]).not.toEqual([
-      speech.requests[1].pitch,
-      speech.requests[1].rate,
+    expect(speech.requests).toEqual([
+      {
+        text: selected.text,
+        locale: 'en-US',
+        rate: 1,
+      },
     ])
-    expect(
-      Math.abs(
-        (speech.requests[0].pitch ?? 1) -
-          (speech.requests[1].pitch ?? 1),
-      ),
-    ).toBeLessThanOrEqual(0.12)
-    expect(
-      Math.abs(speech.requests[0].rate - speech.requests[1].rate),
-    ).toBeLessThanOrEqual(0.05)
+    expect(speech.requests[0].text).not.toContain(
+      `${selected.speaker}:`,
+    )
   })
 
-  it('keeps a single narrator on one neutral stable profile', () => {
-    const unit = releasedCatalogs().listening.units.find(
-      (entry) =>
-        entry.activityType !== 'listening-dialogue' &&
-        new Set(entry.transcript.map(({ speaker }) => speaker))
-          .size === 1,
-    )
-    expect(unit).toBeDefined()
-    const question = fullSceneQuestion(unit!)
-    const speech = new RecordingSpeech(TWO_LOCAL_EN_US_VOICES)
-    const controller = new ListeningPlaybackController({
-      question,
-      initialState: initialPlayback(question),
-      speech,
-    })
+  it('repeats the current sentence and loops the complete dialogue at their real scopes', () => {
+    const question = firstDialogueQuestion()
+    const selected = question.segments[1]
+    const segmentRun = createController(question)
 
-    controller.toggle()
-    completeScene(speech, question.segments.length)
-
+    segmentRun.controller.selectSegment(selected.id)
+    segmentRun.controller.setRepeatMode('segment')
+    segmentRun.controller.toggle()
+    segmentRun.speech.completeCurrent()
     expect(
-      new Set(
-        speech.requests.map(({ voiceId, pitch, rate }) =>
-          JSON.stringify({ voiceId, pitch, rate }),
-        ),
-      ).size,
-    ).toBe(1)
-    expect(speech.requests[0]).toMatchObject({
-      voiceId: 'qa-local-a',
-      pitch: 1,
-      rate: 1,
-    })
+      segmentRun.speech.requests.map(({ text }) => text),
+    ).toEqual([selected.text, selected.text])
+    segmentRun.controller.interrupt()
+
+    const allRun = createController(question)
+    allRun.controller.setRepeatMode('all')
+    allRun.controller.toggle()
+    allRun.speech.completeCurrent()
+    expect(allRun.speech.requests.map(({ text }) => text)).toEqual([
+      continuousText(question),
+      continuousText(question),
+    ])
+    allRun.controller.interrupt()
   })
 
-  it('retains pause, resume, cancel, repeat-all and rate controls', () => {
-    const unit = releasedCatalogs().listening.units.find(
-      (entry) => entry.activityType === 'listening-dialogue',
-    )
-    expect(unit).toBeDefined()
-    const question = fullSceneQuestion(unit!)
-    const speech = new RecordingSpeech(TWO_LOCAL_EN_US_VOICES)
-    const controller = new ListeningPlaybackController({
-      question,
-      initialState: initialPlayback(question),
-      speech,
-    })
+  it('retains pause, resume, cancel and rate-change controls', () => {
+    const { controller, speech } = createController()
 
     controller.toggle()
     controller.toggle()
     expect(controller.snapshot.status).toBe('paused')
     expect(speech.pauseCount).toBe(1)
+
     controller.toggle()
     expect(controller.snapshot.status).toBe('playing')
     expect(speech.resumeCount).toBe(1)
@@ -308,13 +293,8 @@ describe('released listening dialogue voice acceptance', () => {
     controller.setRate(1.25)
     expect(controller.snapshot.status).toBe('idle')
     expect(speech.cancelCount).toBe(1)
-    controller.setRepeatMode('all')
     controller.toggle()
-    completeScene(speech, question.segments.length)
-    expect(speech.requests.at(-1)).toMatchObject({
-      text: question.segments[0].text,
-      rate: 1.25,
-    })
+    expect(speech.requests.at(-1)?.rate).toBe(1.25)
 
     controller.interrupt()
     expect(controller.snapshot.status).toBe('paused')

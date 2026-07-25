@@ -10,6 +10,7 @@
 | QA-004 | 已关闭 | S2 | 关键词听写快速输入时旧状态异步回写，出现单次输入扩增或答案回退 | 失败为用户真实浏览器；修复 `45e97e1` | 07 | Pages run `30143745055`；正式站生产 E2E 的 `listening-dictation-race-recovery` 通过 |
 | QA-005 | 已关闭 | S2 | 词汇训练切题后旧选项到达新题，进入不可继续错误态 | 失败 `45e97e1`；修复 `4a15e1e` | 06 主责，09 回归 | Pages run `30144364133`；正式资产 `index-R31Brx_E.js`；完整生产 E2E exit 0 |
 | QA-006 | 已关闭 | S2 | 正式站关键词听写立即提交时，反馈态持久化旧答案 | 失败 `64d884c`；修复 `56ca8f1` | 07 主责，09 回归 | Pages run `30146889205`；正式资产 `index-DARWx41s.js`；one/two voice 完整 E2E 均 exit 0 |
+| QA-007 | 待真机回归 | S2 | 多 voice、变调变速和逐句 utterance 的真实听感机械、不自然 | `64d884c` 方案；`56ca8f1` 正式资产仍保留该播放机制 | 07 主责，09/用户听感回归 | one/two 参数自动化曾通过，但用户真实听感明确否决；当前自然度门槛不通过 |
 
 ## QA-001｜课程索引未随生产版本发布
 
@@ -252,7 +253,7 @@ abc；断言 Immediate submit used a stale dictation value，'abc' !== 'abcdef'�
 
 ```bash
 QA_BASE_URL=https://rayzhang988.github.io/english-learning-pwa/ \
-QA_TTS_VOICE_MODE=one \
+QA_TTS_NEUTRAL_PROBE=1 \
 QA_SPEAKING_FALLBACK_ONLY=1 \
   node tests/e2e/browser-acceptance.mjs
 ```
@@ -269,11 +270,9 @@ QA_SPEAKING_FALLBACK_ONLY=1 \
 
 1. 快速连续输入、立即退出/暂停、刷新恢复、恢复后追加、立即提交。
 2. 页面输入值、反馈态、`dictationInput`、最终 answer response 和刷新恢复必须一致。
-3. 在本地 production preview 及部署后的正式站分别运行；正式站必须覆盖默认系统
-   TTS、`QA_TTS_VOICE_MODE=one` 和 `QA_TTS_VOICE_MODE=two`。
+3. 在本地 production preview 及部署后的正式站分别运行，不能放慢立即提交节奏。
 4. 听力 7/7、词汇 6/6、口语 fallback、整日计划 3/3 与刷新恢复必须完成。
-5. 听力对话的台词文本、A/B/A profile、双 voice、单 voice 轻微降级检查点必须继续
-   通过。
+5. 听力播放机制后续变更时，`abc → abcdef` 耐久性检查必须作为独立回归继续通过。
 
 修复与关闭证据：
 
@@ -290,8 +289,46 @@ QA_SPEAKING_FALLBACK_ONLY=1 \
 - `pnpm check` 通过：77 个测试文件、291 项测试，lint、类型检查、生产构建、课程发布
   与 PWA 均通过。
 
-关闭范围只证明正式生产链路送入 TTS 的文本、voiceId、pitch、rate 与持久化终态
-正确；不同 profile 在真实 iPhone 上是否听感可区分仍属于真机门禁。
+QA-006 的关闭范围是听写草稿和终态耐久性。旧回归中的 voiceId、pitch、rate 只属于
+当时的技术路径证据，不能证明自然度；其真实听感失败另行登记为 QA-007。
+
+## QA-007｜多音色逐句合成真实听感不自然
+
+```text
+状态：待真机回归
+严重度：S2
+环境：用户真实听感验收；GitHub Pages 正式方案
+失败方案：64d884c 的按 speaker 多 voice、单 voice pitch/rate 差异和逐句 utterance
+前置条件：从真实计划进入包含多人对话的听力任务
+复现步骤：
+1. 播放完整多人对话。
+2. 连续听完不同 speaker 的台词切换和逐句衔接。
+3. 比较语音自然度、清晰度、节奏和长时间可用性。
+实际结果：虽然 one/two voice、voiceId、pitch、rate 和 A/B/A 稳定性自动化均通过，
+但用户真实听感认为音色和逐句衔接明显不自然，实际可用性低于第一版要求。
+期望结果：完整对话自然、清晰、连贯；speaker 标签不朗读。没有经过真实听感验证的
+多 voice 时，使用一个系统默认中性 voice，pitch 固定 1，rate 只来自用户选择。
+影响：听力任务仍能完成，但第一版核心训练体验明显错误；影响 MUST 的真实听感门槛，
+因此定为 S2，并阻止第一版、完整真机清单和连续 14 天实测通过。
+建议责任任务：07 负责播放机制；09 和用户负责真实听感回归。
+```
+
+自动化证据的边界：
+
+- 旧 one/two E2E 只证明参数按旧设计传递，不能证明自然度；其成功结果不关闭本缺陷。
+- 07 当前本地候选已撤除 speaker profile、隐藏 rateScale 和逐句 utterance，改为完整
+  对话单一连续正文、`voice=null`、`pitch=1`、精确用户 rate。
+- 09 新自动化只能证明上述风险机制已撤除、正文顺序正确和控制行为未回归。候选未部署
+  且未经过真实 iPhone/用户听感，因此 QA-007 保持打开。
+
+修复后回归范围：
+
+1. 部署候选后运行正式完整 E2E，验证单一连续 utterance、正文顺序、无 speaker 标签、
+   `voice=null`、`pitch=1` 和精确 `0.75/1/1.25` rate。
+2. 同一正式回归必须继续通过 QA-006 的 `abc → abcdef` 暂停、恢复和立即提交。
+3. 真实 iPhone/用户分别听完整对话和单句，检查自然度、清晰度、连贯性、三档速度、
+   暂停/恢复、重复当前和循环全部。
+4. 只有真实听感通过后才能关闭 QA-007；参数自动化或本地候选通过不能替代。
 
 ## 缺陷模板
 
