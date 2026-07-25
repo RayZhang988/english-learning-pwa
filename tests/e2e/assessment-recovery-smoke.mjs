@@ -50,6 +50,20 @@ try {
   const text = await qa.page.bodyText()
   assert.doesNotMatch(text, /暂时无法继续/u)
   assert.match(text, /进入今日计划/u)
+  await qa.page.clickByText('进入今日计划')
+  await qa.page.waitFor(
+    `location.hash === '#/' &&
+      !document.body.innerText.includes('正在恢复今日学习计划')`,
+    20_000,
+  )
+  const planText = await qa.page.bodyText()
+  const planDatabases = await qa.page.dumpIndexedDb()
+  assert.doesNotMatch(planText, /暂时无法继续/u)
+  assert.match(planText, /45 分钟/u)
+  assert.match(planText, /词汇训练/u)
+  assert.match(planText, /听力训练/u)
+  assert.match(planText, /口语训练/u)
+  assert.match(JSON.stringify(planDatabases), /active-plan/u)
 
   console.log(
     JSON.stringify(
@@ -57,6 +71,7 @@ try {
         status: 'passed',
         restoredPausedAssessment: true,
         resultText: text.slice(0, 1_500),
+        firstDayPlanText: planText.slice(0, 1_500),
       },
       null,
       2,

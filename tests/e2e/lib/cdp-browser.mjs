@@ -377,9 +377,12 @@ export class QaPage {
 
   async clickFirstEnabledChoice() {
     const result = await this.evaluate(`(() => {
-      const candidates = [...document.querySelectorAll(
-        'button.choice-row, button.choice-card, [role="radio"], input[type="radio"]'
+      const explicitChoices = [...document.querySelectorAll(
+        'button.choice-row, button.choice-card, [role="radio"]'
       )]
+      const candidates = explicitChoices.length > 0
+        ? explicitChoices
+        : [...document.querySelectorAll('input[type="radio"]')]
       const element = candidates.find((candidate) => !candidate.disabled && candidate.getAttribute('aria-disabled') !== 'true')
       if (!element) {
         return { clicked: false, available: candidates.map((candidate) => (candidate.innerText || candidate.value || '').trim()) }

@@ -2,92 +2,169 @@
 
 ## 阶段性结论
 
-**无需浏览器的自动化门槛通过；第一版最终验收仍待验证，当前不能判定通过。**
+**自动化与桌面真实浏览器门槛通过；第一版最终验收仍待真实 iPhone 和连续 14 天。**
 
-没有复现 S0–S3 产品缺陷。未完成项不是“默认成功”：浏览器控制本轮被明确禁止，
-真实 iPhone 和连续 14 天尚未执行。
+`QA-001`、`QA-002` 两个 S1 均已在修复后的正式站回归关闭。目前没有未关闭 S0/S1
+或影响 MUST 门槛的 S2。自动化通过仍不等于第一版通过：Safari/PWA 系统能力和连续
+14 天个人使用尚无真实证据。
 
 ## 版本与范围
 
-- 发布功能提交：`dd349f543f038d880d34c395ac9ccfaf8a4af522`
-- 本地 `HEAD`：`f22c4586ebae8cef53c5f171e26066997e825502`
-- 本地 `HEAD` 是上述功能提交后的部署记录提交。
-- 工作区原有 `AGENTS.md` 改动属于 `00`，09 未修改。
-- 09 只新增或修改 `tests/e2e/**`、`tests/qa/**`。
+- 当前验收提交：`20c373d`（`main`、`origin/main`）
+- 正式地址：`https://rayzhang988.github.io/english-learning-pwa/`
+- `QA-001` 原始失败验收版本：`e98e522`
+- `QA-001` 修复版本：`3ae5c9f`
+- `3ae5c9f` GitHub Pages 部署：run `30139578460`，成功
+- `QA-002` 原始失败版本：`3ae5c9f`
+- `QA-002` 修复版本：`20c373d`
+- `20c373d` GitHub Pages 部署：run `30141142971`，成功
+- 09 只修改 `tests/e2e/**`、`tests/qa/**`，未修改生产代码。
 
 ## 可复现命令与结果
+
+### 项目门禁
 
 ```text
 pnpm check
 结果：通过
 lint：通过
 TypeScript：通过
-Vitest：72 个测试文件、243 项测试通过
+Vitest：75 个测试文件、258 项测试通过
 生产构建：通过
-PWA：18 项、1031.37 KiB 进入预缓存
+PWA：20 项、1026.57 KiB 进入预缓存
+课程构建校验：8 个课程资产输出、8 个进入预缓存、0 个课程 JSON 内联
 ```
+
+### 构建产物与正式站
 
 ```text
 node tests/e2e/release-smoke.mjs
 结果：通过
 Manifest：通过
 Service Worker：通过
-课程 JSON 预缓存：6 个
-index.html 本地引用：5 个，均存在
+预缓存课程 JSON：6 个
 ```
 
-新增 QA 验证覆盖：
+```text
+QA_BASE_URL=https://rayzhang988.github.io/english-learning-pwa/ \
+  node tests/e2e/release-smoke.mjs
+结果：通过
+首页 / Manifest / Service Worker：HTTP 200
+安装图标：4 个
+```
 
-1. 真实 60 题库驱动的正式评估会话。
-2. 900–1200 秒有效时长边界和三个独立专项等级。
-3. 真实 v1 `AbilityProfile`、2700 秒首日计划和三个生产模块任务。
-4. 真实 `taskId` 路由约束，拒绝伪造 task。
-5. 词汇、听力、口语实际课程 catalog 与生产事件协调器。
-6. 三任务完成后计划状态、仓库重建后的同 `planId` 恢复。
-7. 重复事件 ID 的幂等处理。
-8. 评估和训练损坏数据拒绝、未来版本拒绝、原记录保留。
-9. 离线未安装词汇内容、听力合成不可用的不可评分降级。
-10. 识别失败后录音可回放，刷新后不伪造旧录音。
-11. 麦克风拒绝后可不评分继续且不记错。
-12. 4 周、28 天、84 单元、前置链、答案和听力扩展完整性。
-13. PWA 安装元数据、窄屏 CSS、焦点、减弱动画和 SSR 语义。
-14. 生产 TypeScript 中没有硬编码外部 API origin。
+### 评估、档案、计划与恢复
+
+```text
+QA_BASE_URL=https://rayzhang988.github.io/english-learning-pwa/ \
+  node tests/e2e/assessment-recovery-smoke.mjs
+结果：通过
+```
+
+正式站证据：
+
+- 评估作答后暂停，刷新恢复的 IndexedDB 记录完全一致。
+- 保存部分结果后生成真实 v1 `AbilityProfile`，没有课程加载错误。
+- 可进入 45 分钟、3 项任务的真实首日计划。
+- GitHub Pages run `30139578460` 已成功部署 `3ae5c9f`。
+- `QA-001` 已回归关闭。
+
+完整浏览器评估使用受控时钟累计 1047–1048 秒（约 17 分 28 秒），完成 19 道正式题，
+产生词汇、听力、口语三个独立能力字段，并生成 2700 秒计划。真实人的 15–20 分钟
+体验仍须 iPhone 计时，受控时钟不能替代真机证据。
+
+### 浏览器、离线、权限与降级
+
+```text
+QA_BASE_URL=https://rayzhang988.github.io/english-learning-pwa/ \
+  node tests/e2e/platform-offline-accessibility.mjs
+结果：通过
+```
+
+- 320 / 375 / 390 px 无横向溢出。
+- Tab 焦点可到达“开始水平测试”。
+- Service Worker 已控制页面。
+- Workbox 缓存包含应用壳和 6 个课程 JSON。
+- 断网刷新后应用壳仍能启动。
+- 未发现非预期跨域请求。
+
+```text
+QA_BASE_URL=https://rayzhang988.github.io/english-learning-pwa/ \
+  node tests/e2e/assessment-permission-denial.mjs
+结果：通过
+```
+
+- 浏览器真实拒绝麦克风权限后没有卡死。
+- 显示设备失败说明，允许提交失败记录或跳题。
+- 没有把权限失败宣称为答错。
+
+```text
+QA_BASE_URL=https://rayzhang988.github.io/english-learning-pwa/ \
+  node tests/e2e/assessment-recording-fallback.mjs
+结果：通过
+```
+
+- 可录音、停止并播放本地录音。
+- 识别失败时显示“录音仍可回放”。
+- 没有伪造识别文本或按答错处理。
+
+### 三个真实训练模块与计划进度
+
+```text
+QA_BASE_URL=https://rayzhang988.github.io/english-learning-pwa/ \
+QA_SPEAKING_FALLBACK_ONLY=1 \
+  node tests/e2e/browser-acceptance.mjs
+结果：通过（exit 0）
+```
+
+`20c373d` 正式站黑盒证据：
+
+1. 全新浏览器数据进入正式评估，没有 `demoPlan` 或测试任务。
+2. 生成真实计划后，用计划内真实 `taskId` 打开口语任务。
+3. 口语完成 3/3 录音；识别失败时可回放，并以不可评分练习终态推进计划。
+4. 不可评分口语没有产生虚假掌握度证据。
+5. 听力 7/7 和词汇 6/6 正常完成，均由真实计划路由进入。
+6. 最终 `completedTaskCount: 3`、`planCompleted: true`。
+7. 刷新后仍保留同一 `planId`、3/3 完成和完整计划终态。
+8. `QA-002` 在相同 fallback 强制条件下正式回归关闭。
+
+## 缺陷结果
+
+| ID | 严重度 | 状态 | 结论 |
+| --- | --- | --- | --- |
+| QA-001 | S1 | 已关闭 | 课程索引未随生产构建发布；`3ae5c9f` 本地与正式站回归通过 |
+| QA-002 | S1 | 已关闭 | `20c373d` 正式站强制 fallback 完整回归 exit 0 |
+
+09 只记录缺陷与回归证据，没有修改生产代码。
+
+## QA-002 关闭证据
+
+- 生产修复：`20c373d`，已推送至 `main`。
+- 部署证据：GitHub Pages run `30141142971` 成功。
+- 回归环境：正式 HTTPS 站。
+- 回归条件：`QA_SPEAKING_FALLBACK_ONLY=1`。
+- 结果：exit 0、三任务完成、计划完成、刷新恢复，不可评分口语不制造掌握度证据。
 
 ## G0–G8 状态
 
 | 门槛 | 状态 | 证据或缺口 |
 | --- | --- | --- |
-| G0 可构建 | 通过 | `pnpm check` 全部通过 |
-| G1 首次使用 | 自动化通过 | 生产契约全链路通过；真实页面和真实 15–20 分钟体验未执行 |
-| G2 训练衔接 | 自动化通过 | 三个真实任务、生产事件、同计划完成和刷新恢复通过 |
-| G3 数据韧性 | 自动化通过 | 快照/会话/计划恢复、损坏/未来版本拒绝、事件幂等通过 |
-| G4 PWA/离线 | 浏览器未测 | 本地 Manifest/SW/预缓存通过；断网重载、更新生命周期未执行 |
-| G5 设备降级 | 待真机 | 可控端口自动化通过；Safari 权限、Siri、MediaRecorder 未执行 |
-| G6 兼容与无障碍 | 待真机 | 静态和 SSR 通过；真实窄屏、键盘、VoiceOver 未执行 |
-| G7 内容完整 | 通过 | 内容基线和生产 catalog 全部通过 |
-| G8 真机稳定 | 待实测 | iPhone 清单和连续 14 天均未开始 |
+| G0 可构建 | 通过 | `pnpm check`、课程构建校验、生产构建和 PWA 通过 |
+| G1 首次使用 | 自动化通过 | 正式评估、1047–1048 秒、三能力字段、真实档案和 2700 秒计划通过；真机实际体验待测 |
+| G2 训练衔接 | 自动化通过 | 正式站真实 taskId 完成口语 fallback、听力、词汇，计划 3/3 completed |
+| G3 数据韧性 | 自动化通过 | 评估恢复、完整计划恢复、3/3 结果刷新保留、损坏/未来版本和幂等测试通过 |
+| G4 PWA/离线 | 待真机 | HTTPS、Manifest、SW、缓存和离线应用壳通过；iPhone 安装态及真实离线训练待测 |
+| G5 设备降级 | 待真机 | Chrome 权限拒绝、录音回放、识别失败、不记错和计划推进通过；Safari 系统能力待测 |
+| G6 兼容与无障碍 | 待真机 | Chrome 窄屏和键盘通过；Safari、大号文字和 VoiceOver 待测 |
+| G7 内容完整 | 通过 | 4 周、28 天、84 单元、答案、前置链和生产 catalog 通过 |
+| G8 真机稳定 | 待实测 | iPhone 清单未执行；连续 14 天未开始 |
 
-## 正式站与浏览器限制
+## 当前门禁
 
-- 交接证据声明 GitHub Pages 首页、Manifest 和 SW 为 HTTP 200。
-- 本轮尝试通过受限网页读取工具复验时，目标被工具安全策略拒绝；未请求权限，也未把
-  交接声明冒充为 09 的独立复验。
-- `tests/e2e/release-smoke.mjs` 已提供 `QA_BASE_URL` 正式站模式，可在允许联网的 CI
-  或终端执行。
-- 并发写入的 `browser-acceptance.mjs` 只覆盖首次入口、评估介绍和第一题，且本轮按
-  禁令未运行。它不是完整 E2E 证据。
+阶段性结论：**自动化与桌面真实浏览器通过；第一版最终验收待真机和 14 天实测。**
 
-## 缺陷
+最终通过仍需：
 
-当前没有已复现的产品缺陷。开发测试过程中两项断言编写错误已经在 09 测试文件内修正，
-不属于产品缺陷，也没有修改生产代码。
-
-## 最终门禁
-
-阶段性状态：**待验证，不能通过第一版验收。**
-
-解锁最终结论仍需：
-
-1. 在允许的浏览器环境执行完整页面链路、离线重载、缓存更新、键盘与窄屏检查。
-2. 按 `iphone-checklist.md` 完成真实 iPhone Safari/PWA 验收。
-3. 按 `14-day-usage-log.md` 完成连续 14 天个人使用。
+1. 按 `iphone-checklist.md` 完成真实 iPhone Safari/PWA 的安装、麦克风、录音、系统
+   语音、VoiceOver、后台中断、离线、恢复和缓存更新。
+2. 真机基础清单通过后，按 `14-day-usage-log.md` 连续记录 14 天个人使用。

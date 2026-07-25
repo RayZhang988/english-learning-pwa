@@ -146,7 +146,298 @@ try {
   assert.match(persistedText, /"speaking"/u)
   assert.match(persistedText, /active-plan/u)
 
-  console.log(JSON.stringify({ status: 'inspection', ...evidence }, null, 2))
+  const records = databases.flatMap(
+    (database) => database.stores.records ?? [],
+  )
+  const activePlanRecord = records.find(
+    (record) => record.key === 'active-plan',
+  )
+  const activePlan = activePlanRecord?.value?.activePlan
+  assert.ok(activePlan)
+  const planId = activePlan.plan.planId
+  const firstTaskId = activePlan.plan.tasks[0].taskId
+  const secondTaskId = activePlan.plan.tasks[1].taskId
+  const thirdTaskId = activePlan.plan.tasks[2].taskId
+  assert.equal(activePlan.plan.targetSeconds, 2_700)
+  assert.equal(activePlan.plan.tasks.length, 3)
+
+  await qa.page.reload()
+  await qa.page.waitFor(
+    `!document.body.innerText.includes('正在恢复今日学习计划')`,
+  )
+  const restoredDatabases = await qa.page.dumpIndexedDb()
+  assert.match(JSON.stringify(restoredDatabases), new RegExp(planId, 'u'))
+  assert.match(await qa.page.bodyText(), /已完成 0 项/u)
+  checkpoint('plan-refresh-recovery', {
+    planId,
+    text: (await qa.page.bodyText()).slice(0, 1_200),
+  })
+
+  await qa.page.clickByText('开始今日计划')
+  await qa.page.waitFor(`location.hash.includes('/speaking?taskId=')`)
+  await qa.page.waitFor(
+    `!document.body.innerText.includes('正在加载口语训练')`,
+  )
+  const speakingUrl = await qa.page.url()
+  const speakingHashQuery = speakingUrl.split('?')[1] ?? ''
+  const routedTaskId = new URLSearchParams(speakingHashQuery).get('taskId')
+  const speakingText = await qa.page.bodyText()
+  const speakingInteractive = await qa.page.interactiveElements()
+  assert.equal(routedTaskId, firstTaskId)
+  assert.match(speakingText, /口语/u)
+  checkpoint('real-speaking-task-route', {
+    taskId: firstTaskId,
+    url: speakingUrl,
+    text: speakingText.slice(0, 1_500),
+    interactive: speakingInteractive,
+  })
+
+  for (let prompt = 0; prompt < 3; prompt += 1) {
+    await qa.page.clickByText('开始录音')
+    await qa.page.waitFor(
+      `document.body.innerText.includes('正在录音')`,
+    )
+    await qa.page.evaluate(
+      `new Promise((resolve) => setTimeout(resolve, 500))`,
+    )
+    await qa.page.clickByText('停止录音')
+    await qa.page.waitFor(
+      `[...document.querySelectorAll('button')].some((button) =>
+        ['下一题', '完成训练'].includes(button.innerText.trim()) &&
+        !button.disabled
+      )`,
+      20_000,
+    )
+    await qa.page.clickByText(
+      prompt === 2 ? '完成训练' : '下一题',
+    )
+    if (prompt < 2) {
+      await qa.page.waitFor(
+        `[...document.querySelectorAll('button')].some((button) =>
+          (button.innerText.trim() === '开始录音' ||
+            button.getAttribute('aria-label') === '开始录音') &&
+          !button.disabled
+        )`,
+      )
+    }
+  }
+  await qa.page.waitFor(
+    `document.body.innerText.includes('口语练习已结束')`,
+  )
+  await qa.page.clickByText('返回今日计划')
+  await qa.page.waitFor(
+    `location.hash === '#/' &&
+      !document.body.innerText.includes('正在恢复今日学习计划')`,
+  )
+  const afterSpeakingText = await qa.page.bodyText()
+  const speakingAdvancedPlan = afterSpeakingText.includes('已完成 1 项')
+  checkpoint('speaking-completed-and-reported', {
+    advancedPlan: speakingAdvancedPlan,
+    text: afterSpeakingText.slice(0, 1_200),
+  })
+  if (process.env.QA_SPEAKING_FALLBACK_ONLY === '1') {
+    assert.equal(
+      speakingAdvancedPlan,
+      true,
+      'A completed recording-playback speaking fallback did not advance the daily plan.',
+    )
+  }
+
+  if (speakingAdvancedPlan) {
+    await qa.page.clickByText('继续今日计划')
+  } else {
+    await qa.page.navigate(
+      new URL(
+        `#/listening?taskId=${encodeURIComponent(secondTaskId)}`,
+        baseUrl,
+      ).href,
+    )
+  }
+  await qa.page.waitFor(`location.hash.includes('/listening?taskId=')`)
+  await qa.page.waitFor(
+    `!document.body.innerText.includes('正在加载听力训练')`,
+  )
+  checkpoint('real-listening-task-route', {
+    url: await qa.page.url(),
+    text: (await qa.page.bodyText()).slice(0, 1_500),
+    interactive: await qa.page.interactiveElements(),
+  })
+
+  for (let question = 0; question < 10; question += 1) {
+    if ((await qa.page.bodyText()).includes('听力任务已完成')) {
+      break
+    }
+    await qa.page.clickByText('播放音频')
+    await qa.page.waitFor(
+      `document.body.innerText.includes('播放完毕') ||
+        document.body.innerText.includes('播放失败')`,
+      30_000,
+    )
+    const listeningText = await qa.page.bodyText()
+    assert.doesNotMatch(listeningText, /播放失败/u)
+    const listeningInteractive = await qa.page.interactiveElements()
+    if (
+      listeningInteractive.some(
+        (element) =>
+          element.className?.includes('choice-row') && !element.disabled,
+      )
+    ) {
+      await qa.page.clickFirstEnabledChoice()
+    } else {
+      const filled = await qa.page.evaluate(`(() => {
+        const input = document.querySelector(
+          'input[type="text"], textarea'
+        )
+        if (!input) return false
+        const setter = Object.getOwnPropertyDescriptor(
+          Object.getPrototypeOf(input),
+          'value',
+        )?.set
+        setter?.call(input, 'hello')
+        input.dispatchEvent(new Event('input', { bubbles: true }))
+        return true
+      })()`)
+      assert.equal(filled, true)
+    }
+    await qa.page.waitFor(
+      `[...document.querySelectorAll('button')].some((button) =>
+        button.innerText.trim() === '提交答案' && !button.disabled
+      )`,
+    )
+    await qa.page.clickByText('提交答案')
+    await qa.page.waitFor(
+      `[...document.querySelectorAll('button')].some((button) =>
+        ['下一题', '完成训练'].includes(button.innerText.trim()) &&
+        !button.disabled
+      )`,
+    )
+    const actionLabels = (await qa.page.interactiveElements())
+      .filter((element) => element.tag === 'button' && !element.disabled)
+      .map((element) => element.text)
+    const completesTraining = actionLabels.includes('完成训练')
+    await qa.page.clickByText(
+      completesTraining ? '完成训练' : '下一题',
+    )
+    if (completesTraining) {
+      await qa.page.waitFor(
+        `document.body.innerText.includes('听力任务已完成')`,
+      )
+      break
+    }
+  }
+  await qa.page.waitFor(
+    `document.body.innerText.includes('听力任务已完成')`,
+  )
+  await qa.page.clickByText('返回今日计划')
+  await qa.page.waitFor(
+    `location.hash === '#/' &&
+      document.body.innerText.includes(${
+        JSON.stringify(speakingAdvancedPlan ? '已完成 2 项' : '已完成 1 项')
+      })`,
+  )
+  checkpoint('listening-completed-and-reported', {
+    text: (await qa.page.bodyText()).slice(0, 1_200),
+  })
+
+  if (speakingAdvancedPlan) {
+    await qa.page.clickByText('继续今日计划')
+  } else {
+    await qa.page.navigate(
+      new URL(
+        `#/vocabulary?taskId=${encodeURIComponent(thirdTaskId)}`,
+        baseUrl,
+      ).href,
+    )
+  }
+  await qa.page.waitFor(`location.hash.includes('/vocabulary?taskId=')`)
+  await qa.page.waitFor(
+    `!document.body.innerText.includes('正在加载词汇训练')`,
+  )
+  checkpoint('real-vocabulary-task-route', {
+    url: await qa.page.url(),
+    text: (await qa.page.bodyText()).slice(0, 1_500),
+    interactive: await qa.page.interactiveElements(),
+  })
+
+  for (let question = 0; question < 10; question += 1) {
+    if ((await qa.page.bodyText()).includes('词汇任务已完成')) {
+      break
+    }
+    await qa.page.clickFirstEnabledChoice()
+    await qa.page.waitFor(
+      `[...document.querySelectorAll('button')].some((button) =>
+        button.innerText.trim() === '提交答案' && !button.disabled
+      )`,
+    )
+    await qa.page.clickByText('提交答案')
+    await qa.page.waitFor(
+      `[...document.querySelectorAll('button')].some((button) =>
+        ['下一题', '完成训练'].includes(button.innerText.trim()) &&
+        !button.disabled
+      )`,
+    )
+    const actionLabels = (await qa.page.interactiveElements())
+      .filter((element) => element.tag === 'button' && !element.disabled)
+      .map((element) => element.text)
+    const completesTraining = actionLabels.includes('完成训练')
+    await qa.page.clickByText(
+      completesTraining ? '完成训练' : '下一题',
+    )
+    if (completesTraining) {
+      await qa.page.waitFor(
+        `document.body.innerText.includes('词汇任务已完成')`,
+      )
+      break
+    }
+  }
+  await qa.page.waitFor(
+    `document.body.innerText.includes('词汇任务已完成')`,
+  )
+  await qa.page.clickByText('返回今日计划')
+  await qa.page.waitFor(
+    `location.hash === '#/' &&
+      document.body.innerText.includes(${
+        JSON.stringify(speakingAdvancedPlan ? '已完成 3 项' : '已完成 2 项')
+      })`,
+  )
+  await qa.page.reload()
+  await qa.page.waitFor(
+    `!document.body.innerText.includes('正在恢复今日学习计划')`,
+  )
+  const completedPlanText = await qa.page.bodyText()
+  const completedPlanDatabases = await qa.page.dumpIndexedDb()
+  assert.match(
+    completedPlanText,
+    speakingAdvancedPlan ? /已完成 3 项/u : /已完成 2 项/u,
+  )
+  const completedPlanRecords = completedPlanDatabases.flatMap(
+    (database) => database.stores.records ?? [],
+  )
+  const completedActivePlan = completedPlanRecords.find(
+    (record) => record.key === 'active-plan',
+  )?.value?.activePlan
+  const completedTaskCount = completedActivePlan?.tasks.filter(
+    (execution) => execution.status === 'completed',
+  ).length
+  const planCompleted = completedActivePlan?.status === 'completed'
+  assert.equal(completedTaskCount, speakingAdvancedPlan ? 3 : 2)
+  assert.equal(planCompleted, speakingAdvancedPlan)
+  checkpoint('three-modules-completed-and-refresh-restored', {
+    planId,
+    completedTaskCount,
+    planCompleted,
+    speakingAdvancedPlan,
+    text: completedPlanText.slice(0, 1_500),
+    databases: completedPlanDatabases,
+  })
+
+  assert.equal(
+    speakingAdvancedPlan,
+    true,
+    'A completed recording-playback speaking fallback did not advance the daily plan.',
+  )
+
+  console.log(JSON.stringify({ status: 'passed', ...evidence }, null, 2))
 } catch (error) {
   console.error(
     JSON.stringify(

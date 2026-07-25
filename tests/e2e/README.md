@@ -20,6 +20,34 @@ QA_BASE_URL=https://rayzhang988.github.io/english-learning-pwa/ \
 预缓存关系。它不能替代真实浏览器的 Service Worker 生命周期、离线重载或 iPhone
 主屏幕安装。
 
-`browser-acceptance.mjs` 和 `lib/cdp-browser.mjs` 是并发任务留下的浏览器检查草稿。
-本次临时恢复任务按明确禁令没有运行它；脚本当前只覆盖首次入口、评估介绍和第一题，
-不得作为完整浏览器验收证据。
+## Chrome DevTools 黑盒验收
+
+这些脚本不依赖 Playwright npm 包，直接启动本机 Chrome 并通过 DevTools Protocol
+控制临时浏览器数据目录：
+
+```bash
+node tests/e2e/platform-offline-accessibility.mjs
+node tests/e2e/assessment-recovery-smoke.mjs
+node tests/e2e/assessment-permission-denial.mjs
+node tests/e2e/assessment-recording-fallback.mjs
+node tests/e2e/browser-acceptance.mjs
+```
+
+`browser-acceptance.mjs` 覆盖全新数据、约 17 分钟正式评估、真实 `AbilityProfile`、
+2700 秒首日计划、真实 `taskId`、口语录音、听力 7/7、词汇 6/6、生产事件和刷新
+恢复。脚本会明确断言口语不可评分回放结束后计划推进、三项任务完成和刷新恢复；
+失败不能改成跳过来制造通过。
+
+正式站强制口语 fallback 全链路回归：
+
+```bash
+QA_BASE_URL=https://rayzhang988.github.io/english-learning-pwa/ \
+QA_SPEAKING_FALLBACK_ONLY=1 \
+  node tests/e2e/browser-acceptance.mjs
+```
+
+`20c373d` 在 GitHub Pages run `30141142971` 部署后，上述命令 exit 0：
+`completedTaskCount: 3`、计划 completed、听力/词汇正常完成且刷新恢复通过。
+
+这些 Chrome 结果不能替代真实 iPhone Safari、主屏幕安装、系统权限、VoiceOver、
+后台回收和连续 14 天使用。
