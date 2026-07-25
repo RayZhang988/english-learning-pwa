@@ -12,6 +12,7 @@ import type {
   ListeningSpeechCallbacks,
   ListeningSpeechPort,
   ListeningSpeechRequest,
+  ListeningSpeechVoice,
 } from './speech-synthesis.ts'
 import {
   choiceQuestion,
@@ -124,32 +125,41 @@ async function commitControlledWrites(
 class ImmediateSpeech implements ListeningSpeechPort {
   callbacks: ListeningSpeechCallbacks | null = null
   cancelCount = 0
+  readonly speakRequests: ListeningSpeechRequest[] = []
+  private readonly voiceCatalog: readonly ListeningSpeechVoice[]
+
+  constructor(
+    voiceCatalog: readonly ListeningSpeechVoice[] = [
+      {
+        id: 'runtime-local-voice',
+        locale: 'en-US',
+        localService: true,
+      },
+    ],
+  ) {
+    this.voiceCatalog = voiceCatalog
+  }
 
   capabilities() {
     return {
       supported: true,
       voicesKnown: true,
-      enUsVoiceAvailable: true,
-      localEnUsVoiceCount: 1,
+      enUsVoiceAvailable: this.voiceCatalog.length > 0,
+      localEnUsVoiceCount: this.voiceCatalog.length,
       pauseResumeAvailable: true,
       supportedRates: [0.75, 1, 1.25] as const,
     }
   }
 
   voices() {
-    return [
-      {
-        id: 'runtime-local-voice',
-        locale: 'en-US',
-        localService: true,
-      },
-    ] as const
+    return this.voiceCatalog
   }
 
   speak(
-    _request: ListeningSpeechRequest,
+    request: ListeningSpeechRequest,
     callbacks: ListeningSpeechCallbacks,
   ): void {
+    this.speakRequests.push(request)
     this.callbacks = callbacks
     callbacks.onStart?.()
   }
@@ -194,6 +204,71 @@ function catalog(
     packageVersion: '1.0.0',
     extensionVersion: '1.0.0',
     courseId: 'survival-travel-american-4w',
+    units: [unit],
+    getUnit: (contentRef) =>
+      contentRef === unit.contentRef ? unit : undefined,
+  }
+}
+
+const dialogueDictationQuestion: ListeningQuestion = {
+  ...dictationQuestion,
+  primarySegmentId: 'dialogue-a-1',
+  segments: [
+    {
+      id: 'dialogue-a-1',
+      locale: 'en-US',
+      text: 'Good morning.',
+      label: 'Alex 的句子',
+      speaker: 'Alex',
+    },
+    {
+      id: 'dialogue-b',
+      locale: 'en-US',
+      text: 'How can I help?',
+      label: 'Blair 的句子',
+      speaker: 'Blair',
+    },
+    {
+      id: 'dialogue-a-2',
+      locale: 'en-US',
+      text: 'I need a ticket.',
+      label: 'Alex 的句子',
+      speaker: 'Alex',
+    },
+  ],
+  playbackPolicy: {
+    ...dictationQuestion.playbackPolicy,
+    sequenceMode: 'all-segments',
+  },
+}
+
+function dialogueCatalog(): ListeningCatalog {
+  const base = catalog([dialogueDictationQuestion])
+  const unit = {
+    ...base.units[0],
+    transcript: [
+      {
+        id: 'dialogue-line-a-1',
+        speaker: 'Alex',
+        text: 'Good morning.',
+        translationZh: '早上好。',
+      },
+      {
+        id: 'dialogue-line-b',
+        speaker: 'Blair',
+        text: 'How can I help?',
+        translationZh: '我能怎么帮您？',
+      },
+      {
+        id: 'dialogue-line-a-2',
+        speaker: 'Alex',
+        text: 'I need a ticket.',
+        translationZh: '我需要一张票。',
+      },
+    ],
+  }
+  return {
+    ...base,
     units: [unit],
     getUnit: (contentRef) =>
       contentRef === unit.contentRef ? unit : undefined,
@@ -306,6 +381,86 @@ describe('listening training runtime', () => {
     })
   })
 
+  it('submits a restored same-turn draft after the latest slow write and keeps dialogue voices stable', async () => {
+    const store = new ControlledWriteStore()
+    const repository = new ListeningSessionRepository(store)
+    const task = createListeningTask()
+    const speech = new ImmediateSpeech([
+      { id: 'runtime-voice-a', locale: 'en-US', localService: true },
+      { id: 'runtime-voice-b', locale: 'en-US', localService: true },
+    ])
+    const runtimeOptions = {
+      task,
+      localDate: '2026-07-24',
+      contentSource: {
+        load: async () => dialogueCatalog(),
+      },
+      eventSink: new InMemoryPlatformEventSink(),
+      repository,
+      networkStatus: online,
+      speech,
+      now: clock(),
+      createId: () => 'restored-submit-dictation-id',
+    } as const
+    const firstRuntime = new ListeningTrainingRuntime(runtimeOptions)
+    await firstRuntime.initialize()
+    await firstRuntime.togglePlayback()
+    speech.callbacks?.onEnd?.()
+    speech.callbacks?.onEnd?.()
+    expect(
+      speech.speakRequests.map((request) => request.voiceId),
+    ).toEqual([
+      'runtime-voice-a',
+      'runtime-voice-b',
+      'runtime-voice-a',
+    ])
+    await firstRuntime.changeDictation('abc')
+    await firstRuntime.pause('user-paused')
+    firstRuntime.dispose()
+
+    const runtime = new ListeningTrainingRuntime(runtimeOptions)
+    await runtime.initialize()
+    await runtime.resume()
+    const notifications: ListeningSession[] = []
+    runtime.subscribe((session) => {
+      notifications.push(session)
+    })
+    store.controlWrites()
+
+    const submission = runtime.submit()
+    const latestDraft = Promise.resolve().then(() =>
+      runtime.changeDictation('abcdef'),
+    )
+    void latestDraft.catch(() => undefined)
+
+    await vi.waitFor(() => {
+      expect(store.pendingWrites.length).toBeGreaterThan(0)
+    })
+    store.commitNewest()
+    await latestDraft
+    await vi.waitFor(() => {
+      expect(store.pendingWrites.length).toBeGreaterThan(0)
+    })
+    const publishedFeedbackBeforeDurableWrite = notifications.some(
+      (session) => session.phase === 'feedback',
+    )
+    store.commitNewest()
+    const submitted = await submission
+    const restored = await repository.load(task)
+
+    expect(publishedFeedbackBeforeDurableWrite).toBe(false)
+    expect(submitted).toMatchObject({
+      phase: 'feedback',
+      dictationInput: 'abcdef',
+    })
+    expect(submitted.answers.at(-1)?.response).toBe('abcdef')
+    expect(restored).toMatchObject({
+      phase: 'feedback',
+      dictationInput: 'abcdef',
+    })
+    expect(restored?.answers.at(-1)?.response).toBe('abcdef')
+  })
+
   it('saves the latest rapid dictation before pausing for exit', async () => {
     const store = new ControlledWriteStore()
     const repository = new ListeningSessionRepository(store)
@@ -370,6 +525,83 @@ describe('listening training runtime', () => {
     expect(restored).toMatchObject({
       phase: 'paused',
       dictationInput: 'abc',
+      pendingEvents: [],
+    })
+  })
+
+  it('pauses only after a restored same-turn draft is durable', async () => {
+    const store = new ControlledWriteStore()
+    const repository = new ListeningSessionRepository(store)
+    const task = createListeningTask()
+    const runtimeOptions = {
+      task,
+      localDate: '2026-07-24',
+      contentSource: {
+        load: async () => catalog([dictationQuestion]),
+      },
+      eventSink: new InMemoryPlatformEventSink(),
+      repository,
+      networkStatus: online,
+      speech: new ImmediateSpeech(),
+      now: clock(),
+      createId: () => 'restored-pause-dictation-id',
+    } as const
+    const firstRuntime = new ListeningTrainingRuntime(runtimeOptions)
+    await firstRuntime.initialize()
+    await firstRuntime.togglePlayback()
+    await firstRuntime.changeDictation('abc')
+    await firstRuntime.pause('user-paused')
+    firstRuntime.dispose()
+
+    const runtime = new ListeningTrainingRuntime(runtimeOptions)
+    await runtime.initialize()
+    await runtime.resume()
+    const notifications: ListeningSession[] = []
+    runtime.subscribe((session) => {
+      notifications.push(session)
+    })
+    store.controlWrites()
+
+    let exitReady = false
+    const pauseForExit = runtime.pause('user-paused').then((session) => {
+      exitReady = true
+      return session
+    })
+    const latestDraft = Promise.resolve().then(() =>
+      runtime.changeDictation('abcdef'),
+    )
+    void latestDraft.catch(() => undefined)
+
+    await vi.waitFor(() => {
+      expect(store.pendingWrites.length).toBeGreaterThan(0)
+    })
+    store.commitNewest()
+    await latestDraft
+    await vi.waitFor(() => {
+      expect(store.pendingWrites.length).toBeGreaterThan(0)
+    })
+    const publishedPauseBeforeDurableWrite = notifications.some(
+      (session) => session.phase === 'paused',
+    )
+    const exitReadyBeforePauseWrite = exitReady
+    store.commitNewest()
+    await vi.waitFor(() => {
+      expect(store.pendingWrites.length).toBeGreaterThan(0)
+    })
+    store.commitNewest()
+    const paused = await pauseForExit
+    const restored = await repository.load(task)
+
+    expect(publishedPauseBeforeDurableWrite).toBe(false)
+    expect(exitReadyBeforePauseWrite).toBe(false)
+    expect(paused).toMatchObject({
+      phase: 'paused',
+      dictationInput: 'abcdef',
+      pendingEvents: [],
+    })
+    expect(restored).toMatchObject({
+      phase: 'paused',
+      dictationInput: 'abcdef',
       pendingEvents: [],
     })
   })

@@ -90,6 +90,8 @@ export class ListeningTrainingRuntime {
   private initializing: Promise<ListeningSession> | null = null
   private sessionRevision = 0
   private sessionWrite: Promise<void> = Promise.resolve()
+  private inputRevision = 0
+  private inputWrite: Promise<void> = Promise.resolve()
   private playbackWrite: Promise<void> = Promise.resolve()
   private reportingSpeechFailure = false
 
@@ -158,9 +160,31 @@ export class ListeningTrainingRuntime {
     session: ListeningSession,
   ): Promise<ListeningSession> {
     this.stageSession(session)
+    const write = this.queueSessionWrite(session)
+    this.inputRevision += 1
+    this.inputWrite = write
     this.notify(session)
-    await this.queueSessionWrite(session)
+    await write
     return this.requireSession()
+  }
+
+  private async waitForInputDrafts(): Promise<void> {
+    // Browser input events can finish in a microtask immediately after the
+    // submit/exit callback starts. Give that input one turn to register its
+    // optimistic snapshot before freezing a durable terminal transition.
+    await Promise.resolve()
+    while (true) {
+      const revision = this.inputRevision
+      const write = this.inputWrite
+      await write
+      await Promise.resolve()
+      if (
+        revision === this.inputRevision &&
+        write === this.inputWrite
+      ) {
+        return
+      }
+    }
   }
 
   private requireSession(): ListeningSession {
@@ -433,6 +457,7 @@ export class ListeningTrainingRuntime {
   async submit(): Promise<ListeningSession> {
     this.controller?.interrupt()
     await this.playbackWrite
+    await this.waitForInputDrafts()
     return this.save(
       submitListeningAnswer(this.requireSession(), this.now()),
     )
@@ -469,6 +494,7 @@ export class ListeningTrainingRuntime {
   async pause(reason: TaskPauseReason): Promise<ListeningSession> {
     this.controller?.interrupt()
     await this.playbackWrite
+    await this.waitForInputDrafts()
     const now = this.now()
     let session = pauseListeningSession(this.requireSession(), now)
     const durationSeconds = Math.max(
