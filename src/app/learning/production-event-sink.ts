@@ -1,0 +1,217 @@
+import type {
+  PlatformEvent,
+  PlatformEventSink,
+} from '../../core/index.ts'
+import { AppError } from '../../core/index.ts'
+import {
+  applyLearningAttempt,
+  applyPlanEvent,
+  parseLearningEvent,
+  recordDailyActivity,
+  summarizePlanActivity,
+  toSkipHistoryEntry,
+  type LearningEngineState,
+  type LearningEvent,
+  type LearningTask,
+  type PlanProgress,
+  type SkipHistoryEntry,
+} from '../../learning-engine/index.ts'
+import type { LearningEngineRepository } from '../../learning-engine/index.ts'
+import {
+  type ActiveLearningRuntime,
+  type ActivePlanRepository,
+  createActiveLearningRuntime,
+} from './active-plan-repository.ts'
+
+const MAX_SKIP_HISTORY_ENTRIES = 500
+
+export interface LearningRuntimeUpdate {
+  readonly runtime: ActiveLearningRuntime
+  readonly engineState: LearningEngineState
+}
+
+export type LearningRuntimeUpdateListener = (
+  update: LearningRuntimeUpdate,
+) => void
+
+function taskForEvent(
+  progress: PlanProgress,
+  event: LearningEvent,
+): LearningTask {
+  const execution = progress.tasks.find(
+    (entry) => entry.task.taskId === event.payload.taskId,
+  )
+  if (!execution) {
+    throw new TypeError('Event taskId is not part of the active plan.')
+  }
+  if (event.payload.localDate !== progress.plan.localDate) {
+    throw new TypeError(
+      'Event localDate does not match the active plan date.',
+    )
+  }
+  if (
+    (event.type === 'learning.task.started.v1' ||
+      event.type === 'learning.attempt.completed.v1') &&
+    event.payload.mode !== execution.task.mode
+  ) {
+    throw new TypeError('Event mode does not match the scheduled task.')
+  }
+  if (
+    event.type === 'learning.attempt.completed.v1' &&
+    (event.payload.difficultyLevel !== execution.task.difficultyLevel ||
+      event.payload.estimatedSeconds !==
+        execution.task.estimatedSeconds)
+  ) {
+    throw new TypeError(
+      'Attempt difficulty or duration does not match the scheduled task.',
+    )
+  }
+  return execution.task
+}
+
+function completedUnitIds(
+  runtime: ActiveLearningRuntime,
+  progress: PlanProgress,
+): readonly string[] {
+  return [
+    ...new Set([
+      ...runtime.completedLearningUnitIds,
+      ...progress.tasks
+        .filter((entry) => entry.status === 'completed')
+        .map((entry) => entry.task.learningUnitId),
+    ]),
+  ]
+}
+
+function withProcessedEvent(
+  runtime: ActiveLearningRuntime,
+  progress: PlanProgress,
+  eventId: string,
+  skipHistory: readonly SkipHistoryEntry[],
+): ActiveLearningRuntime {
+  return createActiveLearningRuntime(progress, {
+    completedLearningUnitIds: completedUnitIds(runtime, progress),
+    processedEventIds: [...runtime.processedEventIds, eventId],
+    skipHistory: skipHistory.slice(-MAX_SKIP_HISTORY_ENTRIES),
+  })
+}
+
+/**
+ * Production event boundary shared by all training modules.
+ *
+ * Engine state is saved before the active plan. If the second write fails,
+ * retrying the same event is safe because the learning engine and runtime
+ * ledgers both use event IDs for idempotence.
+ */
+export class ProductionLearningEventSink implements PlatformEventSink {
+  readonly #activePlans: ActivePlanRepository
+  readonly #engineStates: LearningEngineRepository
+  readonly #listeners = new Set<LearningRuntimeUpdateListener>()
+  #queue: Promise<void> = Promise.resolve()
+
+  constructor(
+    activePlans: ActivePlanRepository,
+    engineStates: LearningEngineRepository,
+  ) {
+    this.#activePlans = activePlans
+    this.#engineStates = engineStates
+  }
+
+  subscribe(listener: LearningRuntimeUpdateListener): () => void {
+    this.#listeners.add(listener)
+    return () => {
+      this.#listeners.delete(listener)
+    }
+  }
+
+  publish(event: PlatformEvent): Promise<void> {
+    const operation = this.#queue.then(() => this.#process(event))
+    this.#queue = operation.catch(() => undefined)
+    return operation
+  }
+
+  async #process(platformEvent: PlatformEvent): Promise<void> {
+    const event = parseLearningEvent(platformEvent)
+    const runtime = await this.#activePlans.load()
+    if (!runtime) {
+      throw new AppError(
+        'unknown',
+        '当前没有可接收训练事件的活动学习计划。',
+        { recoverable: true },
+      )
+    }
+    if (runtime.processedEventIds.includes(event.id)) {
+      return
+    }
+
+    taskForEvent(runtime.activePlan, event)
+    const currentExecution = runtime.activePlan.tasks.find(
+      (entry) => entry.task.taskId === event.payload.taskId,
+    )
+    if (
+      currentExecution?.status === 'completed' ||
+      currentExecution?.status === 'skipped'
+    ) {
+      const terminalRuntime = withProcessedEvent(
+        runtime,
+        runtime.activePlan,
+        event.id,
+        runtime.skipHistory,
+      )
+      await this.#activePlans.save(terminalRuntime)
+      return
+    }
+
+    const engineState = await this.#engineStates.load()
+    if (!engineState) {
+      throw new AppError(
+        'unknown',
+        '学习引擎尚未初始化，训练结果没有被保存。',
+        { recoverable: true },
+      )
+    }
+
+    const progress = applyPlanEvent(
+      runtime.activePlan,
+      event,
+      runtime.skipHistory,
+    )
+    let nextEngineState =
+      event.type === 'learning.attempt.completed.v1'
+        ? applyLearningAttempt(engineState, event).state
+        : engineState
+    const activity = summarizePlanActivity(progress)
+    nextEngineState = {
+      ...nextEngineState,
+      progress: recordDailyActivity(nextEngineState.progress, {
+        ...activity,
+        recordedAt: event.occurredAt,
+      }),
+    }
+
+    const skipEntry =
+      event.type === 'learning.task.skipped.v1'
+        ? toSkipHistoryEntry(event)
+        : null
+    const skipHistory =
+      skipEntry === null
+        ? runtime.skipHistory
+        : [...runtime.skipHistory, skipEntry]
+    const nextRuntime = withProcessedEvent(
+      runtime,
+      progress,
+      event.id,
+      skipHistory,
+    )
+
+    await this.#engineStates.save(nextEngineState)
+    await this.#activePlans.save(nextRuntime)
+    const update = {
+      runtime: nextRuntime,
+      engineState: nextEngineState,
+    }
+    for (const listener of this.#listeners) {
+      listener(update)
+    }
+  }
+}

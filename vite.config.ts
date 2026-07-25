@@ -3,6 +3,7 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
+import { appTheme } from './src/ui/theme.ts'
 
 export default defineConfig({
   // A relative base keeps the generated bundle portable across static hosts.
@@ -22,8 +23,8 @@ export default defineConfig({
         scope: './',
         display: 'standalone',
         orientation: 'portrait',
-        background_color: '#ffffff',
-        theme_color: '#111111',
+        background_color: appTheme.backgroundColor,
+        theme_color: appTheme.themeColor,
         icons: [
           {
             src: 'pwa-icon-192.png',
@@ -56,7 +57,7 @@ export default defineConfig({
         clientsClaim: true,
         skipWaiting: false,
         navigateFallback: 'index.html',
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,json}'],
       },
       devOptions: {
         enabled: true,

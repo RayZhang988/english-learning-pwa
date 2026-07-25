@@ -1,0 +1,746 @@
+{
+  "schemaVersion": 1,
+  "documentType": "lesson-week",
+  "packageVersion": "1.0.0",
+  "courseId": "survival-travel-american-4w",
+  "week": 2,
+  "lessons": [
+    {
+      "lessonId": "w2d8-restaurant-seating",
+      "recommendedDay": 8,
+      "titleZh": "餐厅入座与看菜单",
+      "sceneIds": ["restaurant"],
+      "observableObjectives": [
+        "说明用餐人数和预订姓名。",
+        "听懂等位时间并索取菜单。"
+      ],
+      "learningUnits": [
+        {
+          "learningUnitId": "st4w-w2d8-vocabulary",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d8/vocabulary",
+          "domain": "vocabulary",
+          "difficultyLevel": 2,
+          "estimatedSeconds": 900,
+          "tags": ["scene:restaurant", "week:2", "day:8", "focus:seating"],
+          "prerequisiteUnitIds": ["st4w-w1d7-vocabulary"],
+          "activity": {
+            "type": "vocabulary-set",
+            "instructionsZh": "把人数、预订和等位信息组成入座对话。",
+            "items": [
+              {"id": "w2d8-v1", "term": "table", "partOfSpeech": "noun", "meaningZh": "餐桌；一桌座位", "exampleEn": "We need a table for three.", "exampleZh": "我们需要一张三人桌。"},
+              {"id": "w2d8-v2", "term": "reservation", "partOfSpeech": "noun", "meaningZh": "预订", "exampleEn": "I have a reservation at seven.", "exampleZh": "我预订了七点的位置。"},
+              {"id": "w2d8-v3", "term": "menu", "partOfSpeech": "noun", "meaningZh": "菜单", "exampleEn": "Could we see the menu?", "exampleZh": "我们可以看一下菜单吗？"},
+              {"id": "w2d8-v4", "term": "server", "partOfSpeech": "noun", "meaningZh": "餐厅服务员", "exampleEn": "Your server will be here soon.", "exampleZh": "您的服务员很快就来。"},
+              {"id": "w2d8-v5", "term": "available", "partOfSpeech": "adjective", "meaningZh": "有空的；可用的", "exampleEn": "A table by the window is available.", "exampleZh": "靠窗有一张空桌。"},
+              {"id": "w2d8-v6", "term": "wait", "partOfSpeech": "verb", "meaningZh": "等待", "exampleEn": "The wait is about ten minutes.", "exampleZh": "大约要等十分钟。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w2d8-listening",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d8/listening",
+          "domain": "listening",
+          "difficultyLevel": 2.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:restaurant", "week:2", "day:8", "skill:detail", "focus:seating"],
+          "prerequisiteUnitIds": ["st4w-w1d7-listening"],
+          "activity": {
+            "type": "listening-dialogue",
+            "titleZh": "有预订但需要等位",
+            "tts": {"locale": "en-US", "defaultRate": 0.95},
+            "transcript": [
+              {"speaker": "Host", "text": "Good evening. Do you have a reservation?", "translationZh": "晚上好。您有预订吗？"},
+              {"speaker": "Guest", "text": "Yes, a table for three under Wu at seven.", "translationZh": "有，Wu 名下七点的三人桌。"},
+              {"speaker": "Host", "text": "I found it. Your table will be ready in about ten minutes.", "translationZh": "找到了。您的桌位大约十分钟后准备好。"},
+              {"speaker": "Guest", "text": "That's fine. Could we see the menus while we wait?", "translationZh": "没问题。等的时候可以先看看菜单吗？"},
+              {"speaker": "Host", "text": "Of course. You can wait by the front window.", "translationZh": "当然。你们可以在前窗旁等候。"},
+              {"speaker": "Guest", "text": "Thank you.", "translationZh": "谢谢。"}
+            ],
+            "checks": [
+              {"id": "w2d8-l1", "skill": "detail", "promptZh": "预订是几人桌？", "options": ["两人", "三人", "四人"], "correctOptionIndex": 1, "rationaleZh": "客人说 a table for three。"},
+              {"id": "w2d8-l2", "skill": "detail", "promptZh": "客人需要等多久？", "options": ["约五分钟", "约十分钟", "约二十分钟"], "correctOptionIndex": 1, "rationaleZh": "接待员说 in about ten minutes。"},
+              {"id": "w2d8-l3", "skill": "detail", "promptZh": "客人等待时想做什么？", "options": ["先看菜单", "先点饮料", "先离开"], "correctOptionIndex": 0, "rationaleZh": "客人请求在等待时看 menus。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w2d8-speaking",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d8/speaking",
+          "domain": "speaking",
+          "difficultyLevel": 2.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:restaurant", "week:2", "day:8", "task:fixed-response", "focus:seating"],
+          "prerequisiteUnitIds": ["st4w-w1d7-speaking"],
+          "activity": {
+            "type": "fixed-response",
+            "instructionsZh": "说清人数、预订姓名和时间。",
+            "prompts": [
+              {
+                "id": "w2d8-s1",
+                "cueZh": "你们两个人，没有预订。",
+                "partnerLine": "Good evening. Do you have a reservation?",
+                "modelAnswer": "No. A table for two, please.",
+                "acceptedAnswers": ["No. A table for two, please.", "We don't have a reservation. We need a table for two.", "No reservation. There are two of us."],
+                "requiredConcepts": ["no-reservation", "two-people"]
+              },
+              {
+                "id": "w2d8-s2",
+                "cueZh": "你在 Chen 名下预订了七点的位置。",
+                "partnerLine": "What name is the reservation under?",
+                "modelAnswer": "It's under Chen, for seven o'clock.",
+                "acceptedAnswers": ["It's under Chen, for seven o'clock.", "The reservation is under Chen at seven.", "Chen. We have a seven o'clock reservation."],
+                "requiredConcepts": ["Chen", "7:00"]
+              },
+              {
+                "id": "w2d8-s3",
+                "cueZh": "等位时请求看菜单。",
+                "partnerLine": "The wait is about fifteen minutes.",
+                "modelAnswer": "That's fine. Could we see the menu while we wait?",
+                "acceptedAnswers": ["That's fine. Could we see the menu while we wait?", "Can we have the menus while we wait?", "Could we look at a menu now?"],
+                "requiredConcepts": ["menu-request"]
+              }
+            ]
+          }
+        }
+      ],
+      "sceneQuiz": [
+        {"id": "w2d8-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "“The wait is twenty minutes.”是什么意思？", "options": ["餐厅二十分钟后关门", "需要等二十分钟", "用餐限时二十分钟"], "correctOptionIndex": 1, "rationaleZh": "餐厅接待语境中的 the wait 指等位时间。"},
+        {"id": "w2d8-q2", "domain": "listening", "format": "single-choice", "audioText": "I have a reservation for four under Park at six thirty.", "promptZh": "预订信息是什么？", "options": ["Park，四人，6:30", "Park，六人，4:30", "Four，Park，6:00"], "correctOptionIndex": 0, "rationaleZh": "for four、under Park、at six thirty。"},
+        {"id": "w2d8-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "说明你们三个人，需要一张桌子。", "modelAnswer": "A table for three, please.", "acceptedAnswers": ["A table for three, please.", "We need a table for three.", "There are three of us."], "requiredConcepts": ["three-people"]}
+      ]
+    },
+    {
+      "lessonId": "w2d9-ordering-food",
+      "recommendedDay": 9,
+      "titleZh": "点餐、加减配与过敏信息",
+      "sceneIds": ["restaurant"],
+      "observableObjectives": [
+        "点主菜、配菜和饮料。",
+        "说明减配需求或一种食物过敏。"
+      ],
+      "learningUnits": [
+        {
+          "learningUnitId": "st4w-w2d9-vocabulary",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d9/vocabulary",
+          "domain": "vocabulary",
+          "difficultyLevel": 2,
+          "estimatedSeconds": 900,
+          "tags": ["scene:restaurant", "week:2", "day:9", "focus:food-order"],
+          "prerequisiteUnitIds": ["st4w-w2d8-vocabulary"],
+          "activity": {
+            "type": "vocabulary-set",
+            "instructionsZh": "先识别菜品类别，再表达加减配。",
+            "items": [
+              {"id": "w2d9-v1", "term": "appetizer", "partOfSpeech": "noun", "meaningZh": "开胃菜；前菜", "exampleEn": "Let's share an appetizer.", "exampleZh": "我们一起吃一份前菜吧。"},
+              {"id": "w2d9-v2", "term": "main dish", "partOfSpeech": "noun phrase", "meaningZh": "主菜", "exampleEn": "The chicken is my main dish.", "exampleZh": "鸡肉是我的主菜。"},
+              {"id": "w2d9-v3", "term": "side", "partOfSpeech": "noun", "meaningZh": "配菜", "exampleEn": "The burger comes with one side.", "exampleZh": "汉堡配一份配菜。"},
+              {"id": "w2d9-v4", "term": "without", "partOfSpeech": "preposition", "meaningZh": "不加；没有", "exampleEn": "I'd like it without onions.", "exampleZh": "我想要不加洋葱。"},
+              {"id": "w2d9-v5", "term": "allergic", "partOfSpeech": "adjective", "meaningZh": "过敏的", "exampleEn": "I'm allergic to peanuts.", "exampleZh": "我对花生过敏。"},
+              {"id": "w2d9-v6", "term": "substitute", "partOfSpeech": "verb", "meaningZh": "替换", "exampleEn": "Can I substitute salad for fries?", "exampleZh": "我可以把薯条换成沙拉吗？"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w2d9-listening",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d9/listening",
+          "domain": "listening",
+          "difficultyLevel": 2.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:restaurant", "week:2", "day:9", "skill:detail", "skill:inference", "focus:food-order"],
+          "prerequisiteUnitIds": ["st4w-w2d8-listening"],
+          "activity": {
+            "type": "listening-dialogue",
+            "titleZh": "点汉堡并替换配菜",
+            "tts": {"locale": "en-US", "defaultRate": 0.96},
+            "transcript": [
+              {"speaker": "Server", "text": "Are you ready to order?", "translationZh": "可以点餐了吗？"},
+              {"speaker": "Guest", "text": "Yes. I'd like the turkey burger without onions.", "translationZh": "可以。我想要火鸡汉堡，不加洋葱。"},
+              {"speaker": "Server", "text": "That comes with fries. Would you like a different side?", "translationZh": "它配薯条。你想换别的配菜吗？"},
+              {"speaker": "Guest", "text": "Could I substitute the green salad?", "translationZh": "我可以换成蔬菜沙拉吗？"},
+              {"speaker": "Server", "text": "Sure. Any food allergies?", "translationZh": "可以。有食物过敏吗？"},
+              {"speaker": "Guest", "text": "Yes, I'm allergic to peanuts.", "translationZh": "有，我对花生过敏。"},
+              {"speaker": "Server", "text": "Thanks for telling me. I'll note that for the kitchen.", "translationZh": "谢谢告知。我会给厨房备注。"}
+            ],
+            "checks": [
+              {"id": "w2d9-l1", "skill": "detail", "promptZh": "汉堡不要加什么？", "options": ["洋葱", "奶酪", "西红柿"], "correctOptionIndex": 0, "rationaleZh": "客人说 without onions。"},
+              {"id": "w2d9-l2", "skill": "detail", "promptZh": "客人把薯条换成什么？", "options": ["汤", "沙拉", "米饭"], "correctOptionIndex": 1, "rationaleZh": "客人请求 substitute the green salad。"},
+              {"id": "w2d9-l3", "skill": "inference", "promptZh": "服务员为什么给厨房备注？", "options": ["客人赶时间", "客人对花生过敏", "客人不要配菜"], "correctOptionIndex": 1, "rationaleZh": "过敏信息需要传达给厨房。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w2d9-speaking",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d9/speaking",
+          "domain": "speaking",
+          "difficultyLevel": 2.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:restaurant", "week:2", "day:9", "task:fixed-response", "focus:food-order"],
+          "prerequisiteUnitIds": ["st4w-w2d8-speaking"],
+          "activity": {
+            "type": "fixed-response",
+            "instructionsZh": "过敏信息要用明确肯定句，不要只说“不喜欢”。",
+            "prompts": [
+              {
+                "id": "w2d9-s1",
+                "cueZh": "点烤鸡和沙拉。",
+                "partnerLine": "What would you like?",
+                "modelAnswer": "I'd like the grilled chicken with a salad, please.",
+                "acceptedAnswers": ["I'd like the grilled chicken with a salad, please.", "Can I get the grilled chicken and a salad?", "The grilled chicken with a salad, please."],
+                "requiredConcepts": ["grilled-chicken", "salad"]
+              },
+              {
+                "id": "w2d9-s2",
+                "cueZh": "请求三明治不加奶酪。",
+                "partnerLine": "How would you like the sandwich?",
+                "modelAnswer": "Could I get it without cheese?",
+                "acceptedAnswers": ["Could I get it without cheese?", "No cheese, please.", "I'd like the sandwich without cheese."],
+                "requiredConcepts": ["without-cheese"]
+              },
+              {
+                "id": "w2d9-s3",
+                "cueZh": "明确说明你对花生过敏。",
+                "partnerLine": "Do you have any food allergies?",
+                "modelAnswer": "Yes, I'm allergic to peanuts.",
+                "acceptedAnswers": ["Yes, I'm allergic to peanuts.", "I have a peanut allergy.", "Peanuts. I'm allergic to them."],
+                "requiredConcepts": ["peanut-allergy"]
+              }
+            ]
+          }
+        }
+      ],
+      "sceneQuiz": [
+        {"id": "w2d9-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "“substitute salad for fries”是什么意思？", "options": ["沙拉和薯条都要", "用沙拉替换薯条", "不要沙拉，只要薯条"], "correctOptionIndex": 1, "rationaleZh": "substitute A for B 表示用 A 替换 B。"},
+        {"id": "w2d9-q2", "domain": "listening", "format": "single-choice", "audioText": "The soup has cream in it, but the salad is dairy-free.", "promptZh": "哪一样不含乳制品？", "options": ["汤", "沙拉", "两者都不含"], "correctOptionIndex": 1, "rationaleZh": "dairy-free 明确描述 salad。"},
+        {"id": "w2d9-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "点意面，不加肉。", "modelAnswer": "I'd like the pasta without meat, please.", "acceptedAnswers": ["I'd like the pasta without meat, please.", "Can I get the pasta with no meat?", "The pasta, without meat, please."], "requiredConcepts": ["pasta", "without-meat"]}
+      ]
+    },
+    {
+      "lessonId": "w2d10-check-and-problems",
+      "recommendedDay": 10,
+      "titleZh": "结账、付款与简单差错",
+      "sceneIds": ["restaurant"],
+      "observableObjectives": [
+        "索要账单并说明付款方式。",
+        "礼貌指出菜品或账单上的明显错误。"
+      ],
+      "learningUnits": [
+        {
+          "learningUnitId": "st4w-w2d10-vocabulary",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d10/vocabulary",
+          "domain": "vocabulary",
+          "difficultyLevel": 2.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:restaurant", "week:2", "day:10", "focus:payment", "focus:problem"],
+          "prerequisiteUnitIds": ["st4w-w2d9-vocabulary"],
+          "activity": {
+            "type": "vocabulary-set",
+            "instructionsZh": "区分账单、总额、刷卡收费和小费。",
+            "items": [
+              {"id": "w2d10-v1", "term": "check", "partOfSpeech": "noun", "meaningZh": "账单", "exampleEn": "Could we get the check?", "exampleZh": "可以给我们账单吗？"},
+              {"id": "w2d10-v2", "term": "tip", "partOfSpeech": "noun", "meaningZh": "小费", "exampleEn": "The tip is not included.", "exampleZh": "小费不包含在内。"},
+              {"id": "w2d10-v3", "term": "card", "partOfSpeech": "noun", "meaningZh": "银行卡", "exampleEn": "I'll pay by card.", "exampleZh": "我刷卡付款。"},
+              {"id": "w2d10-v4", "term": "cash", "partOfSpeech": "noun", "meaningZh": "现金", "exampleEn": "Do you accept cash?", "exampleZh": "你们收现金吗？"},
+              {"id": "w2d10-v5", "term": "charge", "partOfSpeech": "noun", "meaningZh": "收费项目", "exampleEn": "What is this five-dollar charge?", "exampleZh": "这笔五美元的收费是什么？"},
+              {"id": "w2d10-v6", "term": "wrong", "partOfSpeech": "adjective", "meaningZh": "错误的", "exampleEn": "I think this is the wrong order.", "exampleZh": "我想这份订单错了。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w2d10-listening",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d10/listening",
+          "domain": "listening",
+          "difficultyLevel": 3,
+          "estimatedSeconds": 900,
+          "tags": ["scene:restaurant", "week:2", "day:10", "skill:detail", "skill:inference", "focus:check-error"],
+          "prerequisiteUnitIds": ["st4w-w2d9-listening"],
+          "activity": {
+            "type": "listening-dialogue",
+            "titleZh": "账单上多了一杯饮料",
+            "tts": {"locale": "en-US", "defaultRate": 0.97},
+            "transcript": [
+              {"speaker": "Guest", "text": "Could we get the check, please?", "translationZh": "可以给我们账单吗？"},
+              {"speaker": "Server", "text": "Of course. I'll be right back.", "translationZh": "当然。我马上回来。"},
+              {"speaker": "Guest", "text": "Excuse me, I think there's an extra drink on the check.", "translationZh": "打扰一下，我想账单上多了一杯饮料。"},
+              {"speaker": "Server", "text": "You're right. I charged you for two lemonades instead of one.", "translationZh": "您说得对。我收了两杯柠檬水的钱，而不是一杯。"},
+              {"speaker": "Guest", "text": "Could you remove the extra charge?", "translationZh": "可以去掉多收的费用吗？"},
+              {"speaker": "Server", "text": "Absolutely. Here's the corrected check.", "translationZh": "当然。这是更正后的账单。"},
+              {"speaker": "Guest", "text": "Thanks. I'll pay by card.", "translationZh": "谢谢。我刷卡付款。"}
+            ],
+            "checks": [
+              {"id": "w2d10-l1", "skill": "detail", "promptZh": "账单有什么问题？", "options": ["少算了一道菜", "多算了一杯饮料", "小费算了两次"], "correctOptionIndex": 1, "rationaleZh": "服务员承认收了两杯 lemonade，而客人只点一杯。"},
+              {"id": "w2d10-l2", "skill": "detail", "promptZh": "服务员如何处理？", "options": ["拒绝修改", "送甜点", "更正账单"], "correctOptionIndex": 2, "rationaleZh": "服务员给出 corrected check。"},
+              {"id": "w2d10-l3", "skill": "detail", "promptZh": "客人如何付款？", "options": ["现金", "银行卡", "礼品卡"], "correctOptionIndex": 1, "rationaleZh": "客人说“I’ll pay by card.”"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w2d10-speaking",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d10/speaking",
+          "domain": "speaking",
+          "difficultyLevel": 3,
+          "estimatedSeconds": 900,
+          "tags": ["scene:restaurant", "week:2", "day:10", "task:fixed-response", "focus:check-error"],
+          "prerequisiteUnitIds": ["st4w-w2d9-speaking"],
+          "activity": {
+            "type": "fixed-response",
+            "instructionsZh": "先描述事实，再提出具体修正请求。",
+            "prompts": [
+              {
+                "id": "w2d10-s1",
+                "cueZh": "索要账单。",
+                "partnerLine": "Can I get you anything else?",
+                "modelAnswer": "No, thank you. Could we get the check, please?",
+                "acceptedAnswers": ["No, thank you. Could we get the check, please?", "We're ready for the check, please.", "The check, please."],
+                "requiredConcepts": ["check-request"]
+              },
+              {
+                "id": "w2d10-s2",
+                "cueZh": "说明账单上多了一份甜点。",
+                "partnerLine": "Is everything correct?",
+                "modelAnswer": "I think there's an extra dessert on the check.",
+                "acceptedAnswers": ["I think there's an extra dessert on the check.", "We didn't order this dessert.", "The dessert charge is wrong."],
+                "requiredConcepts": ["extra-dessert", "check-problem"]
+              },
+              {
+                "id": "w2d10-s3",
+                "cueZh": "说明你刷卡付款。",
+                "partnerLine": "Cash or card?",
+                "modelAnswer": "I'll pay by card.",
+                "acceptedAnswers": ["I'll pay by card.", "Card, please.", "I'd like to pay with a card."],
+                "requiredConcepts": ["card-payment"]
+              }
+            ]
+          }
+        }
+      ],
+      "sceneQuiz": [
+        {"id": "w2d10-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "餐厅里的“extra charge”指什么？", "options": ["额外收费", "额外座位", "免费加菜"], "correctOptionIndex": 0, "rationaleZh": "charge 在账单语境中指收费项目。"},
+        {"id": "w2d10-q2", "domain": "listening", "format": "single-choice", "audioText": "The total is forty-two dollars. The tip is not included.", "promptZh": "哪项信息正确？", "options": ["总额含小费", "总额是 $24", "总额是 $42，未含小费"], "correctOptionIndex": 2, "rationaleZh": "说话人明确说 forty-two dollars，tip is not included。"},
+        {"id": "w2d10-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "礼貌指出送错了菜。", "modelAnswer": "Excuse me, I think this is the wrong dish.", "acceptedAnswers": ["Excuse me, I think this is the wrong dish.", "Sorry, I didn't order this.", "I think this is the wrong order."], "requiredConcepts": ["wrong-item"]}
+      ]
+    },
+    {
+      "lessonId": "w2d11-asking-directions",
+      "recommendedDay": 11,
+      "titleZh": "问路与步行路线",
+      "sceneIds": ["directions-and-transport"],
+      "observableObjectives": [
+        "询问如何到达一个地点。",
+        "听懂直走、转弯、街区和地标位置。"
+      ],
+      "learningUnits": [
+        {
+          "learningUnitId": "st4w-w2d11-vocabulary",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d11/vocabulary",
+          "domain": "vocabulary",
+          "difficultyLevel": 2,
+          "estimatedSeconds": 900,
+          "tags": ["scene:directions-and-transport", "week:2", "day:11", "focus:walking-directions"],
+          "prerequisiteUnitIds": ["st4w-w2d10-vocabulary"],
+          "activity": {
+            "type": "vocabulary-set",
+            "instructionsZh": "用路线词描述从当前位置到地标的步骤。",
+            "items": [
+              {"id": "w2d11-v1", "term": "straight", "partOfSpeech": "adverb", "meaningZh": "直走", "exampleEn": "Go straight for one block.", "exampleZh": "直走一个街区。"},
+              {"id": "w2d11-v2", "term": "left", "partOfSpeech": "noun", "meaningZh": "左边", "exampleEn": "Turn left at the light.", "exampleZh": "在红绿灯处左转。"},
+              {"id": "w2d11-v3", "term": "right", "partOfSpeech": "noun", "meaningZh": "右边", "exampleEn": "The bank is on your right.", "exampleZh": "银行在你的右边。"},
+              {"id": "w2d11-v4", "term": "block", "partOfSpeech": "noun", "meaningZh": "街区；一个路段", "exampleEn": "It's two blocks from here.", "exampleZh": "离这里两个街区。"},
+              {"id": "w2d11-v5", "term": "corner", "partOfSpeech": "noun", "meaningZh": "街角；拐角", "exampleEn": "The café is on the corner.", "exampleZh": "咖啡店在街角。"},
+              {"id": "w2d11-v6", "term": "across from", "partOfSpeech": "phrase", "meaningZh": "在……对面", "exampleEn": "The museum is across from the park.", "exampleZh": "博物馆在公园对面。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w2d11-listening",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d11/listening",
+          "domain": "listening",
+          "difficultyLevel": 2.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:directions-and-transport", "week:2", "day:11", "skill:sequence", "skill:detail"],
+          "prerequisiteUnitIds": ["st4w-w2d10-listening"],
+          "activity": {
+            "type": "listening-dialogue",
+            "titleZh": "去城市图书馆",
+            "tts": {"locale": "en-US", "defaultRate": 0.96},
+            "transcript": [
+              {"speaker": "Traveler", "text": "Excuse me, how do I get to the city library?", "translationZh": "打扰一下，怎么去市图书馆？"},
+              {"speaker": "Local", "text": "Go straight for two blocks and turn right at Pine Street.", "translationZh": "直走两个街区，在 Pine Street 右转。"},
+              {"speaker": "Traveler", "text": "Turn right at Pine Street?", "translationZh": "在 Pine Street 右转？"},
+              {"speaker": "Local", "text": "Yes. The library is on the left, across from a small park.", "translationZh": "对。图书馆在左边，一个小公园的对面。"},
+              {"speaker": "Traveler", "text": "Is it far from here?", "translationZh": "离这里远吗？"},
+              {"speaker": "Local", "text": "No, it's about a five-minute walk.", "translationZh": "不远，大约走五分钟。"}
+            ],
+            "checks": [
+              {"id": "w2d11-l1", "skill": "sequence", "promptZh": "第一步做什么？", "options": ["在 Pine Street 左转", "直走两个街区", "穿过公园"], "correctOptionIndex": 1, "rationaleZh": "路线首先是 go straight for two blocks。"},
+              {"id": "w2d11-l2", "skill": "detail", "promptZh": "图书馆在路的哪一边？", "options": ["左边", "右边", "中间"], "correctOptionIndex": 0, "rationaleZh": "当地人说 on the left。"},
+              {"id": "w2d11-l3", "skill": "detail", "promptZh": "图书馆对面是什么？", "options": ["车站", "小公园", "银行"], "correctOptionIndex": 1, "rationaleZh": "图书馆 across from a small park。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w2d11-speaking",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d11/speaking",
+          "domain": "speaking",
+          "difficultyLevel": 2.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:directions-and-transport", "week:2", "day:11", "task:fixed-response", "focus:directions"],
+          "prerequisiteUnitIds": ["st4w-w2d10-speaking"],
+          "activity": {
+            "type": "fixed-response",
+            "instructionsZh": "问路后至少复述一个关键转弯，防止走错。",
+            "prompts": [
+              {
+                "id": "w2d11-s1",
+                "cueZh": "询问怎么去火车站。",
+                "partnerLine": "You look lost. Can I help?",
+                "modelAnswer": "Yes, please. How do I get to the train station?",
+                "acceptedAnswers": ["Yes, please. How do I get to the train station?", "Could you tell me how to get to the train station?", "Where is the train station?"],
+                "requiredConcepts": ["train-station", "direction-question"]
+              },
+              {
+                "id": "w2d11-s2",
+                "cueZh": "确认是在第二个街角左转。",
+                "partnerLine": "Turn left at the second corner.",
+                "modelAnswer": "Let me confirm: left at the second corner?",
+                "acceptedAnswers": ["Let me confirm: left at the second corner?", "Did you say left at the second corner?", "The second corner, then left, right?"],
+                "requiredConcepts": ["left", "second-corner", "confirmation"]
+              },
+              {
+                "id": "w2d11-s3",
+                "cueZh": "询问目的地是否靠近公园。",
+                "partnerLine": "The museum is on Oak Street.",
+                "modelAnswer": "Is it near the park?",
+                "acceptedAnswers": ["Is it near the park?", "Is the museum close to the park?", "Is it by the park?"],
+                "requiredConcepts": ["park", "near-question"]
+              }
+            ]
+          }
+        }
+      ],
+      "sceneQuiz": [
+        {"id": "w2d11-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "“across from the bank”表示哪里？", "options": ["银行里面", "银行旁边", "银行对面"], "correctOptionIndex": 2, "rationaleZh": "across from 表示在……对面。"},
+        {"id": "w2d11-q2", "domain": "listening", "format": "single-choice", "audioText": "Walk one block, turn left, and the hotel is on your right.", "promptZh": "转弯后酒店在哪边？", "options": ["左边", "右边", "对面"], "correctOptionIndex": 1, "rationaleZh": "hotel is on your right。"},
+        {"id": "w2d11-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "询问博物馆怎么走。", "modelAnswer": "How do I get to the museum?", "acceptedAnswers": ["How do I get to the museum?", "Could you tell me how to get to the museum?", "Where is the museum?"], "requiredConcepts": ["museum", "direction-question"]}
+      ]
+    },
+    {
+      "lessonId": "w2d12-public-transit",
+      "recommendedDay": 12,
+      "titleZh": "公交、地铁与换乘",
+      "sceneIds": ["directions-and-transport"],
+      "observableObjectives": [
+        "确认站点、线路或站台。",
+        "询问是否需要换乘以及在哪里下车。"
+      ],
+      "learningUnits": [
+        {
+          "learningUnitId": "st4w-w2d12-vocabulary",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d12/vocabulary",
+          "domain": "vocabulary",
+          "difficultyLevel": 2.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:directions-and-transport", "week:2", "day:12", "focus:public-transit"],
+          "prerequisiteUnitIds": ["st4w-w2d11-vocabulary"],
+          "activity": {
+            "type": "vocabulary-set",
+            "instructionsZh": "区分 station、stop、line 和 platform。",
+            "items": [
+              {"id": "w2d12-v1", "term": "station", "partOfSpeech": "noun", "meaningZh": "车站", "exampleEn": "The subway station is downstairs.", "exampleZh": "地铁站在楼下。"},
+              {"id": "w2d12-v2", "term": "stop", "partOfSpeech": "noun", "meaningZh": "站点", "exampleEn": "Get off at the next stop.", "exampleZh": "下一站下车。"},
+              {"id": "w2d12-v3", "term": "line", "partOfSpeech": "noun", "meaningZh": "线路", "exampleEn": "Take the Green Line.", "exampleZh": "乘坐绿线。"},
+              {"id": "w2d12-v4", "term": "platform", "partOfSpeech": "noun", "meaningZh": "站台", "exampleEn": "The train leaves from platform four.", "exampleZh": "火车从四号站台出发。"},
+              {"id": "w2d12-v5", "term": "transfer", "partOfSpeech": "verb", "meaningZh": "换乘", "exampleEn": "Transfer to the Red Line downtown.", "exampleZh": "在市中心换乘红线。"},
+              {"id": "w2d12-v6", "term": "downtown", "partOfSpeech": "noun", "meaningZh": "市中心", "exampleEn": "This bus goes downtown.", "exampleZh": "这辆公交车去市中心。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w2d12-listening",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d12/listening",
+          "domain": "listening",
+          "difficultyLevel": 3,
+          "estimatedSeconds": 900,
+          "tags": ["scene:directions-and-transport", "week:2", "day:12", "skill:sequence", "skill:detail", "focus:transfer"],
+          "prerequisiteUnitIds": ["st4w-w2d11-listening"],
+          "activity": {
+            "type": "listening-dialogue",
+            "titleZh": "乘地铁去机场",
+            "tts": {"locale": "en-US", "defaultRate": 0.97},
+            "transcript": [
+              {"speaker": "Traveler", "text": "Does the Blue Line go to the airport?", "translationZh": "蓝线去机场吗？"},
+              {"speaker": "Agent", "text": "Not directly. Take the Blue Line downtown, then transfer to the Airport Line.", "translationZh": "不直达。先坐蓝线到市中心，再换乘机场线。"},
+              {"speaker": "Traveler", "text": "Where do I transfer?", "translationZh": "在哪里换乘？"},
+              {"speaker": "Agent", "text": "At Central Station. Follow the signs to platform six.", "translationZh": "在中央车站。跟着标志去六号站台。"},
+              {"speaker": "Traveler", "text": "How many stops is it from here?", "translationZh": "从这里有几站？"},
+              {"speaker": "Agent", "text": "Four stops to Central, then three more to the airport.", "translationZh": "到中央车站四站，然后再三站到机场。"}
+            ],
+            "checks": [
+              {"id": "w2d12-l1", "skill": "detail", "promptZh": "蓝线是否直达机场？", "options": ["是", "否", "只在周末直达"], "correctOptionIndex": 1, "rationaleZh": "工作人员说 Not directly。"},
+              {"id": "w2d12-l2", "skill": "detail", "promptZh": "在哪里换乘？", "options": ["Central Station", "Airport Station", "Park Street"], "correctOptionIndex": 0, "rationaleZh": "明确说 At Central Station。"},
+              {"id": "w2d12-l3", "skill": "detail", "promptZh": "机场线在几号站台？", "options": ["3", "4", "6"], "correctOptionIndex": 2, "rationaleZh": "工作人员说 platform six。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w2d12-speaking",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d12/speaking",
+          "domain": "speaking",
+          "difficultyLevel": 3,
+          "estimatedSeconds": 900,
+          "tags": ["scene:directions-and-transport", "week:2", "day:12", "task:fixed-response", "focus:public-transit"],
+          "prerequisiteUnitIds": ["st4w-w2d11-speaking"],
+          "activity": {
+            "type": "fixed-response",
+            "instructionsZh": "每次只确认一个关键信息：线路、换乘或下车站。",
+            "prompts": [
+              {
+                "id": "w2d12-s1",
+                "cueZh": "询问去市中心需要哪条线。",
+                "partnerLine": "Where are you going?",
+                "modelAnswer": "Which line do I need for downtown?",
+                "acceptedAnswers": ["Which line do I need for downtown?", "What line goes downtown?", "Which train should I take downtown?"],
+                "requiredConcepts": ["line-question", "downtown"]
+              },
+              {
+                "id": "w2d12-s2",
+                "cueZh": "询问是否需要换乘。",
+                "partnerLine": "Take the Green Line first.",
+                "modelAnswer": "Do I need to transfer?",
+                "acceptedAnswers": ["Do I need to transfer?", "Is there a transfer?", "Do I change trains?"],
+                "requiredConcepts": ["transfer-question"]
+              },
+              {
+                "id": "w2d12-s3",
+                "cueZh": "确认下一站下车。",
+                "partnerLine": "Your stop is next.",
+                "modelAnswer": "So I get off at the next stop, right?",
+                "acceptedAnswers": ["So I get off at the next stop, right?", "The next stop, correct?", "Do I get off at the next stop?"],
+                "requiredConcepts": ["next-stop", "confirmation"]
+              }
+            ]
+          }
+        }
+      ],
+      "sceneQuiz": [
+        {"id": "w2d12-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "“transfer to the Red Line”是什么意思？", "options": ["离开红线", "换乘红线", "在红线终点下车"], "correctOptionIndex": 1, "rationaleZh": "transfer to 指换乘到另一条线路。"},
+        {"id": "w2d12-q2", "domain": "listening", "format": "single-choice", "audioText": "The next train leaves from platform eight in twelve minutes.", "promptZh": "列车信息是什么？", "options": ["8 分钟后从 12 号站台出发", "12 分钟后从 8 号站台出发", "8:12 从站台出发"], "correctOptionIndex": 1, "rationaleZh": "platform eight，in twelve minutes。"},
+        {"id": "w2d12-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "询问在哪里换乘。", "modelAnswer": "Where do I transfer?", "acceptedAnswers": ["Where do I transfer?", "Where should I change trains?", "Which station do I transfer at?"], "requiredConcepts": ["transfer-location-question"]}
+      ]
+    },
+    {
+      "lessonId": "w2d13-tickets-and-rides",
+      "recommendedDay": 13,
+      "titleZh": "车票、打车与上下车点",
+      "sceneIds": ["directions-and-transport"],
+      "observableObjectives": [
+        "购买单程或往返票并确认票价。",
+        "说明网约车上车点和下车地点。"
+      ],
+      "learningUnits": [
+        {
+          "learningUnitId": "st4w-w2d13-vocabulary",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d13/vocabulary",
+          "domain": "vocabulary",
+          "difficultyLevel": 2.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:directions-and-transport", "week:2", "day:13", "focus:tickets", "focus:rides"],
+          "prerequisiteUnitIds": ["st4w-w2d12-vocabulary"],
+          "activity": {
+            "type": "vocabulary-set",
+            "instructionsZh": "把票种与出租车上下车地点分开记忆。",
+            "items": [
+              {"id": "w2d13-v1", "term": "ticket", "partOfSpeech": "noun", "meaningZh": "票", "exampleEn": "I need one ticket to Portland.", "exampleZh": "我需要一张去波特兰的票。"},
+              {"id": "w2d13-v2", "term": "one-way", "partOfSpeech": "adjective", "meaningZh": "单程的", "exampleEn": "A one-way ticket is twenty dollars.", "exampleZh": "单程票二十美元。"},
+              {"id": "w2d13-v3", "term": "round trip", "partOfSpeech": "noun phrase", "meaningZh": "往返票；往返", "exampleEn": "I'd like a round-trip ticket.", "exampleZh": "我想要一张往返票。"},
+              {"id": "w2d13-v4", "term": "fare", "partOfSpeech": "noun", "meaningZh": "车费；票价", "exampleEn": "What's the bus fare?", "exampleZh": "公交车费是多少？"},
+              {"id": "w2d13-v5", "term": "pickup", "partOfSpeech": "noun", "meaningZh": "上车点；接人", "exampleEn": "The pickup area is outside door three.", "exampleZh": "上车区在三号门外。"},
+              {"id": "w2d13-v6", "term": "drop-off", "partOfSpeech": "noun", "meaningZh": "下车点；送达", "exampleEn": "Use the hotel entrance for drop-off.", "exampleZh": "在酒店入口下车。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w2d13-listening",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d13/listening",
+          "domain": "listening",
+          "difficultyLevel": 3,
+          "estimatedSeconds": 900,
+          "tags": ["scene:directions-and-transport", "week:2", "day:13", "skill:detail", "focus:ride-pickup"],
+          "prerequisiteUnitIds": ["st4w-w2d12-listening"],
+          "activity": {
+            "type": "listening-dialogue",
+            "titleZh": "确认网约车上车点",
+            "tts": {"locale": "en-US", "defaultRate": 0.97},
+            "transcript": [
+              {"speaker": "Driver", "text": "Hi, this is Alex, your driver. Are you at the north entrance?", "translationZh": "你好，我是你的司机 Alex。你在北门吗？"},
+              {"speaker": "Rider", "text": "I'm outside the main entrance, next to the taxi sign.", "translationZh": "我在正门外，出租车标志旁边。"},
+              {"speaker": "Driver", "text": "I can't stop there. Could you walk to pickup zone B?", "translationZh": "我不能在那里停车。你可以走到 B 上车区吗？"},
+              {"speaker": "Rider", "text": "Sure. Is that across from the parking garage?", "translationZh": "可以。是在停车楼对面吗？"},
+              {"speaker": "Driver", "text": "Yes. I'll be there in three minutes.", "translationZh": "对。我三分钟后到。"},
+              {"speaker": "Rider", "text": "Great. Please drop me off at the River Hotel.", "translationZh": "好。请把我送到 River Hotel。"}
+            ],
+            "checks": [
+              {"id": "w2d13-l1", "skill": "detail", "promptZh": "乘客一开始在哪里？", "options": ["北门", "正门出租车标志旁", "B 上车区"], "correctOptionIndex": 1, "rationaleZh": "乘客说 outside the main entrance, next to the taxi sign。"},
+              {"id": "w2d13-l2", "skill": "detail", "promptZh": "最终上车点在哪里？", "options": ["pickup zone B", "parking garage 内", "River Hotel"], "correctOptionIndex": 0, "rationaleZh": "司机要求乘客走到 pickup zone B。"},
+              {"id": "w2d13-l3", "skill": "detail", "promptZh": "目的地是哪里？", "options": ["机场", "River Hotel", "Central Station"], "correctOptionIndex": 1, "rationaleZh": "乘客请求 drop me off at the River Hotel。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w2d13-speaking",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d13/speaking",
+          "domain": "speaking",
+          "difficultyLevel": 3,
+          "estimatedSeconds": 900,
+          "tags": ["scene:directions-and-transport", "week:2", "day:13", "task:fixed-response", "focus:tickets", "focus:rides"],
+          "prerequisiteUnitIds": ["st4w-w2d12-speaking"],
+          "activity": {
+            "type": "fixed-response",
+            "instructionsZh": "票务对话说清票种；打车对话说清地标。",
+            "prompts": [
+              {
+                "id": "w2d13-s1",
+                "cueZh": "买一张去 Salem 的往返票。",
+                "partnerLine": "Where are you traveling?",
+                "modelAnswer": "One round-trip ticket to Salem, please.",
+                "acceptedAnswers": ["One round-trip ticket to Salem, please.", "I'd like a round-trip ticket to Salem.", "Can I get a round-trip ticket to Salem?"],
+                "requiredConcepts": ["round-trip", "Salem"]
+              },
+              {
+                "id": "w2d13-s2",
+                "cueZh": "询问票价。",
+                "partnerLine": "The next bus leaves at four.",
+                "modelAnswer": "How much is the fare?",
+                "acceptedAnswers": ["How much is the fare?", "What's the fare?", "How much is the ticket?"],
+                "requiredConcepts": ["fare-question"]
+              },
+              {
+                "id": "w2d13-s3",
+                "cueZh": "请司机在酒店正门让你下车。",
+                "partnerLine": "Where would you like to get out?",
+                "modelAnswer": "Please drop me off at the hotel's main entrance.",
+                "acceptedAnswers": ["Please drop me off at the hotel's main entrance.", "The main hotel entrance, please.", "Could you stop at the main entrance of the hotel?"],
+                "requiredConcepts": ["hotel-main-entrance", "drop-off"]
+              }
+            ]
+          }
+        }
+      ],
+      "sceneQuiz": [
+        {"id": "w2d13-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "只去不回应该买哪种票？", "options": ["one-way", "round trip", "transfer"], "correctOptionIndex": 0, "rationaleZh": "one-way 指单程。"},
+        {"id": "w2d13-q2", "domain": "listening", "format": "single-choice", "audioText": "Meet your driver at pickup zone C outside door five.", "promptZh": "在哪里上车？", "options": ["五号门内的 C 区", "五号门外的 C 上车区", "三号门外"], "correctOptionIndex": 1, "rationaleZh": "pickup zone C outside door five。"},
+        {"id": "w2d13-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "买一张去机场的单程票。", "modelAnswer": "One one-way ticket to the airport, please.", "acceptedAnswers": ["One one-way ticket to the airport, please.", "I'd like a one-way ticket to the airport.", "A one-way airport ticket, please."], "requiredConcepts": ["one-way", "airport"]}
+      ]
+    },
+    {
+      "lessonId": "w2d14-week-two-checkpoint",
+      "recommendedDay": 14,
+      "titleZh": "第二周综合检查：用餐后前往车站",
+      "sceneIds": ["restaurant", "directions-and-transport", "integrated-travel"],
+      "observableObjectives": [
+        "完成点餐、结账和纠错的受控对话。",
+        "根据两步路线找到车站并购买正确车票。"
+      ],
+      "learningUnits": [
+        {
+          "learningUnitId": "st4w-w2d14-vocabulary",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d14/vocabulary",
+          "domain": "vocabulary",
+          "difficultyLevel": 3,
+          "estimatedSeconds": 900,
+          "tags": ["scene:integrated-travel", "week:2", "day:14", "focus:review", "checkpoint:week-2"],
+          "prerequisiteUnitIds": ["st4w-w2d13-vocabulary"],
+          "activity": {
+            "type": "vocabulary-review",
+            "instructionsZh": "按“餐厅—步行—乘车”三个阶段调用已学词。",
+            "reviewItemIds": ["w2d8-v2", "w2d9-v5", "w2d10-v1", "w2d11-v6", "w2d12-v5", "w2d13-v3"],
+            "items": [
+              {"id": "w2d14-v1", "term": "first", "partOfSpeech": "adverb", "meaningZh": "首先", "exampleEn": "First, ask for the check.", "exampleZh": "首先，索要账单。"},
+              {"id": "w2d14-v2", "term": "then", "partOfSpeech": "adverb", "meaningZh": "然后", "exampleEn": "Then, walk to the station.", "exampleZh": "然后，步行到车站。"},
+              {"id": "w2d14-v3", "term": "finally", "partOfSpeech": "adverb", "meaningZh": "最后", "exampleEn": "Finally, buy your ticket.", "exampleZh": "最后，买票。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w2d14-listening",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d14/listening",
+          "domain": "listening",
+          "difficultyLevel": 3,
+          "estimatedSeconds": 900,
+          "tags": ["scene:integrated-travel", "week:2", "day:14", "skill:sequence", "skill:detail", "checkpoint:week-2"],
+          "prerequisiteUnitIds": ["st4w-w2d13-listening"],
+          "activity": {
+            "type": "listening-narrative",
+            "titleZh": "从餐厅赶往演出",
+            "tts": {"locale": "en-US", "defaultRate": 0.98},
+            "transcript": [
+              {"speaker": "Friend", "text": "The show starts at eight, and it's already seven fifteen.", "translationZh": "演出八点开始，现在已经七点十五。"},
+              {"speaker": "Traveler", "text": "Let's get the check now. I can pay by card.", "translationZh": "我们现在结账吧。我可以刷卡。"},
+              {"speaker": "Server", "text": "Here you go. The total is thirty-six dollars.", "translationZh": "给您。总共三十六美元。"},
+              {"speaker": "Friend", "text": "After we leave, turn right and walk two blocks to Oak Station.", "translationZh": "离开后右转，走两个街区到 Oak Station。"},
+              {"speaker": "Traveler", "text": "Which line do we need?", "translationZh": "我们需要哪条线？"},
+              {"speaker": "Friend", "text": "Take the Green Line for three stops. We don't need to transfer.", "translationZh": "坐绿线三站。不需要换乘。"},
+              {"speaker": "Traveler", "text": "Good. Let's buy two one-way tickets.", "translationZh": "好。我们买两张单程票。"}
+            ],
+            "checks": [
+              {"id": "w2d14-l1", "skill": "detail", "promptZh": "演出几点开始？", "options": ["7:15", "7:45", "8:00"], "correctOptionIndex": 2, "rationaleZh": "开头明确说 The show starts at eight。"},
+              {"id": "w2d14-l2", "skill": "sequence", "promptZh": "离开餐厅后先做什么？", "options": ["左转", "右转", "乘绿线"], "correctOptionIndex": 1, "rationaleZh": "路线第一步是 turn right。"},
+              {"id": "w2d14-l3", "skill": "detail", "promptZh": "需要换乘吗？", "options": ["需要一次", "需要两次", "不需要"], "correctOptionIndex": 2, "rationaleZh": "朋友明确说 We don't need to transfer。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w2d14-speaking",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d14/speaking",
+          "domain": "speaking",
+          "difficultyLevel": 3,
+          "estimatedSeconds": 900,
+          "tags": ["scene:integrated-travel", "week:2", "day:14", "task:guided-roleplay", "checkpoint:week-2"],
+          "prerequisiteUnitIds": ["st4w-w2d13-speaking"],
+          "activity": {
+            "type": "guided-roleplay",
+            "instructionsZh": "按顺序完成点餐、结账、问路和购票四个意图。",
+            "prompts": [
+              {
+                "id": "w2d14-s1",
+                "cueZh": "点鸡肉三明治，不加洋葱，并说明花生过敏。",
+                "partnerLine": "What would you like?",
+                "modelAnswer": "I'd like the chicken sandwich without onions. I'm allergic to peanuts.",
+                "acceptedAnswers": ["I'd like the chicken sandwich without onions. I'm allergic to peanuts.", "A chicken sandwich, no onions, please. I have a peanut allergy.", "Can I get the chicken sandwich without onions? I'm allergic to peanuts."],
+                "requiredConcepts": ["chicken-sandwich", "without-onions", "peanut-allergy"]
+              },
+              {
+                "id": "w2d14-s2",
+                "cueZh": "索要账单并说你刷卡。",
+                "partnerLine": "Can I get you anything else?",
+                "modelAnswer": "No, thanks. Could I get the check? I'll pay by card.",
+                "acceptedAnswers": ["No, thanks. Could I get the check? I'll pay by card.", "The check, please. I'd like to pay by card.", "We're ready for the check, and I'll use a card."],
+                "requiredConcepts": ["check", "card"]
+              },
+              {
+                "id": "w2d14-s3",
+                "cueZh": "询问怎么去中央车站。",
+                "partnerLine": "Can I help you find something?",
+                "modelAnswer": "Yes. How do I get to Central Station?",
+                "acceptedAnswers": ["Yes. How do I get to Central Station?", "Could you tell me how to get to Central Station?", "Where is Central Station?"],
+                "requiredConcepts": ["Central-Station", "direction-question"]
+              },
+              {
+                "id": "w2d14-s4",
+                "cueZh": "买两张去市中心的单程票。",
+                "partnerLine": "What tickets do you need?",
+                "modelAnswer": "Two one-way tickets downtown, please.",
+                "acceptedAnswers": ["Two one-way tickets downtown, please.", "I'd like two one-way tickets to downtown.", "Can I get two one-way tickets downtown?"],
+                "requiredConcepts": ["two", "one-way", "downtown"]
+              }
+            ]
+          }
+        }
+      ],
+      "sceneQuiz": [
+        {"id": "w2d14-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "哪组词按“账单—路线—车票”排列？", "options": ["check—turn—ticket", "menu—tip—server", "station—dish—cash"], "correctOptionIndex": 0, "rationaleZh": "check 属于结账，turn 属于路线，ticket 属于乘车。"},
+        {"id": "w2d14-q2", "domain": "listening", "format": "single-choice", "audioText": "Pay the check first, walk one block to the station, and take the Red Line for two stops.", "promptZh": "正确顺序是什么？", "options": ["乘车—步行—付款", "付款—步行—乘车", "步行—付款—乘车"], "correctOptionIndex": 1, "rationaleZh": "first pay，then walk，最后 take the Red Line。"},
+        {"id": "w2d14-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "确认路线：直走两个街区，然后左转。", "modelAnswer": "Let me confirm: straight for two blocks, then left?", "acceptedAnswers": ["Let me confirm: straight for two blocks, then left?", "So I go straight two blocks and turn left, right?", "Two blocks straight, then left, correct?"], "requiredConcepts": ["two-blocks", "left", "confirmation"]}
+      ]
+    }
+  ]
+}

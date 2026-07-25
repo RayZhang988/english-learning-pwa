@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "documentType": "content-package-index",
+  "packageVersion": "1.0.0",
+  "courseId": "survival-travel-american-4w",
+  "status": "released",
+  "targetLocale": "en-US",
+  "supportLocale": "zh-CN",
+  "manifestFile": "content/curriculum/survival-travel-american-4w.v1.json",
+  "lessonFiles": [
+    "content/lessons/survival-travel-american-4w/week-1.v1.json",
+    "content/lessons/survival-travel-american-4w/week-2.v1.json",
+    "content/lessons/survival-travel-american-4w/week-3.v1.json",
+    "content/lessons/survival-travel-american-4w/week-4.v1.json"
+  ],
+  "schemaFiles": [
+    "content/curriculum/package-index.schema.v1.json",
+    "content/curriculum/curriculum-manifest.schema.v1.json",
+    "content/curriculum/lesson-week.schema.v1.json"
+  ],
+  "documentationFiles": [
+    "content/curriculum/README.md",
+    "content/curriculum/content-package-contract.v1.md",
+    "content/curriculum/content-quality-notes.v1.md",
+    "content/curriculum/handoff-v1.md"
+  ],
+  "mediaAssets": [],
+  "totals": {
+    "weeks": 4,
+    "lessons": 28,
+    "learningUnits": 84,
+    "vocabularyUnits": 28,
+    "listeningUnits": 28,
+    "speakingUnits": 28,
+    "sceneQuizItems": 84,
+    "candidateSeconds": 75600
+  },
+  "learningCandidateProjection": {
+    "staticFields": [
+      "learningUnitId",
+      "contentRef",
+      "domain",
+      "difficultyLevel",
+      "estimatedSeconds",
+      "tags"
+    ],
+    "runtimeField": "prerequisitesMet",
+    "runtimeSource": "learningUnit.prerequisiteUnitIds"
+  }
+}

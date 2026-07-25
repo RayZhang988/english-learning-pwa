@@ -1,0 +1,751 @@
+{
+  "schemaVersion": 1,
+  "documentType": "lesson-week",
+  "packageVersion": "1.0.0",
+  "courseId": "survival-travel-american-4w",
+  "week": 1,
+  "lessons": [
+    {
+      "lessonId": "w1d1-first-meeting",
+      "recommendedDay": 1,
+      "titleZh": "第一次见面",
+      "sceneIds": ["introductions"],
+      "observableObjectives": [
+        "回应问候并说出自己的姓名。",
+        "说明自己来自哪里以及是来旅行的。"
+      ],
+      "learningUnits": [
+        {
+          "learningUnitId": "st4w-w1d1-vocabulary",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary",
+          "domain": "vocabulary",
+          "difficultyLevel": 0.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:introductions", "week:1", "day:1", "focus:greetings"],
+          "prerequisiteUnitIds": [],
+          "activity": {
+            "type": "vocabulary-set",
+            "instructionsZh": "先理解词义，再用例句完成一次自我介绍。",
+            "items": [
+              {"id": "w1d1-v1", "term": "hi", "partOfSpeech": "interjection", "meaningZh": "嗨；你好", "exampleEn": "Hi, I'm Emma.", "exampleZh": "你好，我是 Emma。"},
+              {"id": "w1d1-v2", "term": "name", "partOfSpeech": "noun", "meaningZh": "姓名", "exampleEn": "My name is Kai.", "exampleZh": "我叫 Kai。"},
+              {"id": "w1d1-v3", "term": "from", "partOfSpeech": "preposition", "meaningZh": "来自", "exampleEn": "I'm from Beijing.", "exampleZh": "我来自北京。"},
+              {"id": "w1d1-v4", "term": "nice to meet you", "partOfSpeech": "phrase", "meaningZh": "很高兴认识你", "exampleEn": "Nice to meet you, Kai.", "exampleZh": "很高兴认识你，Kai。"},
+              {"id": "w1d1-v5", "term": "visit", "partOfSpeech": "verb", "meaningZh": "访问；旅行", "exampleEn": "I'm visiting Boston.", "exampleZh": "我正在波士顿旅行。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w1d1-listening",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/listening",
+          "domain": "listening",
+          "difficultyLevel": 1,
+          "estimatedSeconds": 900,
+          "tags": ["scene:introductions", "week:1", "day:1", "skill:gist", "skill:detail"],
+          "prerequisiteUnitIds": [],
+          "activity": {
+            "type": "listening-dialogue",
+            "titleZh": "酒店大堂里的问候",
+            "tts": {"locale": "en-US", "defaultRate": 0.9},
+            "transcript": [
+              {"speaker": "Maya", "text": "Hi, I'm Maya.", "translationZh": "你好，我是 Maya。"},
+              {"speaker": "Leo", "text": "Hi, Maya. I'm Leo. Nice to meet you.", "translationZh": "你好，Maya。我是 Leo。很高兴认识你。"},
+              {"speaker": "Maya", "text": "Nice to meet you, too. Where are you from?", "translationZh": "我也很高兴认识你。你来自哪里？"},
+              {"speaker": "Leo", "text": "I'm from Shanghai. I'm visiting Boston this week.", "translationZh": "我来自上海。这周我在波士顿旅行。"},
+              {"speaker": "Maya", "text": "Welcome to Boston!", "translationZh": "欢迎来到波士顿！"}
+            ],
+            "checks": [
+              {"id": "w1d1-l1", "skill": "gist", "promptZh": "两人在做什么？", "options": ["第一次见面并互相介绍", "在餐厅点餐", "讨论航班"], "correctOptionIndex": 0, "rationaleZh": "双方交换姓名，Leo 说明自己来自哪里。"},
+              {"id": "w1d1-l2", "skill": "detail", "promptZh": "Leo 来自哪里？", "options": ["Boston", "Shanghai", "Chicago"], "correctOptionIndex": 1, "rationaleZh": "Leo 说“I’m from Shanghai.”"},
+              {"id": "w1d1-l3", "skill": "detail", "promptZh": "Leo 这周在哪里旅行？", "options": ["Boston", "Shanghai", "Seattle"], "correctOptionIndex": 0, "rationaleZh": "他说“I’m visiting Boston this week.”"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w1d1-speaking",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/speaking",
+          "domain": "speaking",
+          "difficultyLevel": 1,
+          "estimatedSeconds": 900,
+          "tags": ["scene:introductions", "week:1", "day:1", "task:fixed-response"],
+          "prerequisiteUnitIds": [],
+          "activity": {
+            "type": "fixed-response",
+            "instructionsZh": "听到对方的话后，用完整但简短的句子回答。",
+            "prompts": [
+              {
+                "id": "w1d1-s1",
+                "cueZh": "你叫 Lin。回应对方并介绍自己。",
+                "partnerLine": "Hi, I'm Maya.",
+                "modelAnswer": "Hi, Maya. I'm Lin.",
+                "acceptedAnswers": ["Hi, Maya. I'm Lin.", "Hello, Maya. I'm Lin.", "Nice to meet you, Maya. I'm Lin."],
+                "requiredConcepts": ["greeting", "speaker-name"]
+              },
+              {
+                "id": "w1d1-s2",
+                "cueZh": "说明你来自上海。",
+                "partnerLine": "Where are you from?",
+                "modelAnswer": "I'm from Shanghai.",
+                "acceptedAnswers": ["I'm from Shanghai.", "I am from Shanghai."],
+                "requiredConcepts": ["from", "Shanghai"]
+              },
+              {
+                "id": "w1d1-s3",
+                "cueZh": "说明你在纽约旅行。",
+                "partnerLine": "Do you live here?",
+                "modelAnswer": "No, I'm visiting New York.",
+                "acceptedAnswers": ["No, I'm visiting New York.", "No. I'm here on vacation.", "No, I'm a visitor."],
+                "requiredConcepts": ["not-local", "visit"]
+              }
+            ]
+          }
+        }
+      ],
+      "sceneQuiz": [
+        {"id": "w1d1-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "哪一句表示“我来自北京”？", "options": ["I'm Beijing.", "I'm from Beijing.", "I visit from Beijing."], "correctOptionIndex": 1, "rationaleZh": "表示来源使用 be from。"},
+        {"id": "w1d1-q2", "domain": "listening", "format": "single-choice", "audioText": "Hi, I'm Nora. I'm visiting Chicago.", "promptZh": "Nora 在哪里旅行？", "options": ["Chicago", "Boston", "New York"], "correctOptionIndex": 0, "rationaleZh": "visiting 后面的地点是 Chicago。"},
+        {"id": "w1d1-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "对方说“Nice to meet you.” 请回应。", "modelAnswer": "Nice to meet you, too.", "acceptedAnswers": ["Nice to meet you, too.", "You, too.", "It's nice to meet you, too."], "requiredConcepts": ["polite-response"]}
+      ]
+    },
+    {
+      "lessonId": "w1d2-personal-information",
+      "recommendedDay": 2,
+      "titleZh": "姓名拼写与联系方式",
+      "sceneIds": ["introductions"],
+      "observableObjectives": [
+        "询问并确认名字的拼写。",
+        "提供电话号码或电子邮箱地址。"
+      ],
+      "learningUnits": [
+        {
+          "learningUnitId": "st4w-w1d2-vocabulary",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d2/vocabulary",
+          "domain": "vocabulary",
+          "difficultyLevel": 1,
+          "estimatedSeconds": 900,
+          "tags": ["scene:introductions", "week:1", "day:2", "focus:contact-information"],
+          "prerequisiteUnitIds": ["st4w-w1d1-vocabulary"],
+          "activity": {
+            "type": "vocabulary-set",
+            "instructionsZh": "区分名、姓和两种联系方式。",
+            "items": [
+              {"id": "w1d2-v1", "term": "first name", "partOfSpeech": "noun phrase", "meaningZh": "名", "exampleEn": "My first name is Rui.", "exampleZh": "我的名是 Rui。"},
+              {"id": "w1d2-v2", "term": "last name", "partOfSpeech": "noun phrase", "meaningZh": "姓", "exampleEn": "My last name is Wang.", "exampleZh": "我姓 Wang。"},
+              {"id": "w1d2-v3", "term": "spell", "partOfSpeech": "verb", "meaningZh": "拼写", "exampleEn": "Could you spell Wang?", "exampleZh": "你可以拼一下 Wang 吗？"},
+              {"id": "w1d2-v4", "term": "phone number", "partOfSpeech": "noun phrase", "meaningZh": "电话号码", "exampleEn": "My phone number is 555-0162.", "exampleZh": "我的电话号码是 555-0162。"},
+              {"id": "w1d2-v5", "term": "email address", "partOfSpeech": "noun phrase", "meaningZh": "电子邮箱地址", "exampleEn": "Please enter your email address.", "exampleZh": "请输入你的电子邮箱地址。"},
+              {"id": "w1d2-v6", "term": "again", "partOfSpeech": "adverb", "meaningZh": "再一次", "exampleEn": "Could you say that again?", "exampleZh": "你可以再说一次吗？"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w1d2-listening",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d2/listening",
+          "domain": "listening",
+          "difficultyLevel": 1.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:introductions", "week:1", "day:2", "skill:detail", "focus:spelling"],
+          "prerequisiteUnitIds": ["st4w-w1d1-listening"],
+          "activity": {
+            "type": "listening-dialogue",
+            "titleZh": "填写活动登记表",
+            "tts": {"locale": "en-US", "defaultRate": 0.9},
+            "transcript": [
+              {"speaker": "Staff", "text": "What's your first name?", "translationZh": "你的名是什么？"},
+              {"speaker": "Guest", "text": "Jia.", "translationZh": "Jia。"},
+              {"speaker": "Staff", "text": "Could you spell that, please?", "translationZh": "可以拼一下吗？"},
+              {"speaker": "Guest", "text": "J-I-A.", "translationZh": "J-I-A。"},
+              {"speaker": "Staff", "text": "And your last name?", "translationZh": "你的姓呢？"},
+              {"speaker": "Guest", "text": "Sun. S-U-N.", "translationZh": "Sun。S-U-N。"},
+              {"speaker": "Staff", "text": "Thank you. What's your phone number?", "translationZh": "谢谢。你的电话号码是多少？"},
+              {"speaker": "Guest", "text": "It's 555-0184.", "translationZh": "是 555-0184。"}
+            ],
+            "checks": [
+              {"id": "w1d2-l1", "skill": "detail", "promptZh": "客人的名怎么拼？", "options": ["G-I-A", "J-I-A", "J-A-I"], "correctOptionIndex": 1, "rationaleZh": "客人逐字母说 J-I-A。"},
+              {"id": "w1d2-l2", "skill": "detail", "promptZh": "客人的姓是什么？", "options": ["Sun", "Song", "Sung"], "correctOptionIndex": 0, "rationaleZh": "客人说“Sun. S-U-N.”"},
+              {"id": "w1d2-l3", "skill": "detail", "promptZh": "电话号码最后两位是什么？", "options": ["48", "84", "18"], "correctOptionIndex": 1, "rationaleZh": "电话号码是 555-0184。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w1d2-speaking",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d2/speaking",
+          "domain": "speaking",
+          "difficultyLevel": 1.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:introductions", "week:1", "day:2", "task:fixed-response", "focus:spelling"],
+          "prerequisiteUnitIds": ["st4w-w1d1-speaking"],
+          "activity": {
+            "type": "fixed-response",
+            "instructionsZh": "口头提供个人信息；示例信息均为虚构。",
+            "prompts": [
+              {
+                "id": "w1d2-s1",
+                "cueZh": "你的姓是 Li。拼给对方听。",
+                "partnerLine": "Could you spell your last name?",
+                "modelAnswer": "Sure. It's L-I.",
+                "acceptedAnswers": ["Sure. It's L-I.", "L-I.", "My last name is Li, L-I."],
+                "requiredConcepts": ["L", "I"]
+              },
+              {
+                "id": "w1d2-s2",
+                "cueZh": "提供虚构电话号码 555-0136。",
+                "partnerLine": "What's your phone number?",
+                "modelAnswer": "My phone number is 555-0136.",
+                "acceptedAnswers": ["My phone number is 555-0136.", "It's 555-0136.", "555-0136."],
+                "requiredConcepts": ["555-0136"]
+              },
+              {
+                "id": "w1d2-s3",
+                "cueZh": "你没听清电子邮箱地址，请对方再说一次。",
+                "partnerLine": "My email address is maya@example.com.",
+                "modelAnswer": "Could you say that again, please?",
+                "acceptedAnswers": ["Could you say that again, please?", "Could you repeat that, please?", "Sorry, what was the email address?"],
+                "requiredConcepts": ["repeat-request"]
+              }
+            ]
+          }
+        }
+      ],
+      "sceneQuiz": [
+        {"id": "w1d2-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "表格中的“last name”要求填写什么？", "options": ["名字", "姓", "电话号码"], "correctOptionIndex": 1, "rationaleZh": "美式表格中 last name 指姓。"},
+        {"id": "w1d2-q2", "domain": "listening", "format": "single-choice", "audioText": "My name is Bea. That's B-E-A.", "promptZh": "名字怎么拼？", "options": ["B-E-A", "B-I-A", "P-E-A"], "correctOptionIndex": 0, "rationaleZh": "说话人明确拼为 B-E-A。"},
+        {"id": "w1d2-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "请对方拼一下姓名。", "modelAnswer": "Could you spell your name, please?", "acceptedAnswers": ["Could you spell your name, please?", "How do you spell your name?", "Can you spell that, please?"], "requiredConcepts": ["spell", "name"]}
+      ]
+    },
+    {
+      "lessonId": "w1d3-numbers-and-prices",
+      "recommendedDay": 3,
+      "titleZh": "数字与价格",
+      "sceneIds": ["numbers-and-time"],
+      "observableObjectives": [
+        "听辨容易混淆的十几和几十。",
+        "询问并确认简单美元金额。"
+      ],
+      "learningUnits": [
+        {
+          "learningUnitId": "st4w-w1d3-vocabulary",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d3/vocabulary",
+          "domain": "vocabulary",
+          "difficultyLevel": 1,
+          "estimatedSeconds": 900,
+          "tags": ["scene:numbers-and-time", "week:1", "day:3", "focus:numbers", "focus:prices"],
+          "prerequisiteUnitIds": ["st4w-w1d2-vocabulary"],
+          "activity": {
+            "type": "vocabulary-set",
+            "instructionsZh": "重点对比 fifteen/fifty 和 thirteen/thirty 的重音。",
+            "items": [
+              {"id": "w1d3-v1", "term": "zero", "partOfSpeech": "number", "meaningZh": "零", "exampleEn": "The room number is two-zero-eight.", "exampleZh": "房间号是 208。"},
+              {"id": "w1d3-v2", "term": "fifteen", "partOfSpeech": "number", "meaningZh": "十五", "exampleEn": "The ticket is fifteen dollars.", "exampleZh": "票价是十五美元。"},
+              {"id": "w1d3-v3", "term": "fifty", "partOfSpeech": "number", "meaningZh": "五十", "exampleEn": "The bag is fifty dollars.", "exampleZh": "这个包五十美元。"},
+              {"id": "w1d3-v4", "term": "hundred", "partOfSpeech": "number", "meaningZh": "一百", "exampleEn": "The room is one hundred dollars a night.", "exampleZh": "房间每晚一百美元。"},
+              {"id": "w1d3-v5", "term": "dollar", "partOfSpeech": "noun", "meaningZh": "美元", "exampleEn": "It costs one dollar.", "exampleZh": "它一美元。"},
+              {"id": "w1d3-v6", "term": "cent", "partOfSpeech": "noun", "meaningZh": "美分", "exampleEn": "It's ninety-nine cents.", "exampleZh": "它是九十九美分。"},
+              {"id": "w1d3-v7", "term": "price", "partOfSpeech": "noun", "meaningZh": "价格", "exampleEn": "Is that the final price?", "exampleZh": "那是最终价格吗？"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w1d3-listening",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d3/listening",
+          "domain": "listening",
+          "difficultyLevel": 1.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:numbers-and-time", "week:1", "day:3", "skill:detail", "focus:prices"],
+          "prerequisiteUnitIds": ["st4w-w1d2-listening"],
+          "activity": {
+            "type": "listening-dialogue",
+            "titleZh": "纪念品店的价格",
+            "tts": {"locale": "en-US", "defaultRate": 0.9},
+            "transcript": [
+              {"speaker": "Customer", "text": "How much is this postcard?", "translationZh": "这张明信片多少钱？"},
+              {"speaker": "Clerk", "text": "It's one dollar and fifty cents.", "translationZh": "一美元五十美分。"},
+              {"speaker": "Customer", "text": "And the blue hat?", "translationZh": "那顶蓝帽子呢？"},
+              {"speaker": "Clerk", "text": "That's fifteen dollars.", "translationZh": "十五美元。"},
+              {"speaker": "Customer", "text": "Fifty dollars?", "translationZh": "五十美元？"},
+              {"speaker": "Clerk", "text": "No, fifteen: one-five.", "translationZh": "不，是十五：一五。"},
+              {"speaker": "Customer", "text": "Got it. I'll take the postcard.", "translationZh": "明白了。我要明信片。"}
+            ],
+            "checks": [
+              {"id": "w1d3-l1", "skill": "detail", "promptZh": "明信片多少钱？", "options": ["$1.15", "$1.50", "$15.00"], "correctOptionIndex": 1, "rationaleZh": "店员说 one dollar and fifty cents。"},
+              {"id": "w1d3-l2", "skill": "detail", "promptZh": "蓝帽子多少钱？", "options": ["$15", "$50", "$51"], "correctOptionIndex": 0, "rationaleZh": "店员澄清 fifteen，数字为 one-five。"},
+              {"id": "w1d3-l3", "skill": "gist", "promptZh": "顾客最后买了什么？", "options": ["帽子", "明信片", "帽子和明信片"], "correctOptionIndex": 1, "rationaleZh": "顾客说“I’ll take the postcard.”"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w1d3-speaking",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d3/speaking",
+          "domain": "speaking",
+          "difficultyLevel": 1.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:numbers-and-time", "week:1", "day:3", "task:fixed-response", "focus:confirmation"],
+          "prerequisiteUnitIds": ["st4w-w1d2-speaking"],
+          "activity": {
+            "type": "fixed-response",
+            "instructionsZh": "把金额说完整；不确定时主动确认。",
+            "prompts": [
+              {
+                "id": "w1d3-s1",
+                "cueZh": "询问这张票多少钱。",
+                "partnerLine": "Can I help you?",
+                "modelAnswer": "How much is this ticket?",
+                "acceptedAnswers": ["How much is this ticket?", "What's the price of this ticket?", "How much does this ticket cost?"],
+                "requiredConcepts": ["price-question", "ticket"]
+              },
+              {
+                "id": "w1d3-s2",
+                "cueZh": "告诉对方价格是 12.50 美元。",
+                "partnerLine": "How much is it?",
+                "modelAnswer": "It's twelve dollars and fifty cents.",
+                "acceptedAnswers": ["It's twelve dollars and fifty cents.", "It's twelve fifty.", "Twelve dollars and fifty cents."],
+                "requiredConcepts": ["12.50"]
+              },
+              {
+                "id": "w1d3-s3",
+                "cueZh": "你不确定听到的是 15 还是 50，请确认。",
+                "partnerLine": "It's fifty dollars.",
+                "modelAnswer": "Is that fifteen or fifty dollars?",
+                "acceptedAnswers": ["Is that fifteen or fifty dollars?", "Did you say fifteen or fifty?", "Sorry, was that fifty dollars?"],
+                "requiredConcepts": ["number-confirmation"]
+              }
+            ]
+          }
+        }
+      ],
+      "sceneQuiz": [
+        {"id": "w1d3-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "“ninety-nine cents”是多少钱？", "options": ["$0.99", "$9.90", "$99.00"], "correctOptionIndex": 0, "rationaleZh": "一美元等于一百美分，99 cents 是 $0.99。"},
+        {"id": "w1d3-q2", "domain": "listening", "format": "single-choice", "audioText": "Your total is thirty dollars and thirteen cents.", "promptZh": "总价是多少？", "options": ["$13.30", "$30.13", "$30.30"], "correctOptionIndex": 1, "rationaleZh": "thirty dollars and thirteen cents 是 $30.13。"},
+        {"id": "w1d3-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "询问这件物品的价格。", "modelAnswer": "How much is this?", "acceptedAnswers": ["How much is this?", "How much does this cost?", "What's the price of this?"], "requiredConcepts": ["price-question"]}
+      ]
+    },
+    {
+      "lessonId": "w1d4-time-and-plans",
+      "recommendedDay": 4,
+      "titleZh": "时间与简单安排",
+      "sceneIds": ["numbers-and-time"],
+      "observableObjectives": [
+        "询问并听懂常见时间。",
+        "约定今天或明天的会面时间。"
+      ],
+      "learningUnits": [
+        {
+          "learningUnitId": "st4w-w1d4-vocabulary",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d4/vocabulary",
+          "domain": "vocabulary",
+          "difficultyLevel": 1.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:numbers-and-time", "week:1", "day:4", "focus:time"],
+          "prerequisiteUnitIds": ["st4w-w1d3-vocabulary"],
+          "activity": {
+            "type": "vocabulary-set",
+            "instructionsZh": "用 day part 和具体时间组成安排。",
+            "items": [
+              {"id": "w1d4-v1", "term": "today", "partOfSpeech": "adverb", "meaningZh": "今天", "exampleEn": "The museum is open today.", "exampleZh": "博物馆今天开放。"},
+              {"id": "w1d4-v2", "term": "tomorrow", "partOfSpeech": "adverb", "meaningZh": "明天", "exampleEn": "Let's meet tomorrow.", "exampleZh": "我们明天见吧。"},
+              {"id": "w1d4-v3", "term": "morning", "partOfSpeech": "noun", "meaningZh": "早上；上午", "exampleEn": "Breakfast is in the morning.", "exampleZh": "早餐在早上。"},
+              {"id": "w1d4-v4", "term": "afternoon", "partOfSpeech": "noun", "meaningZh": "下午", "exampleEn": "The tour starts this afternoon.", "exampleZh": "旅行团今天下午出发。"},
+              {"id": "w1d4-v5", "term": "evening", "partOfSpeech": "noun", "meaningZh": "晚上", "exampleEn": "I'm free this evening.", "exampleZh": "我今晚有空。"},
+              {"id": "w1d4-v6", "term": "o'clock", "partOfSpeech": "adverb", "meaningZh": "整点", "exampleEn": "The store opens at nine o'clock.", "exampleZh": "商店九点开门。"},
+              {"id": "w1d4-v7", "term": "around", "partOfSpeech": "preposition", "meaningZh": "大约", "exampleEn": "I'll arrive around six.", "exampleZh": "我大约六点到。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w1d4-listening",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d4/listening",
+          "domain": "listening",
+          "difficultyLevel": 2,
+          "estimatedSeconds": 900,
+          "tags": ["scene:numbers-and-time", "week:1", "day:4", "skill:detail", "focus:schedule"],
+          "prerequisiteUnitIds": ["st4w-w1d3-listening"],
+          "activity": {
+            "type": "listening-dialogue",
+            "titleZh": "约好参观博物馆",
+            "tts": {"locale": "en-US", "defaultRate": 0.92},
+            "transcript": [
+              {"speaker": "Ava", "text": "Are you free tomorrow morning?", "translationZh": "你明天上午有空吗？"},
+              {"speaker": "Noah", "text": "Yes. What are you planning?", "translationZh": "有。你有什么计划？"},
+              {"speaker": "Ava", "text": "The art museum opens at ten.", "translationZh": "艺术博物馆十点开门。"},
+              {"speaker": "Noah", "text": "Let's meet at nine thirty and get coffee first.", "translationZh": "我们九点半见，先喝杯咖啡吧。"},
+              {"speaker": "Ava", "text": "Sounds good. I'll meet you in the hotel lobby.", "translationZh": "好。我们在酒店大堂见。"},
+              {"speaker": "Noah", "text": "Great. See you tomorrow at nine thirty.", "translationZh": "好。明天九点半见。"}
+            ],
+            "checks": [
+              {"id": "w1d4-l1", "skill": "detail", "promptZh": "博物馆几点开门？", "options": ["9:00", "9:30", "10:00"], "correctOptionIndex": 2, "rationaleZh": "Ava 说博物馆 at ten 开门。"},
+              {"id": "w1d4-l2", "skill": "detail", "promptZh": "两人几点见面？", "options": ["9:30", "10:00", "10:30"], "correctOptionIndex": 0, "rationaleZh": "Noah 提议 at nine thirty 见面。"},
+              {"id": "w1d4-l3", "skill": "detail", "promptZh": "两人在哪里见面？", "options": ["博物馆门口", "酒店大堂", "咖啡店"], "correctOptionIndex": 1, "rationaleZh": "Ava 说在 hotel lobby 见。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w1d4-speaking",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d4/speaking",
+          "domain": "speaking",
+          "difficultyLevel": 2,
+          "estimatedSeconds": 900,
+          "tags": ["scene:numbers-and-time", "week:1", "day:4", "task:fixed-response", "focus:schedule"],
+          "prerequisiteUnitIds": ["st4w-w1d3-speaking"],
+          "activity": {
+            "type": "fixed-response",
+            "instructionsZh": "用 at + 时间，避免漏掉具体时点。",
+            "prompts": [
+              {
+                "id": "w1d4-s1",
+                "cueZh": "询问早餐几点开始。",
+                "partnerLine": "Breakfast is downstairs.",
+                "modelAnswer": "What time does breakfast start?",
+                "acceptedAnswers": ["What time does breakfast start?", "What time is breakfast?", "When does breakfast start?"],
+                "requiredConcepts": ["breakfast", "time-question"]
+              },
+              {
+                "id": "w1d4-s2",
+                "cueZh": "提议明天上午九点见。",
+                "partnerLine": "When should we meet?",
+                "modelAnswer": "Let's meet tomorrow morning at nine.",
+                "acceptedAnswers": ["Let's meet tomorrow morning at nine.", "How about tomorrow at nine in the morning?", "Let's meet at nine tomorrow morning."],
+                "requiredConcepts": ["tomorrow", "9:00"]
+              },
+              {
+                "id": "w1d4-s3",
+                "cueZh": "确认对方说的是 6:15。",
+                "partnerLine": "The train leaves at six fifteen.",
+                "modelAnswer": "Let me confirm: it leaves at six fifteen?",
+                "acceptedAnswers": ["Let me confirm: it leaves at six fifteen?", "Did you say six fifteen?", "So the train leaves at 6:15, right?"],
+                "requiredConcepts": ["6:15", "confirmation"]
+              }
+            ]
+          }
+        }
+      ],
+      "sceneQuiz": [
+        {"id": "w1d4-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "“this evening”通常指什么时间？", "options": ["今天上午", "今天下午", "今天晚上"], "correctOptionIndex": 2, "rationaleZh": "evening 指晚上。"},
+        {"id": "w1d4-q2", "domain": "listening", "format": "single-choice", "audioText": "The tour starts at a quarter after two this afternoon.", "promptZh": "旅行团几点出发？", "options": ["2:15 p.m.", "2:30 p.m.", "1:45 p.m."], "correctOptionIndex": 0, "rationaleZh": "a quarter after two 是 2:15。"},
+        {"id": "w1d4-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "询问活动几点开始。", "modelAnswer": "What time does it start?", "acceptedAnswers": ["What time does it start?", "When does it start?", "What time is the event?"], "requiredConcepts": ["start-time-question"]}
+      ]
+    },
+    {
+      "lessonId": "w1d5-basic-needs",
+      "recommendedDay": 5,
+      "titleZh": "基本需求与没听懂时的补救",
+      "sceneIds": ["basic-needs"],
+      "observableObjectives": [
+        "礼貌请求水、洗手间或帮助。",
+        "请求对方慢一点或重复。"
+      ],
+      "learningUnits": [
+        {
+          "learningUnitId": "st4w-w1d5-vocabulary",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d5/vocabulary",
+          "domain": "vocabulary",
+          "difficultyLevel": 1.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:basic-needs", "week:1", "day:5", "focus:politeness", "focus:repair"],
+          "prerequisiteUnitIds": ["st4w-w1d4-vocabulary"],
+          "activity": {
+            "type": "vocabulary-set",
+            "instructionsZh": "把礼貌开场和具体需求连起来。",
+            "items": [
+              {"id": "w1d5-v1", "term": "excuse me", "partOfSpeech": "phrase", "meaningZh": "打扰一下；劳驾", "exampleEn": "Excuse me, where is the restroom?", "exampleZh": "打扰一下，洗手间在哪里？"},
+              {"id": "w1d5-v2", "term": "please", "partOfSpeech": "adverb", "meaningZh": "请", "exampleEn": "Some water, please.", "exampleZh": "请给我一些水。"},
+              {"id": "w1d5-v3", "term": "need", "partOfSpeech": "verb", "meaningZh": "需要", "exampleEn": "I need some help.", "exampleZh": "我需要帮助。"},
+              {"id": "w1d5-v4", "term": "restroom", "partOfSpeech": "noun", "meaningZh": "洗手间", "exampleEn": "The restroom is near the elevator.", "exampleZh": "洗手间在电梯附近。"},
+              {"id": "w1d5-v5", "term": "repeat", "partOfSpeech": "verb", "meaningZh": "重复", "exampleEn": "Could you repeat that?", "exampleZh": "你可以重复一下吗？"},
+              {"id": "w1d5-v6", "term": "slowly", "partOfSpeech": "adverb", "meaningZh": "慢慢地", "exampleEn": "Please speak more slowly.", "exampleZh": "请说慢一点。"},
+              {"id": "w1d5-v7", "term": "understand", "partOfSpeech": "verb", "meaningZh": "理解", "exampleEn": "Sorry, I don't understand.", "exampleZh": "抱歉，我没听懂。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w1d5-listening",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d5/listening",
+          "domain": "listening",
+          "difficultyLevel": 2,
+          "estimatedSeconds": 900,
+          "tags": ["scene:basic-needs", "week:1", "day:5", "skill:detail", "focus:directions"],
+          "prerequisiteUnitIds": ["st4w-w1d4-listening"],
+          "activity": {
+            "type": "listening-dialogue",
+            "titleZh": "在游客中心寻求帮助",
+            "tts": {"locale": "en-US", "defaultRate": 0.92},
+            "transcript": [
+              {"speaker": "Visitor", "text": "Excuse me, where is the restroom?", "translationZh": "打扰一下，洗手间在哪里？"},
+              {"speaker": "Staff", "text": "It's past the front desk, next to the elevator.", "translationZh": "经过前台，在电梯旁边。"},
+              {"speaker": "Visitor", "text": "Sorry, could you say that again, more slowly?", "translationZh": "抱歉，可以慢一点再说一次吗？"},
+              {"speaker": "Staff", "text": "Of course. Go past the front desk. It's next to the elevator.", "translationZh": "当然。经过前台。它在电梯旁边。"},
+              {"speaker": "Visitor", "text": "I understand now. Thank you.", "translationZh": "我现在明白了。谢谢。"},
+              {"speaker": "Staff", "text": "You're welcome.", "translationZh": "不客气。"}
+            ],
+            "checks": [
+              {"id": "w1d5-l1", "skill": "gist", "promptZh": "访客需要什么？", "options": ["寻找洗手间", "购买门票", "给手机充电"], "correctOptionIndex": 0, "rationaleZh": "访客开头询问 restroom 在哪里。"},
+              {"id": "w1d5-l2", "skill": "detail", "promptZh": "洗手间靠近什么？", "options": ["电梯", "入口", "咖啡店"], "correctOptionIndex": 0, "rationaleZh": "工作人员两次说 next to the elevator。"},
+              {"id": "w1d5-l3", "skill": "inference", "promptZh": "工作人员为什么重复路线？", "options": ["访客没听清", "路线改变了", "工作人员说错了"], "correctOptionIndex": 0, "rationaleZh": "访客明确请求“say that again, more slowly”。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w1d5-speaking",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d5/speaking",
+          "domain": "speaking",
+          "difficultyLevel": 2,
+          "estimatedSeconds": 900,
+          "tags": ["scene:basic-needs", "week:1", "day:5", "task:fixed-response", "focus:repair"],
+          "prerequisiteUnitIds": ["st4w-w1d4-speaking"],
+          "activity": {
+            "type": "fixed-response",
+            "instructionsZh": "优先传达意图，不要为了复杂语法拖延。",
+            "prompts": [
+              {
+                "id": "w1d5-s1",
+                "cueZh": "礼貌询问洗手间在哪里。",
+                "partnerLine": "Can I help you?",
+                "modelAnswer": "Excuse me, where is the restroom?",
+                "acceptedAnswers": ["Excuse me, where is the restroom?", "Could you tell me where the restroom is?", "Where's the restroom, please?"],
+                "requiredConcepts": ["restroom", "location-question"]
+              },
+              {
+                "id": "w1d5-s2",
+                "cueZh": "请求一杯水。",
+                "partnerLine": "What do you need?",
+                "modelAnswer": "Could I have some water, please?",
+                "acceptedAnswers": ["Could I have some water, please?", "Can I get some water, please?", "Some water, please."],
+                "requiredConcepts": ["water", "polite-request"]
+              },
+              {
+                "id": "w1d5-s3",
+                "cueZh": "你没听懂，请对方说慢一点。",
+                "partnerLine": "Take the escalator past the information desk.",
+                "modelAnswer": "Sorry, I don't understand. Could you speak more slowly?",
+                "acceptedAnswers": ["Sorry, I don't understand. Could you speak more slowly?", "Could you say that again, more slowly?", "Sorry, could you speak more slowly?"],
+                "requiredConcepts": ["repair", "slowly"]
+              }
+            ]
+          }
+        }
+      ],
+      "sceneQuiz": [
+        {"id": "w1d5-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "向陌生人提问时，哪种开场最合适？", "options": ["Excuse me.", "Give me that.", "Hey, you."], "correctOptionIndex": 0, "rationaleZh": "Excuse me 是中性、常用的礼貌开场。"},
+        {"id": "w1d5-q2", "domain": "listening", "format": "single-choice", "audioText": "The restroom is across from the front desk.", "promptZh": "洗手间在哪里？", "options": ["前台里面", "前台对面", "前台后面"], "correctOptionIndex": 1, "rationaleZh": "across from 表示在……对面。"},
+        {"id": "w1d5-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "请对方再说一遍。", "modelAnswer": "Could you say that again, please?", "acceptedAnswers": ["Could you say that again, please?", "Could you repeat that, please?", "Sorry, can you say that again?"], "requiredConcepts": ["repeat-request"]}
+      ]
+    },
+    {
+      "lessonId": "w1d6-coffee-counter",
+      "recommendedDay": 6,
+      "titleZh": "咖啡店柜台点单",
+      "sceneIds": ["restaurant"],
+      "observableObjectives": [
+        "点一杯指定大小的饮料。",
+        "说明堂食或外带，并做一个简单减配。"
+      ],
+      "learningUnits": [
+        {
+          "learningUnitId": "st4w-w1d6-vocabulary",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d6/vocabulary",
+          "domain": "vocabulary",
+          "difficultyLevel": 2,
+          "estimatedSeconds": 900,
+          "tags": ["scene:restaurant", "week:1", "day:6", "focus:counter-order"],
+          "prerequisiteUnitIds": ["st4w-w1d5-vocabulary"],
+          "activity": {
+            "type": "vocabulary-set",
+            "instructionsZh": "把大小、商品和服务方式组合成点单。",
+            "items": [
+              {"id": "w1d6-v1", "term": "order", "partOfSpeech": "verb", "meaningZh": "点单", "exampleEn": "I'd like to order a coffee.", "exampleZh": "我想点一杯咖啡。"},
+              {"id": "w1d6-v2", "term": "small", "partOfSpeech": "adjective", "meaningZh": "小杯；小份", "exampleEn": "I'd like a small tea.", "exampleZh": "我想要一小杯茶。"},
+              {"id": "w1d6-v3", "term": "medium", "partOfSpeech": "adjective", "meaningZh": "中杯；中份", "exampleEn": "A medium coffee, please.", "exampleZh": "请给我一杯中杯咖啡。"},
+              {"id": "w1d6-v4", "term": "large", "partOfSpeech": "adjective", "meaningZh": "大杯；大份", "exampleEn": "The large is four dollars.", "exampleZh": "大杯四美元。"},
+              {"id": "w1d6-v5", "term": "dine in", "partOfSpeech": "phrase", "meaningZh": "堂食", "exampleEn": "We decided to dine in.", "exampleZh": "我们决定在店里吃。"},
+              {"id": "w1d6-v6", "term": "takeout", "partOfSpeech": "noun", "meaningZh": "外带", "exampleEn": "This order is for takeout.", "exampleZh": "这个订单是外带。"},
+              {"id": "w1d6-v7", "term": "without", "partOfSpeech": "preposition", "meaningZh": "不加；不带", "exampleEn": "A sandwich without cheese, please.", "exampleZh": "请给我一个不加奶酪的三明治。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w1d6-listening",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d6/listening",
+          "domain": "listening",
+          "difficultyLevel": 2,
+          "estimatedSeconds": 900,
+          "tags": ["scene:restaurant", "week:1", "day:6", "skill:detail", "focus:counter-order"],
+          "prerequisiteUnitIds": ["st4w-w1d5-listening"],
+          "activity": {
+            "type": "listening-dialogue",
+            "titleZh": "咖啡和早餐三明治",
+            "tts": {"locale": "en-US", "defaultRate": 0.94},
+            "transcript": [
+              {"speaker": "Barista", "text": "Good morning. What can I get for you?", "translationZh": "早上好。您想要什么？"},
+              {"speaker": "Customer", "text": "I'd like a medium coffee and a breakfast sandwich, please.", "translationZh": "我想要一杯中杯咖啡和一个早餐三明治。"},
+              {"speaker": "Barista", "text": "Would you like milk in the coffee?", "translationZh": "咖啡里要加牛奶吗？"},
+              {"speaker": "Customer", "text": "Yes, please. And could I get the sandwich without cheese?", "translationZh": "好的。三明治可以不加奶酪吗？"},
+              {"speaker": "Barista", "text": "Sure. Is that for here or to go?", "translationZh": "可以。是在这里吃还是带走？"},
+              {"speaker": "Customer", "text": "To go, please.", "translationZh": "带走，谢谢。"},
+              {"speaker": "Barista", "text": "Your total is eight dollars and twenty-five cents.", "translationZh": "总共八美元二十五美分。"}
+            ],
+            "checks": [
+              {"id": "w1d6-l1", "skill": "detail", "promptZh": "顾客要多大的咖啡？", "options": ["小杯", "中杯", "大杯"], "correctOptionIndex": 1, "rationaleZh": "顾客说 a medium coffee。"},
+              {"id": "w1d6-l2", "skill": "detail", "promptZh": "三明治不要加什么？", "options": ["鸡蛋", "奶酪", "面包"], "correctOptionIndex": 1, "rationaleZh": "顾客说 without cheese。"},
+              {"id": "w1d6-l3", "skill": "detail", "promptZh": "顾客选择堂食还是外带？", "options": ["堂食", "外带", "没有说明"], "correctOptionIndex": 1, "rationaleZh": "顾客回答“To go, please.”"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w1d6-speaking",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d6/speaking",
+          "domain": "speaking",
+          "difficultyLevel": 2,
+          "estimatedSeconds": 900,
+          "tags": ["scene:restaurant", "week:1", "day:6", "task:fixed-response", "focus:counter-order"],
+          "prerequisiteUnitIds": ["st4w-w1d5-speaking"],
+          "activity": {
+            "type": "fixed-response",
+            "instructionsZh": "用 I'd like 或 Can I get 完成固定点单。",
+            "prompts": [
+              {
+                "id": "w1d6-s1",
+                "cueZh": "点一杯小杯咖啡。",
+                "partnerLine": "What can I get for you?",
+                "modelAnswer": "I'd like a small coffee, please.",
+                "acceptedAnswers": ["I'd like a small coffee, please.", "Can I get a small coffee, please?", "A small coffee, please."],
+                "requiredConcepts": ["small", "coffee"]
+              },
+              {
+                "id": "w1d6-s2",
+                "cueZh": "说明你要外带。",
+                "partnerLine": "Is that for here or to go?",
+                "modelAnswer": "To go, please.",
+                "acceptedAnswers": ["To go, please.", "It's to go.", "Takeout, please."],
+                "requiredConcepts": ["takeout"]
+              },
+              {
+                "id": "w1d6-s3",
+                "cueZh": "请求三明治不加洋葱。",
+                "partnerLine": "Anything else?",
+                "modelAnswer": "Could I get the sandwich without onions?",
+                "acceptedAnswers": ["Could I get the sandwich without onions?", "No onions on the sandwich, please.", "I'd like the sandwich without onions."],
+                "requiredConcepts": ["sandwich", "without-onions"]
+              }
+            ]
+          }
+        }
+      ],
+      "sceneQuiz": [
+        {"id": "w1d6-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "美式柜台对话中“to go”通常表示什么？", "options": ["在店里吃", "外带", "稍后再来"], "correctOptionIndex": 1, "rationaleZh": "to go 是常见美式外带表达。"},
+        {"id": "w1d6-q2", "domain": "listening", "format": "single-choice", "audioText": "A large iced tea, no sugar, for here.", "promptZh": "这份订单是什么？", "options": ["大杯无糖冰茶，堂食", "小杯甜冰茶，外带", "大杯热茶，外带"], "correctOptionIndex": 0, "rationaleZh": "large、no sugar、for here 分别对应大杯、无糖、堂食。"},
+        {"id": "w1d6-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "点一杯中杯茶，堂食。", "modelAnswer": "I'd like a medium tea for here, please.", "acceptedAnswers": ["I'd like a medium tea for here, please.", "Can I get a medium tea for here?", "A medium tea, for here, please."], "requiredConcepts": ["medium", "tea", "dine-in"]}
+      ]
+    },
+    {
+      "lessonId": "w1d7-week-one-checkpoint",
+      "recommendedDay": 7,
+      "titleZh": "第一周综合检查：见面并约咖啡",
+      "sceneIds": ["introductions", "numbers-and-time", "basic-needs", "restaurant", "integrated-travel"],
+      "observableObjectives": [
+        "完成从自我介绍到约定时间的连续交流。",
+        "在咖啡店下单，并在没听清价格时主动确认。"
+      ],
+      "learningUnits": [
+        {
+          "learningUnitId": "st4w-w1d7-vocabulary",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d7/vocabulary",
+          "domain": "vocabulary",
+          "difficultyLevel": 2,
+          "estimatedSeconds": 900,
+          "tags": ["scene:integrated-travel", "week:1", "day:7", "focus:review", "checkpoint:week-1"],
+          "prerequisiteUnitIds": ["st4w-w1d6-vocabulary"],
+          "activity": {
+            "type": "vocabulary-review",
+            "instructionsZh": "不引入大批新词，用已学词完成意图分类和句子重组。",
+            "reviewItemIds": ["w1d1-v4", "w1d2-v3", "w1d3-v5", "w1d4-v2", "w1d5-v6", "w1d6-v6"],
+            "items": [
+              {"id": "w1d7-v1", "term": "confirm", "partOfSpeech": "verb", "meaningZh": "确认", "exampleEn": "Let me confirm the time.", "exampleZh": "让我确认一下时间。"},
+              {"id": "w1d7-v2", "term": "meet", "partOfSpeech": "verb", "meaningZh": "见面", "exampleEn": "Let's meet at the café.", "exampleZh": "我们在咖啡店见吧。"},
+              {"id": "w1d7-v3", "term": "plan", "partOfSpeech": "noun", "meaningZh": "计划", "exampleEn": "What's the plan for tomorrow?", "exampleZh": "明天有什么计划？"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w1d7-listening",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d7/listening",
+          "domain": "listening",
+          "difficultyLevel": 2,
+          "estimatedSeconds": 900,
+          "tags": ["scene:integrated-travel", "week:1", "day:7", "skill:gist", "skill:detail", "checkpoint:week-1"],
+          "prerequisiteUnitIds": ["st4w-w1d6-listening"],
+          "activity": {
+            "type": "listening-dialogue",
+            "titleZh": "新朋友约第二天喝咖啡",
+            "tts": {"locale": "en-US", "defaultRate": 0.95},
+            "transcript": [
+              {"speaker": "Nina", "text": "Hi, I don't think we've met. I'm Nina.", "translationZh": "你好，我想我们还没见过。我是 Nina。"},
+              {"speaker": "Bo", "text": "Hi, Nina. I'm Bo. I'm visiting from Chengdu.", "translationZh": "你好，Nina。我是 Bo。我从成都来旅行。"},
+              {"speaker": "Nina", "text": "Nice to meet you. Are you free tomorrow morning?", "translationZh": "很高兴认识你。你明天上午有空吗？"},
+              {"speaker": "Bo", "text": "Yes. I have a tour at eleven, but I'm free before that.", "translationZh": "有。我十一点有旅行团，但之前有空。"},
+              {"speaker": "Nina", "text": "Let's meet at the lobby café at nine thirty.", "translationZh": "我们九点半在大堂咖啡店见吧。"},
+              {"speaker": "Bo", "text": "Sorry, did you say nine thirteen or nine thirty?", "translationZh": "抱歉，你说的是九点十三还是九点半？"},
+              {"speaker": "Nina", "text": "Nine thirty. That's nine-three-zero.", "translationZh": "九点半。数字是九三零。"},
+              {"speaker": "Bo", "text": "Got it. See you tomorrow.", "translationZh": "明白了。明天见。"}
+            ],
+            "checks": [
+              {"id": "w1d7-l1", "skill": "gist", "promptZh": "两人最终做了什么安排？", "options": ["今晚吃饭", "明早喝咖啡", "明天下午参观博物馆"], "correctOptionIndex": 1, "rationaleZh": "两人约在明早九点半于大堂咖啡店见。"},
+              {"id": "w1d7-l2", "skill": "detail", "promptZh": "Bo 几点有旅行团？", "options": ["9:30", "10:00", "11:00"], "correctOptionIndex": 2, "rationaleZh": "Bo 说“I have a tour at eleven.”"},
+              {"id": "w1d7-l3", "skill": "detail", "promptZh": "两人约几点见？", "options": ["9:13", "9:30", "11:30"], "correctOptionIndex": 1, "rationaleZh": "Nina 用 nine-three-zero 再次确认 9:30。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w1d7-speaking",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d7/speaking",
+          "domain": "speaking",
+          "difficultyLevel": 2,
+          "estimatedSeconds": 900,
+          "tags": ["scene:integrated-travel", "week:1", "day:7", "task:guided-roleplay", "checkpoint:week-1"],
+          "prerequisiteUnitIds": ["st4w-w1d6-speaking"],
+          "activity": {
+            "type": "guided-roleplay",
+            "instructionsZh": "按顺序完成四个意图，不要求开放式扩写。",
+            "prompts": [
+              {
+                "id": "w1d7-s1",
+                "cueZh": "你叫 Mei，来自杭州。介绍自己。",
+                "partnerLine": "Hi, I'm Jordan. What's your name?",
+                "modelAnswer": "Hi, Jordan. I'm Mei. I'm from Hangzhou.",
+                "acceptedAnswers": ["Hi, Jordan. I'm Mei. I'm from Hangzhou.", "My name is Mei, and I'm from Hangzhou.", "I'm Mei. Nice to meet you. I'm from Hangzhou."],
+                "requiredConcepts": ["Mei", "Hangzhou"]
+              },
+              {
+                "id": "w1d7-s2",
+                "cueZh": "提议明天上午十点喝咖啡。",
+                "partnerLine": "Are you free tomorrow?",
+                "modelAnswer": "Yes. Let's get coffee tomorrow morning at ten.",
+                "acceptedAnswers": ["Yes. Let's get coffee tomorrow morning at ten.", "How about coffee at ten tomorrow morning?", "I'm free. Let's meet for coffee at ten."],
+                "requiredConcepts": ["coffee", "tomorrow", "10:00"]
+              },
+              {
+                "id": "w1d7-s3",
+                "cueZh": "点一杯中杯咖啡，外带。",
+                "partnerLine": "What can I get for you?",
+                "modelAnswer": "I'd like a medium coffee to go, please.",
+                "acceptedAnswers": ["I'd like a medium coffee to go, please.", "Can I get a medium coffee to go?", "A medium coffee, to go, please."],
+                "requiredConcepts": ["medium", "coffee", "takeout"]
+              },
+              {
+                "id": "w1d7-s4",
+                "cueZh": "你没听清总价，请对方重复。",
+                "partnerLine": "Your total is four seventy-five.",
+                "modelAnswer": "Sorry, could you repeat the total, please?",
+                "acceptedAnswers": ["Sorry, could you repeat the total, please?", "Could you say the price again, please?", "Sorry, how much is it?"],
+                "requiredConcepts": ["repeat-request", "price"]
+              }
+            ]
+          }
+        }
+      ],
+      "sceneQuiz": [
+        {"id": "w1d7-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "哪组表达按“问候—介绍—回应”排列正确？", "options": ["Hi. / I'm Mei. / Nice to meet you.", "Check. / Fifty. / Tomorrow.", "Restroom. / Large. / Email."], "correctOptionIndex": 0, "rationaleZh": "第一组能组成自然的初次见面流程。"},
+        {"id": "w1d7-q2", "domain": "listening", "format": "single-choice", "audioText": "Let's meet tomorrow at ten fifteen in the lobby. The café opens at ten.", "promptZh": "见面时间和地点是什么？", "options": ["明天 10:00，在咖啡店", "明天 10:15，在大堂", "今天 10:15，在大堂"], "correctOptionIndex": 1, "rationaleZh": "meet tomorrow at ten fifteen in the lobby。"},
+        {"id": "w1d7-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "完成三项信息：你叫 Yun，来自南京，正在西雅图旅行。", "modelAnswer": "Hi, I'm Yun. I'm from Nanjing, and I'm visiting Seattle.", "acceptedAnswers": ["Hi, I'm Yun. I'm from Nanjing, and I'm visiting Seattle.", "My name is Yun. I'm from Nanjing. I'm visiting Seattle.", "I'm Yun from Nanjing, and I'm here visiting Seattle."], "requiredConcepts": ["Yun", "Nanjing", "Seattle"]}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,281 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Listening Exercise Extension Bundle v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "documentType",
+    "extensionId",
+    "extensionVersion",
+    "baseCourseId",
+    "basePackageVersion",
+    "targetLocale",
+    "lessons"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "documentType": {"const": "listening-exercise-extension"},
+    "extensionId": {
+      "const": "survival-travel-american-listening-exercises"
+    },
+    "extensionVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "baseCourseId": {"const": "survival-travel-american-4w"},
+    "basePackageVersion": {"const": "1.0.0"},
+    "targetLocale": {"const": "en-US"},
+    "lessons": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/lesson"}
+    }
+  },
+  "$defs": {
+    "lesson": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lessonId",
+        "recommendedDay",
+        "listeningUnitId",
+        "baseContentRef",
+        "exercises"
+      ],
+      "properties": {
+        "lessonId": {
+          "type": "string",
+          "pattern": "^w[1-4]d([1-9]|1[0-9]|2[0-8])-[a-z0-9-]+$"
+        },
+        "recommendedDay": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 28
+        },
+        "listeningUnitId": {
+          "type": "string",
+          "pattern": "^st4w-w[1-4]d([1-9]|1[0-9]|2[0-8])-listening$"
+        },
+        "baseContentRef": {
+          "type": "string",
+          "pattern": "^lesson://survival-travel-american-4w/1\\.0\\.0/w[1-4]d([1-9]|1[0-9]|2[0-8])/listening$"
+        },
+        "exercises": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "oneOf": [
+              {"$ref": "#/$defs/wordDiscrimination"},
+              {"$ref": "#/$defs/shortSentenceChoice"},
+              {"$ref": "#/$defs/keywordDictation"}
+            ]
+          }
+        }
+      }
+    },
+    "option": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["optionId", "text"],
+      "properties": {
+        "optionId": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "text": {"type": "string", "minLength": 1}
+      }
+    },
+    "audioSource": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["sourceType", "segmentId", "locale", "ttsText"],
+          "properties": {
+            "sourceType": {"const": "tts-text"},
+            "segmentId": {
+              "type": "string",
+              "pattern": "^seg-st4w-w[1-4]d([1-9]|1[0-9]|2[0-8])-(wd|ss|kd)-[0-9]{2}$"
+            },
+            "locale": {"const": "en-US"},
+            "ttsText": {"type": "string", "minLength": 1}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "sourceType",
+            "segmentId",
+            "locale",
+            "baseContentRef",
+            "lineIndex",
+            "expectedText"
+          ],
+          "properties": {
+            "sourceType": {"const": "transcript-line"},
+            "segmentId": {
+              "type": "string",
+              "pattern": "^seg-st4w-w[1-4]d([1-9]|1[0-9]|2[0-8])-(wd|ss|kd)-[0-9]{2}$"
+            },
+            "locale": {"const": "en-US"},
+            "baseContentRef": {
+              "type": "string",
+              "pattern": "^lesson://survival-travel-american-4w/1\\.0\\.0/w[1-4]d([1-9]|1[0-9]|2[0-8])/listening$"
+            },
+            "lineIndex": {"type": "integer", "minimum": 0},
+            "expectedText": {"type": "string", "minLength": 1}
+          }
+        }
+      ]
+    },
+    "playbackPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowSegmentSelection", "allowRepeat", "allowedRates"],
+      "properties": {
+        "allowSegmentSelection": {"type": "boolean"},
+        "allowRepeat": {"type": "boolean"},
+        "allowedRates": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": [0.75, 1, 1.25]}
+        }
+      }
+    },
+    "normalizationHints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trim",
+        "caseFoldLocale",
+        "collapseWhitespace",
+        "normalizeApostrophes",
+        "stripTerminalPunctuation"
+      ],
+      "properties": {
+        "trim": {"const": true},
+        "caseFoldLocale": {"const": "en-US"},
+        "collapseWhitespace": {"const": true},
+        "normalizeApostrophes": {"const": true},
+        "stripTerminalPunctuation": {"const": true}
+      }
+    },
+    "wordDiscrimination": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exerciseId",
+        "type",
+        "audioSource",
+        "promptZh",
+        "options",
+        "correctOptionId",
+        "playbackPolicy",
+        "rationaleZh"
+      ],
+      "properties": {
+        "exerciseId": {
+          "type": "string",
+          "pattern": "^st4w-w[1-4]d([1-9]|1[0-9]|2[0-8])-wd-[0-9]{2}$"
+        },
+        "type": {"const": "word-discrimination"},
+        "audioSource": {"$ref": "#/$defs/audioSource"},
+        "promptZh": {"type": "string", "minLength": 1},
+        "options": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/option"}
+        },
+        "correctOptionId": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "playbackPolicy": {"$ref": "#/$defs/playbackPolicy"},
+        "rationaleZh": {"type": "string", "minLength": 1}
+      }
+    },
+    "shortSentenceChoice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exerciseId",
+        "type",
+        "audioSource",
+        "promptZh",
+        "options",
+        "correctOptionId",
+        "playbackPolicy",
+        "rationaleZh"
+      ],
+      "properties": {
+        "exerciseId": {
+          "type": "string",
+          "pattern": "^st4w-w[1-4]d([1-9]|1[0-9]|2[0-8])-ss-[0-9]{2}$"
+        },
+        "type": {"const": "short-sentence-choice"},
+        "audioSource": {"$ref": "#/$defs/audioSource"},
+        "promptZh": {"type": "string", "minLength": 1},
+        "options": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/option"}
+        },
+        "correctOptionId": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "playbackPolicy": {"$ref": "#/$defs/playbackPolicy"},
+        "rationaleZh": {"type": "string", "minLength": 1}
+      }
+    },
+    "keywordDictation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exerciseId",
+        "type",
+        "audioSource",
+        "promptZh",
+        "targetKeywords",
+        "standardAnswer",
+        "acceptedAnswers",
+        "normalizationHints",
+        "playbackPolicy",
+        "rationaleZh"
+      ],
+      "properties": {
+        "exerciseId": {
+          "type": "string",
+          "pattern": "^st4w-w[1-4]d([1-9]|1[0-9]|2[0-8])-kd-[0-9]{2}$"
+        },
+        "type": {"const": "keyword-dictation"},
+        "audioSource": {"$ref": "#/$defs/audioSource"},
+        "promptZh": {"type": "string", "minLength": 1},
+        "targetKeywords": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "standardAnswer": {"type": "string", "minLength": 1},
+        "acceptedAnswers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "normalizationHints": {"$ref": "#/$defs/normalizationHints"},
+        "playbackPolicy": {"$ref": "#/$defs/playbackPolicy"},
+        "rationaleZh": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

@@ -1,0 +1,753 @@
+{
+  "schemaVersion": 1,
+  "documentType": "lesson-week",
+  "packageVersion": "1.0.0",
+  "courseId": "survival-travel-american-4w",
+  "week": 3,
+  "lessons": [
+    {
+      "lessonId": "w3d15-shopping-choices",
+      "recommendedDay": 15,
+      "titleZh": "挑选商品、尺码与试穿",
+      "sceneIds": ["shopping-and-payment"],
+      "observableObjectives": [
+        "询问商品是否有指定颜色或尺码。",
+        "请求试穿并说明合身情况。"
+      ],
+      "learningUnits": [
+        {
+          "learningUnitId": "st4w-w3d15-vocabulary",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d15/vocabulary",
+          "domain": "vocabulary",
+          "difficultyLevel": 2,
+          "estimatedSeconds": 900,
+          "tags": ["scene:shopping-and-payment", "week:3", "day:15", "focus:size-and-fit"],
+          "prerequisiteUnitIds": ["st4w-w2d14-vocabulary"],
+          "activity": {
+            "type": "vocabulary-set",
+            "instructionsZh": "把商品、颜色、尺码和合身评价放进同一轮对话。",
+            "items": [
+              {"id": "w3d15-v1", "term": "size", "partOfSpeech": "noun", "meaningZh": "尺码；大小", "exampleEn": "What size do you need?", "exampleZh": "你需要什么尺码？"},
+              {"id": "w3d15-v2", "term": "color", "partOfSpeech": "noun", "meaningZh": "颜色", "exampleEn": "Do you have another color?", "exampleZh": "你们有其他颜色吗？"},
+              {"id": "w3d15-v3", "term": "try on", "partOfSpeech": "phrasal verb", "meaningZh": "试穿", "exampleEn": "Can I try this on?", "exampleZh": "我可以试穿这件吗？"},
+              {"id": "w3d15-v4", "term": "fit", "partOfSpeech": "verb", "meaningZh": "合身", "exampleEn": "The jacket fits well.", "exampleZh": "这件夹克很合身。"},
+              {"id": "w3d15-v5", "term": "too big", "partOfSpeech": "phrase", "meaningZh": "太大", "exampleEn": "These shoes are too big.", "exampleZh": "这双鞋太大了。"},
+              {"id": "w3d15-v6", "term": "too small", "partOfSpeech": "phrase", "meaningZh": "太小", "exampleEn": "This shirt is too small.", "exampleZh": "这件衬衫太小了。"},
+              {"id": "w3d15-v7", "term": "fitting room", "partOfSpeech": "noun phrase", "meaningZh": "试衣间", "exampleEn": "The fitting room is in the back.", "exampleZh": "试衣间在后面。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w3d15-listening",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d15/listening",
+          "domain": "listening",
+          "difficultyLevel": 2.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:shopping-and-payment", "week:3", "day:15", "skill:detail", "focus:size-and-fit"],
+          "prerequisiteUnitIds": ["st4w-w2d14-listening"],
+          "activity": {
+            "type": "listening-dialogue",
+            "titleZh": "换一个尺码的夹克",
+            "tts": {"locale": "en-US", "defaultRate": 0.96},
+            "transcript": [
+              {"speaker": "Customer", "text": "Excuse me, do you have this jacket in a medium?", "translationZh": "打扰一下，这件夹克有中码吗？"},
+              {"speaker": "Clerk", "text": "We have a medium in blue or gray.", "translationZh": "中码有蓝色或灰色。"},
+              {"speaker": "Customer", "text": "Could I try the gray one on?", "translationZh": "我可以试穿灰色的吗？"},
+              {"speaker": "Clerk", "text": "Sure. The fitting rooms are over there.", "translationZh": "可以。试衣间在那边。"},
+              {"speaker": "Customer", "text": "This one is a little too big. Do you have a small?", "translationZh": "这件有点太大。有小码吗？"},
+              {"speaker": "Clerk", "text": "Yes, but only in blue.", "translationZh": "有，但只有蓝色。"},
+              {"speaker": "Customer", "text": "That's fine. I'll try it.", "translationZh": "没问题。我试试。"}
+            ],
+            "checks": [
+              {"id": "w3d15-l1", "skill": "detail", "promptZh": "中码有什么颜色？", "options": ["蓝色和灰色", "黑色和灰色", "只有蓝色"], "correctOptionIndex": 0, "rationaleZh": "店员说 a medium in blue or gray。"},
+              {"id": "w3d15-l2", "skill": "detail", "promptZh": "灰色中码有什么问题？", "options": ["太小", "有点太大", "颜色不对"], "correctOptionIndex": 1, "rationaleZh": "顾客说 a little too big。"},
+              {"id": "w3d15-l3", "skill": "detail", "promptZh": "小码只有什么颜色？", "options": ["蓝色", "灰色", "白色"], "correctOptionIndex": 0, "rationaleZh": "店员说 only in blue。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w3d15-speaking",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d15/speaking",
+          "domain": "speaking",
+          "difficultyLevel": 2.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:shopping-and-payment", "week:3", "day:15", "task:fixed-response", "focus:size-and-fit"],
+          "prerequisiteUnitIds": ["st4w-w2d14-speaking"],
+          "activity": {
+            "type": "fixed-response",
+            "instructionsZh": "明确说商品、尺码或颜色，不只说 this one。",
+            "prompts": [
+              {
+                "id": "w3d15-s1",
+                "cueZh": "询问这件衬衫有没有大码。",
+                "partnerLine": "Can I help you find a size?",
+                "modelAnswer": "Do you have this shirt in a large?",
+                "acceptedAnswers": ["Do you have this shirt in a large?", "Is this shirt available in a large?", "Could I get this shirt in a large?"],
+                "requiredConcepts": ["shirt", "large"]
+              },
+              {
+                "id": "w3d15-s2",
+                "cueZh": "请求试穿这双鞋。",
+                "partnerLine": "Would you like to see the shoes?",
+                "modelAnswer": "Yes. Can I try these on?",
+                "acceptedAnswers": ["Yes. Can I try these on?", "Could I try on these shoes?", "I'd like to try these shoes on."],
+                "requiredConcepts": ["try-on", "shoes"]
+              },
+              {
+                "id": "w3d15-s3",
+                "cueZh": "说明裤子太小。",
+                "partnerLine": "How do the pants fit?",
+                "modelAnswer": "They're too small.",
+                "acceptedAnswers": ["They're too small.", "The pants are too small.", "They don't fit. They're too small."],
+                "requiredConcepts": ["too-small"]
+              }
+            ]
+          }
+        }
+      ],
+      "sceneQuiz": [
+        {"id": "w3d15-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "“It fits well.”表示什么？", "options": ["很合身", "太大", "太贵"], "correctOptionIndex": 0, "rationaleZh": "fit well 指尺寸合适。"},
+        {"id": "w3d15-q2", "domain": "listening", "format": "single-choice", "audioText": "The black shoes are available in size eight, but the brown ones are not.", "promptZh": "八码有什么颜色？", "options": ["黑色", "棕色", "黑色和棕色"], "correctOptionIndex": 0, "rationaleZh": "black shoes are available in size eight。"},
+        {"id": "w3d15-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "询问有没有蓝色。", "modelAnswer": "Do you have this in blue?", "acceptedAnswers": ["Do you have this in blue?", "Is this available in blue?", "Could I see this in blue?"], "requiredConcepts": ["blue", "availability-question"]}
+      ]
+    },
+    {
+      "lessonId": "w3d16-payment-and-returns",
+      "recommendedDay": 16,
+      "titleZh": "折扣、付款与退换货",
+      "sceneIds": ["shopping-and-payment"],
+      "observableObjectives": [
+        "确认折扣、税后总价和付款方式。",
+        "凭收据提出退货、换货或退款。"
+      ],
+      "learningUnits": [
+        {
+          "learningUnitId": "st4w-w3d16-vocabulary",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d16/vocabulary",
+          "domain": "vocabulary",
+          "difficultyLevel": 2.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:shopping-and-payment", "week:3", "day:16", "focus:payment", "focus:returns"],
+          "prerequisiteUnitIds": ["st4w-w3d15-vocabulary"],
+          "activity": {
+            "type": "vocabulary-set",
+            "instructionsZh": "区分价格、税、总价和售后动作。",
+            "items": [
+              {"id": "w3d16-v1", "term": "sale", "partOfSpeech": "noun", "meaningZh": "促销；打折", "exampleEn": "This jacket is on sale.", "exampleZh": "这件夹克在打折。"},
+              {"id": "w3d16-v2", "term": "tax", "partOfSpeech": "noun", "meaningZh": "税", "exampleEn": "The price is before tax.", "exampleZh": "这个价格是税前价。"},
+              {"id": "w3d16-v3", "term": "total", "partOfSpeech": "noun", "meaningZh": "总计", "exampleEn": "Your total is thirty-two dollars.", "exampleZh": "总计三十二美元。"},
+              {"id": "w3d16-v4", "term": "receipt", "partOfSpeech": "noun", "meaningZh": "收据", "exampleEn": "Please keep your receipt.", "exampleZh": "请保留收据。"},
+              {"id": "w3d16-v5", "term": "return", "partOfSpeech": "verb", "meaningZh": "退货", "exampleEn": "I'd like to return this shirt.", "exampleZh": "我想退掉这件衬衫。"},
+              {"id": "w3d16-v6", "term": "exchange", "partOfSpeech": "verb", "meaningZh": "换货", "exampleEn": "Can I exchange it for a medium?", "exampleZh": "我能换成中码吗？"},
+              {"id": "w3d16-v7", "term": "refund", "partOfSpeech": "noun", "meaningZh": "退款", "exampleEn": "The refund will go to your card.", "exampleZh": "退款会退回你的卡。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w3d16-listening",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d16/listening",
+          "domain": "listening",
+          "difficultyLevel": 3,
+          "estimatedSeconds": 900,
+          "tags": ["scene:shopping-and-payment", "week:3", "day:16", "skill:detail", "focus:exchange"],
+          "prerequisiteUnitIds": ["st4w-w3d15-listening"],
+          "activity": {
+            "type": "listening-dialogue",
+            "titleZh": "用收据换一个尺码",
+            "tts": {"locale": "en-US", "defaultRate": 0.97},
+            "transcript": [
+              {"speaker": "Clerk", "text": "Hi. How can I help you?", "translationZh": "你好。有什么可以帮你？"},
+              {"speaker": "Customer", "text": "I'd like to exchange this sweater. It's too small.", "translationZh": "我想换这件毛衣。它太小了。"},
+              {"speaker": "Clerk", "text": "Do you have the receipt?", "translationZh": "你有收据吗？"},
+              {"speaker": "Customer", "text": "Yes, here it is. Could I get a large instead?", "translationZh": "有，给你。我可以改换成大码吗？"},
+              {"speaker": "Clerk", "text": "We have a large in green, but not in black.", "translationZh": "大码有绿色，但没有黑色。"},
+              {"speaker": "Customer", "text": "Green is fine.", "translationZh": "绿色可以。"},
+              {"speaker": "Clerk", "text": "Great. The price is the same, so there's no extra charge.", "translationZh": "好。价格一样，所以不用补钱。"}
+            ],
+            "checks": [
+              {"id": "w3d16-l1", "skill": "detail", "promptZh": "顾客为什么换货？", "options": ["毛衣太小", "毛衣有破损", "价格错了"], "correctOptionIndex": 0, "rationaleZh": "顾客明确说 It's too small。"},
+              {"id": "w3d16-l2", "skill": "detail", "promptZh": "大码有什么颜色？", "options": ["黑色", "绿色", "绿色和黑色"], "correctOptionIndex": 1, "rationaleZh": "店员说 large in green, but not in black。"},
+              {"id": "w3d16-l3", "skill": "inference", "promptZh": "顾客需要补差价吗？", "options": ["需要", "不需要", "没有说明"], "correctOptionIndex": 1, "rationaleZh": "店员说 price is the same 和 no extra charge。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w3d16-speaking",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d16/speaking",
+          "domain": "speaking",
+          "difficultyLevel": 3,
+          "estimatedSeconds": 900,
+          "tags": ["scene:shopping-and-payment", "week:3", "day:16", "task:fixed-response", "focus:returns"],
+          "prerequisiteUnitIds": ["st4w-w3d15-speaking"],
+          "activity": {
+            "type": "fixed-response",
+            "instructionsZh": "售后请求要说明动作、商品和原因。",
+            "prompts": [
+              {
+                "id": "w3d16-s1",
+                "cueZh": "询问这件衬衫是否打折。",
+                "partnerLine": "That shirt is forty dollars.",
+                "modelAnswer": "Is it on sale?",
+                "acceptedAnswers": ["Is it on sale?", "Is there a discount on it?", "Is the shirt on sale?"],
+                "requiredConcepts": ["sale-question"]
+              },
+              {
+                "id": "w3d16-s2",
+                "cueZh": "你想退掉这双鞋，因为太大。",
+                "partnerLine": "How can I help?",
+                "modelAnswer": "I'd like to return these shoes. They're too big.",
+                "acceptedAnswers": ["I'd like to return these shoes. They're too big.", "Can I return these shoes? They're too big.", "These shoes are too big, and I'd like to return them."],
+                "requiredConcepts": ["return", "shoes", "too-big"]
+              },
+              {
+                "id": "w3d16-s3",
+                "cueZh": "请求退款退回银行卡。",
+                "partnerLine": "Would you like store credit?",
+                "modelAnswer": "Could I get a refund to my card instead?",
+                "acceptedAnswers": ["Could I get a refund to my card instead?", "I'd like the refund on my card.", "Can you refund my card?"],
+                "requiredConcepts": ["refund", "card"]
+              }
+            ]
+          }
+        }
+      ],
+      "sceneQuiz": [
+        {"id": "w3d16-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "想换同款不同尺码，应该用哪个词？", "options": ["exchange", "refund", "tax"], "correctOptionIndex": 0, "rationaleZh": "exchange 指换货。"},
+        {"id": "w3d16-q2", "domain": "listening", "format": "single-choice", "audioText": "The bag is twenty-five dollars before tax. Your total is twenty-seven fifty.", "promptZh": "税后总价是多少？", "options": ["$25.00", "$27.15", "$27.50"], "correctOptionIndex": 2, "rationaleZh": "说话人明确说 total is twenty-seven fifty。"},
+        {"id": "w3d16-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "请求把小码换成中码。", "modelAnswer": "Could I exchange the small for a medium?", "acceptedAnswers": ["Could I exchange the small for a medium?", "Can I get a medium instead of the small?", "I'd like to exchange this for a medium."], "requiredConcepts": ["exchange", "medium"]}
+      ]
+    },
+    {
+      "lessonId": "w3d17-hotel-check-in",
+      "recommendedDay": 17,
+      "titleZh": "酒店办理入住",
+      "sceneIds": ["hotel"],
+      "observableObjectives": [
+        "用姓名和证件办理入住。",
+        "确认房号、早餐和退房时间。"
+      ],
+      "learningUnits": [
+        {
+          "learningUnitId": "st4w-w3d17-vocabulary",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d17/vocabulary",
+          "domain": "vocabulary",
+          "difficultyLevel": 2.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:hotel", "week:3", "day:17", "focus:check-in"],
+          "prerequisiteUnitIds": ["st4w-w3d16-vocabulary"],
+          "activity": {
+            "type": "vocabulary-set",
+            "instructionsZh": "把预订信息与酒店设施信息分开。",
+            "items": [
+              {"id": "w3d17-v1", "term": "check in", "partOfSpeech": "phrasal verb", "meaningZh": "办理入住", "exampleEn": "I'd like to check in.", "exampleZh": "我想办理入住。"},
+              {"id": "w3d17-v2", "term": "check out", "partOfSpeech": "phrasal verb", "meaningZh": "办理退房", "exampleEn": "We check out tomorrow.", "exampleZh": "我们明天退房。"},
+              {"id": "w3d17-v3", "term": "ID", "partOfSpeech": "noun", "meaningZh": "身份证件", "exampleEn": "May I see your ID?", "exampleZh": "可以看一下你的证件吗？"},
+              {"id": "w3d17-v4", "term": "key card", "partOfSpeech": "noun phrase", "meaningZh": "房卡", "exampleEn": "Here are your two key cards.", "exampleZh": "这是你的两张房卡。"},
+              {"id": "w3d17-v5", "term": "floor", "partOfSpeech": "noun", "meaningZh": "楼层", "exampleEn": "Your room is on the fifth floor.", "exampleZh": "你的房间在五楼。"},
+              {"id": "w3d17-v6", "term": "lobby", "partOfSpeech": "noun", "meaningZh": "大堂", "exampleEn": "Breakfast is near the lobby.", "exampleZh": "早餐区在大堂附近。"},
+              {"id": "w3d17-v7", "term": "elevator", "partOfSpeech": "noun", "meaningZh": "电梯", "exampleEn": "The elevator is around the corner.", "exampleZh": "电梯就在拐角处。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w3d17-listening",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d17/listening",
+          "domain": "listening",
+          "difficultyLevel": 3,
+          "estimatedSeconds": 900,
+          "tags": ["scene:hotel", "week:3", "day:17", "skill:detail", "focus:check-in"],
+          "prerequisiteUnitIds": ["st4w-w3d16-listening"],
+          "activity": {
+            "type": "listening-dialogue",
+            "titleZh": "入住 River Hotel",
+            "tts": {"locale": "en-US", "defaultRate": 0.97},
+            "transcript": [
+              {"speaker": "Clerk", "text": "Welcome to the River Hotel. How can I help you?", "translationZh": "欢迎来到 River Hotel。有什么可以帮您？"},
+              {"speaker": "Guest", "text": "I'd like to check in. I have a reservation under Li.", "translationZh": "我想办理入住。我在 Li 名下有预订。"},
+              {"speaker": "Clerk", "text": "I found it. May I see your ID and a credit card?", "translationZh": "找到了。可以看一下您的证件和信用卡吗？"},
+              {"speaker": "Guest", "text": "Sure. Is breakfast included?", "translationZh": "可以。早餐包含吗？"},
+              {"speaker": "Clerk", "text": "Yes. Breakfast is from six thirty to ten in the lobby café.", "translationZh": "包含。早餐在大堂咖啡厅，时间是六点半到十点。"},
+              {"speaker": "Guest", "text": "Great. What time is checkout?", "translationZh": "好。几点退房？"},
+              {"speaker": "Clerk", "text": "Checkout is at eleven. Your room is 518, on the fifth floor.", "translationZh": "十一点退房。您的房间是 518，在五楼。"}
+            ],
+            "checks": [
+              {"id": "w3d17-l1", "skill": "detail", "promptZh": "预订在谁的名下？", "options": ["Li", "River", "Chen"], "correctOptionIndex": 0, "rationaleZh": "客人说 reservation under Li。"},
+              {"id": "w3d17-l2", "skill": "detail", "promptZh": "早餐几点结束？", "options": ["6:30", "10:00", "11:00"], "correctOptionIndex": 1, "rationaleZh": "早餐时段 from six thirty to ten。"},
+              {"id": "w3d17-l3", "skill": "detail", "promptZh": "房间在哪里？", "options": ["518，五楼", "518，十一楼", "510，五楼"], "correctOptionIndex": 0, "rationaleZh": "room 518, on the fifth floor。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w3d17-speaking",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d17/speaking",
+          "domain": "speaking",
+          "difficultyLevel": 3,
+          "estimatedSeconds": 900,
+          "tags": ["scene:hotel", "week:3", "day:17", "task:fixed-response", "focus:check-in"],
+          "prerequisiteUnitIds": ["st4w-w3d16-speaking"],
+          "activity": {
+            "type": "fixed-response",
+            "instructionsZh": "预订姓名使用 under + 姓名。",
+            "prompts": [
+              {
+                "id": "w3d17-s1",
+                "cueZh": "你要入住，预订在 Zhang 名下。",
+                "partnerLine": "Welcome. How can I help?",
+                "modelAnswer": "I'd like to check in. I have a reservation under Zhang.",
+                "acceptedAnswers": ["I'd like to check in. I have a reservation under Zhang.", "I'm checking in. The reservation is under Zhang.", "I have a reservation under Zhang, and I'd like to check in."],
+                "requiredConcepts": ["check-in", "Zhang"]
+              },
+              {
+                "id": "w3d17-s2",
+                "cueZh": "确认早餐是否包含。",
+                "partnerLine": "Your room is ready.",
+                "modelAnswer": "Thank you. Is breakfast included?",
+                "acceptedAnswers": ["Thank you. Is breakfast included?", "Does the room include breakfast?", "Is breakfast included with the room?"],
+                "requiredConcepts": ["breakfast-inclusion-question"]
+              },
+              {
+                "id": "w3d17-s3",
+                "cueZh": "询问明天几点退房。",
+                "partnerLine": "Here are your key cards.",
+                "modelAnswer": "Thanks. What time is checkout tomorrow?",
+                "acceptedAnswers": ["Thanks. What time is checkout tomorrow?", "When do I need to check out tomorrow?", "What time do we check out?"],
+                "requiredConcepts": ["checkout-time-question"]
+              }
+            ]
+          }
+        }
+      ],
+      "sceneQuiz": [
+        {"id": "w3d17-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "房卡用哪个美式表达？", "options": ["room paper", "key card", "door ticket"], "correctOptionIndex": 1, "rationaleZh": "酒店电子房卡常称 key card。"},
+        {"id": "w3d17-q2", "domain": "listening", "format": "single-choice", "audioText": "Your room is 704 on the seventh floor. The elevators are behind the lobby.", "promptZh": "房间信息是什么？", "options": ["704，七楼", "740，四楼", "704，大堂层"], "correctOptionIndex": 0, "rationaleZh": "room 704 on the seventh floor。"},
+        {"id": "w3d17-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "说明你在 Kim 名下有预订。", "modelAnswer": "I have a reservation under Kim.", "acceptedAnswers": ["I have a reservation under Kim.", "The reservation is under Kim.", "It's booked under Kim."], "requiredConcepts": ["reservation", "Kim"]}
+      ]
+    },
+    {
+      "lessonId": "w3d18-hotel-requests",
+      "recommendedDay": 18,
+      "titleZh": "酒店用品、设施问题与延迟退房",
+      "sceneIds": ["hotel"],
+      "observableObjectives": [
+        "请求额外用品或延迟退房。",
+        "报告 Wi-Fi、空调或噪音问题。"
+      ],
+      "learningUnits": [
+        {
+          "learningUnitId": "st4w-w3d18-vocabulary",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d18/vocabulary",
+          "domain": "vocabulary",
+          "difficultyLevel": 3,
+          "estimatedSeconds": 900,
+          "tags": ["scene:hotel", "week:3", "day:18", "focus:room-problems"],
+          "prerequisiteUnitIds": ["st4w-w3d17-vocabulary"],
+          "activity": {
+            "type": "vocabulary-set",
+            "instructionsZh": "用 extra + 用品，或 isn't working + 设施报告问题。",
+            "items": [
+              {"id": "w3d18-v1", "term": "towel", "partOfSpeech": "noun", "meaningZh": "毛巾", "exampleEn": "Could I get two extra towels?", "exampleZh": "可以给我两条额外毛巾吗？"},
+              {"id": "w3d18-v2", "term": "blanket", "partOfSpeech": "noun", "meaningZh": "毯子", "exampleEn": "I need an extra blanket.", "exampleZh": "我需要一条额外的毯子。"},
+              {"id": "w3d18-v3", "term": "air conditioner", "partOfSpeech": "noun phrase", "meaningZh": "空调", "exampleEn": "The air conditioner isn't working.", "exampleZh": "空调坏了。"},
+              {"id": "w3d18-v4", "term": "Wi-Fi", "partOfSpeech": "noun", "meaningZh": "无线网络", "exampleEn": "I can't connect to the Wi-Fi.", "exampleZh": "我连不上无线网络。"},
+              {"id": "w3d18-v5", "term": "late checkout", "partOfSpeech": "noun phrase", "meaningZh": "延迟退房", "exampleEn": "Is late checkout available?", "exampleZh": "可以延迟退房吗？"},
+              {"id": "w3d18-v6", "term": "noisy", "partOfSpeech": "adjective", "meaningZh": "吵闹的", "exampleEn": "The room is very noisy.", "exampleZh": "房间很吵。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w3d18-listening",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d18/listening",
+          "domain": "listening",
+          "difficultyLevel": 3.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:hotel", "week:3", "day:18", "skill:detail", "skill:inference", "focus:room-problems"],
+          "prerequisiteUnitIds": ["st4w-w3d17-listening"],
+          "activity": {
+            "type": "listening-dialogue",
+            "titleZh": "空调不工作",
+            "tts": {"locale": "en-US", "defaultRate": 0.98},
+            "transcript": [
+              {"speaker": "Front Desk", "text": "Front desk. How can I help you?", "translationZh": "前台。有什么可以帮您？"},
+              {"speaker": "Guest", "text": "Hi, this is room 518. The air conditioner isn't working.", "translationZh": "你好，这里是 518 房。空调不工作。"},
+              {"speaker": "Front Desk", "text": "I'm sorry about that. Is the control panel on?", "translationZh": "很抱歉。控制面板开着吗？"},
+              {"speaker": "Guest", "text": "Yes, but the room is still very warm.", "translationZh": "开着，但房间还是很热。"},
+              {"speaker": "Front Desk", "text": "I'll send someone up in about fifteen minutes.", "translationZh": "我会让人约十五分钟后上去。"},
+              {"speaker": "Guest", "text": "Thank you. Could I also get an extra towel?", "translationZh": "谢谢。还可以给我一条额外毛巾吗？"},
+              {"speaker": "Front Desk", "text": "Of course. We'll bring one with us.", "translationZh": "当然。我们一起带过去。"}
+            ],
+            "checks": [
+              {"id": "w3d18-l1", "skill": "detail", "promptZh": "客人的主要问题是什么？", "options": ["Wi-Fi 断了", "空调不工作", "房间太吵"], "correctOptionIndex": 1, "rationaleZh": "客人明确说 air conditioner isn't working。"},
+              {"id": "w3d18-l2", "skill": "detail", "promptZh": "工作人员多久后上门？", "options": ["约 5 分钟", "约 15 分钟", "约 50 分钟"], "correctOptionIndex": 1, "rationaleZh": "前台说 in about fifteen minutes。"},
+              {"id": "w3d18-l3", "skill": "detail", "promptZh": "客人还需要什么？", "options": ["额外毛巾", "额外房卡", "延迟退房"], "correctOptionIndex": 0, "rationaleZh": "客人请求 an extra towel。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w3d18-speaking",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d18/speaking",
+          "domain": "speaking",
+          "difficultyLevel": 3.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:hotel", "week:3", "day:18", "task:fixed-response", "focus:room-problems"],
+          "prerequisiteUnitIds": ["st4w-w3d17-speaking"],
+          "activity": {
+            "type": "fixed-response",
+            "instructionsZh": "报告问题时先说房号，再说设施与状态。",
+            "prompts": [
+              {
+                "id": "w3d18-s1",
+                "cueZh": "你在 420 房，请求两条额外毛巾。",
+                "partnerLine": "Front desk. How can I help?",
+                "modelAnswer": "Hi, this is room 420. Could I get two extra towels?",
+                "acceptedAnswers": ["Hi, this is room 420. Could I get two extra towels?", "Room 420 needs two extra towels, please.", "Could you send two extra towels to room 420?"],
+                "requiredConcepts": ["room-420", "two-towels"]
+              },
+              {
+                "id": "w3d18-s2",
+                "cueZh": "报告房间 Wi-Fi 无法使用。",
+                "partnerLine": "What seems to be the problem?",
+                "modelAnswer": "The Wi-Fi isn't working in my room.",
+                "acceptedAnswers": ["The Wi-Fi isn't working in my room.", "I can't connect to the Wi-Fi.", "The room Wi-Fi isn't working."],
+                "requiredConcepts": ["wifi-problem"]
+              },
+              {
+                "id": "w3d18-s3",
+                "cueZh": "请求把退房时间延迟到下午一点。",
+                "partnerLine": "Checkout is at eleven.",
+                "modelAnswer": "Could I have a late checkout at one p.m.?",
+                "acceptedAnswers": ["Could I have a late checkout at one p.m.?", "Is it possible to check out at one?", "Could I check out at one instead?"],
+                "requiredConcepts": ["late-checkout", "1:00-pm"]
+              }
+            ]
+          }
+        }
+      ],
+      "sceneQuiz": [
+        {"id": "w3d18-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "设施坏了可使用哪个结构？", "options": ["The Wi-Fi isn't working.", "The Wi-Fi doesn't room.", "The Wi-Fi is checkout."], "correctOptionIndex": 0, "rationaleZh": "isn't working 是报告设施无法工作的常用表达。"},
+        {"id": "w3d18-q2", "domain": "listening", "format": "single-choice", "audioText": "The room next door is very noisy. Could you help?", "promptZh": "客人遇到什么问题？", "options": ["隔壁太吵", "门卡失效", "房间太冷"], "correctOptionIndex": 0, "rationaleZh": "room next door is very noisy。"},
+        {"id": "w3d18-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "请求一条额外毯子。", "modelAnswer": "Could I get an extra blanket, please?", "acceptedAnswers": ["Could I get an extra blanket, please?", "I need one more blanket, please.", "Could you send an extra blanket to my room?"], "requiredConcepts": ["extra-blanket"]}
+      ]
+    },
+    {
+      "lessonId": "w3d19-airport-check-in",
+      "recommendedDay": 19,
+      "titleZh": "机场值机、行李与座位",
+      "sceneIds": ["airport"],
+      "observableObjectives": [
+        "说明航班并提供证件。",
+        "说明行李数量并提出座位偏好。"
+      ],
+      "learningUnits": [
+        {
+          "learningUnitId": "st4w-w3d19-vocabulary",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d19/vocabulary",
+          "domain": "vocabulary",
+          "difficultyLevel": 3,
+          "estimatedSeconds": 900,
+          "tags": ["scene:airport", "week:3", "day:19", "focus:check-in"],
+          "prerequisiteUnitIds": ["st4w-w3d18-vocabulary"],
+          "activity": {
+            "type": "vocabulary-set",
+            "instructionsZh": "区分随身行李和托运行李。",
+            "items": [
+              {"id": "w3d19-v1", "term": "flight", "partOfSpeech": "noun", "meaningZh": "航班", "exampleEn": "My flight leaves at six.", "exampleZh": "我的航班六点出发。"},
+              {"id": "w3d19-v2", "term": "passport", "partOfSpeech": "noun", "meaningZh": "护照", "exampleEn": "Here's my passport.", "exampleZh": "这是我的护照。"},
+              {"id": "w3d19-v3", "term": "boarding pass", "partOfSpeech": "noun phrase", "meaningZh": "登机牌", "exampleEn": "Your boarding pass is on your phone.", "exampleZh": "你的登机牌在手机上。"},
+              {"id": "w3d19-v4", "term": "suitcase", "partOfSpeech": "noun", "meaningZh": "行李箱", "exampleEn": "This suitcase weighs twenty pounds.", "exampleZh": "这个行李箱重二十磅。"},
+              {"id": "w3d19-v5", "term": "carry-on", "partOfSpeech": "noun", "meaningZh": "随身行李", "exampleEn": "I have one carry-on.", "exampleZh": "我有一件随身行李。"},
+              {"id": "w3d19-v6", "term": "check a bag", "partOfSpeech": "verb phrase", "meaningZh": "托运行李", "exampleEn": "I'd like to check one bag.", "exampleZh": "我想托运一件行李。"},
+              {"id": "w3d19-v7", "term": "aisle seat", "partOfSpeech": "noun phrase", "meaningZh": "靠过道座位", "exampleEn": "I'd prefer an aisle seat.", "exampleZh": "我更想要靠过道座位。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w3d19-listening",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d19/listening",
+          "domain": "listening",
+          "difficultyLevel": 3.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:airport", "week:3", "day:19", "skill:detail", "focus:check-in"],
+          "prerequisiteUnitIds": ["st4w-w3d18-listening"],
+          "activity": {
+            "type": "listening-dialogue",
+            "titleZh": "办理 482 航班值机",
+            "tts": {"locale": "en-US", "defaultRate": 0.98},
+            "transcript": [
+              {"speaker": "Agent", "text": "Good morning. Where are you flying today?", "translationZh": "早上好。您今天飞往哪里？"},
+              {"speaker": "Traveler", "text": "I'm checking in for flight 482 to Seattle.", "translationZh": "我办理飞往西雅图的 482 航班值机。"},
+              {"speaker": "Agent", "text": "May I see your passport? Are you checking any bags?", "translationZh": "可以看一下您的护照吗？您有托运行李吗？"},
+              {"speaker": "Traveler", "text": "Here's my passport. I have one suitcase to check and one carry-on.", "translationZh": "这是我的护照。我有一个行李箱托运和一件随身行李。"},
+              {"speaker": "Agent", "text": "Would you prefer a window or an aisle seat?", "translationZh": "您想要靠窗还是靠过道座位？"},
+              {"speaker": "Traveler", "text": "An aisle seat, if possible.", "translationZh": "如果可以，我想要靠过道座位。"},
+              {"speaker": "Agent", "text": "I have one available. Here's your boarding pass. Gate C14.", "translationZh": "有一个空位。这是您的登机牌。登机口 C14。"}
+            ],
+            "checks": [
+              {"id": "w3d19-l1", "skill": "detail", "promptZh": "旅客的航班号是多少？", "options": ["284", "428", "482"], "correctOptionIndex": 2, "rationaleZh": "旅客说 flight 482。"},
+              {"id": "w3d19-l2", "skill": "detail", "promptZh": "旅客有多少托运行李？", "options": ["零件", "一件", "两件"], "correctOptionIndex": 1, "rationaleZh": "one suitcase to check。"},
+              {"id": "w3d19-l3", "skill": "detail", "promptZh": "旅客选择什么座位？", "options": ["靠窗", "靠过道", "中间"], "correctOptionIndex": 1, "rationaleZh": "旅客说 An aisle seat。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w3d19-speaking",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d19/speaking",
+          "domain": "speaking",
+          "difficultyLevel": 3.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:airport", "week:3", "day:19", "task:fixed-response", "focus:check-in"],
+          "prerequisiteUnitIds": ["st4w-w3d18-speaking"],
+          "activity": {
+            "type": "fixed-response",
+            "instructionsZh": "航班、行李和座位偏好分别用一句话说明。",
+            "prompts": [
+              {
+                "id": "w3d19-s1",
+                "cueZh": "你办理飞往芝加哥的 316 航班值机。",
+                "partnerLine": "Where are you flying today?",
+                "modelAnswer": "I'm checking in for flight 316 to Chicago.",
+                "acceptedAnswers": ["I'm checking in for flight 316 to Chicago.", "I'm on flight 316 to Chicago.", "Chicago, flight 316."],
+                "requiredConcepts": ["flight-316", "Chicago"]
+              },
+              {
+                "id": "w3d19-s2",
+                "cueZh": "你有一件随身行李和两件托运行李。",
+                "partnerLine": "How many bags do you have?",
+                "modelAnswer": "I have one carry-on and two bags to check.",
+                "acceptedAnswers": ["I have one carry-on and two bags to check.", "One carry-on and two checked bags.", "I need to check two bags, and I have one carry-on."],
+                "requiredConcepts": ["one-carry-on", "two-checked-bags"]
+              },
+              {
+                "id": "w3d19-s3",
+                "cueZh": "如果可以，你想要靠窗座位。",
+                "partnerLine": "Do you have a seat preference?",
+                "modelAnswer": "I'd like a window seat, if possible.",
+                "acceptedAnswers": ["I'd like a window seat, if possible.", "A window seat, please.", "I prefer a window seat."],
+                "requiredConcepts": ["window-seat"]
+              }
+            ]
+          }
+        }
+      ],
+      "sceneQuiz": [
+        {"id": "w3d19-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "不托运、带上飞机的行李叫什么？", "options": ["carry-on", "boarding pass", "check-in"], "correctOptionIndex": 0, "rationaleZh": "carry-on 指随身带上飞机的行李。"},
+        {"id": "w3d19-q2", "domain": "listening", "format": "single-choice", "audioText": "Your flight is on time. Boarding starts at gate A9 at five forty.", "promptZh": "哪项信息正确？", "options": ["航班延误，A5", "航班准时，A9，5:40 登机", "航班准时，9:05 登机"], "correctOptionIndex": 1, "rationaleZh": "on time、gate A9、at five forty。"},
+        {"id": "w3d19-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "递上护照。", "modelAnswer": "Here's my passport.", "acceptedAnswers": ["Here's my passport.", "Sure. Here is my passport.", "Of course. This is my passport."], "requiredConcepts": ["passport"]}
+      ]
+    },
+    {
+      "lessonId": "w3d20-security-and-gate",
+      "recommendedDay": 20,
+      "titleZh": "机场安检、登机口与延误",
+      "sceneIds": ["airport"],
+      "observableObjectives": [
+        "听懂常见安检指令。",
+        "确认登机口、登机时间和延误信息。"
+      ],
+      "learningUnits": [
+        {
+          "learningUnitId": "st4w-w3d20-vocabulary",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d20/vocabulary",
+          "domain": "vocabulary",
+          "difficultyLevel": 3,
+          "estimatedSeconds": 900,
+          "tags": ["scene:airport", "week:3", "day:20", "focus:security", "focus:gate"],
+          "prerequisiteUnitIds": ["st4w-w3d19-vocabulary"],
+          "activity": {
+            "type": "vocabulary-set",
+            "instructionsZh": "安检动作和航班状态分组记忆。",
+            "items": [
+              {"id": "w3d20-v1", "term": "security", "partOfSpeech": "noun", "meaningZh": "安检", "exampleEn": "Security takes about twenty minutes.", "exampleZh": "安检大约需要二十分钟。"},
+              {"id": "w3d20-v2", "term": "tray", "partOfSpeech": "noun", "meaningZh": "托盘", "exampleEn": "Put your laptop in a tray.", "exampleZh": "把笔记本电脑放进托盘。"},
+              {"id": "w3d20-v3", "term": "remove", "partOfSpeech": "verb", "meaningZh": "取下；拿出", "exampleEn": "Please remove your jacket.", "exampleZh": "请脱下夹克。"},
+              {"id": "w3d20-v4", "term": "gate", "partOfSpeech": "noun", "meaningZh": "登机口", "exampleEn": "The flight leaves from gate B12.", "exampleZh": "航班从 B12 登机口出发。"},
+              {"id": "w3d20-v5", "term": "boarding", "partOfSpeech": "noun", "meaningZh": "登机", "exampleEn": "Boarding starts at six ten.", "exampleZh": "六点十分开始登机。"},
+              {"id": "w3d20-v6", "term": "delayed", "partOfSpeech": "adjective", "meaningZh": "延误的", "exampleEn": "The flight is delayed by one hour.", "exampleZh": "航班延误一小时。"},
+              {"id": "w3d20-v7", "term": "on time", "partOfSpeech": "phrase", "meaningZh": "准时", "exampleEn": "The flight is still on time.", "exampleZh": "航班仍然准时。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w3d20-listening",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d20/listening",
+          "domain": "listening",
+          "difficultyLevel": 3.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:airport", "week:3", "day:20", "skill:detail", "skill:inference", "focus:gate-change"],
+          "prerequisiteUnitIds": ["st4w-w3d19-listening"],
+          "activity": {
+            "type": "listening-announcement",
+            "titleZh": "登机口变更广播",
+            "tts": {"locale": "en-US", "defaultRate": 0.98},
+            "transcript": [
+              {"speaker": "Announcement", "text": "Attention, passengers on Northstar flight 482 to Seattle.", "translationZh": "请注意，乘坐 Northstar 482 航班前往西雅图的旅客。"},
+              {"speaker": "Announcement", "text": "The departure gate has changed from C14 to C18.", "translationZh": "登机口已从 C14 改为 C18。"},
+              {"speaker": "Announcement", "text": "The flight is delayed by thirty minutes because of weather.", "translationZh": "由于天气原因，航班延误三十分钟。"},
+              {"speaker": "Announcement", "text": "Boarding will now begin at seven ten.", "translationZh": "现在将于七点十分开始登机。"},
+              {"speaker": "Announcement", "text": "Please be at gate C18 with your boarding pass and ID.", "translationZh": "请携带登机牌和证件到 C18 登机口。"}
+            ],
+            "checks": [
+              {"id": "w3d20-l1", "skill": "detail", "promptZh": "新登机口是哪里？", "options": ["C14", "C18", "B18"], "correctOptionIndex": 1, "rationaleZh": "广播说 changed from C14 to C18。"},
+              {"id": "w3d20-l2", "skill": "detail", "promptZh": "航班延误多久？", "options": ["13 分钟", "30 分钟", "1 小时"], "correctOptionIndex": 1, "rationaleZh": "广播说 delayed by thirty minutes。"},
+              {"id": "w3d20-l3", "skill": "detail", "promptZh": "新的登机时间是什么？", "options": ["6:40", "7:10", "7:30"], "correctOptionIndex": 1, "rationaleZh": "广播说 boarding will begin at seven ten。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w3d20-speaking",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d20/speaking",
+          "domain": "speaking",
+          "difficultyLevel": 3.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:airport", "week:3", "day:20", "task:fixed-response", "focus:gate-information"],
+          "prerequisiteUnitIds": ["st4w-w3d19-speaking"],
+          "activity": {
+            "type": "fixed-response",
+            "instructionsZh": "优先确认登机口和时间，不讨论航空公司规则细节。",
+            "prompts": [
+              {
+                "id": "w3d20-s1",
+                "cueZh": "询问登机口是否从 B7 改了。",
+                "partnerLine": "Your flight information was updated.",
+                "modelAnswer": "Has the gate changed from B7?",
+                "acceptedAnswers": ["Has the gate changed from B7?", "Is the gate still B7?", "Did they change gate B7?"],
+                "requiredConcepts": ["gate-B7", "change-question"]
+              },
+              {
+                "id": "w3d20-s2",
+                "cueZh": "询问几点开始登机。",
+                "partnerLine": "The flight leaves at eight.",
+                "modelAnswer": "What time does boarding start?",
+                "acceptedAnswers": ["What time does boarding start?", "When do we start boarding?", "What is the boarding time?"],
+                "requiredConcepts": ["boarding-time-question"]
+              },
+              {
+                "id": "w3d20-s3",
+                "cueZh": "确认航班延误四十分钟。",
+                "partnerLine": "The new departure time is nine twenty.",
+                "modelAnswer": "Let me confirm: the flight is delayed by forty minutes?",
+                "acceptedAnswers": ["Let me confirm: the flight is delayed by forty minutes?", "So the delay is forty minutes, right?", "Did you say a forty-minute delay?"],
+                "requiredConcepts": ["forty-minute-delay", "confirmation"]
+              }
+            ]
+          }
+        }
+      ],
+      "sceneQuiz": [
+        {"id": "w3d20-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "安检时“remove your jacket”要求做什么？", "options": ["穿上夹克", "脱下夹克", "把夹克托运"], "correctOptionIndex": 1, "rationaleZh": "remove 在这里表示脱下。"},
+        {"id": "w3d20-q2", "domain": "listening", "format": "single-choice", "audioText": "Flight 206 is on time, but boarding has moved from gate A3 to A6.", "promptZh": "哪项发生变化？", "options": ["出发时间", "登机口", "航班号"], "correctOptionIndex": 1, "rationaleZh": "航班准时，变化的是 gate A3 to A6。"},
+        {"id": "w3d20-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "询问航班是否准时。", "modelAnswer": "Is the flight on time?", "acceptedAnswers": ["Is the flight on time?", "Is our flight still on time?", "Has the flight been delayed?"], "requiredConcepts": ["flight-status-question"]}
+      ]
+    },
+    {
+      "lessonId": "w3d21-week-three-checkpoint",
+      "recommendedDay": 21,
+      "titleZh": "第三周综合检查：购物、酒店与出发",
+      "sceneIds": ["shopping-and-payment", "hotel", "airport", "integrated-travel"],
+      "observableObjectives": [
+        "处理尺码问题并完成换货。",
+        "从酒店退房后确认航班值机与登机信息。"
+      ],
+      "learningUnits": [
+        {
+          "learningUnitId": "st4w-w3d21-vocabulary",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d21/vocabulary",
+          "domain": "vocabulary",
+          "difficultyLevel": 3.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:integrated-travel", "week:3", "day:21", "focus:review", "checkpoint:week-3"],
+          "prerequisiteUnitIds": ["st4w-w3d20-vocabulary"],
+          "activity": {
+            "type": "vocabulary-review",
+            "instructionsZh": "按“购物售后—酒店—机场”三个阶段调用已学词。",
+            "reviewItemIds": ["w3d15-v4", "w3d16-v6", "w3d17-v1", "w3d18-v5", "w3d19-v5", "w3d20-v4"],
+            "items": [
+              {"id": "w3d21-v1", "term": "instead", "partOfSpeech": "adverb", "meaningZh": "改为；代替", "exampleEn": "Could I get a medium instead?", "exampleZh": "我可以改要中码吗？"},
+              {"id": "w3d21-v2", "term": "ready", "partOfSpeech": "adjective", "meaningZh": "准备好的", "exampleEn": "I'm ready to check out.", "exampleZh": "我准备退房了。"},
+              {"id": "w3d21-v3", "term": "change", "partOfSpeech": "noun", "meaningZh": "变更", "exampleEn": "There's a gate change.", "exampleZh": "登机口有变更。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w3d21-listening",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d21/listening",
+          "domain": "listening",
+          "difficultyLevel": 3.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:integrated-travel", "week:3", "day:21", "skill:sequence", "skill:detail", "checkpoint:week-3"],
+          "prerequisiteUnitIds": ["st4w-w3d20-listening"],
+          "activity": {
+            "type": "listening-narrative",
+            "titleZh": "离开酒店前的三个任务",
+            "tts": {"locale": "en-US", "defaultRate": 0.99},
+            "transcript": [
+              {"speaker": "Traveler", "text": "Before I leave, I need to exchange this shirt, check out, and get to the airport.", "translationZh": "离开前，我需要换这件衬衫、退房并去机场。"},
+              {"speaker": "Friend", "text": "The store opens at nine. Do you have the receipt?", "translationZh": "商店九点开门。你有收据吗？"},
+              {"speaker": "Traveler", "text": "Yes. I need a medium instead of a small.", "translationZh": "有。我需要把小码换成中码。"},
+              {"speaker": "Friend", "text": "Checkout is at eleven, but the front desk said one o'clock is available.", "translationZh": "退房时间是十一点，但前台说可以延迟到一点。"},
+              {"speaker": "Traveler", "text": "Good. My flight is at five thirty, and I have one bag to check.", "translationZh": "好。我的航班五点半，我有一件行李要托运。"},
+              {"speaker": "Friend", "text": "Check the app. Your gate changed from D4 to D9.", "translationZh": "看一下应用。你的登机口从 D4 改到 D9。"},
+              {"speaker": "Traveler", "text": "Thanks. I'll leave for the airport at two.", "translationZh": "谢谢。我两点出发去机场。"}
+            ],
+            "checks": [
+              {"id": "w3d21-l1", "skill": "detail", "promptZh": "旅客要把什么尺码换成什么尺码？", "options": ["中码换小码", "小码换中码", "大码换中码"], "correctOptionIndex": 1, "rationaleZh": "need a medium instead of a small。"},
+              {"id": "w3d21-l2", "skill": "detail", "promptZh": "延迟退房可以到几点？", "options": ["11:00", "12:00", "1:00"], "correctOptionIndex": 2, "rationaleZh": "front desk said one o'clock is available。"},
+              {"id": "w3d21-l3", "skill": "detail", "promptZh": "新登机口是什么？", "options": ["D4", "D5", "D9"], "correctOptionIndex": 2, "rationaleZh": "gate changed from D4 to D9。"}
+            ]
+          }
+        },
+        {
+          "learningUnitId": "st4w-w3d21-speaking",
+          "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d21/speaking",
+          "domain": "speaking",
+          "difficultyLevel": 3.5,
+          "estimatedSeconds": 900,
+          "tags": ["scene:integrated-travel", "week:3", "day:21", "task:guided-roleplay", "checkpoint:week-3"],
+          "prerequisiteUnitIds": ["st4w-w3d20-speaking"],
+          "activity": {
+            "type": "guided-roleplay",
+            "instructionsZh": "每轮只处理一个任务，但关键信息必须完整。",
+            "prompts": [
+              {
+                "id": "w3d21-s1",
+                "cueZh": "凭收据把黑色小码衬衫换成蓝色中码。",
+                "partnerLine": "How can I help you?",
+                "modelAnswer": "I'd like to exchange this black shirt for a blue medium. I have the receipt.",
+                "acceptedAnswers": ["I'd like to exchange this black shirt for a blue medium. I have the receipt.", "Can I exchange this small black shirt for a medium blue one? Here's the receipt.", "I need a blue medium instead. I have my receipt."],
+                "requiredConcepts": ["exchange", "black-small", "blue-medium", "receipt"]
+              },
+              {
+                "id": "w3d21-s2",
+                "cueZh": "你在 518 房，准备退房。",
+                "partnerLine": "Good morning. What can I do for you?",
+                "modelAnswer": "I'm in room 518, and I'm ready to check out.",
+                "acceptedAnswers": ["I'm in room 518, and I'm ready to check out.", "I'd like to check out of room 518.", "Room 518. I'm checking out."],
+                "requiredConcepts": ["room-518", "check-out"]
+              },
+              {
+                "id": "w3d21-s3",
+                "cueZh": "说明航班 620，有一件托运行李。",
+                "partnerLine": "Which flight are you on, and do you have bags?",
+                "modelAnswer": "I'm on flight 620, and I have one bag to check.",
+                "acceptedAnswers": ["I'm on flight 620, and I have one bag to check.", "Flight 620. I need to check one bag.", "I'm checking in for flight 620 with one checked bag."],
+                "requiredConcepts": ["flight-620", "one-checked-bag"]
+              },
+              {
+                "id": "w3d21-s4",
+                "cueZh": "确认新登机口是 D9，登机时间 4:50。",
+                "partnerLine": "Your flight information has changed.",
+                "modelAnswer": "Let me confirm: gate D9, and boarding starts at four fifty?",
+                "acceptedAnswers": ["Let me confirm: gate D9, and boarding starts at four fifty?", "So the new gate is D9 and boarding is at 4:50, right?", "D9 at four fifty, correct?"],
+                "requiredConcepts": ["gate-D9", "4:50", "confirmation"]
+              }
+            ]
+          }
+        }
+      ],
+      "sceneQuiz": [
+        {"id": "w3d21-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "哪组词分别对应购物售后、酒店和机场？", "options": ["exchange—checkout—gate", "gate—receipt—towel", "refund—flight—fitting room"], "correctOptionIndex": 0, "rationaleZh": "exchange 属购物售后，checkout 属酒店，gate 属机场。"},
+        {"id": "w3d21-q2", "domain": "listening", "format": "single-choice", "audioText": "Return the jacket before noon, check out at one, and be at gate B6 by four thirty.", "promptZh": "正确时间顺序是什么？", "options": ["中午前退货—1:00 退房—4:30 到登机口", "1:00 退货—4:30 退房—中午登机", "4:30 退货—中午退房—1:00 登机"], "correctOptionIndex": 0, "rationaleZh": "三个时间与动作逐一对应。"},
+        {"id": "w3d21-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "报告酒店空调不工作，并请求延迟到一点退房。", "modelAnswer": "The air conditioner isn't working. Could I also have a late checkout at one?", "acceptedAnswers": ["The air conditioner isn't working. Could I also have a late checkout at one?", "My room's air conditioner is broken, and I'd like to check out at one.", "The AC isn't working. Is a one o'clock checkout possible?"], "requiredConcepts": ["air-conditioner-problem", "late-checkout", "1:00"]}
+      ]
+    }
+  ]
+}

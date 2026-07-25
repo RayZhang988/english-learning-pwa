@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Survival Travel English Content Package Index v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "documentType",
+    "packageVersion",
+    "courseId",
+    "status",
+    "targetLocale",
+    "supportLocale",
+    "manifestFile",
+    "lessonFiles",
+    "schemaFiles",
+    "documentationFiles",
+    "mediaAssets",
+    "totals",
+    "learningCandidateProjection"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "documentType": {"const": "content-package-index"},
+    "packageVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "courseId": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "status": {
+      "enum": ["release-candidate", "released", "deprecated"]
+    },
+    "targetLocale": {"const": "en-US"},
+    "supportLocale": {"const": "zh-CN"},
+    "manifestFile": {
+      "type": "string",
+      "pattern": "^content/curriculum/.+\\.json$"
+    },
+    "lessonFiles": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^content/lessons/.+\\.json$"
+      }
+    },
+    "schemaFiles": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^content/curriculum/.+\\.json$"
+      }
+    },
+    "documentationFiles": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^content/curriculum/.+\\.md$"
+      }
+    },
+    "mediaAssets": {
+      "type": "array",
+      "items": {"type": "object"}
+    },
+    "totals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "weeks",
+        "lessons",
+        "learningUnits",
+        "vocabularyUnits",
+        "listeningUnits",
+        "speakingUnits",
+        "sceneQuizItems",
+        "candidateSeconds"
+      ],
+      "properties": {
+        "weeks": {"type": "integer", "minimum": 1},
+        "lessons": {"type": "integer", "minimum": 1},
+        "learningUnits": {"type": "integer", "minimum": 3},
+        "vocabularyUnits": {"type": "integer", "minimum": 1},
+        "listeningUnits": {"type": "integer", "minimum": 1},
+        "speakingUnits": {"type": "integer", "minimum": 1},
+        "sceneQuizItems": {"type": "integer", "minimum": 3},
+        "candidateSeconds": {"type": "integer", "minimum": 1}
+      }
+    },
+    "learningCandidateProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["staticFields", "runtimeField", "runtimeSource"],
+      "properties": {
+        "staticFields": {
+          "type": "array",
+          "minItems": 6,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "runtimeField": {"const": "prerequisitesMet"},
+        "runtimeSource": {"const": "learningUnit.prerequisiteUnitIds"}
+      }
+    }
+  }
+}

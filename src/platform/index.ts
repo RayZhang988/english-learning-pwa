@@ -13,3 +13,11 @@ export {
   getRecordingCapabilities,
   type RecordingCapabilities,
 } from './permissions/recording-capabilities.ts'
+export {
+  BrowserAssessmentSpeechRecognition,
+  browserAssessmentSpeechRecognition,
+  type AssessmentRecognitionFailureCode,
+  type AssessmentRecognitionHandle,
+  type AssessmentRecognitionOutcome,
+  type AssessmentSpeechRecognitionPort,
+} from './speech/assessment-speech-recognition.ts'

@@ -1,4 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react'
+import { ErrorState } from '../../ui/index.ts'
 import { toAppError, type AppError } from './AppError.ts'
 
 interface Props {
@@ -27,14 +28,12 @@ export class AppErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.error) {
       return (
-        <main className="platform-shell">
-          <section className="platform-message" role="alert">
-            <h1>应用暂时无法继续</h1>
-            <p>{this.state.error.message}</p>
-            <button type="button" onClick={this.reload}>
-              重新加载
-            </button>
-          </section>
+        <main className="full-page-feedback">
+          <ErrorState
+            title="应用暂时无法继续"
+            description={this.state.error.message}
+            onRetry={this.reload}
+          />
         </main>
       )
     }

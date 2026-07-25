@@ -25,6 +25,14 @@ export type {
   StoragePersistenceMode,
 } from './health/contracts.ts'
 export {
+  migratePortableValue,
+  readMigratedRecord,
+} from './migrations/migrate-record.ts'
+export type {
+  DataMigration,
+  DataMigrationPlan,
+} from './migrations/contracts.ts'
+export {
   localStorageService,
   DexieStorageService,
 } from './indexed-db/DexieStorageService.ts'

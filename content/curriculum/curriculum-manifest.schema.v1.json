@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Survival Travel English Curriculum Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "documentType",
+    "packageVersion",
+    "courseId",
+    "titleZh",
+    "targetLocale",
+    "supportLocale",
+    "recommendedDays",
+    "dailyCandidateSeconds",
+    "lessonFiles",
+    "totals",
+    "difficultyScale",
+    "sceneOrder",
+    "scenes"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "documentType": {"const": "curriculum-manifest"},
+    "packageVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "courseId": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "titleZh": {"type": "string", "minLength": 1},
+    "targetLocale": {"const": "en-US"},
+    "supportLocale": {"const": "zh-CN"},
+    "recommendedDays": {"type": "integer", "minimum": 14, "maximum": 28},
+    "dailyCandidateSeconds": {"type": "integer", "minimum": 300},
+    "lessonFiles": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^content/lessons/.+\\.json$"
+      }
+    },
+    "totals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["weeks", "lessons", "learningUnits", "sceneQuizItems"],
+      "properties": {
+        "weeks": {"type": "integer", "minimum": 1},
+        "lessons": {"type": "integer", "minimum": 1},
+        "learningUnits": {"type": "integer", "minimum": 3},
+        "sceneQuizItems": {"type": "integer", "minimum": 3}
+      }
+    },
+    "difficultyScale": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "minimum",
+        "maximum",
+        "cefrOrientationOnly",
+        "officialCertification"
+      ],
+      "properties": {
+        "source": {"const": "internal-0-12"},
+        "minimum": {"type": "number", "minimum": 0, "maximum": 12},
+        "maximum": {"type": "number", "minimum": 0, "maximum": 12},
+        "cefrOrientationOnly": {"type": "string", "minLength": 1},
+        "officialCertification": {"const": false}
+      }
+    },
+    "sceneOrder": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "^[a-z0-9-]+$"
+      }
+    },
+    "scenes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/scene"}
+    }
+  },
+  "$defs": {
+    "scene": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sceneId",
+        "sequence",
+        "recommendedDays",
+        "titleZh",
+        "difficultyRange",
+        "observableObjectives",
+        "coreVocabulary",
+        "sentencePatterns"
+      ],
+      "properties": {
+        "sceneId": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "sequence": {"type": "integer", "minimum": 1},
+        "recommendedDays": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "integer", "minimum": 1, "maximum": 28}
+        },
+        "titleZh": {"type": "string", "minLength": 1},
+        "difficultyRange": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {"type": "number", "minimum": 0, "maximum": 12}
+        },
+        "observableObjectives": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "coreVocabulary": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["term", "meaningZh"],
+            "properties": {
+              "term": {"type": "string", "minLength": 1},
+              "meaningZh": {"type": "string", "minLength": 1}
+            }
+          }
+        },
+        "sentencePatterns": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["pattern", "functionZh", "example"],
+            "properties": {
+              "pattern": {"type": "string", "minLength": 1},
+              "functionZh": {"type": "string", "minLength": 1},
+              "example": {"type": "string", "minLength": 1}
+            }
+          }
+        }
+      }
+    }
+  }
+}

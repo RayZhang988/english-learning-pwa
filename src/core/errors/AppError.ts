@@ -1,6 +1,7 @@
 export type AppErrorCode =
   | 'storage_unavailable'
   | 'storage_quota_exceeded'
+  | 'schema_incompatible'
   | 'network_unavailable'
   | 'permission_denied'
   | 'offline_asset_failed'

@@ -1,8 +1,10 @@
-export type PortablePrimitive = string | number | boolean | null
-export type PortableValue =
-  | PortablePrimitive
-  | readonly PortableValue[]
-  | { readonly [key: string]: PortableValue }
+import type {
+  PortableData,
+  PortablePrimitive,
+} from '../core/contracts/portable-data.ts'
+
+export type { PortablePrimitive }
+export type PortableValue = PortableData
 
 function isPlainObject(value: object) {
   const prototype = Object.getPrototypeOf(value)

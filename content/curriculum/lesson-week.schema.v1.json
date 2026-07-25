@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Survival Travel English Lesson Week v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "documentType",
+    "packageVersion",
+    "courseId",
+    "week",
+    "lessons"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "documentType": {"const": "lesson-week"},
+    "packageVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "courseId": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "week": {"type": "integer", "minimum": 1, "maximum": 4},
+    "lessons": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {"$ref": "#/$defs/lesson"}
+    }
+  },
+  "$defs": {
+    "lesson": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lessonId",
+        "recommendedDay",
+        "titleZh",
+        "sceneIds",
+        "observableObjectives",
+        "learningUnits",
+        "sceneQuiz"
+      ],
+      "properties": {
+        "lessonId": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "recommendedDay": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 28
+        },
+        "titleZh": {"type": "string", "minLength": 1},
+        "sceneIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^[a-z0-9-]+$"
+          }
+        },
+        "observableObjectives": {
+          "type": "array",
+          "minItems": 2,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "safetyNoteZh": {"type": "string", "minLength": 1},
+        "learningUnits": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {"$ref": "#/$defs/learningUnit"},
+          "allOf": [
+            {
+              "contains": {
+                "type": "object",
+                "properties": {"domain": {"const": "vocabulary"}},
+                "required": ["domain"]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            },
+            {
+              "contains": {
+                "type": "object",
+                "properties": {"domain": {"const": "listening"}},
+                "required": ["domain"]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            },
+            {
+              "contains": {
+                "type": "object",
+                "properties": {"domain": {"const": "speaking"}},
+                "required": ["domain"]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            }
+          ]
+        },
+        "sceneQuiz": {
+          "type": "array",
+          "minItems": 3,
+          "items": {"$ref": "#/$defs/quizItem"}
+        }
+      }
+    },
+    "learningUnit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "learningUnitId",
+        "contentRef",
+        "domain",
+        "difficultyLevel",
+        "estimatedSeconds",
+        "tags",
+        "prerequisiteUnitIds",
+        "activity"
+      ],
+      "properties": {
+        "learningUnitId": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "contentRef": {
+          "type": "string",
+          "pattern": "^lesson://[a-z0-9-]+/[0-9]+\\.[0-9]+\\.[0-9]+/[a-z0-9]+/(vocabulary|listening|speaking)$"
+        },
+        "domain": {
+          "enum": ["vocabulary", "listening", "speaking"]
+        },
+        "difficultyLevel": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 12
+        },
+        "estimatedSeconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "tags": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "prerequisiteUnitIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^[a-z0-9-]+$"
+          }
+        },
+        "activity": {
+          "type": "object",
+          "required": ["type"],
+          "properties": {
+            "type": {
+              "enum": [
+                "vocabulary-set",
+                "vocabulary-review",
+                "listening-dialogue",
+                "listening-narrative",
+                "listening-announcement",
+                "fixed-response",
+                "guided-roleplay"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "quizItem": {
+      "type": "object",
+      "required": ["id", "domain", "format", "promptZh"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "domain": {
+          "enum": ["vocabulary", "listening", "speaking"]
+        },
+        "format": {
+          "enum": ["single-choice", "fixed-response", "intent-matching"]
+        },
+        "promptZh": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

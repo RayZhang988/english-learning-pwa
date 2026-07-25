@@ -1,4 +1,5 @@
 import { isRouteErrorResponse, useRouteError } from 'react-router'
+import { ErrorState } from '../../ui/index.ts'
 
 export function RouteErrorPage() {
   const error = useRouteError()
@@ -7,11 +8,12 @@ export function RouteErrorPage() {
     : '页面加载失败。'
 
   return (
-    <main className="platform-shell">
-      <section className="platform-message" role="alert">
-        <h1>无法打开页面</h1>
-        <p>{message}</p>
-      </section>
+    <main className="full-page-feedback">
+      <ErrorState
+        title="无法打开页面"
+        description={message}
+        onRetry={() => window.location.reload()}
+      />
     </main>
   )
 }

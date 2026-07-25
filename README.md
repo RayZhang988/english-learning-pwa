@@ -1,6 +1,7 @@
 # 英语学习 PWA
 
-个人使用、本地优先的英语学习 PWA。当前仓库只建立技术底座，不包含训练业务规则或课程内容。
+个人使用、本地优先的英语学习 PWA。应用已接入真实课程、每日计划以及词汇、听力和
+口语训练模块；学习状态只保存在当前设备。
 
 ## 技术栈
 
@@ -24,6 +25,9 @@ pnpm preview
 
 推送到 `main` 后，`.github/workflows/deploy-pages.yml` 会执行完整检查、构建并部署 GitHub Pages。工作流中的第三方 Action 固定到具体提交，避免浮动标签在未审查的情况下改变构建行为。
 
+当前部署地址：
+<https://rayzhang988.github.io/english-learning-pwa/>
+
 ## 模块边界
 
 ```text
@@ -34,6 +38,7 @@ src/
   platform/            浏览器能力：网络、权限、录音能力探测
   pwa/                 Service Worker 生命周期和离线资源设施
   storage/             IndexedDB、存储健康、备份恢复
+  ui/                  02 所有的主题、样式和纯展示组件
 ```
 
 业务模块不得直接导入其他业务模块的内部文件。交付时实现 `FeatureModule`，只在 `src/app/module-registry.ts` 注册。
@@ -47,9 +52,15 @@ src/
 
 `indexed-db/`、`backup/` 等子目录是底座内部实现，不是业务模块契约。
 
+详细的路由所有权、预留模块槽位、事件信封、异步状态和数据版本规则见
+[`docs/architecture-contracts.md`](docs/architecture-contracts.md)。01 步骤 3–7
+的交付状态和接入检查清单见
+[`docs/01-step-3-7-handoff.md`](docs/01-step-3-7-handoff.md)。
+
 业务模块通过 `LocalStorageService.namespace()` 获得独立数据空间，自行维护其中数据的业务结构和 `schemaVersion`。平台层不替模块决定学习记录字段或算法。该接口只接受可移植 JSON 数据；`Date` 应保存为字符串，Blob、录音和课程媒体必须使用专门的二进制存储接口。
 
-离线内容必须通过 `OfflineAssetStore.install()` 显式下载，通过 `getAsset()` 读取。Service Worker 只保证应用壳离线可启动；它不把偶然访问过的课程资源冒充为“已下载”。
+当前发布的课程 JSON 会随生产 PWA 版本预缓存；各训练模块仍可通过
+`OfflineAssetStore.install()` 管理自己的显式内容包。
 
 `StorageHealthService` 提供容量估算、持久化状态查询及持久化申请。不得把 `persist()` 调用成功等同于必然获批，应以返回的最新快照为准。
 
@@ -62,8 +73,16 @@ src/
 
 备份不包含 `pwa.offline-packages`。该命名空间只描述当前设备的 Cache Storage，恢复它会制造“显示已下载、实际无文件”的假状态；课程资源应在恢复后重新下载。
 
-## 当前已知缺口
+## 当前状态与限制
 
-- PWA 图标已有 180、192、512 像素技术占位文件；正式视觉不属于本任务。
-- 尚未选择部署平台，因此没有绑定供应商的 CI 配置。
-- 业务模块列表为空；接入前必须先交付 `FeatureModule` 和对应存储命名空间。
+- 01 步骤 3–7 已交付；真实每日计划、生产事件协调器和 06/07/08 路由已集成。
+- GitHub Pages 和对应 CI 已启用。
+- 生产模块注册表包含 assessment、vocabulary、listening、speaking。
+- 180、192、512 像素 PWA 图标满足安装技术要求；最终图标视觉由 02 交付。
+- 干净设备会进入 assessment-required，并可完成正式水平测试；评估快照、能力档案、
+  首日计划和训练进度均使用版本化本地存储。
+- `pnpm check` 已覆盖正式评估、四周课程、首日计划、训练路由、刷新恢复和 PWA 构建。
+- 真实 iPhone 安装、离线、麦克风和恢复由 09 执行。
+
+真实运行时、路由、存储和 09 前置条件见
+[`docs/01-step-8-runtime-integration.md`](docs/01-step-8-runtime-integration.md)。

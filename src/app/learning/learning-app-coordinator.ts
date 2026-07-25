@@ -1,0 +1,334 @@
+import { toAppError, type AppError } from '../../core/index.ts'
+import {
+  ASSESSMENT_STORAGE_NAMESPACE,
+  AssessmentProfileRepository,
+} from '../../features/assessment/index.ts'
+import {
+  createLearningEngineState,
+  createPlanProgress,
+  generateDailyPlan,
+  getResumeDecision,
+  LEARNING_ENGINE_STORAGE_NAMESPACE,
+  LearningEngineRepository,
+  recordDailyActivity,
+  summarizePlanActivity,
+  type LearningEngineState,
+  type LearningTask,
+  type TrainingModuleId,
+} from '../../learning-engine/index.ts'
+import { localStorageService } from '../../storage/index.ts'
+import {
+  ActivePlanRepository,
+  createActiveLearningRuntime,
+  LEARNING_RUNTIME_STORAGE_NAMESPACE,
+  type ActiveLearningRuntime,
+} from './active-plan-repository.ts'
+import {
+  currentCourseCandidateSource,
+  type LearningCandidateSource,
+} from './course-candidate-source.ts'
+import { formatLocalDate } from './local-date.ts'
+import {
+  ProductionLearningEventSink,
+  type LearningRuntimeUpdate,
+} from './production-event-sink.ts'
+
+export type LearningAppState =
+  | { readonly status: 'loading' }
+  | {
+      readonly status: 'assessment-required'
+      readonly localDate: string
+    }
+  | {
+      readonly status: 'empty'
+      readonly localDate: string
+      readonly runtime: ActiveLearningRuntime
+      readonly engineState: LearningEngineState
+      readonly reason: 'no-eligible-content'
+    }
+  | {
+      readonly status: 'ready'
+      readonly localDate: string
+      readonly runtime: ActiveLearningRuntime
+      readonly engineState: LearningEngineState
+      readonly resumeTaskId: string | null
+    }
+  | {
+      readonly status: 'error'
+      readonly localDate: string
+      readonly error: AppError
+    }
+
+export interface LearningAppCoordinatorOptions {
+  readonly profiles: AssessmentProfileRepository
+  readonly activePlans: ActivePlanRepository
+  readonly engineStates: LearningEngineRepository
+  readonly candidates: LearningCandidateSource
+  readonly availableModuleIds: ReadonlySet<TrainingModuleId>
+  readonly now?: () => Date
+  readonly createId?: () => string
+}
+
+export type LearningAppStateListener = (
+  state: LearningAppState,
+) => void
+
+function defaultId(): string {
+  return globalThis.crypto.randomUUID()
+}
+
+function runtimeState(
+  runtime: ActiveLearningRuntime,
+  engineState: LearningEngineState,
+  localDate: string,
+): LearningAppState {
+  if (runtime.activePlan.plan.status === 'empty') {
+    return {
+      status: 'empty',
+      localDate,
+      runtime,
+      engineState,
+      reason: 'no-eligible-content',
+    }
+  }
+  const resume =
+    runtime.activePlan.plan.localDate === localDate
+      ? getResumeDecision(runtime.activePlan, localDate)
+      : null
+  return {
+    status: 'ready',
+    localDate,
+    runtime,
+    engineState,
+    resumeTaskId:
+      resume?.action === 'resume-plan' ? resume.nextTaskId : null,
+  }
+}
+
+export class LearningAppCoordinator {
+  readonly #profiles: AssessmentProfileRepository
+  readonly #activePlans: ActivePlanRepository
+  readonly #engineStates: LearningEngineRepository
+  readonly #candidates: LearningCandidateSource
+  readonly #availableModuleIds: ReadonlySet<TrainingModuleId>
+  readonly #now: () => Date
+  readonly #createId: () => string
+  readonly #listeners = new Set<LearningAppStateListener>()
+  readonly eventSink: ProductionLearningEventSink
+  #state: LearningAppState = { status: 'loading' }
+  #initializing: Promise<LearningAppState> | null = null
+
+  constructor(options: LearningAppCoordinatorOptions) {
+    this.#profiles = options.profiles
+    this.#activePlans = options.activePlans
+    this.#engineStates = options.engineStates
+    this.#candidates = options.candidates
+    this.#availableModuleIds = options.availableModuleIds
+    this.#now = options.now ?? (() => new Date())
+    this.#createId = options.createId ?? defaultId
+    this.eventSink = new ProductionLearningEventSink(
+      this.#activePlans,
+      this.#engineStates,
+    )
+    this.eventSink.subscribe((update) => {
+      this.#acceptRuntimeUpdate(update)
+    })
+  }
+
+  get state(): LearningAppState {
+    return this.#state
+  }
+
+  subscribe(listener: LearningAppStateListener): () => void {
+    this.#listeners.add(listener)
+    listener(this.#state)
+    return () => {
+      this.#listeners.delete(listener)
+    }
+  }
+
+  initialize(): Promise<LearningAppState> {
+    if (this.#initializing) {
+      return this.#initializing
+    }
+    this.#setState({ status: 'loading' })
+    const initialization = this.#initialize()
+    this.#initializing = initialization
+    const clear = () => {
+      if (this.#initializing === initialization) {
+        this.#initializing = null
+      }
+    }
+    void initialization.then(clear, clear)
+    return initialization
+  }
+
+  resolveTask(
+    taskId: string,
+    expectedModuleId?: TrainingModuleId,
+  ): LearningTask {
+    const state = this.#state
+    if (state.status !== 'ready') {
+      throw new TypeError('The daily learning plan is not ready.')
+    }
+    if (state.runtime.activePlan.plan.localDate !== state.localDate) {
+      throw new TypeError('The active plan is not for the current date.')
+    }
+    const execution = state.runtime.activePlan.tasks.find(
+      (entry) => entry.task.taskId === taskId,
+    )
+    if (!execution) {
+      throw new TypeError('taskId is not part of the active daily plan.')
+    }
+    if (
+      expectedModuleId !== undefined &&
+      execution.task.targetModuleId !== expectedModuleId
+    ) {
+      throw new TypeError(
+        'taskId does not belong to the requested training module.',
+      )
+    }
+    if (
+      execution.status === 'completed' ||
+      execution.status === 'skipped'
+    ) {
+      throw new TypeError('The requested task is already finished.')
+    }
+    return execution.task
+  }
+
+  routeForTask(taskId: string): string {
+    const task = this.resolveTask(taskId)
+    return `/${task.targetModuleId}?taskId=${encodeURIComponent(task.taskId)}`
+  }
+
+  async #initialize(): Promise<LearningAppState> {
+    const now = this.#now()
+    const localDate = formatLocalDate(now)
+    const generatedAt = now.toISOString()
+    try {
+      const profile = await this.#profiles.loadLatest()
+      if (!profile) {
+        return this.#setState({
+          status: 'assessment-required',
+          localDate,
+        })
+      }
+
+      let engineState = await this.#engineStates.load()
+      if (!engineState) {
+        engineState = createLearningEngineState(profile, generatedAt)
+        await this.#engineStates.save(engineState)
+      } else if (engineState.progress.profileId !== profile.profileId) {
+        throw new TypeError(
+          'The learning engine profile does not match the latest ability profile.',
+        )
+      }
+
+      const previousRuntime = await this.#activePlans.load()
+      if (
+        previousRuntime?.activePlan.plan.localDate === localDate
+      ) {
+        return this.#setState(
+          runtimeState(previousRuntime, engineState, localDate),
+        )
+      }
+
+      let carryOverTasks: readonly LearningTask[] = []
+      if (previousRuntime) {
+        const resume = getResumeDecision(
+          previousRuntime.activePlan,
+          localDate,
+        )
+        carryOverTasks = resume.carryOverTasks
+        const activity = summarizePlanActivity(
+          previousRuntime.activePlan,
+        )
+        engineState = {
+          ...engineState,
+          progress: recordDailyActivity(engineState.progress, {
+            ...activity,
+            recordedAt: generatedAt,
+          }),
+        }
+        await this.#engineStates.save(engineState)
+      }
+
+      const completedLearningUnitIds = new Set(
+        previousRuntime?.completedLearningUnitIds ?? [],
+      )
+      const candidates = await this.#candidates.load(
+        completedLearningUnitIds,
+        this.#availableModuleIds,
+      )
+      const planId = `daily:${localDate}:${this.#createId()}`
+      const plan = generateDailyPlan({
+        planId,
+        generatedAt,
+        localDate,
+        progress: engineState.progress,
+        reviewItems: engineState.reviewItems,
+        candidates,
+        carryOverTasks,
+      })
+      const progress = createPlanProgress(plan, generatedAt)
+      const runtime = createActiveLearningRuntime(
+        progress,
+        previousRuntime,
+      )
+      await this.#activePlans.save(runtime)
+      return this.#setState(
+        runtimeState(runtime, engineState, localDate),
+      )
+    } catch (error) {
+      return this.#setState({
+        status: 'error',
+        localDate,
+        error: toAppError(error),
+      })
+    }
+  }
+
+  #acceptRuntimeUpdate(update: LearningRuntimeUpdate): void {
+    const current = this.#state
+    if (
+      current.status !== 'ready' &&
+      current.status !== 'empty'
+    ) {
+      return
+    }
+    this.#setState(
+      runtimeState(update.runtime, update.engineState, current.localDate),
+    )
+  }
+
+  #setState(state: LearningAppState): LearningAppState {
+    this.#state = state
+    for (const listener of this.#listeners) {
+      listener(state)
+    }
+    return state
+  }
+}
+
+const assessmentProfiles = new AssessmentProfileRepository(
+  localStorageService.namespace(ASSESSMENT_STORAGE_NAMESPACE),
+)
+const activePlans = new ActivePlanRepository(
+  localStorageService.namespace(LEARNING_RUNTIME_STORAGE_NAMESPACE),
+)
+const engineStates = new LearningEngineRepository(
+  localStorageService.namespace(LEARNING_ENGINE_STORAGE_NAMESPACE),
+)
+
+export const learningAppCoordinator = new LearningAppCoordinator({
+  profiles: assessmentProfiles,
+  activePlans,
+  engineStates,
+  candidates: currentCourseCandidateSource,
+  availableModuleIds: new Set([
+    'vocabulary',
+    'listening',
+    'speaking',
+  ]),
+})

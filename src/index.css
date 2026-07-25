@@ -1,13 +1,8 @@
-:root {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  color: #111111;
-  background: #ffffff;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-}
+@import "./ui/styles/app.css";
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -20,6 +15,7 @@ body,
 
 body {
   min-width: 320px;
+  min-height: 100dvh;
 }
 
 button,
@@ -27,18 +23,4 @@ input,
 textarea,
 select {
   font: inherit;
-}
-
-.platform-shell {
-  min-height: 100dvh;
-  padding:
-    max(16px, env(safe-area-inset-top))
-    max(16px, env(safe-area-inset-right))
-    max(16px, env(safe-area-inset-bottom))
-    max(16px, env(safe-area-inset-left));
-}
-
-.platform-message {
-  max-width: 44rem;
-  margin: 0 auto;
 }

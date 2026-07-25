@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Listening Exercise Extension Index v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "documentType",
+    "extensionId",
+    "extensionVersion",
+    "status",
+    "baseCourseId",
+    "basePackageVersion",
+    "basePackageIndex",
+    "targetLocale",
+    "supportLocale",
+    "exerciseBundleFiles",
+    "schemaFiles",
+    "documentationFiles",
+    "compatibility",
+    "retainedExistingExercises",
+    "totals"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "documentType": {"const": "listening-exercise-extension-index"},
+    "extensionId": {
+      "const": "survival-travel-american-listening-exercises"
+    },
+    "extensionVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "status": {"enum": ["draft", "released", "retired"]},
+    "baseCourseId": {"const": "survival-travel-american-4w"},
+    "basePackageVersion": {"const": "1.0.0"},
+    "basePackageIndex": {
+      "const": "content/curriculum/package-index.v1.json"
+    },
+    "targetLocale": {"const": "en-US"},
+    "supportLocale": {"const": "zh-CN"},
+    "exerciseBundleFiles": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^content/lessons/.+\\.json$"
+      }
+    },
+    "schemaFiles": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^content/curriculum/.+\\.json$"
+      }
+    },
+    "documentationFiles": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^content/curriculum/.+\\.md$"
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "corePackageMutation", "existingContentRefsChanged"],
+      "properties": {
+        "mode": {"const": "additive-extension"},
+        "corePackageMutation": {"const": false},
+        "existingContentRefsChanged": {"const": false}
+      }
+    },
+    "retainedExistingExercises": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unitChecksPath", "sceneQuizPath"],
+      "properties": {
+        "unitChecksPath": {"const": "lesson.learningUnits[domain=listening].activity.checks"},
+        "sceneQuizPath": {"const": "lesson.sceneQuiz[domain=listening]"}
+      }
+    },
+    "totals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lessons",
+        "segments",
+        "exercises",
+        "wordDiscrimination",
+        "shortSentenceChoice",
+        "keywordDictation"
+      ],
+      "properties": {
+        "lessons": {"type": "integer", "minimum": 1},
+        "segments": {"type": "integer", "minimum": 1},
+        "exercises": {"type": "integer", "minimum": 1},
+        "wordDiscrimination": {"type": "integer", "minimum": 1},
+        "shortSentenceChoice": {"type": "integer", "minimum": 1},
+        "keywordDictation": {"type": "integer", "minimum": 1}
+      }
+    }
+  }
+}
