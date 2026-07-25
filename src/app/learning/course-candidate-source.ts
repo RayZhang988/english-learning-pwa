@@ -3,6 +3,7 @@ import type {
   LearningCandidate,
   TrainingModuleId,
 } from '../../learning-engine/index.ts'
+import { platformFetch } from '../../platform/index.ts'
 
 export const CURRENT_COURSE_PACKAGE_VERSION = '1.0.0'
 const PACKAGE_INDEX_PATH = 'content/curriculum/package-index.v1.json'
@@ -265,7 +266,7 @@ export class CurrentCourseCandidateSource
   readonly #assetUrls: Readonly<Record<string, string>>
 
   constructor(
-    fetcher: typeof fetch = fetch,
+    fetcher: typeof fetch = platformFetch,
     assetUrls: Readonly<Record<string, string>> =
       CURRENT_COURSE_ASSET_URLS,
   ) {

@@ -136,6 +136,28 @@ HTTPS 部署后入口：
 该证据明确标为不可评分，不会硬编码置信度。本地工程门禁已全部通过；真实 iPhone
 上的语音合成、麦克风权限、后台中断和主屏幕安装结论归 09。
 
+## S1 课程资源发布修复
+
+09 在首次评估完成后复现了课程索引读取失败。根因是 Vite 将较小的课程索引内联为
+`data:` URL，而生产课程加载器把所有条目都作为可部署 URL 交给 `fetch()`。内联索引
+既不是同源静态文件，也不会作为独立条目进入离线预缓存。
+
+01 的修复不修改 05 的内容或语义：
+
+- 构建的 `assetsInlineLimit` 固定为 `0`，全部课程 JSON 都必须生成真实文件；
+- package index 和听力扩展 index 输出到 `content/curriculum/`，课程 manifest、
+  四周内容和听力练习输出到 `assets/`；
+- 所有应用入口保持相对于 `./` 的路径，因此 GitHub Pages 子目录不会丢失前缀；
+- Workbox 递归预缓存全部 JSON，本次课程资源共 8 个，PWA 总预缓存为 20 项；
+- 构建结束后自动验证 8 个文件真实存在、可解析、被应用引用、被 Service Worker
+  预缓存，并拒绝任何 `data:application/json`；
+- 平台 fetch 包装器保持正确的浏览器 receiver，并注入课程候选与三个训练内容源。
+
+本地修复已经通过工程门禁、dist 产物守卫和真实 headless Chrome 恢复脚本；指定的
+`QA_BASE_URL=http://127.0.0.1:4173/ node tests/e2e/assessment-recovery-smoke.mjs`
+在最终全量构建后连续两次通过，并到达“进入今日计划”。修复尚未重新部署到正式
+HTTPS；必须发布新构建，再由 09 对正式站运行同一脚本。
+
 GitHub Pages 已通过 `main` 分支的部署工作流发布：
 
 - 生产入口：`https://rayzhang988.github.io/english-learning-pwa/#/`
@@ -152,9 +174,11 @@ GitHub Pages 已通过 `main` 分支的部署工作流发布：
 ```text
 pnpm check：通过
 pnpm lint / pnpm typecheck：通过
-pnpm test：68 个测试文件、222 项测试通过
+pnpm test：74 个测试文件、245 项测试通过
 pnpm build：通过
-PWA generateSW：预缓存 18 项 / 1031.37 KiB
+课程资源构建守卫：8 个同源 JSON / 0 个 data URL / 8 个均进入 Service Worker
+PWA generateSW：预缓存 20 项 / 1025.00 KiB
+assessment-recovery-smoke（本地 dist / headless Chrome）：连续两次通过
 首次使用生产集成：完整正式评估档案 → 05 四周课程 → 首日计划 → 真实模块路由 → 刷新恢复
 HTTPS 发布：GitHub Pages workflow success；首页 / Manifest / Service Worker 均返回 200
 ```

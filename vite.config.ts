@@ -5,9 +5,42 @@ import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import { appTheme } from './src/ui/theme.ts'
 
+export const courseAssetBuildPolicy = {
+  base: './',
+  assetsInlineLimit: 0,
+  indexAssetDirectory: 'content/curriculum',
+  indexAssetNames: [
+    'package-index.v1.json',
+    'listening-exercise-extension-index.v1.json',
+  ],
+  workboxGlobPatterns: [
+    '**/*.{js,css,html,ico,png,svg,woff2,json}',
+  ],
+} as const
+
 export default defineConfig({
   // A relative base keeps the generated bundle portable across static hosts.
-  base: './',
+  base: courseAssetBuildPolicy.base,
+  // Course loaders use fetch() and therefore need real same-origin resources.
+  // Inlining small JSON files as data: URLs breaks that production contract.
+  build: {
+    assetsInlineLimit: courseAssetBuildPolicy.assetsInlineLimit,
+    rolldownOptions: {
+      output: {
+        assetFileNames: (asset) => {
+          const assetName = asset.names[0] ?? ''
+          if (
+            courseAssetBuildPolicy.indexAssetNames.some(
+              (indexName) => indexName === assetName,
+            )
+          ) {
+            return `${courseAssetBuildPolicy.indexAssetDirectory}/[name]-[hash][extname]`
+          }
+          return 'assets/[name]-[hash][extname]'
+        },
+      },
+    },
+  },
   plugins: [
     react(),
     VitePWA({
@@ -57,7 +90,7 @@ export default defineConfig({
         clientsClaim: true,
         skipWaiting: false,
         navigateFallback: 'index.html',
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,json}'],
+        globPatterns: [...courseAssetBuildPolicy.workboxGlobPatterns],
       },
       devOptions: {
         enabled: true,

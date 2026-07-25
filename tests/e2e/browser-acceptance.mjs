@@ -76,6 +76,13 @@ try {
     if (url.endsWith('#/') && !text.includes('正在恢复')) {
       break
     }
+    if (buttonLabels.includes('进入今日计划')) {
+      await qa.page.clickByText('进入今日计划')
+      await qa.page.waitFor(
+        `location.hash === '#/' && !document.body.innerText.includes('正在恢复')`,
+      )
+      continue
+    }
     if (buttonLabels.includes('继续下一题')) {
       await qa.page.clickByText('继续下一题')
       await qa.page.waitFor(

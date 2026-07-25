@@ -5,6 +5,10 @@ export {
   type NetworkStatusService,
 } from './network/network-status.ts'
 export {
+  createPlatformFetch,
+  platformFetch,
+} from './network/platform-fetch.ts'
+export {
   browserMicrophonePermission,
   type MicrophonePermissionService,
   type MicrophonePermissionState,

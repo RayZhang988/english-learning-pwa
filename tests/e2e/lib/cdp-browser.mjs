@@ -144,25 +144,30 @@ export async function launchQaChrome(options = {}) {
   )
   const chromePath =
     options.chromePath ?? process.env.QA_CHROME_PATH ?? defaultChromePath
-  const child = spawn(
-    chromePath,
-    [
-      '--headless=new',
-      '--remote-debugging-port=0',
-      `--user-data-dir=${profileDirectory}`,
-      '--no-first-run',
-      '--no-default-browser-check',
-      '--disable-background-networking',
-      '--disable-component-update',
-      '--disable-default-apps',
-      '--disable-extensions',
-      '--disable-sync',
-      '--mute-audio',
-      '--autoplay-policy=no-user-gesture-required',
+  const chromeArguments = [
+    '--headless=new',
+    '--remote-debugging-port=0',
+    `--user-data-dir=${profileDirectory}`,
+    '--no-first-run',
+    '--no-default-browser-check',
+    '--disable-background-networking',
+    '--disable-component-update',
+    '--disable-default-apps',
+    '--disable-extensions',
+    '--disable-sync',
+    '--mute-audio',
+    '--autoplay-policy=no-user-gesture-required',
+  ]
+  if (options.fakeMedia !== false) {
+    chromeArguments.push(
       '--use-fake-device-for-media-stream',
       '--use-fake-ui-for-media-stream',
-      'about:blank',
-    ],
+    )
+  }
+  chromeArguments.push('about:blank')
+  const child = spawn(
+    chromePath,
+    chromeArguments,
     { stdio: ['ignore', 'ignore', 'pipe'] },
   )
   const { url: browserWebSocketUrl } = await waitForDevToolsUrl(child)
@@ -250,6 +255,29 @@ export class QaPage {
     await this.client.send('Emulation.setTouchEmulationEnabled', {
       enabled: true,
       maxTouchPoints: 5,
+    })
+  }
+
+  async setOffline(offline) {
+    await this.client.send('Network.emulateNetworkConditions', {
+      offline,
+      latency: 0,
+      downloadThroughput: offline ? 0 : -1,
+      uploadThroughput: offline ? 0 : -1,
+      connectionType: offline ? 'none' : 'wifi',
+    })
+  }
+
+  async pressKey(key, code = key) {
+    await this.client.send('Input.dispatchKeyEvent', {
+      type: 'keyDown',
+      key,
+      code,
+    })
+    await this.client.send('Input.dispatchKeyEvent', {
+      type: 'keyUp',
+      key,
+      code,
     })
   }
 
@@ -374,6 +402,34 @@ export class QaPage {
       bodyWidth: document.body.scrollWidth,
       focusedText: (document.activeElement?.innerText || document.activeElement?.getAttribute?.('aria-label') || '').trim(),
     })`)
+  }
+
+  async serviceWorkerSnapshot() {
+    return this.evaluate(`(async () => {
+      if (!('serviceWorker' in navigator)) {
+        return { supported: false }
+      }
+      const registration = await navigator.serviceWorker.ready
+      const cacheNames = await caches.keys()
+      const cachesWithEntries = []
+      for (const cacheName of cacheNames) {
+        const cache = await caches.open(cacheName)
+        const requests = await cache.keys()
+        cachesWithEntries.push({
+          cacheName,
+          urls: requests.map((request) => request.url),
+        })
+      }
+      return {
+        supported: true,
+        scope: registration.scope,
+        controller: navigator.serviceWorker.controller?.scriptURL ?? null,
+        active: registration.active?.scriptURL ?? null,
+        waiting: registration.waiting?.scriptURL ?? null,
+        installing: registration.installing?.scriptURL ?? null,
+        caches: cachesWithEntries,
+      }
+    })()`)
   }
 
   async dumpIndexedDb() {

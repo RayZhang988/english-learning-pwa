@@ -10,9 +10,10 @@
 - `01` 已完成评估快照、真实档案、首日计划、正式评估与 06/07/08 路由集成；68 个测试文件、222 项测试、完整类型检查、lint、生产构建和 PWA 均通过。
 - `01` 步骤 8 已完成：验证版本已推送至 `main` 并由 GitHub Pages 成功部署；首页、Manifest 和 Service Worker 均返回 HTTP 200。
 - 正式 HTTPS 地址：`https://rayzhang988.github.io/english-learning-pwa/`。
-- `09` 的无浏览器自动化验收已通过：72 个测试文件、243 项测试、类型检查、lint、生产构建、PWA 预缓存和发布冒烟均通过，当前未复现 S0–S3 产品缺陷。
-- 第一版最终验收仍为“待验证”，不得声称通过：完整浏览器交互尚未执行，真实 iPhone 安装、离线、麦克风、录音、系统语音、VoiceOver、后台恢复和缓存更新仍待验证，连续 14 天个人使用记录为空。
-- 当前下一步：按 `tests/qa/iphone-checklist.md` 在真实 iPhone 完成真机验收；通过后开始填写 `tests/qa/14-day-usage-log.md`。
+- `09` 的无浏览器自动化验收曾通过：72 个测试文件、243 项测试、类型检查、lint、生产构建、PWA 预缓存和发布冒烟均通过。
+- 随后的真实浏览器黑盒在正式 HTTPS 站复现 S1 阻断：评估档案保存后，首日计划初始化无法读取 `content/curriculum/package-index.v1.json`。仓库存在内容文件，但生产部署没有提供浏览器可读取的入口。
+- 当前退回 `01` 修复构建/资源集成并重新部署；修复前禁止开始 iPhone 真机和连续 14 天验收。
+- 修复并通过 `tests/e2e/assessment-recovery-smoke.mjs` 的正式站复验后，才按 `tests/qa/iphone-checklist.md` 开始真实 iPhone 验收，再填写 `tests/qa/14-day-usage-log.md`。
 - `09` 暂不进行“全新设备完整链路”结论；评估入口和发布完成后再做真机安装、离线、权限、恢复及 14 天验收。
 - 开放式 AI 对话属于第二阶段，第一版不得实现。
 

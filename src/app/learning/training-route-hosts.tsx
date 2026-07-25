@@ -1,24 +1,42 @@
 import { useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import {
+  CurrentListeningContentSource,
   ListeningTrainingRoute,
 } from '../../features/listening/index.ts'
 import {
+  CurrentSpeakingContentSource,
   SpeakingTrainingRoute,
 } from '../../features/speaking/index.ts'
 import {
+  CurrentVocabularyContentSource,
   VocabularyTrainingRoute,
 } from '../../features/vocabulary/index.ts'
 import type {
   LearningTask,
   TrainingModuleId,
 } from '../../learning-engine/index.ts'
+import { platformFetch } from '../../platform/index.ts'
+import { offlineAssetStore } from '../../pwa/index.ts'
 import {
   EmptyState,
   ErrorState,
   LoadingState,
 } from '../../ui/index.ts'
 import { useLearningApp } from './learning-app-context.ts'
+
+const vocabularyContentSource = new CurrentVocabularyContentSource(
+  offlineAssetStore,
+  platformFetch,
+)
+const listeningContentSource = new CurrentListeningContentSource(
+  offlineAssetStore,
+  platformFetch,
+)
+const speakingContentSource = new CurrentSpeakingContentSource(
+  offlineAssetStore,
+  platformFetch,
+)
 
 function TrainingRouteHost({
   moduleId,
@@ -105,12 +123,27 @@ function TrainingRouteHost({
   }
 
   if (moduleId === 'vocabulary') {
-    return <VocabularyTrainingRoute {...commonProps} />
+    return (
+      <VocabularyTrainingRoute
+        {...commonProps}
+        contentSource={vocabularyContentSource}
+      />
+    )
   }
   if (moduleId === 'listening') {
-    return <ListeningTrainingRoute {...commonProps} />
+    return (
+      <ListeningTrainingRoute
+        {...commonProps}
+        contentSource={listeningContentSource}
+      />
+    )
   }
-  return <SpeakingTrainingRoute {...commonProps} />
+  return (
+    <SpeakingTrainingRoute
+      {...commonProps}
+      contentSource={speakingContentSource}
+    />
+  )
 }
 
 export function VocabularyTrainingRouteHost() {
