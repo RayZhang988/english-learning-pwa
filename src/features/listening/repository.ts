@@ -77,6 +77,14 @@ function validQuestion(value: unknown): value is ListeningQuestion {
   if (!segmentIds.has(value.primarySegmentId)) {
     return false
   }
+  const sequenceMode = value.playbackPolicy.sequenceMode
+  if (
+    sequenceMode !== undefined &&
+    sequenceMode !== 'current-segment' &&
+    sequenceMode !== 'all-segments'
+  ) {
+    return false
+  }
   if (value.type === 'keyword-dictation') {
     return (
       typeof value.standardAnswer === 'string' &&
@@ -92,6 +100,75 @@ function validQuestion(value: unknown): value is ListeningQuestion {
         isRecord(option) && option.id === value.correctOptionId,
     )
   )
+}
+
+function upgradeLegacyPassageSession(
+  session: ListeningSession,
+): ListeningSession {
+  const legacySegmentId = `${session.task.learningUnitId}:passage`
+  let upgradedLegacyPassage = false
+  const questions = session.questions.map((question) => {
+    const normalizedPolicy = {
+      ...question.playbackPolicy,
+      sequenceMode:
+        question.playbackPolicy.sequenceMode ?? 'current-segment',
+    }
+    if (
+      question.type !== 'core-information' ||
+      question.primarySegmentId !== legacySegmentId ||
+      question.segments.length !== 1 ||
+      session.transcript.length === 0
+    ) {
+      return {
+        ...question,
+        playbackPolicy: normalizedPolicy,
+      } as ListeningQuestion
+    }
+    upgradedLegacyPassage = true
+    const segments = session.transcript.map((line, index) => ({
+      id: `${session.task.learningUnitId}:passage:${index}`,
+      locale: 'en-US' as const,
+      text: line.text,
+      label: line.speaker
+        ? `${line.speaker} 的句子`
+        : `第 ${index + 1} 句`,
+      speaker: line.speaker,
+    }))
+    return {
+      ...question,
+      primarySegmentId: segments[0].id,
+      segments,
+      playbackPolicy: {
+        ...normalizedPolicy,
+        allowSegmentSelection: true,
+        sequenceMode: 'all-segments',
+      },
+    } as ListeningQuestion
+  })
+  if (
+    !upgradedLegacyPassage ||
+    session.playback.currentSegmentId !== legacySegmentId
+  ) {
+    return {
+      ...session,
+      questions,
+    }
+  }
+  const firstSegmentId = `${session.task.learningUnitId}:passage:0`
+  const legacyPlayCount =
+    session.playback.playCounts[legacySegmentId] ?? 0
+  return {
+    ...session,
+    questions,
+    playback: {
+      ...session.playback,
+      currentSegmentId: firstSegmentId,
+      playCounts: {
+        ...session.playback.playCounts,
+        [firstSegmentId]: legacyPlayCount,
+      },
+    },
+  }
 }
 
 function restoreSession(
@@ -205,10 +282,10 @@ function restoreSession(
       )
     }
   }
-  return {
+  return upgradeLegacyPassageSession({
     ...(value as unknown as ListeningSession),
     pendingEvents,
-  }
+  })
 }
 
 export class ListeningSessionRepository {

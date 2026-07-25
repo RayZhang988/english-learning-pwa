@@ -339,6 +339,7 @@ function parsePolicy(
     ),
     allowRepeat: booleanValue(policy, 'allowRepeat', label),
     allowedRates: rates as readonly ListeningPlaybackRate[],
+    sequenceMode: 'current-segment',
   }
 }
 
@@ -628,16 +629,22 @@ function extensionQuestion(
 function coreCheckQuestions(
   core: CoreListeningData,
 ): readonly ListeningQuestion[] {
-  const passageSegment: ListeningSegment = {
-    id: `${core.unit.learningUnitId}:passage`,
-    locale: 'en-US',
-    text: core.unit.transcript
-      .map((line) =>
-        line.speaker ? `${line.speaker}: ${line.text}` : line.text,
-      )
-      .join(' '),
-    label: '完整场景',
-    speaker: null,
+  const passageSegments: readonly ListeningSegment[] =
+    core.unit.transcript.map((line, index) => ({
+      id: `${core.unit.learningUnitId}:passage:${index}`,
+      locale: 'en-US',
+      text: line.text,
+      label: line.speaker
+        ? `${line.speaker} 的句子`
+        : `第 ${index + 1} 句`,
+      speaker: line.speaker,
+    }))
+  const primaryPassageSegment = passageSegments[0]
+  if (!primaryPassageSegment) {
+    throw new ListeningError(
+      'content-invalid',
+      `${core.unit.learningUnitId} has no transcript lines.`,
+    )
   }
   const questions = core.checks.map((check, index) => {
     const id = stringValue(check, 'id', `check[${index}]`)
@@ -673,12 +680,13 @@ function coreCheckQuestions(
       id,
       type: 'core-information' as const,
       promptZh: stringValue(check, 'promptZh', id),
-      primarySegmentId: passageSegment.id,
-      segments: [passageSegment],
+      primarySegmentId: primaryPassageSegment.id,
+      segments: passageSegments,
       playbackPolicy: {
-        allowSegmentSelection: false,
+        allowSegmentSelection: true,
         allowRepeat: true,
         allowedRates: [0.75, 1, 1.25] as const,
+        sequenceMode: 'all-segments' as const,
       },
       options,
       correctOptionId: options[correctIndex].id,
@@ -737,6 +745,7 @@ function coreCheckQuestions(
         allowSegmentSelection: false,
         allowRepeat: true,
         allowedRates: [0.75, 1, 1.25] as const,
+        sequenceMode: 'current-segment' as const,
       },
       options: quizOptions,
       correctOptionId: quizOptions[quizCorrectIndex].id,

@@ -130,9 +130,20 @@ class ImmediateSpeech implements ListeningSpeechPort {
       supported: true,
       voicesKnown: true,
       enUsVoiceAvailable: true,
+      localEnUsVoiceCount: 1,
       pauseResumeAvailable: true,
       supportedRates: [0.75, 1, 1.25] as const,
     }
+  }
+
+  voices() {
+    return [
+      {
+        id: 'runtime-local-voice',
+        locale: 'en-US',
+        localService: true,
+      },
+    ] as const
   }
 
   speak(

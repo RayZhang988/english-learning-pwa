@@ -35,6 +35,7 @@ export interface ListeningPlaybackPolicy {
   readonly allowSegmentSelection: boolean
   readonly allowRepeat: boolean
   readonly allowedRates: readonly ListeningPlaybackRate[]
+  readonly sequenceMode: 'current-segment' | 'all-segments'
 }
 
 export interface ListeningChoiceOption {

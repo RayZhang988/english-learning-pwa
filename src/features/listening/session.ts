@@ -76,7 +76,10 @@ function assertQuestion(question: ListeningQuestion): void {
     !question.segments.some(
       (segment) => segment.id === question.primarySegmentId,
     ) ||
-    question.playbackPolicy.allowedRates.length === 0
+    question.playbackPolicy.allowedRates.length === 0 ||
+    !['current-segment', 'all-segments'].includes(
+      question.playbackPolicy.sequenceMode,
+    )
   ) {
     throw new ListeningError(
       'content-invalid',

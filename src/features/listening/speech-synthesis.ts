@@ -18,7 +18,9 @@ export type ListeningSpeechErrorCode =
 export interface ListeningSpeechRequest {
   readonly text: string
   readonly locale: 'en-US'
-  readonly rate: ListeningPlaybackRate
+  readonly rate: number
+  readonly pitch?: number
+  readonly voiceId?: string | null
 }
 
 export interface ListeningSpeechCallbacks {
@@ -33,13 +35,22 @@ export interface ListeningSpeechCapabilities {
   readonly supported: boolean
   readonly voicesKnown: boolean
   readonly enUsVoiceAvailable: boolean
+  readonly localEnUsVoiceCount: number
   readonly pauseResumeAvailable: boolean
   readonly supportedRates: readonly ListeningPlaybackRate[]
+}
+
+export interface ListeningSpeechVoice {
+  readonly id: string
+  readonly locale: 'en-US'
+  readonly localService: true
 }
 
 interface SpeechVoiceLike {
   readonly lang: string
   readonly localService: boolean
+  readonly name?: string
+  readonly voiceURI?: string
 }
 
 interface SpeechErrorEventLike {
@@ -49,6 +60,7 @@ interface SpeechErrorEventLike {
 interface SpeechUtteranceLike {
   lang: string
   rate: number
+  pitch: number
   voice: SpeechVoiceLike | null
   onstart: (() => void) | null
   onend: (() => void) | null
@@ -69,6 +81,7 @@ interface SpeechSynthesisLike {
 
 export interface ListeningSpeechPort {
   capabilities(): ListeningSpeechCapabilities
+  voices(): readonly ListeningSpeechVoice[]
   speak(
     request: ListeningSpeechRequest,
     callbacks: ListeningSpeechCallbacks,
@@ -81,6 +94,10 @@ export interface ListeningSpeechPort {
 }
 
 const SUPPORTED_RATES = [0.75, 1, 1.25] as const
+const MIN_EFFECTIVE_RATE = 0.75
+const MAX_EFFECTIVE_RATE = 1.25
+const MIN_PROFILE_PITCH = 0.9
+const MAX_PROFILE_PITCH = 1.1
 const SPEECH_ERROR_CODES: readonly ListeningSpeechErrorCode[] = [
   'canceled',
   'interrupted',
@@ -117,6 +134,38 @@ function errorCode(value: string | undefined): ListeningSpeechErrorCode {
     : 'unknown'
 }
 
+interface LocalVoiceEntry {
+  readonly id: string
+  readonly voice: SpeechVoiceLike
+}
+
+function localEnUsVoices(
+  synthesis: SpeechSynthesisLike | undefined,
+): readonly LocalVoiceEntry[] {
+  if (!synthesis) {
+    return []
+  }
+  try {
+    return synthesis
+      .getVoices()
+      .filter(
+        (voice) =>
+          voice.lang.toLowerCase() === 'en-us' &&
+          voice.localService,
+      )
+      .map((voice, index) => ({
+        id:
+          voice.voiceURI?.trim() ||
+          voice.name?.trim() ||
+          `local-en-us:${index}`,
+        voice,
+      }))
+      .sort((left, right) => left.id.localeCompare(right.id, 'en-US'))
+  } catch {
+    return []
+  }
+}
+
 export class BrowserListeningSpeechSynthesis
   implements ListeningSpeechPort
 {
@@ -140,20 +189,34 @@ export class BrowserListeningSpeechSynthesis
         supported: false,
         voicesKnown: false,
         enUsVoiceAvailable: false,
+        localEnUsVoiceCount: 0,
         pauseResumeAvailable: false,
         supportedRates: [],
       }
     }
-    const voices = this.synthesis.getVoices()
+    let voicesKnown = false
+    try {
+      voicesKnown = this.synthesis.getVoices().length > 0
+    } catch {
+      // Safari may expose synthesis before its asynchronous voice list is ready.
+    }
+    const localVoices = localEnUsVoices(this.synthesis)
     return {
       supported: true,
-      voicesKnown: voices.length > 0,
-      enUsVoiceAvailable: voices.some(
-        (voice) => voice.lang.toLowerCase() === 'en-us',
-      ),
+      voicesKnown,
+      enUsVoiceAvailable: localVoices.length > 0,
+      localEnUsVoiceCount: localVoices.length,
       pauseResumeAvailable: true,
       supportedRates: SUPPORTED_RATES,
     }
+  }
+
+  voices(): readonly ListeningSpeechVoice[] {
+    return localEnUsVoices(this.synthesis).map(({ id }) => ({
+      id,
+      locale: 'en-US',
+      localService: true,
+    }))
   }
 
   speak(
@@ -168,7 +231,12 @@ export class BrowserListeningSpeechSynthesis
     }
     if (
       request.text.trim().length === 0 ||
-      !SUPPORTED_RATES.includes(request.rate)
+      !Number.isFinite(request.rate) ||
+      request.rate < MIN_EFFECTIVE_RATE ||
+      request.rate > MAX_EFFECTIVE_RATE ||
+      !Number.isFinite(request.pitch ?? 1) ||
+      (request.pitch ?? 1) < MIN_PROFILE_PITCH ||
+      (request.pitch ?? 1) > MAX_PROFILE_PITCH
     ) {
       throw new ListeningError(
         'speech-failed',
@@ -178,13 +246,13 @@ export class BrowserListeningSpeechSynthesis
     const utterance = this.createUtterance(request.text)
     utterance.lang = request.locale
     utterance.rate = request.rate
-    const voices = this.synthesis.getVoices()
+    utterance.pitch = request.pitch ?? 1
+    const voices = localEnUsVoices(this.synthesis)
     utterance.voice =
       voices.find(
-        (voice) =>
-          voice.lang.toLowerCase() === 'en-us' && voice.localService,
-      ) ??
-      voices.find((voice) => voice.lang.toLowerCase() === 'en-us') ??
+        (entry) => entry.id === (request.voiceId ?? null),
+      )?.voice ??
+      voices[0]?.voice ??
       null
     utterance.onstart = callbacks.onStart ?? null
     utterance.onend = callbacks.onEnd ?? null

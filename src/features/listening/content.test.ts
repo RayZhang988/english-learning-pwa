@@ -75,6 +75,50 @@ describe('listening content catalog', () => {
     ).toThrow(/only accepts listening/i)
   })
 
+  it('keeps dialogue speaker labels out of full-scene speech text', () => {
+    const catalog = createListeningCatalog(documents())
+    const dialogues = catalog.units.filter(
+      (unit) => unit.activityType === 'listening-dialogue',
+    )
+
+    expect(dialogues).toHaveLength(21)
+    expect(
+      dialogues.reduce(
+        (total, unit) => total + unit.transcript.length,
+        0,
+      ),
+    ).toBe(143)
+
+    for (const unit of dialogues) {
+      const fullSceneQuestions = unit.questions.filter(
+        (question) => question.type === 'core-information',
+      )
+      expect(fullSceneQuestions.length).toBeGreaterThan(0)
+      for (const question of fullSceneQuestions) {
+        expect(question.playbackPolicy).toMatchObject({
+          sequenceMode: 'all-segments',
+          allowSegmentSelection: true,
+        })
+        expect(
+          question.segments.map(({ text, speaker }) => ({
+            text,
+            speaker,
+          })),
+        ).toEqual(
+          unit.transcript.map(({ text, speaker }) => ({
+            text,
+            speaker,
+          })),
+        )
+        for (const segment of question.segments) {
+          expect(segment.text).not.toContain(
+            `${segment.speaker ?? ''}:`,
+          )
+        }
+      }
+    }
+  })
+
   it('rejects transcript-line extensions when expected text drifts', () => {
     const changed = structuredClone(exercises) as {
       lessons: {

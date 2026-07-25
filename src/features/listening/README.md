@@ -11,6 +11,7 @@
 - `CurrentListeningContentSource`：按 05 的两个唯一入口加载核心包和听力扩展；
 - `ListeningTrainingRuntime`：会话、持久化、事件 outbox、播放器和故障降级；
 - `BrowserListeningSpeechSynthesis`：设备 Web Speech 合成语音适配器；
+- `ListeningSpeakerVoiceProfiles`：会话级说话人—音色映射和单音色降级；
 - `ListeningSessionRepository`：`feature.listening` 命名空间内的会话恢复。
 
 模块不会修改 `src/app/**`。最终路由注册由 01 在集成步骤完成。
@@ -61,12 +62,31 @@ task.targetModuleId === 'listening'
 
 - 语言固定为 `en-US`；
 - 速度只允许内容声明的 `0.75`、`1`、`1.25`；
+- 完整场景使用 `sequenceMode = "all-segments"`，每行 transcript 是一个独立片段；
+- `speaker` 只用于片段标签和音色映射，传给 Web Speech 的 `text` 永远只取台词正文；
+- 正常播放从当前句依次排到末句；`segment` 重复当前句，`all` 在末句后回到首句；
 - 片段 ID 对 UI 保持不透明并原样回收；
 - 重复模式为 `none`、`segment`、`all`；
-- 优先选择设备本地 `en-US` 语音；语音列表暂时为空时使用 `lang = "en-US"`
-  交给浏览器选择；
+- `ListeningSpeechPort.voices()` 只公开设备本地 `en-US` voice，远程 voice 不进入角色映射；
+- 同一运行时会话按 transcript 中的说话人顺序建立一次 profile 并跨题共享，同一
+  speaker 的 `voiceId`、`pitch` 和速率微调不会在题间变化；
+- 本地 voice 数量足够时每位 speaker 使用不同 `voiceId`，保持 `pitch = 1` 且不微调
+  用户速度；
+- voice 不足时循环使用已有本地 voice，并只用 `pitch 0.94–1.06`、速率倍率
+  `0.98–1.02` 做轻微区分；最终有效速度会限制在本题 `allowedRates` 的最小值与最大值
+  之间；
+- 单人叙述或播报始终使用一个中性 profile；
+- 语音列表暂时为空时使用 `voiceId = null` 和 `lang = "en-US"` 交给浏览器的系统默认
+  voice；列表在首次实际解析 profile 时读取，之后为保证角色稳定不在会话中重排；
 - 切换速度或片段时停止当前队列，下一次由用户明确重新播放；
 - 后台切换会取消当前语音并暂停任务，恢复后从当前片段开头重播，不伪造精确音素续播。
+
+`ListeningSpeechRequest` 的 `pitch` 和 `voiceId` 是可选公开字段，未提供时分别按 `1`
+和系统默认 voice 处理，以保持 01/03 已有的单音色调用兼容。`ListeningSpeechVoice`
+只描述本地 `en-US` voice 的稳定 ID，不保存或上传设备个人数据。
+
+旧版会话若仍保存单个 `${speaker}: ${text}` 完整场景片段，恢复时会根据会话内已有
+transcript 迁移为逐句片段，并把旧完整场景的播放次数转移到首句；不会继续朗读旧标签。
 
 ## 学习事件
 
@@ -90,7 +110,9 @@ task.targetModuleId === 'listening'
 
 离线时：
 
-- 资源已安装且设备存在可用语音：正常训练；
+- 资源已安装且设备存在本地 `en-US` voice：正常训练；
+- 设备未枚举本地 voice：尝试系统默认 voice；若 Safari 合成失败则按设备故障降级，
+  不声称该 voice 可离线使用；
 - 资源未安装：显示无法评分，发布 `failureCategory: "network"`；
 - Web Speech 不存在或设备合成失败：显示设备故障，发布不可评分事件；
 - 不下载、缓存或上传合成后的音频与用户答案音频。
@@ -103,6 +125,11 @@ task.targetModuleId === 'listening'
 - 85 道核心理解题与 28 道场景测验的保留；
 - 选择题、听写、规范化、反馈和辅助程度；
 - 播放、暂停、速度、片段、重复和过期回调；
+- 21 段双人对话、143 行台词不朗读 speaker 标签并按 transcript 排队；
+- A/B/A 映射稳定、双 voice 分离、跨题共享 profile；
+- 零 voice、单 voice、双 voice、异步 voice 列表和单人叙述降级；
+- 单 voice 的 pitch/rate 差异上限与有效速度边界；
+- 旧 speaker 前缀会话的无损恢复迁移；
 - 在线完成、离线资源、后台暂停、音频中断和不可评分事件；
 - 会话恢复、事件 outbox、模块元数据和 UI ViewModel。
 
@@ -112,7 +139,10 @@ task.targetModuleId === 'listening'
 
 - Web Speech 不提供稳定的逐帧时长进度；当前播放器只可靠展示开始、暂停、结束和次数，
   不伪造秒级进度。
-- 第一版使用设备声音，不为不同说话人分配不同真人或合成角色音色。
+- 不同系统 voice ID 不等于真机上必然有明显的听感差异；实际可区分度取决于 iPhone
+  已安装的声音，仍需 09 真机验收。
+- 如果首次播放时 voice 列表仍为空，本会话会冻结为单 voice 降级；Safari 后续才加载
+  的新 voice 不会在半途重排角色，重新进入听力任务后才会重新探测。
 - 设备语音是否离线可用取决于 iPhone 已安装的系统语音；模块只能检测与降级，不能替
   用户安装系统声音。
 - Web Speech 被后台或其他系统音频打断后从片段开头恢复，不承诺字词级续播。

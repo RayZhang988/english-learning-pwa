@@ -6,9 +6,14 @@ import type {
 import { ListeningSessionRepository } from './repository.ts'
 import { createListeningSession } from './session.ts'
 import {
+  choiceQuestion,
   createListeningTask,
   createListeningUnit,
 } from './test-fixtures.ts'
+import type {
+  ListeningQuestion,
+  ListeningSession,
+} from './types.ts'
 
 class MemoryStore implements NamespaceStore {
   readonly records = new Map<string, StoredRecord<unknown>>()
@@ -74,5 +79,90 @@ describe('listening session repository', () => {
     await expect(
       repository.load(createListeningTask()),
     ).rejects.toThrow(/unsupported schema version/i)
+  })
+
+  it('upgrades legacy speaker-prefixed passage sessions without losing playback evidence', async () => {
+    const store = new MemoryStore()
+    const repository = new ListeningSessionRepository(store)
+    const task = createListeningTask()
+    const base = createListeningSession(
+      task,
+      createListeningUnit(),
+      '2026-07-24T12:00:00.000Z',
+    )
+    const legacySegmentId = `${task.learningUnitId}:passage`
+    const legacyQuestion = {
+      ...choiceQuestion,
+      id: 'legacy-core-check',
+      type: 'core-information',
+      primarySegmentId: legacySegmentId,
+      segments: [
+        {
+          id: legacySegmentId,
+          locale: 'en-US',
+          text: 'Alex: Good morning. Blair: Hello. Alex: One ticket.',
+          label: '完整场景',
+          speaker: null,
+        },
+      ],
+      playbackPolicy: {
+        allowSegmentSelection: false,
+        allowRepeat: true,
+        allowedRates: [0.75, 1, 1.25],
+      },
+    } as unknown as ListeningQuestion
+    const legacySession = {
+      ...base,
+      transcript: [
+        {
+          id: 'line-1',
+          speaker: 'Alex',
+          text: 'Good morning.',
+          translationZh: '早上好。',
+        },
+        {
+          id: 'line-2',
+          speaker: 'Blair',
+          text: 'Hello.',
+          translationZh: '你好。',
+        },
+        {
+          id: 'line-3',
+          speaker: 'Alex',
+          text: 'One ticket.',
+          translationZh: '一张票。',
+        },
+      ],
+      questions: [legacyQuestion],
+      playback: {
+        ...base.playback,
+        currentSegmentId: legacySegmentId,
+        playCounts: { [legacySegmentId]: 1 },
+      },
+    } satisfies ListeningSession
+    await repository.save(legacySession)
+
+    const restored = await repository.load(task)
+
+    expect(restored?.questions[0].playbackPolicy).toMatchObject({
+      sequenceMode: 'all-segments',
+      allowSegmentSelection: true,
+    })
+    expect(
+      restored?.questions[0].segments.map(({ text, speaker }) => ({
+        text,
+        speaker,
+      })),
+    ).toEqual([
+      { text: 'Good morning.', speaker: 'Alex' },
+      { text: 'Hello.', speaker: 'Blair' },
+      { text: 'One ticket.', speaker: 'Alex' },
+    ])
+    expect(restored?.playback).toMatchObject({
+      currentSegmentId: `${task.learningUnitId}:passage:0`,
+      playCounts: {
+        [`${task.learningUnitId}:passage:0`]: 1,
+      },
+    })
   })
 })

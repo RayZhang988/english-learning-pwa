@@ -24,6 +24,7 @@ import {
   ListeningPlaybackController,
 } from './playback-controller.ts'
 import { ListeningSessionRepository } from './repository.ts'
+import { ListeningSpeakerVoiceProfiles } from './speaker-voice-profiles.ts'
 import {
   advanceListeningSession,
   changeListeningDictation,
@@ -84,6 +85,8 @@ export class ListeningTrainingRuntime {
   private readonly listeners = new Set<SessionListener>()
   private session: ListeningSession | null = null
   private controller: ListeningPlaybackController | null = null
+  private speakerVoiceProfiles: ListeningSpeakerVoiceProfiles | null =
+    null
   private initializing: Promise<ListeningSession> | null = null
   private sessionRevision = 0
   private sessionWrite: Promise<void> = Promise.resolve()
@@ -233,10 +236,15 @@ export class ListeningTrainingRuntime {
     ) {
       return
     }
+    this.speakerVoiceProfiles ??= new ListeningSpeakerVoiceProfiles(
+      session.transcript.map((line) => line.speaker),
+      () => this.speech.voices(),
+    )
     this.controller = new ListeningPlaybackController({
       question,
       initialState: session.playback,
       speech: this.speech,
+      speakerVoiceProfiles: this.speakerVoiceProfiles,
       onStateChange: (playback) =>
         this.handlePlaybackState(playback),
       onFailure: (code) => this.handleSpeechFailure(code),

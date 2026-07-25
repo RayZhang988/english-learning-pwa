@@ -57,6 +57,7 @@ export const choiceQuestion: ListeningQuestion = {
     allowSegmentSelection: false,
     allowRepeat: true,
     allowedRates: [0.75, 1],
+    sequenceMode: 'current-segment',
   },
   options: [
     { id: 'a', label: 'Maya' },
@@ -78,6 +79,7 @@ export const dictationQuestion: ListeningKeywordDictationQuestion = {
     allowSegmentSelection: true,
     allowRepeat: true,
     allowedRates: [0.75, 1, 1.25],
+    sequenceMode: 'current-segment',
   },
   targetKeywords: ['Boston'],
   standardAnswer: 'Boston',

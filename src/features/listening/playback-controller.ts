@@ -3,6 +3,10 @@ import type {
   ListeningSpeechErrorCode,
   ListeningSpeechPort,
 } from './speech-synthesis.ts'
+import {
+  ListeningSpeakerVoiceProfiles,
+  type ListeningSpeakerVoiceProfile,
+} from './speaker-voice-profiles.ts'
 import type {
   ListeningPlaybackRate,
   ListeningPlaybackState,
@@ -15,8 +19,22 @@ export interface ListeningPlaybackControllerOptions {
   readonly question: ListeningQuestion
   readonly initialState: ListeningPlaybackState
   readonly speech: ListeningSpeechPort
+  readonly speakerVoiceProfiles?: ListeningSpeakerVoiceProfiles
   readonly onStateChange?: (state: ListeningPlaybackState) => void
   readonly onFailure?: (code: ListeningSpeechErrorCode) => void
+}
+
+function effectiveRate(
+  rate: ListeningPlaybackRate,
+  rateScale: number,
+  allowedRates: readonly ListeningPlaybackRate[],
+): number {
+  const lowerBound = Math.min(...allowedRates)
+  const upperBound = Math.max(...allowedRates)
+  const scaled = rate * rateScale
+  return Math.round(
+    Math.min(upperBound, Math.max(lowerBound, scaled)) * 1_000,
+  ) / 1_000
 }
 
 function validateState(
@@ -38,6 +56,20 @@ function validateState(
   }
 }
 
+function profileSpeakers(
+  question: ListeningQuestion,
+): readonly (string | null)[] {
+  if (
+    question.playbackPolicy.sequenceMode === 'all-segments' ||
+    question.playbackPolicy.allowSegmentSelection
+  ) {
+    return question.segments.map((segment) => segment.speaker)
+  }
+  return question.segments
+    .filter((segment) => segment.id === question.primarySegmentId)
+    .map((segment) => segment.speaker)
+}
+
 export class ListeningPlaybackController {
   private question: ListeningQuestion
   private state: ListeningPlaybackState
@@ -47,12 +79,21 @@ export class ListeningPlaybackController {
   ) => void
   private readonly onFailure?: (code: ListeningSpeechErrorCode) => void
   private generation = 0
+  private speakerVoiceProfiles: ListeningSpeakerVoiceProfiles
+  private readonly ownsSpeakerVoiceProfiles: boolean
 
   constructor(options: ListeningPlaybackControllerOptions) {
     validateState(options.question, options.initialState)
     this.question = options.question
     this.state = options.initialState
     this.speech = options.speech
+    this.ownsSpeakerVoiceProfiles = !options.speakerVoiceProfiles
+    this.speakerVoiceProfiles =
+      options.speakerVoiceProfiles ??
+      new ListeningSpeakerVoiceProfiles(
+        profileSpeakers(options.question),
+        () => this.speech.voices(),
+      )
     this.onStateChange = options.onStateChange
     this.onFailure = options.onFailure
     if (!this.speech.capabilities().supported) {
@@ -96,6 +137,12 @@ export class ListeningPlaybackController {
     return segment
   }
 
+  private voiceProfile(
+    segment: ListeningSegment,
+  ): ListeningSpeakerVoiceProfile {
+    return this.speakerVoiceProfiles.profileFor(segment.speaker)
+  }
+
   private stopQueue(nextStatus: 'idle' | 'paused'): void {
     this.generation += 1
     this.speech.cancel()
@@ -113,6 +160,7 @@ export class ListeningPlaybackController {
       return
     }
     const segment = this.currentSegment()
+    const voiceProfile = this.voiceProfile(segment)
     const token = ++this.generation
     let started = false
     try {
@@ -124,7 +172,13 @@ export class ListeningPlaybackController {
         {
           text: segment.text,
           locale: segment.locale,
-          rate: this.state.rate,
+          rate: effectiveRate(
+            this.state.rate,
+            voiceProfile.rateScale,
+            this.question.playbackPolicy.allowedRates,
+          ),
+          pitch: voiceProfile.pitch,
+          voiceId: voiceProfile.voiceId,
         },
         {
           onStart: () => {
@@ -157,8 +211,7 @@ export class ListeningPlaybackController {
             if (token !== this.generation) {
               return
             }
-            this.update({ status: 'ended' })
-            this.continueRepeat()
+            this.continueQueue()
           },
           onError: (code) => {
             if (token !== this.generation) {
@@ -185,24 +238,28 @@ export class ListeningPlaybackController {
     }
   }
 
-  private continueRepeat(): void {
-    if (
-      !this.question.playbackPolicy.allowRepeat ||
-      this.state.repeatMode === 'none'
-    ) {
+  private continueQueue(): void {
+    if (this.state.repeatMode === 'segment') {
+      this.startCurrent()
       return
     }
-    if (this.state.repeatMode === 'all') {
-      const index = this.question.segments.findIndex(
-        (segment) => segment.id === this.state.currentSegmentId,
-      )
+    const index = this.question.segments.findIndex(
+      (segment) => segment.id === this.state.currentSegmentId,
+    )
+    const sequenceContinues =
+      this.question.playbackPolicy.sequenceMode === 'all-segments' &&
+      index + 1 < this.question.segments.length
+    const repeatsAll = this.state.repeatMode === 'all'
+    if (sequenceContinues || repeatsAll) {
       const next =
         this.question.segments[
-          (index + 1) % this.question.segments.length
+          sequenceContinues ? index + 1 : 0
         ]
       this.update({ currentSegmentId: next.id })
+      this.startCurrent()
+      return
     }
-    this.startCurrent()
+    this.update({ status: 'ended' })
   }
 
   toggle(): ListeningPlaybackState {
@@ -299,6 +356,12 @@ export class ListeningPlaybackController {
     this.speech.cancel()
     this.question = question
     this.state = state
+    if (this.ownsSpeakerVoiceProfiles) {
+      this.speakerVoiceProfiles = new ListeningSpeakerVoiceProfiles(
+        profileSpeakers(question),
+        () => this.speech.voices(),
+      )
+    }
     if (!this.speech.capabilities().supported) {
       this.state = {
         ...state,
