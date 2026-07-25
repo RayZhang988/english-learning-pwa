@@ -11,9 +11,13 @@ import {
   LoadingState,
   PlatformPrototype,
 } from '../ui/index.ts'
+import {
+  ASSESSMENT_RESULTS_ROUTE,
+} from './assessment/AssessmentRouteHost.tsx'
 import { useLearningApp } from './learning/learning-app-context.ts'
 import {
   toDailyPlanViewModel,
+  toPracticeModulesViewModel,
   toProgressViewModel,
 } from './learning/view-model.ts'
 
@@ -115,7 +119,14 @@ export function PlatformReadyPage() {
         now,
       )}
       progress={toProgressViewModel(state.engineState)}
+      practiceModules={toPracticeModulesViewModel(
+        state.runtime.activePlan,
+        state.resumeTaskId,
+      )}
       offline={network === 'offline'}
+      onAssessmentRequested={() => {
+        navigate(ASSESSMENT_RESULTS_ROUTE)
+      }}
       onTaskRequested={(taskId) => {
         try {
           navigate(coordinator.routeForTask(taskId))

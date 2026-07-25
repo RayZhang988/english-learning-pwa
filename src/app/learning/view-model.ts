@@ -9,6 +9,7 @@ import {
 import type {
   DailyPlanViewModel,
   DailyTaskViewModel,
+  PracticeModuleViewModel,
   ProgressViewModel,
 } from '../../ui/index.ts'
 
@@ -41,6 +42,133 @@ const modeLabels = {
   review: '复习',
   retry: '重试',
 } as const
+
+const practiceModuleIds = [
+  'vocabulary',
+  'listening',
+  'speaking',
+] as const satisfies readonly TrainingModuleId[]
+
+const practiceModuleLabels: Readonly<Record<TrainingModuleId, string>> = {
+  vocabulary: '词汇训练',
+  listening: '听力训练',
+  speaking: '口语训练',
+}
+
+function specialtyPracticeModule(
+  moduleId: TrainingModuleId,
+  progress: PlanProgress,
+  resumeTaskId: string | null,
+): PracticeModuleViewModel {
+  const label = practiceModuleLabels[moduleId]
+  const executions = progress.tasks.filter(
+    (execution) => execution.task.targetModuleId === moduleId,
+  )
+  const current = executions.find(
+    (execution) =>
+      execution.task.taskId === resumeTaskId &&
+      execution.status !== 'completed' &&
+      execution.status !== 'skipped',
+  )
+
+  if (current) {
+    return {
+      moduleId,
+      request: {
+        state: 'enabled',
+        label:
+          current.status === 'active' ||
+          current.status === 'paused' ||
+          current.status === 'blocked'
+            ? '继续训练'
+            : '进入训练',
+        taskId: current.task.taskId,
+      },
+    }
+  }
+
+  if (executions.length === 0) {
+    return {
+      moduleId,
+      request: {
+        state: 'disabled',
+        label: '今日无任务',
+        reason: `当前没有可执行的${label}任务。`,
+      },
+    }
+  }
+
+  const unfinished = executions.some(
+    (execution) =>
+      execution.status !== 'completed' &&
+      execution.status !== 'skipped',
+  )
+  if (unfinished) {
+    return {
+      moduleId,
+      request: {
+        state: 'disabled',
+        label: '稍后开始',
+        reason: `尚未轮到${label}，请先完成当前计划任务。`,
+      },
+    }
+  }
+
+  const allCompleted = executions.every(
+    (execution) => execution.status === 'completed',
+  )
+  if (allCompleted) {
+    return {
+      moduleId,
+      request: {
+        state: 'disabled',
+        label: '已完成',
+        reason: `今天的${label}任务已经完成。`,
+      },
+    }
+  }
+
+  const allSkipped = executions.every(
+    (execution) => execution.status === 'skipped',
+  )
+  if (allSkipped) {
+    return {
+      moduleId,
+      request: {
+        state: 'disabled',
+        label: '已跳过',
+        reason: `今天的${label}任务已从计划中跳过。`,
+      },
+    }
+  }
+
+  return {
+    moduleId,
+    request: {
+      state: 'disabled',
+      label: '今日已结束',
+      reason: `今天的${label}任务已经完成或跳过。`,
+    },
+  }
+}
+
+export function toPracticeModulesViewModel(
+  progress: PlanProgress,
+  resumeTaskId: string | null,
+): readonly PracticeModuleViewModel[] {
+  return [
+    {
+      moduleId: 'assessment',
+      request: {
+        state: 'enabled',
+        label: '查看测试结果',
+      },
+    },
+    ...practiceModuleIds.map((moduleId) =>
+      specialtyPracticeModule(moduleId, progress, resumeTaskId),
+    ),
+  ]
+}
 
 function taskViewModel(
   execution: TaskExecutionState,

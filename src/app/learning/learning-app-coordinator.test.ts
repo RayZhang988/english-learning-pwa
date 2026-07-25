@@ -19,7 +19,10 @@ import {
 } from './active-plan-repository.ts'
 import type { LearningCandidateSource } from './course-candidate-source.ts'
 import { LearningAppCoordinator } from './learning-app-coordinator.ts'
-import { toDailyPlanViewModel } from './view-model.ts'
+import {
+  toDailyPlanViewModel,
+  toPracticeModulesViewModel,
+} from './view-model.ts'
 
 class MemoryNamespaceStore implements NamespaceStore {
   readonly records = new Map<string, StoredRecord<unknown>>()
@@ -258,6 +261,65 @@ describe('LearningAppCoordinator', () => {
     expect(() => refreshed.resolveTask(callbackTaskId)).toThrow(
       'already finished',
     )
+  })
+
+  it('routes all three practice cards with the same exact task ids as Today', async () => {
+    await profiles.saveLatest(abilityProfile())
+    const app = coordinator()
+    const initialized = await app.initialize()
+    if (initialized.status !== 'ready') {
+      throw new Error('Expected a ready plan.')
+    }
+
+    for (const plannedTask of initialized.runtime.activePlan.plan.tasks) {
+      const current = app.state
+      if (current.status !== 'ready') {
+        throw new Error('Expected an active ready plan.')
+      }
+      const practiceModules = toPracticeModulesViewModel(
+        current.runtime.activePlan,
+        current.resumeTaskId,
+      )
+      const module = practiceModules.find(
+        (candidate) =>
+          candidate.moduleId === plannedTask.targetModuleId,
+      )
+      const today = toDailyPlanViewModel(
+        current.runtime.activePlan,
+        current.engineState,
+        current.resumeTaskId,
+        '2026-07-24T08:00:00.000Z',
+      )
+
+      expect(module?.request).toMatchObject({
+        state: 'enabled',
+        taskId: plannedTask.taskId,
+      })
+      expect(today.primaryAction).toMatchObject({
+        state: 'enabled',
+        taskId: plannedTask.taskId,
+      })
+      if (
+        !module ||
+        module.moduleId === 'assessment' ||
+        module.request.state !== 'enabled'
+      ) {
+        throw new Error('Expected an enabled specialty practice card.')
+      }
+      expect(app.routeForTask(module.request.taskId)).toBe(
+        `/${plannedTask.targetModuleId}?taskId=${encodeURIComponent(plannedTask.taskId)}`,
+      )
+
+      await app.eventSink.publish(
+        completedEvent(plannedTask, '2026-07-24'),
+      )
+    }
+
+    expect(app.state.status).toBe('ready')
+    if (app.state.status === 'ready') {
+      expect(app.state.runtime.activePlan.status).toBe('completed')
+      expect(app.state.resumeTaskId).toBeNull()
+    }
   })
 
   it('carries completion state across midnight and unlocks next units', async () => {

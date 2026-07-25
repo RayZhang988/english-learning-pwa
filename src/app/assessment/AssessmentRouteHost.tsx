@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate } from 'react-router'
+import { useNavigate, useSearchParams } from 'react-router'
 import {
   placementBankV1,
   toPublicAssessmentItem,
@@ -16,6 +16,7 @@ import {
   AssessmentPausedScreen,
   AssessmentResultsScreen,
   AssessmentSpeechScreen,
+  EmptyState,
   ErrorState,
   LoadingState,
   type AudioPlayerViewModel,
@@ -121,6 +122,8 @@ export interface AssessmentRouteHostProps {
   readonly speech?: ListeningSpeechPort
 }
 
+export const ASSESSMENT_RESULTS_ROUTE = '/assessment?mode=results'
+
 function createDefaultCaptureController() {
   return new AssessmentCaptureController()
 }
@@ -131,6 +134,8 @@ export function AssessmentRouteHost({
   speech = browserListeningSpeech,
 }: AssessmentRouteHostProps) {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const resultsMode = searchParams.get('mode') === 'results'
   const captureController = useMemo(
     createCaptureController,
     [createCaptureController],
@@ -163,10 +168,10 @@ export function AssessmentRouteHost({
   }, [captureController])
 
   useEffect(() => {
-    if (state.status === 'profile-ready') {
+    if (state.status === 'profile-ready' && !resultsMode) {
       navigate('/', { replace: true })
     }
-  }, [navigate, state])
+  }, [navigate, resultsMode, state])
 
   useEffect(
     () => () => {
@@ -188,10 +193,26 @@ export function AssessmentRouteHost({
     }
   }
 
-  if (state.status === 'loading' || state.status === 'profile-ready') {
+  if (state.status === 'loading') {
     return (
       <main className="full-page-feedback">
         <LoadingState label="正在恢复水平测试" />
+      </main>
+    )
+  }
+  if (state.status === 'profile-ready') {
+    if (resultsMode) {
+      return (
+        <AssessmentResultsScreen
+          viewModel={toAssessmentResultsViewModel(state.profile)}
+          onContinue={() => navigate('/')}
+          onExit={() => navigate('/')}
+        />
+      )
+    }
+    return (
+      <main className="full-page-feedback">
+        <LoadingState label="正在返回今日计划" />
       </main>
     )
   }
@@ -212,6 +233,25 @@ export function AssessmentRouteHost({
   }
 
   const runtime = state.runtime
+  if (resultsMode && runtime.lifecycle !== 'completed') {
+    return (
+      <main className="full-page-feedback">
+        <EmptyState
+          title="还没有可查看的测试结果"
+          description="请先完成当前水平测试；第一版不会从结果入口开始新的重复测试。"
+          action={(
+            <button
+              className="primary-button"
+              type="button"
+              onClick={() => navigate('/')}
+            >
+              返回今日计划
+            </button>
+          )}
+        />
+      </main>
+    )
+  }
   if (runtime.lifecycle === 'intro') {
     return (
       <AssessmentIntroScreen

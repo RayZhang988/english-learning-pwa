@@ -7,6 +7,7 @@ import {
 import { abilityProfile } from '../../learning-engine/test-fixtures.ts'
 import {
   toDailyPlanViewModel,
+  toPracticeModulesViewModel,
   toProgressViewModel,
 } from './view-model.ts'
 
@@ -124,5 +125,106 @@ describe('learning app view-model integration', () => {
       studyMinutes: '20',
       completedSessions: '2',
     })
+  })
+
+  it('maps all four practice cards and preserves each exact current task id', () => {
+    const progress = createPlanProgress(
+      plan(),
+      '2026-07-24T08:00:00.000Z',
+    )
+
+    for (const current of progress.tasks) {
+      const modules = toPracticeModulesViewModel(
+        progress,
+        current.task.taskId,
+      )
+      const assessment = modules[0]
+      const specialty = modules.find(
+        (module) =>
+          module.moduleId === current.task.targetModuleId,
+      )
+
+      expect(modules.map((module) => module.moduleId)).toEqual([
+        'assessment',
+        'vocabulary',
+        'listening',
+        'speaking',
+      ])
+      expect(assessment).toEqual({
+        moduleId: 'assessment',
+        request: {
+          state: 'enabled',
+          label: '查看测试结果',
+        },
+      })
+      expect(specialty?.request).toEqual({
+        state: 'enabled',
+        label: '进入训练',
+        taskId: current.task.taskId,
+      })
+      expect(JSON.stringify(modules)).not.toMatch(
+        /尚未接入|暂无可用训练|训练内容接入后/u,
+      )
+    }
+  })
+
+  it('disables locked, completed, skipped, and missing practice tasks with accurate reasons', () => {
+    const progress = createPlanProgress(
+      plan(),
+      '2026-07-24T08:00:00.000Z',
+    )
+    const mapped = {
+      ...progress,
+      tasks: [
+        {
+          ...progress.tasks[0],
+          status: 'completed' as const,
+        },
+        {
+          ...progress.tasks[1],
+          status: 'skipped' as const,
+        },
+      ],
+    }
+
+    const modules = toPracticeModulesViewModel(mapped, null)
+    const vocabulary = modules.find(
+      (module) => module.moduleId === 'vocabulary',
+    )
+    const listening = modules.find(
+      (module) => module.moduleId === 'listening',
+    )
+    const speaking = modules.find(
+      (module) => module.moduleId === 'speaking',
+    )
+
+    expect(vocabulary?.request).toEqual({
+      state: 'disabled',
+      label: '已完成',
+      reason: '今天的词汇训练任务已经完成。',
+    })
+    expect(listening?.request).toEqual({
+      state: 'disabled',
+      label: '已跳过',
+      reason: '今天的听力训练任务已从计划中跳过。',
+    })
+    expect(speaking?.request).toEqual({
+      state: 'disabled',
+      label: '今日无任务',
+      reason: '当前没有可执行的口语训练任务。',
+    })
+
+    const locked = toPracticeModulesViewModel(progress, null)
+    for (const module of locked.slice(1)) {
+      expect(module.request).toMatchObject({
+        state: 'disabled',
+        label: '稍后开始',
+      })
+      expect(
+        module.request.state === 'disabled'
+          ? module.request.reason
+          : '',
+      ).toContain('尚未轮到')
+    }
   })
 })
