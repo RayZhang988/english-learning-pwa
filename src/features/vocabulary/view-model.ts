@@ -50,6 +50,7 @@ function modeLabel(session: VocabularySession): string {
 
 export function toVocabularyScreenViewModel(
   session: VocabularySession,
+  operationPending = false,
 ): VocabularyScreenViewModel {
   const question = getCurrentVocabularyQuestion(session)
   if (
@@ -76,7 +77,7 @@ export function toVocabularyScreenViewModel(
             disabled: session.selectedOptionId === null,
           }
 
-  return {
+  const viewModel: VocabularyScreenViewModel = {
     header: {
       eyebrow: modeLabel(session),
       title: '词汇训练',
@@ -105,5 +106,22 @@ export function toVocabularyScreenViewModel(
     exampleEn: feedback?.exampleEn ?? undefined,
     explanationZh: feedback?.explanationZh ?? undefined,
     action,
+  }
+
+  if (!operationPending) {
+    return viewModel
+  }
+
+  return {
+    ...viewModel,
+    choices: viewModel.choices.map((choice) => ({
+      ...choice,
+      state: 'disabled',
+    })),
+    action: {
+      ...viewModel.action,
+      disabled: true,
+      loading: true,
+    },
   }
 }

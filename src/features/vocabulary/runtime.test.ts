@@ -69,6 +69,46 @@ class FailOnceEventSink implements PlatformEventSink {
   }
 }
 
+class OutOfOrderNamespaceStore extends MemoryNamespaceStore {
+  private delayNext = false
+  private releaseDelayedWrite: (() => void) | null = null
+  private delayedWriteStarted: Promise<void> = Promise.resolve()
+  private markDelayedWriteStarted: (() => void) | null = null
+
+  delayNextPut(): void {
+    this.delayNext = true
+    this.delayedWriteStarted = new Promise((resolve) => {
+      this.markDelayedWriteStarted = resolve
+    })
+  }
+
+  waitForDelayedPut(): Promise<void> {
+    return this.delayedWriteStarted
+  }
+
+  release(): void {
+    this.releaseDelayedWrite?.()
+    this.releaseDelayedWrite = null
+  }
+
+  override async put<T>(
+    key: string,
+    value: T,
+    schemaVersion = 1,
+  ): Promise<void> {
+    if (this.delayNext) {
+      this.delayNext = false
+      const release = new Promise<void>((resolve) => {
+        this.releaseDelayedWrite = resolve
+      })
+      this.markDelayedWriteStarted?.()
+      this.markDelayedWriteStarted = null
+      await release
+    }
+    await super.put(key, value, schemaVersion)
+  }
+}
+
 function sequenceClock() {
   let timestamp = Date.parse('2026-07-24T00:00:00.000Z')
   return () => {
@@ -92,6 +132,208 @@ const offlineNetwork: NetworkStatusService = {
 }
 
 describe('vocabulary training runtime', () => {
+  it('persists concurrent selections in invocation order when an older write resolves last', async () => {
+    const catalog = createVocabularyCatalog(
+      await loadActualVocabularyDocuments(),
+    )
+    const task = vocabularyTaskFor(catalog.units[0])
+    const store = new OutOfOrderNamespaceStore()
+    const repository = new VocabularySessionRepository(store)
+    const runtime = new VocabularyTrainingRuntime({
+      task,
+      localDate: '2026-07-24',
+      contentSource: createStaticDataSource(catalog),
+      eventSink: new InMemoryPlatformEventSink(),
+      repository,
+      now: sequenceClock(),
+      createId: sequenceIds(),
+    })
+    const session = await runtime.initialize()
+    const [firstOption, secondOption] = session.questions[0].options
+
+    store.delayNextPut()
+    const firstSelection = runtime.select(firstOption.id)
+    await store.waitForDelayedPut()
+    const secondSelection = runtime.select(secondOption.id)
+    await Promise.resolve()
+    store.release()
+    await Promise.all([firstSelection, secondSelection])
+
+    expect((await repository.load(task))?.selectedOptionId).toBe(
+      secondOption.id,
+    )
+  })
+
+  it('reproduces a previous-question option reaching the next session during a slow advance', async () => {
+    const catalog = createVocabularyCatalog(
+      await loadActualVocabularyDocuments(),
+    )
+    const task = vocabularyTaskFor(catalog.units[0])
+    const store = new OutOfOrderNamespaceStore()
+    const runtime = new VocabularyTrainingRuntime({
+      task,
+      localDate: '2026-07-24',
+      contentSource: createStaticDataSource(catalog),
+      eventSink: new InMemoryPlatformEventSink(),
+      repository: new VocabularySessionRepository(store),
+      now: sequenceClock(),
+      createId: sequenceIds(),
+    })
+    let session = await runtime.initialize()
+    const previousQuestionOption =
+      session.questions[0].options[0].id
+    session = await runtime.select(previousQuestionOption)
+    session = await runtime.submit()
+
+    store.delayNextPut()
+    const advancing = runtime.advance()
+    await store.waitForDelayedPut()
+    const staleSelection = runtime.select(previousQuestionOption)
+    store.release()
+    await advancing
+
+    await expect(staleSelection).rejects.toThrow(
+      `Option ${previousQuestionOption} does not belong to the active question.`,
+    )
+  })
+
+  it('exposes the next question optimistically before a slow advance persists', async () => {
+    const catalog = createVocabularyCatalog(
+      await loadActualVocabularyDocuments(),
+    )
+    const task = vocabularyTaskFor(catalog.units[0])
+    const store = new OutOfOrderNamespaceStore()
+    const repository = new VocabularySessionRepository(store)
+    const runtime = new VocabularyTrainingRuntime({
+      task,
+      localDate: '2026-07-24',
+      contentSource: createStaticDataSource(catalog),
+      eventSink: new InMemoryPlatformEventSink(),
+      repository,
+      now: sequenceClock(),
+      createId: sequenceIds(),
+    })
+    let session = await runtime.initialize()
+    session = await runtime.select(
+      session.questions[0].options[0].id,
+    )
+    session = await runtime.submit()
+
+    const observedSessions: typeof session[] = []
+    runtime.subscribe((observed) => {
+      observedSessions.push(observed)
+    })
+    store.delayNextPut()
+    const advancing = runtime.advance()
+    await store.waitForDelayedPut()
+
+    const optimisticSession = observedSessions.at(-1)!
+    expect(optimisticSession).toMatchObject({
+      phase: 'answering',
+      questionIndex: 1,
+      selectedOptionId: null,
+    })
+    const nextOption =
+      optimisticSession.questions[1].options[0].id
+    const selecting = runtime.select(nextOption)
+
+    store.release()
+    await advancing
+    const selected = await selecting
+
+    expect(selected).toMatchObject({
+      phase: 'answering',
+      questionIndex: 1,
+      selectedOptionId: nextOption,
+    })
+    expect((await repository.load(task))?.selectedOptionId).toBe(nextOption)
+  })
+
+  it('persists select, submit, advance, and exit pause in invocation order', async () => {
+    const catalog = createVocabularyCatalog(
+      await loadActualVocabularyDocuments(),
+    )
+    const task = vocabularyTaskFor(catalog.units[0])
+    const store = new OutOfOrderNamespaceStore()
+    const repository = new VocabularySessionRepository(store)
+    const runtime = new VocabularyTrainingRuntime({
+      task,
+      localDate: '2026-07-24',
+      contentSource: createStaticDataSource(catalog),
+      eventSink: new InMemoryPlatformEventSink(),
+      repository,
+      now: sequenceClock(),
+      createId: sequenceIds(),
+    })
+    const session = await runtime.initialize()
+
+    store.delayNextPut()
+    const selecting = runtime.select(
+      session.questions[0].options[0].id,
+    )
+    await store.waitForDelayedPut()
+    const submitting = runtime.submit()
+    const advancing = runtime.advance()
+    const exiting = runtime.pauseIfActive('user-paused')
+
+    store.release()
+    await Promise.all([selecting, submitting, advancing, exiting])
+
+    expect(await repository.load(task)).toMatchObject({
+      phase: 'paused',
+      pausedFromPhase: 'answering',
+      questionIndex: 1,
+      selectedOptionId: null,
+      answers: [{ questionId: session.questions[0].id }],
+    })
+  })
+
+  it('emits monotonic subscription states across queued microtasks without a stale final write', async () => {
+    const catalog = createVocabularyCatalog(
+      await loadActualVocabularyDocuments(),
+    )
+    const task = vocabularyTaskFor(catalog.units[0])
+    const store = new OutOfOrderNamespaceStore()
+    const runtime = new VocabularyTrainingRuntime({
+      task,
+      localDate: '2026-07-24',
+      contentSource: createStaticDataSource(catalog),
+      eventSink: new InMemoryPlatformEventSink(),
+      repository: new VocabularySessionRepository(store),
+      now: sequenceClock(),
+      createId: sequenceIds(),
+    })
+    const session = await runtime.initialize()
+    const observed: string[] = []
+    runtime.subscribe((next) => {
+      observed.push(
+        `${next.questionIndex}:${next.phase}:${next.selectedOptionId ?? '-'}`,
+      )
+    })
+
+    store.delayNextPut()
+    const selectedOptionId = session.questions[0].options[0].id
+    const selecting = runtime.select(selectedOptionId)
+    await store.waitForDelayedPut()
+    const submitting = runtime.submit()
+    const advancing = runtime.advance()
+
+    store.release()
+    await Promise.all([selecting, submitting, advancing])
+    await Promise.resolve()
+
+    expect(observed).toEqual([
+      `0:answering:${selectedOptionId}`,
+      `0:feedback:${selectedOptionId}`,
+      '1:answering:-',
+    ])
+    expect(runtime.currentSession).toMatchObject({
+      questionIndex: 1,
+      phase: 'answering',
+      selectedOptionId: null,
+    })
+  })
+
   it('publishes a scored completion and recovers without duplicating events', async () => {
     const catalog = createVocabularyCatalog(
       await loadActualVocabularyDocuments(),

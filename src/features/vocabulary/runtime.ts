@@ -42,6 +42,9 @@ import type {
 
 type TaskPauseReason = LearningTaskPausedEvent['payload']['reason']
 type TaskSkipReason = LearningTaskSkippedEvent['payload']['reason']
+export type VocabularySessionListener = (
+  session: VocabularySession,
+) => void
 
 export interface VocabularyTrainingRuntimeOptions {
   readonly task: LearningTask
@@ -69,6 +72,8 @@ export class VocabularyTrainingRuntime {
   private readonly createId: () => string
   private session: VocabularySession | null = null
   private initializing: Promise<VocabularySession> | null = null
+  private operationTail: Promise<void> | null = null
+  private readonly sessionListeners = new Set<VocabularySessionListener>()
 
   constructor(options: VocabularyTrainingRuntimeOptions) {
     this.task = options.task
@@ -86,6 +91,45 @@ export class VocabularyTrainingRuntime {
     return this.session
   }
 
+  subscribe(listener: VocabularySessionListener): () => void {
+    this.sessionListeners.add(listener)
+    return () => {
+      this.sessionListeners.delete(listener)
+    }
+  }
+
+  private setSession(session: VocabularySession): void {
+    this.session = session
+    for (const listener of this.sessionListeners) {
+      listener(session)
+    }
+  }
+
+  private enqueue<T>(operation: () => Promise<T>): Promise<T> {
+    let result: Promise<T>
+    if (this.operationTail === null) {
+      try {
+        result = operation()
+      } catch (error) {
+        result = Promise.reject(error)
+      }
+    } else {
+      result = this.operationTail.then(operation, operation)
+    }
+
+    const tail = result.then(
+      () => undefined,
+      () => undefined,
+    )
+    this.operationTail = tail
+    void tail.then(() => {
+      if (this.operationTail === tail) {
+        this.operationTail = null
+      }
+    })
+    return result
+  }
+
   private identity(now: string) {
     return {
       eventId: `vocabulary:${this.task.taskId}:${this.createId()}`,
@@ -95,9 +139,19 @@ export class VocabularyTrainingRuntime {
   }
 
   private async save(session: VocabularySession): Promise<VocabularySession> {
-    this.session = session
-    await this.repository.save(session)
-    return session
+    const previous = this.session
+    this.setSession(session)
+    try {
+      await this.repository.save(session)
+      return session
+    } catch (error) {
+      if (this.session === session && previous) {
+        this.setSession(previous)
+      } else if (this.session === session) {
+        this.session = null
+      }
+      throw error
+    }
   }
 
   private requireSession(): VocabularySession {
@@ -179,7 +233,7 @@ export class VocabularyTrainingRuntime {
   private async initializeInternal(): Promise<VocabularySession> {
     const stored = await this.repository.load(this.task)
     if (stored) {
-      this.session = stored
+      this.setSession(stored)
       return this.flushPendingEvents()
     }
     return this.startFresh()
@@ -189,7 +243,7 @@ export class VocabularyTrainingRuntime {
     if (this.initializing) {
       return this.initializing
     }
-    const initialization = this.initializeInternal()
+    const initialization = this.enqueue(() => this.initializeInternal())
     this.initializing = initialization
     const clearInitialization = () => {
       if (this.initializing === initialization) {
@@ -200,45 +254,53 @@ export class VocabularyTrainingRuntime {
     return initialization
   }
 
-  async select(optionId: string): Promise<VocabularySession> {
-    return this.save(
-      selectVocabularyOption(this.requireSession(), optionId, this.now()),
+  select(optionId: string): Promise<VocabularySession> {
+    return this.enqueue(() =>
+      this.save(
+        selectVocabularyOption(this.requireSession(), optionId, this.now()),
+      ),
     )
   }
 
-  async submit(): Promise<VocabularySession> {
-    return this.save(
-      submitVocabularyAnswer(this.requireSession(), this.now()),
+  submit(): Promise<VocabularySession> {
+    return this.enqueue(() =>
+      this.save(
+        submitVocabularyAnswer(this.requireSession(), this.now()),
+      ),
     )
   }
 
-  async advance(): Promise<VocabularySession> {
-    const now = this.now()
-    let session = advanceVocabularySession(this.requireSession(), now)
-    if (session.phase === 'completed') {
-      const durationSeconds = Math.max(
-        0,
-        session.activeDurationSeconds - session.reportedDurationSeconds,
-      )
-      session = {
-        ...session,
-        reportedDurationSeconds: session.activeDurationSeconds,
-      }
-      session = withPendingVocabularyEvent(
-        session,
-        createVocabularyCompletedEvent(
+  advance(): Promise<VocabularySession> {
+    return this.enqueue(async () => {
+      const now = this.now()
+      let session = advanceVocabularySession(this.requireSession(), now)
+      if (session.phase === 'completed') {
+        const durationSeconds = Math.max(
+          0,
+          session.activeDurationSeconds - session.reportedDurationSeconds,
+        )
+        session = {
+          ...session,
+          reportedDurationSeconds: session.activeDurationSeconds,
+        }
+        session = withPendingVocabularyEvent(
           session,
-          durationSeconds,
-          this.identity(now),
-        ),
-        now,
-      )
-    }
-    await this.save(session)
-    return this.flushPendingEvents()
+          createVocabularyCompletedEvent(
+            session,
+            durationSeconds,
+            this.identity(now),
+          ),
+          now,
+        )
+      }
+      await this.save(session)
+      return this.flushPendingEvents()
+    })
   }
 
-  async pause(reason: TaskPauseReason): Promise<VocabularySession> {
+  private async pauseInternal(
+    reason: TaskPauseReason,
+  ): Promise<VocabularySession> {
     const now = this.now()
     let session = pauseVocabularySession(this.requireSession(), now)
     const durationSeconds = Math.max(
@@ -263,26 +325,94 @@ export class VocabularyTrainingRuntime {
     return this.flushPendingEvents()
   }
 
-  async resume(): Promise<VocabularySession> {
-    const now = this.now()
-    let session = resumeVocabularySession(this.requireSession(), now)
-    session = withPendingVocabularyEvent(
-      session,
-      createVocabularyTaskStartedEvent(
-        session.task,
-        this.identity(now),
-      ),
-      now,
-    )
-    await this.save(session)
-    return this.flushPendingEvents()
+  pause(reason: TaskPauseReason): Promise<VocabularySession> {
+    return this.enqueue(() => this.pauseInternal(reason))
   }
 
-  async skip(reason: TaskSkipReason): Promise<VocabularySession> {
-    const now = this.now()
-    let session = this.requireSession()
-    if (session.phase === 'answering' || session.phase === 'feedback') {
-      session = pauseVocabularySession(session, now)
+  pauseIfActive(reason: TaskPauseReason): Promise<VocabularySession> {
+    return this.enqueue(() => {
+      const session = this.requireSession()
+      if (session.phase !== 'answering' && session.phase !== 'feedback') {
+        return Promise.resolve(session)
+      }
+      return this.pauseInternal(reason)
+    })
+  }
+
+  resume(): Promise<VocabularySession> {
+    return this.enqueue(async () => {
+      const now = this.now()
+      let session = resumeVocabularySession(this.requireSession(), now)
+      session = withPendingVocabularyEvent(
+        session,
+        createVocabularyTaskStartedEvent(
+          session.task,
+          this.identity(now),
+        ),
+        now,
+      )
+      await this.save(session)
+      return this.flushPendingEvents()
+    })
+  }
+
+  skip(reason: TaskSkipReason): Promise<VocabularySession> {
+    return this.enqueue(async () => {
+      const now = this.now()
+      let session = this.requireSession()
+      if (session.phase === 'answering' || session.phase === 'feedback') {
+        session = pauseVocabularySession(session, now)
+        const durationSeconds = Math.max(
+          0,
+          session.activeDurationSeconds - session.reportedDurationSeconds,
+        )
+        session = {
+          ...session,
+          reportedDurationSeconds: session.activeDurationSeconds,
+        }
+        const pauseReason: TaskPauseReason =
+          reason === 'time-budget-ended'
+            ? 'time-budget-ended'
+            : reason === 'device-failure'
+              ? 'device-failure'
+              : reason === 'content-failure'
+                ? 'content-failure'
+                : 'user-paused'
+        session = withPendingVocabularyEvent(
+          session,
+          createVocabularyTaskPausedEvent(
+            session.task,
+            pauseReason,
+            durationSeconds,
+            this.identity(now),
+          ),
+          now,
+        )
+      }
+      session = withPendingVocabularyEvent(
+        session,
+        createVocabularyTaskSkippedEvent(
+          session.task,
+          reason,
+          this.identity(now),
+        ),
+        now,
+      )
+      await this.save(session)
+      return this.flushPendingEvents()
+    })
+  }
+
+  reportFailure(
+    failure: VocabularySessionFailure,
+  ): Promise<VocabularySession> {
+    return this.enqueue(async () => {
+      const now = this.now()
+      let session = failVocabularySession(
+        this.requireSession(),
+        failure,
+        now,
+      )
       const durationSeconds = Math.max(
         0,
         session.activeDurationSeconds - session.reportedDurationSeconds,
@@ -291,79 +421,33 @@ export class VocabularyTrainingRuntime {
         ...session,
         reportedDurationSeconds: session.activeDurationSeconds,
       }
-      const pauseReason: TaskPauseReason =
-        reason === 'time-budget-ended'
-          ? 'time-budget-ended'
-          : reason === 'device-failure'
-            ? 'device-failure'
-            : reason === 'content-failure'
-              ? 'content-failure'
-              : 'user-paused'
       session = withPendingVocabularyEvent(
         session,
-        createVocabularyTaskPausedEvent(
+        createVocabularyUnscorableEvent(
           session.task,
-          pauseReason,
+          failure.category,
           durationSeconds,
           this.identity(now),
         ),
         now,
       )
-    }
-    session = withPendingVocabularyEvent(
-      session,
-      createVocabularyTaskSkippedEvent(
-        session.task,
-        reason,
-        this.identity(now),
-      ),
-      now,
-    )
-    await this.save(session)
-    return this.flushPendingEvents()
-  }
-
-  async reportFailure(
-    failure: VocabularySessionFailure,
-  ): Promise<VocabularySession> {
-    const now = this.now()
-    let session = failVocabularySession(
-      this.requireSession(),
-      failure,
-      now,
-    )
-    const durationSeconds = Math.max(
-      0,
-      session.activeDurationSeconds - session.reportedDurationSeconds,
-    )
-    session = {
-      ...session,
-      reportedDurationSeconds: session.activeDurationSeconds,
-    }
-    session = withPendingVocabularyEvent(
-      session,
-      createVocabularyUnscorableEvent(
-        session.task,
-        failure.category,
-        durationSeconds,
-        this.identity(now),
-      ),
-      now,
-    )
-    await this.save(session)
-    return this.flushPendingEvents()
+      await this.save(session)
+      return this.flushPendingEvents()
+    })
   }
 
   retryPendingEvents(): Promise<VocabularySession> {
-    return this.flushPendingEvents()
+    return this.enqueue(() => this.flushPendingEvents())
   }
 
-  async restart(): Promise<VocabularySession> {
-    if (this.session && this.session.pendingEvents.length > 0) {
-      await this.flushPendingEvents()
-    }
-    await this.repository.delete(this.task.taskId)
-    this.session = null
-    return this.startFresh()
+  restart(): Promise<VocabularySession> {
+    return this.enqueue(async () => {
+      if (this.session && this.session.pendingEvents.length > 0) {
+        await this.flushPendingEvents()
+      }
+      await this.repository.delete(this.task.taskId)
+      this.session = null
+      return this.startFresh()
+    })
   }
 }

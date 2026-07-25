@@ -32,6 +32,7 @@ export {
 } from './repository.ts'
 export {
   VocabularyTrainingRuntime,
+  type VocabularySessionListener,
   type VocabularyTrainingRuntimeOptions,
 } from './runtime.ts'
 export {

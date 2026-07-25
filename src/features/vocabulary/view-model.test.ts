@@ -82,4 +82,38 @@ describe('vocabulary UI adapter', () => {
     )
     expect(viewModel.action.label).toBe('继续训练')
   })
+
+  it('disables every interaction while a route operation is pending', async () => {
+    const catalog = createVocabularyCatalog(
+      await loadActualVocabularyDocuments(),
+    )
+    const unit = catalog.units[0]
+    const questions = buildVocabularyQuestions(unit)
+    let session = createVocabularySession(
+      vocabularyTaskFor(unit),
+      questions,
+      '2026-07-24T00:00:00.000Z',
+    )
+    session = selectVocabularyOption(
+      session,
+      questions[0].correctOptionId,
+      '2026-07-24T00:00:01.000Z',
+    )
+    session = submitVocabularyAnswer(
+      session,
+      '2026-07-24T00:00:02.000Z',
+    )
+
+    const viewModel = toVocabularyScreenViewModel(session, true)
+
+    expect(
+      viewModel.choices.every(
+        (choice) => choice.state === 'disabled',
+      ),
+    ).toBe(true)
+    expect(viewModel.action).toMatchObject({
+      disabled: true,
+      loading: true,
+    })
+  })
 })

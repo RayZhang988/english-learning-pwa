@@ -4,6 +4,7 @@ import { toVocabularyScreenViewModel } from './view-model.ts'
 
 export function VocabularySessionScreen({
   session,
+  operationPending,
   onExit,
   onSelect,
   onSubmit,
@@ -11,13 +12,17 @@ export function VocabularySessionScreen({
   onResume,
 }: {
   readonly session: VocabularySession
+  readonly operationPending?: boolean
   readonly onExit: () => void
   readonly onSelect: (optionId: string) => void
   readonly onSubmit: () => void
   readonly onAdvance: () => void
   readonly onResume: () => void
 }) {
-  const viewModel = toVocabularyScreenViewModel(session)
+  const viewModel = toVocabularyScreenViewModel(
+    session,
+    operationPending,
+  )
   const onAction =
     session.phase === 'paused'
       ? onResume

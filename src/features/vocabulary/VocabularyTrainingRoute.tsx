@@ -57,6 +57,8 @@ export function VocabularyTrainingRoute(
   const [state, setState] = useState<AsyncDataState<VocabularySession>>({
     status: 'loading',
   })
+  const [operationPending, setOperationPending] = useState(false)
+  const operationPendingRef = useRef(false)
   const runtimeKey = `${props.task.planId}:${props.task.taskId}`
   const runtimeRef = useRef<{
     readonly key: string
@@ -98,24 +100,32 @@ export function VocabularyTrainingRoute(
 
   const perform = useCallback(
     async (operation: () => Promise<VocabularySession>) => {
+      if (operationPendingRef.current) {
+        return
+      }
+      operationPendingRef.current = true
+      setOperationPending(true)
       try {
-        showSession(await operation())
+        await operation()
       } catch (error) {
         showError(error)
+      } finally {
+        operationPendingRef.current = false
+        setOperationPending(false)
       }
     },
-    [showError, showSession],
+    [showError],
+  )
+
+  useEffect(
+    () => runtime.subscribe(showSession),
+    [runtime, showSession],
   )
 
   useEffect(() => {
     let active = true
     setState({ status: 'loading' })
-    void runtime.initialize().then(
-      (session) => {
-        if (active) {
-          showSession(session)
-        }
-      },
+    void runtime.initialize().catch(
       (error: unknown) => {
         if (active) {
           showError(error)
@@ -125,7 +135,7 @@ export function VocabularyTrainingRoute(
     return () => {
       active = false
     }
-  }, [runtime, showError, showSession])
+  }, [runtime, showError])
 
   useEffect(
     () => networkStatus.subscribe(setNetwork),
@@ -140,7 +150,7 @@ export function VocabularyTrainingRoute(
         session &&
         (session.phase === 'answering' || session.phase === 'feedback')
       ) {
-        void perform(() => runtime.pause('app-backgrounded'))
+        void runtime.pauseIfActive('app-backgrounded').catch(showError)
       }
     }
     document.addEventListener('visibilitychange', onVisibilityChange)
@@ -150,7 +160,7 @@ export function VocabularyTrainingRoute(
         onVisibilityChange,
       )
     }
-  }, [perform, runtime])
+  }, [runtime, showError])
 
   useEffect(() => {
     if (
@@ -180,7 +190,7 @@ export function VocabularyTrainingRoute(
       session &&
       (session.phase === 'answering' || session.phase === 'feedback')
     ) {
-      void runtime.pause('user-paused').then(
+      void runtime.pauseIfActive('user-paused').then(
         props.onExit,
         props.onExit,
       )
@@ -248,6 +258,7 @@ export function VocabularyTrainingRoute(
       {network === 'offline' ? <OfflineNotice /> : null}
       <VocabularySessionScreen
         session={session}
+        operationPending={operationPending}
         onExit={exit}
         onSelect={(optionId) => {
           void perform(() => runtime.select(optionId))
