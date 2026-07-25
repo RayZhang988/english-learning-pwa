@@ -136,8 +136,14 @@ HTTPS 部署后入口：
 该证据明确标为不可评分，不会硬编码置信度。本地工程门禁已全部通过；真实 iPhone
 上的语音合成、麦克风权限、后台中断和主屏幕安装结论归 09。
 
-GitHub Pages 工作流已存在；本地构建不会自动发布。生产地址只有在本次代码进入部署
-分支且工作流成功后才会更新。
+GitHub Pages 已通过 `main` 分支的部署工作流发布：
+
+- 生产入口：`https://rayzhang988.github.io/english-learning-pwa/#/`
+- 首次完整应用提交：`dd349f543f038d880d34c395ac9ccfaf8a4af522`
+- Actions 运行：`Deploy PWA to GitHub Pages` #2，结论 `success`
+- 公网核验：首页、`manifest.webmanifest` 和 `sw.js` 均通过 HTTPS 返回 200
+
+后续推送到 `main` 会重新运行同一工作流。本地 `pnpm build` 只生成产物，不会单独发布。
 
 ## 可复现验证
 
@@ -150,4 +156,5 @@ pnpm test：68 个测试文件、222 项测试通过
 pnpm build：通过
 PWA generateSW：预缓存 18 项 / 1031.37 KiB
 首次使用生产集成：完整正式评估档案 → 05 四周课程 → 首日计划 → 真实模块路由 → 刷新恢复
+HTTPS 发布：GitHub Pages workflow success；首页 / Manifest / Service Worker 均返回 200
 ```
