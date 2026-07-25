@@ -14,6 +14,7 @@ import {
 import {
   LearningAppPrototype,
   type DailyPlanViewModel,
+  type PracticeModuleViewModel,
   type ProgressViewModel,
 } from './learning-app-prototype.tsx'
 import { ProgressOverviewScreen } from './progress-overview-screen.tsx'
@@ -103,14 +104,55 @@ const demoProgress: ProgressViewModel = {
   ],
 }
 
+const demoPracticeModules: readonly PracticeModuleViewModel[] = [
+  {
+    moduleId: 'assessment',
+    request: {
+      state: 'disabled',
+      label: '已完成',
+      reason: '首次水平测试已完成，第一版暂不支持重复测试。',
+    },
+  },
+  {
+    moduleId: 'vocabulary',
+    request: {
+      state: 'disabled',
+      label: '已完成',
+      reason: '今天的词汇任务已经完成。',
+    },
+  },
+  {
+    moduleId: 'listening',
+    request: {
+      state: 'enabled',
+      label: '进入训练',
+      taskId: 'demo-plan-2026-07-24:task:2',
+    },
+  },
+  {
+    moduleId: 'speaking',
+    request: {
+      state: 'disabled',
+      label: '稍后',
+      reason: '完成当前任务后可开始。',
+    },
+  },
+]
+
 export function LearningAppVisualDemo() {
   const [requestedTaskId, setRequestedTaskId] = useState<string>()
+  const [assessmentRequested, setAssessmentRequested] = useState(false)
 
   return (
-    <div data-demo-requested-task-id={requestedTaskId ?? ''}>
+    <div
+      data-demo-requested-task-id={requestedTaskId ?? ''}
+      data-demo-assessment-requested={assessmentRequested}
+    >
       <LearningAppPrototype
         plan={demoPlan}
         progress={demoProgress}
+        practiceModules={demoPracticeModules}
+        onAssessmentRequested={() => setAssessmentRequested(true)}
         onTaskRequested={setRequestedTaskId}
       />
     </div>

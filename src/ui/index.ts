@@ -6,7 +6,10 @@ export {
   type DailyTaskStatus,
   type DailyTaskViewModel,
   type LearningAppPrototypeProps,
+  type PracticeModuleId,
+  type PracticeModuleViewModel,
   type ProgressViewModel,
+  type TrainingPracticeModuleId,
 } from './learning-app-prototype.tsx'
 export { PlatformPrototype } from './platform-prototype.tsx'
 export {

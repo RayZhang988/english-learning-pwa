@@ -12,7 +12,8 @@ import { ... } from '../../ui/index.ts'
 
 当前公开页面组件：
 
-- `LearningAppPrototype`：纯展示应用壳；必须显式传入计划、进度和任务请求回调。
+- `LearningAppPrototype`：纯展示应用壳；生产入口必须显式传入计划、进度、训练模块
+  ViewModel 和请求回调。
 - `AssessmentIntroScreen`
 - `AssessmentChoiceScreen`
 - `AssessmentSpeechScreen`
@@ -49,6 +50,8 @@ import { ... } from '../../ui/index.ts'
 - 注册业务模块公开的 `FeatureModule`。
 - 为 `LearningAppPrototype.onTaskRequested(taskId)` 注入真实任务协调器；根据活动计划中的
   `LearningTask.targetModuleId` 决定路由，UI 不接收路由表。
+- 为训练页注入四个稳定模块的可用状态；专项训练的启用态必须携带精确
+  `LearningTask.taskId`，水平测试使用独立 `onAssessmentRequested()`。
 - 不在 `src/app/**` 复制 UI 样式。
 
 ### 03
@@ -109,6 +112,9 @@ import {
   type DailyTaskRequestViewModel,
   type DailyTaskViewModel,
   type LearningAppPrototypeProps,
+  type PracticeModuleId,
+  type PracticeModuleViewModel,
+  type TrainingPracticeModuleId,
 } from '../../ui/index.ts'
 ```
 
@@ -145,6 +151,104 @@ UI 的防御规则：
 `demoPlan` 仅存在于 `visual-fixture.tsx`，并通过独立 `LearningAppVisualDemo` 注入演示
 回调。生产 `learning-app-prototype.tsx` 不导入视觉夹具，也没有演示计划、演示 ID 或
 默认任务请求行为。开发环境可通过 `?ui-fixture=today-task-request` 单独验证此契约。
+
+## 01｜训练页公开入口契约
+
+01 继续使用 `LearningAppPrototype.onTaskRequested(taskId)` 启动真实专项训练，并额外
+导入：
+
+```ts
+import {
+  type PracticeModuleId,
+  type PracticeModuleViewModel,
+  type TrainingPracticeModuleId,
+} from '../../ui/index.ts'
+```
+
+稳定模块 ID 为：
+
+```ts
+type PracticeModuleId =
+  | 'assessment'
+  | 'vocabulary'
+  | 'listening'
+  | 'speaking'
+```
+
+`moduleId` 只承担卡片身份、视觉映射和自动化定位，不能当作任务 ID 或路由 ID。生产
+ViewModel 应包含四个模块且每个 ID 恰好出现一次：
+
+```ts
+const practiceModules = [
+  {
+    moduleId: 'assessment',
+    request: {
+      state: 'disabled',
+      label: '已完成',
+      reason: '首次水平测试已完成，第一版暂不支持重复测试。',
+    },
+  },
+  {
+    moduleId: 'vocabulary',
+    request: {
+      state: 'enabled',
+      label: '进入训练',
+      taskId: vocabularyLearningTask.taskId,
+    },
+  },
+  {
+    moduleId: 'listening',
+    request: {
+      state: 'disabled',
+      label: '暂不可用',
+      reason: '当前没有可执行的听力任务。',
+    },
+  },
+  {
+    moduleId: 'speaking',
+    request: {
+      state: 'enabled',
+      label: '进入训练',
+      taskId: speakingLearningTask.taskId,
+    },
+  },
+] satisfies readonly PracticeModuleViewModel[]
+```
+
+生产入口：
+
+```tsx
+<LearningAppPrototype
+  plan={planViewModel}
+  progress={progressViewModel}
+  practiceModules={practiceModules}
+  onAssessmentRequested={() => {
+    // 01 进入正式水平测试入口。
+  }}
+  onTaskRequested={(taskId) => {
+    // 01 在活动计划中校验原始 taskId，再进入真实专项训练。
+  }}
+/>
+```
+
+输入输出约束：
+
+| 输入 / 输出 | 语义 | 强制约束 |
+| --- | --- | --- |
+| `PracticeModuleViewModel.moduleId` | 稳定 UI 身份 | 只允许四个公开字面量；不表示任务或路由 |
+| 专项训练 `request.taskId` | 精确 `LearningTask.taskId` | 只存在于 `enabled`；UI 原样传给 `onTaskRequested` |
+| `onAssessmentRequested()` | 用户请求水平测试 | 水平测试不是 `LearningTask`，不生成 `taskId` |
+| `disabled.reason` | 当前不可执行原因 | 卡片直接展示、使用原生禁用态且不绑定点击动作 |
+
+已有能力档案时，01 必须把 `assessment` 映射为禁用态，并使用文案
+“首次水平测试已完成，第一版暂不支持重复测试”。词汇、听力和口语是否有可执行任务、
+使用哪个 `taskId`、以及最终进入哪条路由，全部由 01 / 04 的真实状态决定；UI 不按标题、
+模块 ID、数组顺序或计划文案猜测。
+
+为避免尚未更新的应用壳在类型迁移期间中断，`practiceModules` 与
+`onAssessmentRequested` 可以同时省略；此时四张卡片全部显示为“入口尚未接入”并禁用，
+不会再进入内部“暂无可用训练”占位页。该状态只用于迁移兼容，不满足生产集成验收；
+01 发布前必须显式传入两项。
 
 ## 07｜听力 UI 公开契约
 

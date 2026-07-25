@@ -512,6 +512,30 @@ svg {
   box-shadow: 0 4px 14px rgb(31 45 84 / 5%);
 }
 
+.module-card:disabled {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--surface) 82%, var(--canvas));
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.module-card:disabled .task-icon {
+  opacity: 0.68;
+}
+
+.module-card:disabled p,
+.module-card:disabled .module-card__action {
+  color: var(--ink-soft);
+}
+
+.module-card:disabled .module-card__action {
+  justify-content: flex-start;
+}
+
+.module-card:disabled:active {
+  transform: none;
+}
+
 .detail-header {
   display: flex;
   align-items: center;

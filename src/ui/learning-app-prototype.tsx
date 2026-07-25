@@ -1,9 +1,18 @@
 import { useState, type CSSProperties } from 'react'
-import { EmptyState, OfflineNotice } from './feedback-states.tsx'
+import { OfflineNotice } from './feedback-states.tsx'
 import { Icon, type IconName } from './icons.tsx'
 
 type AppSection = 'today' | 'practice' | 'progress'
 export type DailyTaskStatus = 'complete' | 'current' | 'upcoming'
+export type PracticeModuleId =
+  | 'assessment'
+  | 'vocabulary'
+  | 'listening'
+  | 'speaking'
+export type TrainingPracticeModuleId = Exclude<
+  PracticeModuleId,
+  'assessment'
+>
 
 export type DailyTaskRequestViewModel =
   | {
@@ -66,12 +75,67 @@ export interface ProgressViewModel {
   }[]
 }
 
-export interface LearningAppPrototypeProps {
+export type PracticeModuleViewModel =
+  | {
+      /**
+       * Stable UI identity only. Assessment is not a LearningTask.
+       */
+      readonly moduleId: 'assessment'
+      readonly request:
+        | {
+            readonly state: 'enabled'
+            readonly label: string
+          }
+        | {
+            readonly state: 'disabled'
+            readonly label: string
+            readonly reason: string
+          }
+    }
+  | {
+      /**
+       * Stable UI identity only. Never use this value as a task id.
+       */
+      readonly moduleId: TrainingPracticeModuleId
+      readonly request:
+        | {
+            readonly state: 'enabled'
+            readonly label: string
+            /**
+             * Exact LearningTask.taskId. The UI returns it unchanged.
+             */
+            readonly taskId: string
+          }
+        | {
+            readonly state: 'disabled'
+            readonly label: string
+            readonly reason: string
+          }
+    }
+
+interface LearningAppPrototypeBaseProps {
   readonly plan: DailyPlanViewModel
   readonly progress: ProgressViewModel
   readonly offline?: boolean
   readonly onTaskRequested: (taskId: string) => void
 }
+
+export type LearningAppPrototypeProps =
+  LearningAppPrototypeBaseProps &
+    (
+      | {
+          readonly practiceModules: readonly PracticeModuleViewModel[]
+          readonly onAssessmentRequested: () => void
+        }
+      | {
+          /**
+           * Transitional compatibility state. All module cards render disabled
+           * until the application layer supplies the explicit practice contract.
+           */
+          readonly practiceModules?: undefined
+          readonly onAssessmentRequested?: undefined
+        }
+    )
 
 const navigation: readonly {
   readonly id: AppSection
@@ -83,21 +147,85 @@ const navigation: readonly {
   { id: 'progress', label: '进度', icon: 'trend' },
 ]
 
+const practiceModulePresentation = {
+  assessment: {
+    title: '水平测试',
+    description: '了解当前英语水平',
+    icon: 'target',
+    accent: 'indigo',
+  },
+  vocabulary: {
+    title: '词汇',
+    description: '复习与巩固词汇',
+    icon: 'book',
+    accent: 'mint',
+  },
+  listening: {
+    title: '听力',
+    description: '精听与理解训练',
+    icon: 'headphones',
+    accent: 'indigo',
+  },
+  speaking: {
+    title: '口语',
+    description: '跟读与表达训练',
+    icon: 'mic',
+    accent: 'coral',
+  },
+} satisfies Record<
+  PracticeModuleId,
+  {
+    readonly title: string
+    readonly description: string
+    readonly icon: IconName
+    readonly accent: DailyTaskViewModel['accent']
+  }
+>
+
+const disconnectedPracticeModules: readonly PracticeModuleViewModel[] = [
+  {
+    moduleId: 'assessment',
+    request: {
+      state: 'disabled',
+      label: '暂不可用',
+      reason: '水平测试入口尚未接入。',
+    },
+  },
+  {
+    moduleId: 'vocabulary',
+    request: {
+      state: 'disabled',
+      label: '暂不可用',
+      reason: '词汇训练入口尚未接入。',
+    },
+  },
+  {
+    moduleId: 'listening',
+    request: {
+      state: 'disabled',
+      label: '暂不可用',
+      reason: '听力训练入口尚未接入。',
+    },
+  },
+  {
+    moduleId: 'speaking',
+    request: {
+      state: 'disabled',
+      label: '暂不可用',
+      reason: '口语训练入口尚未接入。',
+    },
+  },
+]
+
 export function LearningAppPrototype({
   plan,
   progress,
   offline = false,
   onTaskRequested,
+  practiceModules,
+  onAssessmentRequested,
 }: LearningAppPrototypeProps) {
   const [section, setSection] = useState<AppSection>('today')
-  const [practiceModule, setPracticeModule] = useState<string>()
-
-  const navigate = (target: AppSection) => {
-    setSection(target)
-    if (target !== 'practice') {
-      setPracticeModule(undefined)
-    }
-  }
 
   return (
     <div className="learning-app">
@@ -109,14 +237,14 @@ export function LearningAppPrototype({
             onTaskRequested={onTaskRequested}
           />
         ) : null}
-        {section === 'practice' && practiceModule ? (
-          <PracticeModuleEmptyPage
-            title={practiceModule}
-            onBack={() => setPracticeModule(undefined)}
+        {section === 'practice' ? (
+          <PracticeModuleGrid
+            modules={practiceModules ?? disconnectedPracticeModules}
+            onAssessmentRequested={
+              onAssessmentRequested ?? (() => undefined)
+            }
+            onTaskRequested={onTaskRequested}
           />
-        ) : null}
-        {section === 'practice' && !practiceModule ? (
-          <PracticePage onSelectModule={setPracticeModule} />
         ) : null}
         {section === 'progress' ? <ProgressPage progress={progress} /> : null}
       </div>
@@ -128,7 +256,7 @@ export function LearningAppPrototype({
             type="button"
             key={item.id}
             aria-current={section === item.id ? 'page' : undefined}
-            onClick={() => navigate(item.id)}
+            onClick={() => setSection(item.id)}
           >
             <Icon name={item.icon} />
             <span>{item.label}</span>
@@ -292,103 +420,71 @@ function TodayPage({
   )
 }
 
-function PracticePage({
-  onSelectModule,
+export function PracticeModuleGrid({
+  modules,
+  onAssessmentRequested,
+  onTaskRequested,
 }: {
-  readonly onSelectModule: (title: string) => void
+  readonly modules: readonly PracticeModuleViewModel[]
+  readonly onAssessmentRequested: () => void
+  readonly onTaskRequested: (taskId: string) => void
 }) {
-  const modules: readonly {
-    readonly title: string
-    readonly description: string
-    readonly icon: IconName
-    readonly accent: DailyTaskViewModel['accent']
-    readonly label: string
-  }[] = [
-    {
-      title: '水平测试',
-      description: '了解当前英语水平',
-      icon: 'target',
-      accent: 'indigo',
-      label: '开始测试',
-    },
-    {
-      title: '词汇',
-      description: '复习与巩固词汇',
-      icon: 'book',
-      accent: 'mint',
-      label: '进入训练',
-    },
-    {
-      title: '听力',
-      description: '精听与理解训练',
-      icon: 'headphones',
-      accent: 'indigo',
-      label: '进入训练',
-    },
-    {
-      title: '口语',
-      description: '跟读与表达训练',
-      icon: 'mic',
-      accent: 'coral',
-      label: '进入训练',
-    },
-  ]
-
   return (
     <>
       <PageHeader eyebrow="PRACTICE" title="选择训练" />
       <p className="page-intro">选择水平测试或专项训练。</p>
       <section className="module-grid" aria-label="训练模块">
-        {modules.map((module) => (
-          <button
-            className="module-card"
-            type="button"
-            key={module.title}
-            onClick={() => onSelectModule(module.title)}
-          >
-            <span className={`task-icon task-icon--${module.accent}`}>
-              <Icon name={module.icon} />
-            </span>
-            <h2>{module.title}</h2>
-            <p>{module.description}</p>
-            <span className="module-card__action">
-              {module.label}
-              <Icon name="arrow-right" />
-            </span>
-          </button>
-        ))}
-      </section>
-    </>
-  )
-}
+        {modules.map((module) => {
+          const presentation =
+            practiceModulePresentation[module.moduleId]
+          const isDisabled = module.request.state === 'disabled'
+          const taskId =
+            module.moduleId === 'assessment' ||
+            module.request.state === 'disabled'
+              ? undefined
+              : module.request.taskId
+          const description = isDisabled
+            ? module.request.reason
+            : presentation.description
+          const ariaLabel = isDisabled
+            ? `${presentation.title}：${module.request.reason}`
+            : `${module.request.label}：${presentation.title}`
+          let onClick: (() => void) | undefined
+          if (module.request.state === 'enabled') {
+            if (module.moduleId === 'assessment') {
+              onClick = onAssessmentRequested
+            } else {
+              const requestedTaskId = module.request.taskId
+              onClick = () => onTaskRequested(requestedTaskId)
+            }
+          }
 
-function PracticeModuleEmptyPage({
-  title,
-  onBack,
-}: {
-  readonly title: string
-  readonly onBack: () => void
-}) {
-  return (
-    <>
-      <header className="detail-header">
-        <button type="button" onClick={onBack} aria-label="返回训练">
-          <Icon name="arrow-left" />
-        </button>
-        <div>
-          <span className="eyebrow">PRACTICE</span>
-          <h1>{title}</h1>
-        </div>
-      </header>
-      <EmptyState
-        title="暂无可用训练"
-        description="训练内容接入后会显示在这里。你可以先返回选择其他训练。"
-        action={(
-          <button className="secondary-button" type="button" onClick={onBack}>
-            返回训练
-          </button>
-        )}
-      />
+          return (
+            <button
+              className="module-card"
+              type="button"
+              key={module.moduleId}
+              disabled={isDisabled}
+              data-module-id={module.moduleId}
+              data-task-id={taskId}
+              aria-label={ariaLabel}
+              onClick={onClick}
+            >
+              <span
+                className={`task-icon task-icon--${presentation.accent}`}
+              >
+                <Icon name={presentation.icon} />
+              </span>
+              <h2>{presentation.title}</h2>
+              <p>{description}</p>
+              <span className="module-card__action">
+                {module.request.label}
+                {!isDisabled ? <Icon name="arrow-right" /> : null}
+              </span>
+            </button>
+          )
+        })}
+      </section>
     </>
   )
 }
