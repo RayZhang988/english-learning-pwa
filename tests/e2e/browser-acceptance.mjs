@@ -26,6 +26,51 @@ function checkpoint(name, details = {}) {
   evidence.checkpoints.push({ name, ...details })
 }
 
+async function openTrainingHub() {
+  await qa.page.clickByText('训练')
+  await qa.page.waitFor(
+    `document.body.innerText.includes('选择水平测试或专项训练。')`,
+  )
+  const text = await qa.page.bodyText()
+  assert.doesNotMatch(text, /暂无可用训练|训练内容接入后会显示在这里/u)
+  const cards = await qa.page.evaluate(`(() =>
+    [...document.querySelectorAll('button.module-card')].map((card) => ({
+      moduleId: card.dataset.moduleId ?? null,
+      taskId: card.dataset.taskId ?? null,
+      text: card.innerText.trim(),
+      disabled: card.disabled,
+    }))
+  )()`)
+  return { text, cards }
+}
+
+function trainingCard(hub, moduleId) {
+  const card = hub.cards.find((candidate) => candidate.moduleId === moduleId)
+  assert.ok(card, `Training hub is missing the ${moduleId} card.`)
+  return card
+}
+
+async function clickTrainingCard(moduleId) {
+  const result = await qa.page.evaluate(`(() => {
+    const card = [...document.querySelectorAll('button.module-card')].find(
+      (candidate) => candidate.dataset.moduleId === ${JSON.stringify(moduleId)}
+    )
+    if (!card) {
+      return { clicked: false, reason: 'missing' }
+    }
+    if (card.disabled) {
+      return { clicked: false, reason: 'disabled', text: card.innerText.trim() }
+    }
+    card.click()
+    return { clicked: true }
+  })()`)
+  assert.equal(
+    result.clicked,
+    true,
+    `Training hub could not open ${moduleId}: ${JSON.stringify(result)}`,
+  )
+}
+
 function storedListeningSession(databases, taskId) {
   const records = databases.flatMap(
     (database) => database.stores.records ?? [],
@@ -243,6 +288,65 @@ try {
   await qa.page.waitFor(
     `!document.body.innerText.includes('正在加载口语训练')`,
   )
+  const todayEntryUrl = await qa.page.url()
+  const todayEntryTaskId = new URLSearchParams(
+    todayEntryUrl.split('?')[1] ?? '',
+  ).get('taskId')
+  assert.equal(todayEntryTaskId, firstTaskId)
+  checkpoint('today-current-task-route', {
+    taskId: firstTaskId,
+    url: todayEntryUrl,
+    text: (await qa.page.bodyText()).slice(0, 1_200),
+  })
+  await qa.page.navigate(new URL('#/', baseUrl).href)
+  await qa.page.waitFor(
+    `!document.body.innerText.includes('正在恢复今日学习计划')`,
+  )
+
+  const initialTrainingHub = await openTrainingHub()
+  const assessmentCard = trainingCard(initialTrainingHub, 'assessment')
+  const initialSpeakingCard = trainingCard(initialTrainingHub, 'speaking')
+  const initialListeningCard = trainingCard(initialTrainingHub, 'listening')
+  const initialVocabularyCard = trainingCard(initialTrainingHub, 'vocabulary')
+  assert.equal(assessmentCard.disabled, false)
+  assert.equal(initialSpeakingCard.disabled, false)
+  assert.equal(initialSpeakingCard.taskId, firstTaskId)
+  assert.equal(initialListeningCard.disabled, true)
+  assert.match(initialListeningCard.text, /尚未轮到/u)
+  assert.equal(initialVocabularyCard.disabled, true)
+  assert.match(initialVocabularyCard.text, /尚未轮到/u)
+  checkpoint('training-hub-initial-task-state', {
+    cards: initialTrainingHub.cards,
+    text: initialTrainingHub.text.slice(0, 1_500),
+  })
+
+  await clickTrainingCard('assessment')
+  await qa.page.waitFor(
+    `location.hash.includes('/assessment?mode=results')`,
+  )
+  await qa.page.waitFor(
+    `!document.body.innerText.includes('正在恢复水平测试')`,
+  )
+  const assessmentResultsText = await qa.page.bodyText()
+  assert.match(assessmentResultsText, /词汇/u)
+  assert.match(assessmentResultsText, /听力/u)
+  assert.match(assessmentResultsText, /口语/u)
+  checkpoint('training-hub-assessment-results-route', {
+    url: await qa.page.url(),
+    text: assessmentResultsText.slice(0, 1_800),
+    interactive: await qa.page.interactiveElements(),
+  })
+  await qa.page.clickByText('进入今日计划')
+  await qa.page.waitFor(
+    `location.hash === '#/' &&
+      !document.body.innerText.includes('正在恢复今日学习计划')`,
+  )
+  await openTrainingHub()
+  await clickTrainingCard('speaking')
+  await qa.page.waitFor(`location.hash.includes('/speaking?taskId=')`)
+  await qa.page.waitFor(
+    `!document.body.innerText.includes('正在加载口语训练')`,
+  )
   const speakingUrl = await qa.page.url()
   const speakingHashQuery = speakingUrl.split('?')[1] ?? ''
   const routedTaskId = new URLSearchParams(speakingHashQuery).get('taskId')
@@ -309,7 +413,30 @@ try {
   }
 
   if (speakingAdvancedPlan) {
-    await qa.page.clickByText('继续今日计划')
+    const afterSpeakingHub = await openTrainingHub()
+    const completedSpeakingCard = trainingCard(
+      afterSpeakingHub,
+      'speaking',
+    )
+    const currentListeningCard = trainingCard(
+      afterSpeakingHub,
+      'listening',
+    )
+    const pendingVocabularyCard = trainingCard(
+      afterSpeakingHub,
+      'vocabulary',
+    )
+    assert.equal(completedSpeakingCard.disabled, true)
+    assert.match(completedSpeakingCard.text, /已完成/u)
+    assert.equal(currentListeningCard.disabled, false)
+    assert.equal(currentListeningCard.taskId, secondTaskId)
+    assert.equal(pendingVocabularyCard.disabled, true)
+    assert.match(pendingVocabularyCard.text, /尚未轮到/u)
+    checkpoint('training-hub-listening-current', {
+      cards: afterSpeakingHub.cards,
+      text: afterSpeakingHub.text.slice(0, 1_500),
+    })
+    await clickTrainingCard('listening')
   } else {
     await qa.page.navigate(
       new URL(
@@ -588,7 +715,30 @@ try {
   })
 
   if (speakingAdvancedPlan) {
-    await qa.page.clickByText('继续今日计划')
+    const afterListeningHub = await openTrainingHub()
+    const completedSpeakingCard = trainingCard(
+      afterListeningHub,
+      'speaking',
+    )
+    const completedListeningCard = trainingCard(
+      afterListeningHub,
+      'listening',
+    )
+    const currentVocabularyCard = trainingCard(
+      afterListeningHub,
+      'vocabulary',
+    )
+    assert.equal(completedSpeakingCard.disabled, true)
+    assert.match(completedSpeakingCard.text, /已完成/u)
+    assert.equal(completedListeningCard.disabled, true)
+    assert.match(completedListeningCard.text, /已完成/u)
+    assert.equal(currentVocabularyCard.disabled, false)
+    assert.equal(currentVocabularyCard.taskId, thirdTaskId)
+    checkpoint('training-hub-vocabulary-current', {
+      cards: afterListeningHub.cards,
+      text: afterListeningHub.text.slice(0, 1_500),
+    })
+    await clickTrainingCard('vocabulary')
   } else {
     await qa.page.navigate(
       new URL(
@@ -648,6 +798,22 @@ try {
         JSON.stringify(speakingAdvancedPlan ? '已完成 3 项' : '已完成 2 项')
       })`,
   )
+  if (speakingAdvancedPlan) {
+    const completedTrainingHub = await openTrainingHub()
+    for (const moduleId of ['speaking', 'listening', 'vocabulary']) {
+      const card = trainingCard(completedTrainingHub, moduleId)
+      assert.equal(card.disabled, true)
+      assert.match(card.text, /已完成/u)
+    }
+    checkpoint('training-hub-all-tasks-completed', {
+      cards: completedTrainingHub.cards,
+      text: completedTrainingHub.text.slice(0, 1_500),
+    })
+    await qa.page.clickByText('今天')
+    await qa.page.waitFor(
+      `document.body.innerText.includes('已完成 3 项')`,
+    )
+  }
   await qa.page.reload()
   await qa.page.waitFor(
     `!document.body.innerText.includes('正在恢复今日学习计划')`,
