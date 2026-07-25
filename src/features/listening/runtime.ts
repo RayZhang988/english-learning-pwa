@@ -85,6 +85,8 @@ export class ListeningTrainingRuntime {
   private session: ListeningSession | null = null
   private controller: ListeningPlaybackController | null = null
   private initializing: Promise<ListeningSession> | null = null
+  private sessionRevision = 0
+  private sessionWrite: Promise<void> = Promise.resolve()
   private playbackWrite: Promise<void> = Promise.resolve()
   private reportingSpeechFailure = false
 
@@ -126,12 +128,36 @@ export class ListeningTrainingRuntime {
     }
   }
 
-  private async save(session: ListeningSession): Promise<ListeningSession> {
-    await this.playbackWrite.catch(() => undefined)
+  private queueSessionWrite(session: ListeningSession): Promise<void> {
+    const write = this.sessionWrite
+      .catch(() => undefined)
+      .then(() => this.repository.save(session))
+    this.sessionWrite = write
+    return write
+  }
+
+  private stageSession(session: ListeningSession): number {
     this.session = session
-    await this.repository.save(session)
+    this.sessionRevision += 1
+    return this.sessionRevision
+  }
+
+  private async save(session: ListeningSession): Promise<ListeningSession> {
+    const revision = this.stageSession(session)
+    await this.queueSessionWrite(session)
+    if (revision === this.sessionRevision) {
+      this.notify(session)
+    }
+    return this.requireSession()
+  }
+
+  private async saveDraft(
+    session: ListeningSession,
+  ): Promise<ListeningSession> {
+    this.stageSession(session)
     this.notify(session)
-    return session
+    await this.queueSessionWrite(session)
+    return this.requireSession()
   }
 
   private requireSession(): ListeningSession {
@@ -145,11 +171,9 @@ export class ListeningTrainingRuntime {
   }
 
   private queuePlaybackSave(session: ListeningSession): void {
-    this.session = session
+    this.stageSession(session)
     this.notify(session)
-    this.playbackWrite = this.playbackWrite
-      .catch(() => undefined)
-      .then(() => this.repository.save(session))
+    this.playbackWrite = this.queueSessionWrite(session)
   }
 
   private handlePlaybackState(
@@ -379,7 +403,7 @@ export class ListeningTrainingRuntime {
   }
 
   select(optionId: string): Promise<ListeningSession> {
-    return this.save(
+    return this.saveDraft(
       selectListeningOption(
         this.requireSession(),
         optionId,
@@ -389,7 +413,7 @@ export class ListeningTrainingRuntime {
   }
 
   changeDictation(value: string): Promise<ListeningSession> {
-    return this.save(
+    return this.saveDraft(
       changeListeningDictation(
         this.requireSession(),
         value,

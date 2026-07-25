@@ -281,6 +281,10 @@ export class QaPage {
     })
   }
 
+  async insertText(text) {
+    await this.client.send('Input.insertText', { text })
+  }
+
   async navigate(url) {
     await this.client.send('Page.navigate', { url })
     await this.waitFor(

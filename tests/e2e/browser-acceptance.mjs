@@ -17,6 +17,17 @@ function checkpoint(name, details = {}) {
   evidence.checkpoints.push({ name, ...details })
 }
 
+function storedListeningSession(databases, taskId) {
+  const records = databases.flatMap(
+    (database) => database.stores.records ?? [],
+  )
+  return records.find(
+    (record) =>
+      record.namespace === 'feature.listening' &&
+      record.key === `session:${taskId}`,
+  )?.value
+}
+
 try {
   await qa.page.initialize()
   await qa.page.addInitScript(fakeAssessmentClockScript)
@@ -263,10 +274,12 @@ try {
     interactive: await qa.page.interactiveElements(),
   })
 
+  let dictationRaceExercised = false
   for (let question = 0; question < 10; question += 1) {
     if ((await qa.page.bodyText()).includes('听力任务已完成')) {
       break
     }
+    let answerSubmitted = false
     await qa.page.clickByText('播放音频')
     await qa.page.waitFor(
       `document.body.innerText.includes('播放完毕') ||
@@ -284,33 +297,165 @@ try {
     ) {
       await qa.page.clickFirstEnabledChoice()
     } else {
-      const filled = await qa.page.evaluate(`(() => {
-        const input = document.querySelector(
-          'input[type="text"], textarea'
+      if (!dictationRaceExercised) {
+        const focused = await qa.page.evaluate(`(() => {
+          const input = document.querySelector(
+            'input[type="text"], textarea'
+          )
+          if (!input || input.disabled) return false
+          input.focus()
+          input.setSelectionRange(input.value.length, input.value.length)
+          return true
+        })()`)
+        assert.equal(focused, true)
+
+        await Promise.all([
+          qa.page.insertText('a'),
+          qa.page.insertText('b'),
+          qa.page.insertText('c'),
+        ])
+        assert.equal(
+          await qa.page.evaluate(
+            `document.querySelector('input[type="text"], textarea')?.value`,
+          ),
+          'abc',
+          'Rapid DOM input was expanded or overwritten before pause.',
         )
-        if (!input) return false
-        const setter = Object.getOwnPropertyDescriptor(
-          Object.getPrototypeOf(input),
-          'value',
-        )?.set
-        setter?.call(input, 'hello')
-        input.dispatchEvent(new Event('input', { bubbles: true }))
-        return true
-      })()`)
-      assert.equal(filled, true)
+
+        await qa.page.clickByText('退出听力训练')
+        await qa.page.waitFor(
+          `location.hash === '#/' &&
+            !document.body.innerText.includes('正在恢复今日学习计划')`,
+        )
+        const pausedDatabases = await qa.page.dumpIndexedDb()
+        const pausedSession = storedListeningSession(
+          pausedDatabases,
+          secondTaskId,
+        )
+        assert.ok(pausedSession)
+        assert.equal(pausedSession.phase, 'paused')
+        assert.equal(
+          pausedSession.dictationInput,
+          'abc',
+          'Immediate exit persisted a stale dictation value.',
+        )
+
+        await qa.page.reload()
+        await qa.page.waitFor(
+          `!document.body.innerText.includes('正在恢复今日学习计划')`,
+        )
+        if (speakingAdvancedPlan) {
+          await qa.page.clickByText('继续今日计划')
+        } else {
+          await qa.page.navigate(
+            new URL(
+              `#/listening?taskId=${encodeURIComponent(secondTaskId)}`,
+              baseUrl,
+            ).href,
+          )
+        }
+        await qa.page.waitFor(
+          `location.hash.includes('/listening?taskId=') &&
+            !document.body.innerText.includes('正在加载听力训练')`,
+        )
+        await qa.page.waitFor(
+          `[...document.querySelectorAll('button')].some((button) =>
+            button.innerText.trim() === '继续训练' && !button.disabled
+          )`,
+        )
+
+        await qa.page.reload()
+        await qa.page.waitFor(
+          `!document.body.innerText.includes('正在加载听力训练') &&
+            [...document.querySelectorAll('button')].some((button) =>
+              button.innerText.trim() === '继续训练' && !button.disabled
+            )`,
+        )
+        await qa.page.clickByText('继续训练')
+        await qa.page.waitFor(
+          `document.querySelector('input[type="text"], textarea') &&
+            !document.querySelector('input[type="text"], textarea').disabled`,
+        )
+        assert.equal(
+          await qa.page.evaluate(
+            `document.querySelector('input[type="text"], textarea')?.value`,
+          ),
+          'abc',
+          'Paused dictation did not recover the final rapid input.',
+        )
+
+        await qa.page.evaluate(`(() => {
+          const input = document.querySelector(
+            'input[type="text"], textarea'
+          )
+          input.focus()
+          input.setSelectionRange(input.value.length, input.value.length)
+        })()`)
+        await Promise.all([
+          qa.page.insertText('d'),
+          qa.page.insertText('e'),
+          qa.page.insertText('f'),
+        ])
+        await qa.page.clickByText('提交答案')
+        await qa.page.waitFor(
+          `[...document.querySelectorAll('button')].some((button) =>
+            ['下一题', '完成训练'].includes(button.innerText.trim()) &&
+            !button.disabled
+          )`,
+        )
+        const submittedDatabases = await qa.page.dumpIndexedDb()
+        const submittedSession = storedListeningSession(
+          submittedDatabases,
+          secondTaskId,
+        )
+        assert.ok(submittedSession)
+        assert.equal(submittedSession.phase, 'feedback')
+        assert.equal(
+          submittedSession.answers.at(-1)?.response,
+          'abcdef',
+          'Immediate submit used a stale dictation value.',
+        )
+        checkpoint('listening-dictation-race-recovery', {
+          taskId: secondTaskId,
+          pausedValue: pausedSession.dictationInput,
+          restoredValue: 'abc',
+          submittedValue:
+            submittedSession.answers.at(-1)?.response,
+          persistedPhase: submittedSession.phase,
+        })
+        dictationRaceExercised = true
+        answerSubmitted = true
+      } else {
+        const filled = await qa.page.evaluate(`(() => {
+          const input = document.querySelector(
+            'input[type="text"], textarea'
+          )
+          if (!input) return false
+          const setter = Object.getOwnPropertyDescriptor(
+            Object.getPrototypeOf(input),
+            'value',
+          )?.set
+          setter?.call(input, 'hello')
+          input.dispatchEvent(new Event('input', { bubbles: true }))
+          return true
+        })()`)
+        assert.equal(filled, true)
+      }
     }
-    await qa.page.waitFor(
-      `[...document.querySelectorAll('button')].some((button) =>
-        button.innerText.trim() === '提交答案' && !button.disabled
-      )`,
-    )
-    await qa.page.clickByText('提交答案')
-    await qa.page.waitFor(
-      `[...document.querySelectorAll('button')].some((button) =>
-        ['下一题', '完成训练'].includes(button.innerText.trim()) &&
-        !button.disabled
-      )`,
-    )
+    if (!answerSubmitted) {
+      await qa.page.waitFor(
+        `[...document.querySelectorAll('button')].some((button) =>
+          button.innerText.trim() === '提交答案' && !button.disabled
+        )`,
+      )
+      await qa.page.clickByText('提交答案')
+      await qa.page.waitFor(
+        `[...document.querySelectorAll('button')].some((button) =>
+          ['下一题', '完成训练'].includes(button.innerText.trim()) &&
+          !button.disabled
+        )`,
+      )
+    }
     const actionLabels = (await qa.page.interactiveElements())
       .filter((element) => element.tag === 'button' && !element.disabled)
       .map((element) => element.text)
@@ -325,6 +470,11 @@ try {
       break
     }
   }
+  assert.equal(
+    dictationRaceExercised,
+    true,
+    'The production listening task did not expose keyword dictation.',
+  )
   await qa.page.waitFor(
     `document.body.innerText.includes('听力任务已完成')`,
   )

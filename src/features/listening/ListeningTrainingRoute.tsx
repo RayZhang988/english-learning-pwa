@@ -100,12 +100,12 @@ export function ListeningTrainingRoute(
   const perform = useCallback(
     async (operation: () => Promise<ListeningSession>) => {
       try {
-        showSession(await operation())
+        await operation()
       } catch (error) {
         showError(error)
       }
     },
-    [showError, showSession],
+    [showError],
   )
 
   useEffect(() => runtime.subscribe(showSession), [runtime, showSession])
