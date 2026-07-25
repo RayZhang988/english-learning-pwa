@@ -10,7 +10,7 @@
 | QA-004 | 已关闭 | S2 | 关键词听写快速输入时旧状态异步回写，出现单次输入扩增或答案回退 | 失败为用户真实浏览器；修复 `45e97e1` | 07 | Pages run `30143745055`；正式站生产 E2E 的 `listening-dictation-race-recovery` 通过 |
 | QA-005 | 已关闭 | S2 | 词汇训练切题后旧选项到达新题，进入不可继续错误态 | 失败 `45e97e1`；修复 `4a15e1e` | 06 主责，09 回归 | Pages run `30144364133`；正式资产 `index-R31Brx_E.js`；完整生产 E2E exit 0 |
 | QA-006 | 已关闭 | S2 | 正式站关键词听写立即提交时，反馈态持久化旧答案 | 失败 `64d884c`；修复 `56ca8f1` | 07 主责，09 回归 | Pages run `30146889205`；正式资产 `index-DARWx41s.js`；one/two voice 完整 E2E 均 exit 0 |
-| QA-007 | 待真机回归 | S2 | 多 voice、变调变速和逐句 utterance 的真实听感机械、不自然 | `64d884c` 方案；`56ca8f1` 正式资产仍保留该播放机制 | 07 主责，09/用户听感回归 | one/two 参数自动化曾通过，但用户真实听感明确否决；当前自然度门槛不通过 |
+| QA-007 | 待真机回归 | S2 | 多 voice、变调变速和逐句 utterance 的真实听感机械、不自然 | 失败方案 `64d884c`；自然单 voice 候选 `724565b`；验收同步 `98ffb1b` | 07 主责，09/用户听感回归 | run `30147986654` 与正式自动化通过；新候选尚未经真实 iPhone/用户听感确认，缺陷保持打开 |
 
 ## QA-001｜课程索引未随生产版本发布
 
@@ -288,6 +288,9 @@ QA_SPEAKING_FALLBACK_ONLY=1 \
 - 两次正式完整回归都完成口语 fallback、听力 7/7、词汇 6/6、计划 3/3 和刷新恢复。
 - `pnpm check` 通过：77 个测试文件、291 项测试，lint、类型检查、生产构建、课程发布
   与 PWA 均通过。
+- 自然单 voice 候选 `724565b` 经 Pages run `30147986654` 部署后，正式完整 E2E
+  再次通过同一耐久检查点：`pausedValue=abc`、`restoredValue=abc`、
+  `submittedValue=abcdef`、`persistedPhase=feedback`。
 
 QA-006 的关闭范围是听写草稿和终态耐久性。旧回归中的 voiceId、pitch、rate 只属于
 当时的技术路径证据，不能证明自然度；其真实听感失败另行登记为 QA-007。
@@ -299,6 +302,8 @@ QA-006 的关闭范围是听写草稿和终态耐久性。旧回归中的 voiceI
 严重度：S2
 环境：用户真实听感验收；GitHub Pages 正式方案
 失败方案：64d884c 的按 speaker 多 voice、单 voice pitch/rate 差异和逐句 utterance
+候选版本：724565b；验收同步：98ffb1b；Pages run 30147986654；
+正式资产：index-DQn2F3sQ.js（HTTP 200）
 前置条件：从真实计划进入包含多人对话的听力任务
 复现步骤：
 1. 播放完整多人对话。
@@ -316,19 +321,38 @@ QA-006 的关闭范围是听写草稿和终态耐久性。旧回归中的 voiceI
 自动化证据的边界：
 
 - 旧 one/two E2E 只证明参数按旧设计传递，不能证明自然度；其成功结果不关闭本缺陷。
-- 07 当前本地候选已撤除 speaker profile、隐藏 rateScale 和逐句 utterance，改为完整
+- 07 候选 `724565b` 已撤除 speaker profile、隐藏 rateScale 和逐句 utterance，改为完整
   对话单一连续正文、`voice=null`、`pitch=1`、精确用户 rate。
-- 09 新自动化只能证明上述风险机制已撤除、正文顺序正确和控制行为未回归。候选未部署
-  且未经过真实 iPhone/用户听感，因此 QA-007 保持打开。
+- 09 验收同步提交为 `98ffb1b`。首次 run `30147956114` 因部署提交只包含 07，
+  CI 仍读取旧 09 多音色断言而失败；这是候选与验收未同步的门禁失败，不是新生产
+  播放链路的运行时失败。
+- Pages run `30147986654` 随后成功部署，正式入口资产为
+  `assets/index-DQn2F3sQ.js`，HTTP 200。
+- 新外部验收 1 个文件、8 项测试通过；完整门禁 77 个测试文件、291 项测试通过。
+- 正式站执行以下完整浏览器回归，exit 0、`status=passed`：
+
+```bash
+QA_BASE_URL=https://rayzhang988.github.io/english-learning-pwa/ \
+QA_SPEAKING_FALLBACK_ONLY=1 \
+  node tests/e2e/browser-acceptance.mjs
+```
+
+- 正式回归继续通过 QA-006：`pausedValue=abc`、`restoredValue=abc`、
+  `submittedValue=abcdef`、`persistedPhase=feedback`；同时完成计划 3/3、
+  `planCompleted=true` 和刷新恢复。
+- 上述自动化只能证明旧多音色/变声风险机制已撤除、正文与控制链路符合契约，以及
+  正式计划可完成；它不能证明声音在真实 iPhone 上自然、连贯或可长期使用。
+  QA-007 因此继续保持 S2 打开。
 
 修复后回归范围：
 
-1. 部署候选后运行正式完整 E2E，验证单一连续 utterance、正文顺序、无 speaker 标签、
-   `voice=null`、`pitch=1` 和精确 `0.75/1/1.25` rate。
-2. 同一正式回归必须继续通过 QA-006 的 `abc → abcdef` 暂停、恢复和立即提交。
-3. 真实 iPhone/用户分别听完整对话和单句，检查自然度、清晰度、连贯性、三档速度、
+1. 正式完整 E2E 已通过；继续把单一连续 utterance、正文顺序、无 speaker 标签、
+   `voice=null`、`pitch=1` 和精确 `0.75/1/1.25` rate 保留为自动化回归。
+2. QA-006 的 `abc → abcdef` 暂停、恢复和立即提交已在新候选正式站再次通过，后续
+   播放改动仍必须保留该检查点。
+3. 待真实 iPhone/用户分别听完整对话和单句，检查自然度、清晰度、连贯性、三档速度、
    暂停/恢复、重复当前和循环全部。
-4. 只有真实听感通过后才能关闭 QA-007；参数自动化或本地候选通过不能替代。
+4. 只有真实听感通过后才能关闭 QA-007；模块自动化或正式 E2E 通过都不能替代。
 
 ## 缺陷模板
 
