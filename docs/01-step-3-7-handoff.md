@@ -38,7 +38,8 @@
 ## 步骤 6：离线、更新和安装
 
 - Manifest、安装图标和 iPhone Web App 元数据已经配置。
-- Workbox 预缓存应用壳，更新采用用户确认后应用的策略。
+- Workbox 预缓存应用壳；新版本自动激活、接管客户端，并由应用级 guard 只刷新一次。
+- Workbox 激活时清理过期预缓存，不清除 IndexedDB、localStorage 或显式离线课程包。
 - 课程资源通过显式 `OfflineAssetStore` 安装，不把偶然访问等同于已下载。
 - GitHub Pages 使用 HTTPS 部署。
 

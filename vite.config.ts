@@ -18,6 +18,13 @@ export const courseAssetBuildPolicy = {
   ],
 } as const
 
+export const pwaUpdatePolicy = {
+  registerType: 'autoUpdate',
+  cleanupOutdatedCaches: true,
+  clientsClaim: true,
+  skipWaiting: true,
+} as const
+
 export default defineConfig({
   // A relative base keeps the generated bundle portable across static hosts.
   base: courseAssetBuildPolicy.base,
@@ -44,7 +51,7 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'prompt',
+      registerType: pwaUpdatePolicy.registerType,
       injectRegister: null,
       manifest: {
         id: './',
@@ -86,9 +93,9 @@ export default defineConfig({
         ],
       },
       workbox: {
-        cleanupOutdatedCaches: true,
-        clientsClaim: true,
-        skipWaiting: false,
+        cleanupOutdatedCaches: pwaUpdatePolicy.cleanupOutdatedCaches,
+        clientsClaim: pwaUpdatePolicy.clientsClaim,
+        skipWaiting: pwaUpdatePolicy.skipWaiting,
         navigateFallback: 'index.html',
         globPatterns: [...courseAssetBuildPolicy.workboxGlobPatterns],
       },

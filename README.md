@@ -62,6 +62,9 @@ src/
 当前发布的课程 JSON 会随生产 PWA 版本预缓存；各训练模块仍可通过
 `OfflineAssetStore.install()` 管理自己的显式内容包。
 
+PWA 更新采用自动激活策略：新 Service Worker 接管页面后最多自动刷新一次，Workbox
+只清理过期预缓存，不会清除评估、计划、训练进度或显式下载的离线课程包。
+
 `StorageHealthService` 提供容量估算、持久化状态查询及持久化申请。不得把 `persist()` 调用成功等同于必然获批，应以返回的最新快照为准。
 
 `LocalBackupService` 导出带格式版本的 JSON。恢复前先调用 `inspectJson()`；调用 `restoreJson()` 时必须明确选择：

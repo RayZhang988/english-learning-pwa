@@ -167,6 +167,27 @@ GitHub Pages 已通过 `main` 分支的部署工作流发布：
 
 后续推送到 `main` 会重新运行同一工作流。本地 `pnpm build` 只生成产物，不会单独发布。
 
+## S1 旧 PWA 更新生命周期修复
+
+旧版本使用 `registerType: 'prompt'`，但生产应用没有渲染或消费更新提示。结果是新
+Service Worker 可以永久停在 waiting，普通刷新继续由旧 worker 返回旧入口和占位资产。
+
+更新策略已经改为：
+
+- `registerType: 'autoUpdate'`；
+- 新 worker 安装后直接 `skipWaiting`，激活后通过 `clientsClaim` 接管现有页面；
+- Workbox 激活时执行 `cleanupOutdatedCaches`，移除不再属于新版本的预缓存资源；
+- `PwaUpdateReloadGuard` 同时接收激活通知和 `controllerchange`，但每个页面生命周期最多
+  调用一次 `location.reload()`；
+- 首次安装时从“无控制器”变为“有控制器”不会触发多余刷新。
+
+该 guard 只保存于当前 JavaScript 内存，不读取或写入 IndexedDB、localStorage、
+sessionStorage，也不删除 `OfflineAssetStore` 管理的离线课程包。评估快照、能力档案、
+活动计划和训练进度继续由原有版本化仓库恢复。
+
+已经停留在旧 prompt 客户端的用户，需要等待新 worker 激活后再手动刷新一次；加载到
+本修复版本后，未来发布会自动切换并只刷新一次，不再依赖不可见的确认操作。
+
 ## 可复现验证
 
 本轮可复现结果：
@@ -174,10 +195,11 @@ GitHub Pages 已通过 `main` 分支的部署工作流发布：
 ```text
 pnpm check：通过
 pnpm lint / pnpm typecheck：通过
-pnpm test：74 个测试文件、245 项测试通过
+pnpm test：76 个测试文件、262 项测试通过
 pnpm build：通过
 课程资源构建守卫：8 个同源 JSON / 0 个 data URL / 8 个均进入 Service Worker
-PWA generateSW：预缓存 20 项 / 1025.00 KiB
+PWA generateSW：预缓存 20 项 / 1027.47 KiB
+PWA 更新专项：等待 worker 自动激活 / 控制器切换 / 单次刷新 / 过期缓存清理通过
 assessment-recovery-smoke（本地 dist / headless Chrome）：连续两次通过
 首次使用生产集成：完整正式评估档案 → 05 四周课程 → 首日计划 → 真实模块路由 → 刷新恢复
 HTTPS 发布：GitHub Pages workflow success；首页 / Manifest / Service Worker 均返回 200
