@@ -6,6 +6,7 @@
 | --- | --- | --- | --- | --- | --- | --- |
 | QA-001 | 已关闭 | S1 | 完成评估后课程索引无法读取，不能生成首日计划 | 正式站验收版本 `e98e522`；修复 `3ae5c9f` | 01 | Pages run `30139578460` 成功；`assessment-recovery-smoke.mjs` 正式站通过 |
 | QA-002 | 已关闭 | S1 | 口语识别失败降级完成后不推进计划，后续任务锁定 | 失败 `3ae5c9f`；修复 `20c373d` | 01 主责，04/08 契约协同 | Pages run `30141142971`；正式站强制 fallback 回归 exit 0 |
+| QA-003 | 已关闭 | S1 | 旧 PWA 缓存永久等待更新，真实用户停留在技术底座 | 旧缓存策略；修复 `d1e9379` | 01 | Pages run `30141749051`；真实 Chrome 同标签页切换到 `index-WPTS1Fa6.js` |
 
 ## QA-001｜课程索引未随生产版本发布
 
@@ -97,6 +98,44 @@ QA_SPEAKING_FALLBACK_ONLY=1 \
 
 真机遗留不是缺陷关闭条件的一部分：Safari 麦克风、录音、系统语音、VoiceOver、
 后台中断和缓存更新仍必须按真机清单验证。
+
+## QA-003｜旧 PWA 缓存永久 waiting
+
+```text
+状态：已关闭
+严重度：S1
+环境：用户真实 Chrome、GitHub Pages 正式站
+失败策略：registerType='prompt'、skipWaiting=false，应用没有可见更新入口
+修复版本：d1e9379
+前置条件：浏览器仍由旧 Service Worker 和旧预缓存控制
+复现步骤：
+1. 用已有浏览器数据打开正式地址。
+2. 页面只显示“技术底座已运行，尚未接入训练模块”。
+3. 确认加载旧资产 index-CGAg-Eo9.js / index-DaT6cIjA.css。
+4. 普通 reload。
+实际结果：仍加载旧资产和旧技术底座；服务器已经提供新版本，但新 Service Worker
+永久停在 waiting，用户没有可见入口触发激活。
+期望结果：已发布新版本自动接管现有客户端，在受控 reload 后显示当前应用，同时保留
+本地学习数据。
+影响：既有用户无法进入评估、计划或任何训练模块；普通刷新无效，没有用户可见绕行。
+根因：prompt 注册策略要求应用主动处理更新，但产品没有更新提示或激活入口；
+skipWaiting=false 使新 Service Worker 无法自动接管。
+责任任务：01（PWA 生命周期、更新激活和缓存清理）
+```
+
+关闭证据：
+
+- `d1e9379` 改为 `autoUpdate`、`skipWaiting: true`、`clientsClaim: true`，保留过期预缓存
+  清理，并增加单次 reload guard。
+- GitHub Pages run `30141749051` 成功发布。
+- 76 个测试文件、262 项测试通过。
+- 正式用户保持同一 Chrome 标签页和原学习数据：发布后第一次 reload 仍为旧页面；
+  等待 3 秒后第二次 reload 切换到 `index-WPTS1Fa6.js`。
+- 更新后页面显示“需要先完成水平测试 / 开始水平测试”，不再显示旧技术底座。
+- 未清除网站数据或学习数据。
+
+关闭范围只覆盖桌面真实 Chrome。iPhone Safari 和主屏幕 Web App 的 Service Worker
+激活、后台恢复、缓存更新与数据保留仍属于真机门禁。
 
 ## 缺陷模板
 

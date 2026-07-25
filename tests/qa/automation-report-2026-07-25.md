@@ -4,13 +4,13 @@
 
 **自动化与桌面真实浏览器门槛通过；第一版最终验收仍待真实 iPhone 和连续 14 天。**
 
-`QA-001`、`QA-002` 两个 S1 均已在修复后的正式站回归关闭。目前没有未关闭 S0/S1
+`QA-001`、`QA-002`、`QA-003` 三个 S1 均已在修复后的正式站回归关闭。目前没有未关闭 S0/S1
 或影响 MUST 门槛的 S2。自动化通过仍不等于第一版通过：Safari/PWA 系统能力和连续
 14 天个人使用尚无真实证据。
 
 ## 版本与范围
 
-- 当前验收提交：`20c373d`（`main`、`origin/main`）
+- 当前验收提交：`d1e9379`（`main`、`origin/main`）
 - 正式地址：`https://rayzhang988.github.io/english-learning-pwa/`
 - `QA-001` 原始失败验收版本：`e98e522`
 - `QA-001` 修复版本：`3ae5c9f`
@@ -18,6 +18,8 @@
 - `QA-002` 原始失败版本：`3ae5c9f`
 - `QA-002` 修复版本：`20c373d`
 - `20c373d` GitHub Pages 部署：run `30141142971`，成功
+- `QA-003` 修复版本：`d1e9379`
+- `d1e9379` GitHub Pages 部署：run `30141749051`，成功
 - 09 只修改 `tests/e2e/**`、`tests/qa/**`，未修改生产代码。
 
 ## 可复现命令与结果
@@ -29,9 +31,9 @@ pnpm check
 结果：通过
 lint：通过
 TypeScript：通过
-Vitest：75 个测试文件、258 项测试通过
+Vitest：76 个测试文件、262 项测试通过
 生产构建：通过
-PWA：20 项、1026.57 KiB 进入预缓存
+PWA：生成、自动更新策略和过期预缓存清理校验通过
 课程构建校验：8 个课程资产输出、8 个进入预缓存、0 个课程 JSON 内联
 ```
 
@@ -145,6 +147,23 @@ QA_SPEAKING_FALLBACK_ONLY=1 \
 - 回归条件：`QA_SPEAKING_FALLBACK_ONLY=1`。
 - 结果：exit 0、三任务完成、计划完成、刷新恢复，不可评分口语不制造掌握度证据。
 
+## QA-003 桌面缓存更新关闭证据
+
+旧版本真实 Chrome 加载 `index-CGAg-Eo9.js` / `index-DaT6cIjA.css`，只显示“技术底座
+已运行，尚未接入训练模块”。服务器已有新版本，普通 reload 仍旧，因为旧
+`registerType: 'prompt'`、`skipWaiting: false` 与缺失更新入口共同导致新 Service
+Worker 永久 waiting。
+
+`d1e9379` 修复并经 GitHub Pages run `30141749051` 发布：
+
+- 使用 `autoUpdate`、`skipWaiting`、`clientsClaim` 和过期预缓存清理。
+- 使用单次 reload guard，避免 controller 切换造成重复刷新。
+- 用户保持同一标签页和学习数据；第一次 reload 仍旧，等待 3 秒后第二次 reload
+  成功切到 `index-WPTS1Fa6.js`。
+- 页面显示“需要先完成水平测试 / 开始水平测试”，学习数据未清除。
+
+这证明桌面真实 Chrome 的更新接管与数据保留通过，不证明 iPhone 主屏幕安装态通过。
+
 ## G0–G8 状态
 
 | 门槛 | 状态 | 证据或缺口 |
@@ -153,7 +172,7 @@ QA_SPEAKING_FALLBACK_ONLY=1 \
 | G1 首次使用 | 自动化通过 | 正式评估、1047–1048 秒、三能力字段、真实档案和 2700 秒计划通过；真机实际体验待测 |
 | G2 训练衔接 | 自动化通过 | 正式站真实 taskId 完成口语 fallback、听力、词汇，计划 3/3 completed |
 | G3 数据韧性 | 自动化通过 | 评估恢复、完整计划恢复、3/3 结果刷新保留、损坏/未来版本和幂等测试通过 |
-| G4 PWA/离线 | 待真机 | HTTPS、Manifest、SW、缓存和离线应用壳通过；iPhone 安装态及真实离线训练待测 |
+| G4 PWA/离线 | 待真机 | Chrome 旧缓存自动更新、数据保留、HTTPS、Manifest、SW、缓存和离线应用壳通过；iPhone 安装态更新及真实离线训练待测 |
 | G5 设备降级 | 待真机 | Chrome 权限拒绝、录音回放、识别失败、不记错和计划推进通过；Safari 系统能力待测 |
 | G6 兼容与无障碍 | 待真机 | Chrome 窄屏和键盘通过；Safari、大号文字和 VoiceOver 待测 |
 | G7 内容完整 | 通过 | 4 周、28 天、84 单元、答案、前置链和生产 catalog 通过 |
