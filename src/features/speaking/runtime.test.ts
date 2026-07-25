@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { InMemoryPlatformEventSink } from '../../core/testing/index.ts'
+import type { ReadonlyDataSource } from '../../core/index.ts'
 import type {
   MicrophonePermissionService,
   NetworkStatusService,
@@ -13,8 +14,11 @@ import { SpeakingTrainingRuntime } from './runtime.ts'
 import {
   createSpeakingCatalogFixture,
   createSpeakingTask,
+  createSpeakingUnit,
+  speakingPrompt,
 } from './test-fixtures.ts'
 import type {
+  SpeakingCatalog,
   SpeakingRecognitionOutcome,
   SpeakingRecognitionPort,
   SpeakingRecording,
@@ -159,13 +163,15 @@ function runtime(options: {
   readonly recognition?: SpeakingRecognitionPort
   readonly network?: NetworkStatusService
   readonly microphone?: MicrophonePermissionService
+  readonly contentSource?: ReadonlyDataSource<SpeakingCatalog>
 }) {
   return new SpeakingTrainingRuntime({
     task: createSpeakingTask(),
     localDate: '2026-07-24',
-    contentSource: {
-      load: async () => createSpeakingCatalogFixture(),
-    },
+    contentSource:
+      options.contentSource ?? {
+        load: async () => createSpeakingCatalogFixture(),
+      },
     eventSink: options.sink,
     repository: new SpeakingSessionRepository(new MemoryStore()),
     networkStatus: options.network ?? online,
@@ -235,6 +241,40 @@ describe('speaking training runtime fallbacks', () => {
       taskCompleted: false,
       failureCategory: 'network',
     })
+  })
+
+  it('does not publish unscorable completion until every prompt is reviewed', async () => {
+    const sink = new InMemoryPlatformEventSink()
+    const unit = createSpeakingUnit([
+      speakingPrompt,
+      {
+        ...speakingPrompt,
+        id: 'w1d1-s2',
+        cueZh: '说明你在纽约旅行。',
+        modelAnswer: "I'm visiting New York.",
+        acceptedAnswers: ["I'm visiting New York."],
+      },
+    ])
+    const training = runtime({
+      sink,
+      network: offline,
+      contentSource: {
+        load: async () => createSpeakingCatalogFixture(unit),
+      },
+    })
+
+    await training.initialize()
+    await training.startRecording()
+    await training.stopRecording()
+    const nextPrompt = await training.advance()
+
+    expect(nextPrompt.phase).toBe('practicing')
+    expect(nextPrompt.promptIndex).toBe(1)
+    expect(
+      sink.events.filter(
+        (event) => event.type === 'learning.attempt.completed.v1',
+      ),
+    ).toHaveLength(0)
   })
 
   it('keeps a recording after Siri recognition fails', async () => {
@@ -320,5 +360,61 @@ describe('speaking training runtime fallbacks', () => {
       type: 'learning.task.paused.v1',
       payload: { reason: 'app-backgrounded' },
     })
+    expect(
+      sink.events.some(
+        (event) => event.type === 'learning.attempt.completed.v1',
+      ),
+    ).toBe(false)
+  })
+
+  it('keeps initialization and content failures paused instead of completed', async () => {
+    const sink = new InMemoryPlatformEventSink()
+    const training = runtime({
+      sink,
+      contentSource: {
+        load: async () => {
+          throw new Error('Content package unavailable')
+        },
+      },
+    })
+
+    const failed = await training.initialize()
+
+    expect(failed.phase).toBe('error')
+    expect(sink.events.map((event) => event.type)).toEqual([
+      'learning.task.started.v1',
+      'learning.task.paused.v1',
+    ])
+    expect(sink.events[1].payload).toMatchObject({
+      reason: 'content-failure',
+    })
+  })
+
+  it('keeps interrupted unscorable evidence paused at the final prompt', async () => {
+    const sink = new InMemoryPlatformEventSink()
+    const training = runtime({
+      sink,
+      recognition: new FakeRecognition({
+        status: 'failed',
+        code: 'aborted',
+        message: '识别被中断。',
+      }),
+    })
+
+    await training.initialize()
+    await training.startRecording()
+    await training.stopRecording()
+    const paused = await training.advance()
+
+    expect(paused.phase).toBe('paused')
+    expect(sink.events.map((event) => event.type)).toEqual([
+      'learning.task.started.v1',
+      'learning.task.paused.v1',
+    ])
+    expect(
+      sink.events.some(
+        (event) => event.type === 'learning.attempt.completed.v1',
+      ),
+    ).toBe(false)
   })
 })

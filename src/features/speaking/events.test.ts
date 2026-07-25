@@ -76,6 +76,46 @@ function completedSession() {
   )
 }
 
+function completedUnscorableSession() {
+  let session = createSpeakingSession(
+    createSpeakingTask(),
+    createSpeakingUnit(),
+    'granted',
+    'offline',
+    recordingCapabilities,
+    recognitionCapabilities,
+    '2026-07-24T12:00:00.000Z',
+  )
+  session = beginSpeakingRecording(
+    session,
+    'granted',
+    false,
+    '2026-07-24T12:00:01.000Z',
+  )
+  session = processSpeakingRecording(
+    session,
+    '2026-07-24T12:00:02.000Z',
+  )
+  session = submitSpeakingRecording(
+    session,
+    {
+      durationMs: 1_000,
+      match: null,
+      fallbackReason: 'recognition-offline',
+      failureCategory: 'network',
+      recognitionErrorCode: 'network',
+      recognitionMessage: '当前离线。',
+    },
+    '2026-07-24T12:00:03.000Z',
+  )
+  return advanceSpeakingSession(
+    session,
+    recordingCapabilities,
+    recognitionCapabilities,
+    '2026-07-24T12:00:04.000Z',
+  )
+}
+
 describe('speaking learning events', () => {
   it('publishes valid speaking start and scored attempt envelopes', () => {
     const task = createSpeakingTask()
@@ -99,8 +139,7 @@ describe('speaking learning events', () => {
 
   it('keeps recognition failure unscorable and incomplete', () => {
     const event = createSpeakingUnscorableEvent(
-      createSpeakingTask(),
-      'network',
+      completedUnscorableSession(),
       3,
       identity,
     )
@@ -113,5 +152,21 @@ describe('speaking learning events', () => {
       taskCompleted: false,
       failureCategory: 'network',
     })
+  })
+
+  it('refuses to manufacture unscorable completion before the session is complete', () => {
+    const active = createSpeakingSession(
+      createSpeakingTask(),
+      createSpeakingUnit(),
+      'granted',
+      'offline',
+      recordingCapabilities,
+      recognitionCapabilities,
+      '2026-07-24T12:00:00.000Z',
+    )
+
+    expect(() =>
+      createSpeakingUnscorableEvent(active, 0, identity),
+    ).toThrow(/requires a completed session/i)
   })
 })

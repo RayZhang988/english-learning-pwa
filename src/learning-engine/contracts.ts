@@ -244,9 +244,29 @@ export type TaskExecutionStatus =
   | 'skipped'
   | 'blocked'
 
+/**
+ * Why a plan task reached `completed`.
+ *
+ * This is independent from mastery evidence. In particular,
+ * `unscorable-practice` means the learner finished the supported fallback
+ * practice flow, but no score was produced and no mastery update is allowed.
+ *
+ * The property is optional on TaskExecutionState so persisted v1 records
+ * written before this distinction remain readable.
+ */
+export type TaskCompletionKind =
+  | 'scored'
+  | 'unscorable-practice'
+
+export type AttemptPlanDisposition =
+  | 'scored-completion'
+  | 'unscorable-practice-completion'
+  | 'retry-required'
+
 export interface TaskExecutionState {
   readonly task: LearningTask
   readonly status: TaskExecutionStatus
+  readonly completionKind?: TaskCompletionKind | null
   readonly spentSeconds: number
   readonly effectiveSeconds: number
   readonly skipCount: number

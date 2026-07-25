@@ -60,7 +60,8 @@
 - 失败将稳定期压缩到原来的约 35%，掌握度下降，并在 10–30 分钟后安排同日重试；
 - 同日重试成功后仍在次日安排一次巩固，不允许一次补答直接恢复长间隔；
 - `mastery >= 0.9` 且 `stabilityDays >= 21` 标记为已掌握，但仍保留远期复习；
-- 设备、权限、音频、识别或内容故障属于不可评分结果，不更新记忆模型。
+- 设备、权限、音频、识别或内容故障属于不可评分结果，不更新记忆模型。计划层即使
+  允许完整的降级练习结束任务，也不会创建复习证据或改变掌握度。
 
 新学任务每 7 天最多主动跳过两次；普通复习每天最多跳过一次；失败后的必需重试不能
 通过“跳过”清除，只能中断并在续学时保留。达到限制时引擎返回 `blocked`，不会假装
@@ -70,8 +71,14 @@
 
 - 同一天恢复原计划，从 `active`、`paused`、`pending` 中优先级最高的未完成任务继续。
 - 跨天时只结转已开始的任务、到期复习和重试；未开始的新学任务重新排程。
-- 一条 `attempt.completed` 只有在 `taskCompleted: true` 时才完成任务。不可评分、
-  暂停和跳过都不算完成。
+- `taskCompleted: true` 表示产生评分证据的正常完成。口语模块在全部提示均无法识别、
+  但用户已经走完 08 定义的录音/回放或无录音降级流程时，仍合法发布
+  `result: 'unscorable'`、`taskCompleted: false`。
+- 上述口语事件在计划层形成 `status: 'completed'`、
+  `completionKind: 'unscorable-practice'`。它是“练习流程已结束、没有评分证据”，
+  不是 `scored`，也不是 `user-skipped`。后续任务可以解锁。
+- 06/07 的不可评分事件以及口语的 `content` 故障默认保持 `paused`，
+  因为这些事件不能证明完整降级练习已经走完。
 - 当天至少完成一项任务，且有效学习达到
   `min(600 秒, max(300 秒, 计划时间 × 50%))` 才计连续学习日。短计划不会被强迫
   达到 10 分钟，设备失败耗时不计有效学习。
@@ -94,6 +101,15 @@
 可评分尝试还必须提供表现、证据质量、辅助程度和错误标签。模块内部原始答案、录音、
 识别音频和题型状态不进入学习引擎。
 
+v1 兼容规则不增加事件字段：
+
+- `resolveAttemptPlanDisposition()` 将 `scored + taskCompleted` 解释为正常完成；
+- 仅当来源、专项和目标模块均为 `speaking`，结果为 `unscorable`，且失败类别为
+  `device`、`permission`、`network` 或 `interrupted` 时，解释为完整降级练习终态；
+- 其他不可评分事件一律要求重试或恢复；
+- `applyLearningAttempt()` 对所有不可评分事件仍返回 `evidenceAccepted: false`，不
+  写入 attempts，不创建或更新复习状态。
+
 02 可直接展示 `DailyPlan`、`ProgressSnapshot`、`ResumeDecision` 和
 `ReassessmentRecommendation`，但不得重新计算或改变其业务语义。
 
@@ -109,7 +125,7 @@
 | 05 | `LearningCandidate` | 候选单元只声明内容事实，不预排用户每天的主课程 |
 | 06 | `LearningTask` 中 `targetModuleId === 'vocabulary'` 的任务；四类 `LearningEvent` | 不在词汇模块内另算掌握度或全局复习时间 |
 | 07 | `LearningTask` 中 `targetModuleId === 'listening'` 的任务；四类 `LearningEvent` | 设备或音频失败必须上报不可评分，不得算学习失败 |
-| 08 | `LearningTask` 中 `targetModuleId === 'speaking'` 的任务；四类 `LearningEvent` | 权限、离线、识别失败必须上报不可评分，不得压低口语能力 |
+| 08 | `LearningTask` 中 `targetModuleId === 'speaking'` 的任务；四类 `LearningEvent` | 只在完整降级流程结束后发布口语 `unscorable` 完成事件；不得压低口语能力 |
 
 建议集成顺序：
 

@@ -1,4 +1,6 @@
 import type {
+  AttemptPlanDisposition,
+  LearningAttemptCompletedEvent,
   LearningEvent,
   LearningTask,
   PlanActivitySummary,
@@ -27,6 +29,7 @@ export function createPlanProgress(
     tasks: plan.tasks.map((task) => ({
       task,
       status: 'pending',
+      completionKind: null,
       spentSeconds: 0,
       effectiveSeconds: 0,
       skipCount: 0,
@@ -36,6 +39,40 @@ export function createPlanProgress(
     processedEventIds: [],
     updatedAt: createdAt,
   }
+}
+
+/**
+ * Resolves whether an attempt event ends the plan task independently from
+ * whether it carries mastery evidence.
+ *
+ * Speaking v1 publishes one attempt event only after the whole prompt
+ * session has ended. A fully exercised fallback session can therefore end
+ * the plan task without being scored. Other modules' unscorable events may
+ * represent missing content or playback failures and remain resumable.
+ */
+export function resolveAttemptPlanDisposition(
+  event: LearningAttemptCompletedEvent,
+): AttemptPlanDisposition {
+  if (
+    event.payload.result === 'scored' &&
+    event.payload.taskCompleted
+  ) {
+    return 'scored-completion'
+  }
+  if (
+    event.sourceModuleId === 'speaking' &&
+    event.payload.domain === 'speaking' &&
+    event.payload.targetModuleId === 'speaking' &&
+    event.payload.result === 'unscorable' &&
+    !event.payload.taskCompleted &&
+    (event.payload.failureCategory === 'device' ||
+      event.payload.failureCategory === 'permission' ||
+      event.payload.failureCategory === 'network' ||
+      event.payload.failureCategory === 'interrupted')
+  ) {
+    return 'unscorable-practice-completion'
+  }
+  return 'retry-required'
 }
 
 function skipWindowCount(
@@ -185,6 +222,7 @@ export function applyPlanEvent(
     updated = {
       ...execution,
       status: decision.nextStatus,
+      completionKind: null,
       skipCount:
         decision.reason === 'within-limit'
           ? execution.skipCount + 1
@@ -193,10 +231,17 @@ export function applyPlanEvent(
     }
   } else {
     const scored = event.payload.result === 'scored'
+    const disposition = resolveAttemptPlanDisposition(event)
     updated = {
       ...execution,
       status:
-        scored && event.payload.taskCompleted ? 'completed' : 'paused',
+        disposition === 'retry-required' ? 'paused' : 'completed',
+      completionKind:
+        disposition === 'scored-completion'
+          ? 'scored'
+          : disposition === 'unscorable-practice-completion'
+            ? 'unscorable-practice'
+            : null,
       spentSeconds:
         execution.spentSeconds + Math.max(0, event.payload.durationSeconds),
       effectiveSeconds:

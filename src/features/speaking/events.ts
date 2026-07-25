@@ -1,5 +1,4 @@
 import type {
-  AttemptFailureCategory,
   LearningAttemptCompletedEvent,
   LearningTask,
   LearningTaskPausedEvent,
@@ -129,11 +128,34 @@ export function createSpeakingCompletedEvent(
 }
 
 export function createSpeakingUnscorableEvent(
-  task: LearningTask,
-  failureCategory: AttemptFailureCategory,
+  session: SpeakingSession,
   durationSeconds: number,
   identity: EventIdentity,
 ): LearningAttemptCompletedEvent {
+  if (session.phase !== 'completed') {
+    throw new SpeakingError(
+      'session-transition-invalid',
+      'An unscorable speaking event requires a completed session.',
+    )
+  }
+  const result = getSpeakingSessionResult(session)
+  if (result.performanceScore !== null) {
+    throw new SpeakingError(
+      'session-transition-invalid',
+      'An unscorable speaking event cannot contain recognized text evidence.',
+    )
+  }
+  const failureCategory = result.failureCategory
+  if (
+    failureCategory !== 'device' &&
+    failureCategory !== 'permission' &&
+    failureCategory !== 'network'
+  ) {
+    throw new SpeakingError(
+      'session-transition-invalid',
+      'Completed unscorable speaking practice requires a terminal-compatible failure category.',
+    )
+  }
   return {
     id: identity.eventId,
     type: 'learning.attempt.completed.v1',
@@ -141,10 +163,10 @@ export function createSpeakingUnscorableEvent(
     occurredAt: identity.occurredAt,
     schemaVersion: 1,
     payload: {
-      ...basePayload(task, identity.localDate),
-      mode: task.mode,
-      difficultyLevel: task.difficultyLevel,
-      estimatedSeconds: task.estimatedSeconds,
+      ...basePayload(session.task, identity.localDate),
+      mode: session.task.mode,
+      difficultyLevel: session.task.difficultyLevel,
+      estimatedSeconds: session.task.estimatedSeconds,
       result: 'unscorable',
       performanceScore: null,
       evidenceQuality: 0,
@@ -152,7 +174,7 @@ export function createSpeakingUnscorableEvent(
       durationSeconds: Math.max(0, Math.floor(durationSeconds)),
       taskCompleted: false,
       errorTags: [],
-      contentTags: task.tags,
+      contentTags: session.task.tags,
       failureCategory,
     },
   }

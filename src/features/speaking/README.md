@@ -162,6 +162,21 @@ task.targetModuleId === 'speaking'
 
 用户仍可以完成模块内的录音/回放流程；04 不会把不可评分证据当成掌握度下降。
 
+### QA-002 终态门禁
+
+不可评分完成事件同时满足以下条件才允许创建和发布：
+
+- 所有口语提示已经逐题进入过反馈并走完；
+- `session.phase === "completed"`；
+- 来源为 `speaking`；
+- `result: "unscorable"` 且 `taskCompleted: false`；
+- `failureCategory` 只能是 `device`、`permission` 或 `network`。
+
+单题失败只保存在当前答案中，继续下一题时不发布完成事件。初始化失败或课程内容故障只
+发布 `learning.task.paused.v1`（`content-failure`）；后台切换只发布暂停事件；中断类
+不可评分证据在最后一题仍保持暂停，不伪造终态。事件构造器自身也拒绝为非
+`completed` 会话创建不可评分完成事件。
+
 ## 验证
 
 模块测试覆盖：

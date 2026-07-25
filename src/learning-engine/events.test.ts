@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { PlatformEvent } from '../core/index.ts'
 import { parseLearningEvent } from './events.ts'
+import { resolveAttemptPlanDisposition } from './lifecycle.ts'
 import { attemptEvent } from './test-fixtures.ts'
 
 describe('learning event contract', () => {
@@ -29,5 +30,30 @@ describe('learning event contract', () => {
     expect(() => parseLearningEvent(event)).toThrow(
       'unscorable attempt cannot complete a task',
     )
+  })
+
+  it('parses the existing speaking v1 fallback event without new fields', () => {
+    const event = attemptEvent({
+      domain: 'speaking',
+      targetModuleId: 'speaking',
+      learningUnitId: 'speaking-1',
+      contentRef: 'lesson://speaking/1',
+      result: 'unscorable',
+      performanceScore: null,
+      evidenceQuality: 0,
+      taskCompleted: false,
+      failureCategory: 'network',
+    })
+    const parsed = parseLearningEvent(event)
+
+    expect(parsed).toEqual(event)
+    expect(
+      resolveAttemptPlanDisposition(
+        parsed as Extract<
+          typeof parsed,
+          { type: 'learning.attempt.completed.v1' }
+        >,
+      ),
+    ).toBe('unscorable-practice-completion')
   })
 })

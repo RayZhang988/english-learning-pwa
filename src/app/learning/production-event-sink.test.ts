@@ -3,8 +3,10 @@ import type { PlatformEvent } from '../../core/index.ts'
 import {
   createLearningEngineState,
   createPlanProgress,
+  getResumeDecision,
   LearningEngineRepository,
   type DailyPlan,
+  type LearningTask,
 } from '../../learning-engine/index.ts'
 import { abilityProfile } from '../../learning-engine/test-fixtures.ts'
 import type {
@@ -152,6 +154,69 @@ function completedEvent(
   }
 }
 
+function speakingFallbackPlan(): DailyPlan {
+  const base = plan()
+  const speakingTask: LearningTask = {
+    ...base.tasks[0],
+    taskId: 'plan-2026-07-24:speaking:1',
+    sequence: 1,
+    learningUnitId: 'st4w-w1d1-speaking',
+    contentRef:
+      'lesson://survival-travel-american-4w/1.0.0/w1d1/speaking',
+    domain: 'speaking',
+    targetModuleId: 'speaking',
+    estimatedSeconds: 300,
+  }
+  const listeningTask: LearningTask = {
+    ...base.tasks[0],
+    taskId: 'plan-2026-07-24:listening:2',
+    sequence: 2,
+    learningUnitId: 'st4w-w1d1-listening',
+    contentRef:
+      'lesson://survival-travel-american-4w/1.0.0/w1d1/listening',
+    domain: 'listening',
+    targetModuleId: 'listening',
+    estimatedSeconds: 300,
+  }
+  return {
+    ...base,
+    targetSeconds: 600,
+    plannedSeconds: 600,
+    tasks: [speakingTask, listeningTask],
+  }
+}
+
+function unscorableSpeakingEvent(task: LearningTask): PlatformEvent {
+  return {
+    id: 'speaking-fallback-completed',
+    type: 'learning.attempt.completed.v1',
+    sourceModuleId: 'speaking',
+    occurredAt: '2026-07-24T08:05:00.000Z',
+    schemaVersion: 1,
+    payload: {
+      planId: task.planId,
+      taskId: task.taskId,
+      learningUnitId: task.learningUnitId,
+      contentRef: task.contentRef,
+      domain: 'speaking',
+      targetModuleId: 'speaking',
+      localDate: '2026-07-24',
+      mode: task.mode,
+      difficultyLevel: task.difficultyLevel,
+      estimatedSeconds: task.estimatedSeconds,
+      result: 'unscorable',
+      performanceScore: null,
+      evidenceQuality: 0,
+      assistanceLevel: 0,
+      durationSeconds: 240,
+      taskCompleted: false,
+      errorTags: [],
+      contentTags: task.tags,
+      failureCategory: 'network',
+    },
+  }
+}
+
 describe('ProductionLearningEventSink', () => {
   let plans: ActivePlanRepository
   let engines: LearningEngineRepository
@@ -219,5 +284,79 @@ describe('ProductionLearningEventSink', () => {
     await expect(
       sink.publish(completedEvent({ taskId: 'unknown-task' })),
     ).rejects.toThrow('taskId')
+  })
+
+  it('persists completed unscorable speaking practice and restores the next task without mastery evidence', async () => {
+    const planStore = new MemoryNamespaceStore(
+      'app.learning-runtime',
+    )
+    const engineStore = new MemoryNamespaceStore('learning.engine')
+    const dailyPlan = speakingFallbackPlan()
+    const activePlans = new ActivePlanRepository(planStore)
+    const engineStates = new LearningEngineRepository(engineStore)
+    await activePlans.save(
+      createActiveLearningRuntime(
+        createPlanProgress(
+          dailyPlan,
+          '2026-07-24T08:00:00.000Z',
+        ),
+      ),
+    )
+    await engineStates.save(
+      createLearningEngineState(
+        abilityProfile(),
+        '2026-07-24T08:00:00.000Z',
+      ),
+    )
+    const event = unscorableSpeakingEvent(dailyPlan.tasks[0])
+
+    await new ProductionLearningEventSink(
+      activePlans,
+      engineStates,
+    ).publish(event)
+
+    const restoredRuntime = await new ActivePlanRepository(
+      planStore,
+    ).load()
+    const restoredEngine = await new LearningEngineRepository(
+      engineStore,
+    ).load()
+    expect(restoredRuntime?.activePlan.tasks[0]).toMatchObject({
+      status: 'completed',
+      completionKind: 'unscorable-practice',
+      effectiveSeconds: 0,
+      skipCount: 0,
+    })
+    expect(restoredRuntime?.activePlan.tasks[1].status).toBe('pending')
+    expect(restoredRuntime?.completedLearningUnitIds).toContain(
+      dailyPlan.tasks[0].learningUnitId,
+    )
+    expect(restoredRuntime?.processedEventIds).toEqual([event.id])
+    expect(
+      restoredRuntime &&
+        getResumeDecision(
+          restoredRuntime.activePlan,
+          dailyPlan.localDate,
+        ),
+    ).toMatchObject({
+      action: 'resume-plan',
+      nextTaskId: dailyPlan.tasks[1].taskId,
+    })
+    expect(restoredEngine?.progress.attempts).toEqual([])
+    expect(restoredEngine?.reviewItems).toEqual({})
+    expect(restoredEngine?.progress.dailyActivity[0]).toMatchObject({
+      completedTaskCount: 1,
+      effectiveSeconds: 0,
+      planCompleted: false,
+    })
+
+    await new ProductionLearningEventSink(
+      new ActivePlanRepository(planStore),
+      new LearningEngineRepository(engineStore),
+    ).publish(event)
+    expect(
+      (await new ActivePlanRepository(planStore).load())
+        ?.processedEventIds,
+    ).toEqual([event.id])
   })
 })

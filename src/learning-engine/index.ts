@@ -8,6 +8,7 @@ export type {
   AbilityDomain,
   AbilityProfile,
   ApplyAttemptResult,
+  AttemptPlanDisposition,
   AttemptEvidence,
   AttemptFailureCategory,
   CommonErrorMetric,
@@ -45,6 +46,7 @@ export type {
   StreakMetric,
   TaskExecutionState,
   TaskExecutionStatus,
+  TaskCompletionKind,
   TaskOrigin,
   TrainingModuleId,
 } from './contracts.ts'
@@ -61,6 +63,7 @@ export {
   createPlanProgress,
   evaluateTaskSkip,
   getResumeDecision,
+  resolveAttemptPlanDisposition,
   summarizePlanActivity,
   toSkipHistoryEntry,
 } from './lifecycle.ts'

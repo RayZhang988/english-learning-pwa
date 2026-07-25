@@ -315,9 +315,9 @@ export class SpeakingTrainingRuntime {
       session = withPendingSpeakingEvent(session, startedEvent, now)
       session = withPendingSpeakingEvent(
         session,
-        createSpeakingUnscorableEvent(
+        createSpeakingTaskPausedEvent(
           this.task,
-          failure.category,
+          'content-failure',
           0,
           this.identity(now),
         ),
@@ -608,6 +608,25 @@ export class SpeakingTrainingRuntime {
   }
 
   async advance(): Promise<SpeakingSession> {
+    const current = this.requireSession()
+    const isFinalPrompt =
+      current.phase === 'feedback' &&
+      current.unit !== null &&
+      current.promptIndex + 1 >= current.unit.prompts.length
+    if (isFinalPrompt) {
+      const preview = getSpeakingSessionResult(current)
+      const terminalUnscorable =
+        preview.performanceScore === null &&
+        (preview.failureCategory === 'device' ||
+          preview.failureCategory === 'permission' ||
+          preview.failureCategory === 'network')
+      if (
+        preview.performanceScore === null &&
+        !terminalUnscorable
+      ) {
+        return this.pause('device-failure')
+      }
+    }
     this.discardRecording()
     let session = advanceSpeakingSession(
       this.requireSession(),
@@ -626,8 +645,7 @@ export class SpeakingTrainingRuntime {
       const event =
         result.performanceScore === null
           ? createSpeakingUnscorableEvent(
-              session.task,
-              result.failureCategory ?? 'device',
+              session,
               durationSeconds,
               this.identity(now),
             )

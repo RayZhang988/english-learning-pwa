@@ -149,6 +149,14 @@ function assertTaskExecution(
   ) {
     throw new TypeError(`${label}.status is unsupported.`)
   }
+  if (
+    value.completionKind !== undefined &&
+    value.completionKind !== null &&
+    value.completionKind !== 'scored' &&
+    value.completionKind !== 'unscorable-practice'
+  ) {
+    throw new TypeError(`${label}.completionKind is unsupported.`)
+  }
   requireFiniteNumber(value.spentSeconds, `${label}.spentSeconds`)
   requireFiniteNumber(value.effectiveSeconds, `${label}.effectiveSeconds`)
   requireFiniteNumber(value.skipCount, `${label}.skipCount`)
