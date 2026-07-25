@@ -3,6 +3,7 @@ import {
   BrowserListeningSpeechSynthesis,
   type ListeningSpeechCallbacks,
 } from './speech-synthesis.ts'
+import type { ListeningPlaybackRate } from './types.ts'
 
 function createFakeSpeech() {
   const localVoice = {
@@ -75,16 +76,14 @@ describe('browser listening speech synthesis', () => {
           text: 'Hello',
           locale: 'en-US',
           rate: 1,
-          pitch: 1,
-          voiceId: null,
         },
         {},
       ),
     ).toThrow(/does not expose/i)
   })
 
-  it('configures en-US, rate, local voice and lifecycle callbacks', () => {
-    const { synthesis, utterance, localVoice } = createFakeSpeech()
+  it('uses en-US with the exact user rate and neutral system voice', () => {
+    const { synthesis, utterance } = createFakeSpeech()
     const callbacks: ListeningSpeechCallbacks = {
       onStart: vi.fn(),
       onEnd: vi.fn(),
@@ -99,16 +98,14 @@ describe('browser listening speech synthesis', () => {
         text: 'Boston',
         locale: 'en-US',
         rate: 0.75,
-        pitch: 1.03,
-        voiceId: 'local-voice',
       },
       callbacks,
     )
     expect(utterance).toMatchObject({
       lang: 'en-US',
       rate: 0.75,
-      pitch: 1.03,
-      voice: localVoice,
+      pitch: 1,
+      voice: null,
     })
     expect(synthesis.speak).toHaveBeenCalledWith(utterance)
     utterance.onstart?.()
@@ -174,19 +171,36 @@ describe('browser listening speech synthesis', () => {
       {
         text: 'The train is on time.',
         locale: 'en-US',
-        rate: 1.02,
-        pitch: 0.97,
-        voiceId: null,
+        rate: 1.25,
       },
       {},
     )
 
     expect(utterance).toMatchObject({
       lang: 'en-US',
-      rate: 1.02,
-      pitch: 0.97,
+      rate: 1.25,
+      pitch: 1,
       voice: null,
     })
+  })
+
+  it('rejects rates outside the three user-visible choices', () => {
+    const { synthesis, utterance } = createFakeSpeech()
+    const speech = new BrowserListeningSpeechSynthesis(
+      synthesis,
+      () => utterance,
+    )
+
+    expect(() =>
+      speech.speak(
+        {
+          text: 'Use the selected speed.',
+          locale: 'en-US',
+          rate: 1.02 as ListeningPlaybackRate,
+        },
+        {},
+      ),
+    ).toThrow(/invalid text or playback rate/i)
   })
 
   it('treats a temporarily throwing Safari voice list as unknown rather than unsupported', () => {
@@ -215,8 +229,6 @@ describe('browser listening speech synthesis', () => {
           text: 'Please wait.',
           locale: 'en-US',
           rate: 1,
-          pitch: 1,
-          voiceId: null,
         },
         {},
       ),

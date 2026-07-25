@@ -18,9 +18,7 @@ export type ListeningSpeechErrorCode =
 export interface ListeningSpeechRequest {
   readonly text: string
   readonly locale: 'en-US'
-  readonly rate: number
-  readonly pitch?: number
-  readonly voiceId?: string | null
+  readonly rate: ListeningPlaybackRate
 }
 
 export interface ListeningSpeechCallbacks {
@@ -94,10 +92,6 @@ export interface ListeningSpeechPort {
 }
 
 const SUPPORTED_RATES = [0.75, 1, 1.25] as const
-const MIN_EFFECTIVE_RATE = 0.75
-const MAX_EFFECTIVE_RATE = 1.25
-const MIN_PROFILE_PITCH = 0.9
-const MAX_PROFILE_PITCH = 1.1
 const SPEECH_ERROR_CODES: readonly ListeningSpeechErrorCode[] = [
   'canceled',
   'interrupted',
@@ -160,7 +154,6 @@ function localEnUsVoices(
           `local-en-us:${index}`,
         voice,
       }))
-      .sort((left, right) => left.id.localeCompare(right.id, 'en-US'))
   } catch {
     return []
   }
@@ -232,11 +225,7 @@ export class BrowserListeningSpeechSynthesis
     if (
       request.text.trim().length === 0 ||
       !Number.isFinite(request.rate) ||
-      request.rate < MIN_EFFECTIVE_RATE ||
-      request.rate > MAX_EFFECTIVE_RATE ||
-      !Number.isFinite(request.pitch ?? 1) ||
-      (request.pitch ?? 1) < MIN_PROFILE_PITCH ||
-      (request.pitch ?? 1) > MAX_PROFILE_PITCH
+      !SUPPORTED_RATES.includes(request.rate)
     ) {
       throw new ListeningError(
         'speech-failed',
@@ -246,14 +235,8 @@ export class BrowserListeningSpeechSynthesis
     const utterance = this.createUtterance(request.text)
     utterance.lang = request.locale
     utterance.rate = request.rate
-    utterance.pitch = request.pitch ?? 1
-    const voices = localEnUsVoices(this.synthesis)
-    utterance.voice =
-      voices.find(
-        (entry) => entry.id === (request.voiceId ?? null),
-      )?.voice ??
-      voices[0]?.voice ??
-      null
+    utterance.pitch = 1
+    utterance.voice = null
     utterance.onstart = callbacks.onStart ?? null
     utterance.onend = callbacks.onEnd ?? null
     utterance.onpause = callbacks.onPause ?? null

@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
 import { ListeningPlaybackController } from './playback-controller.ts'
-import { ListeningSpeakerVoiceProfiles } from './speaker-voice-profiles.ts'
 import type {
   ListeningSpeechCallbacks,
   ListeningSpeechPort,
@@ -144,8 +143,6 @@ describe('listening playback controller', () => {
       text: 'Maya',
       locale: 'en-US',
       rate: 1,
-      pitch: 1,
-      voiceId: null,
     })
     expect(controller.snapshot.playCounts).toEqual({})
     speech.callbacks?.onStart?.()
@@ -211,7 +208,7 @@ describe('listening playback controller', () => {
     expect(onFailure).toHaveBeenCalledWith('audio-busy')
   })
 
-  it('queues only dialogue text and keeps A/B/A on stable distinct voices', () => {
+  it('speaks a complete dialogue as one neutral continuous utterance', () => {
     const voices = [
       { id: 'voice-alex', locale: 'en-US', localService: true },
       { id: 'voice-blair', locale: 'en-US', localService: true },
@@ -225,164 +222,43 @@ describe('listening playback controller', () => {
 
     controller.toggle()
     speech.callbacks?.onStart?.()
-    speech.callbacks?.onEnd?.()
-    speech.callbacks?.onStart?.()
-    speech.callbacks?.onEnd?.()
-    speech.callbacks?.onStart?.()
-    speech.callbacks?.onEnd?.()
+    expect(speech.speakRequests).toEqual([
+      {
+        text: 'Good morning. How can I help? I need a ticket.',
+        locale: 'en-US',
+        rate: 1,
+      },
+    ])
+    expect(speech.speakRequests[0].text).not.toMatch(/Alex:|Blair:/u)
+    expect(controller.snapshot.playCounts).toEqual({
+      'line-a-1': 1,
+      'line-b': 1,
+      'line-a-2': 1,
+    })
 
-    expect(speech.speakRequests.map((request) => request.text)).toEqual([
-      'Good morning.',
-      'How can I help?',
-      'I need a ticket.',
-    ])
-    expect(speech.speakRequests.map((request) => request.voiceId)).toEqual([
-      'voice-alex',
-      'voice-blair',
-      'voice-alex',
-    ])
-    expect(speech.speakRequests.map((request) => request.pitch)).toEqual([
-      1,
-      1,
-      1,
-    ])
+    speech.callbacks?.onEnd?.()
     expect(controller.snapshot.status).toBe('ended')
+    expect(speech.speakRequests).toHaveLength(1)
   })
 
-  it('distinguishes speakers gently on one local voice without crossing rate bounds', () => {
+  it('speaks only an explicitly selected line and preserves controls', () => {
     const speech = new FakeSpeech([
-      { id: 'voice-only', locale: 'en-US', localService: true },
-    ])
-    const controller = new ListeningPlaybackController({
-      question: dialogueQuestion,
-      initialState: dialogueInitialState,
-      speech,
-    })
-
-    controller.toggle()
-    speech.callbacks?.onEnd?.()
-    speech.callbacks?.onEnd?.()
-    speech.callbacks?.onEnd?.()
-
-    const [firstAlex, blair, secondAlex] = speech.speakRequests
-    expect(firstAlex.voiceId).toBe('voice-only')
-    expect(blair.voiceId).toBe('voice-only')
-    expect(secondAlex).toMatchObject({
-      voiceId: firstAlex.voiceId,
-      pitch: firstAlex.pitch,
-      rate: firstAlex.rate,
-    })
-    expect(blair.pitch).not.toBe(firstAlex.pitch)
-    expect(
-      Math.abs((blair.pitch ?? 1) - (firstAlex.pitch ?? 1)),
-    ).toBeLessThanOrEqual(0.1)
-    expect(
-      Math.abs(blair.rate - firstAlex.rate),
-    ).toBeLessThanOrEqual(0.05)
-    for (const request of speech.speakRequests) {
-      expect(request.rate).toBeGreaterThanOrEqual(0.75)
-      expect(request.rate).toBeLessThanOrEqual(1.25)
-    }
-  })
-
-  it('clamps single-voice fallback differences at content speed boundaries', () => {
-    for (const rate of [0.75, 1.25] as const) {
-      const speech = new FakeSpeech([
-        { id: 'voice-only', locale: 'en-US', localService: true },
-      ])
-      const controller = new ListeningPlaybackController({
-        question: dialogueQuestion,
-        initialState: { ...dialogueInitialState, rate },
-        speech,
-      })
-
-      controller.toggle()
-      speech.callbacks?.onEnd?.()
-
-      expect(speech.speakRequests).toHaveLength(2)
-      for (const request of speech.speakRequests) {
-        expect(request.rate).toBeGreaterThanOrEqual(0.75)
-        expect(request.rate).toBeLessThanOrEqual(1.25)
-      }
-    }
-  })
-
-  it('keeps a single narrator neutral and stable across queued lines', () => {
-    const speech = new FakeSpeech([
-      { id: 'narrator-a', locale: 'en-US', localService: true },
-      { id: 'narrator-b', locale: 'en-US', localService: true },
-    ])
-    const narrativeQuestion = {
-      ...dialogueQuestion,
-      id: 'question-narrative',
-      segments: dialogueQuestion.segments.map((segment) => ({
-        ...segment,
-        speaker: null,
-      })),
-    } as ListeningQuestion
-    const controller = new ListeningPlaybackController({
-      question: narrativeQuestion,
-      initialState: dialogueInitialState,
-      speech,
-    })
-
-    controller.toggle()
-    speech.callbacks?.onEnd?.()
-    speech.callbacks?.onEnd?.()
-    speech.callbacks?.onEnd?.()
-
-    expect(
-      speech.speakRequests.map(({ voiceId, pitch, rate }) => ({
-        voiceId,
-        pitch,
-        rate,
-      })),
-    ).toEqual([
-      { voiceId: 'narrator-a', pitch: 1, rate: 1 },
-      { voiceId: 'narrator-a', pitch: 1, rate: 1 },
-      { voiceId: 'narrator-a', pitch: 1, rate: 1 },
-    ])
-  })
-
-  it('uses gentle profile differences when the local voice list is empty', () => {
-    const speech = new FakeSpeech()
-    const controller = new ListeningPlaybackController({
-      question: dialogueQuestion,
-      initialState: dialogueInitialState,
-      speech,
-    })
-
-    controller.toggle()
-    speech.callbacks?.onEnd?.()
-
-    expect(speech.speakRequests).toHaveLength(2)
-    expect(speech.speakRequests.map(({ voiceId }) => voiceId)).toEqual([
-      null,
-      null,
-    ])
-    expect(speech.speakRequests[0].pitch).not.toBe(
-      speech.speakRequests[1].pitch,
-    )
-  })
-
-  it('uses voices that load before playback and preserves queue controls', () => {
-    const speech = new FakeSpeech()
-    const controller = new ListeningPlaybackController({
-      question: dialogueQuestion,
-      initialState: dialogueInitialState,
-      speech,
-    })
-    speech.voiceCatalog = [
       { id: 'late-a', locale: 'en-US', localService: true },
       { id: 'late-b', locale: 'en-US', localService: true },
-    ]
+    ])
+    const controller = new ListeningPlaybackController({
+      question: dialogueQuestion,
+      initialState: dialogueInitialState,
+      speech,
+    })
 
     controller.selectSegment('line-b')
     controller.setRate(0.75)
     controller.toggle()
-    expect(speech.speakRequests.at(-1)).toMatchObject({
+    expect(speech.speakRequests.at(-1)).toEqual({
       text: 'How can I help?',
-      voiceId: 'late-b',
+      locale: 'en-US',
+      rate: 0.75,
     })
     controller.toggle()
     expect(speech.pauseSpy).toHaveBeenCalledOnce()
@@ -392,62 +268,38 @@ describe('listening playback controller', () => {
     expect(controller.snapshot.status).toBe('idle')
     expect(speech.cancelSpy).toHaveBeenCalled()
     controller.toggle()
-    expect(speech.speakRequests.at(-1)?.rate).toBe(1.25)
+    expect(speech.speakRequests.at(-1)).toEqual({
+      text: 'How can I help?',
+      locale: 'en-US',
+      rate: 1.25,
+    })
     controller.interrupt()
     expect(speech.cancelSpy).toHaveBeenCalled()
-
-    controller.selectSegment('line-a-1')
-    controller.setRepeatMode('all')
-    controller.toggle()
-    speech.callbacks?.onEnd?.()
-    speech.callbacks?.onEnd?.()
-    speech.callbacks?.onEnd?.()
-    expect(speech.speakRequests.at(-1)?.text).toBe('Good morning.')
   })
 
-  it('shares one frozen speaker map across question controllers in the same session', () => {
-    const initialVoices = [
-      { id: 'session-a', locale: 'en-US', localService: true },
-      { id: 'session-b', locale: 'en-US', localService: true },
-    ] as const
-    let currentVoices: readonly FakeVoice[] = initialVoices
-    const profiles = new ListeningSpeakerVoiceProfiles(
-      ['Alex', 'Blair'],
-      () => currentVoices,
-    )
-    const firstSpeech = new FakeSpeech(initialVoices)
-    const firstController = new ListeningPlaybackController({
+  it('repeats a selected line or the complete continuous dialogue honestly', () => {
+    const speech = new FakeSpeech()
+    const controller = new ListeningPlaybackController({
       question: dialogueQuestion,
       initialState: dialogueInitialState,
-      speech: firstSpeech,
-      speakerVoiceProfiles: profiles,
+      speech,
     })
 
-    firstController.toggle()
-    expect(firstSpeech.speakRequests[0].voiceId).toBe('session-a')
+    controller.selectSegment('line-b')
+    controller.setRepeatMode('segment')
+    controller.toggle()
+    speech.callbacks?.onEnd?.()
+    expect(speech.speakRequests.map(({ text }) => text)).toEqual([
+      'How can I help?',
+      'How can I help?',
+    ])
 
-    currentVoices = [...initialVoices].reverse()
-    const secondSpeech = new FakeSpeech(currentVoices)
-    const secondController = new ListeningPlaybackController({
-      question: dialogueQuestion,
-      initialState: {
-        ...dialogueInitialState,
-        currentSegmentId: 'line-b',
-      },
-      speech: secondSpeech,
-      speakerVoiceProfiles: profiles,
-    })
-    secondController.toggle()
-    expect(secondSpeech.speakRequests[0].voiceId).toBe('session-b')
-
-    const thirdSpeech = new FakeSpeech(currentVoices)
-    const thirdController = new ListeningPlaybackController({
-      question: dialogueQuestion,
-      initialState: dialogueInitialState,
-      speech: thirdSpeech,
-      speakerVoiceProfiles: profiles,
-    })
-    thirdController.toggle()
-    expect(thirdSpeech.speakRequests[0].voiceId).toBe('session-a')
+    controller.setRepeatMode('all')
+    speech.callbacks?.onEnd?.()
+    speech.callbacks?.onEnd?.()
+    expect(speech.speakRequests.slice(2).map(({ text }) => text)).toEqual([
+      'Good morning. How can I help? I need a ticket.',
+      'Good morning. How can I help? I need a ticket.',
+    ])
   })
 })

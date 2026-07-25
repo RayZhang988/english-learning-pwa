@@ -41,10 +41,6 @@ export {
   LISTENING_STORAGE_SCHEMA_VERSION,
 } from './repository.ts'
 export {
-  ListeningSpeakerVoiceProfiles,
-  type ListeningSpeakerVoiceProfile,
-} from './speaker-voice-profiles.ts'
-export {
   ListeningTrainingRuntime,
   type ListeningTrainingRuntimeOptions,
 } from './runtime.ts'

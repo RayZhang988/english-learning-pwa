@@ -381,7 +381,7 @@ describe('listening training runtime', () => {
     })
   })
 
-  it('submits a restored same-turn draft after the latest slow write and keeps dialogue voices stable', async () => {
+  it('keeps a restored same-turn draft while using one continuous neutral dialogue utterance', async () => {
     const store = new ControlledWriteStore()
     const repository = new ListeningSessionRepository(store)
     const task = createListeningTask()
@@ -405,15 +405,15 @@ describe('listening training runtime', () => {
     const firstRuntime = new ListeningTrainingRuntime(runtimeOptions)
     await firstRuntime.initialize()
     await firstRuntime.togglePlayback()
-    speech.callbacks?.onEnd?.()
-    speech.callbacks?.onEnd?.()
-    expect(
-      speech.speakRequests.map((request) => request.voiceId),
-    ).toEqual([
-      'runtime-voice-a',
-      'runtime-voice-b',
-      'runtime-voice-a',
+    expect(speech.speakRequests).toEqual([
+      {
+        text: 'Good morning. How can I help? I need a ticket.',
+        locale: 'en-US',
+        rate: 1,
+      },
     ])
+    expect(speech.speakRequests[0].text).not.toMatch(/Alex:|Blair:/u)
+    speech.callbacks?.onEnd?.()
     await firstRuntime.changeDictation('abc')
     await firstRuntime.pause('user-paused')
     firstRuntime.dispose()
