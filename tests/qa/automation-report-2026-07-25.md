@@ -2,16 +2,20 @@
 
 ## 阶段性结论
 
-**自动化与桌面真实浏览器门槛通过；第一版最终验收只剩真实 iPhone 和连续 14 天。**
+**自动化与桌面正式浏览器门槛通过；第一版最终验收仍待真实 iPhone 和连续 14 天。**
 
-`QA-001` 至 `QA-005` 均已在修复后的正式站回归关闭。目前没有未关闭 S0/S1 或影响
-MUST 门槛的 S2。自动化通过仍不等于第一版通过：Safari/PWA 系统能力和连续 14 天
-个人使用尚无真实证据。
+`QA-006` 已由 `56ca8f1` 修复。正式 one/two voice 两次完整生产回归均通过，当前
+没有未关闭 S0/S1 或影响 MUST 的 S2。真实 iPhone 听感和连续 14 天仍无实测证据。
 
 ## 版本与范围
 
-- 当前正式验收提交：`4a15e1e`（`main`、`origin/main`）
+- 当前正式验收提交：`56ca8f1`
 - 正式地址：`https://rayzhang988.github.io/english-learning-pwa/`
+- `64d884c` GitHub Pages 部署：run `30146382499`，正式资产
+  `index-igXDg-nF.js`；该版本触发 QA-006
+- `QA-006` 修复版本：`56ca8f1`
+- `56ca8f1` GitHub Pages 部署：run `30146889205`，成功；正式资产
+  `index-DARWx41s.js`
 - `QA-001` 原始失败验收版本：`e98e522`
 - `QA-001` 修复版本：`3ae5c9f`
 - `3ae5c9f` GitHub Pages 部署：run `30139578460`，成功
@@ -37,11 +41,45 @@ pnpm check
 结果：通过
 lint：通过
 TypeScript：通过
-Vitest：76 个测试文件、272 项测试通过
+Vitest：77 个测试文件、291 项测试通过
 生产构建：通过
 PWA：生成、自动更新策略和过期预缓存清理校验通过
 课程构建校验：8 个课程资产输出、8 个进入预缓存、0 个课程 JSON 内联
 ```
+
+### 听力对话 speaker 与 voice profile
+
+```text
+pnpm exec vitest run tests/qa/listening-dialogue-voice.acceptance.test.ts
+结果：1 个文件、5 项测试通过
+```
+
+- 发布内容的 21 个听力对话、143 条台词逐条验证；speaker 与台词文本分离。
+- A/B/A 同 speaker 的 voice/pitch/rate profile 稳定。
+- 两个本地 `en-US` voice 时 A/B 使用不同 voice。
+- 一个本地 `en-US` voice 时保留同一 voice，以轻微 pitch/rate 差异降级。
+- 单人叙述使用单一中性稳定 profile。
+- 自动逐句继续、暂停、恢复、取消、循环全部和调速均通过。
+
+本地 production preview 上分别运行：
+
+```text
+QA_TTS_VOICE_MODE=one node tests/e2e/browser-acceptance.mjs
+QA_TTS_VOICE_MODE=two node tests/e2e/browser-acceptance.mjs
+结果：两次均 exit 0、status=passed
+```
+
+探针记录实际传给 `SpeechSynthesisUtterance` 的 text、voiceId、pitch 和 rate，并验证
+Day 1 的 Maya/Leo/Maya 对话。`56ca8f1` 部署后的正式 one/two voice 完整 E2E 均
+exit 0、`status=passed`：
+
+- one voice：Maya `qa-local-a` / `0.97` / `0.98`，Leo `qa-local-a` / `1.03` /
+  `1.02`，A/B/A 稳定。
+- two voices：Maya `qa-local-a`、Leo `qa-local-b`，pitch/rate 均为 `1/1`，
+  A/B/A 稳定。
+- 两次均验证只发送台词正文，并完成听力 7/7、词汇 6/6、计划 3/3 和刷新恢复。
+
+这些证据证明生产代码发送的文本和参数正确，不证明真实 iPhone 的声音主观上可区分。
 
 ### 构建产物与正式站
 
@@ -162,6 +200,7 @@ GitHub Pages run `30144364133` 成功部署正式资产 `index-R31Brx_E.js`。�
 | QA-003 | S1 | 已关闭 | `d1e9379` 正式 Chrome 从旧缓存切换到新资产且数据保留 |
 | QA-004 | S2 | 已关闭 | `45e97e1` / run `30143745055` 正式生产检查点通过 |
 | QA-005 | S2 | 已关闭 | `4a15e1e` / run `30144364133` 正式完整 E2E 通过，词汇 6/6、计划 3/3 |
+| QA-006 | S2 | 已关闭 | 失败 `64d884c`；`56ca8f1` / run `30146889205` / `index-DARWx41s.js` 正式 one/two voice 完整 E2E 均 exit 0 |
 
 09 只记录缺陷与回归证据，没有修改生产代码。
 
@@ -196,20 +235,20 @@ Worker 永久 waiting。
 | --- | --- | --- |
 | G0 可构建 | 通过 | `pnpm check`、课程构建校验、生产构建和 PWA 通过 |
 | G1 首次使用 | 自动化通过 | 正式评估、1047–1048 秒、三能力字段、真实档案和 2700 秒计划通过；真机实际体验待测 |
-| G2 训练衔接 | 自动化通过 | `4a15e1e` 正式站通过真实 taskId 完成口语 fallback、听力 7/7、词汇 6/6，计划 3/3 |
-| G3 数据韧性 | 自动化通过 | QA-004 听写暂停/刷新/提交和 QA-005 切题竞态均在正式修复版本回归；计划 3/3 刷新保留 |
+| G2 训练衔接 | 自动化通过 | 正式 one/two voice 两次 E2E 均通过真实 taskId 完成口语 fallback、听力 7/7、词汇 6/6 和计划 3/3 |
+| G3 数据韧性 | 自动化通过 | 两次正式 E2E 均通过 `abc` 暂停/恢复、追加为 `abcdef` 立即提交、feedback 持久化与计划刷新恢复 |
 | G4 PWA/离线 | 待真机 | Chrome 旧缓存自动更新、数据保留、HTTPS、Manifest、SW、缓存和离线应用壳通过；iPhone 安装态更新及真实离线训练待测 |
-| G5 设备降级 | 待真机 | Chrome 权限拒绝、录音回放、识别失败、不记错和计划推进通过；Safari 系统能力待测 |
+| G5 设备降级 | 待真机 | Chrome 权限拒绝、录音回放、识别失败通过；一/双 voice 属性自动化通过；Safari 实际听感和系统能力待测 |
 | G6 兼容与无障碍 | 待真机 | Chrome 窄屏和键盘通过；Safari、大号文字和 VoiceOver 待测 |
 | G7 内容完整 | 通过 | 4 周、28 天、84 单元、答案、前置链和生产 catalog 通过 |
 | G8 真机稳定 | 待实测 | iPhone 清单未执行；连续 14 天未开始 |
 
 ## 当前门禁
 
-阶段性结论：**自动化与桌面真实浏览器通过；第一版最终验收待真机和 14 天实测。**
+阶段性结论：**自动化与桌面正式浏览器通过；第一版最终验收待真机和 14 天实测。**
 
-最终通过只剩：
+下一步顺序：
 
-1. 按 `iphone-checklist.md` 完成真实 iPhone Safari/PWA 的安装、麦克风、录音、系统
-   语音、VoiceOver、后台中断、离线、恢复和缓存更新。
+1. 按 `iphone-checklist.md` 验证安装、麦克风、录音、系统语音、多音色/单音色听感、
+   VoiceOver、后台中断、离线、恢复和缓存更新。
 2. 真机基础清单通过后，按 `14-day-usage-log.md` 连续记录 14 天个人使用。

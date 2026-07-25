@@ -1,15 +1,24 @@
 import assert from 'node:assert/strict'
 import {
   fakeAssessmentClockScript,
+  fakeSpeechSynthesisScript,
   launchQaChrome,
 } from './lib/cdp-browser.mjs'
 
 const baseUrl = new URL(
   process.env.QA_BASE_URL ?? 'http://127.0.0.1:4173/',
 )
+const ttsVoiceMode = process.env.QA_TTS_VOICE_MODE ?? null
+assert.ok(
+  ttsVoiceMode === null ||
+    ttsVoiceMode === 'one' ||
+    ttsVoiceMode === 'two',
+  'QA_TTS_VOICE_MODE must be either one or two.',
+)
 const qa = await launchQaChrome()
 const evidence = {
   baseUrl: baseUrl.href,
+  ttsVoiceMode,
   checkpoints: [],
 }
 
@@ -28,9 +37,112 @@ function storedListeningSession(databases, taskId) {
   )?.value
 }
 
+function assertDialogueVoiceProbe(
+  voiceMode,
+  question,
+  playback,
+  utterances,
+) {
+  const firstSegmentIndex = question.segments.findIndex(
+    (segment) => segment.id === playback.currentSegmentId,
+  )
+  assert.notEqual(
+    firstSegmentIndex,
+    -1,
+    'The active listening segment was not found in the question.',
+  )
+  const expectedSegments = question.segments.slice(firstSegmentIndex)
+  assert.deepEqual(
+    utterances.map((utterance) => utterance.text),
+    expectedSegments.map((segment) => segment.text),
+    'The production route did not send the exact dialogue lines to SpeechSynthesisUtterance.',
+  )
+
+  for (const [index, segment] of expectedSegments.entries()) {
+    if (segment.speaker) {
+      assert.equal(
+        utterances[index].text.startsWith(`${segment.speaker}:`),
+        false,
+        `The spoken text contains the speaker label ${segment.speaker}:`,
+      )
+    }
+  }
+
+  const speakers = expectedSegments.map((segment) => segment.speaker)
+  const abaIndex = speakers.findIndex(
+    (speaker, index) =>
+      speaker &&
+      speaker === speakers[index + 2] &&
+      speaker !== speakers[index + 1],
+  )
+  assert.notEqual(
+    abaIndex,
+    -1,
+    'The production dialogue did not expose an A/B/A speaker sequence.',
+  )
+
+  const profilesBySpeaker = new Map()
+  expectedSegments.forEach((segment, index) => {
+    if (!segment.speaker) return
+    const utterance = utterances[index]
+    const profile = {
+      voiceId: utterance.voiceId,
+      pitch: utterance.pitch,
+      rate: utterance.rate,
+    }
+    const existing = profilesBySpeaker.get(segment.speaker)
+    if (existing) {
+      assert.deepEqual(
+        profile,
+        existing,
+        `Speaker ${segment.speaker} changed voice profile within one dialogue.`,
+      )
+    } else {
+      profilesBySpeaker.set(segment.speaker, profile)
+    }
+  })
+
+  const profiles = [...profilesBySpeaker.values()]
+  assert.ok(profiles.length >= 2)
+  if (voiceMode === 'two') {
+    assert.notEqual(
+      profiles[0].voiceId,
+      profiles[1].voiceId,
+      'Two local en-US voices were exposed, but the dialogue speakers shared one voice.',
+    )
+  } else {
+    assert.equal(
+      new Set(profiles.map((profile) => profile.voiceId)).size,
+      1,
+      'The one-voice fallback did not keep the available voice.',
+    )
+    assert.notDeepEqual(
+      [profiles[0].pitch, profiles[0].rate],
+      [profiles[1].pitch, profiles[1].rate],
+      'The one-voice fallback did not distinguish speakers by pitch/rate.',
+    )
+    assert.ok(
+      Math.abs(profiles[0].pitch - profiles[1].pitch) <= 0.12 &&
+        Math.abs(profiles[0].rate - profiles[1].rate) <= 0.05,
+      'The one-voice pitch/rate fallback is not mild.',
+    )
+  }
+
+  return {
+    speakers,
+    utterances,
+    profiles: Object.fromEntries(profilesBySpeaker),
+  }
+}
+
 try {
   await qa.page.initialize()
   await qa.page.addInitScript(fakeAssessmentClockScript)
+  if (ttsVoiceMode) {
+    await qa.page.addInitScript(
+      fakeSpeechSynthesisScript(ttsVoiceMode),
+    )
+  }
   await qa.page.setViewport(390, 844)
   await qa.page.navigate(new URL('#/', baseUrl).href)
   await qa.page.waitFor(
@@ -275,11 +387,21 @@ try {
   })
 
   let dictationRaceExercised = false
+  let dialogueVoiceProfileExercised = false
   for (let question = 0; question < 10; question += 1) {
     if ((await qa.page.bodyText()).includes('听力任务已完成')) {
       break
     }
     let answerSubmitted = false
+    const listeningSessionBeforePlayback = ttsVoiceMode
+      ? storedListeningSession(
+          await qa.page.dumpIndexedDb(),
+          secondTaskId,
+        )
+      : null
+    const speechProbeBeforePlayback = ttsVoiceMode
+      ? await qa.page.speechSynthesisSnapshot()
+      : null
     await qa.page.clickByText('播放音频')
     await qa.page.waitFor(
       `document.body.innerText.includes('播放完毕') ||
@@ -288,6 +410,35 @@ try {
     )
     const listeningText = await qa.page.bodyText()
     assert.doesNotMatch(listeningText, /播放失败/u)
+    const activeQuestion = listeningSessionBeforePlayback?.questions[
+      listeningSessionBeforePlayback.questionIndex
+    ]
+    if (
+      ttsVoiceMode &&
+      !dialogueVoiceProfileExercised &&
+      activeQuestion?.playbackPolicy.sequenceMode === 'all-segments'
+    ) {
+      const speechProbeAfterPlayback =
+        await qa.page.speechSynthesisSnapshot()
+      assert.ok(speechProbeBeforePlayback)
+      assert.ok(speechProbeAfterPlayback)
+      const utterances = speechProbeAfterPlayback.utterances.slice(
+        speechProbeBeforePlayback.utterances.length,
+      )
+      const dialogueEvidence = assertDialogueVoiceProbe(
+        ttsVoiceMode,
+        activeQuestion,
+        listeningSessionBeforePlayback.playback,
+        utterances,
+      )
+      checkpoint('listening-dialogue-voice-profiles', {
+        localEnUsVoiceCount:
+          speechProbeAfterPlayback.voices.length,
+        voiceMode: ttsVoiceMode,
+        ...dialogueEvidence,
+      })
+      dialogueVoiceProfileExercised = true
+    }
     const listeningInteractive = await qa.page.interactiveElements()
     if (
       listeningInteractive.some(
@@ -475,6 +626,13 @@ try {
     true,
     'The production listening task did not expose keyword dictation.',
   )
+  if (ttsVoiceMode) {
+    assert.equal(
+      dialogueVoiceProfileExercised,
+      true,
+      'The production listening task did not expose a full-scene dialogue voice-profile checkpoint.',
+    )
+  }
   await qa.page.waitFor(
     `document.body.innerText.includes('听力任务已完成')`,
   )

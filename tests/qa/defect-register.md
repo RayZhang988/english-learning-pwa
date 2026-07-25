@@ -9,6 +9,7 @@
 | QA-003 | 已关闭 | S1 | 旧 PWA 缓存永久等待更新，真实用户停留在技术底座 | 旧缓存策略；修复 `d1e9379` | 01 | Pages run `30141749051`；真实 Chrome 同标签页切换到 `index-WPTS1Fa6.js` |
 | QA-004 | 已关闭 | S2 | 关键词听写快速输入时旧状态异步回写，出现单次输入扩增或答案回退 | 失败为用户真实浏览器；修复 `45e97e1` | 07 | Pages run `30143745055`；正式站生产 E2E 的 `listening-dictation-race-recovery` 通过 |
 | QA-005 | 已关闭 | S2 | 词汇训练切题后旧选项到达新题，进入不可继续错误态 | 失败 `45e97e1`；修复 `4a15e1e` | 06 主责，09 回归 | Pages run `30144364133`；正式资产 `index-R31Brx_E.js`；完整生产 E2E exit 0 |
+| QA-006 | 已关闭 | S2 | 正式站关键词听写立即提交时，反馈态持久化旧答案 | 失败 `64d884c`；修复 `56ca8f1` | 07 主责，09 回归 | Pages run `30146889205`；正式资产 `index-DARWx41s.js`；one/two voice 完整 E2E 均 exit 0 |
 
 ## QA-001｜课程索引未随生产版本发布
 
@@ -219,6 +220,78 @@ Promise 结果回写 UI，旧题选项因此可能到达已经切换的新题。
   exit 0、`status=passed`。
 - 正式回归中 QA-004 检查点继续通过，听力 7/7、词汇 6/6、整日计划 3/3 和刷新恢复
   全部通过，没有再出现 QA-005 错误。
+
+## QA-006｜正式站立即提交持久化旧听写答案
+
+```text
+状态：已关闭
+严重度：S2
+环境：GitHub Pages 正式站
+失败版本：64d884c；Pages run 30146382499；资产 index-igXDg-nF.js
+修复版本：56ca8f1；Pages run 30146889205；资产 index-DARWx41s.js
+前置条件：全新浏览器数据；从正式评估生成真实首日计划；通过真实 taskId 进入听力；
+口语按录音回放 fallback 完成
+复现步骤：
+1. 运行正式 browser acceptance，进入关键词听写题。
+2. 快速输入 abc 后立即退出听力训练。
+3. 刷新并恢复，确认 paused.dictationInput 为 abc。
+4. 继续训练，快速追加 def 后立即点“提交答案”，不增加人为等待。
+5. 页面进入反馈态后读取 IndexedDB 中的 listening session。
+实际结果：正式 UI 已进入关键词听写反馈态，但 session.answers 最后一项 response 仍为
+abc；断言 Immediate submit used a stale dictation value，'abc' !== 'abcdef'。
+期望结果：反馈态和持久化答案都必须使用提交瞬间的最终输入 abcdef。
+影响：用户可能看到已提交反馈，却永久保存旧答案，影响听力判定、恢复和学习证据。
+存在重新作答的有限绕行，因此定为 S2；该问题直接影响 MUST 的听力完成和数据韧性，
+在关闭前阻止正式浏览器门槛、真机门槛和 14 天实测。
+已知范围：同一脚本对本地 production preview exit 0，正式站 exit 1。差异说明真实
+网络/持久化时序能暴露问题，但不能据此臆测唯一根因。
+建议责任任务：07（听力输入、提交、保存队列与持久化完成顺序）
+```
+
+正式站复现命令：
+
+```bash
+QA_BASE_URL=https://rayzhang988.github.io/english-learning-pwa/ \
+QA_TTS_VOICE_MODE=one \
+QA_SPEAKING_FALLBACK_ONLY=1 \
+  node tests/e2e/browser-acceptance.mjs
+```
+
+证据：
+
+- 正式站加载 `assets/index-igXDg-nF.js`，HTTP 200。
+- `pausedValue=abc` 与 `restoredValue=abc` 已通过，失败发生在恢复后追加并立即提交。
+- 页面已经进入反馈态；IndexedDB 中 session phase 为 `feedback`，但最终 response
+  仍是 `abc`。
+- 进程 exit 1。09 未修改 `src/**`，也没有放慢立即提交节奏来掩盖竞态。
+
+修复后回归范围：
+
+1. 快速连续输入、立即退出/暂停、刷新恢复、恢复后追加、立即提交。
+2. 页面输入值、反馈态、`dictationInput`、最终 answer response 和刷新恢复必须一致。
+3. 在本地 production preview 及部署后的正式站分别运行；正式站必须覆盖默认系统
+   TTS、`QA_TTS_VOICE_MODE=one` 和 `QA_TTS_VOICE_MODE=two`。
+4. 听力 7/7、词汇 6/6、口语 fallback、整日计划 3/3 与刷新恢复必须完成。
+5. 听力对话的台词文本、A/B/A profile、双 voice、单 voice 轻微降级检查点必须继续
+   通过。
+
+修复与关闭证据：
+
+- `56ca8f1` 在提交和退出前等待同一事件周期内最新输入草稿登记并完成持久化，只有
+  耐久终态写入成功后才向 UI 发布 `feedback`、`paused` 等状态。
+- GitHub Pages run `30146889205` 成功，正式入口资产为 `index-DARWx41s.js`。
+- 正式站 one voice 完整 E2E exit 0、`status=passed`：
+  `pausedValue=abc`、`restoredValue=abc`、`submittedValue=abcdef`、
+  `persistedPhase=feedback`；Maya/Leo/Maya 使用同一 voice，pitch/rate 分别稳定为
+  `0.97/0.98`、`1.03/1.02`、`0.97/0.98`。
+- 正式站 two voices 完整 E2E exit 0、`status=passed`：同一听写耐久检查点通过；
+  Maya 使用 `qa-local-a`，Leo 使用 `qa-local-b`，A/B/A 均为 `1/1` 且稳定。
+- 两次正式完整回归都完成口语 fallback、听力 7/7、词汇 6/6、计划 3/3 和刷新恢复。
+- `pnpm check` 通过：77 个测试文件、291 项测试，lint、类型检查、生产构建、课程发布
+  与 PWA 均通过。
+
+关闭范围只证明正式生产链路送入 TTS 的文本、voiceId、pitch、rate 与持久化终态
+正确；不同 profile 在真实 iPhone 上是否听感可区分仍属于真机门禁。
 
 ## 缺陷模板
 

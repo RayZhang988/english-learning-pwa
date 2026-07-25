@@ -439,6 +439,21 @@ export class QaPage {
     })()`)
   }
 
+  async speechSynthesisSnapshot() {
+    return this.evaluate(`(() => {
+      const probe = globalThis.__qaSpeechSynthesisProbe
+      if (!probe) return null
+      return {
+        voiceMode: probe.voiceMode,
+        voices: probe.voices.map((voice) => ({ ...voice })),
+        utterances: probe.utterances.map((utterance) => ({ ...utterance })),
+        pauseCount: probe.pauseCount,
+        resumeCount: probe.resumeCount,
+        cancelCount: probe.cancelCount,
+      }
+    })()`)
+  }
+
   async dumpIndexedDb() {
     return this.evaluate(`(async () => {
       const databases = typeof indexedDB.databases === 'function'
@@ -490,3 +505,118 @@ export const fakeAssessmentClockScript = `(() => {
     return offsetMilliseconds
   }
 })()`
+
+export function fakeSpeechSynthesisScript(voiceMode) {
+  if (voiceMode !== 'one' && voiceMode !== 'two') {
+    throw new Error(`Unsupported QA TTS voice mode: ${voiceMode}`)
+  }
+  const voiceCount = voiceMode === 'one' ? 1 : 2
+
+  return `(() => {
+    const voices = ${JSON.stringify(
+      Array.from({ length: voiceCount }, (_, index) => ({
+        default: index === 0,
+        lang: 'en-US',
+        localService: true,
+        name: `QA Local Voice ${String.fromCharCode(65 + index)}`,
+        voiceURI: `qa-local-${String.fromCharCode(97 + index)}`,
+      })),
+    )}
+    const probe = {
+      voiceMode: ${JSON.stringify(voiceMode)},
+      voices: voices.map((voice) => ({ ...voice })),
+      utterances: [],
+      pauseCount: 0,
+      resumeCount: 0,
+      cancelCount: 0,
+    }
+    let activeUtterance = null
+    let generation = 0
+    let paused = false
+    let speaking = false
+
+    class QaSpeechSynthesisUtterance {
+      constructor(text) {
+        this.text = String(text)
+        this.lang = ''
+        this.rate = 1
+        this.pitch = 1
+        this.voice = null
+        this.onstart = null
+        this.onend = null
+        this.onpause = null
+        this.onresume = null
+        this.onerror = null
+      }
+    }
+
+    const synthesis = {
+      get paused() {
+        return paused
+      },
+      get speaking() {
+        return speaking
+      },
+      getVoices() {
+        return voices
+      },
+      speak(utterance) {
+        const token = ++generation
+        activeUtterance = utterance
+        paused = false
+        speaking = true
+        probe.utterances.push({
+          text: utterance.text,
+          lang: utterance.lang,
+          rate: utterance.rate,
+          pitch: utterance.pitch,
+          voiceId:
+            utterance.voice?.voiceURI ?? utterance.voice?.name ?? null,
+        })
+        queueMicrotask(() => {
+          if (token !== generation) return
+          utterance.onstart?.()
+          queueMicrotask(() => {
+            if (token !== generation || paused) return
+            activeUtterance = null
+            speaking = false
+            utterance.onend?.()
+          })
+        })
+      },
+      pause() {
+        if (!speaking || paused) return
+        paused = true
+        probe.pauseCount += 1
+        activeUtterance?.onpause?.()
+      },
+      resume() {
+        if (!speaking || !paused) return
+        paused = false
+        probe.resumeCount += 1
+        activeUtterance?.onresume?.()
+      },
+      cancel() {
+        generation += 1
+        activeUtterance = null
+        paused = false
+        speaking = false
+        probe.cancelCount += 1
+      },
+    }
+
+    Object.defineProperty(globalThis, '__qaSpeechSynthesisProbe', {
+      configurable: true,
+      value: probe,
+    })
+    Object.defineProperty(globalThis, 'SpeechSynthesisUtterance', {
+      configurable: true,
+      value: QaSpeechSynthesisUtterance,
+      writable: true,
+    })
+    Object.defineProperty(globalThis, 'speechSynthesis', {
+      configurable: true,
+      value: synthesis,
+    })
+  })()`
+}
