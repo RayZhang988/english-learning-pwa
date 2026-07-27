@@ -87,7 +87,10 @@ function assertV3(value: unknown): asserts value is AbilityProfileR1 {
     !isRecord(value.abilities) ||
     !isRecord(value.abilities.vocabulary) ||
     value.abilities.vocabulary.domain !== 'vocabulary' ||
-    value.abilities.vocabulary.calibrationState !== 'estimated'
+    value.abilities.vocabulary.calibrationState !== 'estimated' ||
+    (value.completionReason !== undefined &&
+      value.completionReason !== 'all-stages-completed' &&
+      value.completionReason !== 'remaining-marked-unknown')
   ) {
     throw new TypeError('Stored R1 assessment profile is invalid')
   }
@@ -107,7 +110,11 @@ export function parseVersionedAbilityProfile(
     return structuredClone(value)
   }
   assertV3(value)
-  return structuredClone(value)
+  return structuredClone({
+    ...value,
+    completionReason:
+      value.completionReason ?? 'all-stages-completed',
+  })
 }
 
 /**

@@ -1,11 +1,13 @@
 import { travelVocabularyBankR1 } from '../../../content/assessment/travel-vocabulary-bank.r1.ts'
 import { AssessmentRuntimeError } from './runtime.ts'
 import {
+  advanceTravelVocabularyQuestionR1,
   answerTravelVocabularyQuestionR1,
   canSubmitTravelVocabularyStageR1,
   clearTravelVocabularyAnswerR1,
   continueTravelVocabularyStageR1,
   createTravelVocabularyAssessmentSessionR1,
+  finishTravelVocabularyRemainingUnknownR1,
   navigateTravelVocabularyQuestionR1,
   submitTravelVocabularyStageR1,
 } from './travel-vocabulary-engine.ts'
@@ -229,6 +231,19 @@ export class TravelVocabularyAssessmentRuntimeR1 {
     return this.#buildState(this.#activeElapsed(now.ms))
   }
 
+  advanceToNextQuestion(): TravelVocabularyAssessmentRuntimeStateR1 {
+    this.#requireLifecycle('active')
+    const now = this.#readNow()
+    this.#snapshot = {
+      ...this.#snapshot,
+      session: advanceTravelVocabularyQuestionR1({
+        session: this.#snapshot.session,
+      }),
+      updatedAt: now.iso,
+    }
+    return this.#buildState(this.#activeElapsed(now.ms))
+  }
+
   selectChoice(
     questionId: string,
     optionId: string,
@@ -286,6 +301,33 @@ export class TravelVocabularyAssessmentRuntimeR1 {
       updatedAt: now.iso,
     }
     return this.#buildState(activeElapsedMs)
+  }
+
+  async finishRemainingUnknown(): Promise<TravelVocabularyAssessmentRuntimeStateR1> {
+    if (
+      this.#snapshot.lifecycle === 'completed' &&
+      this.#snapshot.session.completionReason ===
+        'remaining-marked-unknown'
+    ) {
+      return this.state
+    }
+    if (
+      this.#snapshot.lifecycle !== 'active' &&
+      this.#snapshot.lifecycle !== 'stage-summary'
+    ) {
+      throw new AssessmentRuntimeError(
+        'invalid-transition',
+        'Remaining R1 questions can only be marked unknown from an active assessment.',
+      )
+    }
+    const now = this.#readNow()
+    const activeElapsedMs = this.#activeElapsed(now.ms)
+    const session = finishTravelVocabularyRemainingUnknownR1({
+      session: this.#snapshot.session,
+      bank: this.#bank,
+      submittedAt: now.iso,
+    })
+    return this.#complete(session, now, activeElapsedMs)
   }
 
   continueToNextStage(): TravelVocabularyAssessmentRuntimeStateR1 {
@@ -447,6 +489,19 @@ export class TravelVocabularyAssessmentRuntimeR1 {
     const answeredOverall =
       session.completedStages.length * 30 + answeredInStage
     const editable = lifecycle === 'active'
+    const remainingQuestionsToMarkUncertain =
+      lifecycle === 'active'
+        ? (30 - answeredInStage) +
+          (TRAVEL_VOCABULARY_TOTAL_STAGES_R1 -
+            session.currentStageIndex -
+            1) *
+            30
+        : lifecycle === 'stage-summary'
+          ? (TRAVEL_VOCABULARY_TOTAL_STAGES_R1 -
+              session.currentStageIndex -
+              1) *
+            30
+          : 0
 
     return {
       schemaVersion: 3,
@@ -471,6 +526,12 @@ export class TravelVocabularyAssessmentRuntimeR1 {
         lifecycle === 'completed'
           ? session.completedStages.at(-1) ?? null
           : null,
+      completionReason:
+        session.completionReason ??
+        (session.status === 'completed'
+          ? 'all-stages-completed'
+          : null),
+      remainingQuestionsToMarkUncertain,
       progress: {
         currentStage: session.currentStageIndex + 1,
         totalStages: TRAVEL_VOCABULARY_TOTAL_STAGES_R1,
@@ -489,12 +550,21 @@ export class TravelVocabularyAssessmentRuntimeR1 {
       actions: {
         canStart: lifecycle === 'intro',
         canNavigate: editable,
+        canAdvanceToNextQuestion:
+          editable &&
+          session.currentQuestionIndex <
+            TRAVEL_VOCABULARY_TOTAL_QUESTIONS_R1 /
+              TRAVEL_VOCABULARY_TOTAL_STAGES_R1 -
+              1,
         canAnswer: editable,
         canMarkUncertain: editable,
         canClearAnswer: editable && answeredInStage > 0,
         canSubmitStage:
           editable &&
           canSubmitTravelVocabularyStageR1(session),
+        canFinishRemainingUnknown:
+          lifecycle === 'active' ||
+          lifecycle === 'stage-summary',
         canContinueToNextStage: lifecycle === 'stage-summary',
         canPause:
           lifecycle === 'active' ||

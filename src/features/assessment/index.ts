@@ -132,11 +132,14 @@ export {
   parseVersionedAbilityProfile,
 } from './versioned-profile-repository.ts'
 export {
+  advanceTravelVocabularyQuestionR1,
   answerTravelVocabularyQuestionR1,
   canSubmitTravelVocabularyStageR1,
   clearTravelVocabularyAnswerR1,
   continueTravelVocabularyStageR1,
   createTravelVocabularyAssessmentSessionR1,
+  fillUnansweredTravelVocabularyStageR1,
+  finishTravelVocabularyRemainingUnknownR1,
   navigateTravelVocabularyQuestionR1,
   sampledTravelVocabularyWordIdsR1,
   submitTravelVocabularyStageR1,
@@ -221,6 +224,7 @@ export type {
   TravelVocabularyAssessmentSessionR1,
   TravelVocabularyBankR1,
   TravelVocabularyCandidateR1,
+  TravelVocabularyCompletionReasonR1,
   TravelVocabularyDraftAnswerR1,
   TravelVocabularyEstimateIntervalR1,
   TravelVocabularyProfileCompletionHandlerR1,

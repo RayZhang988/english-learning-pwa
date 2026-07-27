@@ -17,6 +17,7 @@ import type {
   TravelVocabularyAssessmentRuntimeSnapshotR1,
   TravelVocabularyAssessmentSessionR1,
   TravelVocabularyBankR1,
+  TravelVocabularyCompletionReasonR1,
   TravelVocabularyDraftAnswerR1,
   TravelVocabularyQuestionPlanR1,
   TravelVocabularyStagePlanR1,
@@ -91,6 +92,30 @@ function finite(
 
 function jsonEqual(left: unknown, right: unknown): boolean {
   return JSON.stringify(left) === JSON.stringify(right)
+}
+
+function completionReason(input: {
+  readonly value: unknown
+  readonly status: 'in-progress' | 'completed'
+}): TravelVocabularyCompletionReasonR1 | null {
+  if (input.value === undefined) {
+    return input.status === 'completed'
+      ? 'all-stages-completed'
+      : null
+  }
+  if (input.status === 'in-progress') {
+    if (input.value !== null) {
+      invalid('session.completionReason must be null while in progress')
+    }
+    return null
+  }
+  if (
+    input.value !== 'all-stages-completed' &&
+    input.value !== 'remaining-marked-unknown'
+  ) {
+    invalid('session.completionReason is unsupported')
+  }
+  return input.value
 }
 
 function questionPlan(input: {
@@ -354,12 +379,14 @@ function session(
   }
   const id = string(source.id, 'session.id')
   const startedAt = timestamp(source.startedAt, 'session.startedAt')
-  if (
-    source.status !== 'in-progress' &&
-    source.status !== 'completed'
-  ) {
+  const status = source.status
+  if (status !== 'in-progress' && status !== 'completed') {
     invalid('session.status is unsupported')
   }
+  const parsedCompletionReason = completionReason({
+    value: source.completionReason,
+    status,
+  })
   const currentStageIndex = integer(
     source.currentStageIndex,
     'session.currentStageIndex',
@@ -405,7 +432,7 @@ function session(
     currentPlan,
   })
   if (
-    source.status === 'completed' &&
+    status === 'completed' &&
     (currentStageIndex !== 4 ||
       completedStages.length !==
         TRAVEL_VOCABULARY_TOTAL_STAGES_R1 ||
@@ -414,7 +441,7 @@ function session(
     invalid('completed session is inconsistent')
   }
   if (
-    source.status === 'in-progress' &&
+    status === 'in-progress' &&
     completedStages.length < currentStageIndex
   ) {
     invalid('in-progress session skipped a stage')
@@ -425,7 +452,8 @@ function session(
     id,
     bankId: bank.id,
     startedAt,
-    status: source.status,
+    status,
+    completionReason: parsedCompletionReason,
     currentStageIndex,
     currentQuestionIndex,
     stagePlans: plans,
@@ -448,7 +476,13 @@ function profile(input: {
     completedAt,
     durationSeconds: input.activeElapsedMs / 1000,
   })
-  if (!jsonEqual(source, expected)) {
+  const { completionReason: _completionReason, ...legacyExpected } =
+    expected
+  const legacyCompatible =
+    !('completionReason' in source) &&
+    input.session.completionReason === 'all-stages-completed' &&
+    jsonEqual(source, legacyExpected)
+  if (!jsonEqual(source, expected) && !legacyCompatible) {
     invalid('profile does not match completed R1 evidence')
   }
   return expected

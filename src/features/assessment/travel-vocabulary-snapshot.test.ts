@@ -29,6 +29,65 @@ describe('R1 travel vocabulary snapshot validation', () => {
     ).toEqual(snapshot)
   })
 
+  it('normalizes a legacy schema-3 active snapshot without completionReason', () => {
+    const runtime = createTravelVocabularyAssessmentRuntimeR1({
+      now,
+      createId: () => 'snapshot-legacy-active',
+      random,
+    })
+    runtime.start()
+    const snapshot = structuredClone(runtime.toSnapshot())
+    const { completionReason: _completionReason, ...legacySession } =
+      snapshot.session
+
+    const parsed = parseTravelVocabularyRuntimeSnapshotR1(
+      { ...snapshot, session: legacySession },
+      travelVocabularyBankR1,
+    )
+
+    expect(parsed.session.completionReason).toBeNull()
+    expect(parsed.lifecycle).toBe('active')
+  })
+
+  it('normalizes a completed legacy schema-3 snapshot and profile', async () => {
+    const runtime = createTravelVocabularyAssessmentRuntimeR1({
+      now,
+      createId: () => 'snapshot-legacy-completed',
+      random,
+    })
+    runtime.start()
+    for (let stageIndex = 0; stageIndex < 5; stageIndex += 1) {
+      await runtime.submitStage()
+      if (stageIndex < 4) {
+        runtime.continueToNextStage()
+      }
+    }
+    const snapshot = structuredClone(runtime.toSnapshot())
+    if (!snapshot.profile) {
+      throw new Error('Missing completed profile')
+    }
+    const { completionReason: _sessionReason, ...legacySession } =
+      snapshot.session
+    const { completionReason: _profileReason, ...legacyProfile } =
+      snapshot.profile
+
+    const parsed = parseTravelVocabularyRuntimeSnapshotR1(
+      {
+        ...snapshot,
+        session: legacySession,
+        profile: legacyProfile,
+      },
+      travelVocabularyBankR1,
+    )
+
+    expect(parsed.session.completionReason).toBe(
+      'all-stages-completed',
+    )
+    expect(parsed.profile?.completionReason).toBe(
+      'all-stages-completed',
+    )
+  })
+
   it('rejects a future version', () => {
     const snapshot = createTravelVocabularyAssessmentRuntimeR1({
       now,
@@ -42,6 +101,27 @@ describe('R1 travel vocabulary snapshot validation', () => {
         travelVocabularyBankR1,
       ),
     ).toThrow('snapshot identity is incompatible')
+  })
+
+  it('rejects an unsupported completion reason', () => {
+    const snapshot = createTravelVocabularyAssessmentRuntimeR1({
+      now,
+      createId: () => 'snapshot-bad-reason',
+      random,
+    }).toSnapshot()
+
+    expect(() =>
+      parseTravelVocabularyRuntimeSnapshotR1(
+        {
+          ...snapshot,
+          session: {
+            ...snapshot.session,
+            completionReason: 'fabricated-reason',
+          },
+        },
+        travelVocabularyBankR1,
+      ),
+    ).toThrow('completionReason must be null while in progress')
   })
 
   it('rejects a duplicate sampled word', () => {

@@ -55,7 +55,8 @@ export function buildTravelVocabularyAbilityProfileR1(input: {
 }): AbilityProfileR1 {
   if (
     input.session.status !== 'completed' ||
-    input.session.completedStages.length !== 5
+    input.session.completedStages.length !== 5 ||
+    input.session.completionReason === null
   ) {
     throw new TypeError(
       'Cannot build an R1 profile before all five stages complete',
@@ -142,6 +143,8 @@ export function buildTravelVocabularyAbilityProfileR1(input: {
     completedAt: input.completedAt,
     durationSeconds: Math.round(input.durationSeconds),
     outcome: 'completed',
+    completionReason:
+      input.session.completionReason ?? 'all-stages-completed',
     disclaimer: TRAVEL_VOCABULARY_ASSESSMENT_DISCLAIMER_R1,
     sampledWordIds: sampledTravelVocabularyWordIdsR1(input.session),
     travelVocabulary: estimate,

@@ -12,6 +12,10 @@
 R1 只测试单个英文单词的中文释义，不包含句子、图片、音频、语法、听力或口语。旧 v1
 继续供正式站使用和兼容；旧逐题自适应 v2 已废止，不得注册到新入口。
 
+2026-07-27 快速作答修补是 schema 3 的向后兼容增量：题库、五阶段代表词数、估算模型、
+合理区间和 15 级阈值均未改版。新记录增加完成原因；旧 schema 3 记录缺少该字段时按
+本文“完成原因与兼容”规则读取。
+
 ## 五个抽样阶段
 
 | 阶段 | 候选词数 | 每次抽样 | 代表旅游词数 |
@@ -34,8 +38,17 @@ R1 只测试单个英文单词的中文释义，不包含句子、图片、音�
 - 用户也可以选择“不认识 / 不确定”，该项计入有效题数但不计正确。
 - 阶段提交前，`selectChoice`、`markUncertain`、`clearAnswer` 和 `navigate` 可以反复
   修改或检查 30 题。
-- 30 题全部存在选择或“不确定”后，`submitStage` 才可用。
+- `advanceToNextQuestion` 是有默认不会语义的顺序前进动作：当前题未答时，在同一次
+  运行时状态变更中先写入 `uncertain` 再前进；当前题已答时保持答案。返回后仍可修改。
+- `navigate(index)` 只是任意题号导航，不自动补答案，不能用它代替“下一题”。
+- 活动阶段的 `canSubmitStage` 始终为 `true`。`submitStage` 会先把本阶段所有未答题
+  批量补为 `uncertain`，再调用同一阶段估算公式并锁定结果。
 - 整阶段提交后答案和分数锁定；0/30、6/30、15/30、30/30 都进入下一阶段。
+- `finishRemainingUnknown` 可在答题态或阶段结果态调用。它保留既有答案和已提交阶段，
+  把当前阶段未答题及所有后续阶段题目补为 `uncertain`，再用同一提交与估算函数生成
+  五阶段完整结果。
+- 快速结束后再次调用 `finishRemainingUnknown` 返回同一完成结果，不重算、不重复生成
+  档案；正常完成的会话不能被改写为快速结束。
 - 五个阶段全部完成才生成正式 `AbilityProfileR1`。
 - R1 不设目标时间或最长时间；运行时只记录前台有效时间，暂停和离线时间不累计。
 
@@ -92,10 +105,29 @@ R1 只测试单个英文单词的中文释义，不包含句子、图片、音�
 这些名称只是本软件的旅游英语学习标签，不代表学历、学校成绩或官方年级。“大学英语
 四级 / 六级”只表示大致难度参照，不代表通过 CET-4 / CET-6。
 
+## 完成原因与兼容
+
+新会话与档案使用集中类型 `TravelVocabularyCompletionReasonR1`：
+
+- `all-stages-completed`：普通路径提交完五个阶段；
+- `remaining-marked-unknown`：用户确认“剩余全部不会，结束测试”。
+
+进行中会话的 `session.completionReason` 固定为 `null`。新完成档案明确写
+`profile.completionReason`；该字段在 TypeScript 档案类型中保持可选，只为兼容修补前
+已经存在的 schema 3 下游夹具和存储记录，新生产档案不会省略。
+
+读取修补前 schema 3 时：
+
+- 进行中会话缺字段，内存中补为 `null`；
+- 已完成会话或档案缺字段，内存中补为 `all-stages-completed`；
+- 不回写、不清空原记录；
+- 未知原因、会话/档案原因不一致或伪造结果仍拒绝恢复。
+
 ## AbilityProfileR1
 
 `schemaVersion: 3` 的档案包含：
 
+- `completionReason`，区分正常完成与剩余题统一标为不会；
 - `travelVocabulary.estimatedWords`、`reasonableInterval`、五阶段结果及 150 题汇总；
 - `resultLevel` 及三个版本号；
 - `sampledWordIds`，供下一次测试优先避开最近题目；

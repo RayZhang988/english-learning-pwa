@@ -12,6 +12,7 @@ import type {
   RandomSourceR1,
   TravelVocabularyAssessmentSessionR1,
   TravelVocabularyBankR1,
+  TravelVocabularyCompletionReasonR1,
   TravelVocabularyDraftAnswerR1,
   TravelVocabularyQuestionPlanR1,
   TravelVocabularyStageResultR1,
@@ -75,6 +76,7 @@ export function createTravelVocabularyAssessmentSessionR1(input: {
     bankId: input.bank.id,
     startedAt: input.startedAt,
     status: 'in-progress',
+    completionReason: null,
     currentStageIndex: 0,
     currentQuestionIndex: 0,
     stagePlans: sampleTravelVocabularyStagePlansR1({
@@ -87,17 +89,22 @@ export function createTravelVocabularyAssessmentSessionR1(input: {
   }
 }
 
+function assertEditableCurrentStage(
+  session: TravelVocabularyAssessmentSessionR1,
+): void {
+  if (
+    session.status !== 'in-progress' ||
+    session.completedStages.length > session.currentStageIndex
+  ) {
+    throw new TypeError('The current travel vocabulary stage is not editable')
+  }
+}
+
 export function navigateTravelVocabularyQuestionR1(input: {
   readonly session: TravelVocabularyAssessmentSessionR1
   readonly questionIndex: number
 }): TravelVocabularyAssessmentSessionR1 {
-  if (
-    input.session.status !== 'in-progress' ||
-    input.session.completedStages.length >
-      input.session.currentStageIndex
-  ) {
-    throw new TypeError('The current travel vocabulary stage is not editable')
-  }
+  assertEditableCurrentStage(input.session)
   if (
     !Number.isInteger(input.questionIndex) ||
     input.questionIndex < 0 ||
@@ -109,6 +116,36 @@ export function navigateTravelVocabularyQuestionR1(input: {
   return {
     ...input.session,
     currentQuestionIndex: input.questionIndex,
+  }
+}
+
+export function advanceTravelVocabularyQuestionR1(input: {
+  readonly session: TravelVocabularyAssessmentSessionR1
+}): TravelVocabularyAssessmentSessionR1 {
+  assertEditableCurrentStage(input.session)
+  if (
+    input.session.currentQuestionIndex >=
+    TRAVEL_VOCABULARY_SAMPLE_SIZE_PER_STAGE_R1 - 1
+  ) {
+    throw new RangeError('The current question is already the final question')
+  }
+  const plan = currentStagePlan(input.session)
+  const currentQuestion =
+    plan.questions[input.session.currentQuestionIndex]
+  if (!currentQuestion) {
+    throw new TypeError('Travel vocabulary current question is unavailable')
+  }
+  const session =
+    input.session.draftAnswers[currentQuestion.id] === undefined
+      ? answerTravelVocabularyQuestionR1({
+          session: input.session,
+          questionId: currentQuestion.id,
+          answer: { kind: 'uncertain' },
+        })
+      : input.session
+  return {
+    ...session,
+    currentQuestionIndex: session.currentQuestionIndex + 1,
   }
 }
 
@@ -172,16 +209,31 @@ export function clearTravelVocabularyAnswerR1(input: {
 export function canSubmitTravelVocabularyStageR1(
   session: TravelVocabularyAssessmentSessionR1,
 ): boolean {
-  if (
-    session.status !== 'in-progress' ||
-    session.completedStages.length > session.currentStageIndex
-  ) {
-    return false
-  }
-  const plan = currentStagePlan(session)
-  return plan.questions.every(
-    (question) => session.draftAnswers[question.id] !== undefined,
+  return (
+    session.status === 'in-progress' &&
+    session.completedStages.length === session.currentStageIndex
   )
+}
+
+export function fillUnansweredTravelVocabularyStageR1(
+  session: TravelVocabularyAssessmentSessionR1,
+): TravelVocabularyAssessmentSessionR1 {
+  assertEditableCurrentStage(session)
+  const plan = currentStagePlan(session)
+  const draftAnswers = { ...session.draftAnswers }
+  for (const question of plan.questions) {
+    if (draftAnswers[question.id] === undefined) {
+      draftAnswers[question.id] = {
+        questionId: question.id,
+        kind: 'uncertain',
+        optionId: null,
+      }
+    }
+  }
+  return {
+    ...session,
+    draftAnswers,
+  }
 }
 
 export function submitTravelVocabularyStageR1(input: {
@@ -198,17 +250,17 @@ export function submitTravelVocabularyStageR1(input: {
     throw new TypeError('Travel vocabulary session bank is incompatible')
   }
   if (!canSubmitTravelVocabularyStageR1(input.session)) {
-    throw new TypeError(
-      'All 30 questions must be answered before stage submission',
-    )
+    throw new TypeError('The current travel vocabulary stage cannot be submitted')
   }
-  const plan = currentStagePlan(input.session)
-  const stage = input.bank.stages[input.session.currentStageIndex]
+  const completedDraftSession =
+    fillUnansweredTravelVocabularyStageR1(input.session)
+  const plan = currentStagePlan(completedDraftSession)
+  const stage = input.bank.stages[completedDraftSession.currentStageIndex]
   if (!stage || stage.id !== plan.stageId) {
     throw new TypeError('Travel vocabulary stage plan is incompatible')
   }
   const responses = plan.questions.map((question) => {
-    const draft = input.session.draftAnswers[question.id]
+    const draft = completedDraftSession.draftAnswers[question.id]
     if (!draft) {
       throw new TypeError(`Missing draft answer for ${question.id}`)
     }
@@ -249,14 +301,15 @@ export function submitTravelVocabularyStageR1(input: {
     submittedAt: input.submittedAt,
     responses,
   })
-  const completedStages = [...input.session.completedStages, result]
+  const completedStages = [...completedDraftSession.completedStages, result]
   const finalStage =
-    input.session.currentStageIndex ===
+    completedDraftSession.currentStageIndex ===
     TRAVEL_VOCABULARY_TOTAL_STAGES_R1 - 1
   return {
     session: {
-      ...input.session,
+      ...completedDraftSession,
       status: finalStage ? 'completed' : 'in-progress',
+      completionReason: finalStage ? 'all-stages-completed' : null,
       completedStages,
       draftAnswers: {},
     },
@@ -281,6 +334,68 @@ export function continueTravelVocabularyStageR1(
     currentStageIndex: session.currentStageIndex + 1,
     currentQuestionIndex: 0,
     draftAnswers: {},
+    completionReason: null,
+  }
+}
+
+function effectiveCompletionReason(
+  session: TravelVocabularyAssessmentSessionR1,
+): TravelVocabularyCompletionReasonR1 | null {
+  if (session.completionReason !== undefined) {
+    return session.completionReason
+  }
+  return session.status === 'completed' ? 'all-stages-completed' : null
+}
+
+export function finishTravelVocabularyRemainingUnknownR1(input: {
+  readonly session: TravelVocabularyAssessmentSessionR1
+  readonly bank: TravelVocabularyBankR1
+  readonly submittedAt: string
+}): TravelVocabularyAssessmentSessionR1 {
+  parseTimestamp(input.submittedAt, 'submittedAt')
+  validateTravelVocabularyBankR1(input.bank)
+  if (input.session.bankId !== input.bank.id) {
+    throw new TypeError('Travel vocabulary session bank is incompatible')
+  }
+  const existingReason = effectiveCompletionReason(input.session)
+  if (input.session.status === 'completed') {
+    if (existingReason === 'remaining-marked-unknown') {
+      return input.session
+    }
+    throw new TypeError(
+      'A normally completed travel vocabulary assessment cannot be changed',
+    )
+  }
+
+  let session = input.session
+  if (session.completedStages.length === session.currentStageIndex) {
+    session = submitTravelVocabularyStageR1({
+      session,
+      bank: input.bank,
+      submittedAt: input.submittedAt,
+    }).session
+  } else if (
+    session.completedStages.length !== session.currentStageIndex + 1
+  ) {
+    throw new TypeError('Travel vocabulary stage progress is inconsistent')
+  }
+
+  while (
+    session.completedStages.length <
+    TRAVEL_VOCABULARY_TOTAL_STAGES_R1
+  ) {
+    session = continueTravelVocabularyStageR1(session)
+    session = submitTravelVocabularyStageR1({
+      session,
+      bank: input.bank,
+      submittedAt: input.submittedAt,
+    }).session
+  }
+
+  return {
+    ...session,
+    status: 'completed',
+    completionReason: 'remaining-marked-unknown',
   }
 }
 

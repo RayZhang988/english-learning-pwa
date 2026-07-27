@@ -136,6 +136,28 @@ describe('VersionedAssessmentProfileRepository', () => {
     )
   })
 
+  it('reads a pre-patch R1 profile without rewriting and defaults its reason', async () => {
+    const store = new MemoryNamespaceStore()
+    const profile = await completeR1Profile()
+    const { completionReason: _completionReason, ...legacyProfile } =
+      profile
+    await store.put(LATEST_PROFILE_KEY, legacyProfile, 3)
+    const before = structuredClone(
+      store.records.get(LATEST_PROFILE_KEY),
+    )
+
+    const loaded =
+      await new VersionedAssessmentProfileRepository(
+        store,
+      ).loadLatest()
+
+    expect(loaded).toMatchObject({
+      schemaVersion: 3,
+      completionReason: 'all-stages-completed',
+    })
+    expect(store.records.get(LATEST_PROFILE_KEY)).toEqual(before)
+  })
+
   it('rejects a record whose wrapper and profile versions disagree', async () => {
     const store = new MemoryNamespaceStore()
     await store.put(LATEST_PROFILE_KEY, v1Profile, 2)

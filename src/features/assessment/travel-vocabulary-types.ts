@@ -159,6 +159,10 @@ export interface TravelVocabularyAbilityEstimateR1
     | 'pending-calibration'
 }
 
+export type TravelVocabularyCompletionReasonR1 =
+  | 'all-stages-completed'
+  | 'remaining-marked-unknown'
+
 export interface AbilityProfileR1 {
   readonly schemaVersion: 3
   readonly assessmentKind: 'staged-travel-vocabulary'
@@ -171,6 +175,13 @@ export interface AbilityProfileR1 {
   readonly completedAt: string
   readonly durationSeconds: number
   readonly outcome: 'completed'
+  /**
+   * New schema-3 profiles always include this field. It remains optional in
+   * the TypeScript shape so records written before the R1 fast-answer patch
+   * stay source-compatible; readers normalize a missing value to
+   * `all-stages-completed`.
+   */
+  readonly completionReason?: TravelVocabularyCompletionReasonR1
   readonly disclaimer: string
   readonly sampledWordIds: readonly string[]
   readonly travelVocabulary: TravelVocabularyTotalEstimateR1
@@ -192,6 +203,7 @@ export interface TravelVocabularyAssessmentSessionR1 {
   readonly bankId: string
   readonly startedAt: string
   readonly status: 'in-progress' | 'completed'
+  readonly completionReason: TravelVocabularyCompletionReasonR1 | null
   readonly currentStageIndex: number
   readonly currentQuestionIndex: number
   readonly stagePlans: readonly TravelVocabularyStagePlanR1[]
@@ -248,10 +260,12 @@ export interface TravelVocabularyAssessmentProgressR1 {
 export interface TravelVocabularyAssessmentActionsR1 {
   readonly canStart: boolean
   readonly canNavigate: boolean
+  readonly canAdvanceToNextQuestion: boolean
   readonly canAnswer: boolean
   readonly canMarkUncertain: boolean
   readonly canClearAnswer: boolean
   readonly canSubmitStage: boolean
+  readonly canFinishRemainingUnknown: boolean
   readonly canContinueToNextStage: boolean
   readonly canPause: boolean
   readonly canResume: boolean
@@ -274,6 +288,8 @@ export interface TravelVocabularyAssessmentRuntimeStateR1 {
     Record<string, TravelVocabularyDraftAnswerR1>
   >
   readonly latestStageResult: TravelVocabularyStageResultR1 | null
+  readonly completionReason: TravelVocabularyCompletionReasonR1 | null
+  readonly remainingQuestionsToMarkUncertain: number
   readonly progress: TravelVocabularyAssessmentProgressR1
   readonly profile: AbilityProfileR1 | null
   readonly migrationNotice:

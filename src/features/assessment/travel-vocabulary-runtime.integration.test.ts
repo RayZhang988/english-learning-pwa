@@ -119,6 +119,9 @@ describe('R1 travel vocabulary runtime integration', () => {
     expect(state.lifecycle).toBe('completed')
     expect(state.questions).toEqual([])
     expect(state.profile?.schemaVersion).toBe(3)
+    expect(state.profile?.completionReason).toBe(
+      'all-stages-completed',
+    )
     expect(state.profile?.travelVocabulary.estimatedWords).toBe(2_180)
     expect(state.profile?.travelVocabulary.stageResults.map(
       (stage) => stage.masteryRate,
@@ -140,10 +143,12 @@ describe('R1 travel vocabulary runtime integration', () => {
     expect(state.actions).toEqual({
       canStart: false,
       canNavigate: false,
+      canAdvanceToNextQuestion: false,
       canAnswer: false,
       canMarkUncertain: false,
       canClearAnswer: false,
       canSubmitStage: false,
+      canFinishRemainingUnknown: false,
       canContinueToNextStage: false,
       canPause: false,
       canResume: false,
@@ -151,6 +156,142 @@ describe('R1 travel vocabulary runtime integration', () => {
     await expect(runtime.submitStage()).rejects.toMatchObject({
       code: 'invalid-transition',
     })
+  })
+
+  it('advances with an atomic uncertain default without changing arbitrary navigation', () => {
+    const runtime = createTravelVocabularyAssessmentRuntimeR1({
+      now: () => '2026-07-27T04:00:00.000Z',
+      createId: () => 'r1-advance',
+      random: seededRandom(23),
+    })
+    let state = runtime.start()
+    expect(state.actions.canSubmitStage).toBe(true)
+    expect(state.remainingQuestionsToMarkUncertain).toBe(150)
+    const first = state.questions[0]
+    if (!first) {
+      throw new Error('Missing first question')
+    }
+
+    state = runtime.advanceToNextQuestion()
+    expect(state.currentQuestionIndex).toBe(1)
+    expect(state.draftAnswers[first.id]?.kind).toBe('uncertain')
+
+    state = runtime.navigate(2)
+    expect(state.currentQuestionIndex).toBe(2)
+    expect(state.draftAnswers[state.questions[1]?.id ?? 'missing']).toBe(
+      undefined,
+    )
+  })
+
+  it('finishes remaining questions once, preserves the formula and restores the result', async () => {
+    const clock = testClock()
+    const completed: AbilityProfileR1[] = []
+    const runtime = createTravelVocabularyAssessmentRuntimeR1({
+      now: clock.now,
+      createId: () => 'r1-fast-finish',
+      random: seededRandom(24),
+      onCompleted: (profile) => {
+        completed.push(profile)
+      },
+    })
+    let state = runtime.start()
+    const first = state.questions[0]
+    if (!first) {
+      throw new Error('Missing first question')
+    }
+    state = runtime.selectChoice(
+      first.id,
+      correctOption(state, first.word),
+    )
+    expect(state.remainingQuestionsToMarkUncertain).toBe(149)
+    const beforeConfirmation = runtime.toSnapshot()
+    expect(runtime.toSnapshot()).toEqual(beforeConfirmation)
+
+    state = await runtime.finishRemainingUnknown()
+    expect(state.lifecycle).toBe('completed')
+    expect(state.completionReason).toBe(
+      'remaining-marked-unknown',
+    )
+    expect(state.profile?.completionReason).toBe(
+      'remaining-marked-unknown',
+    )
+    expect(state.profile?.travelVocabulary).toMatchObject({
+      estimatedWords: 10,
+      correctCount: 1,
+      validQuestionCount: 150,
+      uncertainCount: 149,
+    })
+    expect(
+      state.profile?.travelVocabulary.stageResults.map((stage) => [
+        stage.correctCount,
+        stage.uncertainCount,
+      ]),
+    ).toEqual([
+      [1, 29],
+      [0, 30],
+      [0, 30],
+      [0, 30],
+      [0, 30],
+    ])
+
+    const firstProfile = state.profile
+    const repeated = await runtime.finishRemainingUnknown()
+    expect(repeated.profile).toEqual(firstProfile)
+    expect(completed).toEqual([firstProfile])
+
+    const restored = restoreTravelVocabularyAssessmentRuntimeR1({
+      snapshot: runtime.toSnapshot(),
+      now: clock.now,
+    })
+    expect(restored.state).toMatchObject({
+      lifecycle: 'completed',
+      completionReason: 'remaining-marked-unknown',
+      profile: firstProfile,
+    })
+  })
+
+  it('does not mutate core state when the caller cancels fast-finish confirmation', () => {
+    const runtime = createTravelVocabularyAssessmentRuntimeR1({
+      now: () => '2026-07-27T04:00:00.000Z',
+      createId: () => 'r1-cancel-fast-finish',
+      random: seededRandom(25),
+    })
+    runtime.start()
+    const before = runtime.toSnapshot()
+
+    // Confirmation UI belongs to 02. Cancellation deliberately calls no
+    // assessment action, so 03 must have no tentative state to roll back.
+    const after = runtime.toSnapshot()
+
+    expect(after).toEqual(before)
+    expect(runtime.state.lifecycle).toBe('active')
+  })
+
+  it('finishes from a submitted-stage summary and preserves that result', async () => {
+    const runtime = createTravelVocabularyAssessmentRuntimeR1({
+      now: () => '2026-07-27T04:00:00.000Z',
+      createId: () => 'r1-finish-from-summary',
+      random: seededRandom(26),
+    })
+    runtime.start()
+    let state = await runtime.submitStage()
+    const firstResult = state.latestStageResult
+    expect(state).toMatchObject({
+      lifecycle: 'stage-summary',
+      remainingQuestionsToMarkUncertain: 120,
+      actions: { canFinishRemainingUnknown: true },
+    })
+
+    state = await runtime.finishRemainingUnknown()
+
+    expect(state.profile?.travelVocabulary.stageResults[0]).toEqual(
+      firstResult,
+    )
+    expect(
+      state.profile?.travelVocabulary.stageResults
+        .slice(1)
+        .every((stage) => stage.uncertainCount === 30),
+    ).toBe(true)
   })
 
   it('presents only single words and never exposes answer metadata', () => {
@@ -246,6 +387,7 @@ describe('R1 travel vocabulary runtime integration', () => {
     expect(migratedV1.state).toMatchObject({
       lifecycle: 'intro',
       sessionId: 'r1-from-v1',
+      completionReason: null,
       migrationNotice:
         'legacy-measurement-incompatible-new-sample-required',
     })
@@ -257,5 +399,6 @@ describe('R1 travel vocabulary runtime integration', () => {
       kind: 'adaptive-vocabulary-runtime-v2',
       snapshot: v2,
     })
+    expect(migratedV2.toSnapshot().session.completionReason).toBeNull()
   })
 })
