@@ -1,15 +1,18 @@
 export {
   LearningAppPrototype,
-  type DailyPlanPrimaryActionViewModel,
+  PracticeModuleGrid,
+  TodayTaskList,
   type DailyPlanViewModel,
-  type DailyTaskRequestViewModel,
-  type DailyTaskStatus,
   type DailyTaskViewModel,
   type LearningAppPrototypeProps,
   type PracticeModuleId,
   type PracticeModuleViewModel,
   type ProgressViewModel,
+  type StartableTrainingTaskStatus,
   type TrainingPracticeModuleId,
+  type TrainingTaskAccessViewModel,
+  type TrainingTaskStatus,
+  type TrainingTaskUnavailableReason,
 } from './learning-app-prototype.tsx'
 export { PlatformPrototype } from './platform-prototype.tsx'
 export {

@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import {
   Children,
   isValidElement,
@@ -8,67 +9,119 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it, vi } from 'vitest'
 import {
   LearningAppPrototype,
+  PracticeModuleGrid,
+  TodayTaskList,
   type DailyPlanViewModel,
+  type DailyTaskViewModel,
   type PracticeModuleId,
   type PracticeModuleViewModel,
   type ProgressViewModel,
+  type TrainingPracticeModuleId,
 } from './index.ts'
-import { PracticeModuleGrid } from './learning-app-prototype.tsx'
 
-const currentTaskId = 'plan-2026-07-24:task:2'
+const taskIds = {
+  vocabulary: 'plan-2026-07-27:task:vocabulary:exact',
+  listening: 'plan-2026-07-27:task:listening:exact',
+  speaking: 'plan-2026-07-27:task:speaking:exact',
+} as const
 
-const plan: DailyPlanViewModel = {
-  dateLabel: '周五 · 7月24日',
-  greeting: '晚上好',
-  streakDays: 5,
-  summary: '45 分钟 · 3 项训练',
-  progressLabel: '已完成 1 项',
-  progressPercent: 34,
-  tasks: [
-    {
-      id: 'plan-2026-07-24:task:1',
-      title: '词汇复习',
-      meta: '15 分钟 · 12 项',
-      status: 'complete',
-      icon: 'book',
-      accent: 'mint',
-      request: {
-        state: 'disabled',
-        label: '已完成',
-        reason: '这项任务已经完成。',
-      },
-    },
-    {
-      id: currentTaskId,
-      title: '听力训练',
-      meta: '15 分钟 · 1 组',
-      status: 'current',
-      icon: 'headphones',
-      accent: 'indigo',
-      request: {
-        state: 'enabled',
-        label: '下一项',
-      },
-    },
-    {
-      id: 'plan-2026-07-24:task:3',
-      title: '口语跟读',
-      meta: '15 分钟 · 1 组',
-      status: 'upcoming',
-      icon: 'mic',
-      accent: 'coral',
-      request: {
-        state: 'disabled',
-        label: '稍后',
-        reason: '完成当前任务后可开始。',
-      },
-    },
-  ],
-  primaryAction: {
-    state: 'enabled',
-    label: '继续今日计划',
-    taskId: currentTaskId,
+const taskPresentation = {
+  vocabulary: {
+    title: '词汇复习',
+    meta: '12 项',
+    icon: 'book',
+    accent: 'mint',
   },
+  listening: {
+    title: '听力训练',
+    meta: '1 组',
+    icon: 'headphones',
+    accent: 'indigo',
+  },
+  speaking: {
+    title: '口语跟读',
+    meta: '1 组',
+    icon: 'mic',
+    accent: 'coral',
+  },
+} as const
+
+function startableTask(
+  moduleId: TrainingPracticeModuleId,
+  recommended = false,
+): DailyTaskViewModel {
+  return {
+    moduleId,
+    taskId: taskIds[moduleId],
+    availability: 'startable',
+    status: moduleId === 'listening' ? 'active' : 'pending',
+    statusLabel: moduleId === 'listening' ? '进行中' : '未完成',
+    recommended,
+    actionLabel: moduleId === 'listening' ? '继续训练' : '开始训练',
+    ...taskPresentation[moduleId],
+  }
+}
+
+function completedTask(
+  moduleId: TrainingPracticeModuleId,
+): DailyTaskViewModel {
+  return {
+    moduleId,
+    taskId: taskIds[moduleId],
+    availability: 'unavailable',
+    status: 'completed',
+    statusLabel: '已完成',
+    recommended: false,
+    unavailableReason: 'task-finished',
+    unavailableDescription: '今天的这项任务已经完成。',
+    ...taskPresentation[moduleId],
+  }
+}
+
+function skippedTask(
+  moduleId: TrainingPracticeModuleId,
+): DailyTaskViewModel {
+  return {
+    moduleId,
+    taskId: taskIds[moduleId],
+    availability: 'unavailable',
+    status: 'skipped',
+    statusLabel: '已跳过',
+    recommended: false,
+    unavailableReason: 'task-finished',
+    unavailableDescription: '今天的这项任务已由计划标记为跳过。',
+    ...taskPresentation[moduleId],
+  }
+}
+
+function unavailableTask(
+  moduleId: TrainingPracticeModuleId,
+  reason: 'not-in-active-plan' | 'invalid-task-data',
+): DailyTaskViewModel {
+  return {
+    moduleId,
+    taskId: reason === 'invalid-task-data' ? null : taskIds[moduleId],
+    availability: 'unavailable',
+    status: null,
+    statusLabel: reason === 'invalid-task-data' ? '数据异常' : '不在计划中',
+    recommended: false,
+    unavailableReason: reason,
+    unavailableDescription:
+      reason === 'invalid-task-data'
+        ? '任务数据不完整，请稍后重试。'
+        : '今天的计划不包含这项任务。',
+    ...taskPresentation[moduleId],
+  }
+}
+
+function allStartableTasks(
+  recommendedModule: TrainingPracticeModuleId | null = 'listening',
+): readonly DailyTaskViewModel[] {
+  return (
+    ['vocabulary', 'listening', 'speaking'] as const
+  ).map((moduleId) =>
+    startableTask(moduleId, moduleId === recommendedModule),
+  )
 }
 
 const progress: ProgressViewModel = {
@@ -78,62 +131,42 @@ const progress: ProgressViewModel = {
   weeklyBars: [],
 }
 
-const vocabularyTaskId = 'plan-2026-07-24:practice:vocabulary:exact'
-const speakingTaskId = 'plan-2026-07-24:practice:speaking:exact'
-
-const practiceModules: readonly PracticeModuleViewModel[] = [
-  {
-    moduleId: 'assessment',
-    request: {
-      state: 'disabled',
-      label: '已完成',
-      reason: '首次水平测试已完成，第一版暂不支持重复测试。',
-    },
-  },
-  {
-    moduleId: 'vocabulary',
-    request: {
-      state: 'enabled',
-      label: '进入训练',
-      taskId: vocabularyTaskId,
-    },
-  },
-  {
-    moduleId: 'listening',
-    request: {
-      state: 'disabled',
-      label: '暂不可用',
-      reason: '当前没有可执行的听力任务。',
-    },
-  },
-  {
-    moduleId: 'speaking',
-    request: {
-      state: 'enabled',
-      label: '进入训练',
-      taskId: speakingTaskId,
-    },
-  },
-]
-
-function renderPlan(viewModel: DailyPlanViewModel): string {
-  return renderToStaticMarkup(
-    <LearningAppPrototype
-      plan={viewModel}
-      progress={progress}
-      onTaskRequested={() => undefined}
-    />,
-  )
+function dailyPlan(
+  tasks: readonly DailyTaskViewModel[] = allStartableTasks(),
+): DailyPlanViewModel {
+  return {
+    dateLabel: '周日 · 7月27日',
+    greeting: '晚上好',
+    streakDays: 5,
+    summary: '3 项训练',
+    progressLabel: '已完成 0 项',
+    progressPercent: 0,
+    tasks,
+  }
 }
 
-function buttonOpeningTag(markup: string, ariaLabel: string): string {
-  const escapedLabel = ariaLabel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const match = markup.match(
-    new RegExp(`<button[^>]*aria-label="${escapedLabel}"[^>]*>`),
-  )
-
-  expect(match).not.toBeNull()
-  return match?.[0] ?? ''
+function practiceModules(
+  tasks: readonly DailyTaskViewModel[] = allStartableTasks(),
+): readonly PracticeModuleViewModel[] {
+  return [
+    {
+      moduleId: 'assessment',
+      request: {
+        state: 'disabled',
+        label: '已完成',
+        reason: '首次水平测试已完成，第一版暂不支持重复测试。',
+      },
+    },
+    ...tasks.map(
+      ({
+        title: _title,
+        meta: _meta,
+        icon: _icon,
+        accent: _accent,
+        ...taskAccess
+      }) => taskAccess,
+    ),
+  ]
 }
 
 function collectHostElements(
@@ -170,167 +203,267 @@ function collectHostElements(
   return found
 }
 
-type PracticeModuleButtonProps = {
+type TaskButtonProps = {
   readonly 'aria-label'?: string
+  readonly 'data-availability'?: string
   readonly 'data-module-id'?: PracticeModuleId
+  readonly 'data-recommended'?: string
   readonly 'data-task-id'?: string
   readonly disabled?: boolean
   readonly onClick?: () => void
+  readonly type?: string
 }
 
-function moduleButton(
+function taskButton(
   node: ReactNode,
   moduleId: PracticeModuleId,
-): ReactElement<PracticeModuleButtonProps> {
+): ReactElement<TaskButtonProps> {
   const button = collectHostElements(node, 'button').find(
     (candidate) =>
-      (candidate.props as PracticeModuleButtonProps)[
-        'data-module-id'
-      ] === moduleId,
+      (candidate.props as TaskButtonProps)['data-module-id'] ===
+      moduleId,
   )
 
   expect(button).toBeDefined()
-  return button as ReactElement<PracticeModuleButtonProps>
+  return button as ReactElement<TaskButtonProps>
 }
 
-describe('LearningAppPrototype task request contract', () => {
-  it('preserves the exact LearningTask.taskId on rows and the primary action', () => {
-    const markup = renderPlan(plan)
-    const currentRow = buttonOpeningTag(markup, '下一项：听力训练')
-    const primaryAction = buttonOpeningTag(markup, '继续今日计划')
-
-    expect(currentRow).toContain(`data-task-id="${currentTaskId}"`)
-    expect(currentRow).not.toContain('disabled=""')
-    expect(primaryAction).toContain(`data-task-id="${currentTaskId}"`)
-    expect(primaryAction).not.toContain('disabled=""')
-  })
-
-  it('honestly disables completed and unavailable task rows', () => {
-    const markup = renderPlan(plan)
-    const completedRow = buttonOpeningTag(
-      markup,
-      '已完成：词汇复习，这项任务已经完成。',
-    )
-    const unavailableRow = buttonOpeningTag(
-      markup,
-      '稍后：口语跟读，完成当前任务后可开始。',
-    )
-
-    expect(completedRow).toContain('disabled=""')
-    expect(completedRow).toContain(
-      'data-task-id="plan-2026-07-24:task:1"',
-    )
-    expect(unavailableRow).toContain('disabled=""')
-    expect(unavailableRow).toContain(
-      'data-task-id="plan-2026-07-24:task:3"',
-    )
-  })
-
-  it('does not fall back to another enabled task when the primary task is invalid', () => {
-    const markup = renderPlan({
-      ...plan,
-      primaryAction: {
-        state: 'enabled',
-        label: '继续今日计划',
-        taskId: 'missing-task-id',
-      },
+describe('R2 today task choices', () => {
+  it('keeps all three unfinished tasks clickable and returns each exact taskId once', () => {
+    const onTaskRequested = vi.fn()
+    const screen = TodayTaskList({
+      tasks: allStartableTasks(),
+      onTaskRequested,
     })
-    const primaryAction = buttonOpeningTag(
-      markup,
-      '继续今日计划，当前计划指定的任务暂时不可执行。',
-    )
 
-    expect(primaryAction).toContain('disabled=""')
-    expect(primaryAction).not.toContain('data-task-id=')
+    for (const moduleId of [
+      'vocabulary',
+      'listening',
+      'speaking',
+    ] as const) {
+      const button = taskButton(screen, moduleId)
+      expect(button.props.disabled).toBe(false)
+      expect(button.props.type).toBe('button')
+      expect(button.props['data-task-id']).toBe(taskIds[moduleId])
+      button.props.onClick?.()
+    }
+
+    expect(onTaskRequested.mock.calls).toEqual([
+      [taskIds.vocabulary],
+      [taskIds.listening],
+      [taskIds.speaking],
+    ])
   })
 
-  it('renders an externally disabled primary action without inventing a task id', () => {
-    const markup = renderPlan({
-      ...plan,
-      primaryAction: {
-        state: 'disabled',
-        label: '当前没有可执行任务',
-        reason: '计划中的任务暂时不可用。',
-      },
+  it.each([
+    ['vocabulary'],
+    ['listening'],
+    ['speaking'],
+    [null],
+  ] as const)(
+    'does not turn recommendation %s into an access gate',
+    (recommendedModule) => {
+      const screen = TodayTaskList({
+        tasks: allStartableTasks(recommendedModule),
+        onTaskRequested: () => undefined,
+      })
+
+      for (const moduleId of [
+        'vocabulary',
+        'listening',
+        'speaking',
+      ] as const) {
+        const button = taskButton(screen, moduleId)
+        expect(button.props.disabled).toBe(false)
+        expect(button.props['data-recommended']).toBe(
+          moduleId === recommendedModule ? 'true' : 'false',
+        )
+      }
+    },
+  )
+
+  it('keeps the other two tasks startable after one task is completed', () => {
+    const screen = TodayTaskList({
+      tasks: [
+        completedTask('vocabulary'),
+        startableTask('listening', true),
+        startableTask('speaking'),
+      ],
+      onTaskRequested: () => undefined,
     })
-    const primaryAction = buttonOpeningTag(
-      markup,
-      '当前没有可执行任务，计划中的任务暂时不可用。',
+
+    expect(taskButton(screen, 'vocabulary').props.disabled).toBe(true)
+    expect(taskButton(screen, 'listening').props.disabled).toBe(false)
+    expect(taskButton(screen, 'speaking').props.disabled).toBe(false)
+  })
+
+  it('shows a skipped task as a truthful terminal state instead of restarting it', () => {
+    const screen = TodayTaskList({
+      tasks: [
+        skippedTask('vocabulary'),
+        startableTask('listening'),
+        startableTask('speaking', true),
+      ],
+      onTaskRequested: () => undefined,
+    })
+    const skippedButton = taskButton(screen, 'vocabulary')
+
+    expect(skippedButton.props.disabled).toBe(true)
+    expect(skippedButton.props.onClick).toBeUndefined()
+    expect(skippedButton.props['aria-label']).toContain('已跳过')
+    expect(skippedButton.props['aria-label']).toContain(
+      '已由计划标记为跳过',
+    )
+  })
+
+  it('disables only externally unavailable tasks and exposes their exact reason', () => {
+    const onTaskRequested = vi.fn()
+    const screen = TodayTaskList({
+      tasks: [
+        startableTask('vocabulary'),
+        unavailableTask('listening', 'not-in-active-plan'),
+        unavailableTask('speaking', 'invalid-task-data'),
+      ],
+      onTaskRequested,
+    })
+    const listeningButton = taskButton(screen, 'listening')
+    const speakingButton = taskButton(screen, 'speaking')
+
+    expect(taskButton(screen, 'vocabulary').props.disabled).toBe(false)
+    expect(listeningButton.props.disabled).toBe(true)
+    expect(listeningButton.props.onClick).toBeUndefined()
+    expect(listeningButton.props['aria-label']).toContain(
+      '今天的计划不包含这项任务。',
+    )
+    expect(speakingButton.props.disabled).toBe(true)
+    expect(speakingButton.props['data-task-id']).toBeUndefined()
+    expect(speakingButton.props['aria-label']).toContain(
+      '任务数据不完整，请稍后重试。',
+    )
+    expect(onTaskRequested).not.toHaveBeenCalled()
+  })
+
+  it('uses free-choice copy and tells VoiceOver that recommendation is non-binding', () => {
+    const markup = renderToStaticMarkup(
+      <LearningAppPrototype
+        plan={dailyPlan()}
+        progress={progress}
+        onTaskRequested={() => undefined}
+      />,
+    )
+    const recommendedButton = taskButton(
+      TodayTaskList({
+        tasks: allStartableTasks(),
+        onTaskRequested: () => undefined,
+      }),
+      'listening',
     )
 
-    expect(primaryAction).toContain('disabled=""')
-    expect(primaryAction).not.toContain('data-task-id=')
+    expect(markup).toContain('任选一项开始')
+    expect(markup).toContain('其他可用任务同样可以直接开始')
+    expect(markup).not.toContain('接下来')
+    expect(markup).not.toContain('尚未轮到')
+    expect(markup).not.toContain('完成当前任务后')
+    expect(recommendedButton.props['aria-label']).toContain(
+      '其他未完成任务同样可选',
+    )
   })
 })
 
-describe('LearningAppPrototype practice request contract', () => {
-  it('renders stable module identities and exact task ids without an empty-page fallback', () => {
+describe('R2 practice task choices', () => {
+  it('keeps all three specialty cards clickable and does not swap or duplicate task ids', () => {
+    const onTaskRequested = vi.fn()
     const screen = PracticeModuleGrid({
-      modules: practiceModules,
+      modules: practiceModules(),
+      onAssessmentRequested: () => undefined,
+      onTaskRequested,
+    })
+
+    for (const moduleId of [
+      'vocabulary',
+      'listening',
+      'speaking',
+    ] as const) {
+      const button = taskButton(screen, moduleId)
+      expect(button.props.disabled).toBe(false)
+      expect(button.props['data-task-id']).toBe(taskIds[moduleId])
+      button.props.onClick?.()
+    }
+
+    expect(onTaskRequested).toHaveBeenCalledTimes(3)
+    expect(onTaskRequested.mock.calls).toEqual([
+      [taskIds.vocabulary],
+      [taskIds.listening],
+      [taskIds.speaking],
+    ])
+  })
+
+  it.each([
+    ['vocabulary'],
+    ['listening'],
+    ['speaking'],
+    [null],
+  ] as const)(
+    'shows recommendation %s without disabling another specialty card',
+    (recommendedModule) => {
+      const screen = PracticeModuleGrid({
+        modules: practiceModules(
+          allStartableTasks(recommendedModule),
+        ),
+        onAssessmentRequested: () => undefined,
+        onTaskRequested: () => undefined,
+      })
+
+      for (const moduleId of [
+        'vocabulary',
+        'listening',
+        'speaking',
+      ] as const) {
+        const button = taskButton(screen, moduleId)
+        expect(button.props.disabled).toBe(false)
+        expect(button.props['data-recommended']).toBe(
+          moduleId === recommendedModule ? 'true' : 'false',
+        )
+      }
+    },
+  )
+
+  it('keeps completed and malformed cards disabled while the remaining task stays startable', () => {
+    const markupTasks = [
+      completedTask('vocabulary'),
+      startableTask('listening', true),
+      unavailableTask('speaking', 'invalid-task-data'),
+    ] as const
+    const screen = PracticeModuleGrid({
+      modules: practiceModules(markupTasks),
       onAssessmentRequested: () => undefined,
       onTaskRequested: () => undefined,
     })
     const markup = renderToStaticMarkup(screen)
-    const moduleIds = collectHostElements(screen, 'button').map(
-      (button) =>
-        (button.props as PracticeModuleButtonProps)[
-          'data-module-id'
-        ],
-    )
 
-    expect(moduleIds).toEqual([
-      'assessment',
-      'vocabulary',
-      'listening',
-      'speaking',
-    ])
-    expect(
-      moduleButton(screen, 'assessment').props['data-task-id'],
-    ).toBeUndefined()
-    expect(
-      moduleButton(screen, 'vocabulary').props['data-task-id'],
-    ).toBe(vocabularyTaskId)
-    expect(
-      moduleButton(screen, 'speaking').props['data-task-id'],
-    ).toBe(speakingTaskId)
-    expect(markup).not.toContain('暂无可用训练')
+    expect(taskButton(screen, 'vocabulary').props.disabled).toBe(true)
+    expect(taskButton(screen, 'listening').props.disabled).toBe(false)
+    expect(taskButton(screen, 'speaking').props.disabled).toBe(true)
+    expect(markup).toContain('今天的这项任务已经完成。')
+    expect(markup).toContain('任务数据不完整，请稍后重试。')
+    expect(markup).not.toContain('尚未轮到')
   })
 
-  it('returns the exact LearningTask.taskId for enabled specialty training', () => {
-    const onTaskRequested = vi.fn()
-    const screen = PracticeModuleGrid({
-      modules: practiceModules,
-      onAssessmentRequested: () => undefined,
-      onTaskRequested,
-    })
-
-    moduleButton(screen, 'vocabulary').props.onClick?.()
-    moduleButton(screen, 'speaking').props.onClick?.()
-
-    expect(onTaskRequested.mock.calls).toEqual([
-      [vocabularyTaskId],
-      [speakingTaskId],
-    ])
-  })
-
-  it('uses a separate callback for assessment without inventing a task id', () => {
+  it('keeps assessment on its separate callback without inventing a task id', () => {
     const onAssessmentRequested = vi.fn()
     const onTaskRequested = vi.fn()
-    const assessmentEnabled: readonly PracticeModuleViewModel[] = [
-      {
-        moduleId: 'assessment',
-        request: {
-          state: 'enabled',
-          label: '开始测试',
-        },
-      },
-    ]
     const screen = PracticeModuleGrid({
-      modules: assessmentEnabled,
+      modules: [
+        {
+          moduleId: 'assessment',
+          request: { state: 'enabled', label: '开始测试' },
+        },
+        ...practiceModules().slice(1),
+      ],
       onAssessmentRequested,
       onTaskRequested,
     })
-    const assessmentButton = moduleButton(screen, 'assessment')
+    const assessmentButton = taskButton(screen, 'assessment')
 
     assessmentButton.props.onClick?.()
 
@@ -338,25 +471,32 @@ describe('LearningAppPrototype practice request contract', () => {
     expect(onTaskRequested).not.toHaveBeenCalled()
     expect(assessmentButton.props['data-task-id']).toBeUndefined()
   })
+})
 
-  it('shows the external reason and removes click behavior for disabled modules', () => {
-    const screen = PracticeModuleGrid({
-      modules: practiceModules,
-      onAssessmentRequested: () => undefined,
+describe('R2 mobile and accessibility guardrails', () => {
+  it('retains native button semantics, focus styling, narrow layout and wrapping text', () => {
+    const screen = TodayTaskList({
+      tasks: allStartableTasks(),
       onTaskRequested: () => undefined,
     })
-    const assessmentButton = moduleButton(screen, 'assessment')
-    const listeningButton = moduleButton(screen, 'listening')
-    const markup = renderToStaticMarkup(screen)
-
-    expect(assessmentButton.props.disabled).toBe(true)
-    expect(assessmentButton.props.onClick).toBeUndefined()
-    expect(assessmentButton.props['aria-label']).toContain(
-      '首次水平测试已完成，第一版暂不支持重复测试。',
+    const css = readFileSync(
+      new URL('./styles/app.css', import.meta.url),
+      'utf8',
     )
-    expect(listeningButton.props.disabled).toBe(true)
-    expect(listeningButton.props.onClick).toBeUndefined()
-    expect(listeningButton.props['data-task-id']).toBeUndefined()
-    expect(markup).toContain('当前没有可执行的听力任务。')
+    const taskTitleRule =
+      css.match(/\.task-row__copy strong\s*\{([^}]*)\}/)?.[1] ?? ''
+
+    for (const moduleId of [
+      'vocabulary',
+      'listening',
+      'speaking',
+    ] as const) {
+      expect(taskButton(screen, moduleId).props.type).toBe('button')
+    }
+    expect(css).toContain(':focus-visible')
+    expect(css).toContain('@media (width <= 360px)')
+    expect(css).toContain('min-height: 82px')
+    expect(css).toContain('overflow-wrap: anywhere')
+    expect(taskTitleRule).not.toContain('white-space')
   })
 })

@@ -74,11 +74,11 @@ import { ... } from '../../ui/index.ts'
 
 ### 04
 
-- 把 `DailyPlan`、`PlanProgress`、`ProgressSnapshot`、`ResumeDecision` 和
-  `ReassessmentRecommendation` 映射成应用壳和进度 ViewModel。
-- `DailyTaskViewModel.id` 必须原样使用 `TaskExecutionState.task.taskId`。
-- 把 `ResumeDecision.nextTaskId` 映射到 `DailyPlanPrimaryActionViewModel`；逐任务是否可请求
-  映射到 `DailyTaskRequestViewModel`，UI 不根据数组顺序推导。
+- 通过 `getPlanTaskAccess(PlanProgress)` 提供逐任务 `availability`、`taskStatus`、
+  `recommended` 与 `unavailableReason`；01 只把这些业务状态格式化为 UI ViewModel。
+- `DailyTaskViewModel.taskId` 必须原样使用 `PlanTaskAvailability.taskId`。
+- `recommendedTaskId`（以及兼容别名 `nextTaskId`）只映射为对应任务的
+  `recommended: true`，不得改变任何其他任务的 `availability`。
 - 分钟、进度、趋势、连续学习和复测到期只做格式化，不能在 UI 内重算。
 
 ### 06
@@ -118,14 +118,16 @@ import { ... } from '../../ui/index.ts'
 ```ts
 import {
   LearningAppPrototype,
-  type DailyPlanPrimaryActionViewModel,
   type DailyPlanViewModel,
-  type DailyTaskRequestViewModel,
   type DailyTaskViewModel,
   type LearningAppPrototypeProps,
   type PracticeModuleId,
   type PracticeModuleViewModel,
+  type StartableTrainingTaskStatus,
   type TrainingPracticeModuleId,
+  type TrainingTaskAccessViewModel,
+  type TrainingTaskStatus,
+  type TrainingTaskUnavailableReason,
 } from '../../ui/index.ts'
 ```
 
@@ -146,18 +148,37 @@ import {
 
 | 字段 | 来源 | 约束 |
 | --- | --- | --- |
-| `DailyTaskViewModel.id` | `LearningTask.taskId` | 原样复制，禁止使用模块 ID、数组索引或重新生成 |
-| `task.request` | `TaskExecutionState` 与模块可用状态 | `enabled` 才可点击；`disabled` 必须提供可读原因 |
-| `plan.primaryAction.taskId` | 通常为 `ResumeDecision.nextTaskId` | 必须匹配同一 ViewModel 中可请求的任务 |
-| `onTaskRequested(taskId)` | 用户点击主行动或可执行任务行 | 返回 `DailyTaskViewModel.id` 原值 |
+| `DailyTaskViewModel.taskId` | `PlanTaskAvailability.taskId` | 原样复制，禁止使用模块 ID、数组索引或重新生成 |
+| `moduleId` | `LearningTask.targetModuleId` | 只作为稳定 UI 身份，不替代 `taskId` |
+| `availability` | `PlanTaskAvailability.availability` | 唯一的可用性来源；UI 不从状态、顺序或推荐反推 |
+| `status` | `PlanTaskAvailability.taskStatus` | 原样传入；用于显示真实 pending / active / paused / blocked / completed / skipped |
+| `recommended` | `PlanTaskAvailability.recommended` | 只显示“建议先做”，不改变其他任务的按钮状态 |
+| `unavailableReason` | `PlanTaskAvailability.unavailableReason` | 只允许 `not-in-active-plan`、`task-finished`、`invalid-task-data` |
+| `onTaskRequested(taskId)` | 用户点击任一 `startable` 任务 | 返回该卡片 `taskId` 原值，一次点击只发送一次 |
+
+`TrainingTaskAccessViewModel` 是判别联合：
+
+- `availability: "startable"`：必须提供非空 `taskId`、非终态 `status`、
+  `recommended`、`statusLabel` 和 `actionLabel`。
+- `availability: "unavailable"`：提供 `taskId | null`、`status | null`、
+  `recommended: false`、`statusLabel`、`unavailableReason` 和
+  `unavailableDescription`。
+
+01 应分别把同一份逐任务访问数据扩展为带标题/图标的 `DailyTaskViewModel`，以及训练页的
+`PracticeModuleViewModel`。两个入口必须使用同一 `availability` 和 `taskId`，不能各自
+计算出不同权限。
 
 UI 的防御规则：
 
-- 已完成任务始终禁用，即使适配层错误地把 `request.state` 标为 `enabled`。
-- 主行动引用缺失、已完成或不可请求任务时禁用，不回退到其他任务。
-- 任务行和“继续今日计划”使用同一个 `onTaskRequested` 回调。
-- UI 不查找首个未完成任务、不读取 `targetModuleId`、不注册路由、不保存活动计划，也不
-  发布学习事件。
+- `availability === "startable"` 的词汇、听力、口语任务全部保持可点击，即使其中某项
+  `recommended === true`。
+- `completed` / `skipped` 使用 `task-finished` 终态展示，不能作为未完成每日必做重新启动。
+- `not-in-active-plan` 直接说明不在当前计划；`invalid-task-data` 使用错误状态。两者均不
+  绑定点击动作。
+- 页面没有单一“继续今日计划”权限入口，不消费 `recommendedTaskId` / `nextTaskId`，
+  不查找首个未完成任务，也不根据数组位置或模块顺序决定权限。
+- `TodayTaskList` 和 `PracticeModuleGrid` 使用同一个 `onTaskRequested` 输出契约；UI 不
+  注册路由、不保存活动计划，也不发布学习事件。
 
 `demoPlan` 仅存在于 `visual-fixture.tsx`，并通过独立 `LearningAppVisualDemo` 注入演示
 回调。生产 `learning-app-prototype.tsx` 不导入视觉夹具，也没有演示计划、演示 ID 或
@@ -201,27 +222,30 @@ const practiceModules = [
   },
   {
     moduleId: 'vocabulary',
-    request: {
-      state: 'enabled',
-      label: '进入训练',
-      taskId: vocabularyLearningTask.taskId,
-    },
+    taskId: vocabularyLearningTask.taskId,
+    availability: 'startable',
+    status: 'pending',
+    statusLabel: '未完成',
+    recommended: false,
+    actionLabel: '开始训练',
   },
   {
     moduleId: 'listening',
-    request: {
-      state: 'disabled',
-      label: '暂不可用',
-      reason: '当前没有可执行的听力任务。',
-    },
+    taskId: listeningLearningTask.taskId,
+    availability: 'startable',
+    status: 'active',
+    statusLabel: '进行中',
+    recommended: true,
+    actionLabel: '继续训练',
   },
   {
     moduleId: 'speaking',
-    request: {
-      state: 'enabled',
-      label: '进入训练',
-      taskId: speakingLearningTask.taskId,
-    },
+    taskId: speakingLearningTask.taskId,
+    availability: 'startable',
+    status: 'pending',
+    statusLabel: '未完成',
+    recommended: false,
+    actionLabel: '开始训练',
   },
 ] satisfies readonly PracticeModuleViewModel[]
 ```
@@ -247,14 +271,17 @@ const practiceModules = [
 | 输入 / 输出 | 语义 | 强制约束 |
 | --- | --- | --- |
 | `PracticeModuleViewModel.moduleId` | 稳定 UI 身份 | 只允许四个公开字面量；不表示任务或路由 |
-| 专项训练 `request.taskId` | 精确 `LearningTask.taskId` | 只存在于 `enabled`；UI 原样传给 `onTaskRequested` |
+| 专项训练 `taskId` | 精确 `LearningTask.taskId` | `startable` 必须存在；UI 原样传给 `onTaskRequested` |
+| 专项训练 `availability` | 逐任务权限 | 只消费 04 的明确结果，不读取推荐或相邻任务 |
+| 专项训练 `recommended` | 非强制推荐 | 只改变边框、徽标与读屏说明；其他 `startable` 卡保持可点 |
 | `onAssessmentRequested()` | 用户请求水平测试 | 水平测试不是 `LearningTask`，不生成 `taskId` |
-| `disabled.reason` | 当前不可执行原因 | 卡片直接展示、使用原生禁用态且不绑定点击动作 |
+| `unavailableDescription` | 当前不可执行原因 | 卡片直接展示、使用原生禁用态且不绑定点击动作 |
 
 已有能力档案时，01 必须把 `assessment` 映射为禁用态，并使用文案
 “首次水平测试已完成，第一版暂不支持重复测试”。词汇、听力和口语是否有可执行任务、
 使用哪个 `taskId`、以及最终进入哪条路由，全部由 01 / 04 的真实状态决定；UI 不按标题、
-模块 ID、数组顺序或计划文案猜测。
+模块 ID、数组顺序、`nextTaskId` 或计划文案猜测。“建议先做”只是视觉建议，不能让其他
+未完成任务变灰、显示顺序等待文案或移除操作。
 
 为避免尚未更新的应用壳在类型迁移期间中断，`practiceModules` 与
 `onAssessmentRequested` 可以同时省略；此时四张卡片全部显示为“入口尚未接入”并禁用，

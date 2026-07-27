@@ -17,14 +17,14 @@
 
 - 应用壳页面显示三项底部导航。
 - 水平测试和专项训练使用专注模式，不显示底部导航。
-- 每页只保留一个视觉优先级最高的主行动。
+- 专注训练页只保留一个视觉优先级最高的主行动；自由选择页允许多个同级真实入口。
 - 页面组件只接收 ViewModel 和回调，不加载数据、不注册路由、不调用设备 API。
 
 ## 今天
 
 ### 页面任务
 
-让用户在 3 秒内看清计划状态、下一项任务和预计投入时间。
+让用户在 3 秒内看清计划状态，并从所有未完成任务中自由选择一项开始。
 
 ```text
 日期                         连续学习
@@ -36,12 +36,10 @@
 │ ━━━━━━━━━━━                  │
 └─────────────────────────────┘
 
-DAILY RHYTHM
-✓ 词汇复习      已完成
-02 听力训练      下一项
-03 口语训练      待开始
-
-[继续今日计划]
+任选一项开始
+┌ 词汇复习      开始训练 ┐
+├ 听力训练  建议先做  继续训练 ┤
+└ 口语跟读      开始训练 ┘
 ```
 
 ### 输入
@@ -57,26 +55,30 @@ DAILY RHYTHM
   - `status`
   - 每个 `TaskExecutionState.status`
   - `spentSeconds`
-- `ResumeDecision`
-  - `action`
-  - `nextTaskId`
-  - `carryOverTasks`
+- `PlanTaskAccess`
+  - `tasks[].taskId`
+  - `tasks[].targetModuleId`
+  - `tasks[].taskStatus`
+  - `tasks[].availability`
+  - `tasks[].recommended`
+  - `tasks[].unavailableReason`
 - `ProgressSnapshot.streak`
 
 ### 显示规则
 
-- 任务严格按 `sequence` 排列。
+- 词汇、听力、口语任务使用同级选择卡，不显示序号、前后连线或固定顺序暗示。
 - 时间只格式化，不重新分配。
 - `partial` 必须展示未排满提示及业务警告。
 - `empty` 不显示虚假的 0% 计划卡。
 - `blocked` 与 `skipped` 不使用完成勾选。
 - 连续学习只展示 `streak.currentDays`，不根据日历自行计算。
-- `DailyTaskViewModel.id` 原样承载 `LearningTask.taskId`；页面不得改写成模块 ID。
-- “继续今日计划”只使用 `DailyPlanPrimaryActionViewModel.taskId` 指定的可执行任务，
-  不自行选择数组中的首个未完成任务。
-- 已完成或外部标记不可执行的任务行使用原生禁用按钮，并显示 `request.label`；不可执行
-  原因用于可访问名称。
-- 主按钮和可点击任务行统一触发 `onTaskRequested(taskId)`；UI 不决定目标路由。
+- `DailyTaskViewModel.taskId` 原样承载 `LearningTask.taskId`；页面不得改写成模块 ID。
+- `availability === "startable"` 的三个任务必须同时可点击；`recommended` 只增加
+  “建议先做”徽标、边框和读屏说明。
+- 已完成、已跳过、计划外或数据异常任务使用原生禁用按钮；状态与不可执行原因均来自
+  外部 ViewModel 并进入可访问名称。
+- 任一可点击任务行触发 `onTaskRequested(taskId)`；UI 不决定目标路由，不读取
+  `nextTaskId`，也不根据数组位置推导权限。
 
 ## 水平测试
 

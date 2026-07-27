@@ -3,7 +3,6 @@ import { OfflineNotice } from './feedback-states.tsx'
 import { Icon, type IconName } from './icons.tsx'
 
 type AppSection = 'today' | 'practice' | 'progress'
-export type DailyTaskStatus = 'complete' | 'current' | 'upcoming'
 export type PracticeModuleId =
   | 'assessment'
   | 'vocabulary'
@@ -13,45 +12,63 @@ export type TrainingPracticeModuleId = Exclude<
   PracticeModuleId,
   'assessment'
 >
+export type TrainingTaskStatus =
+  | 'pending'
+  | 'active'
+  | 'paused'
+  | 'blocked'
+  | 'completed'
+  | 'skipped'
+export type StartableTrainingTaskStatus = Exclude<
+  TrainingTaskStatus,
+  'completed' | 'skipped'
+>
+export type TrainingTaskUnavailableReason =
+  | 'not-in-active-plan'
+  | 'task-finished'
+  | 'invalid-task-data'
 
-export type DailyTaskRequestViewModel =
-  | {
-      readonly state: 'enabled'
-      readonly label: string
-    }
-  | {
-      readonly state: 'disabled'
-      readonly label: string
-      readonly reason: string
-    }
+interface TrainingTaskAccessBase {
+  /**
+   * Stable UI identity. It never substitutes for LearningTask.taskId.
+   */
+  readonly moduleId: TrainingPracticeModuleId
+  readonly statusLabel: string
+}
 
-export type DailyPlanPrimaryActionViewModel =
-  | {
-      readonly state: 'enabled'
-      readonly label: string
+export type TrainingTaskAccessViewModel =
+  | (TrainingTaskAccessBase & {
+      readonly availability: 'startable'
       /**
-       * Must match one DailyTaskViewModel.id from the same plan.
+       * Exact LearningTask.taskId. The UI returns it unchanged.
        */
       readonly taskId: string
-    }
-  | {
-      readonly state: 'disabled'
-      readonly label: string
-      readonly reason: string
-    }
+      readonly status: StartableTrainingTaskStatus
+      readonly recommended: boolean
+      readonly actionLabel: string
+    })
+  | (TrainingTaskAccessBase & {
+      readonly availability: 'unavailable'
+      /**
+       * Completed tasks retain their real id. Plan gaps or malformed input may
+       * intentionally have no trustworthy task id.
+       */
+      readonly taskId: string | null
+      readonly status: TrainingTaskStatus | null
+      readonly recommended: false
+      readonly unavailableReason: TrainingTaskUnavailableReason
+      readonly unavailableDescription: string
+    })
 
-export interface DailyTaskViewModel {
-  /**
-   * Exact LearningTask.taskId. The UI never generates, normalizes or rewrites it.
-   */
-  readonly id: string
+interface DailyTaskPresentation {
   readonly title: string
   readonly meta: string
-  readonly status: DailyTaskStatus
   readonly icon: IconName
   readonly accent: 'indigo' | 'coral' | 'mint'
-  readonly request: DailyTaskRequestViewModel
 }
+
+export type DailyTaskViewModel =
+  TrainingTaskAccessViewModel & DailyTaskPresentation
 
 export interface DailyPlanViewModel {
   readonly dateLabel: string
@@ -61,7 +78,6 @@ export interface DailyPlanViewModel {
   readonly progressLabel: string
   readonly progressPercent: number
   readonly tasks: readonly DailyTaskViewModel[]
-  readonly primaryAction: DailyPlanPrimaryActionViewModel
 }
 
 export interface ProgressViewModel {
@@ -92,26 +108,7 @@ export type PracticeModuleViewModel =
             readonly reason: string
           }
     }
-  | {
-      /**
-       * Stable UI identity only. Never use this value as a task id.
-       */
-      readonly moduleId: TrainingPracticeModuleId
-      readonly request:
-        | {
-            readonly state: 'enabled'
-            readonly label: string
-            /**
-             * Exact LearningTask.taskId. The UI returns it unchanged.
-             */
-            readonly taskId: string
-          }
-        | {
-            readonly state: 'disabled'
-            readonly label: string
-            readonly reason: string
-          }
-    }
+  | TrainingTaskAccessViewModel
 
 interface LearningAppPrototypeBaseProps {
   readonly plan: DailyPlanViewModel
@@ -193,27 +190,33 @@ const disconnectedPracticeModules: readonly PracticeModuleViewModel[] = [
   },
   {
     moduleId: 'vocabulary',
-    request: {
-      state: 'disabled',
-      label: '暂不可用',
-      reason: '词汇训练入口尚未接入。',
-    },
+    taskId: null,
+    status: null,
+    statusLabel: '暂不可用',
+    availability: 'unavailable',
+    recommended: false,
+    unavailableReason: 'invalid-task-data',
+    unavailableDescription: '词汇训练入口尚未接入。',
   },
   {
     moduleId: 'listening',
-    request: {
-      state: 'disabled',
-      label: '暂不可用',
-      reason: '听力训练入口尚未接入。',
-    },
+    taskId: null,
+    status: null,
+    statusLabel: '暂不可用',
+    availability: 'unavailable',
+    recommended: false,
+    unavailableReason: 'invalid-task-data',
+    unavailableDescription: '听力训练入口尚未接入。',
   },
   {
     moduleId: 'speaking',
-    request: {
-      state: 'disabled',
-      label: '暂不可用',
-      reason: '口语训练入口尚未接入。',
-    },
+    taskId: null,
+    status: null,
+    statusLabel: '暂不可用',
+    availability: 'unavailable',
+    recommended: false,
+    unavailableReason: 'invalid-task-data',
+    unavailableDescription: '口语训练入口尚未接入。',
   },
 ]
 
@@ -267,24 +270,6 @@ export function LearningAppPrototype({
   )
 }
 
-function isTaskRequestable(task: DailyTaskViewModel): boolean {
-  return task.status !== 'complete' && task.request.state === 'enabled'
-}
-
-function primaryTaskFor(
-  plan: DailyPlanViewModel,
-): DailyTaskViewModel | undefined {
-  const primaryAction = plan.primaryAction
-  if (primaryAction.state === 'disabled') {
-    return undefined
-  }
-
-  return plan.tasks.find(
-    (task) =>
-      task.id === primaryAction.taskId && isTaskRequestable(task),
-  )
-}
-
 function TodayPage({
   plan,
   onTaskRequested,
@@ -292,14 +277,6 @@ function TodayPage({
   readonly plan: DailyPlanViewModel
   readonly onTaskRequested: (taskId: string) => void
 }) {
-  const primaryTask = primaryTaskFor(plan)
-  const primaryDisabledReason =
-    plan.primaryAction.state === 'disabled'
-      ? plan.primaryAction.reason
-      : primaryTask
-        ? undefined
-        : '当前计划指定的任务暂时不可执行。'
-
   return (
     <>
       <header className="app-header">
@@ -344,79 +321,108 @@ function TodayPage({
       <section className="plan-section" aria-labelledby="plan-heading">
         <div className="section-heading">
           <div>
-            <span className="eyebrow">DAILY RHYTHM</span>
-            <h2 id="plan-heading">接下来</h2>
+            <span className="eyebrow">CHOOSE YOUR START</span>
+            <h2 id="plan-heading">任选一项开始</h2>
           </div>
           <span className="section-heading__count">{plan.tasks.length} 项</span>
         </div>
-
-        <ol className="task-rail">
-          {plan.tasks.map((task, index) => {
-            const requestable = isTaskRequestable(task)
-            const requestDescription =
-              task.request.state === 'disabled'
-                ? `，${task.request.reason}`
-                : ''
-
-            return (
-              <li
-                className={`task-rail__item task-rail__item--${task.status}`}
-                key={task.id}
-              >
-                <button
-                  className={`task-row task-row--${task.status}`}
-                  type="button"
-                  disabled={!requestable}
-                  data-task-id={task.id}
-                  aria-label={`${task.request.label}：${task.title}${requestDescription}`}
-                  onClick={() => onTaskRequested(task.id)}
-                >
-                  <span className="task-rail__step" aria-hidden="true">
-                    {task.status === 'complete' ? (
-                      <Icon name="check" />
-                    ) : (
-                      String(index + 1).padStart(2, '0')
-                    )}
-                  </span>
-                  <span className={`task-icon task-icon--${task.accent}`}>
-                    <Icon name={task.icon} />
-                  </span>
-                  <span className="task-row__copy">
-                    <strong>{task.title}</strong>
-                    <small>{task.meta}</small>
-                  </span>
-                  <span
-                    className={`task-row__status task-row__status--${task.request.state}`}
-                  >
-                    {task.request.label}
-                  </span>
-                </button>
-              </li>
-            )
-          })}
-        </ol>
+        <p className="plan-section__hint">
+          “建议先做”只是推荐，其他可用任务同样可以直接开始。
+        </p>
+        <TodayTaskList
+          tasks={plan.tasks}
+          onTaskRequested={onTaskRequested}
+        />
       </section>
-
-      <button
-        className="primary-button"
-        type="button"
-        disabled={!primaryTask}
-        data-task-id={primaryTask?.id}
-        aria-label={
-          primaryDisabledReason
-            ? `${plan.primaryAction.label}，${primaryDisabledReason}`
-            : plan.primaryAction.label
-        }
-        onClick={() => {
-          if (primaryTask) {
-            onTaskRequested(primaryTask.id)
-          }
-        }}
-      >
-        {plan.primaryAction.label}
-        <Icon name="arrow-right" />
-      </button>
     </>
+  )
+}
+
+function recommendedAriaDescription(recommended: boolean): string {
+  return recommended
+    ? '。建议先做；其他未完成任务同样可选'
+    : ''
+}
+
+export function TodayTaskList({
+  tasks,
+  onTaskRequested,
+}: {
+  readonly tasks: readonly DailyTaskViewModel[]
+  readonly onTaskRequested: (taskId: string) => void
+}) {
+  return (
+    <ul className="task-choice-list">
+      {tasks.map((task) => {
+        const isStartable = task.availability === 'startable'
+        const stateClass =
+          task.availability === 'unavailable' &&
+          task.unavailableReason === 'invalid-task-data'
+            ? 'error'
+            : task.availability
+        const detail =
+          task.availability === 'unavailable'
+            ? task.unavailableDescription
+            : task.meta
+        const actionLabel =
+          task.availability === 'startable'
+            ? task.actionLabel
+            : task.statusLabel
+        const ariaLabel =
+          task.availability === 'startable'
+            ? `${task.actionLabel}：${task.title}${recommendedAriaDescription(task.recommended)}`
+            : `${task.statusLabel}：${task.title}。${task.unavailableDescription}`
+
+        return (
+          <li className="task-choice-list__item" key={task.moduleId}>
+            <button
+              className={[
+                'task-row',
+                `task-row--${stateClass}`,
+                task.status === 'completed' || task.status === 'skipped'
+                  ? 'task-row--finished'
+                  : '',
+                task.recommended ? 'task-row--recommended' : '',
+              ]
+                .filter(Boolean)
+                .join(' ')}
+              type="button"
+              disabled={!isStartable}
+              data-module-id={task.moduleId}
+              data-task-id={task.taskId ?? undefined}
+              data-availability={task.availability}
+              data-recommended={task.recommended ? 'true' : 'false'}
+              aria-label={ariaLabel}
+              onClick={
+                task.availability === 'startable'
+                  ? () => onTaskRequested(task.taskId)
+                  : undefined
+              }
+            >
+              <span className={`task-icon task-icon--${task.accent}`}>
+                <Icon name={task.icon} />
+              </span>
+              <span className="task-row__copy">
+                <span className="task-row__title-line">
+                  <strong>{task.title}</strong>
+                  {task.recommended ? (
+                    <span className="recommendation-badge">
+                      建议先做
+                    </span>
+                  ) : null}
+                </span>
+                <small>{detail}</small>
+              </span>
+              <span
+                className={`task-row__status task-row__status--${stateClass}`}
+              >
+                {actionLabel}
+              </span>
+            </button>
+          </li>
+        )
+      })}
+    </ul>
   )
 }
 
@@ -432,44 +438,81 @@ export function PracticeModuleGrid({
   return (
     <>
       <PageHeader eyebrow="PRACTICE" title="选择训练" />
-      <p className="page-intro">选择水平测试或专项训练。</p>
+      <p className="page-intro">
+        今日任务可自由选择；“建议先做”只是推荐，不影响其他可用任务。
+      </p>
       <section className="module-grid" aria-label="训练模块">
         {modules.map((module) => {
           const presentation =
             practiceModulePresentation[module.moduleId]
-          const isDisabled = module.request.state === 'disabled'
-          const taskId =
-            module.moduleId === 'assessment' ||
-            module.request.state === 'disabled'
-              ? undefined
-              : module.request.taskId
-          const description = isDisabled
-            ? module.request.reason
-            : presentation.description
+          const isAssessment = module.moduleId === 'assessment'
+          const isDisabled = isAssessment
+            ? module.request.state === 'disabled'
+            : module.availability === 'unavailable'
+          const taskId = isAssessment ? undefined : module.taskId ?? undefined
+          const isRecommended = !isAssessment && module.recommended
+          const description = isAssessment
+            ? module.request.state === 'disabled'
+              ? module.request.reason
+              : presentation.description
+            : module.availability === 'unavailable'
+              ? module.unavailableDescription
+              : presentation.description
+          const actionLabel = isAssessment
+            ? module.request.label
+            : module.availability === 'startable'
+              ? module.actionLabel
+              : module.statusLabel
           const ariaLabel = isDisabled
-            ? `${presentation.title}：${module.request.reason}`
-            : `${module.request.label}：${presentation.title}`
+            ? `${presentation.title}：${description}`
+            : `${actionLabel}：${presentation.title}${recommendedAriaDescription(isRecommended)}`
           let onClick: (() => void) | undefined
-          if (module.request.state === 'enabled') {
-            if (module.moduleId === 'assessment') {
+          if (isAssessment) {
+            if (module.request.state === 'enabled') {
               onClick = onAssessmentRequested
-            } else {
-              const requestedTaskId = module.request.taskId
-              onClick = () => onTaskRequested(requestedTaskId)
             }
+          } else if (module.availability === 'startable') {
+            const requestedTaskId = module.taskId
+            onClick = () => onTaskRequested(requestedTaskId)
           }
 
           return (
             <button
-              className="module-card"
+              className={[
+                'module-card',
+                isRecommended ? 'module-card--recommended' : '',
+                !isAssessment &&
+                module.availability === 'unavailable' &&
+                module.unavailableReason === 'invalid-task-data'
+                  ? 'module-card--error'
+                  : '',
+                !isAssessment &&
+                (module.status === 'completed' ||
+                  module.status === 'skipped')
+                  ? 'module-card--finished'
+                  : '',
+              ]
+                .filter(Boolean)
+                .join(' ')}
               type="button"
               key={module.moduleId}
               disabled={isDisabled}
               data-module-id={module.moduleId}
               data-task-id={taskId}
+              data-availability={
+                isAssessment
+                  ? module.request.state
+                  : module.availability
+              }
+              data-recommended={isRecommended ? 'true' : 'false'}
               aria-label={ariaLabel}
               onClick={onClick}
             >
+              {isRecommended ? (
+                <span className="recommendation-badge">
+                  建议先做
+                </span>
+              ) : null}
               <span
                 className={`task-icon task-icon--${presentation.accent}`}
               >
@@ -478,7 +521,7 @@ export function PracticeModuleGrid({
               <h2>{presentation.title}</h2>
               <p>{description}</p>
               <span className="module-card__action">
-                {module.request.label}
+                {actionLabel}
                 {!isDisabled ? <Icon name="arrow-right" /> : null}
               </span>
             </button>
