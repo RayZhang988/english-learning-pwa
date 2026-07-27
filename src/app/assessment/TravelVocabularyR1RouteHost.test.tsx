@@ -11,6 +11,10 @@ import {
   ASSESSMENT_RESULTS_ROUTE,
   TravelVocabularyR1RouteHost,
 } from './TravelVocabularyR1RouteHost.tsx'
+import {
+  cancelTravelVocabularyR1FinishConfirmation,
+  requestTravelVocabularyR1FinishConfirmation,
+} from './travel-vocabulary-r1-route-panel.ts'
 import type {
   TravelVocabularyR1AppCoordinator,
   TravelVocabularyR1AppState,
@@ -69,6 +73,20 @@ async function completedState(): Promise<TravelVocabularyR1AppState> {
 }
 
 describe('TravelVocabularyR1RouteHost', () => {
+  it('opens early-finish confirmation without committing and cancellation returns to stage review', () => {
+    const requested = requestTravelVocabularyR1FinishConfirmation({
+      kind: 'stage-review',
+    })
+
+    expect(requested).toEqual({
+      kind: 'finish-confirmation',
+      returnTo: 'stage-review',
+    })
+    expect(
+      cancelTravelVocabularyR1FinishConfirmation(requested),
+    ).toEqual({ kind: 'stage-review' })
+  })
+
   it('keeps the assessment results URL and renders the real R1 schema 3 result', async () => {
     const markup = renderToStaticMarkup(
       <MemoryRouter initialEntries={[ASSESSMENT_RESULTS_ROUTE]}>

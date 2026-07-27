@@ -173,6 +173,7 @@ export class TravelVocabularyR1AppCoordinator {
     readonly promise: Promise<void>
   } | null = null
   #completedProfileId: string | null = null
+  #pendingCompletedProfile: AbilityProfileR1 | null = null
   #corruptSourceKey: string | null = null
   #migrationSource: TravelVocabularyR1MigrationSource | null = null
 
@@ -254,9 +255,21 @@ export class TravelVocabularyR1AppCoordinator {
     )
   }
 
+  advanceToNextQuestion(): Promise<TravelVocabularyR1AppState> {
+    return this.#dedupe('advance-question', (runtime) =>
+      runtime.advanceToNextQuestion(),
+    )
+  }
+
   submitStage(): Promise<TravelVocabularyR1AppState> {
     return this.#dedupe('submit-stage', (runtime) =>
       runtime.submitStage(),
+    )
+  }
+
+  finishRemainingUnknown(): Promise<TravelVocabularyR1AppState> {
+    return this.#dedupe('finish-remaining-unknown', (runtime) =>
+      runtime.finishRemainingUnknown(),
     )
   }
 
@@ -407,8 +420,9 @@ export class TravelVocabularyR1AppCoordinator {
       createId: this.#createId,
       random: this.#random,
       recentWordIds,
-      onCompleted: (profile) =>
-        this.#commitCompletedProfile(profile),
+      onCompleted: (profile) => {
+        this.#pendingCompletedProfile = profile
+      },
     })
   }
 
@@ -425,8 +439,9 @@ export class TravelVocabularyR1AppCoordinator {
         existingProfile?.schemaVersion === 3
           ? existingProfile.sampledWordIds
           : undefined,
-      onCompleted: (profile) =>
-        this.#commitCompletedProfile(profile),
+      onCompleted: (profile) => {
+        this.#pendingCompletedProfile = profile
+      },
     })
   }
 
@@ -473,7 +488,24 @@ export class TravelVocabularyR1AppCoordinator {
       }
       try {
         const runtimeState = await operation(runtime)
-        await this.#snapshots.save(runtime.toSnapshot())
+        if (runtimeState.lifecycle === 'completed' && runtime.profile) {
+          const completedProfile =
+            this.#pendingCompletedProfile ?? runtime.profile
+          if (!sameProfile(completedProfile, runtime.profile)) {
+            throw new TypeError(
+              'R1 完成回调档案与当前运行时不一致。',
+            )
+          }
+          await this.#commitCompletedProfile(completedProfile)
+          if (
+            this.#pendingCompletedProfile?.profileId ===
+            completedProfile.profileId
+          ) {
+            this.#pendingCompletedProfile = null
+          }
+        } else {
+          await this.#snapshots.save(runtime.toSnapshot())
+        }
         return this.#readyState(runtimeState)
       } catch (error) {
         const runtimeState = runtime.state
@@ -536,15 +568,15 @@ export class TravelVocabularyR1AppCoordinator {
   async #persistCompletedProfile(
     profile: AbilityProfileR1,
   ): Promise<void> {
-    const storedProfile = await this.#profiles.loadLatest()
-    if (!sameProfile(storedProfile, profile)) {
-      await this.#profiles.saveLatest(profile)
-    }
     const runtime = this.#runtime
     if (!runtime || runtime.profile?.profileId !== profile.profileId) {
       throw new TypeError('R1 档案与当前运行时不一致。')
     }
     await this.#snapshots.save(runtime.toSnapshot())
+    const storedProfile = await this.#profiles.loadLatest()
+    if (!sameProfile(storedProfile, profile)) {
+      await this.#profiles.saveLatest(profile)
+    }
     const dailyPlanState = await this.#dailyPlans.initialize()
     if (dailyPlanState.status === 'error') {
       throw dailyPlanState.error instanceof Error

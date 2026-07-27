@@ -7,6 +7,7 @@ import {
 } from '../../features/assessment/index.ts'
 import type {
   TravelVocabularyR1ActionViewModel,
+  TravelVocabularyR1FinishConfirmationViewModel,
   TravelVocabularyR1IntroViewModel,
   TravelVocabularyR1MigrationViewModel,
   TravelVocabularyR1QuestionOptionViewModel,
@@ -256,10 +257,16 @@ export function toTravelVocabularyR1QuestionViewModel(
       disabledReason:
         previousTarget === null ? '已经是本阶段第一题。' : '正在保存答案。',
     }),
-    nextAction: action('下一题', busy || nextTarget === null, {
-      disabledReason:
-        nextTarget === null ? '已经是本阶段最后一题。' : '正在保存答案。',
-    }),
+    nextAction: action(
+      '下一题',
+      busy || !state.actions.canAdvanceToNextQuestion,
+      {
+        disabledReason:
+          nextTarget === null
+            ? '已经是本阶段最后一题。'
+            : '正在保存答案。',
+      },
+    ),
     uncertainAction: action(
       draft?.kind === 'uncertain'
         ? '已标记不认识 / 不确定'
@@ -327,8 +334,12 @@ export function toTravelVocabularyR1StageReviewViewModel(
     reviewDescription:
       unansweredQuestions.length === 0
         ? '30 题都已作答。提交后本阶段答案和分数将锁定。'
-        : `还有 ${unansweredQuestions.length} 题未作答，请返回补答或标记“不认识 / 不确定”。`,
+        : `还有 ${unansweredQuestions.length} 题未答，提交后将按不会记录；也可以返回修改。`,
     unansweredQuestions,
+    unansweredCountLabel:
+      unansweredQuestions.length === 0
+        ? '本阶段没有未答题'
+        : `还有 ${unansweredQuestions.length} 题未答，提交后将按不会记录`,
     submitAction: action(
       '确认提交本阶段',
       busy || !state.actions.canSubmitStage,
@@ -337,12 +348,55 @@ export function toTravelVocabularyR1StageReviewViewModel(
         busyLabel: '正在计算阶段结果',
         disabledReason: busy
           ? '正在提交本阶段。'
-          : '必须完成或标记全部 30 题后才能提交。',
+          : '当前阶段暂时不能提交。',
       },
     ),
     backAction: action('返回修改', busy, {
       disabledReason: '正在提交本阶段。',
     }),
+    finishRemainingAction: action(
+      '剩余全部不会，结束测试',
+      busy || !state.actions.canFinishRemainingUnknown,
+      {
+        busy,
+        busyLabel: '正在生成完整结果',
+        disabledReason: busy
+          ? '正在处理当前操作。'
+          : '当前不能提前结束测试。',
+      },
+    ),
+  }
+}
+
+export function toTravelVocabularyR1FinishConfirmationViewModel(
+  state: TravelVocabularyAssessmentRuntimeStateR1,
+  options: TravelVocabularyR1ViewModelOptions = {},
+): TravelVocabularyR1FinishConfirmationViewModel {
+  const busy = options.busy === true
+  return {
+    sessionId: state.sessionId,
+    headerProgress: {
+      label: `总进度 ${state.progress.answeredOverall} / ${state.progress.totalQuestions}`,
+      value: progressValue(
+        state.progress.answeredOverall,
+        state.progress.totalQuestions,
+      ),
+    },
+    remainingQuestionCountLabel: `${state.remainingQuestionsToMarkUncertain} 题`,
+    cancelAction: action('取消，继续作答', busy, {
+      disabledReason: '正在生成完整结果。',
+    }),
+    confirmAction: action(
+      '确认剩余全部不会并结束',
+      busy || !state.actions.canFinishRemainingUnknown,
+      {
+        busy,
+        busyLabel: '正在生成完整结果',
+        disabledReason: busy
+          ? '正在生成完整结果。'
+          : '当前不能提前结束测试。',
+      },
+    ),
   }
 }
 

@@ -5,6 +5,7 @@ import {
   type NetworkStatus,
 } from '../../platform/index.ts'
 import {
+  TravelVocabularyR1FinishConfirmationScreen,
   TravelVocabularyR1IntroScreen,
   TravelVocabularyR1MigrationScreen,
   TravelVocabularyR1QuestionScreen,
@@ -20,6 +21,7 @@ import {
   type TravelVocabularyR1AppState,
 } from './travel-vocabulary-r1-app-coordinator.ts'
 import {
+  toTravelVocabularyR1FinishConfirmationViewModel,
   toTravelVocabularyR1IntroViewModel,
   toTravelVocabularyR1MigrationViewModel,
   toTravelVocabularyR1QuestionViewModel,
@@ -28,6 +30,11 @@ import {
   toTravelVocabularyR1StageResultViewModel,
   toTravelVocabularyR1StageReviewViewModel,
 } from './travel-vocabulary-r1-view-model.ts'
+import {
+  cancelTravelVocabularyR1FinishConfirmation,
+  requestTravelVocabularyR1FinishConfirmation,
+  type TravelVocabularyR1RoutePanel,
+} from './travel-vocabulary-r1-route-panel.ts'
 
 export const ASSESSMENT_ROUTE = '/assessment'
 export const ASSESSMENT_RESULTS_ROUTE = '/assessment?mode=results'
@@ -46,7 +53,9 @@ export function TravelVocabularyR1RouteHost({
   const [network, setNetwork] = useState<NetworkStatus>(() =>
     browserNetworkStatus.current(),
   )
-  const [reviewingStage, setReviewingStage] = useState(false)
+  const [panel, setPanel] = useState<TravelVocabularyR1RoutePanel>({
+    kind: 'runtime',
+  })
   const [busy, setBusy] = useState(false)
   const busyRef = useRef(false)
 
@@ -62,12 +71,25 @@ export function TravelVocabularyR1RouteHost({
   )
 
   useEffect(() => {
-    if (
-      state.status !== 'ready' ||
-      state.runtime.lifecycle !== 'active'
-    ) {
-      setReviewingStage(false)
-    }
+    setPanel((current) => {
+      if (state.status !== 'ready') {
+        return current.kind === 'runtime'
+          ? current
+          : { kind: 'runtime' }
+      }
+      if (state.runtime.lifecycle === 'active') {
+        return current
+      }
+      if (
+        state.runtime.lifecycle === 'stage-summary' &&
+        current.kind !== 'stage-review'
+      ) {
+        return current
+      }
+      return current.kind === 'runtime'
+        ? current
+        : { kind: 'runtime' }
+    })
   }, [state])
 
   const run = async (
@@ -238,6 +260,36 @@ export function TravelVocabularyR1RouteHost({
     )
   }
 
+  if (
+    panel.kind === 'finish-confirmation' &&
+    (runtime.lifecycle === 'active' ||
+      runtime.lifecycle === 'stage-summary')
+  ) {
+    return (
+      <TravelVocabularyR1FinishConfirmationScreen
+        viewModel={toTravelVocabularyR1FinishConfirmationViewModel(
+          runtime,
+          { busy, offline },
+        )}
+        onCancelFinishRemainingUnknown={(sessionId) => {
+          if (sessionMatches(sessionId) && !busyRef.current) {
+            setPanel((current) =>
+              cancelTravelVocabularyR1FinishConfirmation(current),
+            )
+          }
+        }}
+        onConfirmFinishRemainingUnknown={(sessionId) => {
+          if (sessionMatches(sessionId)) {
+            void run(
+              () => coordinator.finishRemainingUnknown(),
+              () => setPanel({ kind: 'runtime' }),
+            )
+          }
+        }}
+      />
+    )
+  }
+
   if (runtime.lifecycle === 'stage-summary') {
     return (
       <TravelVocabularyR1StageResultScreen
@@ -260,7 +312,7 @@ export function TravelVocabularyR1RouteHost({
     )
   }
 
-  if (reviewingStage) {
+  if (panel.kind === 'stage-review') {
     return (
       <TravelVocabularyR1StageReviewScreen
         viewModel={toTravelVocabularyR1StageReviewViewModel(runtime, {
@@ -272,7 +324,7 @@ export function TravelVocabularyR1RouteHost({
         }}
         onBack={(sessionId) => {
           if (sessionMatches(sessionId)) {
-            setReviewingStage(false)
+            setPanel({ kind: 'runtime' })
           }
         }}
         onNavigate={(target) => {
@@ -282,7 +334,7 @@ export function TravelVocabularyR1RouteHost({
           ) {
             void run(
               () => coordinator.navigate(target.questionIndex),
-              () => setReviewingStage(false),
+              () => setPanel({ kind: 'runtime' }),
             )
           }
         }}
@@ -290,7 +342,14 @@ export function TravelVocabularyR1RouteHost({
           if (sessionMatches(sessionId)) {
             void run(
               () => coordinator.submitStage(),
-              () => setReviewingStage(false),
+              () => setPanel({ kind: 'runtime' }),
+            )
+          }
+        }}
+        onRequestFinishRemainingUnknown={(sessionId) => {
+          if (sessionMatches(sessionId) && !busyRef.current) {
+            setPanel((current) =>
+              requestTravelVocabularyR1FinishConfirmation(current),
             )
           }
         }}
@@ -344,9 +403,19 @@ export function TravelVocabularyR1RouteHost({
           void run(() => coordinator.navigate(target.questionIndex))
         }
       }}
+      onAdvanceToNextQuestion={(intent) => {
+        if (
+          intent.kind === 'advance-to-next-question' &&
+          sessionMatches(intent.sessionId) &&
+          intent.questionIndex === runtime.currentQuestionIndex &&
+          targetMatches(intent.questionId, intent.questionIndex)
+        ) {
+          void run(() => coordinator.advanceToNextQuestion())
+        }
+      }}
       onReviewStage={(sessionId) => {
         if (sessionMatches(sessionId) && !busyRef.current) {
-          setReviewingStage(true)
+          setPanel({ kind: 'stage-review' })
         }
       }}
       onPause={(sessionId) => {

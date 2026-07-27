@@ -10,10 +10,12 @@ import {
   createPlacementAssessmentRuntime,
   createTravelVocabularyAssessmentRuntimeR1,
   createVocabularyPlacementRuntime,
+  LATEST_PROFILE_KEY,
   TRAVEL_VOCABULARY_RUNTIME_SNAPSHOT_KEY_R1,
   VersionedAssessmentProfileRepository,
   VOCABULARY_ASSESSMENT_RUNTIME_SNAPSHOT_KEY,
   type PublicTravelVocabularyQuestionR1,
+  type TravelVocabularyAssessmentRuntimeSnapshotR1,
 } from '../../features/assessment/index.ts'
 import {
   LEARNING_ENGINE_STORAGE_NAMESPACE,
@@ -44,8 +46,10 @@ import {
 
 class MemoryNamespaceStore implements NamespaceStore {
   readonly records = new Map<string, StoredRecord<unknown>>()
+  readonly writes: string[] = []
   readonly namespace: string
   failNextPut = false
+  failNextPutKey: string | null = null
 
   constructor(namespace: string) {
     this.namespace = namespace
@@ -60,10 +64,12 @@ class MemoryNamespaceStore implements NamespaceStore {
     value: T,
     schemaVersion = 1,
   ): Promise<void> {
-    if (this.failNextPut) {
+    if (this.failNextPut || this.failNextPutKey === key) {
       this.failNextPut = false
+      this.failNextPutKey = null
       throw new Error('simulated local storage write failure')
     }
+    this.writes.push(key)
     this.records.set(key, {
       namespace: this.namespace,
       key,
@@ -523,6 +529,236 @@ describe('R1 production application integration', () => {
     expect(state.runtime.lifecycle).toBe('stage-summary')
     expect(state.runtime.progress.currentStage).toBe(1)
     expect(state.runtime.latestStageResult?.validQuestionCount).toBe(30)
+  })
+
+  it('uses the runtime atomic next action, persists uncertain before navigation, and restores that exact state', async () => {
+    const store = new MemoryNamespaceStore('feature.assessment')
+    const createCoordinator = () =>
+      new TravelVocabularyR1AppCoordinator({
+        snapshots: new TravelVocabularyR1SnapshotRepository(store),
+        profiles: new VersionedAssessmentProfileRepository(store),
+        dailyPlans: {
+          async initialize() {
+            return { status: 'ready' }
+          },
+        },
+        now: () => '2026-07-27T03:15:00.000Z',
+        createId: () => 'atomic-next-r1-session',
+        random: () => 0.33,
+      })
+    const coordinator = createCoordinator()
+    await coordinator.initialize()
+    const started = requireReady(await coordinator.start())
+    const firstQuestionId = started.runtime.questions[0].id
+
+    const firstAdvance = coordinator.advanceToNextQuestion()
+    const repeatedAdvance = coordinator.advanceToNextQuestion()
+    expect(repeatedAdvance).toBe(firstAdvance)
+    const advanced = requireReady(await repeatedAdvance)
+
+    expect(advanced.runtime.currentQuestionIndex).toBe(1)
+    expect(advanced.runtime.draftAnswers[firstQuestionId]?.kind).toBe(
+      'uncertain',
+    )
+
+    const stored = store.records.get(
+      TRAVEL_VOCABULARY_RUNTIME_SNAPSHOT_KEY_R1,
+    )?.value as TravelVocabularyAssessmentRuntimeSnapshotR1
+    expect(stored.session.currentQuestionIndex).toBe(1)
+    expect(stored.session.draftAnswers[firstQuestionId]?.kind).toBe(
+      'uncertain',
+    )
+
+    const restored = requireReady(await createCoordinator().initialize())
+    expect(restored.runtime.lifecycle).toBe('paused')
+    expect(restored.runtime.currentQuestionIndex).toBe(1)
+    expect(restored.runtime.draftAnswers[firstQuestionId]?.kind).toBe(
+      'uncertain',
+    )
+  })
+
+  it('submits a partially answered stage and lets the runtime fill every unanswered item as uncertain', async () => {
+    const store = new MemoryNamespaceStore('feature.assessment')
+    const coordinator = new TravelVocabularyR1AppCoordinator({
+      snapshots: new TravelVocabularyR1SnapshotRepository(store),
+      profiles: new VersionedAssessmentProfileRepository(store),
+      dailyPlans: {
+        async initialize() {
+          return { status: 'ready' }
+        },
+      },
+      now: () => '2026-07-27T03:20:00.000Z',
+      createId: () => 'partial-submit-r1-session',
+      random: () => 0.43,
+    })
+    await coordinator.initialize()
+    let state = requireReady(await coordinator.start())
+    const firstQuestion = state.runtime.questions[0]
+    state = requireReady(
+      await coordinator.selectChoice(
+        firstQuestion.id,
+        correctOptionId(firstQuestion),
+      ),
+    )
+    expect(state.runtime.progress.answeredInStage).toBe(1)
+    expect(state.runtime.actions.canSubmitStage).toBe(true)
+
+    state = requireReady(await coordinator.submitStage())
+
+    expect(state.runtime.lifecycle).toBe('stage-summary')
+    expect(state.runtime.latestStageResult?.validQuestionCount).toBe(30)
+    expect(state.runtime.latestStageResult?.correctCount).toBe(1)
+    expect(state.runtime.latestStageResult?.uncertainCount).toBe(29)
+  })
+
+  it('confirms early finish once, saves the completed snapshot before the profile, and restores the same result', async () => {
+    const store = new MemoryNamespaceStore('feature.assessment')
+    const profiles = new VersionedAssessmentProfileRepository(store)
+    let dailyPlanInitializations = 0
+    const createCoordinator = () =>
+      new TravelVocabularyR1AppCoordinator({
+        snapshots: new TravelVocabularyR1SnapshotRepository(store),
+        profiles,
+        dailyPlans: {
+          async initialize() {
+            dailyPlanInitializations += 1
+            return { status: 'ready' }
+          },
+        },
+        now: () => '2026-07-27T03:25:00.000Z',
+        createId: () => 'finish-remaining-r1-session',
+        random: () => 0.53,
+      })
+    const coordinator = createCoordinator()
+    await coordinator.initialize()
+    let state = requireReady(await coordinator.start())
+    const firstQuestion = state.runtime.questions[0]
+    state = requireReady(
+      await coordinator.selectChoice(
+        firstQuestion.id,
+        correctOptionId(firstQuestion),
+      ),
+    )
+    expect(state.runtime.remainingQuestionsToMarkUncertain).toBe(149)
+    store.writes.length = 0
+
+    const firstConfirmation = coordinator.finishRemainingUnknown()
+    const repeatedConfirmation = coordinator.finishRemainingUnknown()
+    expect(repeatedConfirmation).toBe(firstConfirmation)
+    state = requireReady(await repeatedConfirmation)
+
+    expect(state.runtime.lifecycle).toBe('completed')
+    expect(state.runtime.completionReason).toBe(
+      'remaining-marked-unknown',
+    )
+    expect(state.runtime.profile?.completionReason).toBe(
+      'remaining-marked-unknown',
+    )
+    expect(state.runtime.profile?.travelVocabulary.validQuestionCount).toBe(
+      150,
+    )
+    expect(state.runtime.profile?.travelVocabulary.correctCount).toBe(1)
+    expect(state.runtime.profile?.travelVocabulary.uncertainCount).toBe(
+      149,
+    )
+    expect(store.writes.slice(0, 2)).toEqual([
+      TRAVEL_VOCABULARY_RUNTIME_SNAPSHOT_KEY_R1,
+      LATEST_PROFILE_KEY,
+    ])
+    expect(dailyPlanInitializations).toBe(1)
+
+    const repeatedAfterCompletion = requireReady(
+      await coordinator.finishRemainingUnknown(),
+    )
+    expect(repeatedAfterCompletion.runtime.profile).toEqual(
+      state.runtime.profile,
+    )
+    expect(dailyPlanInitializations).toBe(1)
+
+    store.writes.length = 0
+    const restored = requireReady(await createCoordinator().initialize())
+    expect(restored.runtime.lifecycle).toBe('completed')
+    expect(restored.runtime.profile).toEqual(state.runtime.profile)
+    expect(store.writes).not.toContain(LATEST_PROFILE_KEY)
+  })
+
+  it('does not make an unpersisted atomic advance survive a refresh', async () => {
+    const store = new MemoryNamespaceStore('feature.assessment')
+    const createCoordinator = () =>
+      new TravelVocabularyR1AppCoordinator({
+        snapshots: new TravelVocabularyR1SnapshotRepository(store),
+        profiles: new VersionedAssessmentProfileRepository(store),
+        dailyPlans: {
+          async initialize() {
+            return { status: 'ready' }
+          },
+        },
+        now: () => '2026-07-27T03:30:00.000Z',
+        createId: () => 'failed-next-r1-session',
+        random: () => 0.63,
+      })
+    const coordinator = createCoordinator()
+    await coordinator.initialize()
+    const started = requireReady(await coordinator.start())
+    const firstQuestionId = started.runtime.questions[0].id
+    store.failNextPut = true
+
+    const failed = await coordinator.advanceToNextQuestion()
+    expect(failed.status).toBe('error')
+
+    const restored = requireReady(await createCoordinator().initialize())
+    expect(restored.runtime.lifecycle).toBe('paused')
+    expect(restored.runtime.currentQuestionIndex).toBe(0)
+    expect(restored.runtime.draftAnswers[firstQuestionId]).toBeUndefined()
+  })
+
+  it('keeps a completed snapshot recoverable when profile persistence fails and retries completion idempotently', async () => {
+    const store = new MemoryNamespaceStore('feature.assessment')
+    const profiles = new VersionedAssessmentProfileRepository(store)
+    let dailyPlanInitializations = 0
+    const coordinator = new TravelVocabularyR1AppCoordinator({
+      snapshots: new TravelVocabularyR1SnapshotRepository(store),
+      profiles,
+      dailyPlans: {
+        async initialize() {
+          dailyPlanInitializations += 1
+          return { status: 'ready' }
+        },
+      },
+      now: () => '2026-07-27T03:35:00.000Z',
+      createId: () => 'retry-finish-r1-session',
+      random: () => 0.73,
+    })
+    await coordinator.initialize()
+    await coordinator.start()
+    store.failNextPutKey = LATEST_PROFILE_KEY
+
+    const failed = await coordinator.finishRemainingUnknown()
+    expect(failed.status).toBe('error')
+    if (failed.status === 'error') {
+      expect(failed.recovery).toBe('retry-completion')
+      expect(failed.runtime?.lifecycle).toBe('completed')
+    }
+    const completedSnapshot = store.records.get(
+      TRAVEL_VOCABULARY_RUNTIME_SNAPSHOT_KEY_R1,
+    )?.value as TravelVocabularyAssessmentRuntimeSnapshotR1
+    expect(completedSnapshot.lifecycle).toBe('completed')
+    expect(completedSnapshot.session.completionReason).toBe(
+      'remaining-marked-unknown',
+    )
+    expect(await profiles.loadLatest()).toBeUndefined()
+    expect(dailyPlanInitializations).toBe(0)
+
+    const recovered = requireReady(await coordinator.retryCompletion())
+    expect(recovered.runtime.lifecycle).toBe('completed')
+    expect(
+      (await profiles.loadLatest())?.profileId,
+    ).toBe(recovered.runtime.profile?.profileId)
+    expect(dailyPlanInitializations).toBe(1)
+
+    const repeated = requireReady(await coordinator.retryCompletion())
+    expect(repeated.runtime.profile).toEqual(recovered.runtime.profile)
+    expect(dailyPlanInitializations).toBe(1)
   })
 
   it('surfaces a local write failure and succeeds after a safe retry', async () => {

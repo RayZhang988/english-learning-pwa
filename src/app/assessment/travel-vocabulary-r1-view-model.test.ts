@@ -4,6 +4,7 @@ import {
   type TravelVocabularyAssessmentRuntimeR1,
 } from '../../features/assessment/index.ts'
 import {
+  toTravelVocabularyR1FinishConfirmationViewModel,
   toTravelVocabularyR1QuestionViewModel,
   toTravelVocabularyR1ResultsViewModel,
   toTravelVocabularyR1StageResultViewModel,
@@ -38,10 +39,27 @@ describe('R1 assessment application view models', () => {
     expect(question.questionMap[0]?.answerState).toBe('answered')
     expect(question.questionMap[1]?.answerState).toBe('uncertain')
     expect(review.unansweredQuestions).toHaveLength(28)
-    expect(review.submitAction.disabled).toBe(true)
+    expect(review.unansweredCountLabel).toBe(
+      '还有 28 题未答，提交后将按不会记录',
+    )
+    expect(review.submitAction.disabled).toBe(false)
+    expect(review.finishRemainingAction?.disabled).toBe(false)
     expect(JSON.stringify({ question, review })).not.toMatch(
       /correctOptionId|meaningZh|wordId|scoring/u,
     )
+  })
+
+  it('maps atomic next-question availability and the runtime-owned early-finish count', () => {
+    const runtime = createRuntime()
+    const state = runtime.start()
+
+    const question = toTravelVocabularyR1QuestionViewModel(state)
+    const confirmation =
+      toTravelVocabularyR1FinishConfirmationViewModel(state)
+
+    expect(question.nextAction.disabled).toBe(false)
+    expect(confirmation.remainingQuestionCountLabel).toBe('150 题')
+    expect(confirmation.confirmAction.disabled).toBe(false)
   })
 
   it('keeps a zero-score stage eligible for the next stage', async () => {
