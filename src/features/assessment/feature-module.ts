@@ -25,3 +25,21 @@ export function createAssessmentFeatureModule(
     routes: [{ index: true, element: routeElement }],
   })
 }
+
+/**
+ * v2 registration contract. 01 must register this module instead of the
+ * legacy v1 module for new users; both use the same route slot, never both.
+ */
+export function createVocabularyAssessmentFeatureModule(
+  routeElement: ReactElement,
+): FeatureModule {
+  return defineFeatureModule({
+    id: 'assessment',
+    routeBase: 'assessment',
+    storage: {
+      namespace: ASSESSMENT_STORAGE_NAMESPACE,
+      schemaVersion: 2,
+    },
+    routes: [{ index: true, element: routeElement }],
+  })
+}

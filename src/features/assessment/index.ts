@@ -1,4 +1,5 @@
 export { placementBankV1 } from '../../../content/assessment/placement-bank.v1.ts'
+export { vocabularyPlacementBankV2 } from '../../../content/assessment/placement-bank.v2.ts'
 export {
   toPublicAssessmentItem,
   validateAssessmentBank,
@@ -17,7 +18,10 @@ export {
   type NextAssessmentStep,
   type SubmittedAssessmentStep,
 } from './engine.ts'
-export { createAssessmentFeatureModule } from './feature-module.ts'
+export {
+  createAssessmentFeatureModule,
+  createVocabularyAssessmentFeatureModule,
+} from './feature-module.ts'
 export {
   CEFR_DISCLAIMER,
   describeInternalLevel,
@@ -81,10 +85,57 @@ export {
   type SpokenResponseEvidenceInput,
 } from './spoken-response-evaluator.ts'
 export { parseAssessmentRuntimeSnapshot } from './snapshot.ts'
+export {
+  toPublicVocabularyAssessmentItemV2,
+  validateVocabularyAssessmentBankV2,
+} from './vocabulary-bank.ts'
+export {
+  completeMigratedVocabularyAssessmentV2,
+  createVocabularyAssessmentSessionV2,
+  expireVocabularyAssessmentV2,
+  getNextVocabularyAssessmentItemV2,
+  replayVocabularyAssessmentResponseV2,
+  stopVocabularyAssessmentV2,
+  submitVocabularyAssessmentResponseV2,
+  type NextVocabularyAssessmentStepV2,
+  type SubmittedVocabularyAssessmentStepV2,
+  type VocabularyAssessmentSubmissionV2,
+} from './vocabulary-engine.ts'
+export {
+  migrateAssessmentRuntimeSnapshotV1ToVocabularyV2,
+} from './vocabulary-migration.ts'
+export {
+  buildVocabularyAbilityProfileV2,
+  PENDING_CALIBRATION_MESSAGE_V2,
+  VOCABULARY_ASSESSMENT_DISCLAIMER_V2,
+} from './vocabulary-profile.ts'
+export {
+  LEGACY_ASSESSMENT_RUNTIME_SNAPSHOT_KEY,
+  VOCABULARY_ASSESSMENT_RUNTIME_SCHEMA_VERSION,
+  VOCABULARY_ASSESSMENT_RUNTIME_SNAPSHOT_KEY,
+  VocabularyPlacementRuntime,
+  createVocabularyPlacementRuntime,
+  restoreVocabularyPlacementRuntime,
+  type RestoreVocabularyPlacementRuntimeOptions,
+  type VocabularyPlacementRuntimeOptions,
+} from './vocabulary-runtime.ts'
+export {
+  VOCABULARY_ASSESSMENT_RULES_V2,
+} from './vocabulary-rules.ts'
+export {
+  parseVocabularyAssessmentRuntimeSnapshotV2,
+} from './vocabulary-snapshot.ts'
+export {
+  VERSIONED_ASSESSMENT_PROFILE_STORAGE_SCHEMA_VERSION,
+  VersionedAssessmentProfileRepository,
+  parseVersionedAbilityProfile,
+} from './versioned-profile-repository.ts'
 export type {
   AbilityDomain,
   AbilityEstimate,
+  AbilityEstimateV1,
   AbilityProfile,
+  AbilityProfileV1,
   AssessmentBank,
   AssessmentItem,
   AssessmentItemFormat,
@@ -111,3 +162,30 @@ export type {
   SpeechSubmission,
   UnscorableSubmission,
 } from './types.ts'
+export type {
+  AbilityCalibrationStateV2,
+  AbilityEstimateV2,
+  AbilityProfileV2,
+  AnyAbilityProfile,
+  LegacyAssessmentSourceV1,
+  PublicVocabularyAssessmentItemV2,
+  VocabularyAbilityProfileCompletionHandler,
+  VocabularyAdaptiveEstimateV2,
+  VocabularyAnswerV2,
+  VocabularyAssessmentActionsV2,
+  VocabularyAssessmentBankV2,
+  VocabularyAssessmentFormatV2,
+  VocabularyAssessmentItemV2,
+  VocabularyAssessmentLifecycleV2,
+  VocabularyAssessmentProgressV2,
+  VocabularyAssessmentResponseV2,
+  VocabularyAssessmentRuntimeSnapshotV2,
+  VocabularyAssessmentRuntimeStateV2,
+  VocabularyAssessmentSessionV2,
+  VocabularyAssessmentStopReasonV2,
+  VocabularyEstimatePresentationV2,
+  VocabularyFrequencyTierV2,
+  VocabularyItemCalibrationV2,
+  VocabularySizeEstimateV2,
+  VocabularySubmissionSummaryV2,
+} from './vocabulary-types.ts'

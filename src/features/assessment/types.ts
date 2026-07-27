@@ -248,3 +248,10 @@ export interface AbilityProfile {
   readonly disclaimer: string
   readonly abilities: Readonly<Record<AbilityDomain, AbilityEstimate>>
 }
+
+/**
+ * Frozen legacy aliases. v1 remains readable and recoverable, but new first
+ * use placement must use the vocabulary-only v2 contract.
+ */
+export type AbilityEstimateV1 = AbilityEstimate
+export type AbilityProfileV1 = AbilityProfile

@@ -1,4 +1,7 @@
-# 初始测试题库规范（v1）
+# 初始测试题库规范（v1 旧版）
+
+> `placement-en-us-v1` 保持原样供兼容。新用户 v2 词汇题库及标定限制见
+> `vocabulary-placement-v2-contract.md` 与 `placement-bank.v2.ts`。
 
 ## 文件与版本
 
