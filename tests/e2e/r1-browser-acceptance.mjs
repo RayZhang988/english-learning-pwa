@@ -17,7 +17,7 @@ const baseUrl = new URL(
   process.env.QA_BASE_URL ?? 'http://127.0.0.1:4173/',
 )
 const expectedAsset =
-  process.env.QA_R1_EXPECTED_ASSET ?? 'index-CT4ajse6.js'
+  process.env.QA_R1_EXPECTED_ASSET ?? 'index-DGYLY5lm.js'
 const assessmentNamespace = 'feature.assessment'
 const latestProfileKey = 'latest-ability-profile'
 const corruptBackupPrefix =
@@ -449,6 +449,416 @@ async function runLegacyMigration(input) {
   }
 }
 
+async function runFastUnknownR1() {
+  const qa = await launchQaChrome()
+  try {
+    await qa.page.initialize()
+    await qa.page.addInitScript(fakeAssessmentClockScript)
+    await qa.page.setViewport(390, 844)
+    await qa.page.navigate(new URL('#/assessment', baseUrl).href)
+    await waitForAssessmentReady(qa.page)
+    await qa.page.clickByText('开始测试')
+    await qa.page.waitFor(
+      `document.body.innerText.includes('第 1 / 30 题')`,
+    )
+
+    const firstQuestion = await currentQuestion(qa.page)
+    assert.match(
+      await qa.page.bodyText(),
+      /未作答将按不会记录，返回后仍可修改/u,
+    )
+    const rapidAdvance = await qa.page.evaluate(`(() => {
+      const button = [...document.querySelectorAll('button')].find(
+        (candidate) => candidate.innerText.trim() === '下一题'
+      )
+      if (!button || button.disabled) return false
+      button.click()
+      button.click()
+      return true
+    })()`)
+    assert.equal(rapidAdvance, true)
+    await qa.page.waitFor(
+      `document.querySelector(
+        '.travel-r1-word-card .eyebrow'
+      )?.textContent?.trim() === '第 2 题' &&
+      [...document.querySelectorAll(
+        '.travel-r1-choice-list button[role="radio"]'
+      )].every((button) => !button.disabled)`,
+      20_000,
+    )
+
+    const advancedDatabases = await qa.page.dumpIndexedDb()
+    const advancedSnapshot = requireR1Snapshot(advancedDatabases)
+    const firstQuestionId =
+      advancedSnapshot.session.stagePlans[0].questions[0].id
+    assert.equal(advancedSnapshot.session.currentQuestionIndex, 1)
+    assert.equal(
+      advancedSnapshot.session.draftAnswers[firstQuestionId]?.kind,
+      'uncertain',
+    )
+    assert.equal(
+      Object.keys(advancedSnapshot.session.draftAnswers).length,
+      1,
+      'Rapid next advanced or answered more than one question.',
+    )
+    const legacyActiveSnapshot = JSON.parse(
+      JSON.stringify(advancedSnapshot),
+    )
+    delete legacyActiveSnapshot.session.completionReason
+
+    await goToQuestion(qa.page, 0)
+    assert.equal((await currentQuestion(qa.page)).uncertain?.checked, true)
+    await goToQuestion(qa.page, 1)
+    await qa.page.reload()
+    await waitForAssessmentReady(qa.page)
+    assert.match(await qa.page.bodyText(), /从上次位置继续/u)
+    const refreshedSnapshot = requireR1Snapshot(
+      await qa.page.dumpIndexedDb(),
+    )
+    assert.equal(refreshedSnapshot.session.currentQuestionIndex, 1)
+    assert.equal(
+      refreshedSnapshot.session.draftAnswers[firstQuestionId]?.kind,
+      'uncertain',
+    )
+    await qa.page.clickByText('继续原测试')
+    await qa.page.waitFor(
+      `document.body.innerText.includes('第 2 / 30 题')`,
+    )
+    await goToQuestion(qa.page, 0)
+    assert.equal((await currentQuestion(qa.page)).uncertain?.checked, true)
+    checkpoint('r1-unanswered-rapid-next-and-refresh', {
+      firstQuestion: firstQuestion.word,
+      advancedTo: '第 2 题',
+      firstQuestionDraft: 'uncertain',
+      persistedQuestionIndex: refreshedSnapshot.session.currentQuestionIndex,
+      rapidAdvanceDidNotSkip: true,
+    })
+
+    await selectCurrentAnswer(qa.page, 'correct')
+    await qa.page.clickByText('检查并提交本阶段')
+    await qa.page.waitFor(
+      `Boolean(document.querySelector('.travel-r1-screen--review'))`,
+    )
+    const partialReviewText = await qa.page.bodyText()
+    assert.match(
+      partialReviewText,
+      /还有 29 题未答，提交后将按不会记录/u,
+    )
+    assert.match(
+      partialReviewText,
+      /直接提交不会被未答题阻塞/u,
+    )
+    const partialSubmitState = await qa.page.evaluate(`(() => {
+      const button = [...document.querySelectorAll('button')].find(
+        (candidate) =>
+          candidate.innerText.trim() === '确认提交本阶段'
+      )
+      return button
+        ? {
+            disabled: button.disabled,
+            label: button.getAttribute('aria-label'),
+          }
+        : null
+    })()`)
+    assert.deepEqual(partialSubmitState, {
+      disabled: false,
+      label: '确认提交本阶段',
+    })
+    const rapidPartialSubmit = await qa.page.evaluate(`(() => {
+      const button = [...document.querySelectorAll('button')].find(
+        (candidate) =>
+          candidate.innerText.trim() === '确认提交本阶段'
+      )
+      if (!button || button.disabled) return false
+      button.click()
+      button.click()
+      return true
+    })()`)
+    assert.equal(rapidPartialSubmit, true)
+    await qa.page.waitFor(
+      `Boolean(document.querySelector('.travel-r1-screen--stage-result')) &&
+      document.querySelector('.travel-r1-stage-score strong')
+        ?.textContent?.trim() === '1 / 30'`,
+      20_000,
+    )
+    const partialSnapshot = requireR1Snapshot(
+      await qa.page.dumpIndexedDb(),
+    )
+    const firstStageResult = partialSnapshot.session.completedStages[0]
+    assert.ok(firstStageResult)
+    assert.equal(firstStageResult.validQuestionCount, 30)
+    assert.equal(firstStageResult.correctCount, 1)
+    assert.equal(firstStageResult.uncertainCount, 29)
+    assert.equal(partialSnapshot.session.completedStages.length, 1)
+    checkpoint('r1-partial-stage-submit', {
+      answeredBeforeSubmit: 1,
+      validQuestionCount: firstStageResult.validQuestionCount,
+      correctCount: firstStageResult.correctCount,
+      uncertainCount: firstStageResult.uncertainCount,
+      rapidSubmitDidNotDuplicateStage: true,
+    })
+
+    await continueStage(qa.page, 1)
+    await selectCurrentAnswer(qa.page, 'correct')
+    await qa.page.clickByText('检查并提交本阶段')
+    await qa.page.waitFor(
+      `Boolean(document.querySelector('.travel-r1-screen--review'))`,
+    )
+    const beforeConfirmation = requireR1Snapshot(
+      await qa.page.dumpIndexedDb(),
+    )
+    assert.equal(beforeConfirmation.session.completedStages.length, 1)
+    assert.equal(
+      Object.keys(beforeConfirmation.session.draftAnswers).length,
+      1,
+    )
+    const beforeConfirmationDigest = digest(beforeConfirmation)
+
+    await qa.page.clickByText('剩余全部不会，结束测试')
+    await qa.page.waitFor(
+      `Boolean(document.querySelector(
+        '.travel-r1-screen--finish-confirmation'
+      ))`,
+    )
+    const confirmationText = await qa.page.bodyText()
+    assert.match(confirmationText, /确认结束测试/u)
+    assert.match(confirmationText, /剩余全部按不会记录/u)
+    assert.match(confirmationText, /119 题/u)
+    assert.doesNotMatch(confirmationText, /旅游英语词汇结果/u)
+    assert.equal(
+      digest(
+        requireR1Snapshot(
+          await qa.page.dumpIndexedDb(),
+        ),
+      ),
+      beforeConfirmationDigest,
+      'Opening finish confirmation mutated the R1 runtime.',
+    )
+
+    await qa.page.clickByText('取消，继续作答')
+    await qa.page.waitFor(
+      `Boolean(document.querySelector('.travel-r1-screen--review'))`,
+    )
+    assert.equal(
+      digest(
+        requireR1Snapshot(
+          await qa.page.dumpIndexedDb(),
+        ),
+      ),
+      beforeConfirmationDigest,
+      'Cancelling finish confirmation mutated the R1 runtime.',
+    )
+    await qa.page.clickByText('返回修改')
+    await qa.page.waitFor(
+      `document.body.innerText.includes('第 1 / 30 题')`,
+    )
+    const retainedQuestion = await currentQuestion(qa.page)
+    assert.equal(
+      retainedQuestion.options.filter((option) => option.checked)
+        .length,
+      1,
+      'Cancelling early finish lost the existing selected answer.',
+    )
+
+    await qa.page.clickByText('检查并提交本阶段')
+    await qa.page.waitFor(
+      `Boolean(document.querySelector('.travel-r1-screen--review'))`,
+    )
+    await qa.page.clickByText('剩余全部不会，结束测试')
+    await qa.page.waitFor(
+      `Boolean(document.querySelector(
+        '.travel-r1-screen--finish-confirmation'
+      ))`,
+    )
+    const rapidConfirm = await qa.page.evaluate(`(() => {
+      const button = [...document.querySelectorAll('button')].find(
+        (candidate) =>
+          candidate.innerText.trim() ===
+          '确认剩余全部不会并结束'
+      )
+      if (!button || button.disabled) return false
+      button.click()
+      button.click()
+      return true
+    })()`)
+    assert.equal(rapidConfirm, true)
+    await qa.page.waitFor(
+      `Boolean(document.querySelector('.travel-r1-screen--results'))`,
+      20_000,
+    )
+
+    const completedDatabases = await qa.page.dumpIndexedDb()
+    const completedSnapshot = requireR1Snapshot(completedDatabases)
+    assert.equal(completedSnapshot.lifecycle, 'completed')
+    assert.equal(completedSnapshot.session.status, 'completed')
+    assert.equal(
+      completedSnapshot.session.completionReason,
+      'remaining-marked-unknown',
+    )
+    assert.equal(completedSnapshot.session.completedStages.length, 5)
+    assert.equal(
+      completedSnapshot.session.completedStages.reduce(
+        (total, stage) => total + stage.validQuestionCount,
+        0,
+      ),
+      150,
+    )
+    assert.equal(
+      completedSnapshot.session.completedStages.reduce(
+        (total, stage) => total + stage.correctCount,
+        0,
+      ),
+      2,
+    )
+    assert.equal(
+      completedSnapshot.session.completedStages.reduce(
+        (total, stage) => total + stage.uncertainCount,
+        0,
+      ),
+      148,
+    )
+    const profileRecord = recordByKey(
+      completedDatabases,
+      latestProfileKey,
+    )
+    assert.ok(profileRecord)
+    const profile = profileRecord.value
+    assert.equal(profile.completionReason, 'remaining-marked-unknown')
+    assert.equal(profile.travelVocabulary.validQuestionCount, 150)
+    assert.equal(profile.travelVocabulary.correctCount, 2)
+    assert.equal(profile.travelVocabulary.uncertainCount, 148)
+    assert.deepEqual(profile, completedSnapshot.profile)
+    assert.equal(
+      allRecords(completedDatabases).filter(
+        (record) =>
+          record.namespace === assessmentNamespace &&
+          record.key === latestProfileKey,
+      ).length,
+      1,
+      'Rapid confirmation persisted the profile more than once.',
+    )
+    const activePlanRecord = allRecords(completedDatabases).find(
+      (record) => record.key === 'active-plan',
+    )
+    assert.ok(activePlanRecord)
+    const completedProfileDigest = digest(profile)
+    const completedPlanDigest = digest(activePlanRecord.value)
+
+    await qa.page.reload()
+    await waitForAssessmentReady(qa.page)
+    await qa.page.waitFor(
+      `Boolean(document.querySelector('.travel-r1-screen--results'))`,
+    )
+    const restoredDatabases = await qa.page.dumpIndexedDb()
+    assert.equal(
+      digest(
+        recordByKey(restoredDatabases, latestProfileKey)?.value,
+      ),
+      completedProfileDigest,
+    )
+    assert.equal(
+      digest(
+        allRecords(restoredDatabases).find(
+          (record) => record.key === 'active-plan',
+        )?.value,
+      ),
+      completedPlanDigest,
+    )
+    assert.equal(
+      requireR1Snapshot(restoredDatabases).session.completionReason,
+      'remaining-marked-unknown',
+    )
+    checkpoint('r1-finish-remaining-unknown', {
+      firstRequestOnlyOpenedConfirmation: true,
+      cancellationPreservedState: true,
+      remainingQuestionCount: 119,
+      validQuestionCount: profile.travelVocabulary.validQuestionCount,
+      correctCount: profile.travelVocabulary.correctCount,
+      uncertainCount: profile.travelVocabulary.uncertainCount,
+      completionReason: profile.completionReason,
+      stageCount: profile.travelVocabulary.stageResults.length,
+      rapidConfirmDidNotDuplicateProfile: true,
+      refreshPreservedProfileAndPlan: true,
+    })
+
+    return {
+      legacyActiveSnapshot,
+      profileId: profile.profileId,
+      completionReason: profile.completionReason,
+      pageErrors: qa.page.pageErrors,
+      requests: qa.page.requests,
+    }
+  } finally {
+    await qa.close()
+  }
+}
+
+async function runLegacyR1Schema3Compatibility(snapshot) {
+  const qa = await launchQaChrome()
+  try {
+    await qa.page.initialize()
+    await qa.page.setViewport(390, 844)
+    await qa.page.navigate(new URL('#/', baseUrl).href)
+    await qa.page.waitFor(
+      `document.body.innerText.includes('需要先完成水平测试')`,
+    )
+    await putRecord(qa.page, {
+      namespace: assessmentNamespace,
+      key: TRAVEL_VOCABULARY_RUNTIME_SNAPSHOT_KEY_R1,
+      value: snapshot,
+      schemaVersion: 3,
+    })
+    await qa.page.navigate(new URL('#/assessment', baseUrl).href)
+    await waitForAssessmentReady(qa.page)
+    assert.match(await qa.page.bodyText(), /从上次位置继续/u)
+
+    const storedBeforeResume = requireR1Snapshot(
+      await qa.page.dumpIndexedDb(),
+    )
+    assert.equal(
+      Object.hasOwn(storedBeforeResume.session, 'completionReason'),
+      false,
+      'Loading a legacy schema-3 snapshot rewrote its source record.',
+    )
+    const firstQuestionId =
+      storedBeforeResume.session.stagePlans[0].questions[0].id
+    assert.equal(storedBeforeResume.session.currentQuestionIndex, 1)
+    assert.equal(
+      storedBeforeResume.session.draftAnswers[firstQuestionId]?.kind,
+      'uncertain',
+    )
+
+    await qa.page.clickByText('继续原测试')
+    await qa.page.waitFor(
+      `document.body.innerText.includes('第 2 / 30 题')`,
+    )
+    await goToQuestion(qa.page, 0)
+    assert.equal((await currentQuestion(qa.page)).uncertain?.checked, true)
+    const normalizedSnapshot = requireR1Snapshot(
+      await qa.page.dumpIndexedDb(),
+    )
+    assert.equal(normalizedSnapshot.session.completionReason, null)
+    assert.equal(normalizedSnapshot.session.currentQuestionIndex, 0)
+    assert.equal(
+      normalizedSnapshot.session.draftAnswers[firstQuestionId]?.kind,
+      'uncertain',
+    )
+    checkpoint('r1-legacy-schema3-active-recovery', {
+      sourceOmittedCompletionReason: true,
+      sourceWasNotRewrittenDuringLoad: true,
+      resumedQuestion: '第 2 题',
+      firstQuestionDraft: 'uncertain',
+      normalizedCompletionReason: null,
+    })
+    return {
+      pageErrors: qa.page.pageErrors,
+      requests: qa.page.requests,
+    }
+  } finally {
+    await qa.close()
+  }
+}
+
 async function runFreshR1() {
   const qa = await launchQaChrome()
   try {
@@ -553,7 +963,14 @@ async function runFreshR1() {
       `document.body.innerText.includes('提交前检查')`,
     )
     const incompleteText = await qa.page.bodyText()
-    assert.match(incompleteText, /还有 30 题未作答/u)
+    assert.match(
+      incompleteText,
+      /还有 30 题未答，提交后将按不会记录/u,
+    )
+    assert.match(
+      incompleteText,
+      /剩余全部不会，结束测试/u,
+    )
     const incompleteSubmit = await qa.page.evaluate(`(() => {
       const button = [...document.querySelectorAll('button')].find(
         (candidate) =>
@@ -566,11 +983,10 @@ async function runFreshR1() {
           }
         : null
     })()`)
-    assert.equal(incompleteSubmit?.disabled, true)
-    assert.match(
-      incompleteSubmit?.label ?? '',
-      /必须完成或标记全部 30 题/u,
-    )
+    assert.deepEqual(incompleteSubmit, {
+      disabled: false,
+      label: '确认提交本阶段',
+    })
     await qa.page.clickByText('返回修改')
     await qa.page.waitFor(
       `document.body.innerText.includes('第 1 / 30 题')`,
@@ -603,12 +1019,14 @@ async function runFreshR1() {
       ),
       false,
     )
-    checkpoint('r1-edit-navigation-and-incomplete-submit', {
+    checkpoint('r1-edit-navigation-and-partial-submit-entry', {
       navigated: ['1', '30', '1'],
       changedChoice: true,
       markedUncertain: true,
       clearedAnswer: true,
-      incompleteSubmitDisabled: true,
+      incompleteSubmitEnabled: true,
+      incompleteSubmitConsequenceVisible: true,
+      finishRemainingEntryVisible: true,
     })
 
     await answerStageRange(qa.page, scorePattern[0])
@@ -1011,6 +1429,13 @@ try {
   )
   checkpoint('r1-legacy-migrations', { migrations })
 
+  const fastUnknown = await runFastUnknownR1()
+  assert.deepEqual(fastUnknown.pageErrors, [])
+  const legacyR1 = await runLegacyR1Schema3Compatibility(
+    fastUnknown.legacyActiveSnapshot,
+  )
+  assert.deepEqual(legacyR1.pageErrors, [])
+
   const fresh = await runFreshR1()
   assert.deepEqual(fresh.pageErrors, [])
   console.log(
@@ -1025,6 +1450,14 @@ try {
           planTargetSeconds: fresh.planTargetSeconds,
           sampleDigest: fresh.sampleDigest,
           requestCount: fresh.requests.length,
+        },
+        fastUnknown: {
+          profileId: fastUnknown.profileId,
+          completionReason: fastUnknown.completionReason,
+          requestCount: fastUnknown.requests.length,
+        },
+        legacyR1: {
+          requestCount: legacyR1.requests.length,
         },
       },
       null,
