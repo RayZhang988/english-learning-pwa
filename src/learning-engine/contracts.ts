@@ -317,10 +317,36 @@ export interface PlanProgress {
   readonly updatedAt: string
 }
 
+export type PlanTaskUnavailableReason =
+  | 'not-in-active-plan'
+  | 'task-finished'
+  | 'invalid-task-data'
+
+export interface PlanTaskAvailability {
+  readonly taskId: string
+  readonly targetModuleId: TrainingModuleId | null
+  readonly taskStatus: TaskExecutionStatus | null
+  readonly availability: 'startable' | 'unavailable'
+  readonly unavailableReason: PlanTaskUnavailableReason | null
+  readonly recommended: boolean
+}
+
+export interface PlanTaskAccess {
+  readonly schemaVersion: 1
+  readonly startableTaskIds: readonly string[]
+  readonly recommendedTaskId: string | null
+  readonly tasks: readonly PlanTaskAvailability[]
+}
+
 export interface ResumeDecision {
   readonly schemaVersion: 1
   readonly action: 'resume-plan' | 'generate-new-plan' | 'nothing-to-resume'
+  /**
+   * Non-binding recommendation for compatibility with existing callers.
+   * It must never be used as the only task that may start.
+   */
   readonly nextTaskId: string | null
+  readonly recommendedTaskId: string | null
   readonly carryOverTasks: readonly LearningTask[]
   readonly reason:
     | 'same-day-incomplete'

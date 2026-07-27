@@ -43,6 +43,9 @@ export type {
   LearningTaskStartedPayload,
   PlanActivitySummary,
   PlanProgress,
+  PlanTaskAccess,
+  PlanTaskAvailability,
+  PlanTaskUnavailableReason,
   ProgressSnapshot,
   ProgressState,
   ProgressTrend,
@@ -91,6 +94,10 @@ export {
   LEARNING_ENGINE_STORAGE_SCHEMA_VERSION,
   LearningEngineRepository,
 } from './repository.ts'
+export {
+  evaluatePlanTaskStart,
+  getPlanTaskAccess,
+} from './task-access.ts'
 export {
   calculateRetrievability,
   isRetryDue,

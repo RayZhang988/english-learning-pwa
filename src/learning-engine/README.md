@@ -41,6 +41,34 @@ R1 的 listening/speaking 必须保持 `unknown / pending-calibration` 的原始
 折算上限和最终起点；旧状态没有该字段时继续按原规则读取。schema 1 档案的 unavailable
 专项仍保留既有 calibration 任务行为，避免静默改变旧计划。
 
+## 0.5 R2 每日训练自由选择
+
+`getPlanTaskAccess(PlanProgress)` 是 02/01 判断任务入口的唯一 04 业务契约，输出：
+
+- `startableTaskIds`：active plan 中全部真实存在且未结束的 taskId；
+- `recommendedTaskId`：非强制推荐，只决定突出项，不决定哪些任务可进入；
+- `tasks`：逐任务的 `availability`、执行状态、目标模块、推荐标记和不可用原因。
+
+`pending`、`active`、`paused`、`blocked` 都是未完成且可启动；`completed`、`skipped`
+是终态。不可用原因只允许：
+
+- `not-in-active-plan`：请求的 taskId 不存在；
+- `task-finished`：任务已经完成或跳过；
+- `invalid-task-data`：计划与执行状态的任务身份、数量或整体状态不一致。
+
+没有“尚未轮到”“前一任务未完成”或数组位置锁定原因。推荐优先级为：
+active → paused → blocked → retry → carry-over → due review → 其余任务按 sequence。
+这个顺序只用于推荐；用户可以启动 `startableTaskIds` 中任意任务。
+`evaluatePlanTaskStart()` 可校验单个 taskId，并返回同一逐任务契约。
+
+`ResumeDecision.recommendedTaskId` 是同日恢复推荐；旧字段 `nextTaskId` 保留为兼容别名，
+值与它相同，但不再代表唯一允许启动的任务。PlanProgress 和 active plan 不增加字段，
+持久化 schema 仍为 v1；刷新后从现有任务状态重新派生可启动列表和推荐。
+
+`LearningCandidate.prerequisitesMet` 只决定内容单元能否进入当天计划，表示跨日课程候选
+资格。一旦 `LearningTask` 已进入 active plan，就不存在词汇、听力、口语之间的执行
+前置条件。
+
 ## 1. 指标定义
 
 所有比例指标均为 `0..1`，能力和内容难度均沿用 03 的 `0..12` 内部等级。
@@ -106,14 +134,15 @@ R1 的 listening/speaking 必须保持 `unknown / pending-calibration` 的原始
 
 ## 4. 中断、完成、连续学习和阶段复测
 
-- 同一天恢复原计划，从 `active`、`paused`、`pending` 中优先级最高的未完成任务继续。
+- 同一天恢复原计划；active、paused 等中断状态只影响推荐优先级，所有未完成任务仍可
+  由用户自由启动。
 - 跨天时只结转已开始的任务、到期复习和重试；未开始的新学任务重新排程。
 - `taskCompleted: true` 表示产生评分证据的正常完成。口语模块在全部提示均无法识别、
   但用户已经走完 08 定义的录音/回放或无录音降级流程时，仍合法发布
   `result: 'unscorable'`、`taskCompleted: false`。
 - 上述口语事件在计划层形成 `status: 'completed'`、
   `completionKind: 'unscorable-practice'`。它是“练习流程已结束、没有评分证据”，
-  不是 `scored`，也不是 `user-skipped`。后续任务可以解锁。
+  不是 `scored`，也不是 `user-skipped`。其他未完成任务始终保持可启动。
 - 06/07 的不可评分事件以及口语的 `content` 故障默认保持 `paused`，
   因为这些事件不能证明完整降级练习已经走完。
 - 当天至少完成一项任务，且有效学习达到
@@ -147,8 +176,9 @@ v1 兼容规则不增加事件字段：
 - `applyLearningAttempt()` 对所有不可评分事件仍返回 `evidenceAccepted: false`，不
   写入 attempts，不创建或更新复习状态。
 
-02 可直接展示 `DailyPlan`、`ProgressSnapshot`、`ResumeDecision` 和
-`ReassessmentRecommendation`，但不得重新计算或改变其业务语义。
+02 可直接展示 `DailyPlan`、`PlanTaskAccess`、`ProgressSnapshot`、
+`ResumeDecision` 和 `ReassessmentRecommendation`，但不得重新计算或改变其业务
+语义。04 的可启动性输出只包含稳定状态和原因码，不生成 UI 文案。
 
 集成层使用 `LEARNING_ENGINE_STORAGE_NAMESPACE` 创建 01 的 `NamespaceStore`，
 再注入 `LearningEngineRepository`。04 保存业务状态，不直接访问 IndexedDB，也不
@@ -158,7 +188,7 @@ v1 兼容规则不增加事件字段：
 
 | 接收任务 | 只使用的公开契约 | 禁止自行改写的语义 |
 | --- | --- | --- |
-| 02 | `DailyPlan`、`PlanProgress`、`ProgressSnapshot`、`ResumeDecision`、`ReassessmentRecommendation` | 分钟分配、连续学习、趋势和复测到期 |
+| 02 | `DailyPlan`、`PlanProgress`、`PlanTaskAccess`、`ProgressSnapshot`、`ResumeDecision`、`ReassessmentRecommendation` | 不得把推荐 taskId 改成唯一入口；不得自行生成“尚未轮到” |
 | 05 | `LearningCandidate` | 候选单元只声明内容事实，不预排用户每天的主课程 |
 | 06 | `LearningTask` 中 `targetModuleId === 'vocabulary'` 的任务；四类 `LearningEvent` | 不在词汇模块内另算掌握度或全局复习时间 |
 | 07 | `LearningTask` 中 `targetModuleId === 'listening'` 的任务；四类 `LearningEvent` | 设备或音频失败必须上报不可评分，不得算学习失败 |
@@ -168,7 +198,8 @@ v1 兼容规则不增加事件字段：
 
 1. 用最近的 `AbilityProfile` 创建或从 `LearningEngineRepository` 恢复状态。
 2. 将 05 当前可用且前置条件满足的候选单元交给 `generateDailyPlan()`。
-3. 用 `createPlanProgress()` 建立当天执行状态，并按 `sequence` 分发给三个训练模块。
+3. 用 `createPlanProgress()` 建立当天执行状态，再用 `getPlanTaskAccess()` 把所有
+   startable taskId 分发到各自训练模块；sequence 只参与稳定推荐，不是执行门禁。
 4. 集成层先用 `parseLearningEvent()` 校验模块事件，再交给 `applyPlanEvent()`；只有
    `attempt.completed` 同时交给 `applyLearningAttempt()`。
 5. 每次状态变化后保存引擎和计划状态。两个入口都按事件 ID 幂等，重复投递不会重复

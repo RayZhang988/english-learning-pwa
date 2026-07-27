@@ -16,6 +16,7 @@ import {
   localDateOrdinal,
   parseTimestamp,
 } from './utils.ts'
+import { getPlanTaskAccess } from './task-access.ts'
 
 export function createPlanProgress(
   plan: PlanProgress['plan'],
@@ -192,7 +193,10 @@ export function applyPlanEvent(
   ) {
     throw new TypeError('Event task identity does not match scheduled task')
   }
-  if (execution.status === 'completed') {
+  if (
+    execution.status === 'completed' ||
+    execution.status === 'skipped'
+  ) {
     return progress
   }
 
@@ -263,19 +267,6 @@ export function applyPlanEvent(
   }
 }
 
-function firstIncompleteTask(
-  progress: PlanProgress,
-): TaskExecutionState | undefined {
-  const priority = ['active', 'paused', 'blocked', 'pending'] as const
-  for (const status of priority) {
-    const match = progress.tasks.find((task) => task.status === status)
-    if (match !== undefined) {
-      return match
-    }
-  }
-  return undefined
-}
-
 export function getResumeDecision(
   progress: PlanProgress,
   currentLocalDate: string,
@@ -286,17 +277,26 @@ export function getResumeDecision(
       schemaVersion: 1,
       action: 'nothing-to-resume',
       nextTaskId: null,
+      recommendedTaskId: null,
       carryOverTasks: [],
       reason: 'plan-complete',
     }
   }
 
-  const firstIncomplete = firstIncompleteTask(progress)
-  if (firstIncomplete === undefined) {
+  const taskAccess = getPlanTaskAccess(progress)
+  if (
+    taskAccess.tasks.some(
+      (task) => task.unavailableReason === 'invalid-task-data',
+    )
+  ) {
+    throw new TypeError('PlanProgress contains invalid task data')
+  }
+  if (taskAccess.recommendedTaskId === null) {
     return {
       schemaVersion: 1,
       action: 'nothing-to-resume',
       nextTaskId: null,
+      recommendedTaskId: null,
       carryOverTasks: [],
       reason: 'no-incomplete-tasks',
     }
@@ -305,7 +305,8 @@ export function getResumeDecision(
     return {
       schemaVersion: 1,
       action: 'resume-plan',
-      nextTaskId: firstIncomplete.task.taskId,
+      nextTaskId: taskAccess.recommendedTaskId,
+      recommendedTaskId: taskAccess.recommendedTaskId,
       carryOverTasks: [],
       reason: 'same-day-incomplete',
     }
@@ -336,6 +337,7 @@ export function getResumeDecision(
     schemaVersion: 1,
     action: 'generate-new-plan',
     nextTaskId: null,
+    recommendedTaskId: null,
     carryOverTasks,
     reason: 'cross-day-carry-over',
   }
