@@ -1,5 +1,8 @@
 # AbilityProfile v2 交接契约
 
+> **已废止为新用户输出。** schema 2 只保留给旧档案读取；R1 新档案使用 schema 3，
+> 见 `travel-vocabulary-r1-contract.md`。
+
 ## 适用范围
 
 `AbilityProfileV2` 是新用户完成自适应词汇测试后的正式输出。它不是 v1 三能力测试档案的

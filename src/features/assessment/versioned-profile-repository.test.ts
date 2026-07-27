@@ -4,6 +4,9 @@ import type {
   StoredRecord,
 } from '../../storage/index.ts'
 import { LATEST_PROFILE_KEY } from './repository.ts'
+import {
+  createTravelVocabularyAssessmentRuntimeR1,
+} from './travel-vocabulary-runtime.ts'
 import { createVocabularyPlacementRuntime } from './vocabulary-runtime.ts'
 import {
   VersionedAssessmentProfileRepository,
@@ -56,6 +59,28 @@ const v1Profile = {
   abilities: {},
 } as unknown as AbilityProfileV1
 
+async function completeR1Profile() {
+  const runtime = createTravelVocabularyAssessmentRuntimeR1({
+    now: () => '2026-07-27T03:00:00.000Z',
+    createId: () => 'r1-profile',
+    random: () => 0.25,
+  })
+  let state = runtime.start()
+  for (let stageIndex = 0; stageIndex < 5; stageIndex += 1) {
+    for (const question of state.questions) {
+      state = runtime.markUncertain(question.id)
+    }
+    state = await runtime.submitStage()
+    if (stageIndex < 4) {
+      state = runtime.continueToNextStage()
+    }
+  }
+  if (!state.profile) {
+    throw new Error('Expected a real R1 profile')
+  }
+  return state.profile
+}
+
 describe('VersionedAssessmentProfileRepository', () => {
   it('reads a v1 record without silently rewriting it', async () => {
     const store = new MemoryNamespaceStore()
@@ -94,6 +119,20 @@ describe('VersionedAssessmentProfileRepository', () => {
     )
     expect(store.records.get(LATEST_PROFILE_KEY)?.schemaVersion).toBe(
       2,
+    )
+  })
+
+  it('writes and reloads a real R1 profile under record schema 3', async () => {
+    const store = new MemoryNamespaceStore()
+    const profile = await completeR1Profile()
+    const repository = new VersionedAssessmentProfileRepository(
+      store,
+    )
+
+    await repository.saveLatest(profile)
+    await expect(repository.loadLatest()).resolves.toEqual(profile)
+    expect(store.records.get(LATEST_PROFILE_KEY)?.schemaVersion).toBe(
+      3,
     )
   })
 

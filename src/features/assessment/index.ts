@@ -20,6 +20,7 @@ export {
 } from './engine.ts'
 export {
   createAssessmentFeatureModule,
+  createTravelVocabularyAssessmentFeatureModuleR1,
   createVocabularyAssessmentFeatureModule,
 } from './feature-module.ts'
 export {
@@ -130,6 +131,49 @@ export {
   VersionedAssessmentProfileRepository,
   parseVersionedAbilityProfile,
 } from './versioned-profile-repository.ts'
+export {
+  answerTravelVocabularyQuestionR1,
+  canSubmitTravelVocabularyStageR1,
+  clearTravelVocabularyAnswerR1,
+  continueTravelVocabularyStageR1,
+  createTravelVocabularyAssessmentSessionR1,
+  navigateTravelVocabularyQuestionR1,
+  sampledTravelVocabularyWordIdsR1,
+  submitTravelVocabularyStageR1,
+} from './travel-vocabulary-engine.ts'
+export {
+  estimateTravelVocabularyStageR1,
+  estimateTravelVocabularyTotalR1,
+  mapTravelVocabularyLevelR1,
+  roundTravelVocabularyWordsR1,
+  TRAVEL_VOCABULARY_ASSESSMENT_DISCLAIMER_R1,
+  TRAVEL_VOCABULARY_ESTIMATION_MODEL_VERSION_R1,
+  TRAVEL_VOCABULARY_RESULT_LEVELS_R1,
+  TRAVEL_VOCABULARY_RESULT_MAPPING_VERSION_R1,
+  TRAVEL_VOCABULARY_SAMPLE_SIZE_PER_STAGE_R1,
+  TRAVEL_VOCABULARY_STAGE_DEFINITIONS_R1,
+  TRAVEL_VOCABULARY_TOTAL_QUESTIONS_R1,
+  TRAVEL_VOCABULARY_TOTAL_STAGES_R1,
+} from './travel-vocabulary-model.ts'
+export {
+  migrateLegacyAssessmentSnapshotToTravelR1,
+} from './travel-vocabulary-migration.ts'
+export {
+  buildTravelVocabularyAbilityProfileR1,
+  TRAVEL_PENDING_CALIBRATION_MESSAGE_R1,
+} from './travel-vocabulary-profile.ts'
+export {
+  createTravelVocabularyAssessmentRuntimeR1,
+  restoreTravelVocabularyAssessmentRuntimeR1,
+  TravelVocabularyAssessmentRuntimeR1,
+  TRAVEL_VOCABULARY_RUNTIME_SCHEMA_VERSION_R1,
+  TRAVEL_VOCABULARY_RUNTIME_SNAPSHOT_KEY_R1,
+  type RestoreTravelVocabularyRuntimeOptionsR1,
+  type TravelVocabularyRuntimeOptionsR1,
+} from './travel-vocabulary-runtime.ts'
+export {
+  parseTravelVocabularyRuntimeSnapshotR1,
+} from './travel-vocabulary-snapshot.ts'
 export type {
   AbilityDomain,
   AbilityEstimate,
@@ -162,6 +206,34 @@ export type {
   SpeechSubmission,
   UnscorableSubmission,
 } from './types.ts'
+export type {
+  AbilityProfileR1,
+  AnyAbilityProfileR1,
+  LegacyTravelAssessmentSourceR1,
+  PublicTravelVocabularyQuestionR1,
+  RandomSourceR1,
+  TravelVocabularyAbilityEstimateR1,
+  TravelVocabularyAssessmentActionsR1,
+  TravelVocabularyAssessmentLifecycleR1,
+  TravelVocabularyAssessmentProgressR1,
+  TravelVocabularyAssessmentRuntimeSnapshotR1,
+  TravelVocabularyAssessmentRuntimeStateR1,
+  TravelVocabularyAssessmentSessionR1,
+  TravelVocabularyBankR1,
+  TravelVocabularyCandidateR1,
+  TravelVocabularyDraftAnswerR1,
+  TravelVocabularyEstimateIntervalR1,
+  TravelVocabularyProfileCompletionHandlerR1,
+  TravelVocabularyQuestionPlanR1,
+  TravelVocabularyResponseR1,
+  TravelVocabularyResultLevelId,
+  TravelVocabularyResultLevelR1,
+  TravelVocabularyStageId,
+  TravelVocabularyStagePlanR1,
+  TravelVocabularyStageR1,
+  TravelVocabularyStageResultR1,
+  TravelVocabularyTotalEstimateR1,
+} from './travel-vocabulary-types.ts'
 export type {
   AbilityCalibrationStateV2,
   AbilityEstimateV2,

@@ -1,5 +1,6 @@
 import type { CefrBand } from './levels.ts'
 import type { AssessmentRuntimeSnapshotV1 } from './runtime-types.ts'
+import type { AbilityProfileR1 } from './travel-vocabulary-types.ts'
 import type {
   AbilityDomain,
   AbilityEstimateV1,
@@ -178,7 +179,10 @@ export interface AbilityProfileV2 {
   readonly abilities: Readonly<Record<AbilityDomain, AbilityEstimateV2>>
 }
 
-export type AnyAbilityProfile = AbilityProfileV1 | AbilityProfileV2
+export type AnyAbilityProfile =
+  | AbilityProfileV1
+  | AbilityProfileV2
+  | AbilityProfileR1
 
 export type VocabularyAssessmentLifecycleV2 =
   | 'intro'

@@ -27,8 +27,8 @@ export function createAssessmentFeatureModule(
 }
 
 /**
- * v2 registration contract. 01 must register this module instead of the
- * legacy v1 module for new users; both use the same route slot, never both.
+ * Frozen v2 registration contract for compatibility tests and recovery.
+ * It must not be selected for new R1 production sessions.
  */
 export function createVocabularyAssessmentFeatureModule(
   routeElement: ReactElement,
@@ -39,6 +39,24 @@ export function createVocabularyAssessmentFeatureModule(
     storage: {
       namespace: ASSESSMENT_STORAGE_NAMESPACE,
       schemaVersion: 2,
+    },
+    routes: [{ index: true, element: routeElement }],
+  })
+}
+
+/**
+ * R1 registration contract. 01 must use this module for the new production
+ * entry while keeping v1/v2 factories available only for legacy recovery.
+ */
+export function createTravelVocabularyAssessmentFeatureModuleR1(
+  routeElement: ReactElement,
+): FeatureModule {
+  return defineFeatureModule({
+    id: 'assessment',
+    routeBase: 'assessment',
+    storage: {
+      namespace: ASSESSMENT_STORAGE_NAMESPACE,
+      schemaVersion: 3,
     },
     routes: [{ index: true, element: routeElement }],
   })
