@@ -1,7 +1,7 @@
 import { toAppError, type AppError } from '../../core/index.ts'
 import {
   ASSESSMENT_STORAGE_NAMESPACE,
-  AssessmentProfileRepository,
+  VersionedAssessmentProfileRepository,
 } from '../../features/assessment/index.ts'
 import {
   createLearningEngineState,
@@ -13,6 +13,7 @@ import {
   recordDailyActivity,
   summarizePlanActivity,
   type LearningEngineState,
+  type LearningAbilityProfile,
   type LearningTask,
   type TrainingModuleId,
 } from '../../learning-engine/index.ts'
@@ -44,6 +45,7 @@ export type LearningAppState =
       readonly localDate: string
       readonly runtime: ActiveLearningRuntime
       readonly engineState: LearningEngineState
+      readonly assessmentProfileSchemaVersion: 1 | 2 | 3
       readonly reason: 'no-eligible-content'
     }
   | {
@@ -51,6 +53,7 @@ export type LearningAppState =
       readonly localDate: string
       readonly runtime: ActiveLearningRuntime
       readonly engineState: LearningEngineState
+      readonly assessmentProfileSchemaVersion: 1 | 2 | 3
       readonly resumeTaskId: string | null
     }
   | {
@@ -60,7 +63,9 @@ export type LearningAppState =
     }
 
 export interface LearningAppCoordinatorOptions {
-  readonly profiles: AssessmentProfileRepository
+  readonly profiles: {
+    loadLatest(): Promise<LearningAbilityProfile | undefined>
+  }
   readonly activePlans: ActivePlanRepository
   readonly engineStates: LearningEngineRepository
   readonly candidates: LearningCandidateSource
@@ -81,6 +86,7 @@ function runtimeState(
   runtime: ActiveLearningRuntime,
   engineState: LearningEngineState,
   localDate: string,
+  assessmentProfileSchemaVersion: 1 | 2 | 3,
 ): LearningAppState {
   if (runtime.activePlan.plan.status === 'empty') {
     return {
@@ -88,6 +94,7 @@ function runtimeState(
       localDate,
       runtime,
       engineState,
+      assessmentProfileSchemaVersion,
       reason: 'no-eligible-content',
     }
   }
@@ -100,13 +107,14 @@ function runtimeState(
     localDate,
     runtime,
     engineState,
+    assessmentProfileSchemaVersion,
     resumeTaskId:
       resume?.action === 'resume-plan' ? resume.nextTaskId : null,
   }
 }
 
 export class LearningAppCoordinator {
-  readonly #profiles: AssessmentProfileRepository
+  readonly #profiles: LearningAppCoordinatorOptions['profiles']
   readonly #activePlans: ActivePlanRepository
   readonly #engineStates: LearningEngineRepository
   readonly #candidates: LearningCandidateSource
@@ -216,26 +224,34 @@ export class LearningAppCoordinator {
       }
 
       let engineState = await this.#engineStates.load()
+      let profileChanged = false
       if (!engineState) {
         engineState = createLearningEngineState(profile, generatedAt)
         await this.#engineStates.save(engineState)
+        profileChanged = true
       } else if (engineState.progress.profileId !== profile.profileId) {
-        throw new TypeError(
-          'The learning engine profile does not match the latest ability profile.',
-        )
+        engineState = createLearningEngineState(profile, generatedAt)
+        await this.#engineStates.save(engineState)
+        profileChanged = true
       }
 
       const previousRuntime = await this.#activePlans.load()
       if (
+        !profileChanged &&
         previousRuntime?.activePlan.plan.localDate === localDate
       ) {
         return this.#setState(
-          runtimeState(previousRuntime, engineState, localDate),
+          runtimeState(
+            previousRuntime,
+            engineState,
+            localDate,
+            profile.schemaVersion,
+          ),
         )
       }
 
       let carryOverTasks: readonly LearningTask[] = []
-      if (previousRuntime) {
+      if (previousRuntime && !profileChanged) {
         const resume = getResumeDecision(
           previousRuntime.activePlan,
           localDate,
@@ -255,7 +271,9 @@ export class LearningAppCoordinator {
       }
 
       const completedLearningUnitIds = new Set(
-        previousRuntime?.completedLearningUnitIds ?? [],
+        profileChanged
+          ? []
+          : previousRuntime?.completedLearningUnitIds ?? [],
       )
       const candidates = await this.#candidates.load(
         completedLearningUnitIds,
@@ -278,7 +296,12 @@ export class LearningAppCoordinator {
       )
       await this.#activePlans.save(runtime)
       return this.#setState(
-        runtimeState(runtime, engineState, localDate),
+        runtimeState(
+          runtime,
+          engineState,
+          localDate,
+          profile.schemaVersion,
+        ),
       )
     } catch (error) {
       return this.#setState({
@@ -298,7 +321,12 @@ export class LearningAppCoordinator {
       return
     }
     this.#setState(
-      runtimeState(update.runtime, update.engineState, current.localDate),
+      runtimeState(
+        update.runtime,
+        update.engineState,
+        current.localDate,
+        current.assessmentProfileSchemaVersion,
+      ),
     )
   }
 
@@ -311,7 +339,7 @@ export class LearningAppCoordinator {
   }
 }
 
-const assessmentProfiles = new AssessmentProfileRepository(
+const assessmentProfiles = new VersionedAssessmentProfileRepository(
   localStorageService.namespace(ASSESSMENT_STORAGE_NAMESPACE),
 )
 const activePlans = new ActivePlanRepository(

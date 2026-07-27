@@ -2,6 +2,8 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import type { PlatformEvent } from '../../core/index.ts'
 import {
   AssessmentProfileRepository,
+  createTravelVocabularyAssessmentRuntimeR1,
+  VersionedAssessmentProfileRepository,
 } from '../../features/assessment/index.ts'
 import {
   LearningEngineRepository,
@@ -134,6 +136,28 @@ function completedEvent(
       failureCategory: null,
     },
   }
+}
+
+async function completedR1Profile() {
+  const runtime = createTravelVocabularyAssessmentRuntimeR1({
+    now: () => '2026-07-27T08:00:00.000Z',
+    createId: () => 'learning-r1-profile',
+    random: () => 0.44,
+  })
+  let state = runtime.start()
+  for (let stage = 0; stage < 5; stage += 1) {
+    for (const question of state.questions) {
+      state = runtime.markUncertain(question.id)
+    }
+    state = await runtime.submitStage()
+    if (stage < 4) {
+      state = runtime.continueToNextStage()
+    }
+  }
+  if (!state.profile) {
+    throw new Error('Expected a completed schema 3 profile.')
+  }
+  return state.profile
 }
 
 describe('LearningAppCoordinator', () => {
@@ -361,5 +385,62 @@ describe('LearningAppCoordinator', () => {
         (activity) => activity.localDate === '2026-07-24',
       ),
     ).toBe(true)
+  })
+
+  it('replaces an old-profile engine and same-day plan after an R1 schema 3 profile is saved', async () => {
+    const assessmentStore = new MemoryNamespaceStore(
+      'feature.assessment',
+    )
+    const planStore = new MemoryNamespaceStore(
+      'app.learning-runtime',
+    )
+    const engineStore = new MemoryNamespaceStore('learning.engine')
+    const versionedProfiles =
+      new VersionedAssessmentProfileRepository(assessmentStore)
+    const versionedPlans = new ActivePlanRepository(planStore)
+    const versionedEngine = new LearningEngineRepository(engineStore)
+    const versionedCandidates = new SequencedCandidateSource()
+    let nextId = 0
+    const createVersionedCoordinator = () =>
+      new LearningAppCoordinator({
+        profiles: versionedProfiles,
+        activePlans: versionedPlans,
+        engineStates: versionedEngine,
+        candidates: versionedCandidates,
+        availableModuleIds: new Set([
+          'vocabulary',
+          'listening',
+          'speaking',
+        ]),
+        now: () => new Date(2026, 6, 27, 8, 0, 0),
+        createId: () => `profile-switch-${++nextId}`,
+      })
+
+    await versionedProfiles.saveLatest(abilityProfile())
+    const legacyState =
+      await createVersionedCoordinator().initialize()
+    if (legacyState.status !== 'ready') {
+      throw new Error('Expected the legacy-profile plan.')
+    }
+    const legacyPlanId = legacyState.runtime.activePlan.plan.planId
+    const r1Profile = await completedR1Profile()
+    await versionedProfiles.saveLatest(r1Profile)
+
+    const r1State = await createVersionedCoordinator().initialize()
+    if (r1State.status !== 'ready') {
+      throw new Error('Expected the R1 first-day plan.')
+    }
+    expect(r1State.assessmentProfileSchemaVersion).toBe(3)
+    expect(r1State.engineState.progress.profileId).toBe(
+      r1Profile.profileId,
+    )
+    expect(r1State.runtime.activePlan.plan.planId).not.toBe(
+      legacyPlanId,
+    )
+    expect(
+      r1State.runtime.activePlan.plan.tasks.some(
+        (task) => task.mode === 'calibration',
+      ),
+    ).toBe(false)
   })
 })

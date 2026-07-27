@@ -168,6 +168,27 @@ describe('learning app view-model integration', () => {
     }
   })
 
+  it('labels a legacy profile as a new R1 test instead of a completed R1 result', () => {
+    const progress = createPlanProgress(
+      plan(),
+      '2026-07-24T08:00:00.000Z',
+    )
+
+    const modules = toPracticeModulesViewModel(
+      progress,
+      progress.tasks[0].task.taskId,
+      1,
+    )
+
+    expect(modules[0]).toEqual({
+      moduleId: 'assessment',
+      request: {
+        state: 'enabled',
+        label: '开始 R1 词汇测试',
+      },
+    })
+  })
+
   it('disables locked, completed, skipped, and missing practice tasks with accurate reasons', () => {
     const progress = createPlanProgress(
       plan(),

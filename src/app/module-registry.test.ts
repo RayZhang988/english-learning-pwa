@@ -1,3 +1,4 @@
+import { isValidElement } from 'react'
 import { describe, expect, it } from 'vitest'
 import { createFeatureModuleFixture } from '../core/testing/index.ts'
 import {
@@ -5,6 +6,7 @@ import {
   featureRegistry,
   FeatureRegistrationError,
 } from './module-registry.ts'
+import { TravelVocabularyR1RouteHost } from './assessment/TravelVocabularyR1RouteHost.tsx'
 import type { FeatureModuleSlot } from './module-slots.ts'
 
 const fixtureSlot: FeatureModuleSlot = {
@@ -30,6 +32,14 @@ describe('createFeatureRegistry', () => {
       'listening',
       'speaking',
     ])
+    const assessment = featureRegistry.get('assessment')
+    expect(assessment?.storage.schemaVersion).toBe(3)
+    const assessmentElement = assessment?.routes[0]?.element
+    expect(isValidElement(assessmentElement)).toBe(true)
+    if (!isValidElement(assessmentElement)) {
+      throw new Error('Expected the production R1 route element.')
+    }
+    expect(assessmentElement.type).toBe(TravelVocabularyR1RouteHost)
   })
 
   it('mounts a delivered feature below its reserved route base', () => {

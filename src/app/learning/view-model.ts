@@ -155,13 +155,17 @@ function specialtyPracticeModule(
 export function toPracticeModulesViewModel(
   progress: PlanProgress,
   resumeTaskId: string | null,
+  assessmentProfileSchemaVersion: 1 | 2 | 3 = 3,
 ): readonly PracticeModuleViewModel[] {
   return [
     {
       moduleId: 'assessment',
       request: {
         state: 'enabled',
-        label: '查看测试结果',
+        label:
+          assessmentProfileSchemaVersion === 3
+            ? '查看测试结果'
+            : '开始 R1 词汇测试',
       },
     },
     ...practiceModuleIds.map((moduleId) =>

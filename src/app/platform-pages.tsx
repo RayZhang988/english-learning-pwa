@@ -12,8 +12,9 @@ import {
   PlatformPrototype,
 } from '../ui/index.ts'
 import {
+  ASSESSMENT_ROUTE,
   ASSESSMENT_RESULTS_ROUTE,
-} from './assessment/AssessmentRouteHost.tsx'
+} from './assessment/TravelVocabularyR1RouteHost.tsx'
 import { useLearningApp } from './learning/learning-app-context.ts'
 import {
   toDailyPlanViewModel,
@@ -76,7 +77,7 @@ export function PlatformReadyPage() {
             <button
               className="primary-button"
               type="button"
-              onClick={() => navigate('/assessment')}
+              onClick={() => navigate(ASSESSMENT_ROUTE)}
             >
               开始水平测试
             </button>
@@ -122,10 +123,15 @@ export function PlatformReadyPage() {
       practiceModules={toPracticeModulesViewModel(
         state.runtime.activePlan,
         state.resumeTaskId,
+        state.assessmentProfileSchemaVersion,
       )}
       offline={network === 'offline'}
       onAssessmentRequested={() => {
-        navigate(ASSESSMENT_RESULTS_ROUTE)
+        navigate(
+          state.assessmentProfileSchemaVersion === 3
+            ? ASSESSMENT_RESULTS_ROUTE
+            : ASSESSMENT_ROUTE,
+        )
       }}
       onTaskRequested={(taskId) => {
         try {

@@ -2,7 +2,7 @@ import { createElement } from 'react'
 import type { RouteObject } from 'react-router'
 import type { FeatureModule } from '../core/contracts/feature-module.ts'
 import {
-  createAssessmentFeatureModule,
+  createTravelVocabularyAssessmentFeatureModuleR1,
 } from '../features/assessment/index.ts'
 import {
   createVocabularyFeatureModule,
@@ -18,7 +18,7 @@ import {
   SpeakingTrainingRouteHost,
   VocabularyTrainingRouteHost,
 } from './learning/training-route-hosts.tsx'
-import { AssessmentRouteHost } from './assessment/AssessmentRouteHost.tsx'
+import { TravelVocabularyR1RouteHost } from './assessment/TravelVocabularyR1RouteHost.tsx'
 import {
   featureModuleSlots,
   type FeatureModuleSlot,
@@ -158,8 +158,8 @@ export function createFeatureRegistry(
 }
 
 const deliveredFeatureModules: readonly FeatureModule[] = [
-  createAssessmentFeatureModule(
-    createElement(AssessmentRouteHost),
+  createTravelVocabularyAssessmentFeatureModuleR1(
+    createElement(TravelVocabularyR1RouteHost),
   ),
   createVocabularyFeatureModule(
     createElement(VocabularyTrainingRouteHost),
