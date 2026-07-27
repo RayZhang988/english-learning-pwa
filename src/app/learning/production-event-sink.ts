@@ -8,6 +8,7 @@ import {
   applyPlanEvent,
   parseLearningEvent,
   recordDailyActivity,
+  recordTaskDurationSample,
   summarizePlanActivity,
   toSkipHistoryEntry,
   type LearningEngineState,
@@ -51,7 +52,8 @@ function taskForEvent(
   }
   if (
     (event.type === 'learning.task.started.v1' ||
-      event.type === 'learning.attempt.completed.v1') &&
+      event.type === 'learning.attempt.completed.v1' ||
+      event.type === 'learning.timing.segment.recorded.v1') &&
     event.payload.mode !== execution.task.mode
   ) {
     throw new TypeError('Event mode does not match the scheduled task.')
@@ -176,10 +178,21 @@ export class ProductionLearningEventSink implements PlatformEventSink {
       event,
       runtime.skipHistory,
     )
-    let nextEngineState =
-      event.type === 'learning.attempt.completed.v1'
-        ? applyLearningAttempt(engineState, event).state
-        : engineState
+    let nextEngineState = engineState
+    if (event.type === 'learning.attempt.completed.v1') {
+      nextEngineState = applyLearningAttempt(
+        nextEngineState,
+        event,
+      ).state
+      nextEngineState = {
+        ...nextEngineState,
+        progress: recordTaskDurationSample(
+          nextEngineState.progress,
+          progress,
+          event,
+        ),
+      }
+    }
     const activity = summarizePlanActivity(progress)
     nextEngineState = {
       ...nextEngineState,

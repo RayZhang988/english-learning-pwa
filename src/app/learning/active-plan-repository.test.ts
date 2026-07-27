@@ -133,6 +133,58 @@ describe('ActivePlanRepository', () => {
     ).toBe(LEARNING_RUNTIME_STORAGE_SCHEMA_VERSION)
   })
 
+  it('round-trips additive R3 duration estimates and timing totals', async () => {
+    const store = new MemoryNamespaceStore()
+    const repository = new ActivePlanRepository(store)
+    const basePlan = dailyPlan()
+    const timedPlan = {
+      ...basePlan,
+      tasks: [
+        {
+          ...basePlan.tasks[0],
+          durationEstimate: {
+            schemaVersion: 1 as const,
+            estimateSeconds: 900,
+            sampleCount: 3,
+            basis: 'personal-history' as const,
+            confidence: 'medium' as const,
+            reasonableRangeSeconds: {
+              lower: 600,
+              upper: 1_200,
+            },
+            contentType: 'multiple-choice-set',
+            profileKey:
+              'vocabulary:learn:multiple-choice-set',
+            baselineSource: 'structured-content' as const,
+          },
+        },
+      ],
+    }
+    const progress = createPlanProgress(
+      timedPlan,
+      '2026-07-24T08:00:00.000Z',
+    )
+    const timedProgress = {
+      ...progress,
+      tasks: [
+        {
+          ...progress.tasks[0],
+          task: timedPlan.tasks[0],
+          spentSeconds: 15,
+          effectiveSeconds: 10,
+          timingSegmentCount: 2,
+          excludedSeconds: 5,
+          effectiveTimeSource: 'timing-segments' as const,
+        },
+      ],
+    }
+    const runtime = createActiveLearningRuntime(timedProgress)
+
+    await repository.save(runtime)
+
+    await expect(repository.load()).resolves.toEqual(runtime)
+  })
+
   it('rejects a future runtime record version', async () => {
     const store = new MemoryNamespaceStore()
     await store.put(ACTIVE_LEARNING_RUNTIME_KEY, {}, 2)
@@ -177,5 +229,44 @@ describe('ActivePlanRepository', () => {
       code: 'schema_incompatible',
       recoverable: false,
     })
+  })
+
+  it('rejects inconsistent R3 timing totals instead of silently repairing them', async () => {
+    const store = new MemoryNamespaceStore()
+    const progress = createPlanProgress(
+      dailyPlan(),
+      '2026-07-24T08:00:00.000Z',
+    )
+    const corrupted = {
+      ...createActiveLearningRuntime(progress),
+      activePlan: {
+        ...progress,
+        tasks: [
+          {
+            ...progress.tasks[0],
+            spentSeconds: 14,
+            effectiveSeconds: 10,
+            timingSegmentCount: 2,
+            excludedSeconds: 5,
+            effectiveTimeSource: 'timing-segments',
+          },
+        ],
+      },
+    }
+    await store.put(
+      ACTIVE_LEARNING_RUNTIME_KEY,
+      corrupted,
+      LEARNING_RUNTIME_STORAGE_SCHEMA_VERSION,
+    )
+
+    await expect(
+      new ActivePlanRepository(store).load(),
+    ).rejects.toMatchObject({
+      code: 'schema_incompatible',
+      recoverable: false,
+    })
+    expect(
+      store.records.has(ACTIVE_LEARNING_RUNTIME_KEY),
+    ).toBe(true)
   })
 })

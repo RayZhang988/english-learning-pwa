@@ -58,6 +58,22 @@ class MemoryNamespaceStore implements NamespaceStore {
   }
 }
 
+class FailingNamespaceStore extends MemoryNamespaceStore {
+  failNextPut = false
+
+  override async put<T>(
+    key: string,
+    value: T,
+    schemaVersion = 1,
+  ): Promise<void> {
+    if (this.failNextPut) {
+      this.failNextPut = false
+      throw new Error('simulated local write failure')
+    }
+    await super.put(key, value, schemaVersion)
+  }
+}
+
 function plan(): DailyPlan {
   return {
     schemaVersion: 1,
@@ -150,6 +166,43 @@ function completedEvent(
       errorTags: [],
       contentTags: ['week:1'],
       failureCategory: null,
+    },
+  }
+}
+
+function timingEvent(
+  task: LearningTask,
+  input: {
+    readonly id: string
+    readonly startedAt: string
+    readonly endedAt: string
+    readonly elapsedSeconds: number
+    readonly phase?: 'answering' | 'idle'
+    readonly reason?: 'active-answering' | 'idle-timeout'
+  },
+): PlatformEvent {
+  return {
+    id: input.id,
+    type: 'learning.timing.segment.recorded.v1',
+    sourceModuleId: task.targetModuleId,
+    occurredAt: input.endedAt,
+    schemaVersion: 1,
+    payload: {
+      planId: task.planId,
+      taskId: task.taskId,
+      learningUnitId: task.learningUnitId,
+      contentRef: task.contentRef,
+      domain: task.domain,
+      targetModuleId: task.targetModuleId,
+      localDate: '2026-07-24',
+      mode: task.mode,
+      phase: input.phase ?? 'answering',
+      reason: input.reason ?? 'active-answering',
+      visibility: 'foreground',
+      startedAt: input.startedAt,
+      endedAt: input.endedAt,
+      elapsedSeconds: input.elapsedSeconds,
+      idleThresholdSeconds: 45,
     },
   }
 }
@@ -272,6 +325,125 @@ describe('ProductionLearningEventSink', () => {
     expect((await plans.load())?.processedEventIds).toEqual([
       'event-completed-1',
     ])
+  })
+
+  it('serially persists timing segments before completion and records one trusted duration sample', async () => {
+    const task = plan().tasks[0]
+    const active = timingEvent(task, {
+      id: 'timing-session-1',
+      startedAt: '2026-07-24T08:00:00.000Z',
+      endedAt: '2026-07-24T08:00:08.000Z',
+      elapsedSeconds: 8,
+    })
+    const idle = timingEvent(task, {
+      id: 'timing-session-2',
+      startedAt: '2026-07-24T08:00:08.000Z',
+      endedAt: '2026-07-24T08:00:11.000Z',
+      elapsedSeconds: 3,
+      phase: 'idle',
+      reason: 'idle-timeout',
+    })
+
+    await Promise.all([
+      sink.publish(active),
+      sink.publish(idle),
+      sink.publish(active),
+      sink.publish(completedEvent()),
+    ])
+
+    const runtime = await plans.load()
+    const engine = await engines.load()
+    expect(runtime?.activePlan.tasks[0]).toMatchObject({
+      status: 'completed',
+      spentSeconds: 11,
+      effectiveSeconds: 8,
+      timingSegmentCount: 2,
+      excludedSeconds: 3,
+      effectiveTimeSource: 'timing-segments',
+    })
+    expect(runtime?.processedEventIds).toEqual([
+      'timing-session-1',
+      'timing-session-2',
+      'event-completed-1',
+    ])
+    expect(engine?.progress.dailyActivity[0]).toMatchObject({
+      effectiveSeconds: 8,
+      completedTaskCount: 1,
+    })
+    expect(engine?.progress.durationSamples).toEqual([
+      expect.objectContaining({
+        sampleId: 'event-completed-1',
+        taskId: task.taskId,
+        effectiveSeconds: 8,
+        source: 'timing-segments',
+        reliable: true,
+      }),
+    ])
+  })
+
+  it('notifies subscribers only after both local repositories save and retries without double counting', async () => {
+    const planStore = new FailingNamespaceStore(
+      'app.learning-runtime',
+    )
+    const engineStore = new MemoryNamespaceStore('learning.engine')
+    const activePlans = new ActivePlanRepository(planStore)
+    const engineStates = new LearningEngineRepository(engineStore)
+    const dailyPlan = plan()
+    await activePlans.save(
+      createActiveLearningRuntime(
+        createPlanProgress(
+          dailyPlan,
+          '2026-07-24T08:00:00.000Z',
+        ),
+      ),
+    )
+    await engineStates.save(
+      createLearningEngineState(
+        abilityProfile(),
+        '2026-07-24T08:00:00.000Z',
+      ),
+    )
+    const localSink = new ProductionLearningEventSink(
+      activePlans,
+      engineStates,
+    )
+    const updates: unknown[] = []
+    localSink.subscribe((update) => updates.push(update))
+    const event = timingEvent(dailyPlan.tasks[0], {
+      id: 'timing-save-order',
+      startedAt: '2026-07-24T08:00:00.000Z',
+      endedAt: '2026-07-24T08:00:05.000Z',
+      elapsedSeconds: 5,
+    })
+
+    planStore.failNextPut = true
+    await expect(localSink.publish(event)).rejects.toThrow(
+      'simulated local write failure',
+    )
+    expect(updates).toEqual([])
+    expect(
+      (await activePlans.load())?.activePlan.tasks[0]
+        .effectiveSeconds,
+    ).toBe(0)
+    expect(
+      (await engineStates.load())?.progress.dailyActivity[0]
+        .effectiveSeconds,
+    ).toBe(5)
+
+    await localSink.publish(event)
+
+    expect(updates).toHaveLength(1)
+    expect(
+      (await activePlans.load())?.activePlan.tasks[0],
+    ).toMatchObject({
+      effectiveSeconds: 5,
+      timingSegmentCount: 1,
+      excludedSeconds: 0,
+    })
+    expect(
+      (await engineStates.load())?.progress.dailyActivity[0]
+        .effectiveSeconds,
+    ).toBe(5)
   })
 
   it('rejects an event for another plan', async () => {

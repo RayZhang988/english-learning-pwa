@@ -44,9 +44,19 @@ function requireString(
   }
 }
 
-function requireFiniteNumber(value: unknown, label: string): void {
+function requireFiniteNumber(
+  value: unknown,
+  label: string,
+): asserts value is number {
   if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) {
     throw new TypeError(`${label} must be a non-negative finite number.`)
+  }
+}
+
+function requireNonNegativeInteger(value: unknown, label: string): void {
+  requireFiniteNumber(value, label)
+  if (!Number.isInteger(value)) {
+    throw new TypeError(`${label} must be an integer.`)
   }
 }
 
@@ -102,6 +112,71 @@ function assertLearningTask(
   requireFiniteNumber(value.estimatedSeconds, `${label}.estimatedSeconds`)
   requireFiniteNumber(value.skipLimit, `${label}.skipLimit`)
   requireStringArray(value.tags, `${label}.tags`)
+  if (value.durationEstimate !== undefined) {
+    const estimateLabel = `${label}.durationEstimate`
+    if (
+      !isRecord(value.durationEstimate) ||
+      value.durationEstimate.schemaVersion !== 1
+    ) {
+      throw new TypeError(`${estimateLabel} is not schema version 1.`)
+    }
+    const estimate = value.durationEstimate
+    requireFiniteNumber(
+      estimate.estimateSeconds,
+      `${estimateLabel}.estimateSeconds`,
+    )
+    requireNonNegativeInteger(
+      estimate.sampleCount,
+      `${estimateLabel}.sampleCount`,
+    )
+    if (
+      estimate.basis !== 'content-baseline' &&
+      estimate.basis !== 'personal-history'
+    ) {
+      throw new TypeError(`${estimateLabel}.basis is unsupported.`)
+    }
+    if (
+      estimate.confidence !== 'low' &&
+      estimate.confidence !== 'medium' &&
+      estimate.confidence !== 'high'
+    ) {
+      throw new TypeError(
+        `${estimateLabel}.confidence is unsupported.`,
+      )
+    }
+    requireString(estimate.contentType, `${estimateLabel}.contentType`)
+    requireString(estimate.profileKey, `${estimateLabel}.profileKey`)
+    if (
+      estimate.baselineSource !== 'structured-content' &&
+      estimate.baselineSource !== 'legacy-content-estimate'
+    ) {
+      throw new TypeError(
+        `${estimateLabel}.baselineSource is unsupported.`,
+      )
+    }
+    if (!isRecord(estimate.reasonableRangeSeconds)) {
+      throw new TypeError(
+        `${estimateLabel}.reasonableRangeSeconds must be an object.`,
+      )
+    }
+    requireFiniteNumber(
+      estimate.reasonableRangeSeconds.lower,
+      `${estimateLabel}.reasonableRangeSeconds.lower`,
+    )
+    requireFiniteNumber(
+      estimate.reasonableRangeSeconds.upper,
+      `${estimateLabel}.reasonableRangeSeconds.upper`,
+    )
+    if (
+      estimate.reasonableRangeSeconds.lower >
+        estimate.reasonableRangeSeconds.upper ||
+      estimate.estimateSeconds !== value.estimatedSeconds
+    ) {
+      throw new TypeError(
+        `${estimateLabel} is inconsistent with the task estimate.`,
+      )
+    }
+  }
 }
 
 function assertDailyPlan(value: unknown): asserts value is DailyPlan {
@@ -159,6 +234,38 @@ function assertTaskExecution(
   }
   requireFiniteNumber(value.spentSeconds, `${label}.spentSeconds`)
   requireFiniteNumber(value.effectiveSeconds, `${label}.effectiveSeconds`)
+  if (value.timingSegmentCount !== undefined) {
+    requireNonNegativeInteger(
+      value.timingSegmentCount,
+      `${label}.timingSegmentCount`,
+    )
+  }
+  if (value.excludedSeconds !== undefined) {
+    requireFiniteNumber(
+      value.excludedSeconds,
+      `${label}.excludedSeconds`,
+    )
+  }
+  if (
+    value.effectiveTimeSource !== undefined &&
+    value.effectiveTimeSource !== null &&
+    value.effectiveTimeSource !== 'timing-segments' &&
+    value.effectiveTimeSource !== 'legacy-event-duration'
+  ) {
+    throw new TypeError(`${label}.effectiveTimeSource is unsupported.`)
+  }
+  if (
+    value.effectiveTimeSource === 'timing-segments' &&
+    (typeof value.timingSegmentCount !== 'number' ||
+      value.timingSegmentCount < 1 ||
+      typeof value.excludedSeconds !== 'number' ||
+      value.spentSeconds !==
+        value.effectiveSeconds + value.excludedSeconds)
+  ) {
+    throw new TypeError(
+      `${label} timing segment totals are inconsistent.`,
+    )
+  }
   requireFiniteNumber(value.skipCount, `${label}.skipCount`)
   requireString(value.startedAt, `${label}.startedAt`, true)
   requireString(value.updatedAt, `${label}.updatedAt`)
