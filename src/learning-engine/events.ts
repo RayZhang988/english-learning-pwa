@@ -3,6 +3,7 @@ import type {
   LearningEvent,
   StandardErrorTag,
 } from './contracts.ts'
+import { classifyTimingSegment } from './timing.ts'
 import {
   assertLocalDate,
   assertPositiveSeconds,
@@ -15,6 +16,7 @@ const EVENT_TYPES = [
   'learning.task.paused.v1',
   'learning.task.skipped.v1',
   'learning.attempt.completed.v1',
+  'learning.timing.segment.recorded.v1',
 ] as const
 
 const MODES = ['learn', 'calibration', 'review', 'retry'] as const
@@ -37,6 +39,32 @@ const FAILURE_CATEGORIES = [
   'network',
   'content',
   'interrupted',
+] as const
+const TIMING_PHASES = [
+  'answering',
+  'audio-listening',
+  'recording',
+  'playback',
+  'feedback',
+  'loading',
+  'permission-wait',
+  'network-wait',
+  'paused',
+  'idle',
+] as const
+const TIMING_REASONS = [
+  'active-answering',
+  'active-audio-listening',
+  'active-recording',
+  'active-playback',
+  'active-feedback',
+  'app-backgrounded',
+  'user-paused',
+  'idle-timeout',
+  'content-loading',
+  'permission-wait',
+  'network-wait',
+  'media-loading',
 ] as const
 const ERROR_TAGS: readonly StandardErrorTag[] = [
   'meaning-recall',
@@ -166,7 +194,7 @@ export function parseLearningEvent(event: PlatformEvent): LearningEvent {
     }
   } else if (event.type === 'learning.task.skipped.v1') {
     requireEnum(payload, 'reason', SKIP_REASONS)
-  } else {
+  } else if (event.type === 'learning.attempt.completed.v1') {
     requireEnum(payload, 'mode', MODES)
     const difficultyLevel = requireNumber(payload, 'difficultyLevel')
     if (difficultyLevel < 0 || difficultyLevel > 12) {
@@ -230,6 +258,21 @@ export function parseLearningEvent(event: PlatformEvent): LearningEvent {
       throw new TypeError('errorTags contains an unsupported tag')
     }
     requireStringArray(payload, 'contentTags')
+  } else {
+    requireEnum(payload, 'mode', MODES)
+    requireEnum(payload, 'phase', TIMING_PHASES)
+    requireEnum(payload, 'reason', TIMING_REASONS)
+    requireEnum(payload, 'visibility', ['foreground', 'background'])
+    requireString(payload, 'startedAt')
+    requireString(payload, 'endedAt')
+    requireNumber(payload, 'elapsedSeconds')
+    requireNumber(payload, 'idleThresholdSeconds')
+    classifyTimingSegment(
+      payload as unknown as Extract<
+        LearningEvent,
+        { type: 'learning.timing.segment.recorded.v1' }
+      >['payload'],
+    )
   }
 
   return event as unknown as LearningEvent

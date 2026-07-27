@@ -50,6 +50,7 @@ export function createInitialProgressState(
     },
     attempts: [],
     dailyActivity: [],
+    durationSamples: [],
     lastReassessmentAt: null,
     ...(normalized.r1VocabularyStartPlacement
       ? {

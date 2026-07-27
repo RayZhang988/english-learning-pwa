@@ -17,6 +17,7 @@ import {
   parseTimestamp,
 } from './utils.ts'
 import { getPlanTaskAccess } from './task-access.ts'
+import { classifyTimingSegment } from './timing.ts'
 
 export function createPlanProgress(
   plan: PlanProgress['plan'],
@@ -33,6 +34,9 @@ export function createPlanProgress(
       completionKind: null,
       spentSeconds: 0,
       effectiveSeconds: 0,
+      timingSegmentCount: 0,
+      excludedSeconds: 0,
+      effectiveTimeSource: null,
       skipCount: 0,
       startedAt: null,
       updatedAt: createdAt,
@@ -194,6 +198,14 @@ export function applyPlanEvent(
     throw new TypeError('Event task identity does not match scheduled task')
   }
   if (
+    (event.type === 'learning.task.started.v1' ||
+      event.type === 'learning.attempt.completed.v1' ||
+      event.type === 'learning.timing.segment.recorded.v1') &&
+    event.payload.mode !== execution.task.mode
+  ) {
+    throw new TypeError('Event mode does not match scheduled task')
+  }
+  if (
     execution.status === 'completed' ||
     execution.status === 'skipped'
   ) {
@@ -209,11 +221,15 @@ export function applyPlanEvent(
       updatedAt: event.occurredAt,
     }
   } else if (event.type === 'learning.task.paused.v1') {
+    const hasTimingSegments = (execution.timingSegmentCount ?? 0) > 0
     updated = {
       ...execution,
       status: 'paused',
       spentSeconds:
-        execution.spentSeconds + Math.max(0, event.payload.durationSeconds),
+        execution.spentSeconds +
+        (hasTimingSegments
+          ? 0
+          : Math.max(0, event.payload.durationSeconds)),
       updatedAt: event.occurredAt,
     }
   } else if (event.type === 'learning.task.skipped.v1') {
@@ -233,9 +249,37 @@ export function applyPlanEvent(
           : execution.skipCount,
       updatedAt: event.occurredAt,
     }
+  } else if (event.type === 'learning.timing.segment.recorded.v1') {
+    const classification = classifyTimingSegment(event.payload)
+    updated = {
+      ...execution,
+      status:
+        classification.included && execution.status === 'pending'
+          ? 'active'
+          : execution.status,
+      spentSeconds:
+        execution.spentSeconds + event.payload.elapsedSeconds,
+      effectiveSeconds:
+        execution.effectiveSeconds + classification.effectiveSeconds,
+      timingSegmentCount: (execution.timingSegmentCount ?? 0) + 1,
+      excludedSeconds:
+        (execution.excludedSeconds ?? 0) +
+        classification.excludedSeconds,
+      effectiveTimeSource: 'timing-segments',
+      startedAt:
+        classification.included
+          ? execution.startedAt ?? event.payload.startedAt
+          : execution.startedAt,
+      updatedAt: event.occurredAt,
+    }
   } else {
-    const scored = event.payload.result === 'scored'
     const disposition = resolveAttemptPlanDisposition(event)
+    const hasTimingSegments = (execution.timingSegmentCount ?? 0) > 0
+    const legacyDuration = hasTimingSegments
+      ? 0
+      : Math.max(0, event.payload.durationSeconds)
+    const legacyEffectiveDuration =
+      disposition === 'scored-completion' ? legacyDuration : 0
     updated = {
       ...execution,
       status:
@@ -247,10 +291,14 @@ export function applyPlanEvent(
             ? 'unscorable-practice'
             : null,
       spentSeconds:
-        execution.spentSeconds + Math.max(0, event.payload.durationSeconds),
+        execution.spentSeconds + legacyDuration,
       effectiveSeconds:
-        execution.effectiveSeconds +
-        (scored ? Math.max(0, event.payload.durationSeconds) : 0),
+        execution.effectiveSeconds + legacyEffectiveDuration,
+      effectiveTimeSource: hasTimingSegments
+        ? 'timing-segments'
+        : legacyEffectiveDuration > 0
+          ? 'legacy-event-duration'
+          : execution.effectiveTimeSource ?? null,
       updatedAt: event.occurredAt,
     }
   }

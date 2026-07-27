@@ -21,6 +21,12 @@ export const LEARNING_ENGINE_SCHEMA_VERSION = 1 as const
 export const LEARNING_EVENT_SCHEMA_VERSION = 1 as const
 export const DEFAULT_DAILY_TARGET_SECONDS = 45 * 60
 export const MINIMUM_DAILY_BUDGET_SECONDS = 5 * 60
+export const MAX_INTERACTION_IDLE_SECONDS = 45 as const
+export const MAX_CONTINUOUS_ACTIVE_MEDIA_SECONDS = 15 * 60
+export const MIN_PERSONAL_DURATION_SAMPLE_COUNT = 3
+export const PERSONAL_DURATION_SAMPLE_WINDOW = 9
+export const MIN_RELIABLE_EFFECTIVE_SECONDS = 5
+export const MAX_RELIABLE_EFFECTIVE_SECONDS = 2 * 60 * 60
 
 export type TrainingModuleId =
   | 'vocabulary'
@@ -38,6 +44,51 @@ export type TaskOrigin =
   | 'due-review'
   | 'retry'
   | 'carry-over'
+
+export interface TaskDurationBaseline {
+  readonly schemaVersion: 1
+  /**
+   * Stable content shape used together with domain and task mode. Examples
+   * include `multiple-choice-set`, `dialogue-listening`, and
+   * `guided-speaking`.
+   */
+  readonly contentType: string
+  readonly fixedSeconds: number
+  readonly itemCount: number
+  readonly secondsPerItem: number
+  readonly activeAudioSeconds: number
+  readonly expectedAudioPlaythroughs: number
+  readonly interactionStepCount: number
+  readonly secondsPerInteractionStep: number
+  readonly minimumSeconds: number
+  readonly maximumSeconds: number
+}
+
+export type TaskDurationEstimateBasis =
+  | 'content-baseline'
+  | 'personal-history'
+
+export type TaskDurationEstimateConfidence =
+  | 'low'
+  | 'medium'
+  | 'high'
+
+export interface TaskDurationEstimate {
+  readonly schemaVersion: 1
+  readonly estimateSeconds: number
+  readonly sampleCount: number
+  readonly basis: TaskDurationEstimateBasis
+  readonly confidence: TaskDurationEstimateConfidence
+  readonly contentType: string
+  readonly reasonableRangeSeconds: {
+    readonly lower: number
+    readonly upper: number
+  }
+  readonly profileKey: string
+  readonly baselineSource:
+    | 'structured-content'
+    | 'legacy-content-estimate'
+}
 
 export type StandardErrorTag =
   | 'meaning-recall'
@@ -59,7 +110,13 @@ export interface LearningCandidate {
   readonly contentRef: string
   readonly domain: AbilityDomain
   readonly difficultyLevel: number
+  /**
+   * Legacy content estimate retained while 01/05 migrate existing packages.
+   * It is never the daily allocation target. New content should also provide
+   * `durationBaseline`.
+   */
   readonly estimatedSeconds: number
+  readonly durationBaseline?: TaskDurationBaseline
   readonly tags: readonly string[]
   readonly prerequisitesMet: boolean
 }
@@ -77,6 +134,11 @@ export interface LearningTask {
   readonly origin: TaskOrigin
   readonly difficultyLevel: number
   readonly estimatedSeconds: number
+  /**
+   * Additive v1 metadata. Old persisted tasks omit it and keep their original
+   * `estimatedSeconds`.
+   */
+  readonly durationEstimate?: TaskDurationEstimate
   readonly required: boolean
   readonly dueAt: string | null
   readonly skipLimit: number
@@ -139,6 +201,10 @@ export interface AttemptEvidence {
   readonly performanceScore: number
   readonly effectivePerformance: number
   readonly evidenceQuality: number
+  /**
+   * Legacy attempt-level diagnostic duration. It has no foreground/idle
+   * provenance and must never be used as a personal duration sample.
+   */
   readonly durationSeconds: number
   readonly errorTags: readonly StandardErrorTag[]
   readonly occurredAt: string
@@ -197,6 +263,22 @@ export interface DailyActivity {
   readonly qualifiesForStreak: boolean
 }
 
+export type TaskDurationSampleSource = 'timing-segments'
+
+export interface TaskDurationSample {
+  readonly sampleId: string
+  readonly taskId: string
+  readonly learningUnitId: string
+  readonly domain: AbilityDomain
+  readonly mode: LearningTaskMode
+  readonly contentType: string
+  readonly profileKey: string
+  readonly effectiveSeconds: number
+  readonly source: TaskDurationSampleSource
+  readonly reliable: boolean
+  readonly completedAt: string
+}
+
 export interface ProgressState {
   readonly schemaVersion: 1
   readonly profileId: string
@@ -206,6 +288,12 @@ export interface ProgressState {
   readonly domains: Readonly<Record<AbilityDomain, DomainProgressState>>
   readonly attempts: readonly AttemptEvidence[]
   readonly dailyActivity: readonly DailyActivity[]
+  /**
+   * Additive schema-1 timing history. Old records omit this field and remain
+   * readable. Only explicitly reliable foreground timing samples may be used
+   * for personalization; AttemptEvidence.durationSeconds is diagnostic only.
+   */
+  readonly durationSamples?: readonly TaskDurationSample[]
   readonly lastReassessmentAt: string | null
   /**
    * Additive v1 persistence metadata. Old records omit it and remain valid.
@@ -303,6 +391,17 @@ export interface TaskExecutionState {
   readonly completionKind?: TaskCompletionKind | null
   readonly spentSeconds: number
   readonly effectiveSeconds: number
+  /**
+   * Additive schema-1 timing metadata. Missing means a legacy active plan.
+   * `spentSeconds` is diagnostic reported elapsed time and may include
+   * excluded waits. Only `effectiveSeconds` is actual learning time.
+   */
+  readonly timingSegmentCount?: number
+  readonly excludedSeconds?: number
+  readonly effectiveTimeSource?:
+    | 'timing-segments'
+    | 'legacy-event-duration'
+    | null
   readonly skipCount: number
   readonly startedAt: string | null
   readonly updatedAt: string
@@ -400,6 +499,32 @@ export type AttemptFailureCategory =
   | 'content'
   | 'interrupted'
 
+export type LearningTimingPhase =
+  | 'answering'
+  | 'audio-listening'
+  | 'recording'
+  | 'playback'
+  | 'feedback'
+  | 'loading'
+  | 'permission-wait'
+  | 'network-wait'
+  | 'paused'
+  | 'idle'
+
+export type LearningTimingSegmentReason =
+  | 'active-answering'
+  | 'active-audio-listening'
+  | 'active-recording'
+  | 'active-playback'
+  | 'active-feedback'
+  | 'app-backgrounded'
+  | 'user-paused'
+  | 'idle-timeout'
+  | 'content-loading'
+  | 'permission-wait'
+  | 'network-wait'
+  | 'media-loading'
+
 type LearningEventBasePayload = {
   readonly planId: string
   readonly taskId: string
@@ -438,6 +563,22 @@ export type LearningAttemptCompletedPayload = LearningEventBasePayload & {
   readonly failureCategory: AttemptFailureCategory | null
 }
 
+export type LearningTimingSegmentRecordedPayload =
+  LearningEventBasePayload & {
+    readonly mode: LearningTaskMode
+    readonly phase: LearningTimingPhase
+    readonly reason: LearningTimingSegmentReason
+    readonly visibility: 'foreground' | 'background'
+    readonly startedAt: string
+    readonly endedAt: string
+    readonly elapsedSeconds: number
+    /**
+     * Producers persist this policy with each segment so restored sessions do
+     * not silently switch idle semantics.
+     */
+    readonly idleThresholdSeconds: typeof MAX_INTERACTION_IDLE_SECONDS
+  }
+
 type LearningPlatformEvent<
   TType extends string,
   TPayload extends PortableData,
@@ -463,11 +604,17 @@ export type LearningAttemptCompletedEvent = LearningPlatformEvent<
   LearningAttemptCompletedPayload
 >
 
+export type LearningTimingSegmentRecordedEvent = LearningPlatformEvent<
+  'learning.timing.segment.recorded.v1',
+  LearningTimingSegmentRecordedPayload
+>
+
 export type LearningEvent =
   | LearningTaskStartedEvent
   | LearningTaskPausedEvent
   | LearningTaskSkippedEvent
   | LearningAttemptCompletedEvent
+  | LearningTimingSegmentRecordedEvent
 
 export interface DailyPlanInput {
   readonly planId: string

@@ -127,6 +127,7 @@ describe('unscorable speaking fallback completion', () => {
     expect(speakingExecution).toMatchObject({
       status: 'completed',
       completionKind: 'unscorable-practice',
+      spentSeconds: 120,
       effectiveSeconds: 0,
       skipCount: 0,
     })

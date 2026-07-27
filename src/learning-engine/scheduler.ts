@@ -8,6 +8,7 @@ import type {
   LearningTaskMode,
   ProgressState,
   ReviewItemState,
+  TaskDurationEstimate,
   TaskOrigin,
 } from './contracts.ts'
 import {
@@ -16,6 +17,7 @@ import {
 } from './contracts.ts'
 import { buildProgressSnapshot } from './progress.ts'
 import { isRetryDue, isReviewDue } from './review.ts'
+import { estimateTaskDuration } from './timing.ts'
 import {
   ABILITY_DOMAINS,
   assertLocalDate,
@@ -32,10 +34,17 @@ interface TaskSeed {
   readonly origin: TaskOrigin
   readonly difficultyLevel: number
   readonly estimatedSeconds: number
+  readonly durationEstimate: TaskDurationEstimate
   readonly required: boolean
   readonly dueAt: string | null
   readonly skipLimit: number
   readonly tags: readonly string[]
+}
+
+interface PreparedCandidate {
+  readonly candidate: LearningCandidate
+  readonly mode: LearningTaskMode
+  readonly durationEstimate: TaskDurationEstimate
 }
 
 function progressScore(progress: ProgressState, domain: AbilityDomain): number {
@@ -150,7 +159,15 @@ function targetSecondsByDomain(
 function taskSeedFromReview(
   item: ReviewItemState,
   mode: 'review' | 'retry',
+  progress: ProgressState,
 ): TaskSeed {
+  const durationEstimate = estimateTaskDuration({
+    domain: item.domain,
+    mode,
+    tags: item.tags,
+    legacyEstimatedSeconds: item.estimatedSeconds,
+    progress,
+  })
   return {
     learningUnitId: item.learningUnitId,
     contentRef: item.contentRef,
@@ -158,7 +175,8 @@ function taskSeedFromReview(
     mode,
     origin: mode === 'retry' ? 'retry' : 'due-review',
     difficultyLevel: item.difficultyLevel,
-    estimatedSeconds: item.estimatedSeconds,
+    estimatedSeconds: durationEstimate.estimateSeconds,
+    durationEstimate,
     required: true,
     dueAt: mode === 'retry' ? item.retryAt : item.nextReviewAt,
     skipLimit: mode === 'retry' ? 0 : 1,
@@ -166,7 +184,19 @@ function taskSeedFromReview(
   }
 }
 
-function taskSeedFromCarryOver(task: LearningTask): TaskSeed {
+function taskSeedFromCarryOver(
+  task: LearningTask,
+  progress: ProgressState,
+): TaskSeed {
+  const durationEstimate =
+    task.durationEstimate ??
+    estimateTaskDuration({
+      domain: task.domain,
+      mode: task.mode,
+      tags: task.tags,
+      legacyEstimatedSeconds: task.estimatedSeconds,
+      progress,
+    })
   return {
     learningUnitId: task.learningUnitId,
     contentRef: task.contentRef,
@@ -174,7 +204,8 @@ function taskSeedFromCarryOver(task: LearningTask): TaskSeed {
     mode: task.mode,
     origin: 'carry-over',
     difficultyLevel: task.difficultyLevel,
-    estimatedSeconds: task.estimatedSeconds,
+    estimatedSeconds: durationEstimate.estimateSeconds,
+    durationEstimate,
     required: true,
     dueAt: task.dueAt,
     skipLimit: task.mode === 'retry' ? 0 : task.skipLimit,
@@ -182,23 +213,44 @@ function taskSeedFromCarryOver(task: LearningTask): TaskSeed {
   }
 }
 
-function taskSeedFromCandidate(
+function prepareCandidate(
   candidate: LearningCandidate,
   progress: ProgressState,
-): TaskSeed {
+): PreparedCandidate {
   const state = progress.domains[candidate.domain]
-  const calibration =
+  const mode =
     state.assessmentStatus !== 'estimated' &&
     state.reliableEvidenceCount < 8 &&
     state.pendingCalibrationPolicy !== 'normal-training'
+      ? 'calibration'
+      : 'learn'
+  return {
+    candidate,
+    mode,
+    durationEstimate: estimateTaskDuration({
+      domain: candidate.domain,
+      mode,
+      tags: candidate.tags,
+      legacyEstimatedSeconds: candidate.estimatedSeconds,
+      durationBaseline: candidate.durationBaseline,
+      progress,
+    }),
+  }
+}
+
+function taskSeedFromCandidate(
+  prepared: PreparedCandidate,
+): TaskSeed {
+  const { candidate, durationEstimate, mode } = prepared
   return {
     learningUnitId: candidate.learningUnitId,
     contentRef: candidate.contentRef,
     domain: candidate.domain,
-    mode: calibration ? 'calibration' : 'learn',
+    mode,
     origin: 'new',
     difficultyLevel: candidate.difficultyLevel,
-    estimatedSeconds: candidate.estimatedSeconds,
+    estimatedSeconds: durationEstimate.estimateSeconds,
+    durationEstimate,
     required: false,
     dueAt: null,
     skipLimit: 2,
@@ -259,7 +311,7 @@ function fitsBudget(
 }
 
 function selectNewSeed(
-  candidates: readonly LearningCandidate[],
+  candidates: readonly PreparedCandidate[],
   selectedIds: ReadonlySet<string>,
   plannedByDomain: Readonly<Record<AbilityDomain, number>>,
   targetByDomain: Readonly<Record<AbilityDomain, number>>,
@@ -267,19 +319,20 @@ function selectNewSeed(
   weaknessWeights: Readonly<Record<AbilityDomain, number>>,
   plannedSeconds: number,
   budgetSeconds: number,
-): LearningCandidate | undefined {
+): PreparedCandidate | undefined {
   return candidates
     .filter(
-      (candidate) =>
+      ({ candidate, durationEstimate }) =>
         candidate.prerequisitesMet &&
         !selectedIds.has(candidate.learningUnitId) &&
         fitsBudget(
           plannedSeconds,
-          candidate.estimatedSeconds,
+          durationEstimate.estimateSeconds,
           budgetSeconds,
         ),
     )
-    .map((candidate) => {
+    .map((prepared) => {
+      const { candidate } = prepared
       const deficit =
         targetByDomain[candidate.domain] -
         plannedByDomain[candidate.domain]
@@ -293,16 +346,17 @@ function selectNewSeed(
         normalizedDeficit * 3 +
         weaknessWeights[candidate.domain] * 2 -
         difficultyDistance * 0.35
-      return { candidate, score }
+      return { prepared, score }
     })
     .sort(
       (left, right) =>
         right.score - left.score ||
-        left.candidate.estimatedSeconds - right.candidate.estimatedSeconds ||
-        left.candidate.learningUnitId.localeCompare(
-          right.candidate.learningUnitId,
+        left.prepared.durationEstimate.estimateSeconds -
+          right.prepared.durationEstimate.estimateSeconds ||
+        left.prepared.candidate.learningUnitId.localeCompare(
+          right.prepared.candidate.learningUnitId,
         ),
-    )[0]?.candidate
+    )[0]?.prepared
 }
 
 function materializeTasks(
@@ -322,6 +376,7 @@ function materializeTasks(
     origin: seed.origin,
     difficultyLevel: seed.difficultyLevel,
     estimatedSeconds: seed.estimatedSeconds,
+    durationEstimate: seed.durationEstimate,
     required: seed.required,
     dueAt: seed.dueAt,
     skipLimit: seed.skipLimit,
@@ -347,11 +402,11 @@ export function generateDailyPlan(input: DailyPlanInput): DailyPlan {
     .sort((left, right) =>
       (left.retryAt as string).localeCompare(right.retryAt as string),
     )
-    .map((item) => taskSeedFromReview(item, 'retry'))
+    .map((item) => taskSeedFromReview(item, 'retry', input.progress))
   const carrySeeds = (input.carryOverTasks ?? [])
     .slice()
     .sort((left, right) => left.sequence - right.sequence)
-    .map(taskSeedFromCarryOver)
+    .map((task) => taskSeedFromCarryOver(task, input.progress))
   const dueReviewSeeds = Object.values(input.reviewItems)
     .filter(
       (item) =>
@@ -361,7 +416,7 @@ export function generateDailyPlan(input: DailyPlanInput): DailyPlan {
     .sort((left, right) =>
       left.nextReviewAt.localeCompare(right.nextReviewAt),
     )
-    .map((item) => taskSeedFromReview(item, 'review'))
+    .map((item) => taskSeedFromReview(item, 'review', input.progress))
 
   const mandatoryCap = Math.round(
     budgetSeconds * (budgetSeconds <= 15 * 60 ? 0.75 : 0.55),
@@ -405,9 +460,11 @@ export function generateDailyPlan(input: DailyPlanInput): DailyPlan {
   const knownReviewIds = new Set(
     Object.values(input.reviewItems).map((item) => item.learningUnitId),
   )
-  const newCandidates = input.candidates.filter(
-    (candidate) => !knownReviewIds.has(candidate.learningUnitId),
-  )
+  const newCandidates = input.candidates
+    .filter(
+      (candidate) => !knownReviewIds.has(candidate.learningUnitId),
+    )
+    .map((candidate) => prepareCandidate(candidate, input.progress))
   while (plannedSeconds < budgetSeconds) {
     const next = selectNewSeed(
       newCandidates,
@@ -422,7 +479,7 @@ export function generateDailyPlan(input: DailyPlanInput): DailyPlan {
     if (next === undefined) {
       break
     }
-    const seed = taskSeedFromCandidate(next, input.progress)
+    const seed = taskSeedFromCandidate(next)
     selectedSeeds.push(seed)
     selectedIds.add(seed.learningUnitId)
     plannedSeconds += seed.estimatedSeconds

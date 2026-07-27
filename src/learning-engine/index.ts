@@ -10,7 +10,13 @@ export {
   DEFAULT_DAILY_TARGET_SECONDS,
   LEARNING_ENGINE_SCHEMA_VERSION,
   LEARNING_EVENT_SCHEMA_VERSION,
+  MAX_CONTINUOUS_ACTIVE_MEDIA_SECONDS,
+  MAX_INTERACTION_IDLE_SECONDS,
+  MAX_RELIABLE_EFFECTIVE_SECONDS,
   MINIMUM_DAILY_BUDGET_SECONDS,
+  MIN_PERSONAL_DURATION_SAMPLE_COUNT,
+  MIN_RELIABLE_EFFECTIVE_SECONDS,
+  PERSONAL_DURATION_SAMPLE_WINDOW,
 } from './contracts.ts'
 export type {
   AbilityDomain,
@@ -35,6 +41,10 @@ export type {
   LearningEvent,
   LearningTask,
   LearningTaskMode,
+  LearningTimingPhase,
+  LearningTimingSegmentReason,
+  LearningTimingSegmentRecordedEvent,
+  LearningTimingSegmentRecordedPayload,
   LearningTaskPausedEvent,
   LearningTaskPausedPayload,
   LearningTaskSkippedEvent,
@@ -60,6 +70,12 @@ export type {
   TaskExecutionState,
   TaskExecutionStatus,
   TaskCompletionKind,
+  TaskDurationBaseline,
+  TaskDurationEstimate,
+  TaskDurationEstimateBasis,
+  TaskDurationEstimateConfidence,
+  TaskDurationSample,
+  TaskDurationSampleSource,
   TaskOrigin,
   TrainingModuleId,
 } from './contracts.ts'
@@ -105,3 +121,14 @@ export {
   updateReviewItem,
 } from './review.ts'
 export { generateDailyPlan } from './scheduler.ts'
+export {
+  calculateContentBaselineSeconds,
+  classifyTimingSegment,
+  estimateTaskDuration,
+  getDurationProfileKey,
+  recordTaskDurationSample,
+} from './timing.ts'
+export type {
+  EstimateTaskDurationInput,
+  TimingSegmentClassification,
+} from './timing.ts'

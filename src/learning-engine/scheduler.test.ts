@@ -189,4 +189,70 @@ describe('daily scheduler', () => {
     expect(plan.unfilledSeconds).toBe(2700)
     expect(plan.warnings).toContain('insufficient-eligible-content')
   })
+
+  it('uses content and personal estimates without rewriting tasks to fill the daily target', () => {
+    const initial = createInitialProgressState(
+      abilityProfile(),
+      '2026-07-01T00:00:00.000Z',
+    )
+    const progress = {
+      ...initial,
+      durationSamples: [100, 120, 140].map(
+        (effectiveSeconds, index) => ({
+          sampleId: `duration-history-${index}`,
+          taskId: `history-task-${index}`,
+          learningUnitId: `history-unit-${index}`,
+          domain: 'vocabulary' as const,
+          mode: 'learn' as const,
+          contentType: 'multiple-choice-set',
+          profileKey:
+            'vocabulary|learn|multiple-choice-set',
+          effectiveSeconds,
+          source: 'timing-segments' as const,
+          reliable: true,
+          completedAt: `2026-07-0${index + 2}T00:00:00.000Z`,
+        }),
+      ),
+    }
+
+    const plan = generateDailyPlan({
+      planId: 'plan-r3-duration',
+      generatedAt: '2026-07-06T00:00:00.000Z',
+      localDate: '2026-07-06',
+      availableSeconds: 600,
+      progress,
+      reviewItems: {},
+      candidates: [
+        learningCandidate('vocabulary', 99, {
+          estimatedSeconds: 900,
+          tags: ['content-type:multiple-choice-set'],
+          durationBaseline: {
+            schemaVersion: 1,
+            contentType: 'multiple-choice-set',
+            fixedSeconds: 30,
+            itemCount: 5,
+            secondsPerItem: 20,
+            activeAudioSeconds: 60,
+            expectedAudioPlaythroughs: 1,
+            interactionStepCount: 5,
+            secondsPerInteractionStep: 4,
+            minimumSeconds: 120,
+            maximumSeconds: 600,
+          },
+        }),
+      ],
+    })
+
+    expect(plan.targetSeconds).toBe(600)
+    expect(plan.tasks[0]).toMatchObject({
+      estimatedSeconds: 120,
+      durationEstimate: {
+        estimateSeconds: 120,
+        sampleCount: 3,
+        basis: 'personal-history',
+      },
+    })
+    expect(plan.plannedSeconds).toBe(120)
+    expect(plan.unfilledSeconds).toBe(480)
+  })
 })

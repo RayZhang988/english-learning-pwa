@@ -89,4 +89,84 @@ describe('LearningEngineRepository', () => {
       selectedStartLevel: 4.5,
     })
   })
+
+  it('reads a legacy schema 1 record without duration samples and preserves new timing history', async () => {
+    const store = new MemoryNamespaceStore()
+    const repository = new LearningEngineRepository(store)
+    const current = createLearningEngineState(
+      abilityProfile(),
+      '2026-07-02T00:00:00.000Z',
+    )
+    const { durationSamples: _durationSamples, ...legacyProgress } =
+      current.progress
+    const legacy = {
+      ...current,
+      progress: legacyProgress,
+    }
+    await store.put(LEARNING_ENGINE_STATE_KEY, legacy, 1)
+    await expect(repository.load()).resolves.toEqual(legacy)
+
+    const withTiming = {
+      ...current,
+      progress: {
+        ...current.progress,
+        durationSamples: [
+          {
+            sampleId: 'sample-1',
+            taskId: 'task-1',
+            learningUnitId: 'unit-1',
+            domain: 'vocabulary' as const,
+            mode: 'learn' as const,
+            contentType: 'multiple-choice-set',
+            profileKey:
+              'vocabulary|learn|multiple-choice-set',
+            effectiveSeconds: 120,
+            source: 'timing-segments' as const,
+            reliable: true,
+            completedAt: '2026-07-02T00:02:00.000Z',
+          },
+        ],
+      },
+    }
+    await repository.save(withTiming)
+    await expect(repository.load()).resolves.toEqual(withTiming)
+  })
+
+  it('rejects legacy scored attempts masquerading as trusted timing samples', async () => {
+    const store = new MemoryNamespaceStore()
+    const repository = new LearningEngineRepository(store)
+    const state = createLearningEngineState(
+      abilityProfile(),
+      '2026-07-02T00:00:00.000Z',
+    )
+    await store.put(
+      LEARNING_ENGINE_STATE_KEY,
+      {
+        ...state,
+        progress: {
+          ...state.progress,
+          durationSamples: [
+            {
+              sampleId: 'legacy-attempt',
+              taskId: 'task-legacy',
+              learningUnitId: 'unit-legacy',
+              domain: 'vocabulary',
+              mode: 'learn',
+              contentType: 'general',
+              profileKey: 'vocabulary|learn|general',
+              effectiveSeconds: 120,
+              source: 'legacy-scored-attempt',
+              reliable: true,
+              completedAt: '2026-07-02T00:00:00.000Z',
+            },
+          ],
+        },
+      },
+      1,
+    )
+
+    await expect(repository.load()).rejects.toThrow(
+      'Stored learning engine state is invalid',
+    )
+  })
 })

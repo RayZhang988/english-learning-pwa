@@ -69,6 +69,105 @@ active → paused → blocked → retry → carry-over → due review → 其余
 资格。一旦 `LearningTask` 已进入 active plan，就不存在词汇、听力、口语之间的执行
 前置条件。
 
+## 0.75 R3 训练时长真实性
+
+### 三种时间不能混用
+
+- `DailyPlan.targetSeconds`：用户当天可用的计划目标，默认 2700 秒。它只用于任务选择
+  和未填满预算统计。
+- `DailyPlan.plannedSeconds` / `DomainAllocation.plannedSeconds`：已选任务的
+  `estimatedSeconds` 之和，是计划预算统计，不是实际学习时间。
+- `LearningTask.estimatedSeconds`：开始任务前展示的预计**有效练习**时间。调度器不再
+  为了凑满 45 分钟改写它；预算有缺口时返回 `unfilledSeconds`。
+- `TaskExecutionState.effectiveSeconds`：经片段规则确认的前台有效练习时间，与是否产生
+  分数无关。
+- `TaskExecutionState.spentSeconds`：接收到的片段总耗时诊断值，可能包含后台、暂停、
+  空闲或等待。它不能作为 UI 的“实际练习时间”。
+
+现状审计确认旧课程 84 个单元的 `estimatedSeconds` 全部为 900；01 原样投影后，三个
+任务恰好构成 45 分钟。06/07/08 又用活动状态中相邻操作的墙钟差产生
+`durationSeconds`，没有统一空闲上限，因此可能混入后台切换延迟、长时间无操作和等待。
+R3 契约保留旧值作低置信迁移回退，但不再把它视为经过内容计算的精确结果。
+
+### 内容基线与个人校准
+
+新内容通过可选 `TaskDurationBaseline` 声明稳定 `contentType` 和内容量：
+
+```text
+raw = fixedSeconds
+    + itemCount × secondsPerItem
+    + activeAudioSeconds × expectedAudioPlaythroughs
+    + interactionStepCount × secondsPerInteractionStep
+
+contentEstimate = clamp(raw, minimumSeconds, maximumSeconds)
+```
+
+若缺少结构化基线，旧 `LearningCandidate.estimatedSeconds` 作为
+`legacy-content-estimate` 回退，`confidence = low`，合理范围为该值的 50%–150%。
+这只是诚实兼容，不表示旧 900 秒已经可靠；01/05 后续必须从真实题量、音频长度和操作
+步骤提供结构化基线。
+
+个人速度按 `domain | mode | contentType` 隔离。可用样本只包括完成任务后由
+`recordTaskDurationSample()` 固化，且明确标记为
+`source: timing-segments / reliable: true` 的前台有效计时：
+
+- 只接受 5–7200 秒的可靠有效时长；
+- 只取最近 9 个样本；
+- 4 个以上样本使用中位绝对偏差排除极端异常值；
+- 0–2 个样本仍返回内容基线，不声称已个人化；
+- 至少 3 个样本后使用样本中位数，3–4 个为 medium、5 个以上为 high；
+- 因为输出就是稳健中位数，个人估算与用于校准的历史中位数偏差为 0%，满足不超过
+  25% 的目标。
+
+`AttemptEvidence.durationSeconds` 无论是旧记录还是新 scored attempt，都不进入
+`sampleCount`，也不能触发 `personal-history`。它缺少 foreground、idle、background
+和片段来源证据；`contentTags` 或分组键同样不能证明计时可靠。即使存在 3 条、9 条或
+更多普通 attempt，仍保持 `content-baseline / sampleCount: 0`。普通 attempt 与同 ID
+可信 timing sample 同时存在时，只计算 timing sample 一次。
+
+`LearningTask.durationEstimate` 同时输出 `estimateSeconds`、`sampleCount`、`basis`、
+`confidence`、`reasonableRangeSeconds`、`contentType`、`profileKey` 和基线来源。
+该字段是 additive v1；旧持久化任务缺失时仍使用原 `estimatedSeconds`。
+
+### 可恢复有效计时片段
+
+01/06/07/08 通过 `learning.timing.segment.recorded.v1` 上报可序列化片段。payload 必须
+包含标准任务身份、mode、phase、reason、前后台状态、start/end、整数 elapsed 秒和
+`idleThresholdSeconds: 45`。平台事件 `id` 是唯一幂等键；04 把最近 500 个处理 ID
+保存在 `PlanProgress`，刷新后重投不会重复累计。
+
+集中计入规则：
+
+| 片段 | 是否计入 `effectiveSeconds` | 单片段上限 |
+| --- | --- | --- |
+| 前台主动答题、查看反馈 | 是 | 45 秒；超过说明调用方没有在空闲边界切片，事件拒绝 |
+| 前台主动播放学习音频、录音、录音回放 | 是 | 15 分钟 |
+| 后台 | 否 | 只记诊断耗时 |
+| 用户暂停、45 秒空闲超时 | 否 | 只记诊断耗时 |
+| 内容/媒体加载、权限等待、网络等待 | 否 | 只记诊断耗时 |
+
+“音频播放”只有用户在前台主动听学习材料时才是 `active-audio-listening`；缓冲或设备
+等待必须报 `media-loading`，不能冒充听力练习。04 不读取浏览器状态，由 01 提供统一
+前台/后台/空闲基础设施，模块只按契约上报片段。
+
+只要存在计时片段，`attempt.durationSeconds` 和旧 pause duration 不再重复累加。没有
+片段的旧计划继续使用事件时长兼容：scored 完成仍可为旧活动统计保留有效时长，但绝不
+进入个人速度样本；旧
+`unscorable-practice` 的 `durationSeconds` 没有前台/空闲来源证据，只保留在 spent，
+不能升级为 effective。接入 timing 片段后，完整口语降级流程会保留真实录音/回放时间，
+同时仍不产生掌握度证据。要求重试的不可评分故障同样只记 spent。
+
+`ProgressState.durationSamples` 和执行态计时字段都是可选的 schema-1 扩展。仓储只
+接受 `source: timing-segments` 的速度样本；旧引擎状态、旧 active plan 和旧 attempt
+不迁移版本、不丢掌握度，但旧 attempt 只保留为训练证据和诊断数据。新字段损坏时仓储
+明确拒绝，不静默清空。完成事件的集成顺序必须是：
+
+1. `parseLearningEvent()`；
+2. `applyPlanEvent()` 得到包含最终有效时间的计划状态；
+3. attempt 事件交给 `applyLearningAttempt()` 更新可评分证据；
+4. 再用 `recordTaskDurationSample()` 固化可靠片段样本；
+5. 保存引擎状态和 active plan。
+
 ## 1. 指标定义
 
 所有比例指标均为 `0..1`，能力和内容难度均沿用 03 的 `0..12` 内部等级。
@@ -153,8 +252,10 @@ active → paused → blocked → retry → carry-over → due review → 其余
 
 ## 5. 跨模块契约
 
-05 向引擎提供 `LearningCandidate`，只包含稳定内容引用、所属专项、内容等级和预计
-时长。04 返回 `LearningTask`；06/07/08 只消费各自 `targetModuleId` 的任务。
+05/01 向引擎提供 `LearningCandidate`，包含稳定内容引用、所属专项、内容等级，以及
+由题量、音频和操作步骤构成的 `durationBaseline`。旧内容可暂时只给低置信
+`estimatedSeconds`。04 返回带 `durationEstimate` 的 `LearningTask`；06/07/08 只
+消费各自 `targetModuleId` 的任务。
 
 训练模块通过 01 的 `PlatformEvent` 信封上报以下 v1 事件：
 
@@ -162,12 +263,13 @@ active → paused → blocked → retry → carry-over → due review → 其余
 - `learning.task.paused.v1`
 - `learning.task.skipped.v1`
 - `learning.attempt.completed.v1`
+- `learning.timing.segment.recorded.v1`
 
 事件时间必须是 ISO 8601 UTC；payload 必须带本地日期、计划、任务、内容引用和专项。
 可评分尝试还必须提供表现、证据质量、辅助程度和错误标签。模块内部原始答案、录音、
 识别音频和题型状态不进入学习引擎。
 
-v1 兼容规则不增加事件字段：
+原 attempt v1 兼容规则不修改既有字段；R3 通过独立 timing v1 事件增加真实计时：
 
 - `resolveAttemptPlanDisposition()` 将 `scored + taskCompleted` 解释为正常完成；
 - 仅当来源、专项和目标模块均为 `speaking`，结果为 `unscorable`，且失败类别为
@@ -190,9 +292,9 @@ v1 兼容规则不增加事件字段：
 | --- | --- | --- |
 | 02 | `DailyPlan`、`PlanProgress`、`PlanTaskAccess`、`ProgressSnapshot`、`ResumeDecision`、`ReassessmentRecommendation` | 不得把推荐 taskId 改成唯一入口；不得自行生成“尚未轮到” |
 | 05 | `LearningCandidate` | 候选单元只声明内容事实，不预排用户每天的主课程 |
-| 06 | `LearningTask` 中 `targetModuleId === 'vocabulary'` 的任务；四类 `LearningEvent` | 不在词汇模块内另算掌握度或全局复习时间 |
-| 07 | `LearningTask` 中 `targetModuleId === 'listening'` 的任务；四类 `LearningEvent` | 设备或音频失败必须上报不可评分，不得算学习失败 |
-| 08 | `LearningTask` 中 `targetModuleId === 'speaking'` 的任务；四类 `LearningEvent` | 只在完整降级流程结束后发布口语 `unscorable` 完成事件；不得压低口语能力 |
+| 06 | `LearningTask` 中 `targetModuleId === 'vocabulary'` 的任务；五类 `LearningEvent` | 不在词汇模块内另算掌握度或全局复习时间；长时间无操作必须切出 active 片段 |
+| 07 | `LearningTask` 中 `targetModuleId === 'listening'` 的任务；五类 `LearningEvent` | 主动听音可计 effective；媒体加载和后台等待不可计入 |
+| 08 | `LearningTask` 中 `targetModuleId === 'speaking'` 的任务；五类 `LearningEvent` | 录音/回放可计 effective；权限/识别等待不可计入；不可评分不得压低口语能力 |
 
 建议集成顺序：
 
@@ -201,8 +303,9 @@ v1 兼容规则不增加事件字段：
 3. 用 `createPlanProgress()` 建立当天执行状态，再用 `getPlanTaskAccess()` 把所有
    startable taskId 分发到各自训练模块；sequence 只参与稳定推荐，不是执行门禁。
 4. 集成层先用 `parseLearningEvent()` 校验模块事件，再交给 `applyPlanEvent()`；只有
-   `attempt.completed` 同时交给 `applyLearningAttempt()`。
-5. 每次状态变化后保存引擎和计划状态。两个入口都按事件 ID 幂等，重复投递不会重复
+   `attempt.completed` 同时交给 `applyLearningAttempt()`，并在终态用
+   `recordTaskDurationSample()` 固化可靠片段样本。
+5. 每次状态变化后保存引擎和计划状态。各入口都按事件 ID 幂等，重复投递不会重复
    增加掌握度或学习时长。
 6. 当天结束用 `summarizePlanActivity()` 和 `recordDailyActivity()` 更新连续学习，
    再生成进度快照和阶段复测建议。
