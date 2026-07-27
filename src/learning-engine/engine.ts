@@ -12,10 +12,10 @@ import {
   round,
   uniqueStrings,
 } from './utils.ts'
-import type { AbilityProfile } from './contracts.ts'
+import type { LearningAbilityProfile } from './contracts.ts'
 
 export function createLearningEngineState(
-  profile: AbilityProfile,
+  profile: LearningAbilityProfile,
   initializedAt: string,
 ): LearningEngineState {
   return {

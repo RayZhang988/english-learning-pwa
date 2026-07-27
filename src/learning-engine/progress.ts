@@ -1,6 +1,5 @@
 import type {
   AbilityDomain,
-  AbilityProfile,
   AttemptEvidence,
   CommonErrorMetric,
   DailyActivity,
@@ -11,9 +10,11 @@ import type {
   ProgressTrend,
   ReassessmentRecommendation,
   ReviewItemState,
+  LearningAbilityProfile,
   StandardErrorTag,
   StreakMetric,
 } from './contracts.ts'
+import { normalizeLearningAbilityProfile } from './ability-profile.ts'
 import {
   ABILITY_DOMAINS,
   assertLocalDate,
@@ -25,61 +26,37 @@ import {
   round,
 } from './utils.ts'
 
-const SAFE_UNAVAILABLE_LEVEL = 2.5
 const MAX_ATTEMPT_HISTORY = 120
 const MAX_DAILY_HISTORY = 90
 const ERROR_HALF_LIFE_DAYS = 14
 
-function startingDomainProgress(
-  profile: AbilityProfile,
-  domain: AbilityDomain,
-): DomainProgressState {
-  const estimate = profile.abilities[domain]
-  const baselineLevel =
-    estimate.status === 'unavailable' || estimate.internalLevel === null
-      ? SAFE_UNAVAILABLE_LEVEL
-      : estimate.internalLevel
-
-  return {
-    domain,
-    assessmentStatus: estimate.status,
-    assessmentBoundary: estimate.boundary,
-    baselineLevel,
-    currentLevel: baselineLevel,
-    confidence:
-      estimate.status === 'unavailable' ? 0 : clamp(estimate.confidence, 0, 1),
-    recentPerformance: 0.65,
-    retentionScore: 0.5,
-    masteryScore: 0.5,
-    evidenceCount: 0,
-    reliableEvidenceCount: 0,
-  }
-}
-
 export function createInitialProgressState(
-  profile: AbilityProfile,
+  profile: LearningAbilityProfile,
   initializedAt: string,
 ): ProgressState {
-  if (profile.schemaVersion !== 1) {
-    throw new TypeError('Unsupported AbilityProfile schemaVersion')
-  }
-  parseTimestamp(profile.completedAt, 'profile.completedAt')
+  const normalized = normalizeLearningAbilityProfile(profile)
   parseTimestamp(initializedAt, 'initializedAt')
 
   return {
     schemaVersion: 1,
-    profileId: profile.profileId,
-    assessmentCompletedAt: profile.completedAt,
+    profileId: normalized.profileId,
+    assessmentCompletedAt: normalized.completedAt,
     initializedAt,
     updatedAt: initializedAt,
     domains: {
-      vocabulary: startingDomainProgress(profile, 'vocabulary'),
-      listening: startingDomainProgress(profile, 'listening'),
-      speaking: startingDomainProgress(profile, 'speaking'),
+      vocabulary: normalized.domains.vocabulary,
+      listening: normalized.domains.listening,
+      speaking: normalized.domains.speaking,
     },
     attempts: [],
     dailyActivity: [],
     lastReassessmentAt: null,
+    ...(normalized.r1VocabularyStartPlacement
+      ? {
+          r1VocabularyStartPlacement:
+            normalized.r1VocabularyStartPlacement,
+        }
+      : {}),
   }
 }
 

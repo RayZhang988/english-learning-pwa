@@ -189,7 +189,8 @@ function taskSeedFromCandidate(
   const state = progress.domains[candidate.domain]
   const calibration =
     state.assessmentStatus !== 'estimated' &&
-    state.reliableEvidenceCount < 8
+    state.reliableEvidenceCount < 8 &&
+    state.pendingCalibrationPolicy !== 'normal-training'
   return {
     learningUnitId: candidate.learningUnitId,
     contentRef: candidate.contentRef,

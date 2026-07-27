@@ -1,4 +1,12 @@
 export {
+  normalizeLearningAbilityProfile,
+  R1_ENGINE_DIFFICULTY_MAX,
+  R1_FIRST_DAY_START_MAPPING_VERSION,
+  R1_FIRST_DAY_START_RULES,
+  R1_TRAVEL_VOCABULARY_REPRESENTATIVE_WORDS,
+  SAFE_PENDING_CALIBRATION_LEVEL,
+} from './ability-profile.ts'
+export {
   DEFAULT_DAILY_TARGET_SECONDS,
   LEARNING_ENGINE_SCHEMA_VERSION,
   LEARNING_EVENT_SCHEMA_VERSION,
@@ -23,6 +31,7 @@ export type {
   LearningAttemptCompletedPayload,
   LearningCandidate,
   LearningEngineState,
+  LearningAbilityProfile,
   LearningEvent,
   LearningTask,
   LearningTaskMode,
@@ -38,6 +47,7 @@ export type {
   ProgressState,
   ProgressTrend,
   ReassessmentRecommendation,
+  R1VocabularyStartPlacement,
   ResumeDecision,
   ReviewItemState,
   SkipDecision,

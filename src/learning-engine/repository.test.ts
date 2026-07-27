@@ -8,7 +8,7 @@ import {
   LEARNING_ENGINE_STATE_KEY,
   LearningEngineRepository,
 } from './repository.ts'
-import { abilityProfile } from './test-fixtures.ts'
+import { abilityProfile, abilityProfileR1 } from './test-fixtures.ts'
 
 class MemoryNamespaceStore implements NamespaceStore {
   readonly records = new Map<string, StoredRecord<unknown>>()
@@ -67,5 +67,26 @@ describe('LearningEngineRepository', () => {
     await expect(repository.load()).rejects.toThrow(
       'Unsupported learning engine state version: 2',
     )
+  })
+
+  it('round-trips additive R1 placement metadata without changing the storage schema', async () => {
+    const store = new MemoryNamespaceStore()
+    const repository = new LearningEngineRepository(store)
+    const state = createLearningEngineState(
+      abilityProfileR1(),
+      '2026-07-02T00:00:00.000Z',
+    )
+
+    await repository.save(state)
+
+    const stored = store.records.get(LEARNING_ENGINE_STATE_KEY)
+    expect(stored?.schemaVersion).toBe(1)
+    await expect(repository.load()).resolves.toEqual(state)
+    expect(
+      (await repository.load())?.progress.r1VocabularyStartPlacement,
+    ).toMatchObject({
+      mappingVersion: 'learning-r1-first-day-start-v1',
+      selectedStartLevel: 4.5,
+    })
   })
 })

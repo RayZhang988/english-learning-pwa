@@ -1,13 +1,21 @@
 import type {
   AbilityDomain,
   AbilityProfile,
+  AnyAbilityProfile,
+  TravelVocabularyResultLevelId,
 } from '../features/assessment/index.ts'
 import type {
   PlatformEvent,
   PortableData,
 } from '../core/index.ts'
 
-export type { AbilityDomain, AbilityProfile }
+export type {
+  AbilityDomain,
+  AbilityProfile,
+  AnyAbilityProfile,
+}
+
+export type LearningAbilityProfile = AnyAbilityProfile
 
 export const LEARNING_ENGINE_SCHEMA_VERSION = 1 as const
 export const LEARNING_EVENT_SCHEMA_VERSION = 1 as const
@@ -156,6 +164,28 @@ export interface DomainProgressState {
   readonly masteryScore: number
   readonly evidenceCount: number
   readonly reliableEvidenceCount: number
+  /**
+   * R1 leaves listening and speaking pending so ordinary training can
+   * calibrate them. Missing means the legacy scheduler behavior is retained.
+   */
+  readonly pendingCalibrationPolicy?: 'normal-training'
+}
+
+export interface R1VocabularyStartPlacement {
+  readonly kind: 'r1-conservative-travel-vocabulary'
+  readonly mappingVersion: 'learning-r1-first-day-start-v1'
+  readonly resultLevelId: TravelVocabularyResultLevelId
+  readonly resultLevelOrdinal: number
+  readonly resultLevelMinimumEstimatedWords: number
+  readonly estimatedWords: number
+  readonly reasonableInterval: {
+    readonly lower: number
+    readonly upper: number
+  }
+  readonly intervalLowerLevel: number
+  readonly pointEstimateLevel: number
+  readonly resultLevelFloor: number
+  readonly selectedStartLevel: number
 }
 
 export interface DailyActivity {
@@ -177,6 +207,10 @@ export interface ProgressState {
   readonly attempts: readonly AttemptEvidence[]
   readonly dailyActivity: readonly DailyActivity[]
   readonly lastReassessmentAt: string | null
+  /**
+   * Additive v1 persistence metadata. Old records omit it and remain valid.
+   */
+  readonly r1VocabularyStartPlacement?: R1VocabularyStartPlacement
 }
 
 export interface LearningEngineState {

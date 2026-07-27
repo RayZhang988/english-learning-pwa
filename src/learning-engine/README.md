@@ -4,6 +4,43 @@
 `AbilityProfile`、05 的可用学习单元和训练模块上报的标准事件；引擎只返回计划、
 复习状态、续学决策和展示指标。
 
+## 0. R1 能力档案与首日起点兼容
+
+公开入口 `LearningAbilityProfile` 接受 schema 1、schema 2 和 schema 3。创建状态前，
+`normalizeLearningAbilityProfile()` 会按版本校验并归一化；未知 schema、错误的
+`assessmentKind`、不匹配的 R1 版本/等级、未包含点估计的合理区间，以及把
+listening/speaking 伪造成已测量的 R1 档案都会被拒绝。不能依靠 TypeScript 类型断言
+绕过运行时边界。
+
+schema 1 与 schema 2 的可用 `0..12` 内部等级保持原值。R1 的 15 级 ordinal 是
+`0..14` 的结果标签索引，不能直接当作训练难度。04 使用集中版本
+`learning-r1-first-day-start-v1` 做保守转换：
+
+```text
+wordLevel(words) = 向下取 0.5 × (words / 3200 × 12)
+首日词汇起点 = min(
+  wordLevel(reasonableInterval.lower),
+  wordLevel(estimatedWords),
+  wordLevel(resultLevel.minimumEstimatedWords)
+)
+```
+
+`resultLevel.id`、`ordinal` 和 `minimumEstimatedWords` 必须同时匹配 03 的 15 级映射；
+`estimatedWords` 还必须落在该标签的词数区间。映射表集中在
+`R1_FIRST_DAY_START_RULES`，阈值依次为
+`0、150、300、450、600、750、900、1100、1300、1500、1750、2000、2250、2500、2850`。
+“幼儿园”到“大学英语六级”都只是产品内部学习标签；这里不把它们解释为学校成绩、
+学历或官方 CET 结果。
+
+R1 的 listening/speaking 必须保持 `unknown / pending-calibration` 的原始语义：
+起点使用安全默认难度 `2.5`、置信度为 `0`，但任务模式是普通 `learn`。后续正常训练
+逐步形成证据，不插入强制听力/口语考试，也不从词汇结果推导两项能力。
+
+`ProgressState` 仍使用持久化 schema 1。R1 新状态仅增加可选的
+`r1VocabularyStartPlacement` 审计元数据，记录原始估算、合理区间、结果标签、三个
+折算上限和最终起点；旧状态没有该字段时继续按原规则读取。schema 1 档案的 unavailable
+专项仍保留既有 calibration 任务行为，避免静默改变旧计划。
+
 ## 1. 指标定义
 
 所有比例指标均为 `0..1`，能力和内容难度均沿用 03 的 `0..12` 内部等级。
