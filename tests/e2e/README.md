@@ -30,13 +30,11 @@ node tests/e2e/platform-offline-accessibility.mjs
 node tests/e2e/assessment-recovery-smoke.mjs
 node tests/e2e/assessment-permission-denial.mjs
 node tests/e2e/assessment-recording-fallback.mjs
-node tests/e2e/browser-acceptance.mjs
 ```
 
-`browser-acceptance.mjs` 覆盖全新数据、约 17 分钟正式评估、真实 `AbilityProfile`、
-2700 秒首日计划、真实 `taskId`、口语录音、听力 7/7、词汇 6/6、生产事件和刷新
-恢复。脚本会明确断言口语不可评分回放结束后计划推进、三项任务完成和刷新恢复；
-失败不能改成跳过来制造通过。
+`browser-acceptance.mjs` 保留为 R1 以前的旧 v1 综合链路和 QA-006/QA-007 历史
+回归证据；它包含当时固定任务顺序的断言，不代表当前 R2，不应拿它替代下面的 R1/R2
+正式脚本。
 
 正式站强制口语 fallback 全链路回归：
 
@@ -51,7 +49,7 @@ QA_SPEAKING_FALLBACK_ONLY=1 \
 
 ## R1 正式黑盒
 
-当前活动需求 R1 使用独立脚本，不复用旧 v1 综合评估路径：
+已关闭需求 R1 使用独立脚本，不复用旧 v1 综合评估路径：
 
 ```bash
 QA_BASE_URL=https://rayzhang988.github.io/english-learning-pwa/ \
@@ -65,3 +63,22 @@ schema 3 档案和首日保守计划。脚本不会清理日常浏览器中的�
 
 这些 Chrome 结果不能替代真实 iPhone Safari、主屏幕安装、系统权限、VoiceOver、
 后台回收和连续 14 天使用。
+
+## R2 正式黑盒
+
+当前活动需求 R2 使用独立隔离脚本：
+
+```bash
+QA_BASE_URL=https://rayzhang988.github.io/english-learning-pwa/ \
+QA_SPEAKING_FALLBACK_ONLY=1 \
+  node tests/e2e/r2-browser-acceptance.mjs
+```
+
+脚本核对 Pages run `30254660989`、正式资产 `index-CgCA6fnf.js`，从正式 R1 链路生成
+schema 3 档案与 schema 1 active plan，再在独立临时 Chrome profile 中验证“今天”和
+“训练”的三个真实 taskId、三个首项入口、全部六种完成顺序、18 次逐项刷新、快速重复
+操作、暂停推荐不锁定、旧 schema 1 派生、缺失/损坏/完成 taskId 拒绝，以及 320/390px
+无横向溢出。脚本不会读取或清除日常浏览器数据。
+
+该结果不能替代用户在真实 iPhone Safari/主屏幕 Web App 对三个入口触摸自由选择的
+确认。
