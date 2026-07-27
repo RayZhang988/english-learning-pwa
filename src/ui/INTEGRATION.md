@@ -22,6 +22,7 @@ import { ... } from '../../ui/index.ts'
 - `TravelVocabularyR1IntroScreen`
 - `TravelVocabularyR1QuestionScreen`
 - `TravelVocabularyR1StageReviewScreen`
+- `TravelVocabularyR1FinishConfirmationScreen`
 - `TravelVocabularyR1StageResultScreen`
 - `TravelVocabularyR1ResumeScreen`
 - `TravelVocabularyR1MigrationScreen`
@@ -403,13 +404,14 @@ import {
 
 ## R1｜旅游英语分阶段词汇测试 UI 契约
 
-R1 与现有 v1 正式评估页面并存；01 完成正式入口切换以前，不得删除或改写
-`AssessmentIntroScreen`、`AssessmentChoiceScreen` 等 v1 组件。
+R1 已用于正式评估入口；现有 v1 页面仍作为兼容组件保留，不得删除或改写
+`AssessmentIntroScreen`、`AssessmentChoiceScreen` 等公开组件。
 
 01 只从 `src/ui/index.ts` 导入 R1 页面和类型：
 
 ```ts
 import {
+  TravelVocabularyR1FinishConfirmationScreen,
   TravelVocabularyR1IntroScreen,
   TravelVocabularyR1MigrationScreen,
   TravelVocabularyR1QuestionScreen,
@@ -419,6 +421,7 @@ import {
   TravelVocabularyR1StageReviewScreen,
   TravelVocabularyR1StatusScreen,
   type TravelVocabularyR1QuestionViewModel,
+  type TravelVocabularyR1FinishConfirmationViewModel,
   type TravelVocabularyR1ResultsViewModel,
   type TravelVocabularyR1StageReviewViewModel,
 } from '../../ui/index.ts'
@@ -431,7 +434,8 @@ import {
 | `intro`，无迁移提示 | `TravelVocabularyR1IntroScreen` | 映射 `sessionId`、`actions.canStart` |
 | `intro`，存在 `migrationNotice` | `TravelVocabularyR1MigrationScreen` | 显示旧 v1/v2 不兼容，不伪造成绩 |
 | `active` | `TravelVocabularyR1QuestionScreen` | 映射当前题、四个选项、草稿答案、30 题状态与动作 |
-| `active` 的 UI 提交检查子状态 | `TravelVocabularyR1StageReviewScreen` | 明确提供未答题列表；不改变 runtime lifecycle |
+| `active` 的 UI 提交检查子状态 | `TravelVocabularyR1StageReviewScreen` | 明确提供未答题列表和提交后果；不改变 runtime lifecycle |
+| `active` / `stage-summary` 的 UI 提前结束确认子状态 | `TravelVocabularyR1FinishConfirmationScreen` | 映射 `remainingQuestionsToMarkUncertain`；首次请求不调用 runtime |
 | `stage-summary` | `TravelVocabularyR1StageResultScreen` | 映射 `latestStageResult` 的最终显示字符串 |
 | `paused` | `TravelVocabularyR1ResumeScreen` | 显示固定原题恢复事实并调用 `resume()` |
 | `completed` | `TravelVocabularyR1ResultsScreen` | 映射 schema 3 `profile`，听力/口语保持待校准 |
@@ -440,7 +444,18 @@ import {
 `TravelVocabularyR1StageReviewScreen` 是提交前的纯 UI 子状态。点击
 `onReviewStage(sessionId)` 后，01 显示检查页；只有检查页的
 `onSubmitStage(sessionId)` 才调用 `runtime.submitStage()`。返回补答只关闭检查页或导航
-到指定题，不能提前提交。
+到指定题，不能提前提交。检查页存在未答题时仍可提交，运行时负责统一记为
+`uncertain`。
+
+“剩余全部不会，结束测试”使用独立的 UI 确认子状态：
+
+1. `onRequestFinishRemainingUnknown(sessionId)` 只打开
+   `TravelVocabularyR1FinishConfirmationScreen`；
+2. `onCancelFinishRemainingUnknown(sessionId)` 只关闭确认状态并回到作答；
+3. `onConfirmFinishRemainingUnknown(sessionId)` 才调用
+   `await runtime.finishRemainingUnknown()`。
+
+不得在首次请求时调用最终动作，也不得在 UI 中循环补写 `uncertain`。
 
 ### 字段映射
 
@@ -453,7 +468,10 @@ import {
 | `question.answerState` | `state.draftAnswers[question.id]` | 只映射选中/不确定/未答，不判断正确性 |
 | `questionMap` | 30 个公开题目与草稿 | 每项显式提供题号、题 ID、题序、当前态和作答态 |
 | `unansweredQuestions` | 草稿中缺失的题目 | 由 01 显式提供；02 不从数量推导可提交性 |
-| `submitAction.disabled` | `!state.actions.canSubmitStage` | 禁用必须同时提供 `disabledReason` |
+| `unansweredCountLabel` | `state.progress` 与未答映射结果 | 由 01 提供完整显示字符串，例如“还有 2 题未答，提交后将按不会记录” |
+| `submitAction.busy` | 01 串行操作状态 | 存在未答题不禁用提交；只在提交中的防重状态禁用 |
+| `finishRemainingAction` | `state.actions.canFinishRemainingUnknown` | 只负责打开确认页，不直接执行最终动作 |
+| `remainingQuestionCountLabel` | `state.remainingQuestionsToMarkUncertain` | 由 01 格式化；02 不计算当前阶段或后续阶段剩余数 |
 | 阶段结果各 `*Label` | `latestStageResult` | 在适配层格式化，02 不计算比例、估算或区间 |
 | 总结果各 `*Label` | `state.profile` | 在适配层格式化，02 不计算总词数、等级或时间 |
 
@@ -470,8 +488,12 @@ import {
 | `onMarkUncertain(target)` | `sessionId/questionId/questionIndex` | `runtime.markUncertain(questionId)` |
 | `onClearAnswer(target)` | 同上 | `runtime.clearAnswer(questionId)` |
 | `onNavigate(target)` | 目标题 ID 与零基题序 | 校验目标后 `runtime.navigate(questionIndex)` |
+| `onAdvanceToNextQuestion(intent)` | 当前 `sessionId/questionId/questionIndex` 和固定意图类型 | 校验当前题后 `runtime.advanceToNextQuestion()`；不得改用 `navigate(current + 1)` |
 | `onReviewStage(sessionId)` | 会话 ID | 只打开提交检查，不调用 runtime |
 | `onSubmitStage(sessionId)` | 会话 ID | `await runtime.submitStage()` |
+| `onRequestFinishRemainingUnknown(sessionId)` | 会话 ID | 只打开 UI 二次确认 |
+| `onCancelFinishRemainingUnknown(sessionId)` | 会话 ID | 只关闭 UI 二次确认，不调用 runtime |
+| `onConfirmFinishRemainingUnknown(sessionId)` | 会话 ID | `await runtime.finishRemainingUnknown()` |
 | `onContinueToNextStage(sessionId)` | 会话 ID | `runtime.continueToNextStage()` |
 | `onPause(sessionId)` | 会话 ID | `runtime.pause()` 并由 01 持久化快照 |
 | `onResume(sessionId)` | 会话 ID | `runtime.resume()` |
@@ -481,6 +503,10 @@ import {
 按钮是否可用、忙碌和禁用原因全部由 ViewModel 提供。阶段结果页固定使用“进入下一阶段”
 动作，不根据 `correctCountLabel` 设置满分门槛；0/30、6/30、15/30、30/30 的页面结构和
 回调完全相同。
+
+`onAdvanceToNextQuestion` 与检查页的快速结束入口在类型中暂时保留可选兼容桥，目的只是让
+尚未更新的 01 适配器在所有权交接期间继续编译。UI 不会回退到旧 `onNavigate` 语义；
+生产接入必须显式提供这些新增字段和回调，否则对应控件保持禁用或不显示。
 
 ### 恢复、迁移和结果诚实性
 
@@ -499,6 +525,7 @@ import {
 ?ui-fixture=travel-r1-intro
 ?ui-fixture=travel-r1-question
 ?ui-fixture=travel-r1-review
+?ui-fixture=travel-r1-finish-confirmation
 ?ui-fixture=travel-r1-stage-result
 ?ui-fixture=travel-r1-resume
 ?ui-fixture=travel-r1-migration

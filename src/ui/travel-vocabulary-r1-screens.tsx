@@ -3,6 +3,7 @@ import { LoadingState } from './feedback-states.tsx'
 import { TrainingScreen } from './training-primitives.tsx'
 import type {
   TravelVocabularyR1ActionViewModel,
+  TravelVocabularyR1FinishConfirmationScreenProps,
   TravelVocabularyR1IntroScreenProps,
   TravelVocabularyR1MigrationScreenProps,
   TravelVocabularyR1NoticeViewModel,
@@ -229,6 +230,7 @@ export function TravelVocabularyR1QuestionScreen({
   onMarkUncertain,
   onClearAnswer,
   onNavigate,
+  onAdvanceToNextQuestion,
   onReviewStage,
   onPause,
 }: TravelVocabularyR1QuestionScreenProps) {
@@ -240,6 +242,16 @@ export function TravelVocabularyR1QuestionScreen({
   )
   const reviewDisabled = isActionDisabled(viewModel.reviewAction)
   const pauseDisabled = isActionDisabled(viewModel.pauseAction)
+  const nextDisabled =
+    viewModel.nextTarget === null ||
+    isActionDisabled(viewModel.nextAction) ||
+    onAdvanceToNextQuestion === undefined
+  const nextWillMarkUnknown =
+    viewModel.question.answerState === 'unanswered' &&
+    viewModel.nextTarget !== null
+  const nextDescriptionId = nextWillMarkUnknown
+    ? 'travel-r1-next-question-description'
+    : undefined
 
   return (
     <TrainingScreen
@@ -278,22 +290,35 @@ export function TravelVocabularyR1QuestionScreen({
             <button
               className="secondary-button"
               type="button"
-              disabled={
-                viewModel.nextTarget === null ||
-                isActionDisabled(viewModel.nextAction)
+              disabled={nextDisabled}
+              aria-label={
+                nextWillMarkUnknown
+                  ? `${actionAccessibleLabel(viewModel.nextAction)}，未作答将按不会记录`
+                  : actionAccessibleLabel(viewModel.nextAction)
               }
-              aria-label={actionAccessibleLabel(viewModel.nextAction)}
+              aria-describedby={nextDescriptionId}
               onClick={
-                viewModel.nextTarget === null ||
-                isActionDisabled(viewModel.nextAction)
+                nextDisabled
                   ? undefined
-                  : () => onNavigate(viewModel.nextTarget!)
+                  : () =>
+                      onAdvanceToNextQuestion?.({
+                        ...currentTarget,
+                        kind: 'advance-to-next-question',
+                      })
               }
             >
               {actionLabel(viewModel.nextAction)}
               <Icon name="arrow-right" />
             </button>
           </div>
+          {nextWillMarkUnknown ? (
+            <p
+              className="travel-r1-advance-note"
+              id={nextDescriptionId}
+            >
+              未作答将按不会记录，返回后仍可修改。
+            </p>
+          ) : null}
           <button
             className="primary-button"
             type="button"
@@ -487,9 +512,14 @@ export function TravelVocabularyR1StageReviewScreen({
   onBack,
   onNavigate,
   onSubmitStage,
+  onRequestFinishRemainingUnknown,
 }: TravelVocabularyR1StageReviewScreenProps) {
   const submitDisabled = isActionDisabled(viewModel.submitAction)
   const backDisabled = isActionDisabled(viewModel.backAction)
+  const finishRemainingDisabled =
+    viewModel.finishRemainingAction === undefined ||
+    isActionDisabled(viewModel.finishRemainingAction) ||
+    onRequestFinishRemainingUnknown === undefined
 
   return (
     <TrainingScreen
@@ -531,6 +561,32 @@ export function TravelVocabularyR1StageReviewScreen({
           >
             {actionLabel(viewModel.backAction)}
           </button>
+          {viewModel.finishRemainingAction ? (
+            <div className="travel-r1-finish-entry">
+              <span>
+                <strong>确定后不再逐题作答</strong>
+                <small>会先进入确认页面，不会立即结束测试。</small>
+              </span>
+              <button
+                className="travel-r1-danger-button"
+                type="button"
+                disabled={finishRemainingDisabled}
+                aria-label={`危险操作：${actionAccessibleLabel(
+                  viewModel.finishRemainingAction,
+                )}`}
+                onClick={
+                  finishRemainingDisabled
+                    ? undefined
+                    : () =>
+                        onRequestFinishRemainingUnknown?.(
+                          viewModel.sessionId,
+                        )
+                }
+              >
+                {actionLabel(viewModel.finishRemainingAction)}
+              </button>
+            </div>
+          ) : null}
         </div>
       )}
     >
@@ -555,7 +611,11 @@ export function TravelVocabularyR1StageReviewScreen({
           aria-labelledby="travel-r1-unanswered-heading"
         >
           <h2 id="travel-r1-unanswered-heading">仍未作答</h2>
-          <p>先返回这些题目完成选择，再提交本阶段。</p>
+          <p>
+            {viewModel.unansweredCountLabel ??
+              viewModel.reviewDescription}
+          </p>
+          <p>可以返回修改；直接提交不会被未答题阻塞。</p>
           <div className="travel-r1-unanswered__grid">
             {viewModel.unansweredQuestions.map((question) => (
               <button
@@ -590,6 +650,93 @@ export function TravelVocabularyR1StageReviewScreen({
           {viewModel.submitAction.disabledReason}
         </p>
       ) : null}
+    </TrainingScreen>
+  )
+}
+
+export function TravelVocabularyR1FinishConfirmationScreen({
+  viewModel,
+  onCancelFinishRemainingUnknown,
+  onConfirmFinishRemainingUnknown,
+}: TravelVocabularyR1FinishConfirmationScreenProps) {
+  const cancelDisabled = isActionDisabled(viewModel.cancelAction)
+  const confirmDisabled = isActionDisabled(viewModel.confirmAction)
+
+  return (
+    <TrainingScreen
+      className="travel-r1-screen travel-r1-screen--finish-confirmation"
+      header={{
+        eyebrow: 'END AS UNKNOWN',
+        title: '确认结束测试',
+        progress: viewModel.headerProgress,
+      }}
+      exitLabel="取消提前结束并继续作答"
+      onExit={() =>
+        onCancelFinishRemainingUnknown(viewModel.sessionId)}
+      actionLayout="stacked"
+      action={(
+        <div className="training-action__stack">
+          <button
+            className="primary-button"
+            type="button"
+            disabled={cancelDisabled}
+            aria-label={actionAccessibleLabel(viewModel.cancelAction)}
+            onClick={
+              cancelDisabled
+                ? undefined
+                : () =>
+                    onCancelFinishRemainingUnknown(
+                      viewModel.sessionId,
+                    )
+            }
+          >
+            <Icon name="arrow-left" />
+            {actionLabel(viewModel.cancelAction)}
+          </button>
+          <button
+            className="travel-r1-danger-button travel-r1-danger-button--confirm"
+            type="button"
+            disabled={confirmDisabled}
+            aria-label={`危险操作：${actionAccessibleLabel(
+              viewModel.confirmAction,
+            )}`}
+            onClick={
+              confirmDisabled
+                ? undefined
+                : () =>
+                    onConfirmFinishRemainingUnknown(
+                      viewModel.sessionId,
+                    )
+            }
+          >
+            {actionLabel(viewModel.confirmAction)}
+          </button>
+        </div>
+      )}
+    >
+      <section
+        className="travel-r1-finish-confirmation"
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="travel-r1-finish-confirmation-heading"
+        aria-describedby="travel-r1-finish-confirmation-description"
+      >
+        <span
+          className="travel-r1-finish-confirmation__icon"
+          aria-hidden="true"
+        >
+          <Icon name="info" />
+        </span>
+        <span className="eyebrow">不可撤销</span>
+        <h2 id="travel-r1-finish-confirmation-heading">
+          剩余全部按不会记录？
+        </h2>
+        <strong>{viewModel.remainingQuestionCountLabel}</strong>
+        <p id="travel-r1-finish-confirmation-description">
+          已经作答的结果会原样保留；其余题目将全部按“不认识 /
+          不确定”记录。确认后会直接生成五阶段完整结果，无法撤销。
+        </p>
+      </section>
     </TrainingScreen>
   )
 }

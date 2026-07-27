@@ -2,6 +2,7 @@ export const travelVocabularyR1VisualFixtureIds = [
   'travel-r1-intro',
   'travel-r1-question',
   'travel-r1-review',
+  'travel-r1-finish-confirmation',
   'travel-r1-stage-result',
   'travel-r1-resume',
   'travel-r1-migration',

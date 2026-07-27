@@ -8,6 +8,7 @@ import {
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it, vi } from 'vitest'
 import {
+  TravelVocabularyR1FinishConfirmationScreen,
   TravelVocabularyR1IntroScreen,
   TravelVocabularyR1MigrationScreen,
   TravelVocabularyR1QuestionScreen,
@@ -323,6 +324,7 @@ describe('R1 travel vocabulary UI contract', () => {
     const onMarkUncertain = vi.fn()
     const onClearAnswer = vi.fn()
     const onNavigate = vi.fn()
+    const onAdvanceToNextQuestion = vi.fn()
     const onReviewStage = vi.fn()
     const onPause = vi.fn()
     const screen = TravelVocabularyR1QuestionScreen({
@@ -332,6 +334,7 @@ describe('R1 travel vocabulary UI contract', () => {
       onMarkUncertain,
       onClearAnswer,
       onNavigate,
+      onAdvanceToNextQuestion,
       onReviewStage,
       onPause,
     })
@@ -342,10 +345,14 @@ describe('R1 travel vocabulary UI contract', () => {
     expect(markup).toContain('<details')
     expect(markup).toContain('查看本阶段 30 题')
     expect(collectHostElements(screen, 'button')).toHaveLength(41)
+    expect(markup).not.toMatch(
+      /correctOptionId|meaningZh|wordId|scoring/u,
+    )
 
     buttonContaining(screen, '行李领取处').props.onClick?.()
     buttonByAriaLabel(screen, '不认识 / 不确定').props.onClick?.()
     buttonByAriaLabel(screen, '8，未答').props.onClick?.()
+    buttonByAriaLabel(screen, '下一题').props.onClick?.()
     buttonByAriaLabel(screen, '清除本题选择').props.onClick?.()
     buttonByAriaLabel(screen, '检查本阶段').props.onClick?.()
     buttonByAriaLabel(screen, '暂停并保存').props.onClick?.()
@@ -366,6 +373,12 @@ describe('R1 travel vocabulary UI contract', () => {
       questionId: 'r1-question-8',
       questionIndex: 7,
     })
+    expect(onAdvanceToNextQuestion).toHaveBeenCalledWith({
+      kind: 'advance-to-next-question',
+      sessionId,
+      questionId: 'r1-question-7',
+      questionIndex: 6,
+    })
     expect(onClearAnswer).toHaveBeenCalledWith({
       sessionId,
       questionId: 'r1-question-7',
@@ -375,9 +388,71 @@ describe('R1 travel vocabulary UI contract', () => {
     expect(onPause).toHaveBeenCalledWith(sessionId)
   })
 
-  it('lists unanswered questions and removes submit behavior until externally enabled', () => {
+  it('announces the unanswered advance rule without changing arbitrary navigation semantics', () => {
+    const onNavigate = vi.fn()
+    const onAdvanceToNextQuestion = vi.fn()
+    const screen = TravelVocabularyR1QuestionScreen({
+      viewModel: {
+        ...questionViewModel,
+        question: {
+          ...questionViewModel.question,
+          answerState: 'unanswered',
+          options: [
+            {
+              ...questionViewModel.question.options[0],
+              selected: false,
+            },
+            {
+              ...questionViewModel.question.options[1],
+              selected: false,
+            },
+            {
+              ...questionViewModel.question.options[2],
+              selected: false,
+            },
+            {
+              ...questionViewModel.question.options[3],
+              selected: false,
+            },
+          ],
+        },
+      },
+      onExit: () => undefined,
+      onSelectChoice: () => undefined,
+      onMarkUncertain: () => undefined,
+      onClearAnswer: () => undefined,
+      onNavigate,
+      onAdvanceToNextQuestion,
+      onReviewStage: () => undefined,
+      onPause: () => undefined,
+    })
+    const markup = renderToStaticMarkup(screen)
+
+    expect(markup).toContain('未作答将按不会记录')
+    expect(markup).toContain('返回后仍可修改')
+
+    buttonByAriaLabel(
+      screen,
+      '下一题，未作答将按不会记录',
+    ).props.onClick?.()
+    expect(onAdvanceToNextQuestion).toHaveBeenCalledWith({
+      kind: 'advance-to-next-question',
+      sessionId,
+      questionId: 'r1-question-7',
+      questionIndex: 6,
+    })
+    expect(onNavigate).not.toHaveBeenCalled()
+
+    buttonByAriaLabel(screen, '上一题').props.onClick?.()
+    expect(onNavigate).toHaveBeenCalledWith(
+      questionViewModel.previousTarget,
+    )
+  })
+
+  it('keeps stage submission available with unanswered questions and requests confirmation separately', () => {
     const onSubmitStage = vi.fn()
     const onNavigate = vi.fn()
+    const onRequestFinishRemainingUnknown = vi.fn()
     const screen = TravelVocabularyR1StageReviewScreen({
       viewModel: {
         sessionId,
@@ -391,7 +466,8 @@ describe('R1 travel vocabulary UI contract', () => {
           value: 40,
         },
         answeredLabel: '已答 28 / 30',
-        reviewDescription: '还有两题未完成。',
+        reviewDescription:
+          '还有 2 题未答，提交后将按不会记录。',
         unansweredQuestions: [
           {
             questionId: 'r1-question-9',
@@ -406,29 +482,34 @@ describe('R1 travel vocabulary UI contract', () => {
             answerState: 'unanswered',
           },
         ],
-        submitAction: action(
-          '确认提交本阶段',
-          true,
-          '还有 2 题未作答。',
-        ),
+        unansweredCountLabel:
+          '还有 2 题未答，提交后将按不会记录。',
+        submitAction: action('确认提交本阶段'),
         backAction: action('返回继续检查'),
+        finishRemainingAction: action(
+          '剩余全部不会，结束测试',
+        ),
       },
       onExit: () => undefined,
       onBack: () => undefined,
       onNavigate,
       onSubmitStage,
+      onRequestFinishRemainingUnknown,
     })
     const submitButton = buttonByAriaLabel(
       screen,
-      '确认提交本阶段，还有 2 题未作答。',
+      '确认提交本阶段',
     )
 
     expect(renderToStaticMarkup(screen)).toContain('仍未作答')
+    expect(renderToStaticMarkup(screen)).toContain(
+      '还有 2 题未答，提交后将按不会记录。',
+    )
     expect(renderToStaticMarkup(screen)).toContain('>9<')
     expect(renderToStaticMarkup(screen)).toContain('>24<')
-    expect(submitButton.props.disabled).toBe(true)
-    expect(submitButton.props.onClick).toBeUndefined()
-    expect(onSubmitStage).not.toHaveBeenCalled()
+    expect(submitButton.props.disabled).toBe(false)
+    submitButton.props.onClick?.()
+    expect(onSubmitStage).toHaveBeenCalledWith(sessionId)
 
     buttonByAriaLabel(screen, '返回第 9 题补答').props.onClick?.()
     expect(onNavigate).toHaveBeenCalledWith({
@@ -436,6 +517,14 @@ describe('R1 travel vocabulary UI contract', () => {
       questionId: 'r1-question-9',
       questionIndex: 8,
     })
+
+    buttonByAriaLabel(
+      screen,
+      '危险操作：剩余全部不会，结束测试',
+    ).props.onClick?.()
+    expect(onRequestFinishRemainingUnknown).toHaveBeenCalledWith(
+      sessionId,
+    )
   })
 
   it('requires an explicit confirmation and submits only when the adapter enables it', () => {
@@ -462,6 +551,7 @@ describe('R1 travel vocabulary UI contract', () => {
       onBack: () => undefined,
       onNavigate: () => undefined,
       onSubmitStage,
+      onRequestFinishRemainingUnknown: () => undefined,
     })
     const markup = renderToStaticMarkup(screen)
 
@@ -470,6 +560,83 @@ describe('R1 travel vocabulary UI contract', () => {
     expect(markup).toContain('不能再修改')
     buttonByAriaLabel(screen, '确认提交本阶段').props.onClick?.()
     expect(onSubmitStage).toHaveBeenCalledWith(sessionId)
+  })
+
+  it('separates request, cancel and irreversible confirmation while displaying the external remaining count', () => {
+    const onCancelFinishRemainingUnknown = vi.fn()
+    const onConfirmFinishRemainingUnknown = vi.fn()
+    const screen = TravelVocabularyR1FinishConfirmationScreen({
+      viewModel: {
+        sessionId,
+        headerProgress: {
+          label: '由外部提供：58 / 150',
+          value: 13,
+        },
+        remainingQuestionCountLabel: '由 03 提供：92 题',
+        cancelAction: action('取消，继续作答'),
+        confirmAction: action('确认全部不会并结束'),
+      },
+      onCancelFinishRemainingUnknown,
+      onConfirmFinishRemainingUnknown,
+    })
+    const markup = renderToStaticMarkup(screen)
+
+    expect(markup).toContain('role="alertdialog"')
+    expect(markup).toContain('由 03 提供：92 题')
+    expect(markup).toContain('已经作答的结果会原样保留')
+    expect(markup).toContain('直接生成五阶段完整结果')
+    expect(markup).toContain('无法撤销')
+    expect(markup).not.toMatch(
+      /correctOptionId|meaningZh|wordId|scoring/u,
+    )
+
+    buttonByAriaLabel(
+      screen,
+      '取消，继续作答',
+    ).props.onClick?.()
+    expect(onCancelFinishRemainingUnknown).toHaveBeenCalledWith(
+      sessionId,
+    )
+    expect(onConfirmFinishRemainingUnknown).not.toHaveBeenCalled()
+
+    buttonByAriaLabel(
+      screen,
+      '危险操作：确认全部不会并结束',
+    ).props.onClick?.()
+    expect(onConfirmFinishRemainingUnknown).toHaveBeenCalledWith(
+      sessionId,
+    )
+  })
+
+  it('prevents repeated confirmation while the external action is busy', () => {
+    const onConfirmFinishRemainingUnknown = vi.fn()
+    const screen = TravelVocabularyR1FinishConfirmationScreen({
+      viewModel: {
+        sessionId,
+        headerProgress: {
+          label: '总进度 58 / 150',
+          value: 39,
+        },
+        remainingQuestionCountLabel: '92 题',
+        cancelAction: action('取消，继续作答'),
+        confirmAction: {
+          label: '确认全部不会并结束',
+          disabled: false,
+          busy: true,
+          busyLabel: '正在生成结果',
+        },
+      },
+      onCancelFinishRemainingUnknown: () => undefined,
+      onConfirmFinishRemainingUnknown,
+    })
+    const confirmButton = buttonByAriaLabel(
+      screen,
+      '危险操作：正在生成结果',
+    )
+
+    expect(confirmButton.props.disabled).toBe(true)
+    expect(confirmButton.props.onClick).toBeUndefined()
+    expect(onConfirmFinishRemainingUnknown).not.toHaveBeenCalled()
   })
 
   it('keeps the next stage available for a zero score and displays external estimates verbatim', () => {
@@ -640,6 +807,9 @@ describe('R1 travel vocabulary UI contract', () => {
       'grid-template-columns: repeat(5, minmax(44px, 1fr))',
     )
     expect(r1Css).toContain('min-height: 44px')
+    expect(r1Css).toMatch(
+      /\.travel-r1-danger-button\s*\{[\s\S]*?min-height: 44px/u,
+    )
     expect(r1Css).toContain('@media (width <= 360px)')
     expect(r1Css).toContain('overflow-wrap: anywhere')
     expect(r1Css).toContain('env(safe-area-inset-bottom)')

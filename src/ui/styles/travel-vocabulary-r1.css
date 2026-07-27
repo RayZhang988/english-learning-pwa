@@ -471,6 +471,14 @@
   margin-top: 0;
 }
 
+.travel-r1-advance-note {
+  margin: 0;
+  color: #9b4636;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  text-align: right;
+}
+
 .travel-r1-action-reason {
   margin: 16px 0 0;
   color: var(--ink-soft);
@@ -556,6 +564,7 @@
 
 .travel-r1-unanswered p,
 .travel-r1-confirmation p,
+.travel-r1-finish-confirmation p,
 .travel-r1-calibration > p,
 .travel-r1-disclaimer p {
   margin: 0;
@@ -581,6 +590,114 @@
   font-family: var(--utility-font);
   font-weight: 750;
   cursor: pointer;
+}
+
+.travel-r1-finish-entry {
+  display: grid;
+  margin-top: 8px;
+  padding-top: 16px;
+  gap: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.travel-r1-finish-entry > span {
+  display: grid;
+  gap: 3px;
+  text-align: left;
+}
+
+.travel-r1-finish-entry strong {
+  color: var(--ink);
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
+.travel-r1-finish-entry small {
+  color: var(--ink-soft);
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+
+.travel-r1-danger-button {
+  display: inline-flex;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgb(200 68 68 / 45%);
+  border-radius: 14px;
+  color: var(--danger);
+  background: var(--surface);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 720;
+  line-height: 1.45;
+  text-align: center;
+  cursor: pointer;
+}
+
+.travel-r1-danger-button--confirm {
+  color: #ffffff;
+  background: var(--danger);
+}
+
+.travel-r1-danger-button:disabled {
+  border-color: var(--line);
+  color: var(--ink-faint);
+  background: #f3f5f9;
+  cursor: not-allowed;
+}
+
+.travel-r1-finish-confirmation {
+  display: grid;
+  padding: 28px 22px;
+  justify-items: center;
+  border: 1px solid rgb(200 68 68 / 28%);
+  border-radius: 26px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 88% 12%, rgb(200 68 68 / 8%), transparent 32%),
+    var(--surface);
+  box-shadow: 0 14px 34px rgb(31 45 84 / 6%);
+}
+
+.travel-r1-finish-confirmation__icon {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  margin-bottom: 18px;
+  place-items: center;
+  border-radius: 19px;
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.travel-r1-finish-confirmation__icon svg {
+  width: 25px;
+  height: 25px;
+}
+
+.travel-r1-finish-confirmation h2 {
+  max-width: 330px;
+  margin: 7px 0 18px;
+  font-family: var(--display-font);
+  font-size: clamp(1.7rem, 8vw, 2.3rem);
+  letter-spacing: -0.045em;
+  line-height: 1.2;
+}
+
+.travel-r1-finish-confirmation > strong {
+  margin-bottom: 12px;
+  color: var(--danger);
+  font-family: var(--display-font);
+  font-size: clamp(2.6rem, 14vw, 3.8rem);
+  letter-spacing: -0.055em;
+  line-height: 1;
+}
+
+.travel-r1-finish-confirmation p {
+  max-width: 350px;
 }
 
 .travel-r1-confirmation {

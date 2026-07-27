@@ -57,6 +57,15 @@ export interface TravelVocabularyR1ChoiceIntent
   readonly optionId: string
 }
 
+/**
+ * A sequential advance is deliberately distinct from arbitrary navigation.
+ * The integration layer must map this intent to `advanceToNextQuestion()`.
+ */
+export interface TravelVocabularyR1AdvanceIntent
+  extends TravelVocabularyR1QuestionTarget {
+  readonly kind: 'advance-to-next-question'
+}
+
 export interface TravelVocabularyR1QuestionOptionViewModel {
   readonly id: string
   readonly label: string
@@ -133,8 +142,31 @@ export interface TravelVocabularyR1StageReviewViewModel {
    */
   readonly unansweredQuestions:
     readonly TravelVocabularyR1StageReviewQuestionViewModel[]
+  /**
+   * Final display text supplied by the integration layer, for example
+   * "还有 2 题未答，提交后将按不会记录". The UI does not count
+   * `unansweredQuestions` itself.
+   */
+  readonly unansweredCountLabel?: string
   readonly submitAction: TravelVocabularyR1ActionViewModel
   readonly backAction: TravelVocabularyR1ActionViewModel
+  /**
+   * Optional only as a temporary compatibility bridge for the existing 01
+   * adapter. New R1 integrations must provide this action.
+   */
+  readonly finishRemainingAction?: TravelVocabularyR1ActionViewModel
+}
+
+export interface TravelVocabularyR1FinishConfirmationViewModel {
+  readonly sessionId: string
+  readonly headerProgress: TravelVocabularyR1HeaderProgressViewModel
+  /**
+   * Exact externally formatted value based on
+   * `remainingQuestionsToMarkUncertain`, for example "92 题".
+   */
+  readonly remainingQuestionCountLabel: string
+  readonly cancelAction: TravelVocabularyR1ActionViewModel
+  readonly confirmAction: TravelVocabularyR1ActionViewModel
 }
 
 export interface TravelVocabularyR1StageResultViewModel {
@@ -241,6 +273,14 @@ export interface TravelVocabularyR1QuestionScreenProps {
   readonly onNavigate: (
     target: TravelVocabularyR1QuestionTarget,
   ) => void
+  /**
+   * Optional only so the previous 01 adapter keeps compiling during the
+   * ownership handoff. The next-question control never falls back to
+   * `onNavigate`; new integrations must provide this callback.
+   */
+  readonly onAdvanceToNextQuestion?: (
+    intent: TravelVocabularyR1AdvanceIntent,
+  ) => void
   readonly onReviewStage: (sessionId: string) => void
   readonly onPause: (sessionId: string) => void
 }
@@ -253,6 +293,23 @@ export interface TravelVocabularyR1StageReviewScreenProps {
     target: TravelVocabularyR1QuestionTarget,
   ) => void
   readonly onSubmitStage: (sessionId: string) => void
+  /**
+   * Opens the UI confirmation state only. It must not call the runtime's
+   * final action.
+   */
+  readonly onRequestFinishRemainingUnknown?: (
+    sessionId: string,
+  ) => void
+}
+
+export interface TravelVocabularyR1FinishConfirmationScreenProps {
+  readonly viewModel: TravelVocabularyR1FinishConfirmationViewModel
+  readonly onCancelFinishRemainingUnknown: (
+    sessionId: string,
+  ) => void
+  readonly onConfirmFinishRemainingUnknown: (
+    sessionId: string,
+  ) => void
 }
 
 export interface TravelVocabularyR1StageResultScreenProps {

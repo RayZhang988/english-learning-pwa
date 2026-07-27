@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import {
+  TravelVocabularyR1FinishConfirmationScreen,
   TravelVocabularyR1IntroScreen,
   TravelVocabularyR1MigrationScreen,
   TravelVocabularyR1QuestionScreen,
@@ -129,10 +130,7 @@ export function TravelVocabularyR1VisualFixture({
     | { readonly kind: 'choice'; readonly optionId: string }
     | { readonly kind: 'uncertain' }
     | null
-  >({
-    kind: 'choice',
-    optionId: 'meaning-reservation',
-  })
+  >(null)
 
   if (id === 'travel-r1-intro') {
     return (
@@ -259,6 +257,7 @@ export function TravelVocabularyR1VisualFixture({
         onMarkUncertain={() => setAnswer({ kind: 'uncertain' })}
         onClearAnswer={() => setAnswer(null)}
         onNavigate={() => undefined}
+        onAdvanceToNextQuestion={() => undefined}
         onReviewStage={() => undefined}
         onPause={() => undefined}
       />
@@ -280,7 +279,8 @@ export function TravelVocabularyR1VisualFixture({
             value: 39,
           },
           answeredLabel: '已答 28 / 30',
-          reviewDescription: '完成剩余题目后才能提交本阶段。',
+          reviewDescription:
+            '还有 2 题未答，提交后将按不会记录。',
           unansweredQuestions: [
             {
               questionId: 'visual-r1-question-9',
@@ -295,13 +295,18 @@ export function TravelVocabularyR1VisualFixture({
               answerState: 'unanswered',
             },
           ],
+          unansweredCountLabel:
+            '还有 2 题未答，提交后将按不会记录。',
           submitAction: {
             label: '确认提交本阶段',
-            disabled: true,
-            disabledReason: '还有 2 题未作答。',
+            disabled: false,
           },
           backAction: {
             label: '返回继续检查',
+            disabled: false,
+          },
+          finishRemainingAction: {
+            label: '剩余全部不会，结束测试',
             disabled: false,
           },
         }}
@@ -309,6 +314,32 @@ export function TravelVocabularyR1VisualFixture({
         onBack={() => undefined}
         onNavigate={() => undefined}
         onSubmitStage={() => undefined}
+        onRequestFinishRemainingUnknown={() => undefined}
+      />
+    )
+  }
+
+  if (id === 'travel-r1-finish-confirmation') {
+    return (
+      <TravelVocabularyR1FinishConfirmationScreen
+        viewModel={{
+          sessionId: demoSessionId,
+          headerProgress: {
+            label: '总进度 58 / 150',
+            value: 39,
+          },
+          remainingQuestionCountLabel: '92 题',
+          cancelAction: {
+            label: '取消，继续作答',
+            disabled: false,
+          },
+          confirmAction: {
+            label: '确认全部不会并结束',
+            disabled: false,
+          },
+        }}
+        onCancelFinishRemainingUnknown={() => undefined}
+        onConfirmFinishRemainingUnknown={() => undefined}
       />
     )
   }

@@ -43,6 +43,7 @@ export {
   type AssessmentSubmissionFailureReason,
 } from './assessment-screens.tsx'
 export {
+  TravelVocabularyR1FinishConfirmationScreen,
   TravelVocabularyR1IntroScreen,
   TravelVocabularyR1MigrationScreen,
   TravelVocabularyR1QuestionScreen,
@@ -54,7 +55,10 @@ export {
 } from './travel-vocabulary-r1-screens.tsx'
 export type {
   TravelVocabularyR1ActionViewModel,
+  TravelVocabularyR1AdvanceIntent,
   TravelVocabularyR1ChoiceIntent,
+  TravelVocabularyR1FinishConfirmationScreenProps,
+  TravelVocabularyR1FinishConfirmationViewModel,
   TravelVocabularyR1HeaderProgressViewModel,
   TravelVocabularyR1IntroScreenProps,
   TravelVocabularyR1IntroViewModel,
