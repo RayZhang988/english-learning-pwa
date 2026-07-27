@@ -6,7 +6,9 @@ import {
 import {
   createLearningEngineState,
   createPlanProgress,
+  evaluatePlanTaskStart,
   generateDailyPlan,
+  getPlanTaskAccess,
   getResumeDecision,
   LEARNING_ENGINE_STORAGE_NAMESPACE,
   LearningEngineRepository,
@@ -15,6 +17,7 @@ import {
   type LearningEngineState,
   type LearningAbilityProfile,
   type LearningTask,
+  type PlanTaskAccess,
   type TrainingModuleId,
 } from '../../learning-engine/index.ts'
 import { localStorageService } from '../../storage/index.ts'
@@ -54,7 +57,7 @@ export type LearningAppState =
       readonly runtime: ActiveLearningRuntime
       readonly engineState: LearningEngineState
       readonly assessmentProfileSchemaVersion: 1 | 2 | 3
-      readonly resumeTaskId: string | null
+      readonly taskAccess: PlanTaskAccess
     }
   | {
       readonly status: 'error'
@@ -98,18 +101,13 @@ function runtimeState(
       reason: 'no-eligible-content',
     }
   }
-  const resume =
-    runtime.activePlan.plan.localDate === localDate
-      ? getResumeDecision(runtime.activePlan, localDate)
-      : null
   return {
     status: 'ready',
     localDate,
     runtime,
     engineState,
     assessmentProfileSchemaVersion,
-    resumeTaskId:
-      resume?.action === 'resume-plan' ? resume.nextTaskId : null,
+    taskAccess: getPlanTaskAccess(runtime.activePlan),
   }
 }
 
@@ -182,6 +180,25 @@ export class LearningAppCoordinator {
     if (state.runtime.activePlan.plan.localDate !== state.localDate) {
       throw new TypeError('The active plan is not for the current date.')
     }
+    const access = evaluatePlanTaskStart(
+      state.runtime.activePlan,
+      taskId,
+    )
+    if (access.availability !== 'startable') {
+      if (access.unavailableReason === 'not-in-active-plan') {
+        throw new TypeError(
+          'taskId is not part of the active daily plan.',
+        )
+      }
+      if (access.unavailableReason === 'task-finished') {
+        throw new TypeError(
+          'The requested task is already finished.',
+        )
+      }
+      throw new TypeError(
+        'The requested task has invalid active-plan data.',
+      )
+    }
     const execution = state.runtime.activePlan.tasks.find(
       (entry) => entry.task.taskId === taskId,
     )
@@ -195,12 +212,6 @@ export class LearningAppCoordinator {
       throw new TypeError(
         'taskId does not belong to the requested training module.',
       )
-    }
-    if (
-      execution.status === 'completed' ||
-      execution.status === 'skipped'
-    ) {
-      throw new TypeError('The requested task is already finished.')
     }
     return execution.task
   }

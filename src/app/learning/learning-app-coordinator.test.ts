@@ -138,6 +138,29 @@ function completedEvent(
   }
 }
 
+function startedEvent(
+  task: LearningTask,
+  localDate: string,
+): PlatformEvent {
+  return {
+    id: `started:${task.taskId}`,
+    type: 'learning.task.started.v1',
+    sourceModuleId: task.targetModuleId,
+    occurredAt: `${localDate}T08:05:00.000Z`,
+    schemaVersion: 1,
+    payload: {
+      planId: task.planId,
+      taskId: task.taskId,
+      learningUnitId: task.learningUnitId,
+      contentRef: task.contentRef,
+      domain: task.domain,
+      targetModuleId: task.targetModuleId,
+      localDate,
+      mode: task.mode,
+    },
+  }
+}
+
 async function completedR1Profile() {
   const runtime = createTravelVocabularyAssessmentRuntimeR1({
     now: () => '2026-07-27T08:00:00.000Z',
@@ -216,6 +239,14 @@ describe('LearningAppCoordinator', () => {
       throw new Error('Expected a ready plan.')
     }
     expect(firstState.runtime.activePlan.plan.tasks).toHaveLength(3)
+    expect(firstState.runtime.schemaVersion).toBe(1)
+    expect(firstState.runtime.activePlan.schemaVersion).toBe(1)
+    expect(firstState.taskAccess.schemaVersion).toBe(1)
+    expect(firstState.taskAccess.startableTaskIds).toEqual(
+      firstState.runtime.activePlan.plan.tasks.map(
+        (task) => task.taskId,
+      ),
+    )
     const planId = firstState.runtime.activePlan.plan.planId
 
     const refreshed = coordinator()
@@ -225,69 +256,99 @@ describe('LearningAppCoordinator', () => {
       throw new Error('Expected a restored plan.')
     }
     expect(refreshedState.runtime.activePlan.plan.planId).toBe(planId)
+    expect(refreshedState.taskAccess.startableTaskIds).toEqual(
+      firstState.taskAccess.startableTaskIds,
+    )
     expect(candidates.loadCount).toBe(1)
   })
 
-  it('routes only unfinished tasks from the current plan', async () => {
+  it('routes every unfinished task from the current plan by exact taskId', async () => {
     await profiles.saveLatest(abilityProfile())
     const app = coordinator()
     const state = await app.initialize()
     if (state.status !== 'ready') {
       throw new Error('Expected a ready plan.')
     }
-    const task = state.runtime.activePlan.plan.tasks[0]
 
-    expect(app.routeForTask(task.taskId)).toBe(
-      `/${task.targetModuleId}?taskId=${encodeURIComponent(task.taskId)}`,
+    for (const task of state.runtime.activePlan.plan.tasks) {
+      expect(app.routeForTask(task.taskId)).toBe(
+        `/${task.targetModuleId}?taskId=${encodeURIComponent(task.taskId)}`,
+      )
+    }
+    expect(state.taskAccess.startableTaskIds).toEqual(
+      state.runtime.activePlan.plan.tasks.map((task) => task.taskId),
     )
     expect(() => app.resolveTask('unknown-task')).toThrow('taskId')
     expect(() =>
-      app.resolveTask(task.taskId, 'speaking'),
+      app.resolveTask(
+        state.runtime.activePlan.plan.tasks[0].taskId,
+        'speaking',
+      ),
     ).toThrow('requested training module')
   })
 
-  it('takes the UI task ID through routing, event persistence, and refresh recovery', async () => {
+  it('takes an arbitrary UI task ID through routing, persistence, and partial refresh recovery', async () => {
     await profiles.saveLatest(abilityProfile())
-    const app = coordinator()
-    const state = await app.initialize()
+    let app = coordinator()
+    let state = await app.initialize()
     if (state.status !== 'ready') {
       throw new Error('Expected a ready plan.')
     }
-    const viewModel = toDailyPlanViewModel(
-      state.runtime.activePlan,
-      state.engineState,
-      state.resumeTaskId,
-      '2026-07-24T08:00:00.000Z',
-    )
-    if (viewModel.primaryAction.state !== 'enabled') {
-      throw new Error('Expected a real primary task.')
+    const completionOrder = [
+      state.runtime.activePlan.plan.tasks.find(
+        (task) => task.targetModuleId === 'speaking',
+      ),
+      state.runtime.activePlan.plan.tasks.find(
+        (task) => task.targetModuleId === 'vocabulary',
+      ),
+    ]
+    if (completionOrder.some((task) => task === undefined)) {
+      throw new Error('Expected speaking and vocabulary tasks.')
     }
 
-    const callbackTaskId = viewModel.primaryAction.taskId
-    const task = app.resolveTask(callbackTaskId)
-    expect(app.routeForTask(callbackTaskId)).toBe(
-      `/${task.targetModuleId}?taskId=${encodeURIComponent(callbackTaskId)}`,
-    )
-    await app.eventSink.publish(
-      completedEvent(task, '2026-07-24'),
-    )
+    for (const task of completionOrder) {
+      if (!task) {
+        throw new Error('Expected a task.')
+      }
+      expect(app.routeForTask(task.taskId)).toBe(
+        `/${task.targetModuleId}?taskId=${encodeURIComponent(task.taskId)}`,
+      )
+      await app.eventSink.publish(
+        completedEvent(task, '2026-07-24'),
+      )
 
-    const refreshed = coordinator()
-    const restored = await refreshed.initialize()
-    if (restored.status !== 'ready') {
-      throw new Error('Expected a restored plan.')
+      app = coordinator()
+      state = await app.initialize()
+      if (state.status !== 'ready') {
+        throw new Error('Expected a restored plan.')
+      }
+      expect(
+        state.runtime.activePlan.tasks.find(
+          (entry) => entry.task.taskId === task.taskId,
+        )?.status,
+      ).toBe('completed')
+      expect(() => app.resolveTask(task.taskId)).toThrow(
+        'already finished',
+      )
+      const unfinished = state.taskAccess.tasks.filter(
+        (access) => access.availability === 'startable',
+      )
+      const startableTaskIds = state.taskAccess.startableTaskIds
+      expect(
+        unfinished.every((access) =>
+          startableTaskIds.includes(access.taskId),
+        ),
+      ).toBe(true)
     }
-    expect(
-      restored.runtime.activePlan.tasks.find(
-        (entry) => entry.task.taskId === callbackTaskId,
-      )?.status,
-    ).toBe('completed')
-    expect(() => refreshed.resolveTask(callbackTaskId)).toThrow(
-      'already finished',
-    )
+
+    expect(state.taskAccess.startableTaskIds).toEqual([
+      state.runtime.activePlan.plan.tasks.find(
+        (task) => task.targetModuleId === 'listening',
+      )?.taskId,
+    ])
   })
 
-  it('routes all three practice cards with the same exact task ids as Today', async () => {
+  it('routes all three Practice cards with the same exact task ids as Today', async () => {
     await profiles.saveLatest(abilityProfile())
     const app = coordinator()
     const initialized = await app.initialize()
@@ -295,54 +356,155 @@ describe('LearningAppCoordinator', () => {
       throw new Error('Expected a ready plan.')
     }
 
+    const practiceModules = toPracticeModulesViewModel(
+      initialized.runtime.activePlan,
+      initialized.taskAccess,
+    )
+    const today = toDailyPlanViewModel(
+      initialized.runtime.activePlan,
+      initialized.engineState,
+      initialized.taskAccess,
+      '2026-07-24T08:00:00.000Z',
+    )
+
     for (const plannedTask of initialized.runtime.activePlan.plan.tasks) {
-      const current = app.state
-      if (current.status !== 'ready') {
-        throw new Error('Expected an active ready plan.')
-      }
-      const practiceModules = toPracticeModulesViewModel(
-        current.runtime.activePlan,
-        current.resumeTaskId,
-      )
       const module = practiceModules.find(
         (candidate) =>
           candidate.moduleId === plannedTask.targetModuleId,
       )
-      const today = toDailyPlanViewModel(
-        current.runtime.activePlan,
-        current.engineState,
-        current.resumeTaskId,
-        '2026-07-24T08:00:00.000Z',
+      const todayTask = today.tasks.find(
+        (candidate) =>
+          candidate.moduleId === plannedTask.targetModuleId,
       )
 
-      expect(module?.request).toMatchObject({
-        state: 'enabled',
+      expect(module).toMatchObject({
+        availability: 'startable',
         taskId: plannedTask.taskId,
       })
-      expect(today.primaryAction).toMatchObject({
-        state: 'enabled',
+      expect(todayTask).toMatchObject({
+        availability: 'startable',
         taskId: plannedTask.taskId,
       })
       if (
         !module ||
         module.moduleId === 'assessment' ||
-        module.request.state !== 'enabled'
+        module.availability !== 'startable'
       ) {
         throw new Error('Expected an enabled specialty practice card.')
       }
-      expect(app.routeForTask(module.request.taskId)).toBe(
+      expect(app.routeForTask(module.taskId)).toBe(
         `/${plannedTask.targetModuleId}?taskId=${encodeURIComponent(plannedTask.taskId)}`,
       )
+    }
+  })
 
-      await app.eventSink.publish(
-        completedEvent(plannedTask, '2026-07-24'),
-      )
+  it('keeps recommendation non-binding when another task is active', async () => {
+    await profiles.saveLatest(abilityProfile())
+    const app = coordinator()
+    const initialized = await app.initialize()
+    if (initialized.status !== 'ready') {
+      throw new Error('Expected a ready plan.')
+    }
+    const speaking = initialized.runtime.activePlan.plan.tasks.find(
+      (task) => task.targetModuleId === 'speaking',
+    )
+    if (!speaking) {
+      throw new Error('Expected a speaking task.')
     }
 
-    expect(app.state.status).toBe('ready')
-    if (app.state.status === 'ready') {
+    await app.eventSink.publish(
+      startedEvent(speaking, '2026-07-24'),
+    )
+    if (app.state.status !== 'ready') {
+      throw new Error('Expected an updated ready plan.')
+    }
+    expect(app.state.taskAccess.recommendedTaskId).toBe(
+      speaking.taskId,
+    )
+    expect(app.state.taskAccess.startableTaskIds).toEqual(
+      expect.arrayContaining(
+        app.state.runtime.activePlan.plan.tasks.map(
+          (task) => task.taskId,
+        ),
+      ),
+    )
+    for (const task of app.state.runtime.activePlan.plan.tasks) {
+      expect(() => app.routeForTask(task.taskId)).not.toThrow()
+    }
+  })
+
+  it('persists the same 3/3 completion for all six task orders', async () => {
+    const orders = [
+      ['vocabulary', 'listening', 'speaking'],
+      ['vocabulary', 'speaking', 'listening'],
+      ['listening', 'vocabulary', 'speaking'],
+      ['listening', 'speaking', 'vocabulary'],
+      ['speaking', 'vocabulary', 'listening'],
+      ['speaking', 'listening', 'vocabulary'],
+    ] as const
+
+    for (const order of orders) {
+      profiles = new AssessmentProfileRepository(
+        new MemoryNamespaceStore('feature.assessment'),
+      )
+      activePlans = new ActivePlanRepository(
+        new MemoryNamespaceStore('app.learning-runtime'),
+      )
+      engineStates = new LearningEngineRepository(
+        new MemoryNamespaceStore('learning.engine'),
+      )
+      candidates = new SequencedCandidateSource()
+      idSequence = 0
+      await profiles.saveLatest(abilityProfile())
+      const app = coordinator()
+      const initialized = await app.initialize()
+      if (initialized.status !== 'ready') {
+        throw new Error('Expected a ready plan.')
+      }
+
+      for (const moduleId of order) {
+        const current = app.state
+        if (current.status !== 'ready') {
+          throw new Error('Expected an active ready plan.')
+        }
+        const task = current.runtime.activePlan.plan.tasks.find(
+          (candidate) =>
+            candidate.targetModuleId === moduleId,
+        )
+        if (!task) {
+          throw new Error(`Expected a ${moduleId} task.`)
+        }
+        expect(current.taskAccess.startableTaskIds).toContain(
+          task.taskId,
+        )
+        await app.eventSink.publish(
+          completedEvent(task, '2026-07-24'),
+        )
+        await app.eventSink.publish(
+          completedEvent(task, '2026-07-24'),
+        )
+      }
+
+      if (app.state.status !== 'ready') {
+        throw new Error('Expected a completed ready plan.')
+      }
       expect(app.state.runtime.activePlan.status).toBe('completed')
-      expect(app.state.resumeTaskId).toBeNull()
+      expect(
+        app.state.runtime.activePlan.tasks.filter(
+          (task) => task.status === 'completed',
+        ),
+      ).toHaveLength(3)
+      expect(app.state.taskAccess.startableTaskIds).toEqual([])
+      expect(
+        (await engineStates.load())?.progress.attempts,
+      ).toHaveLength(3)
+      const refreshed = coordinator()
+      const restored = await refreshed.initialize()
+      if (restored.status !== 'ready') {
+        throw new Error('Expected a restored completed plan.')
+      }
+      expect(restored.runtime.activePlan.status).toBe('completed')
+      expect(restored.taskAccess.startableTaskIds).toEqual([])
     }
   })
 

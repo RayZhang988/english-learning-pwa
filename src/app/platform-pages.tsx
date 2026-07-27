@@ -116,13 +116,13 @@ export function PlatformReadyPage() {
       plan={toDailyPlanViewModel(
         state.runtime.activePlan,
         state.engineState,
-        state.resumeTaskId,
+        state.taskAccess,
         now,
       )}
       progress={toProgressViewModel(state.engineState)}
       practiceModules={toPracticeModulesViewModel(
         state.runtime.activePlan,
-        state.resumeTaskId,
+        state.taskAccess,
         state.assessmentProfileSchemaVersion,
       )}
       offline={network === 'offline'}

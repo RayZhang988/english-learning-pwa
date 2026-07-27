@@ -3,7 +3,8 @@ import {
   DEFAULT_DAILY_TARGET_SECONDS,
   type LearningEngineState,
   type PlanProgress,
-  type TaskExecutionState,
+  type PlanTaskAccess,
+  type PlanTaskAvailability,
   type TrainingModuleId,
 } from '../../learning-engine/index.ts'
 import type {
@@ -11,6 +12,7 @@ import type {
   DailyTaskViewModel,
   PracticeModuleViewModel,
   ProgressViewModel,
+  TrainingTaskAccessViewModel,
 } from '../../ui/index.ts'
 
 const modulePresentation: Readonly<
@@ -55,106 +57,156 @@ const practiceModuleLabels: Readonly<Record<TrainingModuleId, string>> = {
   speaking: '口语训练',
 }
 
-function specialtyPracticeModule(
+function unavailableDescription(
   moduleId: TrainingModuleId,
-  progress: PlanProgress,
-  resumeTaskId: string | null,
-): PracticeModuleViewModel {
+  access: PlanTaskAvailability,
+): string {
   const label = practiceModuleLabels[moduleId]
-  const executions = progress.tasks.filter(
-    (execution) => execution.task.targetModuleId === moduleId,
-  )
-  const current = executions.find(
-    (execution) =>
-      execution.task.taskId === resumeTaskId &&
-      execution.status !== 'completed' &&
-      execution.status !== 'skipped',
-  )
-
-  if (current) {
-    return {
-      moduleId,
-      request: {
-        state: 'enabled',
-        label:
-          current.status === 'active' ||
-          current.status === 'paused' ||
-          current.status === 'blocked'
-            ? '继续训练'
-            : '进入训练',
-        taskId: current.task.taskId,
-      },
-    }
+  if (
+    access.unavailableReason === 'task-finished' &&
+    access.taskStatus === 'completed'
+  ) {
+    return `今天的${label}任务已经完成。`
   }
-
-  if (executions.length === 0) {
-    return {
-      moduleId,
-      request: {
-        state: 'disabled',
-        label: '今日无任务',
-        reason: `当前没有可执行的${label}任务。`,
-      },
-    }
+  if (
+    access.unavailableReason === 'task-finished' &&
+    access.taskStatus === 'skipped'
+  ) {
+    return `今天的${label}任务已从计划中跳过。`
   }
-
-  const unfinished = executions.some(
-    (execution) =>
-      execution.status !== 'completed' &&
-      execution.status !== 'skipped',
-  )
-  if (unfinished) {
-    return {
-      moduleId,
-      request: {
-        state: 'disabled',
-        label: '稍后开始',
-        reason: `尚未轮到${label}，请先完成当前计划任务。`,
-      },
-    }
+  if (access.unavailableReason === 'not-in-active-plan') {
+    return `当前计划没有${label}任务。`
   }
+  return `${label}任务数据不完整或与当前计划不一致，无法安全启动。`
+}
 
-  const allCompleted = executions.every(
-    (execution) => execution.status === 'completed',
-  )
-  if (allCompleted) {
+function trainingTaskAccessViewModel(
+  moduleId: TrainingModuleId,
+  access: PlanTaskAvailability,
+): TrainingTaskAccessViewModel {
+  if (
+    access.availability === 'startable' &&
+    access.taskStatus !== null &&
+    access.taskStatus !== 'completed' &&
+    access.taskStatus !== 'skipped'
+  ) {
+    const statusPresentation = {
+      pending: {
+        statusLabel: '未开始',
+        actionLabel: '开始训练',
+      },
+      active: {
+        statusLabel: '进行中',
+        actionLabel: '继续训练',
+      },
+      paused: {
+        statusLabel: '已暂停',
+        actionLabel: '继续训练',
+      },
+      blocked: {
+        statusLabel: '待继续',
+        actionLabel: '继续训练',
+      },
+    }[access.taskStatus]
     return {
       moduleId,
-      request: {
-        state: 'disabled',
-        label: '已完成',
-        reason: `今天的${label}任务已经完成。`,
-      },
-    }
-  }
-
-  const allSkipped = executions.every(
-    (execution) => execution.status === 'skipped',
-  )
-  if (allSkipped) {
-    return {
-      moduleId,
-      request: {
-        state: 'disabled',
-        label: '已跳过',
-        reason: `今天的${label}任务已从计划中跳过。`,
-      },
+      availability: 'startable',
+      taskId: access.taskId,
+      status: access.taskStatus,
+      recommended: access.recommended,
+      ...statusPresentation,
     }
   }
 
   return {
     moduleId,
-    request: {
-      state: 'disabled',
-      label: '今日已结束',
-      reason: `今天的${label}任务已经完成或跳过。`,
-    },
+    availability: 'unavailable',
+    taskId:
+      access.unavailableReason === 'not-in-active-plan'
+        ? null
+        : access.taskId,
+    status: access.taskStatus,
+    recommended: false,
+    statusLabel:
+      access.taskStatus === 'completed'
+        ? '已完成'
+        : access.taskStatus === 'skipped'
+          ? '已跳过'
+          : access.unavailableReason === 'not-in-active-plan'
+            ? '今日无任务'
+            : '任务异常',
+    unavailableReason:
+      access.unavailableReason ?? 'invalid-task-data',
+    unavailableDescription: unavailableDescription(moduleId, access),
   }
+}
+
+function invalidAccess(
+  taskId: string,
+  moduleId: TrainingModuleId | null,
+): PlanTaskAvailability {
+  return {
+    taskId,
+    targetModuleId: moduleId,
+    taskStatus: null,
+    availability: 'unavailable',
+    unavailableReason: 'invalid-task-data',
+    recommended: false,
+  }
+}
+
+function missingModuleAccess(
+  moduleId: TrainingModuleId,
+): PlanTaskAvailability {
+  return {
+    taskId: `missing:${moduleId}`,
+    targetModuleId: moduleId,
+    taskStatus: null,
+    availability: 'unavailable',
+    unavailableReason: 'not-in-active-plan',
+    recommended: false,
+  }
+}
+
+function specialtyPracticeModule(
+  moduleId: TrainingModuleId,
+  progress: PlanProgress,
+  taskAccess: PlanTaskAccess,
+): PracticeModuleViewModel {
+  const taskIds = [
+    ...new Set([
+      ...progress.plan.tasks
+        .filter((task) => task.targetModuleId === moduleId)
+        .map((task) => task.taskId),
+      ...progress.tasks
+        .filter(
+          (execution) =>
+            execution.task.targetModuleId === moduleId,
+        )
+        .map((execution) => execution.task.taskId),
+    ]),
+  ]
+  if (taskIds.length === 0) {
+    return trainingTaskAccessViewModel(
+      moduleId,
+      missingModuleAccess(moduleId),
+    )
+  }
+  if (taskIds.length !== 1) {
+    return trainingTaskAccessViewModel(
+      moduleId,
+      invalidAccess(taskIds[0], moduleId),
+    )
+  }
+  const access =
+    taskAccess.tasks.find((task) => task.taskId === taskIds[0]) ??
+    invalidAccess(taskIds[0], moduleId)
+  return trainingTaskAccessViewModel(moduleId, access)
 }
 
 export function toPracticeModulesViewModel(
   progress: PlanProgress,
-  resumeTaskId: string | null,
+  taskAccess: PlanTaskAccess,
   assessmentProfileSchemaVersion: 1 | 2 | 3 = 3,
 ): readonly PracticeModuleViewModel[] {
   return [
@@ -169,54 +221,41 @@ export function toPracticeModulesViewModel(
       },
     },
     ...practiceModuleIds.map((moduleId) =>
-      specialtyPracticeModule(moduleId, progress, resumeTaskId),
+      specialtyPracticeModule(moduleId, progress, taskAccess),
     ),
   ]
 }
 
 function taskViewModel(
-  execution: TaskExecutionState,
-  resumeTaskId: string | null,
+  progress: PlanProgress,
+  taskAccess: PlanTaskAccess,
+  taskId: string,
 ): DailyTaskViewModel {
-  const presentation =
-    modulePresentation[execution.task.targetModuleId]
-  const terminal =
-    execution.status === 'completed' || execution.status === 'skipped'
-  const isCurrent = execution.task.taskId === resumeTaskId
-  const request = terminal
-    ? {
-        state: 'disabled' as const,
-        label:
-          execution.status === 'completed' ? '已完成' : '已跳过',
-        reason:
-          execution.status === 'completed'
-            ? '这项任务已经完成。'
-            : '这项任务已从今日计划中跳过。',
-      }
-    : isCurrent
-      ? {
-          state: 'enabled' as const,
-          label:
-            execution.status === 'paused' ? '继续' : '下一项',
-        }
-      : {
-          state: 'disabled' as const,
-          label: '稍后',
-          reason: '完成当前任务后可开始。',
-        }
+  const execution = progress.tasks.find(
+    (candidate) => candidate.task.taskId === taskId,
+  )
+  const scheduled = progress.plan.tasks.find(
+    (candidate) => candidate.taskId === taskId,
+  )
+  const task = execution?.task ?? scheduled
+  const moduleId = task?.targetModuleId ?? null
+  const access =
+    taskAccess.tasks.find((candidate) => candidate.taskId === taskId) ??
+    invalidAccess(taskId, moduleId)
+  if (!task || moduleId === null) {
+    throw new TypeError(
+      'Daily task view model requires a scheduled task identity.',
+    )
+  }
+  const presentation = modulePresentation[moduleId]
+  const taskState = trainingTaskAccessViewModel(moduleId, access)
 
   return {
-    id: execution.task.taskId,
     ...presentation,
-    meta: `${Math.round(execution.task.estimatedSeconds / 60)} 分钟 · ${
-      modeLabels[execution.task.mode]
+    ...taskState,
+    meta: `${Math.round(task.estimatedSeconds / 60)} 分钟 · ${
+      modeLabels[task.mode]
     }`,
-    status: terminal
-      ? 'complete'
-      : isCurrent
-        ? 'current'
-        : 'upcoming',
-    request,
   }
 }
 
@@ -232,11 +271,11 @@ function dateLabel(localDate: string): string {
 export function toDailyPlanViewModel(
   progress: PlanProgress,
   engineState: LearningEngineState,
-  resumeTaskId: string | null,
+  taskAccess: PlanTaskAccess,
   asOf: string,
 ): DailyPlanViewModel {
-  const tasks = progress.tasks.map((task) =>
-    taskViewModel(task, resumeTaskId),
+  const tasks = progress.plan.tasks.map((task) =>
+    taskViewModel(progress, taskAccess, task.taskId),
   )
   const completedCount = progress.tasks.filter(
     (task) => task.status === 'completed',
@@ -246,10 +285,6 @@ export function toDailyPlanViewModel(
       task.status === 'completed' || task.status === 'skipped',
   ).length
   const totalCount = progress.tasks.length
-  const current = tasks.find(
-    (task) =>
-      task.id === resumeTaskId && task.request.state === 'enabled',
-  )
   const progressSnapshot = buildProgressSnapshot(
     engineState.progress,
     asOf,
@@ -267,26 +302,6 @@ export function toDailyPlanViewModel(
         ? 0
         : Math.round((finishedCount / totalCount) * 100),
     tasks,
-    primaryAction: current
-      ? {
-          state: 'enabled',
-          label:
-            progress.status === 'not-started'
-              ? '开始今日计划'
-              : '继续今日计划',
-          taskId: current.id,
-        }
-      : {
-          state: 'disabled',
-          label:
-            progress.status === 'completed'
-              ? '今日计划已完成'
-              : '当前没有可执行任务',
-          reason:
-            progress.status === 'completed'
-              ? '今天的学习任务已经全部完成。'
-              : '计划中的任务暂时不可用。',
-        },
   }
 }
 

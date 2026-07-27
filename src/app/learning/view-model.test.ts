@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest'
 import {
   createLearningEngineState,
   createPlanProgress,
+  getPlanTaskAccess,
   type DailyPlan,
+  type PlanProgress,
 } from '../../learning-engine/index.ts'
 import { abilityProfile } from '../../learning-engine/test-fixtures.ts'
 import {
@@ -68,45 +70,128 @@ function plan(): DailyPlan {
   }
 }
 
+function progress(): PlanProgress {
+  return createPlanProgress(
+    plan(),
+    '2026-07-24T08:00:00.000Z',
+  )
+}
+
+function engine() {
+  return createLearningEngineState(
+    abilityProfile(),
+    '2026-07-24T08:00:00.000Z',
+  )
+}
+
 describe('learning app view-model integration', () => {
-  it('preserves task IDs and enables only the engine resume task', () => {
-    const progress = createPlanProgress(
-      plan(),
-      '2026-07-24T08:00:00.000Z',
-    )
-    const engine = createLearningEngineState(
-      abilityProfile(),
-      '2026-07-24T08:00:00.000Z',
-    )
-    const resumeTaskId = progress.tasks[0].task.taskId
+  it('maps all three Today tasks as startable with their own exact task ids', () => {
+    const activePlan = progress()
+    const taskAccess = getPlanTaskAccess(activePlan)
 
     const viewModel = toDailyPlanViewModel(
-      progress,
-      engine,
-      resumeTaskId,
+      activePlan,
+      engine(),
+      taskAccess,
       '2026-07-24T08:00:00.000Z',
     )
 
-    expect(viewModel.tasks.map((task) => task.id)).toEqual(
-      progress.tasks.map((task) => task.task.taskId),
+    expect(viewModel.tasks.map((task) => task.taskId)).toEqual(
+      activePlan.tasks.map((task) => task.task.taskId),
     )
-    expect(viewModel.tasks[0].request.state).toBe('enabled')
-    expect(viewModel.tasks[1].request.state).toBe('disabled')
-    expect(viewModel.primaryAction).toMatchObject({
-      state: 'enabled',
-      taskId: resumeTaskId,
+    expect(
+      viewModel.tasks.map((task) => task.availability),
+    ).toEqual(['startable', 'startable', 'startable'])
+    expect(
+      viewModel.tasks.filter(
+        (task) =>
+          task.availability === 'startable' && task.recommended,
+      ),
+    ).toHaveLength(1)
+    expect(JSON.stringify(viewModel)).not.toMatch(
+      /primaryAction|尚未轮到|完成当前任务后/u,
+    )
+  })
+
+  it('uses the same task access and exact ids for Today and Practice', () => {
+    const activePlan = progress()
+    const taskAccess = getPlanTaskAccess(activePlan)
+    const today = toDailyPlanViewModel(
+      activePlan,
+      engine(),
+      taskAccess,
+      '2026-07-24T08:00:00.000Z',
+    )
+    const modules = toPracticeModulesViewModel(
+      activePlan,
+      taskAccess,
+    )
+
+    for (const todayTask of today.tasks) {
+      const module = modules.find(
+        (candidate) =>
+          candidate.moduleId === todayTask.moduleId,
+      )
+      expect(module).toMatchObject({
+        availability: todayTask.availability,
+        taskId: todayTask.taskId,
+        recommended: todayTask.recommended,
+      })
+    }
+  })
+
+  it('keeps unfinished tasks startable after another task completes', () => {
+    const initial = progress()
+    const activePlan: PlanProgress = {
+      ...initial,
+      status: 'in-progress',
+      tasks: initial.tasks.map((task, index) =>
+        index === 0
+          ? {
+              ...task,
+              status: 'completed',
+              completionKind: 'scored',
+            }
+          : task,
+      ),
+    }
+    const taskAccess = getPlanTaskAccess(activePlan)
+    const today = toDailyPlanViewModel(
+      activePlan,
+      engine(),
+      taskAccess,
+      '2026-07-24T08:00:00.000Z',
+    )
+
+    expect(today.tasks[0]).toMatchObject({
+      availability: 'unavailable',
+      taskId: activePlan.tasks[0].task.taskId,
+      status: 'completed',
+      unavailableReason: 'task-finished',
+      unavailableDescription: '今天的词汇训练任务已经完成。',
     })
+    expect(today.tasks.slice(1)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          moduleId: 'listening',
+          availability: 'startable',
+          taskId: activePlan.tasks[1].task.taskId,
+        }),
+        expect.objectContaining({
+          moduleId: 'speaking',
+          availability: 'startable',
+          taskId: activePlan.tasks[2].task.taskId,
+        }),
+      ]),
+    )
   })
 
   it('derives progress display only from persisted engine activity', () => {
-    const engine = createLearningEngineState(
-      abilityProfile(),
-      '2026-07-24T08:00:00.000Z',
-    )
+    const currentEngine = engine()
     const viewModel = toProgressViewModel({
-      ...engine,
+      ...currentEngine,
       progress: {
-        ...engine.progress,
+        ...currentEngine.progress,
         dailyActivity: [
           {
             localDate: '2026-07-24',
@@ -127,56 +212,44 @@ describe('learning app view-model integration', () => {
     })
   })
 
-  it('maps all four practice cards and preserves each exact current task id', () => {
-    const progress = createPlanProgress(
-      plan(),
-      '2026-07-24T08:00:00.000Z',
+  it('maps all four Practice cards without placeholder content', () => {
+    const activePlan = progress()
+    const modules = toPracticeModulesViewModel(
+      activePlan,
+      getPlanTaskAccess(activePlan),
     )
 
-    for (const current of progress.tasks) {
-      const modules = toPracticeModulesViewModel(
-        progress,
-        current.task.taskId,
-      )
-      const assessment = modules[0]
-      const specialty = modules.find(
-        (module) =>
-          module.moduleId === current.task.targetModuleId,
-      )
-
-      expect(modules.map((module) => module.moduleId)).toEqual([
-        'assessment',
-        'vocabulary',
-        'listening',
-        'speaking',
-      ])
-      expect(assessment).toEqual({
-        moduleId: 'assessment',
-        request: {
-          state: 'enabled',
-          label: '查看测试结果',
-        },
-      })
-      expect(specialty?.request).toEqual({
+    expect(modules.map((module) => module.moduleId)).toEqual([
+      'assessment',
+      'vocabulary',
+      'listening',
+      'speaking',
+    ])
+    expect(modules[0]).toEqual({
+      moduleId: 'assessment',
+      request: {
         state: 'enabled',
-        label: '进入训练',
-        taskId: current.task.taskId,
-      })
-      expect(JSON.stringify(modules)).not.toMatch(
-        /尚未接入|暂无可用训练|训练内容接入后/u,
-      )
-    }
+        label: '查看测试结果',
+      },
+    })
+    expect(
+      modules.slice(1).every(
+        (module) =>
+          module.moduleId !== 'assessment' &&
+          module.availability === 'startable',
+      ),
+    ).toBe(true)
+    expect(JSON.stringify(modules)).not.toMatch(
+      /尚未轮到|尚未接入|暂无可用训练|训练内容接入后/u,
+    )
   })
 
   it('labels a legacy profile as a new R1 test instead of a completed R1 result', () => {
-    const progress = createPlanProgress(
-      plan(),
-      '2026-07-24T08:00:00.000Z',
-    )
+    const activePlan = progress()
 
     const modules = toPracticeModulesViewModel(
-      progress,
-      progress.tasks[0].task.taskId,
+      activePlan,
+      getPlanTaskAccess(activePlan),
       1,
     )
 
@@ -189,63 +262,93 @@ describe('learning app view-model integration', () => {
     })
   })
 
-  it('disables locked, completed, skipped, and missing practice tasks with accurate reasons', () => {
-    const progress = createPlanProgress(
-      plan(),
-      '2026-07-24T08:00:00.000Z',
-    )
-    const mapped = {
-      ...progress,
+  it('disables completed, skipped, missing, and malformed tasks with honest reasons', () => {
+    const initial = progress()
+    const terminal: PlanProgress = {
+      ...initial,
+      plan: {
+        ...initial.plan,
+        tasks: initial.plan.tasks.slice(0, 2),
+      },
+      status: 'completed',
       tasks: [
         {
-          ...progress.tasks[0],
-          status: 'completed' as const,
+          ...initial.tasks[0],
+          status: 'completed',
+          completionKind: 'scored',
         },
         {
-          ...progress.tasks[1],
-          status: 'skipped' as const,
+          ...initial.tasks[1],
+          status: 'skipped',
         },
       ],
     }
-
-    const modules = toPracticeModulesViewModel(mapped, null)
-    const vocabulary = modules.find(
-      (module) => module.moduleId === 'vocabulary',
-    )
-    const listening = modules.find(
-      (module) => module.moduleId === 'listening',
-    )
-    const speaking = modules.find(
-      (module) => module.moduleId === 'speaking',
+    const terminalModules = toPracticeModulesViewModel(
+      terminal,
+      getPlanTaskAccess(terminal),
     )
 
-    expect(vocabulary?.request).toEqual({
-      state: 'disabled',
-      label: '已完成',
-      reason: '今天的词汇训练任务已经完成。',
+    expect(
+      terminalModules.find(
+        (module) => module.moduleId === 'vocabulary',
+      ),
+    ).toMatchObject({
+      availability: 'unavailable',
+      taskId: terminal.tasks[0].task.taskId,
+      statusLabel: '已完成',
+      unavailableReason: 'task-finished',
+      unavailableDescription: '今天的词汇训练任务已经完成。',
     })
-    expect(listening?.request).toEqual({
-      state: 'disabled',
-      label: '已跳过',
-      reason: '今天的听力训练任务已从计划中跳过。',
+    expect(
+      terminalModules.find(
+        (module) => module.moduleId === 'listening',
+      ),
+    ).toMatchObject({
+      availability: 'unavailable',
+      taskId: terminal.tasks[1].task.taskId,
+      statusLabel: '已跳过',
+      unavailableReason: 'task-finished',
+      unavailableDescription:
+        '今天的听力训练任务已从计划中跳过。',
     })
-    expect(speaking?.request).toEqual({
-      state: 'disabled',
-      label: '今日无任务',
-      reason: '当前没有可执行的口语训练任务。',
+    expect(
+      terminalModules.find(
+        (module) => module.moduleId === 'speaking',
+      ),
+    ).toMatchObject({
+      availability: 'unavailable',
+      taskId: null,
+      statusLabel: '今日无任务',
+      unavailableReason: 'not-in-active-plan',
+      unavailableDescription: '当前计划没有口语训练任务。',
     })
 
-    const locked = toPracticeModulesViewModel(progress, null)
-    for (const module of locked.slice(1)) {
-      expect(module.request).toMatchObject({
-        state: 'disabled',
-        label: '稍后开始',
-      })
-      expect(
-        module.request.state === 'disabled'
-          ? module.request.reason
-          : '',
-      ).toContain('尚未轮到')
+    const malformed: PlanProgress = {
+      ...initial,
+      tasks: initial.tasks.map((task, index) =>
+        index === 0
+          ? {
+              ...task,
+              task: {
+                ...task.task,
+                contentRef: 'lesson://wrong/content',
+              },
+            }
+          : task,
+      ),
     }
+    const malformedModules = toPracticeModulesViewModel(
+      malformed,
+      getPlanTaskAccess(malformed),
+    )
+    expect(
+      malformedModules.find(
+        (module) => module.moduleId === 'vocabulary',
+      ),
+    ).toMatchObject({
+      availability: 'unavailable',
+      statusLabel: '任务异常',
+      unavailableReason: 'invalid-task-data',
+    })
   })
 })
