@@ -1,0 +1,955 @@
+.travel-r1-screen {
+  overflow-wrap: anywhere;
+}
+
+.travel-r1-screen--question {
+  padding-bottom: calc(284px + env(safe-area-inset-bottom));
+}
+
+.travel-r1-notice {
+  display: grid;
+  margin-bottom: 22px;
+  padding: 13px 14px;
+  grid-template-columns: 36px minmax(0, 1fr);
+  align-items: start;
+  gap: 11px;
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  background: var(--surface);
+}
+
+.travel-r1-notice--offline {
+  border-color: rgb(232 121 99 / 30%);
+  background: var(--coral-soft);
+}
+
+.travel-r1-notice--restored {
+  border-color: rgb(37 132 103 / 22%);
+  background: var(--mint-soft);
+}
+
+.travel-r1-notice--info {
+  border-color: rgb(76 85 215 / 20%);
+  background: var(--indigo-soft);
+}
+
+.travel-r1-notice__icon {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 12px;
+  color: var(--indigo);
+  background: var(--surface);
+}
+
+.travel-r1-notice--offline .travel-r1-notice__icon {
+  color: var(--coral);
+}
+
+.travel-r1-notice--restored .travel-r1-notice__icon {
+  color: var(--mint);
+}
+
+.travel-r1-notice__icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.travel-r1-notice > span:last-child {
+  display: grid;
+  gap: 3px;
+}
+
+.travel-r1-notice strong {
+  color: var(--ink);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.travel-r1-notice small {
+  color: var(--ink-soft);
+  font-size: 0.74rem;
+  line-height: 1.55;
+}
+
+.travel-r1-intro {
+  padding-top: 4px;
+}
+
+.travel-r1-passport-mark {
+  display: grid;
+  width: 76px;
+  height: 76px;
+  margin-bottom: 28px;
+  place-items: center;
+  align-content: center;
+  gap: 2px;
+  border: 2px solid rgb(255 255 255 / 72%);
+  border-radius: 24px;
+  color: #ffffff;
+  background: var(--indigo);
+  box-shadow:
+    0 0 0 5px var(--indigo-soft),
+    0 15px 30px rgb(76 85 215 / 22%);
+  transform: rotate(-2deg);
+}
+
+.travel-r1-passport-mark b {
+  font-family: var(--display-font);
+  font-size: 1.25rem;
+  letter-spacing: -0.04em;
+}
+
+.travel-r1-passport-mark small {
+  font-family: var(--utility-font);
+  font-size: 0.52rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.travel-r1-intro h2 {
+  max-width: 360px;
+  margin: 7px 0 12px;
+  font-family: var(--display-font);
+  font-size: clamp(2rem, 9vw, 2.55rem);
+  letter-spacing: -0.055em;
+  line-height: 1.14;
+}
+
+.travel-r1-intro p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.72;
+}
+
+.travel-r1-intro-metrics {
+  display: grid;
+  margin-top: 28px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.travel-r1-intro-metrics article {
+  display: grid;
+  min-width: 0;
+  min-height: 104px;
+  padding: 14px 10px;
+  align-content: space-between;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.travel-r1-intro-metrics strong {
+  font-family: var(--display-font);
+  font-size: clamp(1.35rem, 6vw, 1.8rem);
+  letter-spacing: -0.045em;
+  line-height: 1.1;
+}
+
+.travel-r1-intro-metrics span {
+  color: var(--ink-soft);
+  font-size: 0.7rem;
+  line-height: 1.4;
+}
+
+.travel-r1-route {
+  position: relative;
+  display: grid;
+  margin: 30px 0 0;
+  padding: 0;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  list-style: none;
+}
+
+.travel-r1-route::before {
+  position: absolute;
+  z-index: 0;
+  top: 18px;
+  right: 9%;
+  left: 9%;
+  height: 2px;
+  background: var(--line);
+  content: "";
+}
+
+.travel-r1-route__stop {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  min-width: 0;
+  justify-items: center;
+  gap: 7px;
+  color: var(--ink-faint);
+  font-size: 0.66rem;
+  font-weight: 650;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.travel-r1-route__marker {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 2px solid var(--line);
+  border-radius: 50%;
+  color: var(--ink-faint);
+  background: var(--canvas);
+  font-family: var(--utility-font);
+  font-size: 0.68rem;
+  font-weight: 750;
+}
+
+.travel-r1-route__marker svg {
+  width: 16px;
+  height: 16px;
+}
+
+.travel-r1-route__stop--complete,
+.travel-r1-route__stop--current {
+  color: var(--ink);
+}
+
+.travel-r1-route__stop--complete .travel-r1-route__marker {
+  border-color: var(--mint);
+  color: #ffffff;
+  background: var(--mint);
+}
+
+.travel-r1-route__stop--current .travel-r1-route__marker {
+  border-color: var(--indigo);
+  color: #ffffff;
+  background: var(--indigo);
+  box-shadow: 0 0 0 5px var(--indigo-soft);
+}
+
+.travel-r1-facts {
+  display: grid;
+  margin-top: 30px;
+  gap: 12px;
+}
+
+.travel-r1-facts > div {
+  display: grid;
+  padding: 16px;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.travel-r1-facts svg {
+  width: 21px;
+  height: 21px;
+  margin: 8px;
+  color: var(--indigo);
+}
+
+.travel-r1-facts span {
+  display: grid;
+  gap: 3px;
+}
+
+.travel-r1-facts strong {
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.travel-r1-facts small {
+  color: var(--ink-soft);
+  font-size: 0.74rem;
+  line-height: 1.55;
+}
+
+.travel-r1-question-meta {
+  display: flex;
+  margin-top: 18px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.travel-r1-question-meta span {
+  min-height: 30px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  background: var(--surface);
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+
+.travel-r1-question-map {
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.travel-r1-question-map summary {
+  display: flex;
+  min-height: 56px;
+  padding: 10px 15px;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  border-radius: inherit;
+  cursor: pointer;
+}
+
+.travel-r1-question-map summary::marker {
+  color: var(--indigo);
+}
+
+.travel-r1-question-map summary span {
+  color: var(--ink);
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.travel-r1-question-map summary small {
+  color: var(--ink-soft);
+  font-size: 0.7rem;
+  line-height: 1.45;
+}
+
+.travel-r1-question-map__grid {
+  display: grid;
+  padding: 10px 15px 15px;
+  grid-template-columns: repeat(5, minmax(44px, 1fr));
+  gap: 8px;
+}
+
+.travel-r1-question-map__legend {
+  display: flex;
+  padding: 2px 15px 0;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: var(--ink-soft);
+  font-size: 0.66rem;
+}
+
+.travel-r1-question-map__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.travel-r1-question-map__legend i {
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--canvas);
+}
+
+.travel-r1-question-map__legend i[data-state="answered"] {
+  border-color: var(--mint);
+  background: var(--mint-soft);
+}
+
+.travel-r1-question-map__legend i[data-state="uncertain"] {
+  border-color: var(--coral);
+  background: var(--coral-soft);
+}
+
+.travel-r1-question-number {
+  display: grid;
+  min-width: 44px;
+  min-height: 44px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  color: var(--ink-soft);
+  background: var(--canvas);
+  font-family: var(--utility-font);
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.travel-r1-question-number--answered {
+  border-color: rgb(37 132 103 / 40%);
+  color: var(--mint);
+  background: var(--mint-soft);
+}
+
+.travel-r1-question-number--uncertain {
+  border-color: rgb(232 121 99 / 35%);
+  color: #a74f3e;
+  background: var(--coral-soft);
+}
+
+.travel-r1-question-number[aria-current="step"] {
+  border-color: var(--indigo);
+  color: #ffffff;
+  background: var(--indigo);
+  box-shadow: 0 0 0 3px var(--indigo-soft);
+}
+
+.travel-r1-question-number:disabled {
+  color: var(--ink-faint);
+  background: #f3f5f9;
+  cursor: not-allowed;
+}
+
+.travel-r1-word-card {
+  display: grid;
+  min-height: 184px;
+  margin-top: 22px;
+  padding: 24px 20px;
+  place-items: center;
+  align-content: center;
+  border: 1px solid rgb(76 85 215 / 18%);
+  border-radius: 26px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 88% 12%, rgb(76 85 215 / 9%), transparent 30%),
+    var(--surface);
+  box-shadow: 0 14px 34px rgb(31 45 84 / 6%);
+}
+
+.travel-r1-word-card h2 {
+  max-width: 100%;
+  margin: 10px 0 7px;
+  font-family: var(--display-font);
+  font-size: clamp(2.65rem, 14vw, 4.2rem);
+  letter-spacing: -0.06em;
+  line-height: 1.02;
+  overflow-wrap: anywhere;
+}
+
+.travel-r1-word-card p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.travel-r1-choice-list {
+  display: grid;
+  margin-top: 18px;
+  gap: 10px;
+}
+
+.travel-r1-choice-list .choice-row {
+  min-height: 58px;
+}
+
+.travel-r1-uncertain {
+  margin-top: 4px;
+  border-style: dashed;
+}
+
+.travel-r1-uncertain .choice-row__marker {
+  color: var(--ink-soft);
+  font-family: var(--display-font);
+  font-size: 0.76rem;
+  font-weight: 750;
+}
+
+.travel-r1-clear-answer {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.travel-r1-question-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.travel-r1-question-actions .secondary-button {
+  width: 100%;
+  min-width: 0;
+  margin-top: 0;
+}
+
+.travel-r1-action-reason {
+  margin: 16px 0 0;
+  color: var(--ink-soft);
+  font-size: 0.76rem;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.travel-r1-review-card,
+.travel-r1-resume-card,
+.travel-r1-migration-card,
+.travel-r1-stage-score,
+.travel-r1-result-hero,
+.travel-r1-system-card {
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  background: var(--surface);
+}
+
+.travel-r1-review-card {
+  padding: 24px 20px;
+  text-align: center;
+}
+
+.travel-r1-review-card__icon,
+.travel-r1-resume-card__icon,
+.travel-r1-migration-card__icon,
+.travel-r1-system-card__icon {
+  display: grid;
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 18px;
+  place-items: center;
+  border-radius: 18px;
+  color: var(--indigo);
+  background: var(--indigo-soft);
+}
+
+.travel-r1-review-card__icon svg,
+.travel-r1-resume-card__icon svg,
+.travel-r1-migration-card__icon svg,
+.travel-r1-system-card__icon svg {
+  width: 23px;
+  height: 23px;
+}
+
+.travel-r1-review-card h2,
+.travel-r1-resume-card h2,
+.travel-r1-migration-card h2,
+.travel-r1-system-card h2 {
+  margin: 6px 0 8px;
+  font-family: var(--display-font);
+  font-size: 1.45rem;
+  letter-spacing: -0.035em;
+  line-height: 1.25;
+}
+
+.travel-r1-review-card p,
+.travel-r1-resume-card > p,
+.travel-r1-migration-card p,
+.travel-r1-system-card p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  line-height: 1.65;
+}
+
+.travel-r1-unanswered {
+  margin-top: 22px;
+  padding: 20px;
+  border: 1px solid rgb(232 121 99 / 28%);
+  border-radius: 22px;
+  background: var(--coral-soft);
+}
+
+.travel-r1-unanswered h2,
+.travel-r1-confirmation h2,
+.travel-r1-calibration h2,
+.travel-r1-disclaimer h2 {
+  margin: 0 0 5px;
+  font-size: 0.96rem;
+}
+
+.travel-r1-unanswered p,
+.travel-r1-confirmation p,
+.travel-r1-calibration > p,
+.travel-r1-disclaimer p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.76rem;
+  line-height: 1.6;
+}
+
+.travel-r1-unanswered__grid {
+  display: grid;
+  margin-top: 16px;
+  grid-template-columns: repeat(5, minmax(44px, 1fr));
+  gap: 8px;
+}
+
+.travel-r1-unanswered__grid button {
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid rgb(232 121 99 / 35%);
+  border-radius: 13px;
+  color: #9b4636;
+  background: var(--surface);
+  font-family: var(--utility-font);
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.travel-r1-confirmation {
+  display: grid;
+  margin-top: 22px;
+  padding: 18px;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+  border-radius: 20px;
+  background: var(--mint-soft);
+}
+
+.travel-r1-confirmation > svg {
+  width: 22px;
+  height: 22px;
+  margin: 10px;
+  color: var(--mint);
+}
+
+.travel-r1-stage-score {
+  display: grid;
+  margin-top: 24px;
+  padding: 28px 22px;
+  justify-items: center;
+  text-align: center;
+}
+
+.travel-r1-stage-score > strong {
+  margin-top: 14px;
+  font-family: var(--display-font);
+  font-size: clamp(3rem, 16vw, 4.4rem);
+  letter-spacing: -0.065em;
+  line-height: 1;
+}
+
+.travel-r1-stage-score > span:not(.eyebrow) {
+  margin-top: 4px;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+}
+
+.travel-r1-stage-score p {
+  max-width: 330px;
+  margin: 20px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  line-height: 1.65;
+}
+
+.travel-r1-stage-metrics {
+  display: grid;
+  margin-top: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.travel-r1-stage-metrics article {
+  display: grid;
+  min-width: 0;
+  min-height: 96px;
+  padding: 14px 10px;
+  align-content: space-between;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.travel-r1-stage-metrics span {
+  color: var(--ink-soft);
+  font-size: 0.68rem;
+  line-height: 1.45;
+}
+
+.travel-r1-stage-metrics strong {
+  font-family: var(--display-font);
+  font-size: 1.35rem;
+  letter-spacing: -0.035em;
+}
+
+.travel-r1-estimate-list,
+.travel-r1-result-stages article dl,
+.travel-r1-resume-card dl {
+  margin: 12px 0 0;
+}
+
+.travel-r1-estimate-list {
+  padding: 8px 18px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface);
+}
+
+.travel-r1-estimate-list > div,
+.travel-r1-result-stages article dl > div,
+.travel-r1-resume-card dl > div {
+  display: flex;
+  min-height: 48px;
+  padding: 10px 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.travel-r1-estimate-list > div:not(:last-child),
+.travel-r1-result-stages article dl > div:not(:last-child),
+.travel-r1-resume-card dl > div:not(:last-child) {
+  border-bottom: 1px solid var(--line);
+}
+
+.travel-r1-estimate-list dt,
+.travel-r1-result-stages article dt,
+.travel-r1-resume-card dt {
+  color: var(--ink-soft);
+  font-size: 0.74rem;
+}
+
+.travel-r1-estimate-list dd,
+.travel-r1-result-stages article dd,
+.travel-r1-resume-card dd {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+.travel-r1-resume-card,
+.travel-r1-migration-card,
+.travel-r1-system-card {
+  padding: 26px 22px;
+  text-align: center;
+}
+
+.travel-r1-resume-card dl {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.travel-r1-resume-card > p {
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 16px;
+  background: var(--indigo-soft);
+}
+
+.travel-r1-migration-card__icon {
+  color: var(--coral);
+  background: var(--coral-soft);
+}
+
+.travel-r1-migration-card p + p {
+  margin-top: 12px;
+}
+
+.travel-r1-result-hero {
+  display: grid;
+  padding: 28px 20px;
+  justify-items: center;
+  text-align: center;
+  background:
+    radial-gradient(circle at 90% 10%, rgb(76 85 215 / 10%), transparent 32%),
+    var(--surface);
+}
+
+.travel-r1-level-badge {
+  margin-bottom: 20px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  color: var(--indigo-strong);
+  background: var(--indigo-soft);
+  font-size: 0.76rem;
+  font-weight: 750;
+}
+
+.travel-r1-result-hero > strong {
+  margin: 12px 0 5px;
+  font-family: var(--display-font);
+  font-size: clamp(2.7rem, 14vw, 4rem);
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+
+.travel-r1-result-hero > span:last-child {
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+}
+
+.travel-r1-result-overview {
+  display: grid;
+  margin-top: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.travel-r1-result-overview article {
+  display: grid;
+  min-height: 88px;
+  padding: 14px;
+  align-content: space-between;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.travel-r1-result-overview span {
+  color: var(--ink-soft);
+  font-size: 0.7rem;
+}
+
+.travel-r1-result-overview strong {
+  font-family: var(--display-font);
+  font-size: 1.2rem;
+}
+
+.travel-r1-result-stages {
+  margin-top: 34px;
+}
+
+.travel-r1-result-stages > article {
+  margin-top: 10px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface);
+}
+
+.travel-r1-result-stages article header {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+}
+
+.travel-r1-result-stages article header > span {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 13px;
+  color: var(--indigo-strong);
+  background: var(--indigo-soft);
+  font-family: var(--utility-font);
+  font-size: 0.7rem;
+  font-weight: 750;
+}
+
+.travel-r1-result-stages h3 {
+  margin: 0;
+  font-size: 0.86rem;
+}
+
+.travel-r1-result-stages header small {
+  display: block;
+  margin-top: 2px;
+  color: var(--ink-soft);
+  font-size: 0.66rem;
+}
+
+.travel-r1-result-stages header > strong {
+  font-family: var(--display-font);
+  font-size: 1rem;
+}
+
+.travel-r1-calibration {
+  margin-top: 28px;
+  padding: 20px;
+  border-radius: 22px;
+  background: var(--indigo-soft);
+}
+
+.travel-r1-calibration > div {
+  display: grid;
+  margin: 16px 0 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.travel-r1-calibration article {
+  display: grid;
+  min-width: 0;
+  min-height: 74px;
+  padding: 11px 8px;
+  align-content: space-between;
+  gap: 7px;
+  border-radius: 15px;
+  background: var(--surface);
+}
+
+.travel-r1-calibration article span {
+  color: var(--ink-soft);
+  font-size: 0.67rem;
+}
+
+.travel-r1-calibration article strong {
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
+.travel-r1-disclaimer {
+  display: grid;
+  margin-top: 14px;
+  padding: 18px;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface);
+}
+
+.travel-r1-disclaimer > svg {
+  width: 20px;
+  height: 20px;
+  margin: 7px;
+  color: var(--indigo);
+}
+
+.travel-r1-disclaimer p + p {
+  margin-top: 8px;
+}
+
+.travel-r1-system-card--error .travel-r1-system-card__icon {
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.travel-r1-system-card--offline .travel-r1-system-card__icon {
+  color: var(--coral);
+  background: var(--coral-soft);
+}
+
+@media (width <= 360px) {
+  .travel-r1-screen {
+    padding-right: max(16px, env(safe-area-inset-right));
+    padding-left: max(16px, env(safe-area-inset-left));
+  }
+
+  .travel-r1-question-map__grid {
+    padding-right: 13px;
+    padding-left: 13px;
+  }
+
+  .travel-r1-question-map__grid,
+  .travel-r1-unanswered__grid {
+    gap: 7px;
+  }
+
+  .travel-r1-stage-metrics article,
+  .travel-r1-intro-metrics article {
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+
+  .travel-r1-question-actions {
+    gap: 7px;
+  }
+
+  .travel-r1-question-actions .secondary-button {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .travel-r1-passport-mark {
+    transform: none;
+  }
+}

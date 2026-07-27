@@ -19,7 +19,11 @@ import {
 } from './learning-app-prototype.tsx'
 import { ProgressOverviewScreen } from './progress-overview-screen.tsx'
 import { MicrophonePermissionCard } from './system-state-surfaces.tsx'
-import type { UiVisualFixtureId } from './visual-fixture-ids.ts'
+import { TravelVocabularyR1VisualFixture } from './travel-vocabulary-r1-fixture.tsx'
+import {
+  isTravelVocabularyR1VisualFixtureId,
+  type UiVisualFixtureId,
+} from './visual-fixture-ids.ts'
 import type { ChoiceViewModel } from './view-models.ts'
 
 const selectedChoices = (
@@ -165,6 +169,10 @@ export function UiVisualFixture({ id }: { readonly id: UiVisualFixtureId }) {
 
   if (id === 'today-task-request') {
     return <LearningAppVisualDemo />
+  }
+
+  if (isTravelVocabularyR1VisualFixtureId(id)) {
+    return <TravelVocabularyR1VisualFixture id={id} />
   }
 
   if (id === 'assessment-intro') {

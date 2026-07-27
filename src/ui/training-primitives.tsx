@@ -12,6 +12,7 @@ import type {
 } from './view-models.ts'
 
 export function TrainingScreen({
+  className,
   header,
   exitLabel,
   onExit,
@@ -19,6 +20,7 @@ export function TrainingScreen({
   action,
   actionLayout = 'single',
 }: {
+  readonly className?: string
   readonly header: TrainingHeaderViewModel
   readonly exitLabel: string
   readonly onExit: () => void
@@ -28,7 +30,13 @@ export function TrainingScreen({
 }) {
   return (
     <main
-      className={`training-screen training-screen--${actionLayout}-action`}
+      className={[
+        'training-screen',
+        `training-screen--${actionLayout}-action`,
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       <header className="training-topbar">
         <button

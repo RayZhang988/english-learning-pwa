@@ -19,6 +19,14 @@ import { ... } from '../../ui/index.ts'
 - `AssessmentSpeechScreen`
 - `AssessmentPausedScreen`
 - `AssessmentResultsScreen`
+- `TravelVocabularyR1IntroScreen`
+- `TravelVocabularyR1QuestionScreen`
+- `TravelVocabularyR1StageReviewScreen`
+- `TravelVocabularyR1StageResultScreen`
+- `TravelVocabularyR1ResumeScreen`
+- `TravelVocabularyR1MigrationScreen`
+- `TravelVocabularyR1ResultsScreen`
+- `TravelVocabularyR1StatusScreen`
 - `VocabularyTrainingScreen`
 - `ListeningTrainingScreen`
 - `SpeakingTrainingScreen`
@@ -60,6 +68,8 @@ import { ... } from '../../ui/index.ts'
   assessment 页面 ViewModel。
 - 选择项、提交中、跳过、反馈、暂停和结果状态由 03 控制。
 - UI 不得收到私有 `scoring` 字段。
+- R1 使用独立的 `TravelVocabularyR1*ViewModel`；03 的随机抽样、答案判定、阶段比例、
+  词汇量、区间和等级映射结果只能由 01 适配为最终展示字段，02 不重算。
 
 ### 04
 
@@ -390,6 +400,111 @@ import {
 
 03 没有 restart 动作，因此 UI 不公开 `onRestart`，也不把“结束并保留部分结果”伪装成
 重新开始。恢复页面的可用性必须来自 `actions.canResume` / `actions.canStop`。
+
+## R1｜旅游英语分阶段词汇测试 UI 契约
+
+R1 与现有 v1 正式评估页面并存；01 完成正式入口切换以前，不得删除或改写
+`AssessmentIntroScreen`、`AssessmentChoiceScreen` 等 v1 组件。
+
+01 只从 `src/ui/index.ts` 导入 R1 页面和类型：
+
+```ts
+import {
+  TravelVocabularyR1IntroScreen,
+  TravelVocabularyR1MigrationScreen,
+  TravelVocabularyR1QuestionScreen,
+  TravelVocabularyR1ResultsScreen,
+  TravelVocabularyR1ResumeScreen,
+  TravelVocabularyR1StageResultScreen,
+  TravelVocabularyR1StageReviewScreen,
+  TravelVocabularyR1StatusScreen,
+  type TravelVocabularyR1QuestionViewModel,
+  type TravelVocabularyR1ResultsViewModel,
+  type TravelVocabularyR1StageReviewViewModel,
+} from '../../ui/index.ts'
+```
+
+### 生命周期映射
+
+| 03 `TravelVocabularyAssessmentRuntimeStateR1` | 02 页面 | 01 适配责任 |
+| --- | --- | --- |
+| `intro`，无迁移提示 | `TravelVocabularyR1IntroScreen` | 映射 `sessionId`、`actions.canStart` |
+| `intro`，存在 `migrationNotice` | `TravelVocabularyR1MigrationScreen` | 显示旧 v1/v2 不兼容，不伪造成绩 |
+| `active` | `TravelVocabularyR1QuestionScreen` | 映射当前题、四个选项、草稿答案、30 题状态与动作 |
+| `active` 的 UI 提交检查子状态 | `TravelVocabularyR1StageReviewScreen` | 明确提供未答题列表；不改变 runtime lifecycle |
+| `stage-summary` | `TravelVocabularyR1StageResultScreen` | 映射 `latestStageResult` 的最终显示字符串 |
+| `paused` | `TravelVocabularyR1ResumeScreen` | 显示固定原题恢复事实并调用 `resume()` |
+| `completed` | `TravelVocabularyR1ResultsScreen` | 映射 schema 3 `profile`，听力/口语保持待校准 |
+| 外层加载、错误、仅可本机恢复 | `TravelVocabularyR1StatusScreen` | 01 提供最终事实和重试/恢复动作 |
+
+`TravelVocabularyR1StageReviewScreen` 是提交前的纯 UI 子状态。点击
+`onReviewStage(sessionId)` 后，01 显示检查页；只有检查页的
+`onSubmitStage(sessionId)` 才调用 `runtime.submitStage()`。返回补答只关闭检查页或导航
+到指定题，不能提前提交。
+
+### 字段映射
+
+| UI 字段 | R1 来源 | 强制约束 |
+| --- | --- | --- |
+| `sessionId` | `state.sessionId` | 原样复制，所有会话动作原样回传 |
+| `question.id` | `state.questions[index].id` | 原样复制，不使用单词文本或题序替代 |
+| `question.index` | `state.currentQuestionIndex` | 零基题序原样复制 |
+| `options[4].id/label` | `PublicTravelVocabularyQuestionR1.options` | 必须正好四项；公开模型没有正确答案键 |
+| `question.answerState` | `state.draftAnswers[question.id]` | 只映射选中/不确定/未答，不判断正确性 |
+| `questionMap` | 30 个公开题目与草稿 | 每项显式提供题号、题 ID、题序、当前态和作答态 |
+| `unansweredQuestions` | 草稿中缺失的题目 | 由 01 显式提供；02 不从数量推导可提交性 |
+| `submitAction.disabled` | `!state.actions.canSubmitStage` | 禁用必须同时提供 `disabledReason` |
+| 阶段结果各 `*Label` | `latestStageResult` | 在适配层格式化，02 不计算比例、估算或区间 |
+| 总结果各 `*Label` | `state.profile` | 在适配层格式化，02 不计算总词数、等级或时间 |
+
+所有 `headerProgress.value` 都由 01 映射为 `0..100`。UI 不使用
+`answeredOverall / totalQuestions`、`correctCount / validQuestionCount` 或阶段代表词数进行
+任何计算。测试中允许传入非公式化字符串，以验证页面确实原样显示外部结果。
+
+### 回调
+
+| 页面回调 | UI 原样输出 | 01 / 03 动作 |
+| --- | --- | --- |
+| `onStart(sessionId)` | 会话 ID | `runtime.start()` |
+| `onSelectChoice(intent)` | `sessionId/questionId/questionIndex/optionId` | `runtime.selectChoice(questionId, optionId)` |
+| `onMarkUncertain(target)` | `sessionId/questionId/questionIndex` | `runtime.markUncertain(questionId)` |
+| `onClearAnswer(target)` | 同上 | `runtime.clearAnswer(questionId)` |
+| `onNavigate(target)` | 目标题 ID 与零基题序 | 校验目标后 `runtime.navigate(questionIndex)` |
+| `onReviewStage(sessionId)` | 会话 ID | 只打开提交检查，不调用 runtime |
+| `onSubmitStage(sessionId)` | 会话 ID | `await runtime.submitStage()` |
+| `onContinueToNextStage(sessionId)` | 会话 ID | `runtime.continueToNextStage()` |
+| `onPause(sessionId)` | 会话 ID | `runtime.pause()` 并由 01 持久化快照 |
+| `onResume(sessionId)` | 会话 ID | `runtime.resume()` |
+| `onStartNewAssessment(sessionId)` | 新 R1 会话 ID | 对迁移后 intro 状态调用 `runtime.start()` |
+| `onContinue(sessionId)` | 已完成会话 ID | 01 保存档案并进入后续正式入口 |
+
+按钮是否可用、忙碌和禁用原因全部由 ViewModel 提供。阶段结果页固定使用“进入下一阶段”
+动作，不根据 `correctCountLabel` 设置满分门槛；0/30、6/30、15/30、30/30 的页面结构和
+回调完全相同。
+
+### 恢复、迁移和结果诚实性
+
+- 暂停恢复页明确说明继续使用快照中的原题和原选项顺序；02 不重新抽题。
+- `legacy-measurement-incompatible-new-sample-required` 映射到迁移页固定提示
+  “需要重新开始新的旅游英语词汇测试”，不能展示旧测试为 R1 已完成。
+- 总结果必须提供 5 条阶段明细、总作答数、有效时间、估算词数、合理区间、内部等级和
+  两条免责声明。
+- `listeningCalibrationLabel` 与 `speakingCalibrationLabel` 的公开类型固定为“待校准”，
+  不能传入数字、CEFR 或从词汇结果推导的等级。
+- 加载、错误和离线/本机恢复状态只显示 01 提供的事实，不主动读取网络、快照或存储。
+
+视觉检查夹具：
+
+```text
+?ui-fixture=travel-r1-intro
+?ui-fixture=travel-r1-question
+?ui-fixture=travel-r1-review
+?ui-fixture=travel-r1-stage-result
+?ui-fixture=travel-r1-resume
+?ui-fixture=travel-r1-migration
+?ui-fixture=travel-r1-results
+?ui-fixture=travel-r1-status
+```
 
 ## 当前限制
 
