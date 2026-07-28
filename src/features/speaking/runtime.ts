@@ -25,6 +25,7 @@ import {
   createSpeakingStreamAttemptEvent,
   createSpeakingTrainingBudgetCompletedEvent,
   createSpeakingTrainingContentExhaustedEvent,
+  createSpeakingTrainingContentRecoveredEvent,
   createSpeakingTrainingItemCompletedEvent,
 } from './events.ts'
 import { SpeakingError, toSpeakingError } from './errors.ts'
@@ -500,6 +501,8 @@ export class SpeakingTrainingRuntime {
       recognizedItemCount: prior?.recognizedItemCount ?? 0,
       unscorableItemCount: prior?.unscorableItemCount ?? 0,
       finishCurrentItem: prior?.finishCurrentItem ?? this.trainingBudgetStatus?.() === 'finish-current-item',
+      exhaustionRequestId: prior?.exhaustionRequestId ?? null,
+      recoveryEventId: prior?.recoveryEventId ?? null,
     }
   }
 
@@ -530,7 +533,7 @@ export class SpeakingTrainingRuntime {
         const { request, result } = await this.nextStreamItem(catalog, null)
         if (result.status !== 'item') {
           session = createFailedSpeakingSession(this.task, { category: 'content', message: '当前没有可继续的口语题目。' }, now)
-          session = { ...session, stream: this.streamState(null, request.requestId, request.cursor) }
+          session = { ...session, stream: { ...this.streamState(null, request.requestId, request.cursor), exhaustionRequestId: request.requestId } }
           session = withPendingSpeakingEvent(session, startedEvent, now)
           session = withPendingSpeakingEvent(session, createSpeakingTrainingContentExhaustedEvent(this.task, request.requestId, request.cursor, result.reason, this.identity(now)), now)
           await this.save(session)
@@ -1084,7 +1087,8 @@ export class SpeakingTrainingRuntime {
           const { request, result: next } = await this.nextStreamItem(catalog, completedStream)
           if (next.status !== 'item') {
             session = { ...session, phase: 'error', pausedFromPhase: null, lastActiveAt: null,
-              failure: { category: 'content', message: '当前没有可继续的口语题目。' }, stream: completedStream, updatedAt: now }
+              failure: { category: 'content', message: '当前没有可继续的口语题目。' },
+              stream: { ...completedStream, exhaustionRequestId: request.requestId, recoveryEventId: null }, updatedAt: now }
             session = withPendingSpeakingEvent(session, createSpeakingTrainingContentExhaustedEvent(this.task, request.requestId, request.cursor, next.reason, this.identity(now)), now)
           } else {
             const supplied = resolveSpeakingSupplyPrompt(catalog, next.item as SpeakingSupplyItem)
@@ -1238,24 +1242,57 @@ export class SpeakingTrainingRuntime {
       if (!this.continuousTraining || current.phase !== 'error' || !current.stream) {
         throw new SpeakingError('session-transition-invalid', 'Speaking supply is not awaiting a retry.')
       }
+      if (current.stream.exhaustionRequestId === null) {
+        throw new SpeakingError('session-transition-invalid', 'Speaking stream has no acknowledged exhaustion to recover.')
+      }
       await this.timing.startLoading()
+      const exhaustionRequestId = current.stream.exhaustionRequestId
+      const recoveryEventId = current.stream.recoveryEventId ??
+        `speaking:${this.task.taskId}:content-recovered:${exhaustionRequestId}`
+      let catalog: SpeakingCatalog
+      let request: LearningTaskSupplyRequest
+      let result: Awaited<ReturnType<SpeakingSupplyProvider['next']>>
       try {
-        const catalog = await this.contentSource.load()
-        const { request, result } = await this.nextStreamItem(catalog, current.stream)
-        if (result.status !== 'item') {
-          const session = withPendingSpeakingEvent(current, createSpeakingTrainingContentExhaustedEvent(this.task, request.requestId, request.cursor, result.reason, this.identity(this.now())), this.now())
-          await this.save(session)
-          return this.flushPendingEvents()
-        }
-        const supplied = resolveSpeakingSupplyPrompt(catalog, result.item as SpeakingSupplyItem)
-        const session = this.createStreamSession(current, supplied.unit, supplied.prompt,
-          this.streamState(result.item as SpeakingSupplyItem, request.requestId, result.nextCursor, current.stream))
-        await this.saveDuringExcludedPersistence(session)
-        return this.flushPendingEvents()
+        catalog = await this.contentSource.load()
+        const next = await this.nextStreamItem(catalog, current.stream)
+        request = next.request
+        result = next.result
       } catch (error) {
         const failed = { ...current, failure: this.failureFor(error), updatedAt: this.now() }
         return this.save(failed)
       }
+      if (result.status !== 'item') {
+        // The task remains blocked by its original persisted exhaustion.
+        // Replacing that identity would make 04 reject a later recovery.
+        return this.requireSession()
+      }
+      const now = this.now()
+      let recovery = this.requireSession()
+      if (recovery.stream?.recoveryEventId === null) {
+        recovery = {
+          ...recovery,
+          stream: { ...recovery.stream, recoveryEventId },
+          updatedAt: now,
+        }
+        recovery = withPendingSpeakingEvent(
+          recovery,
+          createSpeakingTrainingContentRecoveredEvent(
+            this.task,
+            exhaustionRequestId,
+            { eventId: recoveryEventId, occurredAt: now, localDate: this.localDate },
+          ),
+          now,
+        )
+        await this.save(recovery)
+      }
+      recovery = await this.flushPendingEvents()
+      const supplied = resolveSpeakingSupplyPrompt(catalog, result.item as SpeakingSupplyItem)
+      const session = this.createStreamSession(recovery, supplied.unit, supplied.prompt,
+        { ...recovery.stream!, activeItem: result.item as SpeakingSupplyItem,
+          activeRequestId: request.requestId, nextSupplyCursor: result.nextCursor,
+          exhaustionRequestId: null, recoveryEventId: null })
+      await this.saveDuringExcludedPersistence(session)
+      return this.flushPendingEvents()
     })
   }
 

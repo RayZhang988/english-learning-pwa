@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { InMemoryPlatformEventSink } from '../../core/testing/index.ts'
+import type { PlatformEvent, PlatformEventSink } from '../../core/index.ts'
 import { parseLearningEvent } from '../../learning-engine/index.ts'
 import type { ReadonlyDataSource } from '../../core/index.ts'
 import type {
@@ -57,6 +58,19 @@ class MemoryStore implements NamespaceStore {
 
   async clear(): Promise<void> {
     this.records.clear()
+  }
+}
+
+class FailRecoveredOnceEventSink implements PlatformEventSink {
+  readonly events: PlatformEvent[] = []
+  private failed = false
+
+  async publish(event: PlatformEvent): Promise<void> {
+    if (event.type === 'learning.training.content.recovered.v1' && !this.failed) {
+      this.failed = true
+      throw new Error('temporary recovery publish failure')
+    }
+    this.events.push(event)
   }
 }
 
@@ -249,6 +263,65 @@ describe('speaking training runtime fallbacks', () => {
     await training.retrySupply()
     expect(training.currentSession?.phase).toBe('error')
     expect(requests.at(-1)?.excludeItemIds).toEqual(['only-item'])
+  })
+
+  it('persists the exhaustion identity across refresh, publishes recovery first, then completes the recovered finish-current-item', async () => {
+    const secondPrompt = { ...speakingPrompt, id: 'w1d1-s2', modelAnswer: "I'm visiting New York.", acceptedAnswers: ["I'm visiting New York."] }
+    const catalog = createSpeakingCatalogFixture(createSpeakingUnit([speakingPrompt, secondPrompt]))
+    const first = { itemId: 'supply-1', learningUnitId: catalog.units[0].learningUnitId, contentRef: catalog.units[0].contentRef, difficultyLevel: 1, tags: [], source: { sourceType: 'speaking-prompt' as const, sourceId: 'w1d1-s1', variantId: 'activity-prompt' as const } }
+    const second = { ...first, itemId: 'supply-2', source: { sourceType: 'speaking-prompt' as const, sourceId: 'w1d1-s2', variantId: 'activity-prompt' as const } }
+    let recoveredAvailable = false
+    const provider = { async next(request: import('../../learning-engine/index.ts').LearningTaskSupplyRequest) {
+      const item = !request.excludeItemIds.includes(first.itemId) ? first
+        : recoveredAvailable && !request.excludeItemIds.includes(second.itemId) ? second : null
+      return item ? { schemaVersion: 1 as const, requestId: request.requestId, status: 'item' as const, item, nextCursor: item.itemId }
+        : { schemaVersion: 1 as const, requestId: request.requestId, status: 'content-exhausted' as const, reason: 'all-eligible-content-recently-used' as const }
+    } }
+    let budget: 'running' | 'finish-current-item' = 'running'
+    const store = new MemoryStore()
+    const sink = new InMemoryPlatformEventSink()
+    const makeRuntime = () => new SpeakingTrainingRuntime({ task: createSpeakingTask({ trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } }), localDate: '2026-07-28', contentSource: { load: async () => catalog }, eventSink: sink, repository: new SpeakingSessionRepository(store), networkStatus: online, microphonePermission: permission(), recorder: new FakeRecorder(), recognition: new FakeRecognition({ status: 'recognized', transcript: "I'm from Shanghai.", alternatives: [] }), now: clock(), createId: ids('recovery'), supplyProvider: provider, trainingBudgetStatus: () => budget })
+    const original = makeRuntime()
+    await original.initialize(); await original.startRecording(); await original.stopRecording()
+    const exhausted = await original.advance()
+    const exhaustion = sink.events.find((event) => event.type === 'learning.training.content.exhausted.v1')
+    expect(exhausted.stream?.exhaustionRequestId).toBe(exhaustion?.payload.requestId)
+
+    recoveredAvailable = true
+    const refreshed = makeRuntime()
+    await refreshed.initialize()
+    let session = await refreshed.retrySupply()
+    expect(session.phase).toBe('practicing')
+    expect(session.stream?.completedItemIds).toEqual(['supply-1'])
+    expect(session.stream?.exhaustionRequestId).toBeNull()
+    const recovery = sink.events.find((event) => event.type === 'learning.training.content.recovered.v1')
+    expect(recovery?.payload.exhaustionRequestId).toBe(exhaustion?.payload.requestId)
+    budget = 'finish-current-item'
+    await refreshed.startRecording(); await refreshed.stopRecording(); session = await refreshed.advance()
+    expect(session.phase).toBe('completed')
+    const types = sink.events.map((event) => event.type)
+    expect(types.indexOf('learning.training.content.recovered.v1')).toBeLessThan(types.lastIndexOf('learning.training.item.completed.v1'))
+    expect(types.indexOf('learning.training.content.recovered.v1')).toBeLessThan(types.indexOf('learning.training.budget.completed.v1'))
+  })
+
+  it('keeps one stable recovery event in the outbox when publication fails', async () => {
+    const catalog = createSpeakingCatalogFixture()
+    const item = { itemId: 'supply-1', learningUnitId: catalog.units[0].learningUnitId, contentRef: catalog.units[0].contentRef, difficultyLevel: 1, tags: [], source: { sourceType: 'speaking-prompt' as const, sourceId: 'w1d1-s1', variantId: 'activity-prompt' as const } }
+    let available = false
+    const provider = { async next(request: import('../../learning-engine/index.ts').LearningTaskSupplyRequest) {
+      const next = !request.excludeItemIds.includes(item.itemId) ? item : available ? { ...item, itemId: 'supply-2' } : null
+      return next ? { schemaVersion: 1 as const, requestId: request.requestId, status: 'item' as const, item: next, nextCursor: next.itemId }
+        : { schemaVersion: 1 as const, requestId: request.requestId, status: 'content-exhausted' as const, reason: 'all-eligible-content-recently-used' as const }
+    } }
+    const sink = new FailRecoveredOnceEventSink()
+    const training = new SpeakingTrainingRuntime({ task: createSpeakingTask({ trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } }), localDate: '2026-07-28', contentSource: { load: async () => catalog }, eventSink: sink, repository: new SpeakingSessionRepository(new MemoryStore()), networkStatus: online, microphonePermission: permission(), recorder: new FakeRecorder(), recognition: new FakeRecognition({ status: 'recognized', transcript: "I'm from Shanghai.", alternatives: [] }), now: clock(), createId: ids('retry-recovery'), supplyProvider: provider, trainingBudgetStatus: () => 'running' })
+    await training.initialize(); await training.startRecording(); await training.stopRecording(); await training.advance()
+    available = true
+    await expect(training.retrySupply()).rejects.toThrow('temporary recovery publish failure')
+    expect(training.currentSession?.pendingEvents.filter((event) => event.type === 'learning.training.content.recovered.v1')).toHaveLength(1)
+    const session = await training.retrySupply()
+    expect(session.phase).toBe('practicing')
+    expect(sink.events.filter((event) => event.type === 'learning.training.content.recovered.v1')).toHaveLength(1)
   })
   it('publishes scored evidence from controlled recognition matching', async () => {
     const sink = new InMemoryPlatformEventSink()

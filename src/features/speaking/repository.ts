@@ -101,9 +101,18 @@ function restoreSession(
       )
     }
   }
+  const legacyStream = (value as unknown as {
+    stream?: SpeakingSession['stream']
+  }).stream
   return {
     ...(value as unknown as SpeakingSession),
-    stream: (value as unknown as { stream?: SpeakingSession['stream'] }).stream ?? null,
+    stream: legacyStream === null || legacyStream === undefined
+      ? null
+      : {
+          ...legacyStream,
+          exhaustionRequestId: legacyStream.exhaustionRequestId ?? null,
+          recoveryEventId: legacyStream.recoveryEventId ?? null,
+        },
     pendingEvents,
     recorder: {
       ...(value.recorder as unknown as SpeakingSession['recorder']),

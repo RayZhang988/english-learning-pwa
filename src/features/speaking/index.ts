@@ -17,6 +17,7 @@ export {
   createSpeakingStreamAttemptEvent,
   createSpeakingTrainingBudgetCompletedEvent,
   createSpeakingTrainingContentExhaustedEvent,
+  createSpeakingTrainingContentRecoveredEvent,
   createSpeakingTrainingItemCompletedEvent,
 } from './events.ts'
 export { SpeakingCatalogSupplyProvider, resolveSpeakingSupplyPrompt, type SpeakingSupplyProvider } from './supply.ts'

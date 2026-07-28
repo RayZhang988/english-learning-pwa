@@ -7,6 +7,7 @@ import type {
   LearningTaskSupplyItem,
   LearningTrainingBudgetCompletedEvent,
   LearningTrainingContentExhaustedEvent,
+  LearningTrainingContentRecoveredEvent,
   LearningTrainingItemCompletedEvent,
 } from '../../learning-engine/index.ts'
 import { SpeakingError } from './errors.ts'
@@ -226,6 +227,13 @@ export function createSpeakingTrainingContentExhaustedEvent(
 ): LearningTrainingContentExhaustedEvent {
   return { id: identity.eventId, type: 'learning.training.content.exhausted.v1', sourceModuleId: 'speaking', occurredAt: identity.occurredAt, schemaVersion: 1,
     payload: { ...basePayload(task, identity.localDate), mode: task.mode, requestId, cursor, reason } }
+}
+
+export function createSpeakingTrainingContentRecoveredEvent(
+  task: LearningTask, exhaustionRequestId: string, identity: EventIdentity,
+): LearningTrainingContentRecoveredEvent {
+  return { id: identity.eventId, type: 'learning.training.content.recovered.v1', sourceModuleId: 'speaking', occurredAt: identity.occurredAt, schemaVersion: 1,
+    payload: { ...basePayload(task, identity.localDate), mode: task.mode, exhaustionRequestId } }
 }
 
 export function createSpeakingTrainingBudgetCompletedEvent(

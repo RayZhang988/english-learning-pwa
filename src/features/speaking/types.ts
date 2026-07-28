@@ -63,6 +63,10 @@ export interface SpeakingStreamState {
   readonly recognizedItemCount: number
   readonly unscorableItemCount: number
   readonly finishCurrentItem: boolean
+  /** The acknowledged exhausted request that a recovery event must match. */
+  readonly exhaustionRequestId: string | null
+  /** Stable outbox identity while recovery publication is pending. */
+  readonly recoveryEventId: string | null
 }
 
 export type SpeakingMatchLevel =
