@@ -273,7 +273,35 @@ describe('09 first-use production acceptance', () => {
     }
     const originalPlan = learning.state.runtime.activePlan.plan
     expect(originalPlan.targetSeconds).toBe(2_700)
-    expect(originalPlan.plannedSeconds).toBe(2_700)
+    expect(originalPlan.plannedSeconds).toBe(
+      originalPlan.tasks.reduce(
+        (total, task) => total + task.estimatedSeconds,
+        0,
+      ),
+    )
+    expect(originalPlan.plannedSeconds).toBe(515)
+    expect(
+      Object.fromEntries(
+        originalPlan.tasks.map((task) => [
+          task.targetModuleId,
+          task.durationEstimate?.estimateSeconds,
+        ]),
+      ),
+    ).toEqual({
+      vocabulary: 123,
+      listening: 211,
+      speaking: 181,
+    })
+    expect(
+      originalPlan.tasks.every(
+        (task) =>
+          task.durationEstimate?.baselineSource ===
+            'structured-content' &&
+          task.estimatedSeconds ===
+            task.durationEstimate.estimateSeconds &&
+          task.estimatedSeconds !== 900,
+      ),
+    ).toBe(true)
     expect(
       new Set(originalPlan.tasks.map((task) => task.targetModuleId)),
     ).toEqual(new Set(['vocabulary', 'listening', 'speaking']))
@@ -327,7 +355,16 @@ describe('09 first-use production acceptance', () => {
         vocabularySession,
       )
       if (!question) {
-        throw new Error('Vocabulary session lost its real question.')
+        throw new Error(
+          `Vocabulary session lost its real question: ${JSON.stringify({
+            phase: vocabularySession.phase,
+            taskId: vocabularySession.task.taskId,
+            learningUnitId: vocabularySession.task.learningUnitId,
+            questionIndex: vocabularySession.questionIndex,
+            questionCount: vocabularySession.questions.length,
+            failure: vocabularySession.failure,
+          })}`,
+        )
       }
       await vocabulary.select(question.correctOptionId)
       await vocabulary.submit()

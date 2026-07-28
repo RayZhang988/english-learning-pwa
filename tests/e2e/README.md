@@ -82,3 +82,32 @@ schema 3 档案与 schema 1 active plan，再在独立临时 Chrome profile 中�
 
 该结果不能替代用户在真实 iPhone Safari/主屏幕 Web App 对三个入口触摸自由选择的
 确认。
+
+## R3 正式时长回归
+
+R3 当前先用独立脚本阻断旧 900 秒重新包装为“内容估算”：
+
+```bash
+QA_BASE_URL=https://rayzhang988.github.io/english-learning-pwa/ \
+  node tests/e2e/r3-duration-baseline-regression.mjs
+```
+
+正式运行时，脚本核对 Pages run `30326369853`、正式资产 `index-CDUEKV0C.js`，再用
+隔离临时 Chrome profile 从正式 R1 生成 schema 3 档案和真实首日计划。它同时读取
+Today、Training 和 IndexedDB，要求三个生产任务携带 `structured-content` 基线，
+不得全部回退为 900 秒或约 15 分钟，并点击真实词汇 task 检查 Route。
+
+本地候选可这样运行：
+
+```bash
+pnpm build
+pnpm preview --host 127.0.0.1
+
+QA_BASE_URL=http://127.0.0.1:4173/ \
+  node tests/e2e/r3-duration-baseline-regression.mjs
+```
+
+当前本地候选完整通过：目标 2700 秒、实际计划 515 秒，词汇/听力/口语为
+`123/211/181` 秒，Today/Training taskId 与估算一致；真实词汇 Route 显示
+“已完成 0 / 6”和生产题面，不再出现不可评分错误。旧正式版本仍复现 QA-009，尚未
+重新部署；QA-009/010 的正式站回归完成前，后续真机结果不能记录为 R3 通过。

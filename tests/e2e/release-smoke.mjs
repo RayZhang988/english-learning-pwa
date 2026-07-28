@@ -91,7 +91,20 @@ async function verifyLocalBuild() {
   }
   assert.ok(serviceWorker.includes('index.html'))
   assert.ok(serviceWorker.includes('manifest.webmanifest'))
-  assert.ok(serviceWorker.includes('SKIP_WAITING'))
+  assert.ok(
+    serviceWorker.includes('SKIP_WAITING') ||
+      serviceWorker.includes('self.skipWaiting()'),
+    'Service Worker does not activate new releases automatically.',
+  )
+  assert.ok(
+    serviceWorker.includes('clientsClaim()') ||
+      serviceWorker.includes('clients.claim()'),
+    'Service Worker does not claim existing clients.',
+  )
+  assert.ok(
+    serviceWorker.includes('cleanupOutdatedCaches()'),
+    'Service Worker does not clean outdated precaches.',
+  )
 
   return {
     mode: 'local-dist',
@@ -124,9 +137,22 @@ async function verifyLive(baseUrl) {
     worker.headers.get('content-type') ?? '',
     /javascript|octet-stream/,
   )
-  const manifest = await manifestResponse.json()
+  const [manifest, serviceWorker] = await Promise.all([
+    manifestResponse.json(),
+    worker.text(),
+  ])
   assert.equal(manifest.display, 'standalone')
   assert.equal(manifest.start_url, './')
+  assert.ok(
+    serviceWorker.includes('SKIP_WAITING') ||
+      serviceWorker.includes('self.skipWaiting()'),
+    'Live Service Worker does not activate new releases automatically.',
+  )
+  assert.ok(
+    serviceWorker.includes('clientsClaim()') ||
+      serviceWorker.includes('clients.claim()'),
+    'Live Service Worker does not claim existing clients.',
+  )
   for (const icon of manifest.icons) {
     await fetchOk(new URL(icon.src, normalized))
   }

@@ -17,6 +17,10 @@ import {
   packageIndex,
   releasedCatalogs,
 } from './fixtures/production-course.ts'
+import {
+  calculateContentBaselineSeconds,
+  type TaskDurationBaseline,
+} from '../../src/learning-engine/index.ts'
 
 async function sourceFiles(directory: string): Promise<string[]> {
   const entries = await readdir(directory, { withFileTypes: true })
@@ -36,12 +40,25 @@ async function sourceFiles(directory: string): Promise<string[]> {
 }
 
 describe('09 released content acceptance', () => {
-  it('contains exactly four weeks, 28 days and 84 unique 15-minute units', () => {
+  it('contains 28 days and 84 unique units with truthful structured baselines', () => {
     const lessonDocuments = Object.values(lessonsByPath)
     const lessons = lessonDocuments.flatMap(
       (week) => week.lessons,
     )
     const units = lessons.flatMap((lesson) => lesson.learningUnits)
+    const baselineSeconds = units.map((unit) =>
+      calculateContentBaselineSeconds(
+        unit.durationBaseline as TaskDurationBaseline,
+      ),
+    )
+    const firstDaySeconds = Object.fromEntries(
+      lessons[0].learningUnits.map((unit) => [
+        unit.domain,
+        calculateContentBaselineSeconds(
+          unit.durationBaseline as TaskDurationBaseline,
+        ),
+      ]),
+    )
 
     expect(packageIndex.status).toBe('released')
     expect(packageIndex.lessonFiles).toHaveLength(4)
@@ -55,14 +72,37 @@ describe('09 released content acceptance', () => {
       units.every((unit) => unit.estimatedSeconds === 900),
     ).toBe(true)
     expect(
+      units.every((unit) => unit.durationBaseline !== undefined),
+    ).toBe(true)
+    expect(firstDaySeconds).toEqual({
+      vocabulary: 123,
+      listening: 211,
+      speaking: 181,
+    })
+    expect(baselineSeconds.reduce((sum, value) => sum + value, 0)).toBe(
+      17_566,
+    )
+    expect(packageIndex.durationBaselineTotals).toEqual({
+      learningUnits: 84,
+      vocabularySeconds: 4_740,
+      listeningSeconds: 7_238,
+      speakingSeconds: 5_588,
+      allUnitsSeconds: 17_566,
+    })
+    expect(
       lessons.every(
         (lesson) =>
           lesson.learningUnits.reduce(
-            (sum, unit) => sum + unit.estimatedSeconds,
+            (sum, unit) =>
+              sum +
+              calculateContentBaselineSeconds(
+                unit.durationBaseline as TaskDurationBaseline,
+              ),
             0,
-          ) === 2_700,
+          ) !== 2_700,
       ),
     ).toBe(true)
+    expect(17_566 / 28 / 60).toBeCloseTo(10.5, 1)
     expect(new Set(units.map((unit) => unit.learningUnitId)).size).toBe(
       84,
     )

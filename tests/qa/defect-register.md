@@ -12,6 +12,8 @@
 | QA-006 | 已关闭 | S2 | 正式站关键词听写立即提交时，反馈态持久化旧答案 | 失败 `64d884c`；修复 `56ca8f1` | 07 主责，09 回归 | Pages run `30146889205`；正式资产 `index-DARWx41s.js`；one/two voice 完整 E2E 均 exit 0 |
 | QA-007 | 已关闭 | S2 | 多 voice、变调变速和逐句 utterance 的真实听感机械、不自然 | 失败方案 `64d884c`；修复候选 `724565b`；验收同步 `98ffb1b` | 07 主责，09/用户听感回归 | run `30147986654` 与正式自动化通过；用户真实听感确认自然单 voice 候选“已经解决” |
 | QA-008 | 已关闭 | S2 | 底部“训练”页四个公开入口全部进入“暂无可用训练”占位页 | 失败资产 `index-DQn2F3sQ.js`；修复 `1b504c9` / `a326f97` | 01 主责，02 公开入口契约协同；08 无需返工 | Pages run `30149442712`；资产 `index-BAJtI4Qx.js`；正式完整 E2E exit 0，占位命中 0/4 |
+| QA-009 | 待正式部署回归 | S2 | R3 正式首日计划仍把词汇、听力、口语全部标为固定 15 分钟 | 失败 `16b9788` / `9ab305a`；本地候选 `4e49d7f` / `b803bd1` / `c86d879` | 01 主责，05 内容事实协同；09 回归 | 当前本地生产预览已得到 `123/211/181` 秒、`plannedSeconds=515` 和 `structured-content`；旧正式站尚未重部署 |
+| QA-010 | 待正式部署回归 | S1 | 结构化时长任务被真实词汇路由拒绝，首日词汇无法进入 | 失败候选 `4e49d7f` / `b803bd1`；本地修复 `c86d879` | 06 主责，01 任务契约协同；09 回归 | first-use、R3/09 专项、全量及本地生产黑盒通过；真实词汇入口加载 `0/6` 题面，无不可评分错误 |
 
 ## QA-001｜课程索引未随生产版本发布
 
@@ -446,6 +448,151 @@ https://rayzhang988.github.io/english-learning-pwa/#/。
   自动化契约继续通过；此前真实用户听感关闭证据不变。
 - `pnpm check` 通过：78 个测试文件、299 项测试，以及 lint、类型检查、生产构建、
   课程资源和 PWA 预缓存验证全部通过。
+
+## QA-009｜R3 正式计划仍使用固定 15 分钟
+
+```text
+状态：待正式部署回归
+严重度：S2
+环境：GitHub Pages 正式站；390×844；全新隔离 Chrome profile
+失败版本：01 集成 9ab305a；状态 16b9788；Pages run 30326369853；
+正式资产：assets/index-CDUEKV0C.js
+前置条件：清空隔离 profile；从正式 R1 生成 schema 3 AbilityProfile 和真实首日计划
+复现步骤：
+1. 打开正式站并完成 R1，进入“今天”。
+2. 读取词汇、听力、口语三张任务卡的预计有效练习文本和 data-estimate-seconds。
+3. 进入底部“训练”，重复读取三张专项卡。
+4. 读取 IndexedDB 的 app.learning-runtime / active-plan。
+实际结果：两个页面的六张卡全部显示“预计有效练习 / 约 15 分钟 / 内容估算”；
+active plan 的三个任务均为 estimatedSeconds=900，三个任务合计恰好 2700 秒。
+正式候选没有 durationBaseline，durationEstimate.baselineSource 仍为
+legacy-content-estimate。
+期望结果：每项预计时长由该任务真实题量、音频长度和交互步骤计算；不得继续使用
+旧 900 秒或把每日 45 分钟平均分成三份。Today 与 Training 应显示同一任务自身估算。
+影响：R3 的入口时间真实性核心门槛不通过。用户仍能训练，因此不是 S1；但预计时间
+继续系统性误导，属于影响 MUST 的 S2，阻止 R3、真机门禁和后续需求解锁。
+建议责任任务：01 主责修复课程候选投影和正式计划集成，把现有内容事实转成 04 的
+TaskDurationBaseline。只有现有课程结构确实无法表达必要事实时，才由 05 补公开内容
+元数据。02 已诚实显示上游值，04 算法及 06/07/08 计时接入无需为本缺陷返工。
+```
+
+正式站证据：
+
+- Actions API 返回 run `30326369853` 为 `completed/success`，head SHA 为
+  `16b97888d7bda8c0d200bf0a7da53c03e4f9c018`。
+- 首页引用 `assets/index-CDUEKV0C.js`；Manifest、Service Worker 和正式资产均
+  HTTP 200。
+- 正式 R1 生成真实 schema 3 档案、schema 1 active plan 和三个不同生产 taskId，
+  没有使用 `demoPlan`、视觉夹具或测试任务。
+- Today：
+  - 词汇：`900` 秒，约 15 分钟，内容估算；
+  - 听力：`900` 秒，约 15 分钟，内容估算；
+  - 口语：`900` 秒，约 15 分钟，内容估算。
+- Training 使用相同三个 taskId，三张卡仍全部为 `900` 秒和约 15 分钟。
+- `tests/qa/r3-truthful-duration.acceptance.test.ts` 的生产内容投影断言稳定失败：
+  已发布候选没有 `durationBaseline`；其余 5 项算法、排除和汇总契约通过。
+
+最短回归命令：
+
+```bash
+pnpm exec vitest run tests/qa/r3-truthful-duration.acceptance.test.ts
+
+QA_BASE_URL=https://rayzhang988.github.io/english-learning-pwa/ \
+  node tests/e2e/r3-duration-baseline-regression.mjs
+```
+
+修复后回归范围：
+
+1. 已发布课程的三个首日候选必须携带结构化 `durationBaseline`，不得只复制旧 900 秒。
+2. 新计划的三个 `durationEstimate.baselineSource` 必须为 `structured-content`；
+   至少按模块真实内容量产生非等分估算，不能三项全为 900。
+3. Today、Training 和三个正式训练 Route 显示同一任务自身估算；推荐变化不得改时间。
+4. 保留 R2 三入口自由选择与真实 taskId；不得为修时长重新引入顺序锁。
+5. 修复部署后重新执行 R3 正式浏览器的三模块实际计时、排除、恢复、汇总、窄屏与缓存
+   全套门禁；当前因第一道预计时长门槛失败，后续正式黑盒不构成通过证据。
+
+应回退步骤：R3 回到实施顺序第 5 步的 `01` 正式计划集成，补齐结构化内容基线并重新
+部署；修复前不得进入用户真机 R3 确认，也不得激活“继续训练”。
+
+本地候选回归（2026-07-28）：
+
+- 01 `4e49d7f` 已投影结构化内容基线，05 `b803bd1` 已为 84/84 单元提供可校验事实。
+- `validate-duration-baselines.v1.mjs` 通过：首日词汇/听力/口语分别为
+  `123/211/181` 秒，84 单元总计 `17,566` 秒。
+- QA-009 定向自动化 2 个文件、13 项通过；`targetSeconds=2700`，
+  `plannedSeconds=123+211+181=515`，三项 `baselineSource` 均为
+  `structured-content`，旧 `estimatedSeconds=900` 只保留为内容 schema 兼容字段。
+- 当前本地生产资产 `index-Cm31haDv.js` 的首页、Manifest、SW 和资产均 HTTP 200；隔离
+  Chrome 从真实 R1 生成 schema 3 档案和首日计划后，Today/Training 使用相同三个
+  taskId，均显示 `123/211/181` 秒，不再全为 15 分钟。
+- 课程现有 28 天内容总时长折合日均约 `17,566 ÷ 28 ÷ 60 ≈ 10.5` 分钟。45 分钟是
+  每日目标，不是伪造时长的许可证；内容不足必须如实暴露，不能放大单元秒数补齐。
+
+QA-009 因此达到“本地修复通过”门槛，但旧正式资产仍是失败版本，必须等待 00 部署后
+重跑正式 URL 才能关闭。首次本地完整链路发现的独立 QA-010 已由 `c86d879` 修复并在
+下节通过回归；它不推翻 QA-009 的卡片修复证据，也不能替代 QA-009 的正式站回归。
+
+## QA-010｜结构化时长任务被词汇路由拒绝
+
+```text
+状态：待正式部署回归
+严重度：S1
+环境：本地生产预览；390×844；全新隔离 Chrome profile
+候选版本：01 4e49d7f；05 b803bd1；HEAD 00d45f7
+生产资产：assets/index-CTOzFSgF.js
+前置条件：从 R1 生成真实 schema 3 AbilityProfile 和首日 active plan
+复现步骤：
+1. 在“训练”读取真实词汇 taskId，确认其预计有效时间为 123 秒。
+2. 点击词汇卡，进入 #/vocabulary?taskId=<真实 taskId>。
+3. 等待正式课程资源加载完成。
+实际结果：页面显示“本次词汇任务无法评分”和
+“Learning task ... does not match its course unit.”，仅提供“重新加载”；
+同一失败在 first-use 生产集成验收中表现为 phase=error、questionCount=0。
+期望结果：结构化 durationEstimate 只改变任务预计有效时间，不应破坏同一
+learningUnitId/contentRef 的课程身份校验；词汇题目应正常加载并可完成。
+影响：三个核心训练模块之一完全无法进入且没有可接受降级，符合 S1 定义，立即阻止
+完整测试、候选部署、R3 正式回归和真机验收。
+责任任务：06 主责修正词汇正式内容解析对新任务时长契约的兼容；01 协同确认
+LearningTask.estimatedSeconds 与 durationEstimate 的公开含义。09 只回归，不改源码。
+```
+
+可复现证据：
+
+- `tests/qa/first-use-production.acceptance.test.ts`：真实计划词汇 task
+  `estimatedSeconds=123`，初始化后得到
+  `task-incompatible / does not match its course unit`。
+- `tests/e2e/r3-duration-baseline-regression.mjs`：本地生产黑盒先证明 Today/Training
+  三项时长和 taskId 一致，再点击真实词汇卡稳定进入上述错误页，exit 1。
+- R3 专项：24 个文件、166 项中 165 通过、1 失败。
+- 全量：114 个文件、586 项中 585 通过、1 失败；typecheck、lint、生产构建、8 个
+  课程资源发布和 20 项 PWA 预缓存均通过。
+
+回归门槛：
+
+1. 保留 QA-009 的 `123/211/181`、`plannedSeconds=515` 和 `structured-content`。
+2. 保留旧 schema/课程 `estimatedSeconds=900` 的恢复与读取兼容，不能把新估算回退
+   成 900 来绕过错误。
+3. first-use 真实三模块链路恢复全绿；本地生产黑盒点击真实词汇 taskId 后出现题目，
+   不得进入不可评分错误页。
+4. 全量测试必须零失败；修复提交后由 00 重新构建、部署，再由 09 回归 QA-009/010。
+
+本地修复回归（2026-07-28）：
+
+- 06 `c86d879` 已把动态 `estimatedSeconds` / `durationEstimate` 从静态课程身份中移除，
+  同时继续校验 schema、domain、targetModuleId、learningUnitId、contentRef、难度和
+  tags；旧 900 秒任务兼容测试保留。
+- R3 专项 26 个文件、181 项全部通过；09 外部验收 8 个文件、49 项全部通过。
+- 全量 114 个文件、588 项全部通过；typecheck、lint、生产构建、课程时长校验和 PWA
+  均通过。
+- 本地生产资产 `index-Cm31haDv.js` 的首页、Manifest、SW 和资产均 HTTP 200；
+  隔离 Chrome 从真实 R1 生成计划后，Today/Training 仍为 `123/211/181` 秒、
+  `plannedSeconds=515`，没有回退 900 秒。
+- 点击正式词汇 taskId 后进入真实词汇训练，显示“已完成 0 / 6”和第一题 `hi`，没有
+  “本次词汇任务无法评分”或 `does not match its course unit`。
+
+QA-010 已达到“本地修复通过”门槛，但尚未部署正式站，因此不能关闭。00 部署后，09
+必须在正式 URL 复跑同一 R3 黑盒并核对新 run/asset，才能把 QA-009 与 QA-010 一并
+关闭。
 
 ## 缺陷模板
 
