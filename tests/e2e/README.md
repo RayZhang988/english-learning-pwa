@@ -89,13 +89,16 @@ R3 当前先用独立脚本阻断旧 900 秒重新包装为“内容估算”：
 
 ```bash
 QA_BASE_URL=https://rayzhang988.github.io/english-learning-pwa/ \
+QA_R3_EXPECTED_ASSET=index-Cm31haDv.js \
+QA_R3_PAGES_RUN=30330487187 \
   node tests/e2e/r3-duration-baseline-regression.mjs
 ```
 
-正式运行时，脚本核对 Pages run `30326369853`、正式资产 `index-CDUEKV0C.js`，再用
+正式运行时，脚本核对 Pages run `30330487187`、正式资产 `index-Cm31haDv.js`，再用
 隔离临时 Chrome profile 从正式 R1 生成 schema 3 档案和真实首日计划。它同时读取
 Today、Training 和 IndexedDB，要求三个生产任务携带 `structured-content` 基线，
-不得全部回退为 900 秒或约 15 分钟，并点击真实词汇 task 检查 Route。
+不得全部回退为 900 秒或约 15 分钟，并点击真实词汇 task 检查 6 题 Route。最后核对
+SW 已接管且隔离 profile 只缓存当前 index 资产。
 
 本地候选可这样运行：
 
@@ -107,7 +110,7 @@ QA_BASE_URL=http://127.0.0.1:4173/ \
   node tests/e2e/r3-duration-baseline-regression.mjs
 ```
 
-当前本地候选完整通过：目标 2700 秒、实际计划 515 秒，词汇/听力/口语为
+当前正式候选与本地候选均完整通过：目标 2700 秒、实际计划 515 秒，词汇/听力/口语为
 `123/211/181` 秒，Today/Training taskId 与估算一致；真实词汇 Route 显示
-“已完成 0 / 6”和生产题面，不再出现不可评分错误。旧正式版本仍复现 QA-009，尚未
-重新部署；QA-009/010 的正式站回归完成前，后续真机结果不能记录为 R3 通过。
+“已完成 0 / 6”和生产题面，不再出现不可评分错误。QA-009/010 已关闭；真实 iPhone
+锁屏、后台、媒体和主屏幕缓存更新仍需用户验收。

@@ -137,10 +137,19 @@ async function verifyLive(baseUrl) {
     worker.headers.get('content-type') ?? '',
     /javascript|octet-stream/,
   )
-  const [manifest, serviceWorker] = await Promise.all([
+  const [html, manifest, serviceWorker] = await Promise.all([
+    home.text(),
     manifestResponse.json(),
     worker.text(),
   ])
+  const indexAssetMatch = html.match(
+    /assets\/(index-[A-Za-z0-9_-]+\.js)/u,
+  )
+  assert.ok(indexAssetMatch, 'Live home does not reference an index asset.')
+  const indexAsset = indexAssetMatch[1]
+  const assetResponse = await fetchOk(
+    new URL(`assets/${indexAsset}`, normalized),
+  )
   assert.equal(manifest.display, 'standalone')
   assert.equal(manifest.start_url, './')
   assert.ok(
@@ -153,6 +162,10 @@ async function verifyLive(baseUrl) {
       serviceWorker.includes('clients.claim()'),
     'Live Service Worker does not claim existing clients.',
   )
+  assert.ok(
+    serviceWorker.includes('cleanupOutdatedCaches()'),
+    'Live Service Worker does not clean outdated precaches.',
+  )
   for (const icon of manifest.icons) {
     await fetchOk(new URL(icon.src, normalized))
   }
@@ -162,6 +175,8 @@ async function verifyLive(baseUrl) {
     home: home.status,
     manifest: manifestResponse.status,
     serviceWorker: worker.status,
+    indexAsset,
+    indexAssetStatus: assetResponse.status,
     icons: manifest.icons.length,
   }
 }

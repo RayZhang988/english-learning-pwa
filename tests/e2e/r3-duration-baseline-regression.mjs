@@ -121,7 +121,7 @@ async function cardsForSurface(page, surface) {
   )()`)
 }
 
-async function createFirstDayPlan() {
+async function createFirstDayPlan(observedAsset) {
   const qa = await prepareBrowser()
   try {
     await qa.page.navigate(new URL('#/assessment', baseUrl).href)
@@ -330,6 +330,36 @@ async function createFirstDayPlan() {
       /词汇训练[\s\S]*已完成 0 \/ 6[\s\S]*提交答案/u,
       'The real vocabulary route did not load its six production questions.',
     )
+
+    await qa.page.waitFor(
+      `navigator.serviceWorker?.controller !== null`,
+      20_000,
+    )
+    const serviceWorker = await qa.page.serviceWorkerSnapshot()
+    assert.equal(serviceWorker.supported, true)
+    assert.match(serviceWorker.controller ?? '', /\/sw\.js$/u)
+    assert.match(serviceWorker.active ?? '', /\/sw\.js$/u)
+    const cachedUrls = serviceWorker.caches.flatMap((entry) => entry.urls)
+    const cachedIndexAssets = cachedUrls.filter((url) =>
+      /\/assets\/index-[A-Za-z0-9_-]+\.js$/u.test(url)
+    )
+    assert.ok(
+      cachedIndexAssets.some((url) =>
+        url.endsWith(`/assets/${observedAsset}`)
+      ),
+      `The current asset ${observedAsset} is missing from the active precache.`,
+    )
+    assert.deepEqual(
+      [...new Set(cachedIndexAssets.map((url) => new URL(url).pathname))],
+      [new URL(`assets/${observedAsset}`, baseUrl).pathname],
+      'The isolated profile retained an outdated index asset cache.',
+    )
+    checkpoint('r3-service-worker-cache', {
+      controller: serviceWorker.controller,
+      active: serviceWorker.active,
+      cacheNames: serviceWorker.caches.map((entry) => entry.cacheName),
+      cachedIndexAssets,
+    })
   } finally {
     await qa.close()
   }
@@ -368,7 +398,7 @@ async function releaseEvidence() {
       observedAsset,
       resources,
     })
-    return
+    return observedAsset
   }
 
   const runResponse = await fetch(
@@ -396,11 +426,12 @@ async function releaseEvidence() {
       headSha: run.head_sha,
     },
   })
+  return observedAsset
 }
 
 try {
-  await releaseEvidence()
-  await createFirstDayPlan()
+  const observedAsset = await releaseEvidence()
+  await createFirstDayPlan(observedAsset)
   console.log(JSON.stringify({ status: 'passed', ...evidence }, null, 2))
 } catch (error) {
   console.error(

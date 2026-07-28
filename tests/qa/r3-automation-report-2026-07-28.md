@@ -2,12 +2,12 @@
 
 ## 结论
 
-**QA-009 与 QA-010 均已在本地修复通过，仍待部署后的正式站回归。**
+**QA-009 与 QA-010 的正式站回归通过，两项缺陷已关闭；R3 仍待真实 iPhone 验收。**
 
-01 `4e49d7f` 与 05 `b803bd1` 已让本地生产计划使用 `123/211/181` 秒的结构化内容
-基线；06 `c86d879` 又解除动态任务时长与旧课程 900 秒兼容字段的错误身份耦合。当前
-本地生产链路与全部工程门禁均通过，但旧正式站尚未重新部署，因此两项缺陷都不能提前
-关闭。
+01 `4e49d7f`、05 `b803bd1` 和 06 `c86d879` 已进入正式资产
+`index-Cm31haDv.js`。隔离、无旧缓存 Chrome 从正式 R1 生成首日计划，得到
+`123/211/181` 秒和 515 秒真实计划，并进入 6 题词汇训练；没有回退 900 秒或出现课程
+身份错误。
 
 ## 验收版本
 
@@ -19,19 +19,34 @@
 - 08：`0af7857`
 - 02：`1457252`
 - 01 正式集成：`9ab305a`
-- 状态：`16b9788`
-- Pages run：`30326369853`，`completed / success`
-- run head SHA：`16b97888d7bda8c0d200bf0a7da53c03e4f9c018`
-- 正式资产：`assets/index-CDUEKV0C.js`
+- QA 验收同步：`79d90b6`
+- Pages run：`30330487187`，`completed / success`
+- run head SHA：`79d90b67601669f050031d2ddece9f5ba64af7fa`
+- 正式资产：`assets/index-Cm31haDv.js`
 
-本地候选：
+修复链：
 
 - 01 结构化投影：`4e49d7f`
 - 05 84 单元内容基线：`b803bd1`
 - 06 动态词汇时长兼容：`c86d879`
-- 本地 HEAD：`c86d879`
-- 本地生产资产：`assets/index-Cm31haDv.js`
-- 正式站尚未重新部署；本轮没有用旧正式站否决本地候选，也没有把本地预览冒充正式证据
+- QA 正式验收：`79d90b6`
+
+## 正式站关闭证据
+
+- Actions API 确认 run `30330487187` 为 `completed/success`，head 与指定
+  `79d90b6` 一致。
+- 首页、`manifest.webmanifest`、`sw.js` 和 `assets/index-Cm31haDv.js` 均
+  HTTP 200；正式 smoke 同时验证 4 个 PWA 图标。
+- 隔离 profile 没有读取或清理用户日常浏览器数据，从正式 R1 生成 schema 3
+  `AbilityProfile` 和三个不同的真实 taskId。
+- `targetSeconds=2700`、`plannedSeconds=515`；词汇、听力、口语分别
+  `123/211/181` 秒，三项 `baselineSource=structured-content`、
+  `durationBasis=content-baseline`。
+- Today 与 Training 的 taskId/秒数逐项一致；推荐语义没有改变其他任务可用性。
+- 正式词汇 Route 显示“已完成 0 / 6”、第一题 `hi` 和提交按钮，不含不可评分或
+  identity mismatch。
+- 当前 Service Worker 已接管页面；隔离 profile 的唯一 index 预缓存是
+  `index-Cm31haDv.js`，未残留旧 index 资产。
 
 ## 本地候选证据
 
@@ -159,23 +174,21 @@ PWA：8 个课程资源发布并预缓存，Service Worker 20 个预缓存条目
 `release-smoke.mjs` 原来只匹配旧 Workbox 文本 `SKIP_WAITING`，当前生成器等价输出为
 `self.skipWaiting()`。09 已在测试文件内修正该兼容断言，并同时检查 `clientsClaim()`
 和过期预缓存清理；本地 dist 与正式站发布冒烟均通过。这是 QA 测试维护，不是生产
-功能修复，不能替代 QA-009/010 的正式部署回归。
+功能修复；本轮正式 smoke 与浏览器缓存检查已补齐 QA-009/010 的部署证据。
 
 ## 责任与回退
 
-- QA-009 本地修复：01 `4e49d7f` 投影课程候选，05 `b803bd1` 提供公开内容事实；
-  当前只差部署和正式回归。
+- QA-009 已关闭：01 `4e49d7f` 投影课程候选，05 `b803bd1` 提供公开内容事实。
 - 无需返工：02 正确显示上游值；04 的计算和个人化算法已生效；06/07/08 的计时阶段
   不是 QA-009 根因。
-- QA-010 已由 06 `c86d879` 本地修复；01 任务字段契约没有回退。
-- 下一步：由 00 部署当前候选，09 使用正式 run/asset 重跑 QA-009/010。
+- QA-010 已关闭：06 `c86d879` 修正词汇课程身份校验；01 任务字段契约没有回退。
+- 下一步：用户按 `iphone-checklist.md` 执行 R3 真机验收。
 
 ## 本轮未冒充通过的项目
 
-QA-009 与 QA-010 都只能记为“本地修复通过、待正式部署回归”，不能关闭。旧正式
-资产仍是 QA-009 失败版本，因此没有把部署后正式计时、缓存更新或窄屏结果写成通过；
-本地全绿也不能关闭 R3。
+QA-009/010 已有正式站证据并关闭，但这只证明桌面正式站、发布资源、结构化估算和
+词汇入口。它不能证明 iOS 的锁屏、后台回收、真实媒体事件或主观时间体验。
 
 真实 iPhone 的锁屏、后台、MediaRecorder、SpeechSynthesis、语音识别、主屏幕缓存更新
-和主观时间合理性也未执行。重新部署并通过 QA-009/010 正式站回归后，才应执行
-`iphone-checklist.md` 的 R3 小节。
+和主观时间合理性仍未执行。下一步应执行 `iphone-checklist.md` 的 R3 小节，不得把
+本轮正式 Chrome 结果冒充真机通过。
