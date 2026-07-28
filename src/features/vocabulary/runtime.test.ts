@@ -147,6 +147,50 @@ const structuredDurationEstimate = {
 } as const
 
 describe('vocabulary training runtime', () => {
+  it('streams a stable next item and completes only after finish-current-item', async () => {
+    const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
+    const task = vocabularyTaskFor(catalog.units[0], {
+      trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 },
+    })
+    let budget: 'running' | 'finish-current-item' = 'running'
+    const sink = new InMemoryPlatformEventSink()
+    const store = new MemoryNamespaceStore()
+    const runtime = new VocabularyTrainingRuntime({
+      task, localDate: '2026-07-28', contentSource: createStaticDataSource(catalog), eventSink: sink,
+      repository: new VocabularySessionRepository(store), now: sequenceClock(), createId: sequenceIds(),
+      trainingBudgetStatus: () => budget,
+    })
+    let session = await runtime.initialize()
+    const firstId = session.stream?.activeItem.itemId
+    session = await runtime.select(session.questions[0].correctOptionId)
+    session = await runtime.submit()
+    session = await runtime.advance()
+    expect(session.phase).toBe('answering')
+    expect(session.stream?.activeItem.itemId).not.toBe(firstId)
+    expect(sink.events.map((event) => event.type)).toContain('learning.training.item.completed.v1')
+    expect(sink.events.map((event) => event.type)).not.toContain('learning.training.budget.completed.v1')
+
+    const restored = new VocabularyTrainingRuntime({
+      task, localDate: '2026-07-28', contentSource: createStaticDataSource(catalog), eventSink: sink,
+      repository: new VocabularySessionRepository(store), now: sequenceClock(), createId: sequenceIds(),
+      trainingBudgetStatus: () => budget,
+    })
+    session = await restored.initialize()
+    expect(session.stream?.completedItemIds).toEqual([firstId])
+    expect(session.stream?.activeItem.itemId).not.toBe(firstId)
+
+    budget = 'finish-current-item'
+    session = await restored.select(session.questions[0].correctOptionId)
+    session = await restored.submit()
+    session = await restored.advance()
+    expect(session.phase).toBe('completed')
+    expect(sink.events.map((event) => event.type)).toContain('learning.training.budget.completed.v1')
+    const attempts = sink.events
+      .map((event) => parseLearningEvent(event))
+      .filter((event) => event.type === 'learning.attempt.completed.v1')
+    expect(attempts.every((event) => event.payload.taskCompleted === false)).toBe(true)
+  })
+
   it('runs, restores, and completes a structured-duration task against legacy course duration', async () => {
     const catalog = createVocabularyCatalog(
       await loadActualVocabularyDocuments(),

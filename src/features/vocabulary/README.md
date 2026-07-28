@@ -21,12 +21,13 @@
 
 ## 输入与输出
 
-- 输入：05 的课程包入口、课程清单、按清单顺序提供的 lesson 文件，以及 04 的
-  `LearningTask`。
+- 输入：05 的课程包入口、课程清单、按清单顺序提供的 lesson 文件、连续供应索引，以及
+  04 的 `LearningTask`。
 - 题目输出：`VocabularyQuestion`，包含稳定 ID、提示语言、选项、正确选项、解释和
   标准错误标签。
 - 会话输出：可移植的 `VocabularySession`，用于本地恢复和事件 outbox。
-- 学习输出：04 定义的 started、paused、skipped、attempt.completed v1 事件；注入
+- 学习输出：04 定义的 started、paused、skipped、attempt.completed v1 和训练流
+  `item-completed` / `content-exhausted` / `budget-completed` 事件；注入
   01 计时 factory 后，由共享 session 另行发布
   `learning.timing.segment.recorded.v1`。
 
@@ -38,7 +39,7 @@
 公开入口为 `src/features/vocabulary/index.ts`。
 
 - `currentVocabularyContentSource.install()`：通过 01 的
-  `OfflineAssetStore` 显式安装包入口、课程清单和四个 lesson 文件。
+  `OfflineAssetStore` 显式安装包入口、供应索引、课程清单和四个 lesson 文件。
 - `currentVocabularyContentSource.load()`：优先读取已安装离线包，缺失时才访问打包后的
   课程资源，并按 05 的清单顺序构建 `VocabularyCatalog`。
 - `VocabularyTrainingRoute`：接收一条 04 下发的词汇 `LearningTask`、`localDate`、
@@ -68,9 +69,8 @@
   `feedback / active-feedback`，业务暂停调用共享 `pause()`。
 - 选择、提交、下一题和恢复会记录 activity。01 统一处理 DOM 活动、45 秒空闲、
   页面后台和崩溃快照；06 不补算离线时间。
-- 最后一题的 `finish()` 必须成功后，06 才发布
-  `learning.attempt.completed.v1`。失败时 completion 保留在模块 outbox，重试仍先重试
-  同一 timing session 的 pending event。
+- 旧计划的最后一题，以及预算任务的 `budget-completed`，都必须先让最后一个 timing
+  segment 成功结算；失败时事件保留在模块 outbox，重试仍先重试同一 timing session。
 - 01 的精确生产接入点是
   `src/app/learning/training-route-hosts.tsx` 中的 `VocabularyTrainingRoute`：
   传入 `timingSessionFactory={productionEffectiveTimingSessions}`。这项应用集成不属于
@@ -83,6 +83,14 @@
 - 恢复身份使用 `taskId`、`planId`、`learningUnitId`、`contentRef`、`domain`、
   `targetModuleId` 和 `mode`。动态预计时长变化不会拒绝已有会话，也不会把已落盘
   session 中的原任务静默替换；后续完成事件继续使用该会话实际持有的任务估算。
+- 具有 `trainingBudget` 的新计划改为单题连续流：供应索引的 `itemId` 是题目身份，
+  每次已评分题目先写入 `completedItemIds`、`nextSupplyCursor` 与事件 outbox，刷新后以
+  相同排除集请求下一题，绝不回绕重复。没有 `trainingBudget` 的旧计划仍使用原六题单元
+  与原完成语义。
+- 04 将预算置为 `finish-current-item` 后，06 保留正在作答或查看反馈的题；该题完成后才
+  发布 `learning.training.budget.completed.v1`。供应器返回内容耗尽时发布明确
+  `content-exhausted` 原因，保存当前 cursor/排除集并停在可恢复错误态；`retrySupply()`
+  只能从该状态重试，不能清空排除集或伪造 task completion。
 - started、paused、skipped 和 attempt.completed 先写入会话 outbox，再发布；发布成功
   后才移除。崩溃后的重复发布沿用同一事件 ID，由 04 幂等处理。
 - 选择、提交、下一题、暂停/退出及 outbox 更新进入同一运行时队列；即使本地仓库写入
@@ -101,7 +109,7 @@
 
 ## 验证
 
-- 06 专项：10 个测试文件、34 项测试通过。
+- QA-011 本地定向：11 个测试文件、37 项测试通过。
 - 覆盖真实 4 周课程包、28 个词汇单元、四类题型、复习引用、判定与非法转换、
   UI ViewModel、四类学习事件、离线读取、恢复和 outbox 重试。
 - QA-005 回归使用可控慢仓库覆盖乱序选择写入、旧题选项到达新题、下一题乐观发布、
@@ -111,13 +119,13 @@
 - QA-010 覆盖课程旧 900 秒与结构化任务 123 秒并存、`durationEstimate` 有/无、旧任务、
   静态身份损坏、恢复不覆盖原任务及 completion 保留真实任务估算。本地生产浏览器从
   首日真实 123 秒词汇入口成功进入 6 题训练，不再进入不可评分错误页。
-- 项目级 `pnpm check`：114 个测试文件、588 项测试通过；lint、TypeScript、Vite
-  生产构建、课程资源校验和 PWA 生成通过。
+- QA-011 覆盖供应索引稳定选择、排除集不回绕、已批准变式映射、逐题事件、跨题不重复及
+  `finish-current-item` 后才产生预算完成事件。
 
 ## 已知限制
 
-1. QA-010 的 06 本地修复仍需由 00 重新部署，并由 09 在正式站同时回归 QA-009/010；
-   本模块单元测试通过不能替代正式入口结论。
+1. 01 仍须在正式路由注入 04 已恢复的 `trainingBudgetStatus`，并把供应索引列入应用级
+   PWA 预缓存；06 的默认本地供应器只保证模块资产读取，不能替代 01 的正式集成。
 2. 02 当前把 `VocabularyTrainingScreen` 的主提示固定标注为 `lang="en-US"`。
    `meaning-to-term` 和部分场景题的中文提示可正常显示，但语言元数据不准确；应由 02
    扩展公开 ViewModel 后由 01 集成，09 需复验 VoiceOver。

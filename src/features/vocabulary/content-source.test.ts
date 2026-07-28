@@ -61,7 +61,7 @@ describe('current vocabulary content source', () => {
     expect(catalog.units).toHaveLength(28)
   })
 
-  it('installs exactly the released index, manifest, and four lesson files', async () => {
+  it('installs the released index, supply index, manifest, and four lesson files', async () => {
     const store = new FileBackedOfflineStore()
     const source = new CurrentVocabularyContentSource(store)
 
@@ -69,7 +69,7 @@ describe('current vocabulary content source', () => {
 
     expect(installed.packageId).toBe(VOCABULARY_CONTENT_PACKAGE_ID)
     expect(installed.version).toBe(VOCABULARY_CONTENT_PACKAGE_VERSION)
-    expect(installed.assets).toHaveLength(6)
-    expect(new Set(installed.assets.map((asset) => asset.url)).size).toBe(6)
+    expect(installed.assets).toHaveLength(7)
+    expect(new Set(installed.assets.map((asset) => asset.url)).size).toBe(7)
   })
 })

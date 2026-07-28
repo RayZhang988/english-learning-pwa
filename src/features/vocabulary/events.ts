@@ -4,6 +4,10 @@ import type {
   LearningTask,
   LearningTaskPausedEvent,
   LearningTaskStartedEvent,
+  LearningTrainingBudgetCompletedEvent,
+  LearningTrainingContentExhaustedEvent,
+  LearningTrainingItemCompletedEvent,
+  LearningTaskSupplyItem,
   LearningTaskSkippedEvent,
 } from '../../learning-engine/index.ts'
 import { getVocabularySessionResult } from './session.ts'
@@ -143,4 +147,48 @@ export function createVocabularyUnscorableEvent(
       failureCategory,
     },
   }
+}
+
+export function createVocabularyStreamAttemptEvent(
+  session: VocabularySession,
+  durationSeconds: number,
+  identity: EventIdentity,
+): LearningAttemptCompletedEvent {
+  const result = getVocabularySessionResult(session)
+  return {
+    id: identity.eventId, type: 'learning.attempt.completed.v1', sourceModuleId: 'vocabulary', occurredAt: identity.occurredAt, schemaVersion: 1,
+    payload: { ...basePayload(session.task, identity.localDate), mode: session.task.mode, difficultyLevel: session.task.difficultyLevel, estimatedSeconds: session.task.estimatedSeconds, result: 'scored', performanceScore: result.performanceScore, evidenceQuality: 1, assistanceLevel: 0, durationSeconds: Math.max(0, Math.floor(durationSeconds)), taskCompleted: false, errorTags: result.errorTags, contentTags: session.task.tags, failureCategory: null },
+  }
+}
+
+export function createVocabularyTrainingItemCompletedEvent(
+  task: LearningTask,
+  item: LearningTaskSupplyItem,
+  requestId: string,
+  nextSupplyCursor: string | null,
+  identity: EventIdentity,
+): LearningTrainingItemCompletedEvent {
+  return { id: identity.eventId, type: 'learning.training.item.completed.v1', sourceModuleId: 'vocabulary', occurredAt: identity.occurredAt, schemaVersion: 1,
+    payload: { ...basePayload(task, identity.localDate), mode: task.mode, item, requestId, nextSupplyCursor, outcome: 'scored' } }
+}
+
+export function createVocabularyTrainingContentExhaustedEvent(
+  task: LearningTask,
+  requestId: string,
+  cursor: string | null,
+  reason: LearningTrainingContentExhaustedEvent['payload']['reason'],
+  identity: EventIdentity,
+): LearningTrainingContentExhaustedEvent {
+  return { id: identity.eventId, type: 'learning.training.content.exhausted.v1', sourceModuleId: 'vocabulary', occurredAt: identity.occurredAt, schemaVersion: 1,
+    payload: { ...basePayload(task, identity.localDate), mode: task.mode, requestId, cursor, reason } }
+}
+
+export function createVocabularyTrainingBudgetCompletedEvent(
+  task: LearningTask,
+  lastCompletedItemId: string,
+  completedItemCount: number,
+  identity: EventIdentity,
+): LearningTrainingBudgetCompletedEvent {
+  return { id: identity.eventId, type: 'learning.training.budget.completed.v1', sourceModuleId: 'vocabulary', occurredAt: identity.occurredAt, schemaVersion: 1,
+    payload: { ...basePayload(task, identity.localDate), mode: task.mode, lastCompletedItemId, completedItemCount } }
 }

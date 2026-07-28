@@ -22,6 +22,7 @@ export async function loadActualVocabularyDocuments(): Promise<VocabularyContent
   const index = packageIndex as {
     readonly manifestFile: string
     readonly lessonFiles: readonly string[]
+    readonly trainingSupplyIndexFile?: string
   }
   const lessonsByPath: Record<string, unknown> = {}
   for (const lessonFile of index.lessonFiles) {
@@ -31,6 +32,9 @@ export async function loadActualVocabularyDocuments(): Promise<VocabularyContent
     packageIndex,
     manifest: await readJson(index.manifestFile),
     lessonsByPath,
+    trainingSupplyIndex: index.trainingSupplyIndexFile
+      ? await readJson(index.trainingSupplyIndexFile)
+      : undefined,
   }
 }
 

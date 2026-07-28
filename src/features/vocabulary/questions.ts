@@ -6,6 +6,7 @@ import type {
   VocabularyQuestionType,
   VocabularySceneQuiz,
   VocabularyTrainingUnit,
+  VocabularySupplyVariantId,
 } from './types.ts'
 
 const ITEM_QUESTION_TYPES: readonly VocabularyQuestionType[] = [
@@ -162,6 +163,31 @@ function buildItemQuestion(
     explanationZh: item.exampleZh,
     errorTag: 'meaning-recall',
   }
+}
+
+/** Builds one stable supply item without inventing a new question format. */
+export function buildVocabularySupplyQuestion(
+  itemId: string,
+  item: VocabularyItem,
+  distractors: readonly VocabularyItem[],
+  variantId: VocabularySupplyVariantId,
+): VocabularyQuestion {
+  const type: VocabularyQuestionType =
+    variantId === 'meaning-to-term-choice'
+      ? 'meaning-to-term'
+      : variantId === 'example-gap-choice'
+        ? 'example-comprehension'
+        : 'term-to-meaning'
+  const questionId = `supply:${itemId}:${type}`
+  if (type === 'meaning-to-term') {
+    const { options, correctOptionId } = itemOptions(questionId, item, distractors, (candidate) => candidate.term)
+    return { id: questionId, type, instructionZh: '根据中文义回忆英文表达', prompt: item.meaningZh, promptLocale: 'zh-CN', partOfSpeech: item.partOfSpeech, options, correctOptionId, exampleEn: item.exampleEn, explanationZh: item.exampleZh, errorTag: 'form-recall' }
+  }
+  const { options, correctOptionId } = itemOptions(questionId, item, distractors, (candidate) => candidate.meaningZh)
+  if (type === 'example-comprehension') {
+    return { id: questionId, type, instructionZh: '根据原课程例句判断目标表达的含义', prompt: item.exampleEn, promptLocale: 'en-US', partOfSpeech: item.partOfSpeech, options, correctOptionId, exampleEn: item.exampleEn, explanationZh: item.exampleZh, errorTag: 'meaning-recall' }
+  }
+  return { id: questionId, type, instructionZh: '选择正确的中文含义', prompt: item.term, promptLocale: 'en-US', partOfSpeech: item.partOfSpeech, options, correctOptionId, exampleEn: item.exampleEn, explanationZh: item.exampleZh, errorTag: 'meaning-recall' }
 }
 
 function quizOptions(

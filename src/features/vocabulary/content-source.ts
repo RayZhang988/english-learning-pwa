@@ -25,6 +25,10 @@ const CURRENT_PACKAGE_ASSET_URLS: Readonly<Record<string, string>> = {
     '../../../content/curriculum/survival-travel-american-4w.v1.json',
     import.meta.url,
   ).href,
+  'content/curriculum/training-supply-index.v1.json': new URL(
+    '../../../content/curriculum/training-supply-index.v1.json',
+    import.meta.url,
+  ).href,
   'content/lessons/survival-travel-american-4w/week-1.v1.json': new URL(
     '../../../content/lessons/survival-travel-american-4w/week-1.v1.json',
     import.meta.url,
@@ -46,6 +50,7 @@ const CURRENT_PACKAGE_ASSET_URLS: Readonly<Record<string, string>> = {
 interface PackageIndexShape {
   readonly manifestFile: string
   readonly lessonFiles: readonly string[]
+  readonly trainingSupplyIndexFile: string | null
 }
 
 function readPackageIndexShape(value: unknown): PackageIndexShape {
@@ -66,9 +71,22 @@ function readPackageIndexShape(value: unknown): PackageIndexShape {
       'Content package index has invalid file references.',
     )
   }
+  if (
+    record.trainingSupplyIndexFile !== undefined &&
+    typeof record.trainingSupplyIndexFile !== 'string'
+  ) {
+    throw new VocabularyError(
+      'content-invalid',
+      'Content package index has an invalid training supply reference.',
+    )
+  }
   return {
     manifestFile: record.manifestFile,
     lessonFiles: record.lessonFiles as readonly string[],
+    trainingSupplyIndexFile:
+      typeof record.trainingSupplyIndexFile === 'string'
+        ? record.trainingSupplyIndexFile
+        : null,
   }
 }
 
@@ -149,6 +167,9 @@ export class CurrentVocabularyContentSource
       packageIndex,
       manifest,
       lessonsByPath,
+      trainingSupplyIndex: packageFiles.trainingSupplyIndexFile
+        ? await this.readJson(packageFiles.trainingSupplyIndexFile, signal)
+        : undefined,
     }
     return createVocabularyCatalog(documents)
   }

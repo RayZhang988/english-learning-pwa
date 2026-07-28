@@ -1,6 +1,7 @@
 import type {
   LearningEvent,
   LearningTask,
+  LearningTaskSupplyItem,
   StandardErrorTag,
 } from '../../learning-engine/index.ts'
 
@@ -85,13 +86,41 @@ export interface VocabularyCatalog {
   readonly packageVersion: '1.0.0'
   readonly courseId: string
   readonly units: readonly VocabularyTrainingUnit[]
+  readonly trainingSupplyIndex?: unknown
   getUnit(contentRef: string): VocabularyTrainingUnit | undefined
+  getItem(itemId: string): VocabularyItem | undefined
 }
 
 export interface VocabularyContentDocuments {
   readonly packageIndex: unknown
   readonly manifest: unknown
   readonly lessonsByPath: Readonly<Record<string, unknown>>
+  /** Optional for released packages created before QA-011. */
+  readonly trainingSupplyIndex?: unknown
+}
+
+export type VocabularySupplyVariantId =
+  | 'term-to-meaning-choice'
+  | 'meaning-to-term-choice'
+  | 'example-gap-choice'
+
+export interface VocabularySupplyItem extends LearningTaskSupplyItem {
+  readonly source: {
+    readonly sourceType: 'vocabulary-item'
+    readonly sourceId: string
+    readonly variantId: VocabularySupplyVariantId
+    readonly distractorItemIds: readonly string[]
+  }
+}
+
+export interface VocabularyStreamState {
+  readonly activeItem: VocabularySupplyItem
+  readonly activeRequestId: string
+  readonly nextSupplyCursor: string | null
+  readonly completedItemIds: readonly string[]
+  readonly completedItemCount: number
+  readonly correctItemCount: number
+  readonly finishCurrentItem: boolean
 }
 
 export interface VocabularyAnswerRecord {
@@ -137,6 +166,8 @@ export interface VocabularySession {
   readonly updatedAt: string
   readonly pendingEvents: readonly LearningEvent[]
   readonly failure: VocabularySessionFailure | null
+  /** Present only for QA-011 training-budget tasks. */
+  readonly stream: VocabularyStreamState | null
 }
 
 export interface VocabularySessionResult {

@@ -8,6 +8,7 @@ import {
   type VocabularySession,
   type VocabularySessionFailure,
   type VocabularySessionResult,
+  type VocabularyStreamState,
 } from './types.ts'
 
 function assertTimestamp(value: string): number {
@@ -93,6 +94,7 @@ export function createVocabularySession(
     updatedAt: now,
     pendingEvents: [],
     failure: null,
+    stream: null,
   }
 }
 
@@ -119,6 +121,43 @@ export function createFailedVocabularySession(
     updatedAt: now,
     pendingEvents: [],
     failure,
+    stream: null,
+  }
+}
+
+export function replaceVocabularyStreamQuestion(
+  session: VocabularySession,
+  question: VocabularyQuestion,
+  stream: VocabularyStreamState,
+  now: string,
+): VocabularySession {
+  return {
+    ...session,
+    questions: [question],
+    questionIndex: 0,
+    selectedOptionId: null,
+    answers: [],
+    phase: 'answering',
+    pausedFromPhase: null,
+    lastActiveAt: now,
+    updatedAt: now,
+    stream,
+    failure: null,
+  }
+}
+
+export function completeVocabularyStreamSession(
+  session: VocabularySession,
+  stream: VocabularyStreamState,
+  now: string,
+): VocabularySession {
+  return {
+    ...session,
+    phase: 'completed',
+    selectedOptionId: null,
+    lastActiveAt: null,
+    updatedAt: now,
+    stream,
   }
 }
 

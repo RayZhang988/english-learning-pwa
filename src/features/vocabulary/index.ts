@@ -19,10 +19,15 @@ export {
   createVocabularyTaskSkippedEvent,
   createVocabularyTaskStartedEvent,
   createVocabularyUnscorableEvent,
+  createVocabularyStreamAttemptEvent,
+  createVocabularyTrainingBudgetCompletedEvent,
+  createVocabularyTrainingContentExhaustedEvent,
+  createVocabularyTrainingItemCompletedEvent,
 } from './events.ts'
 export { createVocabularyFeatureModule } from './feature-module.ts'
 export {
   buildVocabularyQuestions,
+  buildVocabularySupplyQuestion,
   judgeVocabularyAnswer,
 } from './questions.ts'
 export {
@@ -36,6 +41,10 @@ export {
   type VocabularyTrainingRuntimeOptions,
 } from './runtime.ts'
 export {
+  VocabularyCatalogSupplyProvider,
+  type VocabularySupplyProvider,
+} from './supply.ts'
+export {
   advanceVocabularySession,
   createFailedVocabularySession,
   createVocabularySession,
@@ -47,6 +56,8 @@ export {
   resumeVocabularySession,
   selectVocabularyOption,
   submitVocabularyAnswer,
+  completeVocabularyStreamSession,
+  replaceVocabularyStreamQuestion,
 } from './session.ts'
 export {
   VocabularyEffectiveTiming,
@@ -77,5 +88,8 @@ export {
   type VocabularySessionResult,
   type VocabularySingleChoiceQuiz,
   type VocabularyTrainingUnit,
+  type VocabularySupplyItem,
+  type VocabularySupplyVariantId,
+  type VocabularyStreamState,
 } from './types.ts'
 export { toVocabularyScreenViewModel } from './view-model.ts'

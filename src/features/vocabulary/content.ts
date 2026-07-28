@@ -438,8 +438,12 @@ export function createVocabularyCatalog(
     packageVersion: '1.0.0',
     courseId,
     units,
+    trainingSupplyIndex: documents.trainingSupplyIndex,
     getUnit(contentRef) {
       return unitMap.get(contentRef)
+    },
+    getItem(itemId) {
+      return itemRegistry.get(itemId)
     },
   }
 }
