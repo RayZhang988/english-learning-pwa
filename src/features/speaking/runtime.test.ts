@@ -2,6 +2,10 @@ import { describe, expect, it, vi } from 'vitest'
 import { InMemoryPlatformEventSink } from '../../core/testing/index.ts'
 import type { PlatformEvent, PlatformEventSink } from '../../core/index.ts'
 import { parseLearningEvent } from '../../learning-engine/index.ts'
+import type {
+  LearningTrainingContentExhaustedEvent,
+  LearningTrainingContentRecoveredEvent,
+} from '../../learning-engine/index.ts'
 import type { ReadonlyDataSource } from '../../core/index.ts'
 import type {
   MicrophonePermissionService,
@@ -284,8 +288,16 @@ describe('speaking training runtime fallbacks', () => {
     const original = makeRuntime()
     await original.initialize(); await original.startRecording(); await original.stopRecording()
     const exhausted = await original.advance()
-    const exhaustion = sink.events.find((event) => event.type === 'learning.training.content.exhausted.v1')
-    expect(exhausted.stream?.exhaustionRequestId).toBe(exhaustion?.payload.requestId)
+    const learningEvents = sink.events.map(parseLearningEvent)
+    const exhaustion = learningEvents.find(
+      (event): event is LearningTrainingContentExhaustedEvent =>
+        event.type === 'learning.training.content.exhausted.v1',
+    )
+    if (!exhaustion) {
+      throw new Error('Expected the exhausted speaking stream event.')
+    }
+    const exhaustionRequestId = exhaustion.payload.requestId
+    expect(exhausted.stream?.exhaustionRequestId).toBe(exhaustionRequestId)
 
     recoveredAvailable = true
     const refreshed = makeRuntime()
@@ -294,8 +306,16 @@ describe('speaking training runtime fallbacks', () => {
     expect(session.phase).toBe('practicing')
     expect(session.stream?.completedItemIds).toEqual(['supply-1'])
     expect(session.stream?.exhaustionRequestId).toBeNull()
-    const recovery = sink.events.find((event) => event.type === 'learning.training.content.recovered.v1')
-    expect(recovery?.payload.exhaustionRequestId).toBe(exhaustion?.payload.requestId)
+    const recovery = sink.events
+      .map(parseLearningEvent)
+      .find(
+        (event): event is LearningTrainingContentRecoveredEvent =>
+          event.type === 'learning.training.content.recovered.v1',
+      )
+    if (!recovery) {
+      throw new Error('Expected the speaking stream recovery event.')
+    }
+    expect(recovery.payload.exhaustionRequestId).toBe(exhaustionRequestId)
     budget = 'finish-current-item'
     await refreshed.startRecording(); await refreshed.stopRecording(); session = await refreshed.advance()
     expect(session.phase).toBe('completed')
