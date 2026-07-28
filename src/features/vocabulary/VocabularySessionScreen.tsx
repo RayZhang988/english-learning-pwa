@@ -10,6 +10,7 @@ export function VocabularySessionScreen({
   onSubmit,
   onAdvance,
   onResume,
+  onRetryTrainingContent,
 }: {
   readonly session: VocabularySession
   readonly operationPending?: boolean
@@ -18,6 +19,7 @@ export function VocabularySessionScreen({
   readonly onSubmit: () => void
   readonly onAdvance: () => void
   readonly onResume: () => void
+  readonly onRetryTrainingContent?: () => void
 }) {
   const viewModel = toVocabularyScreenViewModel(
     session,
@@ -36,6 +38,7 @@ export function VocabularySessionScreen({
       onExit={onExit}
       onSelect={onSelect}
       onAction={onAction}
+      onRetryTrainingContent={onRetryTrainingContent}
     />
   )
 }

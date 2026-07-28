@@ -30,6 +30,7 @@ import { VocabularyRuntimeMountLifecycle } from './route-lifecycle.ts'
 import {
   VocabularyTrainingRuntime,
 } from './runtime.ts'
+import type { VocabularySupplyProvider } from './supply.ts'
 import type {
   VocabularyEffectiveTimingSessionFactoryPort,
 } from './timing.ts'
@@ -50,6 +51,29 @@ export interface VocabularyTrainingRouteProps {
   readonly now?: () => string
   readonly createId?: () => string
   readonly timingSessionFactory?: VocabularyEffectiveTimingSessionFactoryPort
+  /** 01 supplies both ports for QA-011 budget tasks. */
+  readonly supplyProvider?: VocabularySupplyProvider
+  readonly trainingBudgetStatus?: () => 'running' | 'finish-current-item'
+}
+
+/** Public route seam: 01 supplies its restored budget ports here, never via UI. */
+export function createVocabularyTrainingRouteRuntime(
+  props: VocabularyTrainingRouteProps,
+  networkStatus: NetworkStatusService = browserNetworkStatus,
+): VocabularyTrainingRuntime {
+  return new VocabularyTrainingRuntime({
+    task: props.task,
+    localDate: props.localDate,
+    contentSource: props.contentSource ?? currentVocabularyContentSource,
+    eventSink: props.eventSink,
+    repository: props.repository,
+    networkStatus,
+    now: props.now,
+    createId: props.createId,
+    timingSessionFactory: props.timingSessionFactory,
+    supplyProvider: props.supplyProvider,
+    trainingBudgetStatus: props.trainingBudgetStatus,
+  })
 }
 
 export function VocabularyTrainingRoute(
@@ -76,6 +100,10 @@ export function VocabularyTrainingRoute(
     readonly timingSessionFactory:
       | VocabularyEffectiveTimingSessionFactoryPort
       | undefined
+    readonly supplyProvider: VocabularySupplyProvider | undefined
+    readonly trainingBudgetStatus:
+      | (() => 'running' | 'finish-current-item')
+      | undefined
   } | null>(null)
   const runtimeMountLifecycleRef =
     useRef<VocabularyRuntimeMountLifecycle | null>(null)
@@ -87,23 +115,16 @@ export function VocabularyTrainingRoute(
 
   if (
     runtimeRef.current?.key !== runtimeKey ||
-    runtimeRef.current.timingSessionFactory !== props.timingSessionFactory
+    runtimeRef.current.timingSessionFactory !== props.timingSessionFactory ||
+    runtimeRef.current.supplyProvider !== props.supplyProvider ||
+    runtimeRef.current.trainingBudgetStatus !== props.trainingBudgetStatus
   ) {
     runtimeRef.current = {
       key: runtimeKey,
       timingSessionFactory: props.timingSessionFactory,
-      runtime: new VocabularyTrainingRuntime({
-        task: props.task,
-        localDate: props.localDate,
-        contentSource:
-          props.contentSource ?? currentVocabularyContentSource,
-        eventSink: props.eventSink,
-        repository: props.repository,
-        networkStatus,
-        now: props.now,
-        createId: props.createId,
-        timingSessionFactory: props.timingSessionFactory,
-      }),
+      supplyProvider: props.supplyProvider,
+      trainingBudgetStatus: props.trainingBudgetStatus,
+      runtime: createVocabularyTrainingRouteRuntime(props, networkStatus),
     }
   }
   const runtime = runtimeRef.current.runtime
@@ -210,7 +231,7 @@ export function VocabularyTrainingRoute(
   const retry = useCallback(() => {
     const session = runtime.currentSession
     if (session?.phase === 'error') {
-      void perform(() => runtime.restart())
+      void perform(() => session.stream ? runtime.retrySupply() : runtime.restart())
     } else if (session) {
       void perform(() => runtime.retryPendingEvents())
     } else {
@@ -314,6 +335,11 @@ export function VocabularyTrainingRoute(
         onResume={() => {
           void perform(() => runtime.resume())
         }}
+        onRetryTrainingContent={
+          session.stream
+            ? () => { void perform(() => runtime.retrySupply()) }
+            : undefined
+        }
       />
     </>
   )

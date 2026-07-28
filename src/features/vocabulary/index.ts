@@ -68,6 +68,7 @@ export {
 export { VocabularySessionScreen } from './VocabularySessionScreen.tsx'
 export {
   VocabularyTrainingRoute,
+  createVocabularyTrainingRouteRuntime,
   type VocabularyTrainingRouteProps,
 } from './VocabularyTrainingRoute.tsx'
 export {
