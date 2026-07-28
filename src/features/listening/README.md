@@ -13,6 +13,25 @@
 - `BrowserListeningSpeechSynthesis`：设备 Web Speech 合成语音适配器；
 - `ListeningSessionRepository`：`feature.listening` 命名空间内的会话恢复。
 
+### QA-011 连续题流（待 01 生产注入）
+
+- 预算任务通过 05 的 `training-supply-index.v1.json` 读取 197 个已批准听力候选，严格按
+  `itemId`、cursor 和已完成题目排除集合选择；不会扫描课程目录、生成新题、复用已排除题，
+  也不会把名义题目秒数当作有效训练时间。
+- 每道题完成会先持久化当前 stream（已完成 ID、下一个 cursor、当前题和 outbox），再发布
+  `learning.training.item.completed.v1` 与非终态 attempt。刷新后继续下一道未排除题。
+- 04 的状态 port 返回 `finish-current-item` 后，07 仍允许正在播放、作答或反馈的题自然结束；
+  仅在该题完成后发布 `learning.training.budget.completed.v1`。该终态的 timing `finish()`
+  仍先于预算完成事件，绝不通过取消 SpeechSynthesis 触发完成。
+- 候选耗尽会进入可重试的内容错误并原样发布
+  `learning.training.content.exhausted.v1`（`no-eligible-content`、
+  `all-eligible-content-recently-used` 或 `provider-failure`）；重试保留排除集合，不清空
+  cursor、更不循环旧题。没有 `trainingBudgetStatus` 注入的旧调用继续使用原固定题组完成语义。
+
+01 的 QA-011 唯一注入点是 `ListeningTrainingRoute` 的
+`supplyProvider` 与 `trainingBudgetStatus` props；07 仅声明并消费这两个端口，不能自行读取
+04 状态或修改应用路由。
+
 模块不会修改 `src/app/**`。最终路由注册由 01 在集成步骤完成。
 
 ### R3 有效计时接入
@@ -128,7 +147,7 @@ transcript 迁移为逐句片段，并把旧完整场景的播放次数转移到
 
 ## 学习事件
 
-模块发布 04 定义的四类 v1 事件：
+普通任务发布 04 定义的四类 v1 事件：
 
 - `learning.task.started.v1`
 - `learning.task.paused.v1`
@@ -140,6 +159,9 @@ transcript 迁移为逐句片段，并把旧完整场景的播放次数转移到
 听力掌握度。
 
 事件先写入会话 outbox，再发布；发布成功后按事件 ID 删除，恢复时不会重复生成结果。
+预算连续任务另外发布 `learning.training.item.completed.v1`、
+`learning.training.content.exhausted.v1` 与
+`learning.training.budget.completed.v1`。
 
 ## 离线与降级
 

@@ -15,6 +15,7 @@ import {
   type ListeningSession,
   type ListeningSessionFailure,
   type ListeningSessionResult,
+  type ListeningStreamState,
   type ListeningTrainingUnit,
 } from './types.ts'
 
@@ -167,6 +168,7 @@ export function createListeningSession(
     updatedAt: now,
     pendingEvents: [],
     failure: null,
+    stream: null,
   }
 }
 
@@ -203,6 +205,59 @@ export function createFailedListeningSession(
     updatedAt: now,
     pendingEvents: [],
     failure,
+    stream: null,
+  }
+}
+
+export function createListeningStreamSession(
+  task: LearningTask,
+  unit: ListeningTrainingUnit,
+  question: ListeningQuestion,
+  now: string,
+): ListeningSession {
+  const base = createListeningSession(task, { ...unit, questions: [question] }, now)
+  return base
+}
+
+export function replaceListeningStreamQuestion(
+  session: ListeningSession,
+  unit: ListeningTrainingUnit,
+  question: ListeningQuestion,
+  stream: ListeningStreamState,
+  now: string,
+): ListeningSession {
+  assertQuestion(question)
+  return {
+    ...session,
+    transcript: unit.transcript,
+    questions: [question],
+    questionIndex: 0,
+    selectedOptionId: null,
+    dictationInput: '',
+    answers: [],
+    phase: 'answering',
+    pausedFromPhase: null,
+    playback: initialPlayback(question),
+    lastActiveAt: now,
+    updatedAt: now,
+    failure: null,
+    stream,
+  }
+}
+
+export function completeListeningStreamSession(
+  session: ListeningSession,
+  stream: ListeningStreamState,
+  now: string,
+): ListeningSession {
+  return {
+    ...session,
+    phase: 'completed',
+    selectedOptionId: null,
+    dictationInput: '',
+    lastActiveAt: null,
+    updatedAt: now,
+    stream,
   }
 }
 

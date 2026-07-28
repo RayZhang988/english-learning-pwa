@@ -907,6 +907,7 @@ export function createListeningCatalog(
     extensionVersion: '1.0.0',
     courseId: packageIndex.courseId as string,
     units,
+    trainingSupplyIndex: documents.trainingSupplyIndex,
     getUnit(contentRef: string) {
       return byContentRef.get(contentRef)
     },

@@ -4,6 +4,10 @@ import type {
   LearningTask,
   LearningTaskPausedEvent,
   LearningTaskStartedEvent,
+  LearningTaskSupplyItem,
+  LearningTrainingBudgetCompletedEvent,
+  LearningTrainingContentExhaustedEvent,
+  LearningTrainingItemCompletedEvent,
   LearningTaskSkippedEvent,
 } from '../../learning-engine/index.ts'
 import { ListeningError } from './errors.ts'
@@ -149,5 +153,85 @@ export function createListeningUnscorableEvent(
       contentTags: task.tags,
       failureCategory,
     },
+  }
+}
+
+export function createListeningStreamAttemptEvent(
+  session: ListeningSession,
+  durationSeconds: number,
+  identity: EventIdentity,
+): LearningAttemptCompletedEvent {
+  const result = getListeningSessionResult(session)
+  return {
+    id: identity.eventId,
+    type: 'learning.attempt.completed.v1',
+    sourceModuleId: 'listening',
+    occurredAt: identity.occurredAt,
+    schemaVersion: 1,
+    payload: {
+      ...basePayload(session.task, identity.localDate),
+      mode: session.task.mode,
+      difficultyLevel: session.task.difficultyLevel,
+      estimatedSeconds: session.task.estimatedSeconds,
+      result: 'scored',
+      performanceScore: result.performanceScore,
+      evidenceQuality: 1,
+      assistanceLevel: result.assistanceLevel,
+      durationSeconds: Math.max(0, Math.floor(durationSeconds)),
+      taskCompleted: false,
+      errorTags: result.errorTags,
+      contentTags: session.task.tags,
+      failureCategory: null,
+    },
+  }
+}
+
+export function createListeningTrainingItemCompletedEvent(
+  task: LearningTask,
+  item: LearningTaskSupplyItem,
+  requestId: string,
+  nextSupplyCursor: string | null,
+  identity: EventIdentity,
+): LearningTrainingItemCompletedEvent {
+  return {
+    id: identity.eventId,
+    type: 'learning.training.item.completed.v1',
+    sourceModuleId: 'listening',
+    occurredAt: identity.occurredAt,
+    schemaVersion: 1,
+    payload: { ...basePayload(task, identity.localDate), mode: task.mode, item, requestId, nextSupplyCursor, outcome: 'scored' },
+  }
+}
+
+export function createListeningTrainingContentExhaustedEvent(
+  task: LearningTask,
+  requestId: string,
+  cursor: string | null,
+  reason: LearningTrainingContentExhaustedEvent['payload']['reason'],
+  identity: EventIdentity,
+): LearningTrainingContentExhaustedEvent {
+  return {
+    id: identity.eventId,
+    type: 'learning.training.content.exhausted.v1',
+    sourceModuleId: 'listening',
+    occurredAt: identity.occurredAt,
+    schemaVersion: 1,
+    payload: { ...basePayload(task, identity.localDate), mode: task.mode, requestId, cursor, reason },
+  }
+}
+
+export function createListeningTrainingBudgetCompletedEvent(
+  task: LearningTask,
+  lastCompletedItemId: string,
+  completedItemCount: number,
+  identity: EventIdentity,
+): LearningTrainingBudgetCompletedEvent {
+  return {
+    id: identity.eventId,
+    type: 'learning.training.budget.completed.v1',
+    sourceModuleId: 'listening',
+    occurredAt: identity.occurredAt,
+    schemaVersion: 1,
+    payload: { ...basePayload(task, identity.localDate), mode: task.mode, lastCompletedItemId, completedItemCount },
   }
 }

@@ -1,0 +1,58 @@
+import { describe, expect, it } from 'vitest'
+import packageIndex from '../../../content/curriculum/package-index.v1.json'
+import manifest from '../../../content/curriculum/survival-travel-american-4w.v1.json'
+import extensionIndex from '../../../content/curriculum/listening-exercise-extension-index.v1.json'
+import trainingSupplyIndex from '../../../content/curriculum/training-supply-index.v1.json'
+import exercises from '../../../content/lessons/survival-travel-american-4w/listening-exercises.v1.json'
+import week1 from '../../../content/lessons/survival-travel-american-4w/week-1.v1.json'
+import week2 from '../../../content/lessons/survival-travel-american-4w/week-2.v1.json'
+import week3 from '../../../content/lessons/survival-travel-american-4w/week-3.v1.json'
+import week4 from '../../../content/lessons/survival-travel-american-4w/week-4.v1.json'
+import { createListeningCatalog } from './content.ts'
+import { resolveListeningSupplyQuestion, ListeningCatalogSupplyProvider } from './supply.ts'
+
+function catalog() {
+  return createListeningCatalog({
+    packageIndex,
+    manifest,
+    extensionIndex,
+    trainingSupplyIndex,
+    lessonsByPath: {
+      [packageIndex.lessonFiles[0]]: week1,
+      [packageIndex.lessonFiles[1]]: week2,
+      [packageIndex.lessonFiles[2]]: week3,
+      [packageIndex.lessonFiles[3]]: week4,
+    },
+    exerciseBundlesByPath: {
+      [extensionIndex.exerciseBundleFiles[0]]: exercises,
+    },
+  })
+}
+
+describe('listening training supply', () => {
+  it('selects stable non-repeating approved listening items from all three source types', async () => {
+    const current = catalog()
+    const provider = new ListeningCatalogSupplyProvider(current.trainingSupplyIndex, current)
+    const first = await provider.next({ schemaVersion: 1, requestId: 'request-1', planId: 'plan', taskId: 'task', domain: 'listening', targetModuleId: 'listening', mode: 'learn', targetDifficulty: 1, cursor: null, excludeItemIds: [], reason: 'initial' })
+    expect(first).toMatchObject({ status: 'item' })
+    if (first.status !== 'item') return
+    const second = await provider.next({ schemaVersion: 1, requestId: 'request-2', planId: 'plan', taskId: 'task', domain: 'listening', targetModuleId: 'listening', mode: 'learn', targetDifficulty: 1, cursor: first.nextCursor, excludeItemIds: [first.item.itemId], reason: 'continue-after-item' })
+    expect(second).toMatchObject({ status: 'item' })
+    if (second.status !== 'item') return
+    expect(second.item.itemId).not.toBe(first.item.itemId)
+    const supplied = first.item as import('./types.ts').ListeningSupplyItem
+    const resolved = resolveListeningSupplyQuestion(current, supplied)
+    expect(resolved.question.id).toBe(supplied.source.sourceId)
+    expect(current.trainingSupplyIndex).toBeDefined()
+  })
+
+  it('reports exhaustion instead of clearing exclusions and looping', async () => {
+    const current = catalog()
+    const provider = new ListeningCatalogSupplyProvider(current.trainingSupplyIndex, current)
+    const all = (trainingSupplyIndex.candidates as { readonly itemId: string }[])
+      .filter((item) => item.itemId.includes('-listening-'))
+      .map((item) => item.itemId)
+    const result = await provider.next({ schemaVersion: 1, requestId: 'request', planId: 'plan', taskId: 'task', domain: 'listening', targetModuleId: 'listening', mode: 'learn', targetDifficulty: 1, cursor: null, excludeItemIds: all, reason: 'continue-after-item' })
+    expect(result).toMatchObject({ status: 'content-exhausted', reason: 'all-eligible-content-recently-used' })
+  })
+})

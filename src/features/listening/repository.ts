@@ -12,6 +12,7 @@ import {
   LISTENING_SESSION_SCHEMA_VERSION,
   type ListeningQuestion,
   type ListeningSession,
+  type ListeningStreamState,
 } from './types.ts'
 
 export const LISTENING_STORAGE_NAMESPACE = 'feature.listening'
@@ -100,6 +101,29 @@ function validQuestion(value: unknown): value is ListeningQuestion {
         isRecord(option) && option.id === value.correctOptionId,
     )
   )
+}
+
+function validStream(value: unknown): value is ListeningStreamState | null | undefined {
+  if (value === null || value === undefined) {
+    return true
+  }
+  if (!isRecord(value) || !isRecord(value.activeItem) || !isRecord(value.activeItem.source)) {
+    return false
+  }
+  return typeof value.activeItem.itemId === 'string' &&
+    typeof value.activeItem.learningUnitId === 'string' &&
+    typeof value.activeItem.contentRef === 'string' &&
+    typeof value.activeItem.difficultyLevel === 'number' &&
+    Array.isArray(value.activeItem.tags) &&
+    typeof value.activeItem.source.sourceType === 'string' &&
+    typeof value.activeItem.source.sourceId === 'string' &&
+    typeof value.activeItem.source.variantId === 'string' &&
+    typeof value.activeRequestId === 'string' &&
+    (typeof value.nextSupplyCursor === 'string' || value.nextSupplyCursor === null) &&
+    Array.isArray(value.completedItemIds) && value.completedItemIds.every((id) => typeof id === 'string') &&
+    typeof value.completedItemCount === 'number' && Number.isInteger(value.completedItemCount) && value.completedItemCount >= 0 &&
+    typeof value.correctItemCount === 'number' && Number.isInteger(value.correctItemCount) && value.correctItemCount >= 0 &&
+    typeof value.finishCurrentItem === 'boolean'
 }
 
 function upgradeLegacyPassageSession(
@@ -202,7 +226,8 @@ function restoreSession(
     !Array.isArray(value.transcript) ||
     !Array.isArray(value.answers) ||
     !Array.isArray(value.pendingEvents) ||
-    !isRecord(value.playback)
+    !isRecord(value.playback) ||
+    !validStream(value.stream)
   ) {
     throw new ListeningError(
       'session-recovery-invalid',

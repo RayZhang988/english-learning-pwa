@@ -28,6 +28,7 @@ import { ListeningSessionScreen } from './ListeningSessionScreen.tsx'
 import { ListeningSessionRepository } from './repository.ts'
 import { ListeningRuntimeMountLifecycle } from './route-lifecycle.ts'
 import { ListeningTrainingRuntime } from './runtime.ts'
+import type { ListeningSupplyProvider } from './supply.ts'
 import type { ListeningSpeechPort } from './speech-synthesis.ts'
 import type {
   ListeningEffectiveTimingSessionFactoryPort,
@@ -51,6 +52,9 @@ export interface ListeningTrainingRouteProps {
   readonly now?: () => string
   readonly createId?: () => string
   readonly timingSessionFactory?: ListeningEffectiveTimingSessionFactoryPort
+  /** 01 supplies both ports for QA-011 budget tasks. */
+  readonly supplyProvider?: ListeningSupplyProvider
+  readonly trainingBudgetStatus?: () => 'running' | 'finish-current-item'
 }
 
 export function ListeningTrainingRoute(
@@ -71,6 +75,8 @@ export function ListeningTrainingRoute(
     readonly timingSessionFactory:
       | ListeningEffectiveTimingSessionFactoryPort
       | undefined
+    readonly supplyProvider: ListeningSupplyProvider | undefined
+    readonly trainingBudgetStatus: (() => 'running' | 'finish-current-item') | undefined
   } | null>(null)
   const runtimeMountLifecycleRef =
     useRef<ListeningRuntimeMountLifecycle | null>(null)
@@ -83,11 +89,15 @@ export function ListeningTrainingRoute(
   if (
     runtimeRef.current?.key !== runtimeKey ||
     runtimeRef.current.timingSessionFactory !==
-      props.timingSessionFactory
+      props.timingSessionFactory ||
+    runtimeRef.current.supplyProvider !== props.supplyProvider ||
+    runtimeRef.current.trainingBudgetStatus !== props.trainingBudgetStatus
   ) {
     runtimeRef.current = {
       key: runtimeKey,
       timingSessionFactory: props.timingSessionFactory,
+      supplyProvider: props.supplyProvider,
+      trainingBudgetStatus: props.trainingBudgetStatus,
       runtime: new ListeningTrainingRuntime({
         task: props.task,
         localDate: props.localDate,
@@ -100,6 +110,8 @@ export function ListeningTrainingRoute(
         now: props.now,
         createId: props.createId,
         timingSessionFactory: props.timingSessionFactory,
+        supplyProvider: props.supplyProvider,
+        trainingBudgetStatus: props.trainingBudgetStatus,
       }),
     }
   }
@@ -193,7 +205,7 @@ export function ListeningTrainingRoute(
   const retry = useCallback(() => {
     const session = runtime.currentSession
     if (session?.phase === 'error') {
-      void perform(() => runtime.restart())
+      void perform(() => session.stream ? runtime.retrySupply() : runtime.restart())
     } else if (session) {
       void perform(() => runtime.retryPendingEvents())
     } else {

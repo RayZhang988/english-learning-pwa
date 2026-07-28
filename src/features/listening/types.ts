@@ -1,6 +1,7 @@
 import type {
   LearningEvent,
   LearningTask,
+  LearningTaskSupplyItem,
   StandardErrorTag,
 } from '../../learning-engine/index.ts'
 
@@ -109,6 +110,7 @@ export interface ListeningCatalog {
   readonly extensionVersion: '1.0.0'
   readonly courseId: string
   readonly units: readonly ListeningTrainingUnit[]
+  readonly trainingSupplyIndex?: unknown
   getUnit(contentRef: string): ListeningTrainingUnit | undefined
 }
 
@@ -118,6 +120,29 @@ export interface ListeningContentDocuments {
   readonly lessonsByPath: Readonly<Record<string, unknown>>
   readonly extensionIndex: unknown
   readonly exerciseBundlesByPath: Readonly<Record<string, unknown>>
+  /** Optional for released packages created before QA-011. */
+  readonly trainingSupplyIndex?: unknown
+}
+
+export interface ListeningSupplyItem extends LearningTaskSupplyItem {
+  readonly source: {
+    readonly sourceType:
+      | 'listening-extension'
+      | 'listening-core-check'
+      | 'listening-scene-quiz'
+    readonly sourceId: string
+    readonly variantId: string
+  }
+}
+
+export interface ListeningStreamState {
+  readonly activeItem: ListeningSupplyItem
+  readonly activeRequestId: string
+  readonly nextSupplyCursor: string | null
+  readonly completedItemIds: readonly string[]
+  readonly completedItemCount: number
+  readonly correctItemCount: number
+  readonly finishCurrentItem: boolean
 }
 
 export interface ListeningPlaybackState {
@@ -177,6 +202,8 @@ export interface ListeningSession {
   readonly updatedAt: string
   readonly pendingEvents: readonly LearningEvent[]
   readonly failure: ListeningSessionFailure | null
+  /** Present only for QA-011 training-budget tasks. */
+  readonly stream: ListeningStreamState | null
 }
 
 export interface ListeningSessionResult {

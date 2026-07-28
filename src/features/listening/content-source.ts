@@ -18,6 +18,8 @@ export const LISTENING_CONTENT_PACKAGE_VERSION = '1.0.0'
 const PACKAGE_INDEX_PATH = 'content/curriculum/package-index.v1.json'
 const EXTENSION_INDEX_PATH =
   'content/curriculum/listening-exercise-extension-index.v1.json'
+const TRAINING_SUPPLY_INDEX_PATH =
+  'content/curriculum/training-supply-index.v1.json'
 const CURRENT_ASSET_URLS: Readonly<Record<string, string>> = {
   [PACKAGE_INDEX_PATH]: new URL(
     '../../../content/curriculum/package-index.v1.json',
@@ -52,11 +54,16 @@ const CURRENT_ASSET_URLS: Readonly<Record<string, string>> = {
       '../../../content/lessons/survival-travel-american-4w/listening-exercises.v1.json',
       import.meta.url,
     ).href,
+  [TRAINING_SUPPLY_INDEX_PATH]: new URL(
+    '../../../content/curriculum/training-supply-index.v1.json',
+    import.meta.url,
+  ).href,
 }
 
 interface CoreIndexShape {
   readonly manifestFile: string
   readonly lessonFiles: readonly string[]
+  readonly trainingSupplyIndexFile: string | null
 }
 
 interface ExtensionIndexShape {
@@ -104,6 +111,10 @@ function readCoreIndex(value: unknown): CoreIndexShape {
   return {
     manifestFile: files.single as string,
     lessonFiles: files.list,
+    trainingSupplyIndexFile:
+      typeof (value as Record<string, unknown>).trainingSupplyIndexFile === 'string'
+        ? (value as Record<string, unknown>).trainingSupplyIndexFile as string
+        : null,
   }
 }
 
@@ -198,6 +209,9 @@ export class CurrentListeningContentSource
     for (const path of extensionFiles.exerciseBundleFiles) {
       exerciseBundlesByPath[path] = await this.readJson(path, signal)
     }
+    const trainingSupplyIndex = coreFiles.trainingSupplyIndexFile
+      ? await this.readJson(coreFiles.trainingSupplyIndexFile, signal)
+      : undefined
 
     const documents: ListeningContentDocuments = {
       packageIndex,
@@ -205,6 +219,7 @@ export class CurrentListeningContentSource
       lessonsByPath,
       extensionIndex,
       exerciseBundlesByPath,
+      trainingSupplyIndex,
     }
     return createListeningCatalog(documents)
   }

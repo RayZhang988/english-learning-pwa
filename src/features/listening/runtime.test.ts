@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { InMemoryPlatformEventSink } from '../../core/testing/index.ts'
+import { parseLearningEvent } from '../../learning-engine/index.ts'
 import type { NetworkStatusService } from '../../platform/index.ts'
 import type {
   NamespaceStore,
@@ -22,6 +23,7 @@ import {
 } from './test-fixtures.ts'
 import type {
   ListeningCatalog,
+  ListeningChoiceQuestion,
   ListeningQuestion,
   ListeningSession,
 } from './types.ts'
@@ -276,6 +278,119 @@ function dialogueCatalog(): ListeningCatalog {
 }
 
 describe('listening training runtime', () => {
+  it('streams durable non-repeating items and completes only after finish-current-item', async () => {
+    const secondQuestion: ListeningChoiceQuestion = {
+      id: 'question-choice-2',
+      type: 'word-discrimination',
+      promptZh: '你听到了哪一句？',
+      primarySegmentId: 'seg-sentence',
+      segments: choiceQuestion.segments,
+      playbackPolicy: choiceQuestion.playbackPolicy,
+      options: [
+        { id: 'yes', label: "I'm visiting Boston this week." },
+        { id: 'no', label: 'I live in Chicago.' },
+      ],
+      correctOptionId: 'yes',
+      rationaleZh: '音频读的是 Boston。',
+      errorTag: 'sound-discrimination',
+    }
+    const currentCatalog = catalog([choiceQuestion, secondQuestion])
+    const items = [
+      {
+        itemId: 'supply-1', learningUnitId: 'st4w-w1d1-listening', contentRef: 'lesson://survival-travel-american-4w/1.0.0/w1d1/listening',
+        difficultyLevel: 2, tags: ['scene:introductions'], source: { sourceType: 'listening-extension' as const, sourceId: 'question-choice', variantId: 'word-discrimination' },
+      },
+      {
+        itemId: 'supply-2', learningUnitId: 'st4w-w1d1-listening', contentRef: 'lesson://survival-travel-american-4w/1.0.0/w1d1/listening',
+        difficultyLevel: 2, tags: ['scene:introductions'], source: { sourceType: 'listening-extension' as const, sourceId: 'question-choice-2', variantId: 'word-discrimination' },
+      },
+    ]
+    const supplyProvider = {
+      async next(request: import('../../learning-engine/index.ts').LearningTaskSupplyRequest) {
+        const item = items.find((candidate) => !request.excludeItemIds.includes(candidate.itemId))
+        return item
+          ? { schemaVersion: 1 as const, requestId: request.requestId, status: 'item' as const, item, nextCursor: item.itemId }
+          : { schemaVersion: 1 as const, requestId: request.requestId, status: 'content-exhausted' as const, reason: 'all-eligible-content-recently-used' as const }
+      },
+    }
+    let budget: 'running' | 'finish-current-item' = 'running'
+    const store = new MemoryStore()
+    const sink = new InMemoryPlatformEventSink()
+    const runtime = new ListeningTrainingRuntime({
+      task: createListeningTask({ trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } }),
+      localDate: '2026-07-28', contentSource: { load: async () => currentCatalog }, eventSink: sink,
+      repository: new ListeningSessionRepository(store), speech: new ImmediateSpeech(), now: clock(), createId: (() => { let id = 0; return () => `event-${id++}` })(),
+      supplyProvider, trainingBudgetStatus: () => budget,
+    })
+    let session = await runtime.initialize()
+    expect(session.stream?.activeItem.itemId).toBe('supply-1')
+    await runtime.togglePlayback()
+    session = await runtime.select('a')
+    session = await runtime.submit()
+    session = await runtime.advance()
+    expect(session.phase).toBe('answering')
+    expect(session.stream?.completedItemIds).toEqual(['supply-1'])
+    expect(session.stream?.activeItem.itemId).toBe('supply-2')
+
+    const restored = new ListeningTrainingRuntime({
+      task: createListeningTask({ trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } }),
+      localDate: '2026-07-28', contentSource: { load: async () => currentCatalog }, eventSink: sink,
+      repository: new ListeningSessionRepository(store), speech: new ImmediateSpeech(), now: clock(), createId: (() => { let id = 0; return () => `restored-event-${id++}` })(),
+      supplyProvider, trainingBudgetStatus: () => budget,
+    })
+    session = await restored.initialize()
+    expect(session.stream?.completedItemIds).toEqual(['supply-1'])
+    budget = 'finish-current-item'
+    await restored.togglePlayback()
+    session = await restored.select('yes')
+    session = await restored.submit()
+    session = await restored.advance()
+    expect(session.phase).toBe('completed')
+    expect(sink.events.map((event) => event.type)).toContain('learning.training.item.completed.v1')
+    expect(sink.events.map((event) => event.type)).toContain('learning.training.budget.completed.v1')
+    const attempts = sink.events
+      .map((event) => parseLearningEvent(event))
+      .filter((event) => event.type === 'learning.attempt.completed.v1')
+    expect(attempts.every((event) => event.payload.taskCompleted === false)).toBe(true)
+  })
+
+  it('reports a retryable exhausted stream without clearing completed exclusions', async () => {
+    const currentCatalog = catalog([choiceQuestion])
+    const item = {
+      itemId: 'only-item', learningUnitId: 'st4w-w1d1-listening', contentRef: 'lesson://survival-travel-american-4w/1.0.0/w1d1/listening',
+      difficultyLevel: 2, tags: ['scene:introductions'], source: { sourceType: 'listening-extension' as const, sourceId: 'question-choice', variantId: 'word-discrimination' },
+    }
+    const requests: import('../../learning-engine/index.ts').LearningTaskSupplyRequest[] = []
+    const supplyProvider = {
+      async next(request: import('../../learning-engine/index.ts').LearningTaskSupplyRequest) {
+        requests.push(request)
+        return request.excludeItemIds.includes(item.itemId)
+          ? { schemaVersion: 1 as const, requestId: request.requestId, status: 'content-exhausted' as const, reason: 'all-eligible-content-recently-used' as const }
+          : { schemaVersion: 1 as const, requestId: request.requestId, status: 'item' as const, item, nextCursor: item.itemId }
+      },
+    }
+    const sink = new InMemoryPlatformEventSink()
+    const runtime = new ListeningTrainingRuntime({
+      task: createListeningTask({ trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } }),
+      localDate: '2026-07-28', contentSource: { load: async () => currentCatalog }, eventSink: sink,
+      repository: new ListeningSessionRepository(new MemoryStore()), speech: new ImmediateSpeech(), now: clock(), createId: (() => { let id = 0; return () => `event-${id++}` })(),
+      supplyProvider, trainingBudgetStatus: () => 'running',
+    })
+    await runtime.initialize()
+    await runtime.togglePlayback()
+    await runtime.select('a')
+    await runtime.submit()
+    const exhausted = await runtime.advance()
+    expect(exhausted.phase).toBe('error')
+    expect(exhausted.stream?.completedItemIds).toEqual(['only-item'])
+    expect(sink.events
+      .map((event) => parseLearningEvent(event))
+      .some((event) => event.type === 'learning.training.content.exhausted.v1' && event.payload.reason === 'all-eligible-content-recently-used')).toBe(true)
+    await runtime.retrySupply()
+    expect(runtime.currentSession?.phase).toBe('error')
+    expect(requests.at(-1)?.excludeItemIds).toEqual(['only-item'])
+  })
+
   it('keeps rapid dictation notifications and persistence on the latest complete value', async () => {
     const store = new ControlledWriteStore()
     const repository = new ListeningSessionRepository(store)

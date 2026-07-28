@@ -6,6 +6,7 @@ import type {
   LearningTask,
   LearningTaskPausedEvent,
   LearningTaskSkippedEvent,
+  LearningTaskSupplyRequest,
 } from '../../learning-engine/index.ts'
 import {
   browserNetworkStatus,
@@ -19,6 +20,10 @@ import {
   createListeningTaskSkippedEvent,
   createListeningTaskStartedEvent,
   createListeningUnscorableEvent,
+  createListeningStreamAttemptEvent,
+  createListeningTrainingBudgetCompletedEvent,
+  createListeningTrainingContentExhaustedEvent,
+  createListeningTrainingItemCompletedEvent,
 } from './events.ts'
 import {
   ListeningPlaybackController,
@@ -30,10 +35,13 @@ import {
   changeListeningDictation,
   createFailedListeningSession,
   createListeningSession,
+  createListeningStreamSession,
+  completeListeningStreamSession,
   failListeningSession,
   getCurrentListeningQuestion,
   pauseListeningSession,
   resumeListeningSession,
+  replaceListeningStreamQuestion,
   selectListeningOption,
   submitListeningAnswer,
   updateListeningPlayback,
@@ -46,6 +54,11 @@ import {
   type ListeningSpeechPort,
 } from './speech-synthesis.ts'
 import {
+  ListeningCatalogSupplyProvider,
+  resolveListeningSupplyQuestion,
+  type ListeningSupplyProvider,
+} from './supply.ts'
+import {
   ListeningEffectiveTiming,
   type ListeningEffectiveTimingSessionFactoryPort,
 } from './timing.ts'
@@ -54,6 +67,7 @@ import type {
   ListeningRepeatMode,
   ListeningSession,
   ListeningSessionFailure,
+  ListeningStreamState,
 } from './types.ts'
 
 type TaskPauseReason = LearningTaskPausedEvent['payload']['reason']
@@ -71,6 +85,10 @@ export interface ListeningTrainingRuntimeOptions {
   readonly now?: () => string
   readonly createId?: () => string
   readonly timingSessionFactory?: ListeningEffectiveTimingSessionFactoryPort
+  /** 01 injects this for production; tests may supply a controlled provider. */
+  readonly supplyProvider?: ListeningSupplyProvider
+  /** Mirrors 04's restored training progress; it is never inferred from wall time. */
+  readonly trainingBudgetStatus?: () => 'running' | 'finish-current-item'
 }
 
 function defaultId(): string {
@@ -88,6 +106,10 @@ export class ListeningTrainingRuntime {
   private readonly now: () => string
   private readonly createId: () => string
   private readonly timing: ListeningEffectiveTiming
+  private readonly suppliedProvider: ListeningSupplyProvider | undefined
+  private readonly trainingBudgetStatus: (() => 'running' | 'finish-current-item') | undefined
+  /** A budget is continuous only when the 01 host has supplied its restored status port. */
+  private readonly continuousTraining: boolean
   private readonly listeners = new Set<SessionListener>()
   private session: ListeningSession | null = null
   private controller: ListeningPlaybackController | null = null
@@ -117,6 +139,11 @@ export class ListeningTrainingRuntime {
     this.timing = new ListeningEffectiveTiming(
       this.task.taskId,
       options.timingSessionFactory,
+    )
+    this.suppliedProvider = options.supplyProvider
+    this.trainingBudgetStatus = options.trainingBudgetStatus
+    this.continuousTraining = Boolean(
+      this.task.trainingBudget && this.trainingBudgetStatus,
     )
   }
 
@@ -389,8 +416,9 @@ export class ListeningTrainingRuntime {
     while (session.pendingEvents.length > 0) {
       const event = session.pendingEvents[0]
       if (
-        event.type === 'learning.attempt.completed.v1' &&
-        event.payload.taskCompleted
+        (event.type === 'learning.attempt.completed.v1' &&
+          event.payload.taskCompleted) ||
+        event.type === 'learning.training.budget.completed.v1'
       ) {
         await this.timing.finish()
       }
@@ -434,6 +462,40 @@ export class ListeningTrainingRuntime {
     }
   }
 
+  private streamRequest(stream: ListeningStreamState | null): LearningTaskSupplyRequest {
+    const completed = stream?.completedItemIds ?? []
+    const cursor = stream?.nextSupplyCursor ?? null
+    return {
+      schemaVersion: 1,
+      requestId: `${this.task.taskId}:supply:${completed.length + 1}:${cursor ?? 'initial'}`,
+      planId: this.task.planId,
+      taskId: this.task.taskId,
+      domain: 'listening',
+      targetModuleId: 'listening',
+      mode: this.task.mode,
+      targetDifficulty: this.task.difficultyLevel,
+      cursor,
+      excludeItemIds: completed,
+      reason: completed.length === 0 ? 'initial' : 'continue-after-item',
+    }
+  }
+
+  private async nextStreamItem(
+    catalog: ListeningCatalog,
+    stream: ListeningStreamState | null,
+  ) {
+    const provider = this.suppliedProvider ?? new ListeningCatalogSupplyProvider(
+      catalog.trainingSupplyIndex,
+      catalog,
+    )
+    const request = this.streamRequest(stream)
+    const result = await provider.next(request)
+    if (result.requestId !== request.requestId) {
+      throw new ListeningError('content-invalid', 'Listening supply returned a mismatched request.')
+    }
+    return { request, result }
+  }
+
   private async startFresh(): Promise<ListeningSession> {
     const now = this.now()
     const startedEvent = createListeningTaskStartedEvent(
@@ -443,14 +505,39 @@ export class ListeningTrainingRuntime {
     let session: ListeningSession
     try {
       const catalog = await this.contentSource.load()
-      const unit = resolveListeningTask(catalog, this.task)
       if (!this.speech.capabilities().supported) {
         throw new ListeningError(
           'speech-unavailable',
           '当前浏览器无法使用设备合成语音。',
         )
       }
-      session = createListeningSession(this.task, unit, now)
+      if (this.continuousTraining) {
+        const { request, result } = await this.nextStreamItem(catalog, null)
+        if (result.status !== 'item') {
+          session = createFailedListeningSession(this.task, { category: 'content', message: '当前没有可继续的听力题目。' }, now)
+          session = withPendingListeningEvent(session, startedEvent, now)
+          session = withPendingListeningEvent(session, createListeningTrainingContentExhaustedEvent(this.task, request.requestId, request.cursor, result.reason, this.identity(now)), now)
+          await this.save(session)
+          return this.flushPendingEvents()
+        }
+        const supplied = resolveListeningSupplyQuestion(catalog, result.item as import('./types.ts').ListeningSupplyItem)
+        session = createListeningStreamSession(this.task, supplied.unit, supplied.question, now)
+        session = {
+          ...session,
+          stream: {
+            activeItem: result.item as import('./types.ts').ListeningSupplyItem,
+            activeRequestId: request.requestId,
+            nextSupplyCursor: result.nextCursor,
+            completedItemIds: [],
+            completedItemCount: 0,
+            correctItemCount: 0,
+            finishCurrentItem: this.trainingBudgetStatus?.() === 'finish-current-item',
+          },
+        }
+      } else {
+        const unit = resolveListeningTask(catalog, this.task)
+        session = createListeningSession(this.task, unit, now)
+      }
       session = withPendingListeningEvent(session, startedEvent, now)
     } catch (error) {
       const listeningError = toListeningError(error)
@@ -631,8 +718,60 @@ export class ListeningTrainingRuntime {
     ])
     await this.timing.beginPersistenceWait('feedback', true)
     const now = this.now()
-    let session = advanceListeningSession(this.requireSession(), now)
-    if (session.phase === 'completed') {
+    const current = this.requireSession()
+    let session = advanceListeningSession(current, now)
+    if (this.continuousTraining && current.stream) {
+      const active = current.stream
+      const answer = current.answers[0]
+      if (!answer) {
+        throw new ListeningError('session-transition-invalid', 'Budget listening item requires one submitted answer.')
+      }
+      const alreadyCompleted = active.completedItemIds.includes(active.activeItem.itemId)
+      const completedStream: ListeningStreamState = {
+        ...active,
+        completedItemIds: alreadyCompleted
+          ? active.completedItemIds
+          : [...active.completedItemIds, active.activeItem.itemId],
+        completedItemCount: active.completedItemCount + (alreadyCompleted ? 0 : 1),
+        correctItemCount: active.correctItemCount + (answer.correct ? 1 : 0),
+        finishCurrentItem: active.finishCurrentItem || this.trainingBudgetStatus?.() === 'finish-current-item',
+      }
+      session = withPendingListeningEvent(session, createListeningStreamAttemptEvent(current, this.untrustedLegacyDuration(current), this.identity(now)), now)
+      session = withPendingListeningEvent(session, createListeningTrainingItemCompletedEvent(this.task, active.activeItem, active.activeRequestId, active.nextSupplyCursor, this.identity(now)), now)
+      if (completedStream.finishCurrentItem) {
+        session = completeListeningStreamSession(session, completedStream, now)
+        session = withPendingListeningEvent(session, createListeningTrainingBudgetCompletedEvent(this.task, active.activeItem.itemId, completedStream.completedItemCount, this.identity(now)), now)
+      } else {
+        try {
+          const catalog = await this.contentSource.load()
+          const { request, result } = await this.nextStreamItem(catalog, completedStream)
+          if (result.status !== 'item') {
+            session = {
+              ...session,
+              phase: 'error', pausedFromPhase: null, lastActiveAt: null,
+              failure: { category: 'content', message: '当前没有可继续的听力题目。' },
+              stream: completedStream, updatedAt: now,
+            }
+            session = withPendingListeningEvent(session, createListeningTrainingContentExhaustedEvent(this.task, request.requestId, request.cursor, result.reason, this.identity(now)), now)
+          } else {
+            const supplied = resolveListeningSupplyQuestion(catalog, result.item as import('./types.ts').ListeningSupplyItem)
+            session = replaceListeningStreamQuestion(session, supplied.unit, supplied.question, {
+              ...completedStream,
+              activeItem: result.item as import('./types.ts').ListeningSupplyItem,
+              activeRequestId: request.requestId,
+              nextSupplyCursor: result.nextCursor,
+            }, now)
+          }
+        } catch (error) {
+          session = {
+            ...session,
+            phase: 'error', pausedFromPhase: null, lastActiveAt: null,
+            failure: this.failureFor(error), stream: completedStream, updatedAt: now,
+          }
+        }
+      }
+    }
+    if (session.phase === 'completed' && !this.continuousTraining) {
       const durationSeconds = this.untrustedLegacyDuration(session)
       session = {
         ...session,
@@ -812,6 +951,36 @@ export class ListeningTrainingRuntime {
 
   retryPendingEvents(): Promise<ListeningSession> {
     return this.enqueue(() => this.retryPendingEventsInternal())
+  }
+
+  /** Retries an explicit supply failure without discarding acknowledged item ids. */
+  retrySupply(): Promise<ListeningSession> {
+    return this.enqueue(async () => {
+      await this.timing.startLoading()
+      const current = this.requireSession()
+      if (!this.continuousTraining || current.phase !== 'error' || !current.stream) {
+        throw new ListeningError('session-transition-invalid', 'Only an exhausted listening stream can request more content.')
+      }
+      const catalog = await this.contentSource.load()
+      const { request, result } = await this.nextStreamItem(catalog, current.stream)
+      if (result.status !== 'item') {
+        const session = withPendingListeningEvent(current, createListeningTrainingContentExhaustedEvent(this.task, request.requestId, request.cursor, result.reason, this.identity(this.now())), this.now())
+        await this.save(session)
+        return this.flushPendingEvents()
+      }
+      const now = this.now()
+      const supplied = resolveListeningSupplyQuestion(catalog, result.item as import('./types.ts').ListeningSupplyItem)
+      const session = replaceListeningStreamQuestion(current, supplied.unit, supplied.question, {
+        ...current.stream,
+        activeItem: result.item as import('./types.ts').ListeningSupplyItem,
+        activeRequestId: request.requestId,
+        nextSupplyCursor: result.nextCursor,
+      }, now)
+      await this.save(session)
+      this.attachController(session)
+      await this.timing.synchronize(session.phase, { activateAnswering: true })
+      return session
+    })
   }
 
   private async restartInternal(): Promise<ListeningSession> {

@@ -24,6 +24,10 @@ export {
   createListeningTaskSkippedEvent,
   createListeningTaskStartedEvent,
   createListeningUnscorableEvent,
+  createListeningStreamAttemptEvent,
+  createListeningTrainingBudgetCompletedEvent,
+  createListeningTrainingContentExhaustedEvent,
+  createListeningTrainingItemCompletedEvent,
 } from './events.ts'
 export { createListeningFeatureModule } from './feature-module.ts'
 export { ListeningSessionScreen } from './ListeningSessionScreen.tsx'
@@ -46,6 +50,11 @@ export {
   type ListeningTrainingRuntimeOptions,
 } from './runtime.ts'
 export {
+  ListeningCatalogSupplyProvider,
+  resolveListeningSupplyQuestion,
+  type ListeningSupplyProvider,
+} from './supply.ts'
+export {
   ListeningEffectiveTiming,
   type ListeningEffectiveTimingSessionFactoryPort,
   type ListeningEffectiveTimingSessionPort,
@@ -57,12 +66,15 @@ export {
   changeListeningDictation,
   createFailedListeningSession,
   createListeningSession,
+  createListeningStreamSession,
+  completeListeningStreamSession,
   failListeningSession,
   getCurrentListeningQuestion,
   getListeningAnswerFeedback,
   getListeningSessionResult,
   pauseListeningSession,
   resumeListeningSession,
+  replaceListeningStreamQuestion,
   selectListeningOption,
   setListeningRate,
   setListeningRepeatMode,
@@ -100,6 +112,8 @@ export {
   type ListeningSessionFailure,
   type ListeningSessionPhase,
   type ListeningSessionResult,
+  type ListeningStreamState,
+  type ListeningSupplyItem,
   type ListeningTrainingUnit,
   type ListeningTranscriptLine,
 } from './types.ts'
