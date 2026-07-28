@@ -47,6 +47,12 @@ function recordByNamespaceAndKey(databases, namespace, key) {
   )
 }
 
+function recordByNamespace(databases, namespace) {
+  return allRecords(databases).find(
+    (record) => record.namespace === namespace,
+  )
+}
+
 function activeRuntime(databases) {
   const record = recordByNamespaceAndKey(
     databases,
@@ -104,6 +110,9 @@ async function cardsForSurface(page, surface) {
       )
       .map((button) => {
         const duration = button.querySelector('.duration-estimate')
+        const budget = button.querySelector(
+          '[data-training-duration-kind="training-budget"]'
+        )
         return {
           moduleId: button.dataset.moduleId,
           taskId: button.dataset.taskId ?? null,
@@ -116,9 +125,47 @@ async function cardsForSurface(page, surface) {
             ? Number(duration.dataset.estimateSeconds)
             : null,
           durationBasis: duration?.dataset.durationBasis ?? null,
+          targetEffectiveSeconds: budget
+            ? Number(budget.dataset.targetEffectiveSeconds)
+            : null,
         }
       })
   )()`)
+}
+
+async function completeCurrentVocabularyItem(page) {
+  await page.clickFirstEnabledChoice()
+  await page.waitFor(
+    `[...document.querySelectorAll('button')].some((button) =>
+      button.innerText.trim() === '提交答案' && !button.disabled
+    )`,
+  )
+  await page.clickByText('提交答案')
+  await page.waitFor(
+    `[...document.querySelectorAll('button')].some((button) =>
+      ['下一题', '完成训练'].includes(button.innerText.trim()) &&
+      !button.disabled
+    )`,
+  )
+  const action = await page.evaluate(`(() => {
+    const button = [...document.querySelectorAll('button')].find(
+      (candidate) =>
+        ['下一题', '完成训练'].includes(candidate.innerText.trim()) &&
+        !candidate.disabled
+    )
+    return button?.innerText.trim() ?? null
+  })()`)
+  assert.ok(action, 'Vocabulary feedback has no enabled advance action.')
+  await page.clickByText(action)
+  await page.waitFor(
+    `[...document.querySelectorAll(
+      'button.choice-row, button.choice-card, [role="radio"]'
+    )].some((choice) =>
+      !choice.disabled &&
+      choice.getAttribute('aria-disabled') !== 'true'
+    ) && !document.body.innerText.includes('正在处理')`,
+    20_000,
+  )
 }
 
 async function createFirstDayPlan(observedAsset) {
@@ -175,6 +222,7 @@ async function createFirstDayPlan(observedAsset) {
       moduleId: task.targetModuleId,
       estimatedSeconds: task.estimatedSeconds,
       durationEstimate: task.durationEstimate ?? null,
+      trainingBudget: task.trainingBudget ?? null,
     }))
     assert.equal(tasks.length, 3)
     assert.equal(
@@ -246,11 +294,11 @@ async function createFirstDayPlan(observedAsset) {
       assert.equal(
         cards.every(
           (card) =>
-            card.estimateSeconds === 900 &&
-            /约 15 分钟/u.test(card.text),
+            card.targetEffectiveSeconds === 900 &&
+            /15 分钟有效训练/u.test(card.text),
         ),
-        false,
-        'QA-009: the public task cards still show fixed 15-minute estimates.',
+        true,
+        'QA-011: the public task cards do not show the required 15-minute effective budget.',
       )
       for (const card of cards) {
         const task = tasks.find(
@@ -264,32 +312,37 @@ async function createFirstDayPlan(observedAsset) {
         )
         assert.equal(
           card.estimateSeconds,
-          expectedFirstDaySeconds[card.moduleId],
-          `${surface}: ${card.moduleId} displayed the wrong estimate.`,
+          null,
+          `${surface}: ${card.moduleId} displayed an estimate instead of its required budget.`,
         )
         assert.equal(
           card.durationBasis,
-          'content-baseline',
-          `${surface}: ${card.moduleId} did not disclose the content baseline.`,
+          null,
+          `${surface}: ${card.moduleId} exposed an estimate basis on a budget task.`,
+        )
+        assert.equal(
+          task.trainingBudget?.targetEffectiveSeconds,
+          900,
+          `${surface}: ${card.moduleId} task lacks its 900-second budget.`,
         )
       }
     }
     assert.deepEqual(
-      today.map(({ moduleId, taskId, estimateSeconds }) => ({
+      today.map(({ moduleId, taskId, targetEffectiveSeconds }) => ({
         moduleId,
         taskId,
-        estimateSeconds,
+        targetEffectiveSeconds,
       })).sort((left, right) =>
         left.moduleId.localeCompare(right.moduleId)
       ),
-      training.map(({ moduleId, taskId, estimateSeconds }) => ({
+      training.map(({ moduleId, taskId, targetEffectiveSeconds }) => ({
         moduleId,
         taskId,
-        estimateSeconds,
+        targetEffectiveSeconds,
       })).sort((left, right) =>
         left.moduleId.localeCompare(right.moduleId)
       ),
-      'Today and Training did not expose the same taskId/estimate pairs.',
+      'Today and Training did not expose the same taskId/budget pairs.',
     )
 
     const vocabularyClick = await qa.page.evaluate(`(() => {
@@ -327,9 +380,106 @@ async function createFirstDayPlan(observedAsset) {
     )
     assert.match(
       vocabularyRoute.text,
-      /词汇训练[\s\S]*已完成 0 \/ 6[\s\S]*提交答案/u,
-      'The real vocabulary route did not load its six production questions.',
+      /15:00[\s\S]*词汇训练[\s\S]*提交答案/u,
+      'The real vocabulary route did not load its continuous budget task.',
     )
+
+    const completedItemIds = []
+    for (let completed = 0; completed < 6; completed += 1) {
+      const before = recordByNamespace(
+        await qa.page.dumpIndexedDb(),
+        'feature.vocabulary',
+      )?.value
+      const activeItemId = before?.stream?.activeItem?.itemId
+      assert.ok(
+        activeItemId,
+        `Vocabulary item ${completed + 1} is missing.`,
+      )
+      completedItemIds.push(activeItemId)
+      await completeCurrentVocabularyItem(qa.page)
+      const after = recordByNamespace(
+        await qa.page.dumpIndexedDb(),
+        'feature.vocabulary',
+      )?.value
+      assert.equal(after?.phase, 'answering')
+      assert.equal(
+        after?.stream?.completedItemIds.length,
+        completed + 1,
+      )
+      assert.notEqual(
+        after?.stream?.activeItem?.itemId,
+        activeItemId,
+      )
+    }
+    const afterSixDatabases = await qa.page.dumpIndexedDb()
+    const afterSixSession = recordByNamespace(
+      afterSixDatabases,
+      'feature.vocabulary',
+    )?.value
+    const seventhItemId =
+      afterSixSession?.stream?.activeItem?.itemId
+    assert.ok(seventhItemId, 'The seventh vocabulary item is missing.')
+    assert.equal(completedItemIds.includes(seventhItemId), false)
+    assert.equal(
+      new Set(afterSixSession.stream.completedItemIds).size,
+      6,
+    )
+    const afterSixRuntime = activeRuntime(afterSixDatabases)
+    const vocabularyExecution =
+      afterSixRuntime.activePlan.tasks.find(
+        (execution) =>
+          execution.task.targetModuleId === 'vocabulary',
+      )
+    assert.ok(vocabularyExecution)
+    assert.equal(vocabularyExecution.status, 'active')
+    assert.equal(vocabularyExecution.training?.status, 'running')
+    assert.ok(
+      vocabularyExecution.training?.remainingEffectiveSeconds > 0,
+    )
+    checkpoint('qa-011-vocabulary-seventh-item', {
+      completedItemIds:
+        afterSixSession.stream.completedItemIds,
+      seventhItemId,
+      taskStatus: vocabularyExecution.status,
+      budgetStatus: vocabularyExecution.training?.status,
+      remainingEffectiveSeconds:
+        vocabularyExecution.training?.remainingEffectiveSeconds,
+    })
+
+    await qa.page.navigate(new URL('#/', baseUrl).href)
+    await qa.page.waitFor(
+      `!document.body.innerText.includes('正在恢复今日学习计划')`,
+      20_000,
+    )
+    await qa.page.navigate(
+      new URL(
+        `#/vocabulary?taskId=${encodeURIComponent(
+          vocabularyExecution.task.taskId,
+        )}`,
+        baseUrl,
+      ).href,
+    )
+    await qa.page.waitFor(
+      `!document.body.innerText.includes('正在加载词汇训练')`,
+      20_000,
+    )
+    const restoredSession = recordByNamespace(
+      await qa.page.dumpIndexedDb(),
+      'feature.vocabulary',
+    )?.value
+    assert.equal(
+      restoredSession?.stream?.activeItem?.itemId,
+      seventhItemId,
+    )
+    assert.deepEqual(
+      restoredSession?.stream?.completedItemIds,
+      afterSixSession.stream.completedItemIds,
+    )
+    checkpoint('qa-011-vocabulary-refresh-recovery', {
+      seventhItemId,
+      completedItemCount:
+        restoredSession.stream.completedItemIds.length,
+    })
 
     await qa.page.waitFor(
       `navigator.serviceWorker?.controller !== null`,

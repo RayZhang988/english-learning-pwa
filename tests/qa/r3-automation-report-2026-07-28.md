@@ -2,55 +2,62 @@
 
 ## 结论
 
-**QA-009 与 QA-010 的历史正式站回归仍有效，但 QA-011 重新打开 R3；当前
-HEAD `2b75173` 的 09 本地验收又发现 QA-012，候选不通过，不得部署。**
+**QA-011 的本地候选验收通过，QA-012 已在 `b878965` 本地关闭；R3 仍待正式站
+部署回归，不能提前关闭。**
 
 01 `4e49d7f`、05 `b803bd1` 和 06 `c86d879` 已进入正式资产
 `index-Cm31haDv.js`。隔离、无旧缓存 Chrome 从正式 R1 生成首日计划，得到
 `123/211/181` 秒和 515 秒真实计划，并进入 6 题词汇训练；没有回退 900 秒或出现课程
 身份错误。
 
-## QA-011 当前本地候选（HEAD `2b75173`）
+## QA-011 当前本地候选（HEAD `b878965`）
 
 用户在真实 iPhone 上用 12 秒完成首日 6 题词汇任务，证明“显示真实估算”并未解决
 每日任务在 15 分钟目标前耗尽的问题。当前产品链已改为三模块各 900 秒有效预算、
-连续内容供应和到时完成当前题后结束。09 已开始迁移旧 first-use 生产验收：
+连续内容供应和到时完成当前题后结束。09 已完成迁移与本地黑盒：
 
 - 正式首日计划的三项 task 均携带 `targetEffectiveSeconds=900`；
-- 单个词汇 item 与单个听力 item 完成后，task 保持 active；
+- 单个词汇、听力或口语 item/attempt 完成后，task 保持 active；
 - 1 秒初始有效训练加 898 秒后仍为 running/剩余 1 秒；
 - 第 900 秒只进入 `finish-current-item`，当前题自然完成并发布
   `budget.completed` 后对应 task 才完成；
 - 测试夹具已改为加载与生产相同的 808 候选正式索引，未再用固定 6/7/3 题目录
   冒充连续供应。
 
-但同一生产链在初始化口语第一题时稳定失败：
+QA-012 的 08 修复 `b878965` 让完整 122 个口语候选可解析，其中包含 28 个
+`speaking-scene-quiz`。原稳定失败的 first-use 生产链路现为 1/1 通过；三模块均完成
+899/900 秒与自然收尾，因此 QA-012 达到本地关闭门槛。
 
-```text
-phase=error
-failure.category=content
-failure.message=当前没有可继续的口语题目。
-stream.activeRequestId=...:task:3:supply:1:initial
-stream.exhaustionRequestId=...:task:3:supply:1:initial
-task.mode=learn
-task.difficultyLevel=1
-```
+新增 `qa-011-continuous-training.acceptance.test.ts` 以 7/7 通过证明：
 
-QA-012 已按 S1 交回 08。根因是正式索引包含
-`speaking-scene-quiz / scene-fixed-response`，而 08 的生产供应解析只在
-`unit.prompts` 查找 sourceId，导致 122 个口语候选的整体构造失败；01 按契约将异常
-诚实转成 `provider-failure`。05 不应删除这些公开候选，01/09 也不得过滤绕过。
+- Today/Training 三项均为“15 分钟有效训练”，同一 taskId 不再显示内容估算作为完成
+  条件；
+- 三模块正式 provider 的 cursor/exclude 在序列化恢复后不回绕、不短期重复；
+- 后台、暂停和 45 秒空闲不扣预算；899 秒继续，900 秒只进入
+  `finish-current-item`；
+- 三模块 `content-exhausted → retry → content.recovered → continue` 保留剩余时间、
+  cursor 和排除集合；错误 recovery 被拒绝，重复 recovery 幂等；
+- 听力到时不取消正在播放的系统语音，口语到时不取消正在进行的录音；媒体和答题自然
+  结束后才发布 item/budget 完成事件。
 
-因此以下门禁尚未执行或不得宣称通过：
+本地生产隔离 Chrome 使用真实 R1 档案、active plan、taskId 和正式供应索引：
 
-- 三模块 `content-exhausted → retry → content.recovered → continue` 全链路；
-- 本地生产浏览器跨过原 6 题并看到第 7 题；
-- QA-011/R3/09 专项与完整工程门禁；
-- 本地 release smoke、PWA 和最终差异审计。
+- Today/Training 三卡均显示 15 分钟有效训练；
+- 连续完成 6 个不同词汇 item 后，第 7 题
+  `supply-v1-vocabulary-w1d1-v3-term-to-meaning-choice` 正常出现；
+- vocabulary execution 保持 `active/running`，剩余 900 秒，整日计划仍
+  `in-progress`；
+- 刷新后仍是同一第 7 题，已完成 6 个 itemId 和排除集合不变；
+- SW 仅缓存当前 `index-DuWWQrUe.js`，首页、Manifest、SW 和资产均 HTTP 200。
 
-修复顺序：08 先让两类口语供应候选全部可解析并补专项回归；回到 09 重跑同一
-first-use 生产用例，随后继续剩余 QA-011 浏览器与全量门禁。QA-012 修复并完成上述
-步骤前，QA-011、R3 和正式候选均不得关闭。
+当前门禁：09 专项 9 文件/56 项、R3 专项 24 文件/199 项、全量 122 文件/666 项，
+typecheck、lint、生产构建、84 单元、808 候选、PWA、dist smoke 和 preview smoke
+全部通过。构建生成 21 项预缓存，9 个课程资源进入预缓存；lint 仅有既有的 Fast
+Refresh 非阻断警告。
+
+结论只到“本地候选通过、待部署正式站”。必须部署包含本产品链与 QA 改动的候选，
+再由 09 对正式 URL 重跑同一 browser gate、PWA 缓存与刷新恢复；在此之前 QA-011 和
+R3 均不得关闭。
 
 ## 验收版本
 
@@ -66,6 +73,9 @@ first-use 生产用例，随后继续剩余 QA-011 浏览器与全量门禁。QA
 - Pages run：`30330487187`，`completed / success`
 - run head SHA：`79d90b67601669f050031d2ddece9f5ba64af7fa`
 - 正式资产：`assets/index-Cm31haDv.js`
+- QA-011 本地候选 HEAD：`b878965`
+- QA-011 本地生产资产：`assets/index-DuWWQrUe.js`
+- QA-012 修复：08 `b878965`
 
 修复链：
 
