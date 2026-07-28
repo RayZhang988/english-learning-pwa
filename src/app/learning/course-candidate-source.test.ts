@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import type { TrainingModuleId } from '../../learning-engine/index.ts'
+import type {
+  TaskDurationBaseline,
+  TrainingModuleId,
+} from '../../learning-engine/index.ts'
 import { projectLearningCandidates } from './course-candidate-source.ts'
 
 const packageIndex = {
@@ -7,6 +10,55 @@ const packageIndex = {
   packageVersion: '1.0.0',
   status: 'released',
   lessonFiles: ['content/lessons/week-1.json'],
+}
+
+function durationBaseline(
+  day: number,
+  domain: TrainingModuleId,
+): TaskDurationBaseline {
+  if (domain === 'vocabulary') {
+    return {
+      schemaVersion: 1,
+      contentType: 'vocabulary-set',
+      fixedSeconds: 20,
+      itemCount: day + 3,
+      secondsPerItem: 18,
+      activeAudioSeconds: 0,
+      expectedAudioPlaythroughs: 0,
+      interactionStepCount: (day + 3) * 2,
+      secondsPerInteractionStep: 3,
+      minimumSeconds: 60,
+      maximumSeconds: 600,
+    }
+  }
+  if (domain === 'listening') {
+    return {
+      schemaVersion: 1,
+      contentType: 'listening-dialogue',
+      fixedSeconds: 20,
+      itemCount: day + 5,
+      secondsPerItem: 15,
+      activeAudioSeconds: 40 + day,
+      expectedAudioPlaythroughs: 1,
+      interactionStepCount: (day + 5) * 2,
+      secondsPerInteractionStep: 3,
+      minimumSeconds: 90,
+      maximumSeconds: 900,
+    }
+  }
+  return {
+    schemaVersion: 1,
+    contentType: 'fixed-response',
+    fixedSeconds: 30,
+    itemCount: day + 2,
+    secondsPerItem: 30,
+    activeAudioSeconds: 0,
+    expectedAudioPlaythroughs: 0,
+    interactionStepCount: (day + 2) * 3,
+    secondsPerInteractionStep: 4,
+    minimumSeconds: 90,
+    maximumSeconds: 900,
+  }
 }
 
 function unit(
@@ -21,6 +73,7 @@ function unit(
     domain,
     difficultyLevel: 1,
     estimatedSeconds: 900,
+    durationBaseline: durationBaseline(day, domain),
     tags: [`day:${day}`],
     prerequisiteUnitIds: prerequisites,
     activity: {
@@ -61,6 +114,33 @@ const documents = {
 }
 
 describe('projectLearningCandidates', () => {
+  it('projects an authored structured baseline without treating the legacy estimate as truth', () => {
+    const candidates = projectLearningCandidates(
+      documents,
+      new Set(),
+      new Set<TrainingModuleId>([
+        'vocabulary',
+        'listening',
+        'speaking',
+      ]),
+    )
+
+    expect(candidates).toHaveLength(6)
+    expect(
+      candidates.map((candidate) => candidate.estimatedSeconds),
+    ).toEqual([900, 900, 900, 900, 900, 900])
+    expect(
+      candidates.map((candidate) => candidate.durationBaseline),
+    ).toEqual([
+      durationBaseline(1, 'vocabulary'),
+      durationBaseline(1, 'listening'),
+      durationBaseline(1, 'speaking'),
+      durationBaseline(2, 'vocabulary'),
+      durationBaseline(2, 'listening'),
+      durationBaseline(2, 'speaking'),
+    ])
+  })
+
   it('uses durable completed unit IDs for prerequisites', () => {
     const candidates = projectLearningCandidates(
       documents,
@@ -123,5 +203,39 @@ describe('projectLearningCandidates', () => {
         new Set<TrainingModuleId>(['vocabulary']),
       ),
     ).toThrow('missing prerequisite')
+  })
+
+  it('rejects an authored baseline that violates the engine contract', () => {
+    const invalidUnit = unit(1, 'listening')
+    const invalid = {
+      packageIndex,
+      lessonsByPath: {
+        'content/lessons/week-1.json': {
+          schemaVersion: 1,
+          packageVersion: '1.0.0',
+          lessons: [
+            {
+              learningUnits: [
+                {
+                  ...invalidUnit,
+                  durationBaseline: {
+                    ...invalidUnit.durationBaseline,
+                    activeAudioSeconds: -1,
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      },
+    }
+
+    expect(() =>
+      projectLearningCandidates(
+        invalid,
+        new Set(),
+        new Set<TrainingModuleId>(['listening']),
+      ),
+    ).toThrow('durationBaseline is invalid')
   })
 })

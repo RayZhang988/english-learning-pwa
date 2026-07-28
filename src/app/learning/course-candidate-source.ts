@@ -1,7 +1,9 @@
 import { AppError } from '../../core/index.ts'
-import type {
-  LearningCandidate,
-  TrainingModuleId,
+import {
+  calculateContentBaselineSeconds,
+  type LearningCandidate,
+  type TaskDurationBaseline,
+  type TrainingModuleId,
 } from '../../learning-engine/index.ts'
 import { platformFetch } from '../../platform/index.ts'
 
@@ -55,6 +57,7 @@ interface CourseLearningUnit {
   readonly domain: TrainingModuleId
   readonly difficultyLevel: number
   readonly estimatedSeconds: number
+  readonly durationBaseline?: TaskDurationBaseline
   readonly tags: readonly string[]
   readonly prerequisiteUnitIds: readonly string[]
 }
@@ -101,6 +104,73 @@ function requireStringArray(
   ) {
     throw new TypeError(`${label} must be a string array.`)
   }
+}
+
+function requireFiniteNumber(
+  value: unknown,
+  label: string,
+): asserts value is number {
+  if (typeof value !== 'number' || !Number.isFinite(value)) {
+    throw new TypeError(`${label} must be a finite number.`)
+  }
+}
+
+function readDurationBaseline(
+  value: unknown,
+  label: string,
+): TaskDurationBaseline | undefined {
+  if (value === undefined) {
+    return undefined
+  }
+  if (!isRecord(value)) {
+    throw new TypeError(`${label} must be an object.`)
+  }
+  if (value.schemaVersion !== 1) {
+    throw new TypeError(`${label}.schemaVersion must be 1.`)
+  }
+  requireNonEmptyString(value.contentType, `${label}.contentType`)
+  requireFiniteNumber(value.fixedSeconds, `${label}.fixedSeconds`)
+  requireFiniteNumber(value.itemCount, `${label}.itemCount`)
+  requireFiniteNumber(value.secondsPerItem, `${label}.secondsPerItem`)
+  requireFiniteNumber(
+    value.activeAudioSeconds,
+    `${label}.activeAudioSeconds`,
+  )
+  requireFiniteNumber(
+    value.expectedAudioPlaythroughs,
+    `${label}.expectedAudioPlaythroughs`,
+  )
+  requireFiniteNumber(
+    value.interactionStepCount,
+    `${label}.interactionStepCount`,
+  )
+  requireFiniteNumber(
+    value.secondsPerInteractionStep,
+    `${label}.secondsPerInteractionStep`,
+  )
+  requireFiniteNumber(value.minimumSeconds, `${label}.minimumSeconds`)
+  requireFiniteNumber(value.maximumSeconds, `${label}.maximumSeconds`)
+
+  const baseline: TaskDurationBaseline = {
+    schemaVersion: 1,
+    contentType: value.contentType,
+    fixedSeconds: value.fixedSeconds,
+    itemCount: value.itemCount,
+    secondsPerItem: value.secondsPerItem,
+    activeAudioSeconds: value.activeAudioSeconds,
+    expectedAudioPlaythroughs: value.expectedAudioPlaythroughs,
+    interactionStepCount: value.interactionStepCount,
+    secondsPerInteractionStep: value.secondsPerInteractionStep,
+    minimumSeconds: value.minimumSeconds,
+    maximumSeconds: value.maximumSeconds,
+  }
+
+  try {
+    calculateContentBaselineSeconds(baseline)
+  } catch (error) {
+    throw new TypeError(`${label} is invalid.`, { cause: error })
+  }
+  return baseline
 }
 
 function readPackageIndex(value: unknown): CoursePackageIndex {
@@ -176,6 +246,10 @@ function readLearningUnit(
     domain: value.domain,
     difficultyLevel: value.difficultyLevel,
     estimatedSeconds: value.estimatedSeconds,
+    durationBaseline: readDurationBaseline(
+      value.durationBaseline,
+      `${label}.durationBaseline`,
+    ),
     tags: value.tags,
     prerequisiteUnitIds: value.prerequisiteUnitIds,
   }
@@ -252,6 +326,7 @@ export function projectLearningCandidates(
       domain: unit.domain,
       difficultyLevel: unit.difficultyLevel,
       estimatedSeconds: unit.estimatedSeconds,
+      durationBaseline: unit.durationBaseline,
       tags: unit.tags,
       prerequisitesMet: unit.prerequisiteUnitIds.every((id) =>
         completedLearningUnitIds.has(id),
