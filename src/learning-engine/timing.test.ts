@@ -510,6 +510,32 @@ describe('R3 task duration estimate', () => {
 })
 
 describe('R3 effective timing segments', () => {
+  it('keeps a legacy task JSON-portable after creation, timing, and completion', () => {
+    const { task, progress } = singleTask()
+    const { trainingBudget: _trainingBudget, ...legacyTask } = task
+    const legacyPlan = { ...progress.plan, tasks: [legacyTask] }
+    const created = createPlanProgress(legacyPlan, legacyPlan.generatedAt)
+
+    expect(Object.hasOwn(created.tasks[0], 'training')).toBe(false)
+
+    const timed = applyPlanEvent(
+      created,
+      timingEvent(legacyTask, {
+        id: 'legacy-portable-timing',
+        startedAt: '2026-07-02T00:00:00.000Z',
+        endedAt: '2026-07-02T00:00:10.000Z',
+        elapsedSeconds: 10,
+      }),
+    )
+    expect(Object.hasOwn(timed.tasks[0], 'training')).toBe(false)
+
+    const completed = applyPlanEvent(
+      timed,
+      completionEvent(legacyTask, { id: 'legacy-portable-completion' }),
+    )
+    expect(Object.hasOwn(completed.tasks[0], 'training')).toBe(false)
+  })
+
   it('serializes, validates, deduplicates, and restores included/excluded segments', () => {
     const { state, task, progress } = singleTask()
     const active = timingEvent(task, {

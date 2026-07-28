@@ -24,6 +24,16 @@ import {
   withBudgetAfterEffectiveTime,
 } from './training-budget.ts'
 
+function withOptionalTraining(
+  execution: TaskExecutionState,
+  training: TaskExecutionState['training'],
+): TaskExecutionState {
+  const { training: _discardedTraining, ...withoutTraining } = execution
+  return training === undefined
+    ? withoutTraining
+    : { ...withoutTraining, training }
+}
+
 export function createPlanProgress(
   plan: PlanProgress['plan'],
   createdAt: string,
@@ -33,20 +43,24 @@ export function createPlanProgress(
     schemaVersion: 1,
     plan,
     status: 'not-started',
-    tasks: plan.tasks.map((task) => ({
-      task,
-      status: 'pending',
-      completionKind: null,
-      spentSeconds: 0,
-      effectiveSeconds: 0,
-      timingSegmentCount: 0,
-      excludedSeconds: 0,
-      effectiveTimeSource: null,
-      skipCount: 0,
-      training: initialTrainingTaskProgress(task),
-      startedAt: null,
-      updatedAt: createdAt,
-    })),
+    tasks: plan.tasks.map((task) =>
+      withOptionalTraining(
+        {
+          task,
+          status: 'pending',
+          completionKind: null,
+          spentSeconds: 0,
+          effectiveSeconds: 0,
+          timingSegmentCount: 0,
+          excludedSeconds: 0,
+          effectiveTimeSource: null,
+          skipCount: 0,
+          startedAt: null,
+          updatedAt: createdAt,
+        },
+        initialTrainingTaskProgress(task),
+      ),
+    ),
     processedEventIds: [],
     updatedAt: createdAt,
   }
@@ -263,27 +277,29 @@ export function applyPlanEvent(
     const classification = classifyTimingSegment(event.payload)
     const effectiveSeconds =
       execution.effectiveSeconds + classification.effectiveSeconds
-    updated = {
-      ...execution,
-      status:
-        classification.included && execution.status === 'pending'
-          ? 'active'
-          : execution.status,
-      spentSeconds:
-        execution.spentSeconds + event.payload.elapsedSeconds,
-      effectiveSeconds,
-      timingSegmentCount: (execution.timingSegmentCount ?? 0) + 1,
-      excludedSeconds:
-        (execution.excludedSeconds ?? 0) +
-        classification.excludedSeconds,
-      effectiveTimeSource: 'timing-segments',
-      training: withBudgetAfterEffectiveTime(execution, effectiveSeconds),
-      startedAt:
-        classification.included
-          ? execution.startedAt ?? event.payload.startedAt
-          : execution.startedAt,
-      updatedAt: event.occurredAt,
-    }
+    updated = withOptionalTraining(
+      {
+        ...execution,
+        status:
+          classification.included && execution.status === 'pending'
+            ? 'active'
+            : execution.status,
+        spentSeconds:
+          execution.spentSeconds + event.payload.elapsedSeconds,
+        effectiveSeconds,
+        timingSegmentCount: (execution.timingSegmentCount ?? 0) + 1,
+        excludedSeconds:
+          (execution.excludedSeconds ?? 0) +
+          classification.excludedSeconds,
+        effectiveTimeSource: 'timing-segments',
+        startedAt:
+          classification.included
+            ? execution.startedAt ?? event.payload.startedAt
+            : execution.startedAt,
+        updatedAt: event.occurredAt,
+      },
+      withBudgetAfterEffectiveTime(execution, effectiveSeconds),
+    )
   } else if (event.type === 'learning.training.item.completed.v1') {
     if (execution.training === undefined) {
       throw new TypeError('Stream item event requires a training budget')
@@ -389,33 +405,35 @@ export function applyPlanEvent(
     const legacyEffectiveDuration =
       !streamTask && disposition === 'scored-completion' ? legacyDuration : 0
     const effectiveSeconds = execution.effectiveSeconds + legacyEffectiveDuration
-    updated = {
-      ...execution,
-      status:
-        streamTask
-          ? 'active'
-          : disposition === 'retry-required'
-            ? 'paused'
-            : 'completed',
-      completionKind:
-        streamTask
-          ? null
-          : disposition === 'scored-completion'
-          ? 'scored'
-          : disposition === 'unscorable-practice-completion'
-            ? 'unscorable-practice'
-            : null,
-      spentSeconds:
-        execution.spentSeconds + legacyDuration,
-      effectiveSeconds,
-      effectiveTimeSource: hasTimingSegments
-        ? 'timing-segments'
-        : legacyEffectiveDuration > 0
-          ? 'legacy-event-duration'
-          : execution.effectiveTimeSource ?? null,
-      training: withBudgetAfterEffectiveTime(execution, effectiveSeconds),
-      updatedAt: event.occurredAt,
-    }
+    updated = withOptionalTraining(
+      {
+        ...execution,
+        status:
+          streamTask
+            ? 'active'
+            : disposition === 'retry-required'
+              ? 'paused'
+              : 'completed',
+        completionKind:
+          streamTask
+            ? null
+            : disposition === 'scored-completion'
+            ? 'scored'
+            : disposition === 'unscorable-practice-completion'
+              ? 'unscorable-practice'
+              : null,
+        spentSeconds:
+          execution.spentSeconds + legacyDuration,
+        effectiveSeconds,
+        effectiveTimeSource: hasTimingSegments
+          ? 'timing-segments'
+          : legacyEffectiveDuration > 0
+            ? 'legacy-event-duration'
+            : execution.effectiveTimeSource ?? null,
+        updatedAt: event.occurredAt,
+      },
+      withBudgetAfterEffectiveTime(execution, effectiveSeconds),
+    )
   }
 
   const tasks = progress.tasks.map((entry, index) =>
