@@ -20,6 +20,9 @@
     "totals",
     "durationBaselinePolicyFile",
     "durationBaselineTotals",
+    "trainingSupplyIndexFile",
+    "trainingSupplyIndexSchemaFile",
+    "trainingSupplyTotals",
     "learningCandidateProjection"
   ],
   "properties": {
@@ -126,6 +129,28 @@
         "listeningSeconds": {"type": "integer", "minimum": 1},
         "speakingSeconds": {"type": "integer", "minimum": 1},
         "allUnitsSeconds": {"type": "integer", "minimum": 3}
+      }
+    },
+    "trainingSupplyIndexFile": {
+      "const": "content/curriculum/training-supply-index.v1.json"
+    },
+    "trainingSupplyIndexSchemaFile": {
+      "const": "content/curriculum/training-supply-index.schema.v1.json"
+    },
+    "trainingSupplyTotals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "vocabularyCandidates",
+        "listeningCandidates",
+        "speakingCandidates",
+        "allCandidates"
+      ],
+      "properties": {
+        "vocabularyCandidates": {"type": "integer", "minimum": 1},
+        "listeningCandidates": {"type": "integer", "minimum": 1},
+        "speakingCandidates": {"type": "integer", "minimum": 1},
+        "allCandidates": {"type": "integer", "minimum": 3}
       }
     },
     "learningCandidateProjection": {

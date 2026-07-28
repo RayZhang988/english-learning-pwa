@@ -55,6 +55,18 @@
 - `content/curriculum/duration-baseline-authoring.v1.json`
 - `content/curriculum/validate-duration-baselines.v1.mjs`
 
+## QA-011：900 秒连续训练候选
+
+单个内容块只有少量题，不可能单独承担 15 分钟。连续训练从
+`training-supply-index.v1.json` 按目标专项、mode、难度带、cursor 和当前流的已完成 ID
+选择不同的现有内容来源：词汇 489 项（163 个词条的三种不同题面）、听力 197 项、口语
+122 项，共 808 项。每项都回指现有 `contentRef` 和原始题源，不能凭空生成答案。
+
+对课程支持的目标难度 0–5.5，索引保证每个专项至少有 900 秒名义内容量及 50/24/18 个
+不同候选（词汇/听力/口语）。若排除集合已用尽该难度带，必须报告内容耗尽；不允许把同一
+题目换 ID 或清空排除集合来假装持续训练。供应选择、三种耗尽原因和 06/07/08 输入见
+`content/curriculum/training-supply-handoff-v1.md`。
+
 核心课程入口仍为 `content/curriculum/package-index.v1.json`。为保持既有消费者和
 `contentRef` 稳定，三类新增听力题型通过独立入口
 `content/curriculum/listening-exercise-extension-index.v1.json` 交付；07/09 的详细

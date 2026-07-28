@@ -174,6 +174,30 @@ estimate = round(clamp(raw, minimumSeconds, maximumSeconds))
 - 目标训练模块尚未交付的单元；
 - 未识别的 schema 或活动类型。
 
+### 6.2 QA-011 连续训练供应
+
+900 秒训练预算不是首个 `learningUnit` 的时长，也不允许把同 6 道题换 ID 后循环。05 的
+版本化供应入口是 `package-index.trainingSupplyIndexFile`，当前指向：
+
+`content/curriculum/training-supply-index.v1.json`
+
+索引中的每项已经包含稳定 `itemId`、来源 `learningUnitId`/`contentRef`、专项、难度、
+tags、允许 mode、名义内容量和可追溯 `source`。它的选择契约严格对应 04 的
+`LearningTaskSupplyRequest`：按难度带与 mode 过滤、从 cursor 后选第一项、以
+`excludeItemIds` 覆盖当前流已完成题、末尾单次回绕。选中项的 `itemId` 同时是返回
+`LearningTaskSupplyItem.itemId` 和下一次 cursor。
+
+供应器只能返回：
+
+1. 一个符合请求且不在排除集合的 item；
+2. `no-eligible-content`：目标超出首批课程 0–5.5 覆盖，或没有相称来源；
+3. `all-eligible-content-recently-used`：当前流已排除全部合格 item；
+4. `provider-failure`：索引、版本、cursor 或引用不可解析。
+
+04 决定错题/到期复习优先级和 budget 完成；05 只给出处可追溯的候选，绝不为了填满
+900 秒重置排除集合或伪造新 item。详见
+`content/curriculum/training-supply-handoff-v1.md`。
+
 ## 7. 06 词汇消费规则
 
 - `items` 提供词/短语、词性、中文义、英文例句和中文解释。

@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Survival Travel English Continuous Training Supply Index v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "documentType",
+    "supplyVersion",
+    "baseCourseId",
+    "basePackageVersion",
+    "basePackageIndex",
+    "targetLocale",
+    "supplyPolicy",
+    "capacityPolicy",
+    "totals",
+    "candidates"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "documentType": {"const": "continuous-training-supply-index"},
+    "supplyVersion": {"const": "1.0.0"},
+    "baseCourseId": {"const": "survival-travel-american-4w"},
+    "basePackageVersion": {"const": "1.0.0"},
+    "basePackageIndex": {"const": "content/curriculum/package-index.v1.json"},
+    "targetLocale": {"const": "en-US"},
+    "supplyPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["supportedTargetDifficulty", "cursor", "deduplication", "contentExhaustion"],
+      "properties": {
+        "supportedTargetDifficulty": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["minimum", "maximum", "standardTolerance", "beginnerFloorUpperBound"],
+          "properties": {
+            "minimum": {"const": 0},
+            "maximum": {"const": 5.5},
+            "standardTolerance": {"const": 1.5},
+            "beginnerFloorUpperBound": {"const": 2.5}
+          }
+        },
+        "cursor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["meaning", "selection"],
+          "properties": {
+            "meaning": {"const": "last-supplied-item-id"},
+            "selection": {"const": "first-eligible-after-cursor-with-single-wrap"}
+          }
+        },
+        "deduplication": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["input", "scope", "whenAllEligibleExcluded"],
+          "properties": {
+            "input": {"const": "request.excludeItemIds"},
+            "scope": {"const": "all-current-stream-completed-item-ids"},
+            "whenAllEligibleExcluded": {"const": "all-eligible-content-recently-used"}
+          }
+        },
+        "contentExhaustion": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["noEligible", "allRecentlyUsed", "providerFailure"],
+          "properties": {
+            "noEligible": {"const": "no-eligible-content"},
+            "allRecentlyUsed": {"const": "all-eligible-content-recently-used"},
+            "providerFailure": {"const": "provider-failure"}
+          }
+        }
+      }
+    },
+    "capacityPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["targetEffectiveSeconds", "nominalOnly", "minimumDistinctCandidates", "capacityByTargetDifficulty"],
+      "properties": {
+        "targetEffectiveSeconds": {"const": 900},
+        "nominalOnly": {"const": true},
+        "minimumDistinctCandidates": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["vocabulary", "listening", "speaking"],
+          "properties": {
+            "vocabulary": {"const": 50},
+            "listening": {"const": 24},
+            "speaking": {"const": 18}
+          }
+        },
+        "capacityByTargetDifficulty": {
+          "type": "array",
+          "minItems": 12,
+          "maxItems": 12,
+          "items": {"$ref": "#/$defs/capacity"}
+        }
+      }
+    },
+    "totals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["vocabularyCandidates", "listeningCandidates", "speakingCandidates", "allCandidates"],
+      "properties": {
+        "vocabularyCandidates": {"type": "integer", "minimum": 1},
+        "listeningCandidates": {"type": "integer", "minimum": 1},
+        "speakingCandidates": {"type": "integer", "minimum": 1},
+        "allCandidates": {"type": "integer", "minimum": 3}
+      }
+    },
+    "candidates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/candidate"}
+    }
+  },
+  "$defs": {
+    "capacity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["targetDifficulty", "domains"],
+      "properties": {
+        "targetDifficulty": {"type": "number", "minimum": 0, "maximum": 5.5},
+        "domains": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["vocabulary", "listening", "speaking"],
+          "properties": {
+            "vocabulary": {"$ref": "#/$defs/domainCapacity"},
+            "listening": {"$ref": "#/$defs/domainCapacity"},
+            "speaking": {"$ref": "#/$defs/domainCapacity"}
+          }
+        }
+      }
+    },
+    "domainCapacity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidateCount", "nominalEffectiveSeconds", "coversTarget"],
+      "properties": {
+        "candidateCount": {"type": "integer", "minimum": 0},
+        "nominalEffectiveSeconds": {"type": "integer", "minimum": 0},
+        "coversTarget": {"type": "boolean"}
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["itemId", "supplyOrder", "domain", "targetModuleId", "learningUnitId", "contentRef", "difficultyLevel", "tags", "allowedModes", "nominalEffectiveSeconds", "source"],
+      "properties": {
+        "itemId": {"type": "string", "pattern": "^supply-v1-(vocabulary|listening|speaking)-[a-z0-9-]+$"},
+        "supplyOrder": {"type": "integer", "minimum": 1},
+        "domain": {"enum": ["vocabulary", "listening", "speaking"]},
+        "targetModuleId": {"enum": ["vocabulary", "listening", "speaking"]},
+        "learningUnitId": {"type": "string", "pattern": "^st4w-w[1-4]d([1-9]|1[0-9]|2[0-8])-(vocabulary|listening|speaking)$"},
+        "contentRef": {"type": "string", "pattern": "^lesson://survival-travel-american-4w/1\\.0\\.0/w[1-4]d([1-9]|1[0-9]|2[0-8])/(vocabulary|listening|speaking)$"},
+        "difficultyLevel": {"type": "number", "minimum": 0, "maximum": 12},
+        "tags": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "allowedModes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["learn", "calibration", "review", "retry"]}},
+        "nominalEffectiveSeconds": {"type": "integer", "minimum": 1},
+        "source": {"$ref": "#/$defs/source"}
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceType", "sourceId", "variantId"],
+      "properties": {
+        "sourceType": {"enum": ["vocabulary-item", "listening-extension", "listening-core-check", "listening-scene-quiz", "speaking-prompt", "speaking-scene-quiz"]},
+        "sourceId": {"type": "string", "minLength": 1},
+        "variantId": {"type": "string", "minLength": 1},
+        "distractorItemIds": {"type": "array", "minItems": 3, "maxItems": 3, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"sourceType": {"const": "vocabulary-item"}}, "required": ["sourceType"]},
+          "then": {"required": ["distractorItemIds"]}
+        }
+      ]
+    }
+  }
+}

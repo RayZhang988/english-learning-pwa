@@ -22,10 +22,12 @@
     "content/curriculum/README.md",
     "content/curriculum/content-package-contract.v1.md",
     "content/curriculum/content-quality-notes.v1.md",
-    "content/curriculum/handoff-v1.md"
+    "content/curriculum/handoff-v1.md",
+    "content/curriculum/training-supply-handoff-v1.md"
   ],
   "validationFiles": [
-    "content/curriculum/validate-duration-baselines.v1.mjs"
+    "content/curriculum/validate-duration-baselines.v1.mjs",
+    "content/curriculum/validate-training-supply.v1.mjs"
   ],
   "mediaAssets": [],
   "totals": {
@@ -45,6 +47,14 @@
     "listeningSeconds": 7238,
     "speakingSeconds": 5588,
     "allUnitsSeconds": 17566
+  },
+  "trainingSupplyIndexFile": "content/curriculum/training-supply-index.v1.json",
+  "trainingSupplyIndexSchemaFile": "content/curriculum/training-supply-index.schema.v1.json",
+  "trainingSupplyTotals": {
+    "vocabularyCandidates": 489,
+    "listeningCandidates": 197,
+    "speakingCandidates": 122,
+    "allCandidates": 808
   },
   "learningCandidateProjection": {
     "staticFields": [
