@@ -10,9 +10,12 @@ const baseUrl = new URL(
     'https://rayzhang988.github.io/english-learning-pwa/',
 )
 const expectedAsset =
-  process.env.QA_R3_EXPECTED_ASSET ?? 'index-CDUEKV0C.js'
+  process.env.QA_R3_EXPECTED_ASSET ?? 'index-DuWWQrUe.js'
 const expectedPagesRun =
-  process.env.QA_R3_PAGES_RUN ?? '30326369853'
+  process.env.QA_R3_PAGES_RUN ?? '30341029089'
+const expectedHeadSha =
+  process.env.QA_R3_EXPECTED_HEAD_SHA ??
+  'ff7b85f95080d1e3c8d06ee9d114c6b52fd636e8'
 const isLocalPreview = ['127.0.0.1', 'localhost'].includes(
   baseUrl.hostname,
 )
@@ -26,6 +29,7 @@ const evidence = {
   mode: isLocalPreview ? 'local-production-preview' : 'formal-release',
   expectedAsset: isLocalPreview ? null : expectedAsset,
   expectedPagesRun: isLocalPreview ? null : expectedPagesRun,
+  expectedHeadSha: isLocalPreview ? null : expectedHeadSha,
   isolatedProfile: true,
   checkpoints: [],
 }
@@ -345,6 +349,48 @@ async function createFirstDayPlan(observedAsset) {
       'Today and Training did not expose the same taskId/budget pairs.',
     )
 
+    const speakingTask = tasks.find(
+      (task) => task.moduleId === 'speaking',
+    )
+    assert.ok(speakingTask, 'The real speaking task is missing.')
+    await qa.page.navigate(
+      new URL(
+        `#/speaking?taskId=${encodeURIComponent(
+          speakingTask.taskId,
+        )}`,
+        baseUrl,
+      ).href,
+    )
+    await qa.page.waitFor(
+      `!document.body.innerText.includes('正在加载口语训练')`,
+      20_000,
+    )
+    assert.doesNotMatch(
+      await qa.page.bodyText(),
+      /口语训练暂时无法继续|本次口语任务无法加载|provider-failure/u,
+      'QA-012: the released speaking catalog failed before the first item.',
+    )
+    const initialSpeakingSession = recordByNamespace(
+      await qa.page.dumpIndexedDb(),
+      'feature.speaking',
+    )?.value
+    assert.equal(
+      initialSpeakingSession?.stream?.activeItem?.itemId,
+      'supply-v1-speaking-w1d1-s1',
+      'QA-012: the released speaking stream did not load its first real item.',
+    )
+    checkpoint('qa-012-speaking-catalog-first-item', {
+      activeItem: initialSpeakingSession.stream.activeItem,
+      phase: initialSpeakingSession.phase,
+      text: (await qa.page.bodyText()).slice(0, 1_500),
+    })
+
+    await qa.page.navigate(new URL('#/', baseUrl).href)
+    await qa.page.waitFor(
+      `!document.body.innerText.includes('正在恢复今日学习计划')`,
+      20_000,
+    )
+    await cardsForSurface(qa.page, 'training')
     const vocabularyClick = await qa.page.evaluate(`(() => {
       const button = [...document.querySelectorAll('button.module-card')]
         .find((candidate) =>
@@ -493,6 +539,13 @@ async function createFirstDayPlan(observedAsset) {
     const cachedIndexAssets = cachedUrls.filter((url) =>
       /\/assets\/index-[A-Za-z0-9_-]+\.js$/u.test(url)
     )
+    const cachedCourseJson = [
+      ...new Set(
+        cachedUrls.filter((url) =>
+          new URL(url).pathname.endsWith('.json')
+        ),
+      ),
+    ]
     assert.ok(
       cachedIndexAssets.some((url) =>
         url.endsWith(`/assets/${observedAsset}`)
@@ -504,11 +557,101 @@ async function createFirstDayPlan(observedAsset) {
       [new URL(`assets/${observedAsset}`, baseUrl).pathname],
       'The isolated profile retained an outdated index asset cache.',
     )
+    assert.equal(
+      cachedCourseJson.length,
+      9,
+      'The active PWA cache does not contain exactly nine released course resources.',
+    )
+    for (const requiredAsset of [
+      'training-supply-index.v1-',
+      'package-index.v1-',
+      'listening-exercise-extension-index.v1-',
+      'survival-travel-american-4w.v1-',
+      'listening-exercises.v1-',
+      'week-1.v1-',
+      'week-2.v1-',
+      'week-3.v1-',
+      'week-4.v1-',
+    ]) {
+      assert.ok(
+        cachedCourseJson.some((url) => url.includes(requiredAsset)),
+        `The active PWA cache is missing ${requiredAsset}.`,
+      )
+    }
+    const cachedSupplyUrl = cachedCourseJson.find((url) =>
+      url.includes('training-supply-index.v1-')
+    )
+    assert.ok(
+      cachedSupplyUrl,
+      'The active PWA cache is missing the training supply index.',
+    )
+    await qa.page.setOffline(true)
+    const offlineSupply = await qa.page.evaluate(`(async () => {
+      const response = await caches.match(
+        ${JSON.stringify(cachedSupplyUrl)}
+      )
+      if (!response) {
+        return {
+          ok: false,
+          status: null,
+          allCandidates: null,
+          speakingCandidates: null,
+          speakingSceneCandidates: null,
+        }
+      }
+      const value = await response.json()
+      return {
+        ok: response.ok,
+        status: response.status,
+        allCandidates: value.totals?.allCandidates ?? null,
+        speakingCandidates:
+          value.totals?.speakingCandidates ?? null,
+        speakingSceneCandidates: Array.isArray(value.candidates)
+          ? value.candidates.filter(
+              (candidate) =>
+                candidate.domain === 'speaking' &&
+                candidate.source?.sourceType ===
+                  'speaking-scene-quiz'
+            ).length
+          : null,
+      }
+    })()`)
+    assert.deepEqual(offlineSupply, {
+      ok: true,
+      status: 200,
+      allCandidates: 808,
+      speakingCandidates: 122,
+      speakingSceneCandidates: 28,
+    })
+    await qa.page.reload()
+    await qa.page.waitFor(
+      `!document.body.innerText.includes('正在加载词汇训练')`,
+      20_000,
+    )
+    assert.doesNotMatch(
+      await qa.page.bodyText(),
+      /词汇训练暂时无法继续|本次词汇任务无法评分/u,
+      'The cached continuous vocabulary route failed while offline.',
+    )
+    const offlineRestoredSession = recordByNamespace(
+      await qa.page.dumpIndexedDb(),
+      'feature.vocabulary',
+    )?.value
+    assert.equal(
+      offlineRestoredSession?.stream?.activeItem?.itemId,
+      seventhItemId,
+      'The offline reload did not restore the seventh vocabulary item.',
+    )
+    await qa.page.setOffline(false)
     checkpoint('r3-service-worker-cache', {
       controller: serviceWorker.controller,
       active: serviceWorker.active,
       cacheNames: serviceWorker.caches.map((entry) => entry.cacheName),
       cachedIndexAssets,
+      cachedCourseJson,
+      offlineSupply,
+      offlineRestoredItemId:
+        offlineRestoredSession.stream.activeItem.itemId,
     })
   } finally {
     await qa.close()
@@ -564,6 +707,7 @@ async function releaseEvidence() {
   const run = await runResponse.json()
   assert.equal(run.status, 'completed')
   assert.equal(run.conclusion, 'success')
+  assert.equal(run.head_sha, expectedHeadSha)
   checkpoint('r3-release-evidence', {
     mode: 'formal-release',
     observedAsset,

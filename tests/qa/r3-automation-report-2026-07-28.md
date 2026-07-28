@@ -2,15 +2,14 @@
 
 ## 结论
 
-**QA-011 的本地候选验收通过，QA-012 已在 `b878965` 本地关闭；R3 仍待正式站
-部署回归，不能提前关闭。**
+**QA-011 与 QA-012 已在正式站关闭；新发现的 QA-013 已在 HEAD `c29c63a` 本地
+修复通过，但尚未部署。R3 真机验收暂停在旧计划兼容回归，不能提前关闭。**
 
-01 `4e49d7f`、05 `b803bd1` 和 06 `c86d879` 已进入正式资产
-`index-Cm31haDv.js`。隔离、无旧缓存 Chrome 从正式 R1 生成首日计划，得到
-`123/211/181` 秒和 515 秒真实计划，并进入 6 题词汇训练；没有回退 900 秒或出现课程
-身份错误。
+正式候选 head `ff7b85f95080d1e3c8d06ee9d114c6b52fd636e8` 已由 Pages run
+`30341029089` 成功部署为 `index-DuWWQrUe.js`。隔离 Chrome 从正式 R1 生成首日计划，
+Today/Training 使用同一三个真实 taskId，并分别显示 15 分钟有效训练。
 
-## QA-011 当前本地候选（HEAD `b878965`）
+## QA-011/012 正式关闭（run `30341029089`）
 
 用户在真实 iPhone 上用 12 秒完成首日 6 题词汇任务，证明“显示真实估算”并未解决
 每日任务在 15 分钟目标前耗尽的问题。当前产品链已改为三模块各 900 秒有效预算、
@@ -40,7 +39,7 @@ QA-012 的 08 修复 `b878965` 让完整 122 个口语候选可解析，其中�
 - 听力到时不取消正在播放的系统语音，口语到时不取消正在进行的录音；媒体和答题自然
   结束后才发布 item/budget 完成事件。
 
-本地生产隔离 Chrome 使用真实 R1 档案、active plan、taskId 和正式供应索引：
+正式站隔离 Chrome 使用真实 R1 档案、active plan、taskId 和正式供应索引：
 
 - Today/Training 三卡均显示 15 分钟有效训练；
 - 连续完成 6 个不同词汇 item 后，第 7 题
@@ -48,16 +47,41 @@ QA-012 的 08 修复 `b878965` 让完整 122 个口语候选可解析，其中�
 - vocabulary execution 保持 `active/running`，剩余 900 秒，整日计划仍
   `in-progress`；
 - 刷新后仍是同一第 7 题，已完成 6 个 itemId 和排除集合不变；
-- SW 仅缓存当前 `index-DuWWQrUe.js`，首页、Manifest、SW 和资产均 HTTP 200。
+- 口语真实 taskId 初始化为 `supply-v1-speaking-w1d1-s1` / `practicing`，没有
+  `provider-failure`；同一正式供应索引包含 122 个口语候选及 28 个 scene 候选；
+- SW 仅缓存当前 `index-DuWWQrUe.js`，课程 JSON 精确 9 个；离线 CacheStorage 可读取
+  808 候选供应索引，离线刷新仍恢复词汇第 7 题；
+- 首页、Manifest、SW 和资产均 HTTP 200；正式 release smoke 通过。
 
 当前门禁：09 专项 9 文件/56 项、R3 专项 24 文件/199 项、全量 122 文件/666 项，
 typecheck、lint、生产构建、84 单元、808 候选、PWA、dist smoke 和 preview smoke
 全部通过。构建生成 21 项预缓存，9 个课程资源进入预缓存；lint 仅有既有的 Fast
 Refresh 非阻断警告。
 
-结论只到“本地候选通过、待部署正式站”。必须部署包含本产品链与 QA 改动的候选，
-再由 09 对正式 URL 重跑同一 browser gate、PWA 缓存与刷新恢复；在此之前 QA-011 和
-R3 均不得关闭。
+本轮必要专项为 11 文件/60 项通过，808 供应校验通过。QA-011 与 QA-012 已达到正式
+关闭门槛。随后用户原 iPhone 旧计划暴露 QA-013；必须先部署并在不清数据的前提下
+恢复听力/口语，才能继续 `iphone-checklist.md` 的锁屏、后台、真实媒体生命周期和
+900 秒自然收尾。
+
+## QA-013 本地修复验收（HEAD `c29c63a`）
+
+用户真实 iPhone 保留 QA-011 前生成的旧计划：词汇已完成 12 秒，听力和口语没有
+`trainingBudget`。进入任一模块发布事件时，仓储曾报
+`value.activePlan.tasks[n].training is not JSON-portable`。
+
+- 04 `1f847d3` 在旧任务上完全省略 `training`，不再写入 `undefined`；
+- 01 `c29c63a` 使用严格 portable 仓储覆盖旧计划的 listening/speaking 生产事件链；
+- 09 新增外部验收 1/1：listening 的 started→7 秒 timing→attempt、speaking 的
+  started→9 秒 timing→attempt 每步均保存并用新仓储实例刷新加载；
+- 每次恢复都保留词汇 `completed / scored / 12 秒` 和原 completedLearningUnitId；
+- 最终三项 completed、学习引擎新增两次 attempt，原计划三项仍无 `trainingBudget`
+  或 execution `training`，没有静默改造、清空或重建用户计划。
+- QA-013 专项 3 文件/42 项、09 专项 10 文件/57 项、R3 专项 27 文件/203 项、全量
+  123 文件/669 项通过；`pnpm check`、84 单元、808 供应、PWA 与本地 release smoke
+  全部通过。
+
+当前结论只能是“QA-013 本地修复通过，待正式站及用户原 iPhone 回归”。正式部署由
+00 统一执行；09 不部署，也不得要求用户清除网站数据。
 
 ## 验收版本
 
@@ -76,6 +100,25 @@ R3 均不得关闭。
 - QA-011 本地候选 HEAD：`b878965`
 - QA-011 本地生产资产：`assets/index-DuWWQrUe.js`
 - QA-012 修复：08 `b878965`
+- QA-011/012 正式验收 head：`ff7b85f95080d1e3c8d06ee9d114c6b52fd636e8`
+- QA-011/012 Pages run：`30341029089`，`completed / success`
+- QA-011/012 正式资产：`assets/index-DuWWQrUe.js`
+- QA-013 修复：04 `1f847d3`
+- QA-013 01 仓储回归 / 当前 HEAD：`c29c63a`
+
+## QA-011/012 正式站关闭证据
+
+- Actions API 确认 run `30341029089` 为 `completed/success`，head 精确匹配
+  `ff7b85f95080d1e3c8d06ee9d114c6b52fd636e8`。
+- 正式 R3 E2E `status=passed`：R1→计划、Today/Training 三个真实 taskId、三项
+  `targetEffectiveSeconds=900`、词汇第 7 题、`active/running` 与刷新恢复全部通过。
+- QA-012 正式口语首题进入 `supply-v1-speaking-w1d1-s1` / `practicing`，完整供应目录
+  初始化未返回 `provider-failure`；离线索引证明其中包含 122 个口语候选和 28 个
+  `speaking-scene-quiz`，确定性供应专项验证 scene 引用可解析。
+- Workbox 预缓存中只有当前 `index-DuWWQrUe.js`，课程 JSON 精确 9 个；离线直接读取
+  供应索引得到 808 项，离线刷新继续恢复同一词汇第 7 题。
+- 正式 release smoke 验证首页、Manifest、SW、资产与 4 个图标；必要专项 11 文件/
+  60 项和 808 供应校验均通过。
 
 修复链：
 
@@ -84,7 +127,7 @@ R3 均不得关闭。
 - 06 动态词汇时长兼容：`c86d879`
 - QA 正式验收：`79d90b6`
 
-## 正式站关闭证据
+## QA-009/010 历史正式站关闭证据
 
 - Actions API 确认 run `30330487187` 为 `completed/success`，head 与指定
   `79d90b6` 一致。

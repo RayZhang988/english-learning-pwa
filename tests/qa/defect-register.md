@@ -14,8 +14,9 @@
 | QA-008 | 已关闭 | S2 | 底部“训练”页四个公开入口全部进入“暂无可用训练”占位页 | 失败资产 `index-DQn2F3sQ.js`；修复 `1b504c9` / `a326f97` | 01 主责，02 公开入口契约协同；08 无需返工 | Pages run `30149442712`；资产 `index-BAJtI4Qx.js`；正式完整 E2E exit 0，占位命中 0/4 |
 | QA-009 | 已关闭 | S2 | R3 正式首日计划仍把词汇、听力、口语全部标为固定 15 分钟 | 失败 `16b9788` / `9ab305a`；修复 `4e49d7f` / `b803bd1` | 01 主责，05 内容事实协同；09 回归 | run `30330487187`、head `79d90b6`、资产 `index-Cm31haDv.js`；正式 V/L/S=`123/211/181`、计划 515 |
 | QA-010 | 已关闭 | S1 | 结构化时长任务被真实词汇路由拒绝，首日词汇无法进入 | 失败候选 `4e49d7f` / `b803bd1`；修复 `c86d879` | 06 主责，01 任务契约协同；09 回归 | 同一正式 run/asset；真实词汇入口加载 `0/6` 题面，无不可评分或 identity mismatch |
-| QA-011 | 本地候选通过，待正式站回归 | S2 | 15 分钟目标前固定单元题目耗尽并提前完成任务 | 用户真实 iPhone / 正式 `79d90b6`；本地候选 HEAD `b878965` | 04/05/06/07/08/01/02 已交付；09 验收 | 本地 Chrome 跨过原 6 题并恢复第 7 题；09 9/56、R3 24/199、全量 122/666 全绿 |
-| QA-012 | 本地已关闭，待随候选部署 | S1 | 正式 808 供应索引使口语预算任务首题即进入内容耗尽 | 失败 `2b75173`；修复 08 `b878965` | 08 主责；05/01 无需返工 | 完整 122 个口语候选含 28 scene quiz；原 first-use 1/1 与 QA-011 全门禁通过 |
+| QA-011 | 已关闭 | S2 | 15 分钟目标前固定单元题目耗尽并提前完成任务 | 用户真实 iPhone / 正式 `79d90b6`；修复链至 `b878965` | 04/05/06/07/08/01/02 已交付；09 验收 | run `30341029089`、head `ff7b85f`、资产 `index-DuWWQrUe.js`；正式 Chrome 跨 6 题恢复第 7 题且预算 running |
+| QA-012 | 已关闭 | S1 | 正式 808 供应索引使口语预算任务首题即进入内容耗尽 | 失败 `2b75173`；修复 08 `b878965` | 08 主责；05/01 无需返工 | 同一正式 run/asset；口语首题 `practicing` 无 provider-failure，索引含 122 口语/28 scene |
+| QA-013 | 本地修复通过，待正式站回归 | S1 | 旧 iPhone 计划启动听力/口语时写入非 JSON-portable 的 `training: undefined` | 用户真实 iPhone 旧计划；修复 04 `1f847d3`，01 回归 `c29c63a` | 04 主责；01 仓储集成；09 回归 | QA 外部 1/1 通过；既有词汇完成 12 秒、听力/口语 started+timing+attempt 与逐次刷新均保留 |
 
 ## QA-001｜课程索引未随生产版本发布
 
@@ -615,10 +616,37 @@ QA-010 在本地候选阶段达到“修复通过”门槛，但当时尚不能�
 - R3 专项 26/181、09 外部 8/49、全量 114/588、typecheck、lint、构建、课程校验和
   PWA 全部通过。
 
+## QA-011｜限时训练在目标前耗尽并提前完成
+
+```text
+状态：已关闭
+严重度：S2
+失败环境：真实 iPhone；正式资产 index-Cm31haDv.js
+失败事实：词汇任务只有 6 题，用户约 12 秒完成后任务即结束，远未达到 900 秒有效目标。
+期望结果：词汇、听力、口语各自训练满 900 秒有效时间；目标前持续供应，目标到达后
+完成当前题再结束，不能截断当前答题或媒体。
+责任任务：04/05/06/07/08/01/02 按所有权修复；09 黑盒验收。
+```
+
+正式关闭证据（2026-07-28）：
+
+- 修复链已部署为 Pages run `30341029089` / head
+  `ff7b85f95080d1e3c8d06ee9d114c6b52fd636e8` /
+  `index-DuWWQrUe.js`；首页、Manifest、SW 和资产均 HTTP 200。
+- 隔离 Chrome 从正式 R1 生成真实计划；Today/Training 使用同一三个 taskId，三项
+  `targetEffectiveSeconds=900` 并显示“15 分钟有效训练”。
+- 正式词汇连续完成 6 个唯一 item 后出现
+  `supply-v1-vocabulary-w1d1-v3-term-to-meaning-choice`；execution 保持
+  `active/running`，刷新和离线重载均恢复同一第 7 题。
+- 899/900 秒、`finish-current-item`、三模块自然收尾、耗尽恢复、错误恢复拒绝和幂等
+  由 first-use、QA-011 外部验收及模块专项覆盖；正式站没有靠放慢点击掩盖竞态。
+- Workbox 只有当前 index 资产，9 个课程 JSON 全部缓存；离线读取供应索引得到 808
+  候选。正式 R3/release smoke、必要专项 11 文件/60 项和 808 供应校验均通过。
+
 ## QA-012｜口语正式供应索引无法完整解析
 
 ```text
-状态：已交回
+状态：已关闭
 严重度：S1
 环境：本地生产同构验收；HEAD 2b75173
 前置条件：使用正式 package-index、四周课程和
@@ -690,8 +718,69 @@ task.difficultyLevel=1
 - R3 专项 24 文件/199 项、09 专项 9 文件/56 项、全量 122 文件/666 项，以及
   typecheck、lint、生产构建、84 单元、808 候选、PWA 和本地 release smoke 全绿。
 
-QA-012 已达到本地关闭门槛；它随 QA-011 候选一起等待正式站部署。正式 URL 上口语
-第一题、连续供应和刷新恢复尚未重跑，因此这里不把本地关闭扩大为正式发布关闭。
+正式关闭证据（2026-07-28）：
+
+- 08 修复 `b878965` 已包含在 Pages run `30341029089` / head
+  `ff7b85f95080d1e3c8d06ee9d114c6b52fd636e8` / `index-DuWWQrUe.js`。
+- 正式隔离 Chrome 使用真实 speaking taskId 初始化完整供应目录，首题进入
+  `supply-v1-speaking-w1d1-s1` / `practicing`，页面显示真实口语提示，没有
+  `provider-failure`、内容耗尽或口语加载错误。
+- 正式 PWA 离线缓存中的供应索引可读，确认总计 808 候选、口语 122 个，其中
+  `speaking-scene-quiz` 28 个；口语供应专项验证 scene 引用可解析。
+- 正式 R3 E2E 与 release smoke 均通过，本轮必要专项 11 文件/60 项和 808 供应校验
+  通过。QA-012 正式关闭，不再阻塞 QA-011 或 R3 真机门禁。
+
+## QA-013｜旧 iPhone 计划事件写入非 JSON-portable training 字段
+
+```text
+状态：本地修复通过，待正式站回归
+严重度：S1
+环境：用户真实 iPhone；QA-011 之前生成、没有 trainingBudget 的旧 active plan
+前置状态：词汇已完成，实际有效时间 12 秒；听力和口语仍未完成
+复现步骤：
+1. 保留原有网站数据和 active plan，不清除、不重做评估。
+2. 从旧计划进入听力或口语真实 taskId。
+3. 模块发布 started、timing 或 attempt 事件，生产事件协调器保存 active plan。
+实际结果：仓储拒绝
+value.activePlan.tasks[n].training is not JSON-portable，听力和口语无法继续。
+期望结果：旧任务没有 trainingBudget 时，execution 必须完全省略 training 字段；
+started、timing、attempt 保存和刷新均可继续，既有词汇 12 秒完成进度不得丢失。
+影响：同一真实用户的两个核心模块均被阻断且不能靠正常 UI 恢复，符合 S1；不得要求
+用户清除本地数据绕过。
+责任任务：04 修复事件生命周期的旧计划字段形状；01 验证真实仓储写入与恢复；09
+执行外部回归。
+```
+
+根因与修复：
+
+- 旧计划任务没有 `trainingBudget`。此前 `createPlanProgress()`、timing 和 attempt
+  路径仍会生成自有属性 `training: undefined`。
+- JavaScript 运行时读取 `undefined` 看似无害，但严格本地仓储只接受 JSON-portable
+  值，因此在实际保存时拒绝整个 active plan。
+- 04 `1f847d3` 通过统一的可选字段构造，在没有预算时完全省略 `training`，而不是
+  写入 `undefined`；新预算计划仍保留正常 training 状态。
+- 01 `c29c63a` 使用严格 portable 仓储覆盖真实旧 iPhone 计划事件链。
+
+本地回归证据（2026-07-28）：
+
+- `tests/qa/qa-013-legacy-plan-portability.acceptance.test.ts` 1/1 通过。
+- 旧计划的 listening 与 speaking 分别逐次发布 started、timing、attempt；每次事件后
+  都重新建立仓储实例并加载，所有 execution 均不含自有 `training` 字段。
+- 已完成词汇始终保持 `completed / scored / 12 秒`；听力保留 7 秒可信 timing，口语
+  保留 9 秒可信 timing，最终三项均完成，学习引擎保存两次新 attempt。
+- 原计划三项仍不含 `trainingBudget`，没有把旧计划静默迁成新预算计划，也没有清除、
+  重建或覆盖用户历史。
+- QA-013 专项 3 文件/42 项、09 专项 10 文件/57 项、R3 专项 27 文件/203 项、全量
+  123 文件/669 项通过；`pnpm check`、84 单元、808 供应、PWA 和本地 release smoke
+  全部通过。
+
+正式关闭门槛：
+
+1. 部署包含 `1f847d3` 和 `c29c63a` 的候选，不得要求用户清数据。
+2. 正式站使用隔离的旧计划夹具重跑 listening/speaking started+timing+attempt 与刷新
+   恢复，保存过程不得出现 `not JSON-portable`。
+3. 用户在原 iPhone 数据上重新进入听力和口语，既有词汇 12 秒完成进度仍保留。
+4. 正式自动化和用户原数据均通过后，QA-013 才能关闭并继续 R3 真机清单。
 
 ## 缺陷模板
 
