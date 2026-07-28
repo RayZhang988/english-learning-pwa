@@ -51,6 +51,12 @@
 `recommendedDay` 构造计划。事件接收端应先调用 04 的 `parseLearningEvent()`，再交给
 `applyPlanEvent()`；可评分完成事件同时交给 `applyLearningAttempt()`。
 
+课程解析只把 `schemaVersion`、`domain`、`targetModuleId`、`contentRef`、
+`learningUnitId`、`difficultyLevel` 和 `tags` 作为发布内容身份。04 在每次计划生成时
+计算的 `estimatedSeconds` / `durationEstimate` 是动态执行元数据，不得与课程 schema
+为兼容旧调用方保留的 `estimatedSeconds` 做等值比较。旧任务可以继续使用课程中的
+900 秒兼容值；结构化基线或个人历史生成的任务则原样保留本次真实估算。
+
 ### R3 有效计时接入
 
 - 06 公开 `VocabularyEffectiveTimingSessionFactoryPort`，其结构与 01 的
@@ -74,6 +80,9 @@
 
 - 回答中、反馈中、暂停、完成和不可评分错误均保存在
   `feature.vocabulary` 命名空间，记录版本为 1。
+- 恢复身份使用 `taskId`、`planId`、`learningUnitId`、`contentRef`、`domain`、
+  `targetModuleId` 和 `mode`。动态预计时长变化不会拒绝已有会话，也不会把已落盘
+  session 中的原任务静默替换；后续完成事件继续使用该会话实际持有的任务估算。
 - started、paused、skipped 和 attempt.completed 先写入会话 outbox，再发布；发布成功
   后才移除。崩溃后的重复发布沿用同一事件 ID，由 04 幂等处理。
 - 选择、提交、下一题、暂停/退出及 outbox 更新进入同一运行时队列；即使本地仓库写入
@@ -92,20 +101,23 @@
 
 ## 验证
 
-- 06 专项：10 个测试文件、32 项测试通过。
+- 06 专项：10 个测试文件、34 项测试通过。
 - 覆盖真实 4 周课程包、28 个词汇单元、四类题型、复习引用、判定与非法转换、
   UI ViewModel、四类学习事件、离线读取、恢复和 outbox 重试。
 - QA-005 回归使用可控慢仓库覆盖乱序选择写入、旧题选项到达新题、下一题乐观发布、
   选择→提交→下一题→退出的持久化顺序，以及跨微任务订阅状态单调性。
 - R3 使用真实 `EffectiveTimingSession` 与手动单调时钟覆盖内容加载、慢持久化、
   answering/feedback、45 秒空闲、后台、刷新恢复、卸载、完成事件顺序及失败重试。
-- 项目级 `pnpm check`：105 个测试文件、513 项测试通过；lint、TypeScript、Vite
+- QA-010 覆盖课程旧 900 秒与结构化任务 123 秒并存、`durationEstimate` 有/无、旧任务、
+  静态身份损坏、恢复不覆盖原任务及 completion 保留真实任务估算。本地生产浏览器从
+  首日真实 123 秒词汇入口成功进入 6 题训练，不再进入不可评分错误页。
+- 项目级 `pnpm check`：114 个测试文件、588 项测试通过；lint、TypeScript、Vite
   生产构建、课程资源校验和 PWA 生成通过。
 
 ## 已知限制
 
-1. R3 的 06 port 尚未由 01 注入正式 Route，也未部署或经 09 正式站回归；当前生产
-   词汇训练仍不会创建有效计时 session。
+1. QA-010 的 06 本地修复仍需由 00 重新部署，并由 09 在正式站同时回归 QA-009/010；
+   本模块单元测试通过不能替代正式入口结论。
 2. 02 当前把 `VocabularyTrainingScreen` 的主提示固定标注为 `lang="en-US"`。
    `meaning-to-term` 和部分场景题的中文提示可正常显示，但语言元数据不准确；应由 02
    扩展公开 ViewModel 后由 01 集成，09 需复验 VoiceOver。

@@ -131,7 +131,112 @@ const offlineNetwork: NetworkStatusService = {
   subscribe: () => () => {},
 }
 
+const structuredDurationEstimate = {
+  schemaVersion: 1,
+  estimateSeconds: 123,
+  sampleCount: 0,
+  basis: 'content-baseline',
+  confidence: 'medium',
+  contentType: 'vocabulary-set-v1',
+  reasonableRangeSeconds: {
+    lower: 90,
+    upper: 600,
+  },
+  profileKey: 'vocabulary|learn|vocabulary-set-v1',
+  baselineSource: 'structured-content',
+} as const
+
 describe('vocabulary training runtime', () => {
+  it('runs, restores, and completes a structured-duration task against legacy course duration', async () => {
+    const catalog = createVocabularyCatalog(
+      await loadActualVocabularyDocuments(),
+    )
+    const task = vocabularyTaskFor(catalog.units[0], {
+      estimatedSeconds: 123,
+      durationEstimate: structuredDurationEstimate,
+    })
+    const store = new MemoryNamespaceStore()
+    const repository = new VocabularySessionRepository(store)
+    const eventSink = new InMemoryPlatformEventSink()
+    const firstRuntime = new VocabularyTrainingRuntime({
+      task,
+      localDate: '2026-07-28',
+      contentSource: createStaticDataSource(catalog),
+      eventSink,
+      repository,
+      now: sequenceClock(),
+      createId: sequenceIds(),
+    })
+    let session = await firstRuntime.initialize()
+
+    expect(catalog.units[0].estimatedSeconds).toBe(900)
+    expect(session.phase).toBe('answering')
+    expect(session.questions.length).toBeGreaterThan(0)
+    expect(session.task.estimatedSeconds).toBe(123)
+    session = await firstRuntime.select(
+      session.questions[0].correctOptionId,
+    )
+
+    const refreshedTask = {
+      ...task,
+      estimatedSeconds: 130,
+      durationEstimate: {
+        ...structuredDurationEstimate,
+        estimateSeconds: 130,
+      },
+    }
+    const refreshedRuntime = new VocabularyTrainingRuntime({
+      task: refreshedTask,
+      localDate: '2026-07-28',
+      contentSource: createStaticDataSource(catalog),
+      eventSink,
+      repository,
+      now: sequenceClock(),
+      createId: sequenceIds(),
+    })
+    session = await refreshedRuntime.initialize()
+
+    expect(session.phase).toBe('answering')
+    expect(session.selectedOptionId).not.toBeNull()
+    expect(session.task.estimatedSeconds).toBe(123)
+
+    while (session.phase !== 'completed') {
+      if (session.phase === 'answering') {
+        if (session.selectedOptionId === null) {
+          session = await refreshedRuntime.select(
+            session.questions[session.questionIndex].correctOptionId,
+          )
+        }
+        session = await refreshedRuntime.submit()
+      } else {
+        session = await refreshedRuntime.advance()
+      }
+    }
+
+    const completion = eventSink.events
+      .map((event) => parseLearningEvent(event))
+      .findLast(
+        (event) => event.type === 'learning.attempt.completed.v1',
+      )
+    expect(completion).toMatchObject({
+      type: 'learning.attempt.completed.v1',
+      payload: {
+        estimatedSeconds: 123,
+        result: 'scored',
+        taskCompleted: true,
+      },
+    })
+    expect(
+      eventSink.events
+        .map((event) => parseLearningEvent(event))
+        .some(
+          (event) =>
+            event.type === 'learning.attempt.completed.v1' &&
+            event.payload.result === 'unscorable',
+        ),
+    ).toBe(false)
+  })
+
   it('persists concurrent selections in invocation order when an older write resolves last', async () => {
     const catalog = createVocabularyCatalog(
       await loadActualVocabularyDocuments(),

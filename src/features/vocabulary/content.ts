@@ -468,7 +468,6 @@ export function resolveVocabularyTask(
   if (
     task.learningUnitId !== unit.learningUnitId ||
     task.difficultyLevel !== unit.difficultyLevel ||
-    task.estimatedSeconds !== unit.estimatedSeconds ||
     !sameStrings(task.tags, unit.tags)
   ) {
     throw new VocabularyError(
@@ -476,5 +475,8 @@ export function resolveVocabularyTask(
       `Learning task ${task.taskId} does not match its course unit.`,
     )
   }
+  // `estimatedSeconds` and `durationEstimate` describe this execution of the
+  // task. 04 may derive them from the released content baseline or personal
+  // history, so neither value is part of the immutable course identity.
   return unit
 }

@@ -396,7 +396,25 @@ class FailOnceFinishSession
 
 describe('vocabulary effective timing integration', () => {
   it('excludes persistence, idle, and background while recording answering and feedback', async () => {
-    const { catalog, task } = await vocabularySetup()
+    const { catalog, task: legacyTask } = await vocabularySetup()
+    const task: LearningTask = {
+      ...legacyTask,
+      estimatedSeconds: 123,
+      durationEstimate: {
+        schemaVersion: 1,
+        estimateSeconds: 123,
+        sampleCount: 0,
+        basis: 'content-baseline',
+        confidence: 'medium',
+        contentType: 'vocabulary-set-v1',
+        reasonableRangeSeconds: {
+          lower: 90,
+          upper: 600,
+        },
+        profileKey: 'vocabulary|learn|vocabulary-set-v1',
+        baselineSource: 'structured-content',
+      },
+    }
     const time = new ManualTime()
     const lifecycle = new ManualLifecycle()
     const snapshots = new MemoryTimingSnapshotStore()
@@ -516,6 +534,7 @@ describe('vocabulary effective timing integration', () => {
     expect(completion.type).toBe('learning.attempt.completed.v1')
     if (completion.type === 'learning.attempt.completed.v1') {
       expect(completion.payload.durationSeconds).toBe(0)
+      expect(completion.payload.estimatedSeconds).toBe(123)
     }
     const pauseEvent = sink.events
       .map((event) => parseLearningEvent(event))
@@ -541,6 +560,13 @@ describe('vocabulary effective timing integration', () => {
     }
     expect(progress.tasks[0]).toMatchObject({
       status: 'completed',
+      task: {
+        estimatedSeconds: 123,
+        durationEstimate: {
+          estimateSeconds: 123,
+          baselineSource: 'structured-content',
+        },
+      },
       effectiveSeconds: 59,
       excludedSeconds: 32,
       timingSegmentCount: 8,
