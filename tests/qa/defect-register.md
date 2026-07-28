@@ -16,7 +16,7 @@
 | QA-010 | 已关闭 | S1 | 结构化时长任务被真实词汇路由拒绝，首日词汇无法进入 | 失败候选 `4e49d7f` / `b803bd1`；修复 `c86d879` | 06 主责，01 任务契约协同；09 回归 | 同一正式 run/asset；真实词汇入口加载 `0/6` 题面，无不可评分或 identity mismatch |
 | QA-011 | 已关闭 | S2 | 15 分钟目标前固定单元题目耗尽并提前完成任务 | 用户真实 iPhone / 正式 `79d90b6`；修复链至 `b878965` | 04/05/06/07/08/01/02 已交付；09 验收 | run `30341029089`、head `ff7b85f`、资产 `index-DuWWQrUe.js`；正式 Chrome 跨 6 题恢复第 7 题且预算 running |
 | QA-012 | 已关闭 | S1 | 正式 808 供应索引使口语预算任务首题即进入内容耗尽 | 失败 `2b75173`；修复 08 `b878965` | 08 主责；05/01 无需返工 | 同一正式 run/asset；口语首题 `practicing` 无 provider-failure，索引含 122 口语/28 scene |
-| QA-013 | 正式自动化通过，待用户原 iPhone 确认 | S1 | 旧 iPhone 计划启动听力/口语时写入非 JSON-portable 的 `training: undefined` | 用户真实 iPhone 旧计划；修复 04 `1f847d3`，01 回归 `c29c63a`；正式 `ac915a3` | 04 主责；01 仓储集成；09 回归 | run `30345631519` / `index-yjGhjGzs.js`；隔离正式 E2E 自然 exit 0，词汇 12 秒不变，听力/口语 started+timing+attempt 逐次刷新通过；仍未用用户原数据验证 |
+| QA-013 | 已关闭 | S1 | 旧 iPhone 计划启动听力/口语时写入非 JSON-portable 的 `training: undefined` | 用户真实 iPhone 旧计划；修复 04 `1f847d3`，01 回归 `c29c63a`；正式 `ac915a3` | 04 主责；01 仓储集成；09 回归 | run `30345631519` / `index-yjGhjGzs.js`；隔离正式 E2E exit 0；用户原 iPhone 实际完成听力 38 秒和口语 3 个固定提示，未再出现同类错误 |
 
 ## QA-001｜课程索引未随生产版本发布
 
@@ -733,7 +733,7 @@ task.difficultyLevel=1
 ## QA-013｜旧 iPhone 计划事件写入非 JSON-portable training 字段
 
 ```text
-状态：正式自动化通过，待用户原 iPhone 确认
+状态：已关闭
 严重度：S1
 环境：用户真实 iPhone；QA-011 之前生成、没有 trainingBudget 的旧 active plan
 前置状态：词汇已完成，实际有效时间 12 秒；听力和口语仍未完成

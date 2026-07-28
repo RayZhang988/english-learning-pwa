@@ -56,12 +56,12 @@ taskId 已进入 `supply-v1-speaking-w1d1-s1` / `practicing`，没有 `provider-
 
 | ID | QA-013 要求 | 当前证据 | 状态 |
 | --- | --- | --- | --- |
-| QA013-01 | 旧任务 create/start/timing/attempt 后完全省略 execution.training | 04 `1f847d3` 与学习引擎专项；正式隔离 E2E 全程检查 raw IndexedDB 无 undefined/`training` | 正式自动化通过，待用户原 iPhone 确认 |
-| QA013-02 | listening started+timing+attempt 每步保存并刷新恢复 | 正式真实 taskId：started→1 秒 speech timing→7 题 attempt；各步刷新，最终 `completed/scored` | 正式自动化通过，待用户原 iPhone 确认 |
-| QA013-03 | speaking started+timing+attempt 每步保存并刷新恢复 | 正式真实 taskId：started→1 秒 MediaRecorder timing→三题回放降级 attempt；各步刷新，最终 `completed/unscorable-practice` | 正式自动化通过，待用户原 iPhone 确认 |
-| QA013-04 | 既有词汇 completed/scored/12 秒及 completedLearningUnitId 全程保留 | 正式每个检查点深比较同一 execution；最终三项 completed，词汇 12 秒不变，原计划仍无 trainingBudget | 正式自动化通过，待用户原 iPhone 确认 |
-| QA013-05 | 不清数据；正式部署后原 iPhone 旧计划可继续 | 正式脚本使用隔离等价夹具且未触碰用户数据；用户原 iPhone 仍必须亲自验证 | 待用户原设备 |
-| QA013-06 | QA-013、09、R3、全量和工程门禁零失败 | 本地 3/42、10/57、27/203、123/669 及完整工程门禁已通过；正式 QA-013 E2E 自然 exit 0 | 正式自动化通过，待用户原 iPhone 确认 |
+| QA013-01 | 旧任务 create/start/timing/attempt 后完全省略 execution.training | 04 `1f847d3` 与学习引擎专项；正式隔离 E2E 全程检查 raw IndexedDB 无 undefined/`training` | 通过 |
+| QA013-02 | listening started+timing+attempt 每步保存并刷新恢复 | 正式 E2E 各步刷新；用户原 iPhone 实际完成听力并显示 38 秒 | 通过 |
+| QA013-03 | speaking started+timing+attempt 每步保存并刷新恢复 | 正式 E2E 各步刷新；用户原 iPhone 实际完成 3 个固定口语提示 | 通过 |
+| QA013-04 | 既有词汇 completed/scored/12 秒及 completedLearningUnitId 全程保留 | 正式每个检查点深比较同一 execution；用户未清数据继续原计划 | 通过 |
+| QA013-05 | 不清数据；正式部署后原 iPhone 旧计划可继续 | 用户未清数据、未重做水平测试，听力与口语均实际完成 | 通过 |
+| QA013-06 | QA-013、09、R3、全量和工程门禁零失败 | 本地 3/42、10/57、27/203、123/669 及完整工程门禁已通过；正式 QA-013 E2E 自然 exit 0 | 通过 |
 
 | ID | R3 要求 | 自动化与黑盒证据 | 通过门槛 | 状态 |
 | --- | --- | --- | --- | --- |
@@ -89,8 +89,7 @@ QA-009/010 的正式历史证据仍有效：内容结构估算为 `123/211/181`�
 秒有效训练目标，内容单元结束只推进供应 cursor。
 
 run `30345631519` / head `ac915a39a3adb0e7fa6888ff2383d7787f0604cc` /
-`index-yjGhjGzs.js` 已通过正式 R3/release smoke 及 QA-013 等价旧计划回归；QA-011
-与 QA-012 正式关闭，QA-013 的正式自动化门禁通过。下一步必须在不清数据的前提下
-由用户用原 iPhone 计划确认听力、口语及词汇 12 秒记录；通过后才继续锁屏、后台、
-MediaRecorder、SpeechSynthesis、语音识别、900 秒自然收尾和安装态缓存更新。完成前
-不能开始 14 天计时，也不能关闭 QA-013 或 R3。
+`index-yjGhjGzs.js` 已通过正式 R3/release smoke 及 QA-013 等价旧计划回归；QA-011、
+QA-012 与 QA-013 均已关闭。下一步必须由用户在原 iPhone 上使用新版预算计划，
+继续验证锁屏、后台、MediaRecorder、SpeechSynthesis、语音识别、三模块 900 秒自然
+收尾和安装态缓存更新。完成前不能开始 14 天计时，也不能关闭 R3。
