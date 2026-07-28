@@ -123,7 +123,23 @@ function validStream(value: unknown): value is ListeningStreamState | null | und
     Array.isArray(value.completedItemIds) && value.completedItemIds.every((id) => typeof id === 'string') &&
     typeof value.completedItemCount === 'number' && Number.isInteger(value.completedItemCount) && value.completedItemCount >= 0 &&
     typeof value.correctItemCount === 'number' && Number.isInteger(value.correctItemCount) && value.correctItemCount >= 0 &&
-    typeof value.finishCurrentItem === 'boolean'
+    typeof value.finishCurrentItem === 'boolean' &&
+    (typeof value.exhaustionRequestId === 'string' || value.exhaustionRequestId === null || value.exhaustionRequestId === undefined) &&
+    (typeof value.recoveryEventId === 'string' || value.recoveryEventId === null || value.recoveryEventId === undefined)
+}
+
+function normalizeStream(session: ListeningSession): ListeningSession {
+  if (!session.stream) {
+    return session
+  }
+  return {
+    ...session,
+    stream: {
+      ...session.stream,
+      exhaustionRequestId: session.stream.exhaustionRequestId ?? null,
+      recoveryEventId: session.stream.recoveryEventId ?? null,
+    },
+  }
 }
 
 function upgradeLegacyPassageSession(
@@ -307,10 +323,10 @@ function restoreSession(
       )
     }
   }
-  return upgradeLegacyPassageSession({
+  return normalizeStream(upgradeLegacyPassageSession({
     ...(value as unknown as ListeningSession),
     pendingEvents,
-  })
+  }))
 }
 
 export class ListeningSessionRepository {

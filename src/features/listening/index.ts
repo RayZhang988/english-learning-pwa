@@ -27,6 +27,7 @@ export {
   createListeningStreamAttemptEvent,
   createListeningTrainingBudgetCompletedEvent,
   createListeningTrainingContentExhaustedEvent,
+  createListeningTrainingContentRecoveredEvent,
   createListeningTrainingItemCompletedEvent,
 } from './events.ts'
 export { createListeningFeatureModule } from './feature-module.ts'

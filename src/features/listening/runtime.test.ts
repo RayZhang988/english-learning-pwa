@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { InMemoryPlatformEventSink } from '../../core/testing/index.ts'
+import type { PlatformEvent, PlatformEventSink } from '../../core/index.ts'
 import { parseLearningEvent } from '../../learning-engine/index.ts'
 import type { NetworkStatusService } from '../../platform/index.ts'
 import type {
@@ -179,6 +180,19 @@ class ImmediateSpeech implements ListeningSpeechPort {
   }
 }
 
+class FailRecoveredOnceEventSink implements PlatformEventSink {
+  readonly events: PlatformEvent[] = []
+  private failed = false
+
+  async publish(event: PlatformEvent): Promise<void> {
+    if (event.type === 'learning.training.content.recovered.v1' && !this.failed) {
+      this.failed = true
+      throw new Error('temporary recovery publish failure')
+    }
+    this.events.push(event)
+  }
+}
+
 const online: NetworkStatusService = {
   current: () => 'online',
   subscribe: () => () => undefined,
@@ -278,6 +292,92 @@ function dialogueCatalog(): ListeningCatalog {
 }
 
 describe('listening training runtime', () => {
+  it('publishes one durable recovery before a refreshed item and budget completion', async () => {
+    const secondQuestion: ListeningChoiceQuestion = {
+      id: 'question-choice-recovered', type: 'word-discrimination', promptZh: '你听到了哪一句？',
+      primarySegmentId: 'seg-sentence', segments: choiceQuestion.segments, playbackPolicy: choiceQuestion.playbackPolicy,
+      options: [{ id: 'yes', label: "I'm visiting Boston this week." }, { id: 'no', label: 'I live in Chicago.' }],
+      correctOptionId: 'yes', rationaleZh: '音频读的是 Boston。', errorTag: 'sound-discrimination',
+    }
+    const currentCatalog = catalog([choiceQuestion, secondQuestion])
+    const first = { itemId: 'recovery-first', learningUnitId: 'st4w-w1d1-listening', contentRef: 'lesson://survival-travel-american-4w/1.0.0/w1d1/listening', difficultyLevel: 2, tags: ['scene:introductions'], source: { sourceType: 'listening-extension' as const, sourceId: 'question-choice', variantId: 'word-discrimination' } }
+    const second = { ...first, itemId: 'recovery-second', source: { ...first.source, sourceId: 'question-choice-recovered' } }
+    let calls = 0
+    const supplyProvider = { async next(request: import('../../learning-engine/index.ts').LearningTaskSupplyRequest) {
+      calls += 1
+      if (calls === 1) return { schemaVersion: 1 as const, requestId: request.requestId, status: 'item' as const, item: first, nextCursor: first.itemId }
+      if (calls === 2) return { schemaVersion: 1 as const, requestId: request.requestId, status: 'content-exhausted' as const, reason: 'provider-failure' as const }
+      return { schemaVersion: 1 as const, requestId: request.requestId, status: 'item' as const, item: second, nextCursor: second.itemId }
+    } }
+    let budget: 'running' | 'finish-current-item' = 'running'
+    const sink = new InMemoryPlatformEventSink()
+    const store = new MemoryStore()
+    const task = createListeningTask({ trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } })
+    const runtime = new ListeningTrainingRuntime({ task, localDate: '2026-07-28', contentSource: { load: async () => currentCatalog }, eventSink: sink, repository: new ListeningSessionRepository(store), speech: new ImmediateSpeech(), now: clock(), createId: (() => { let id = 0; return () => `recovery-${id++}` })(), supplyProvider, trainingBudgetStatus: () => budget })
+    await runtime.initialize()
+    await runtime.togglePlayback()
+    await runtime.select('a')
+    await runtime.submit()
+    const exhausted = await runtime.advance()
+    expect(exhausted.phase).toBe('error')
+    const exhaustion = sink.events.find((event) => event.type === 'learning.training.content.exhausted.v1')
+    expect(exhaustion).toBeDefined()
+
+    const refreshed = new ListeningTrainingRuntime({ task, localDate: '2026-07-28', contentSource: { load: async () => currentCatalog }, eventSink: sink, repository: new ListeningSessionRepository(store), speech: new ImmediateSpeech(), now: clock(), createId: (() => { let id = 0; return () => `recovered-${id++}` })(), supplyProvider, trainingBudgetStatus: () => budget })
+    await refreshed.initialize()
+    let session = await refreshed.retrySupply()
+    expect(session.phase).toBe('answering')
+    expect(session.stream?.completedItemIds).toEqual([first.itemId])
+    expect(session.stream?.exhaustionRequestId).toBeNull()
+    const recovery = sink.events.filter((event) => event.type === 'learning.training.content.recovered.v1')
+    expect(recovery).toHaveLength(1)
+    const exhaustedPayload = (parseLearningEvent(exhaustion!) as Extract<ReturnType<typeof parseLearningEvent>, { type: 'learning.training.content.exhausted.v1' }>).payload
+    const recoveredPayload = (parseLearningEvent(recovery[0]) as Extract<ReturnType<typeof parseLearningEvent>, { type: 'learning.training.content.recovered.v1' }>).payload
+    expect(recoveredPayload.exhaustionRequestId).toBe(exhaustedPayload.requestId)
+
+    budget = 'finish-current-item'
+    await refreshed.togglePlayback()
+    await refreshed.select('yes')
+    await refreshed.submit()
+    session = await refreshed.advance()
+    expect(session.phase).toBe('completed')
+    const types = sink.events.map((event) => event.type)
+    expect(types.indexOf('learning.training.content.recovered.v1')).toBeLessThan(types.lastIndexOf('learning.training.item.completed.v1'))
+    expect(types.indexOf('learning.training.content.recovered.v1')).toBeLessThan(types.indexOf('learning.training.budget.completed.v1'))
+  })
+
+  it('retries one failed recovery outbox event without creating another identity', async () => {
+    const secondQuestion: ListeningChoiceQuestion = {
+      id: 'question-choice-retry', type: 'word-discrimination', promptZh: '你听到了哪一句？',
+      primarySegmentId: 'seg-sentence', segments: choiceQuestion.segments, playbackPolicy: choiceQuestion.playbackPolicy,
+      options: [{ id: 'yes', label: "I'm visiting Boston this week." }, { id: 'no', label: 'I live in Chicago.' }],
+      correctOptionId: 'yes', rationaleZh: '音频读的是 Boston。', errorTag: 'sound-discrimination',
+    }
+    const currentCatalog = catalog([choiceQuestion, secondQuestion])
+    const first = { itemId: 'retry-first', learningUnitId: 'st4w-w1d1-listening', contentRef: 'lesson://survival-travel-american-4w/1.0.0/w1d1/listening', difficultyLevel: 2, tags: ['scene:introductions'], source: { sourceType: 'listening-extension' as const, sourceId: 'question-choice', variantId: 'word-discrimination' } }
+    const second = { ...first, itemId: 'retry-second', source: { ...first.source, sourceId: 'question-choice-retry' } }
+    let calls = 0
+    const supplyProvider = { async next(request: import('../../learning-engine/index.ts').LearningTaskSupplyRequest) {
+      calls += 1
+      if (calls === 1) return { schemaVersion: 1 as const, requestId: request.requestId, status: 'item' as const, item: first, nextCursor: first.itemId }
+      if (calls === 2) return { schemaVersion: 1 as const, requestId: request.requestId, status: 'content-exhausted' as const, reason: 'provider-failure' as const }
+      return { schemaVersion: 1 as const, requestId: request.requestId, status: 'item' as const, item: second, nextCursor: second.itemId }
+    } }
+    const sink = new FailRecoveredOnceEventSink()
+    const runtime = new ListeningTrainingRuntime({ task: createListeningTask({ trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } }), localDate: '2026-07-28', contentSource: { load: async () => currentCatalog }, eventSink: sink, repository: new ListeningSessionRepository(new MemoryStore()), speech: new ImmediateSpeech(), now: clock(), createId: (() => { let id = 0; return () => `retry-${id++}` })(), supplyProvider, trainingBudgetStatus: () => 'running' })
+    await runtime.initialize()
+    await runtime.togglePlayback()
+    await runtime.select('a')
+    await runtime.submit()
+    await runtime.advance()
+    await expect(runtime.retrySupply()).rejects.toThrow('temporary recovery publish failure')
+    expect(runtime.currentSession?.pendingEvents.filter((event) => event.type === 'learning.training.content.recovered.v1')).toHaveLength(1)
+    const session = await runtime.retrySupply()
+    expect(session.phase).toBe('answering')
+    expect(sink.events.filter((event) => event.type === 'learning.training.content.recovered.v1')).toHaveLength(1)
+    expect(session.stream?.completedItemIds).toEqual([first.itemId])
+  })
+
   it('streams durable non-repeating items and completes only after finish-current-item', async () => {
     const secondQuestion: ListeningChoiceQuestion = {
       id: 'question-choice-2',

@@ -7,6 +7,7 @@ import type {
   LearningTaskSupplyItem,
   LearningTrainingBudgetCompletedEvent,
   LearningTrainingContentExhaustedEvent,
+  LearningTrainingContentRecoveredEvent,
   LearningTrainingItemCompletedEvent,
   LearningTaskSkippedEvent,
 } from '../../learning-engine/index.ts'
@@ -217,6 +218,21 @@ export function createListeningTrainingContentExhaustedEvent(
     occurredAt: identity.occurredAt,
     schemaVersion: 1,
     payload: { ...basePayload(task, identity.localDate), mode: task.mode, requestId, cursor, reason },
+  }
+}
+
+export function createListeningTrainingContentRecoveredEvent(
+  task: LearningTask,
+  exhaustionRequestId: string,
+  identity: EventIdentity,
+): LearningTrainingContentRecoveredEvent {
+  return {
+    id: identity.eventId,
+    type: 'learning.training.content.recovered.v1',
+    sourceModuleId: 'listening',
+    occurredAt: identity.occurredAt,
+    schemaVersion: 1,
+    payload: { ...basePayload(task, identity.localDate), mode: task.mode, exhaustionRequestId },
   }
 }
 

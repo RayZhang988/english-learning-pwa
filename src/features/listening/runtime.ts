@@ -23,6 +23,7 @@ import {
   createListeningStreamAttemptEvent,
   createListeningTrainingBudgetCompletedEvent,
   createListeningTrainingContentExhaustedEvent,
+  createListeningTrainingContentRecoveredEvent,
   createListeningTrainingItemCompletedEvent,
 } from './events.ts'
 import {
@@ -532,6 +533,8 @@ export class ListeningTrainingRuntime {
             completedItemCount: 0,
             correctItemCount: 0,
             finishCurrentItem: this.trainingBudgetStatus?.() === 'finish-current-item',
+            exhaustionRequestId: null,
+            recoveryEventId: null,
           },
         }
       } else {
@@ -750,7 +753,7 @@ export class ListeningTrainingRuntime {
               ...session,
               phase: 'error', pausedFromPhase: null, lastActiveAt: null,
               failure: { category: 'content', message: '当前没有可继续的听力题目。' },
-              stream: completedStream, updatedAt: now,
+              stream: { ...completedStream, exhaustionRequestId: request.requestId, recoveryEventId: null }, updatedAt: now,
             }
             session = withPendingListeningEvent(session, createListeningTrainingContentExhaustedEvent(this.task, request.requestId, request.cursor, result.reason, this.identity(now)), now)
           } else {
@@ -961,20 +964,47 @@ export class ListeningTrainingRuntime {
       if (!this.continuousTraining || current.phase !== 'error' || !current.stream) {
         throw new ListeningError('session-transition-invalid', 'Only an exhausted listening stream can request more content.')
       }
+      if (current.stream.exhaustionRequestId === null) {
+        throw new ListeningError('session-transition-invalid', 'Listening stream has no acknowledged exhaustion to recover.')
+      }
+      const exhaustionRequestId = current.stream.exhaustionRequestId
+      const recoveryEventId = current.stream.recoveryEventId ??
+        `listening:${this.task.taskId}:content-recovered:${exhaustionRequestId}`
       const catalog = await this.contentSource.load()
       const { request, result } = await this.nextStreamItem(catalog, current.stream)
       if (result.status !== 'item') {
-        const session = withPendingListeningEvent(current, createListeningTrainingContentExhaustedEvent(this.task, request.requestId, request.cursor, result.reason, this.identity(this.now())), this.now())
-        await this.save(session)
-        return this.flushPendingEvents()
+        // The task is already blocked by the persisted exhaustion request.
+        // Do not replace that identity or create an invalid second exhaustion.
+        return this.requireSession()
       }
       const now = this.now()
+      let recovery = this.requireSession()
+      if (recovery.stream?.recoveryEventId === null) {
+        recovery = {
+          ...recovery,
+          stream: { ...recovery.stream, recoveryEventId },
+          updatedAt: now,
+        }
+        recovery = withPendingListeningEvent(
+          recovery,
+          createListeningTrainingContentRecoveredEvent(
+            this.task,
+            exhaustionRequestId,
+            { eventId: recoveryEventId, occurredAt: now, localDate: this.localDate },
+          ),
+          now,
+        )
+        await this.save(recovery)
+      }
+      recovery = await this.flushPendingEvents()
       const supplied = resolveListeningSupplyQuestion(catalog, result.item as import('./types.ts').ListeningSupplyItem)
-      const session = replaceListeningStreamQuestion(current, supplied.unit, supplied.question, {
-        ...current.stream,
+      const session = replaceListeningStreamQuestion(recovery, supplied.unit, supplied.question, {
+        ...recovery.stream!,
         activeItem: result.item as import('./types.ts').ListeningSupplyItem,
         activeRequestId: request.requestId,
         nextSupplyCursor: result.nextCursor,
+        exhaustionRequestId: null,
+        recoveryEventId: null,
       }, now)
       await this.save(session)
       this.attachController(session)
