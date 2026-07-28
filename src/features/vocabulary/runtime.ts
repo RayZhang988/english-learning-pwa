@@ -34,6 +34,10 @@ import {
   withPendingVocabularyEvent,
   withoutPendingVocabularyEvent,
 } from './session.ts'
+import {
+  VocabularyEffectiveTiming,
+  type VocabularyEffectiveTimingSessionFactoryPort,
+} from './timing.ts'
 import type {
   VocabularyCatalog,
   VocabularySession,
@@ -55,6 +59,7 @@ export interface VocabularyTrainingRuntimeOptions {
   readonly networkStatus?: NetworkStatusService
   readonly now?: () => string
   readonly createId?: () => string
+  readonly timingSessionFactory?: VocabularyEffectiveTimingSessionFactoryPort
 }
 
 function defaultId(): string {
@@ -70,6 +75,7 @@ export class VocabularyTrainingRuntime {
   private readonly networkStatus: NetworkStatusService
   private readonly now: () => string
   private readonly createId: () => string
+  private readonly timing: VocabularyEffectiveTiming
   private session: VocabularySession | null = null
   private initializing: Promise<VocabularySession> | null = null
   private operationTail: Promise<void> | null = null
@@ -85,6 +91,10 @@ export class VocabularyTrainingRuntime {
     this.networkStatus = options.networkStatus ?? browserNetworkStatus
     this.now = options.now ?? (() => new Date().toISOString())
     this.createId = options.createId ?? defaultId
+    this.timing = new VocabularyEffectiveTiming(
+      this.task.taskId,
+      options.timingSessionFactory,
+    )
   }
 
   get currentSession(): VocabularySession | null {
@@ -168,6 +178,12 @@ export class VocabularyTrainingRuntime {
     let session = this.requireSession()
     while (session.pendingEvents.length > 0) {
       const event = session.pendingEvents[0]
+      if (
+        event.type === 'learning.attempt.completed.v1' &&
+        event.payload.taskCompleted
+      ) {
+        await this.timing.finish()
+      }
       await this.eventSink.publish(event)
       session = withoutPendingVocabularyEvent(
         session,
@@ -177,6 +193,18 @@ export class VocabularyTrainingRuntime {
       await this.save(session)
     }
     return session
+  }
+
+  private untrustedLegacyDuration(
+    session: VocabularySession,
+  ): number {
+    if (this.timing.enabled) {
+      return 0
+    }
+    return Math.max(
+      0,
+      session.activeDurationSeconds - session.reportedDurationSeconds,
+    )
   }
 
   private failureFor(error: unknown): VocabularySessionFailure {
@@ -231,12 +259,17 @@ export class VocabularyTrainingRuntime {
   }
 
   private async initializeInternal(): Promise<VocabularySession> {
+    await this.timing.startLoading()
     const stored = await this.repository.load(this.task)
+    let session: VocabularySession
     if (stored) {
       this.setSession(stored)
-      return this.flushPendingEvents()
+      session = await this.flushPendingEvents()
+    } else {
+      session = await this.startFresh()
     }
-    return this.startFresh()
+    await this.timing.synchronize(session.phase)
+    return session
   }
 
   initialize(): Promise<VocabularySession> {
@@ -255,30 +288,34 @@ export class VocabularyTrainingRuntime {
   }
 
   select(optionId: string): Promise<VocabularySession> {
-    return this.enqueue(() =>
-      this.save(
+    return this.enqueue(async () => {
+      await this.timing.beginPersistenceWait(true)
+      const session = await this.save(
         selectVocabularyOption(this.requireSession(), optionId, this.now()),
-      ),
-    )
+      )
+      await this.timing.synchronize(session.phase)
+      return session
+    })
   }
 
   submit(): Promise<VocabularySession> {
-    return this.enqueue(() =>
-      this.save(
+    return this.enqueue(async () => {
+      await this.timing.beginPersistenceWait(true)
+      const session = await this.save(
         submitVocabularyAnswer(this.requireSession(), this.now()),
-      ),
-    )
+      )
+      await this.timing.synchronize(session.phase)
+      return session
+    })
   }
 
   advance(): Promise<VocabularySession> {
     return this.enqueue(async () => {
+      await this.timing.beginPersistenceWait(true)
       const now = this.now()
       let session = advanceVocabularySession(this.requireSession(), now)
       if (session.phase === 'completed') {
-        const durationSeconds = Math.max(
-          0,
-          session.activeDurationSeconds - session.reportedDurationSeconds,
-        )
+        const durationSeconds = this.untrustedLegacyDuration(session)
         session = {
           ...session,
           reportedDurationSeconds: session.activeDurationSeconds,
@@ -294,19 +331,19 @@ export class VocabularyTrainingRuntime {
         )
       }
       await this.save(session)
-      return this.flushPendingEvents()
+      session = await this.flushPendingEvents()
+      await this.timing.synchronize(session.phase)
+      return session
     })
   }
 
   private async pauseInternal(
     reason: TaskPauseReason,
   ): Promise<VocabularySession> {
+    await this.timing.pause()
     const now = this.now()
     let session = pauseVocabularySession(this.requireSession(), now)
-    const durationSeconds = Math.max(
-      0,
-      session.activeDurationSeconds - session.reportedDurationSeconds,
-    )
+    const durationSeconds = this.untrustedLegacyDuration(session)
     session = {
       ...session,
       reportedDurationSeconds: session.activeDurationSeconds,
@@ -341,6 +378,7 @@ export class VocabularyTrainingRuntime {
 
   resume(): Promise<VocabularySession> {
     return this.enqueue(async () => {
+      await this.timing.beginPersistenceWait(true)
       const now = this.now()
       let session = resumeVocabularySession(this.requireSession(), now)
       session = withPendingVocabularyEvent(
@@ -352,20 +390,20 @@ export class VocabularyTrainingRuntime {
         now,
       )
       await this.save(session)
-      return this.flushPendingEvents()
+      session = await this.flushPendingEvents()
+      await this.timing.synchronize(session.phase, true)
+      return session
     })
   }
 
   skip(reason: TaskSkipReason): Promise<VocabularySession> {
     return this.enqueue(async () => {
+      await this.timing.pause()
       const now = this.now()
       let session = this.requireSession()
       if (session.phase === 'answering' || session.phase === 'feedback') {
         session = pauseVocabularySession(session, now)
-        const durationSeconds = Math.max(
-          0,
-          session.activeDurationSeconds - session.reportedDurationSeconds,
-        )
+        const durationSeconds = this.untrustedLegacyDuration(session)
         session = {
           ...session,
           reportedDurationSeconds: session.activeDurationSeconds,
@@ -407,16 +445,14 @@ export class VocabularyTrainingRuntime {
     failure: VocabularySessionFailure,
   ): Promise<VocabularySession> {
     return this.enqueue(async () => {
+      await this.timing.beginPersistenceWait(false)
       const now = this.now()
       let session = failVocabularySession(
         this.requireSession(),
         failure,
         now,
       )
-      const durationSeconds = Math.max(
-        0,
-        session.activeDurationSeconds - session.reportedDurationSeconds,
-      )
+      const durationSeconds = this.untrustedLegacyDuration(session)
       session = {
         ...session,
         reportedDurationSeconds: session.activeDurationSeconds,
@@ -437,17 +473,28 @@ export class VocabularyTrainingRuntime {
   }
 
   retryPendingEvents(): Promise<VocabularySession> {
-    return this.enqueue(() => this.flushPendingEvents())
+    return this.enqueue(async () => {
+      const session = await this.flushPendingEvents()
+      await this.timing.synchronize(session.phase)
+      return session
+    })
   }
 
   restart(): Promise<VocabularySession> {
     return this.enqueue(async () => {
+      await this.timing.startLoading()
       if (this.session && this.session.pendingEvents.length > 0) {
         await this.flushPendingEvents()
       }
       await this.repository.delete(this.task.taskId)
       this.session = null
-      return this.startFresh()
+      const session = await this.startFresh()
+      await this.timing.synchronize(session.phase)
+      return session
     })
+  }
+
+  dispose(): Promise<void> {
+    return this.enqueue(() => this.timing.dispose())
   }
 }

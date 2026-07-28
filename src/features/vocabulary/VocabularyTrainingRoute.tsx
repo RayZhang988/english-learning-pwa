@@ -26,9 +26,13 @@ import {
 } from './content-source.ts'
 import { VocabularySessionScreen } from './VocabularySessionScreen.tsx'
 import { VocabularySessionRepository } from './repository.ts'
+import { VocabularyRuntimeMountLifecycle } from './route-lifecycle.ts'
 import {
   VocabularyTrainingRuntime,
 } from './runtime.ts'
+import type {
+  VocabularyEffectiveTimingSessionFactoryPort,
+} from './timing.ts'
 import type {
   VocabularyCatalog,
   VocabularySession,
@@ -45,11 +49,14 @@ export interface VocabularyTrainingRouteProps {
   readonly networkStatus?: NetworkStatusService
   readonly now?: () => string
   readonly createId?: () => string
+  readonly timingSessionFactory?: VocabularyEffectiveTimingSessionFactoryPort
 }
 
 export function VocabularyTrainingRoute(
   props: VocabularyTrainingRouteProps,
 ) {
+  const onCompleted = props.onCompleted
+  const onExit = props.onExit
   const networkStatus = props.networkStatus ?? browserNetworkStatus
   const [network, setNetwork] = useState<NetworkStatus>(() =>
     networkStatus.current(),
@@ -59,16 +66,32 @@ export function VocabularyTrainingRoute(
   })
   const [operationPending, setOperationPending] = useState(false)
   const operationPendingRef = useRef(false)
+  const exitPendingRef = useRef(false)
+  const onCompletedRef = useRef(onCompleted)
+  onCompletedRef.current = onCompleted
   const runtimeKey = `${props.task.planId}:${props.task.taskId}`
   const runtimeRef = useRef<{
     readonly key: string
     readonly runtime: VocabularyTrainingRuntime
+    readonly timingSessionFactory:
+      | VocabularyEffectiveTimingSessionFactoryPort
+      | undefined
   } | null>(null)
+  const runtimeMountLifecycleRef =
+    useRef<VocabularyRuntimeMountLifecycle | null>(null)
   const completedTaskRef = useRef<string | null>(null)
+  if (!runtimeMountLifecycleRef.current) {
+    runtimeMountLifecycleRef.current =
+      new VocabularyRuntimeMountLifecycle()
+  }
 
-  if (runtimeRef.current?.key !== runtimeKey) {
+  if (
+    runtimeRef.current?.key !== runtimeKey ||
+    runtimeRef.current.timingSessionFactory !== props.timingSessionFactory
+  ) {
     runtimeRef.current = {
       key: runtimeKey,
+      timingSessionFactory: props.timingSessionFactory,
       runtime: new VocabularyTrainingRuntime({
         task: props.task,
         localDate: props.localDate,
@@ -79,6 +102,7 @@ export function VocabularyTrainingRoute(
         networkStatus,
         now: props.now,
         createId: props.createId,
+        timingSessionFactory: props.timingSessionFactory,
       }),
     }
   }
@@ -98,6 +122,19 @@ export function VocabularyTrainingRoute(
     })
   }, [])
 
+  const notifyCompleted = useCallback(
+    (session: VocabularySession) => {
+      if (
+        session.phase === 'completed' &&
+        completedTaskRef.current !== session.task.taskId
+      ) {
+        completedTaskRef.current = session.task.taskId
+        onCompletedRef.current?.(session)
+      }
+    },
+    [],
+  )
+
   const perform = useCallback(
     async (operation: () => Promise<VocabularySession>) => {
       if (operationPendingRef.current) {
@@ -106,7 +143,7 @@ export function VocabularyTrainingRoute(
       operationPendingRef.current = true
       setOperationPending(true)
       try {
-        await operation()
+        notifyCompleted(await operation())
       } catch (error) {
         showError(error)
       } finally {
@@ -114,7 +151,7 @@ export function VocabularyTrainingRoute(
         setOperationPending(false)
       }
     },
-    [showError],
+    [notifyCompleted, showError],
   )
 
   useEffect(
@@ -124,8 +161,15 @@ export function VocabularyTrainingRoute(
 
   useEffect(() => {
     let active = true
+    const releaseRuntime =
+      runtimeMountLifecycleRef.current!.retain(runtime)
     setState({ status: 'loading' })
-    void runtime.initialize().catch(
+    void runtime.initialize().then(
+      (session) => {
+        if (active) {
+          notifyCompleted(session)
+        }
+      },
       (error: unknown) => {
         if (active) {
           showError(error)
@@ -134,8 +178,9 @@ export function VocabularyTrainingRoute(
     )
     return () => {
       active = false
+      releaseRuntime()
     }
-  }, [runtime, showError])
+  }, [notifyCompleted, runtime, showError])
 
   useEffect(
     () => networkStatus.subscribe(setNetwork),
@@ -162,17 +207,6 @@ export function VocabularyTrainingRoute(
     }
   }, [runtime, showError])
 
-  useEffect(() => {
-    if (
-      state.status === 'ready' &&
-      state.value.phase === 'completed' &&
-      completedTaskRef.current !== state.value.task.taskId
-    ) {
-      completedTaskRef.current = state.value.task.taskId
-      props.onCompleted?.(state.value)
-    }
-  }, [props, state])
-
   const retry = useCallback(() => {
     const session = runtime.currentSession
     if (session?.phase === 'error') {
@@ -185,19 +219,27 @@ export function VocabularyTrainingRoute(
   }, [perform, runtime])
 
   const exit = useCallback(() => {
-    const session = runtime.currentSession
-    if (
-      session &&
-      (session.phase === 'answering' || session.phase === 'feedback')
-    ) {
-      void runtime.pauseIfActive('user-paused').then(
-        props.onExit,
-        props.onExit,
-      )
+    if (exitPendingRef.current) {
       return
     }
-    props.onExit()
-  }, [props, runtime])
+    exitPendingRef.current = true
+    const session = runtime.currentSession
+    void (async () => {
+      try {
+        if (
+          session &&
+          (session.phase === 'answering' || session.phase === 'feedback')
+        ) {
+          await runtime.pauseIfActive('user-paused')
+        }
+        await runtime.dispose()
+        onExit()
+      } catch (error) {
+        exitPendingRef.current = false
+        showError(error)
+      }
+    })()
+  }, [onExit, runtime, showError])
 
   if (state.status === 'loading' || state.status === 'idle') {
     return <LoadingState label="正在加载词汇训练" />
@@ -244,7 +286,7 @@ export function VocabularyTrainingRoute(
           <button
             className="primary-button"
             type="button"
-            onClick={props.onExit}
+            onClick={exit}
           >
             返回今日计划
           </button>

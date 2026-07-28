@@ -26,7 +26,9 @@
 - 题目输出：`VocabularyQuestion`，包含稳定 ID、提示语言、选项、正确选项、解释和
   标准错误标签。
 - 会话输出：可移植的 `VocabularySession`，用于本地恢复和事件 outbox。
-- 学习输出：04 定义的 started、paused、skipped、attempt.completed v1 事件。
+- 学习输出：04 定义的 started、paused、skipped、attempt.completed v1 事件；注入
+  01 计时 factory 后，由共享 session 另行发布
+  `learning.timing.segment.recorded.v1`。
 
 `VocabularyTrainingScreen` 只接收本模块映射后的 ViewModel；选项视觉状态始终由本模块
 状态机决定。
@@ -40,13 +42,33 @@
 - `currentVocabularyContentSource.load()`：优先读取已安装离线包，缺失时才访问打包后的
   课程资源，并按 05 的清单顺序构建 `VocabularyCatalog`。
 - `VocabularyTrainingRoute`：接收一条 04 下发的词汇 `LearningTask`、`localDate`、
-  `PlatformEventSink` 和退出/完成回调，负责加载、恢复、UI 映射与事件 outbox。
+  `PlatformEventSink`、可选 `timingSessionFactory` 和退出/完成回调，负责加载、恢复、
+  UI 映射与事件 outbox。
 - `createVocabularyFeatureModule(routeElement)`：返回匹配 01 预留槽位的
   `FeatureModule`。最终加入 `src/app/module-registry.ts` 仍由 01 负责。
 
 集成层必须先由 04 决定任务，再把同一 `LearningTask` 交给本模块；不得直接按
 `recommendedDay` 构造计划。事件接收端应先调用 04 的 `parseLearningEvent()`，再交给
 `applyPlanEvent()`；可评分完成事件同时交给 `applyLearningAttempt()`。
+
+### R3 有效计时接入
+
+- 06 公开 `VocabularyEffectiveTimingSessionFactoryPort`，其结构与 01 的
+  `ProductionEffectiveTimingSessionFactory` 兼容。06 不读取浏览器可见性、不创建时钟、
+  快照、事件 ID 或空闲定时器。
+- 初始化、课程读取、会话恢复、业务事件发布和模块仓储等待声明为
+  `loading / content-loading`；可作答阶段声明为
+  `answering / active-answering`，反馈查看声明为
+  `feedback / active-feedback`，业务暂停调用共享 `pause()`。
+- 选择、提交、下一题和恢复会记录 activity。01 统一处理 DOM 活动、45 秒空闲、
+  页面后台和崩溃快照；06 不补算离线时间。
+- 最后一题的 `finish()` 必须成功后，06 才发布
+  `learning.attempt.completed.v1`。失败时 completion 保留在模块 outbox，重试仍先重试
+  同一 timing session 的 pending event。
+- 01 的精确生产接入点是
+  `src/app/learning/training-route-hosts.tsx` 中的 `VocabularyTrainingRoute`：
+  传入 `timingSessionFactory={productionEffectiveTimingSessions}`。这项应用集成不属于
+  06 文件所有权。
 
 ## 状态、恢复与错误
 
@@ -60,6 +82,9 @@
   不再直接回写 UI，避免旧操作完成后覆盖较新的题目状态。
 - Route 在操作持久化完成前禁用题目与主操作，重复点击由同步门禁忽略；退出仍排入
   runtime 队列，确保先保存当前操作再保存暂停状态。
+- 未完成任务退出或真实 Route 卸载会 `dispose()` 计时 session；React StrictMode 的
+  cleanup/setup 探测不会误关仍在使用的 session。完成任务调用 `finish()`，不保留
+  可恢复计时快照。
 - 切到后台或退出会暂停任务；恢复后保留当前题、选择和反馈阶段。
 - 内容损坏、未知活动、任务元数据不匹配、离线且课程未安装等情况上报
   `result: "unscorable"`，不会生成答错证据或完成任务。
@@ -67,18 +92,20 @@
 
 ## 验证
 
-- 06 专项：7 个测试文件、23 项测试通过。
+- 06 专项：10 个测试文件、32 项测试通过。
 - 覆盖真实 4 周课程包、28 个词汇单元、四类题型、复习引用、判定与非法转换、
   UI ViewModel、四类学习事件、离线读取、恢复和 outbox 重试。
 - QA-005 回归使用可控慢仓库覆盖乱序选择写入、旧题选项到达新题、下一题乐观发布、
   选择→提交→下一题→退出的持久化顺序，以及跨微任务订阅状态单调性。
-- 项目级 `pnpm check`：76 个测试文件、272 项测试通过；lint、TypeScript、Vite
+- R3 使用真实 `EffectiveTimingSession` 与手动单调时钟覆盖内容加载、慢持久化、
+  answering/feedback、45 秒空闲、后台、刷新恢复、卸载、完成事件顺序及失败重试。
+- 项目级 `pnpm check`：105 个测试文件、513 项测试通过；lint、TypeScript、Vite
   生产构建、课程资源校验和 PWA 生成通过。
 
 ## 已知限制
 
-1. QA-005 修复尚未部署到正式站；正式生产浏览器回归必须等待 01 集成并部署本次
-   06 产物，再由 09 复验。
+1. R3 的 06 port 尚未由 01 注入正式 Route，也未部署或经 09 正式站回归；当前生产
+   词汇训练仍不会创建有效计时 session。
 2. 02 当前把 `VocabularyTrainingScreen` 的主提示固定标注为 `lang="en-US"`。
    `meaning-to-term` 和部分场景题的中文提示可正常显示，但语言元数据不准确；应由 02
    扩展公开 ViewModel 后由 01 集成，09 需复验 VoiceOver。

@@ -48,6 +48,12 @@ export {
   selectVocabularyOption,
   submitVocabularyAnswer,
 } from './session.ts'
+export {
+  VocabularyEffectiveTiming,
+  type VocabularyEffectiveTimingSessionFactoryPort,
+  type VocabularyEffectiveTimingSessionPort,
+  type VocabularyTimingPhaseDeclaration,
+} from './timing.ts'
 export { VocabularySessionScreen } from './VocabularySessionScreen.tsx'
 export {
   VocabularyTrainingRoute,
