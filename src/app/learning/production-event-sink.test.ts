@@ -14,6 +14,7 @@ import type {
   NamespaceStore,
   StoredRecord,
 } from '../../storage/index.ts'
+import { assertPortableValue } from '../../storage/portable-value.ts'
 import {
   ActivePlanRepository,
   createActiveLearningRuntime,
@@ -75,6 +76,17 @@ class FailingNamespaceStore extends MemoryNamespaceStore {
   }
 }
 
+class PortableMemoryNamespaceStore extends MemoryNamespaceStore {
+  override async put<T>(
+    key: string,
+    value: T,
+    schemaVersion = 1,
+  ): Promise<void> {
+    assertPortableValue(value)
+    await super.put(key, value, schemaVersion)
+  }
+}
+
 function plan(): DailyPlan {
   return {
     schemaVersion: 1,
@@ -130,6 +142,122 @@ function plan(): DailyPlan {
       },
     },
     warnings: [],
+  }
+}
+
+function legacyIphonePlan(): DailyPlan {
+  const base = plan()
+  const task = base.tasks[0]
+  const vocabulary: LearningTask = {
+    ...task,
+    taskId: `${base.planId}:vocabulary:legacy`,
+    sequence: 1,
+    estimatedSeconds: 123,
+  }
+  const listening: LearningTask = {
+    ...task,
+    taskId: `${base.planId}:listening:legacy`,
+    sequence: 2,
+    learningUnitId: 'st4w-w1d1-listening',
+    contentRef:
+      'lesson://survival-travel-american-4w/1.0.0/w1d1/listening',
+    domain: 'listening',
+    targetModuleId: 'listening',
+    estimatedSeconds: 211,
+  }
+  const speaking: LearningTask = {
+    ...task,
+    taskId: `${base.planId}:speaking:legacy`,
+    sequence: 3,
+    learningUnitId: 'st4w-w1d1-speaking',
+    contentRef:
+      'lesson://survival-travel-american-4w/1.0.0/w1d1/speaking',
+    domain: 'speaking',
+    targetModuleId: 'speaking',
+    estimatedSeconds: 181,
+  }
+  return {
+    ...base,
+    targetSeconds: 2_700,
+    plannedSeconds: 515,
+    unfilledSeconds: 2_185,
+    status: 'partial',
+    tasks: [vocabulary, listening, speaking],
+    allocations: {
+      vocabulary: {
+        ...base.allocations.vocabulary,
+        targetSeconds: 900,
+        plannedSeconds: vocabulary.estimatedSeconds,
+      },
+      listening: {
+        ...base.allocations.listening,
+        targetSeconds: 900,
+        plannedSeconds: listening.estimatedSeconds,
+      },
+      speaking: {
+        ...base.allocations.speaking,
+        targetSeconds: 900,
+        plannedSeconds: speaking.estimatedSeconds,
+      },
+    },
+    warnings: ['insufficient-eligible-content'],
+  }
+}
+
+function legacyStartedEvent(
+  task: LearningTask,
+  index: number,
+): PlatformEvent {
+  return {
+    id: `${task.targetModuleId}:legacy-started`,
+    type: 'learning.task.started.v1',
+    sourceModuleId: task.targetModuleId,
+    occurredAt: `2026-07-24T08:${10 + index}:00.000Z`,
+    schemaVersion: 1,
+    payload: {
+      planId: task.planId,
+      taskId: task.taskId,
+      learningUnitId: task.learningUnitId,
+      contentRef: task.contentRef,
+      domain: task.domain,
+      targetModuleId: task.targetModuleId,
+      localDate: '2026-07-24',
+      mode: task.mode,
+    },
+  }
+}
+
+function legacyAttemptEvent(
+  task: LearningTask,
+  index: number,
+): PlatformEvent {
+  return {
+    id: `${task.targetModuleId}:legacy-attempt`,
+    type: 'learning.attempt.completed.v1',
+    sourceModuleId: task.targetModuleId,
+    occurredAt: `2026-07-24T08:${10 + index}:10.000Z`,
+    schemaVersion: 1,
+    payload: {
+      planId: task.planId,
+      taskId: task.taskId,
+      learningUnitId: task.learningUnitId,
+      contentRef: task.contentRef,
+      domain: task.domain,
+      targetModuleId: task.targetModuleId,
+      localDate: '2026-07-24',
+      mode: task.mode,
+      difficultyLevel: task.difficultyLevel,
+      estimatedSeconds: task.estimatedSeconds,
+      result: 'scored',
+      performanceScore: 0.8,
+      evidenceQuality: 0.9,
+      assistanceLevel: 0,
+      durationSeconds: 10,
+      taskCompleted: true,
+      errorTags: [],
+      contentTags: task.tags,
+      failureCategory: null,
+    },
   }
 }
 
@@ -460,10 +588,15 @@ function timingEvent(
     readonly startedAt: string
     readonly endedAt: string
     readonly elapsedSeconds: number
-    readonly phase?: 'answering' | 'audio-listening' | 'idle'
+    readonly phase?:
+      | 'answering'
+      | 'audio-listening'
+      | 'recording'
+      | 'idle'
     readonly reason?:
       | 'active-answering'
       | 'active-audio-listening'
+      | 'active-recording'
       | 'idle-timeout'
   },
 ): PlatformEvent {
@@ -645,6 +778,140 @@ describe('ProductionLearningEventSink', () => {
     expect((await plans.load())?.processedEventIds).toEqual([
       'event-completed-1',
     ])
+  })
+
+  it('keeps a real legacy iPhone plan portable through listening and speaking after vocabulary is complete', async () => {
+    const planStore = new PortableMemoryNamespaceStore(
+      'app.learning-runtime',
+    )
+    const engineStore = new PortableMemoryNamespaceStore(
+      'learning.engine',
+    )
+    const activePlans = new ActivePlanRepository(planStore)
+    const engineStates = new LearningEngineRepository(engineStore)
+    const dailyPlan = legacyIphonePlan()
+    const created = createPlanProgress(
+      dailyPlan,
+      '2026-07-24T08:00:00.000Z',
+    )
+    expect(
+      created.tasks.every(
+        (execution) => !Object.hasOwn(execution, 'training'),
+      ),
+    ).toBe(true)
+    const vocabulary = created.tasks[0]
+    const legacyProgress = {
+      ...created,
+      status: 'in-progress' as const,
+      tasks: [
+        {
+          ...vocabulary,
+          status: 'completed' as const,
+          completionKind: 'scored' as const,
+          spentSeconds: 12,
+          effectiveSeconds: 12,
+          effectiveTimeSource: 'legacy-event-duration' as const,
+          startedAt: '2026-07-24T08:00:00.000Z',
+          updatedAt: '2026-07-24T08:00:12.000Z',
+        },
+        created.tasks[1],
+        created.tasks[2],
+      ],
+      processedEventIds: ['vocabulary:legacy-attempt'],
+      updatedAt: '2026-07-24T08:00:12.000Z',
+    }
+    await activePlans.save(
+      createActiveLearningRuntime(legacyProgress, {
+        completedLearningUnitIds: [
+          vocabulary.task.learningUnitId,
+        ],
+        processedEventIds: ['vocabulary:legacy-attempt'],
+        skipHistory: [],
+      }),
+    )
+    await engineStates.save(
+      createLearningEngineState(
+        abilityProfile(),
+        '2026-07-24T08:00:00.000Z',
+      ),
+    )
+
+    let localSink = new ProductionLearningEventSink(
+      activePlans,
+      engineStates,
+    )
+    const listening = dailyPlan.tasks[1]
+    await localSink.publish(legacyStartedEvent(listening, 1))
+    await localSink.publish(
+      timingEvent(listening, {
+        id: 'listening:legacy-timing',
+        startedAt: '2026-07-24T08:11:00.000Z',
+        endedAt: '2026-07-24T08:11:07.000Z',
+        elapsedSeconds: 7,
+        phase: 'audio-listening',
+        reason: 'active-audio-listening',
+      }),
+    )
+    await localSink.publish(legacyAttemptEvent(listening, 1))
+
+    let restored = await new ActivePlanRepository(planStore).load()
+    expect(
+      restored?.activePlan.tasks.map((execution) => ({
+        status: execution.status,
+        hasTraining: Object.hasOwn(execution, 'training'),
+      })),
+    ).toEqual([
+      { status: 'completed', hasTraining: false },
+      { status: 'completed', hasTraining: false },
+      { status: 'pending', hasTraining: false },
+    ])
+    expect(restored?.activePlan.tasks[0]).toMatchObject({
+      effectiveSeconds: 12,
+      completionKind: 'scored',
+    })
+
+    localSink = new ProductionLearningEventSink(
+      new ActivePlanRepository(planStore),
+      new LearningEngineRepository(engineStore),
+    )
+    const speaking = dailyPlan.tasks[2]
+    await localSink.publish(legacyStartedEvent(speaking, 2))
+    await localSink.publish(
+      timingEvent(speaking, {
+        id: 'speaking:legacy-timing',
+        startedAt: '2026-07-24T08:12:00.000Z',
+        endedAt: '2026-07-24T08:12:09.000Z',
+        elapsedSeconds: 9,
+        phase: 'recording',
+        reason: 'active-recording',
+      }),
+    )
+    await localSink.publish(legacyAttemptEvent(speaking, 2))
+
+    restored = await new ActivePlanRepository(planStore).load()
+    expect(restored?.activePlan.plan.planId).toBe(dailyPlan.planId)
+    expect(
+      restored?.activePlan.plan.tasks.every(
+        (task) => !Object.hasOwn(task, 'trainingBudget'),
+      ),
+    ).toBe(true)
+    expect(
+      restored?.activePlan.tasks.map((execution) => ({
+        status: execution.status,
+        hasTraining: Object.hasOwn(execution, 'training'),
+      })),
+    ).toEqual([
+      { status: 'completed', hasTraining: false },
+      { status: 'completed', hasTraining: false },
+      { status: 'completed', hasTraining: false },
+    ])
+    expect(restored?.completedLearningUnitIds).toEqual(
+      dailyPlan.tasks.map((task) => task.learningUnitId),
+    )
+    expect(
+      (await new LearningEngineRepository(engineStore).load())
+        ?.progress.attempts,
+    ).toHaveLength(2)
   })
 
   it('serially persists timing segments before completion and records one trusted duration sample', async () => {
