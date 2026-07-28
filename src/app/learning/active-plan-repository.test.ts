@@ -185,6 +185,101 @@ describe('ActivePlanRepository', () => {
     await expect(repository.load()).resolves.toEqual(runtime)
   })
 
+  it('round-trips the restored training budget, cursor, and exclusion ledger', async () => {
+    const store = new MemoryNamespaceStore()
+    const repository = new ActivePlanRepository(store)
+    const basePlan = dailyPlan()
+    const budgetTask = {
+      ...basePlan.tasks[0],
+      trainingBudget: {
+        schemaVersion: 1 as const,
+        targetEffectiveSeconds: 900 as const,
+      },
+    }
+    const budgetPlan = {
+      ...basePlan,
+      tasks: [budgetTask],
+    }
+    const progress = createPlanProgress(
+      budgetPlan,
+      '2026-07-24T08:00:00.000Z',
+    )
+    const restoredProgress = {
+      ...progress,
+      status: 'in-progress' as const,
+      tasks: [
+        {
+          ...progress.tasks[0],
+          task: budgetTask,
+          status: 'active' as const,
+          effectiveSeconds: 383,
+          training: {
+            ...progress.tasks[0].training!,
+            remainingEffectiveSeconds: 517,
+            completedItemIds: ['item-1', 'item-2'],
+            nextSupplyCursor: 'item-2',
+          },
+        },
+      ],
+    }
+    const runtime = createActiveLearningRuntime(restoredProgress)
+
+    await repository.save(runtime)
+
+    await expect(repository.load()).resolves.toEqual(runtime)
+  })
+
+  it('rejects a corrupted budget ledger without deleting the active plan', async () => {
+    const store = new MemoryNamespaceStore()
+    const basePlan = dailyPlan()
+    const budgetPlan = {
+      ...basePlan,
+      tasks: [
+        {
+          ...basePlan.tasks[0],
+          trainingBudget: {
+            schemaVersion: 1 as const,
+            targetEffectiveSeconds: 900 as const,
+          },
+        },
+      ],
+    }
+    const progress = createPlanProgress(
+      budgetPlan,
+      '2026-07-24T08:00:00.000Z',
+    )
+    const corrupted = {
+      ...createActiveLearningRuntime(progress),
+      activePlan: {
+        ...progress,
+        tasks: [
+          {
+            ...progress.tasks[0],
+            training: {
+              ...progress.tasks[0].training,
+              completedItemIds: ['item-1', 'item-1'],
+            },
+          },
+        ],
+      },
+    }
+    await store.put(
+      ACTIVE_LEARNING_RUNTIME_KEY,
+      corrupted,
+      LEARNING_RUNTIME_STORAGE_SCHEMA_VERSION,
+    )
+
+    await expect(
+      new ActivePlanRepository(store).load(),
+    ).rejects.toMatchObject({
+      code: 'schema_incompatible',
+      recoverable: false,
+    })
+    expect(
+      store.records.has(ACTIVE_LEARNING_RUNTIME_KEY),
+    ).toBe(true)
+  })
+
   it('rejects a future runtime record version', async () => {
     const store = new MemoryNamespaceStore()
     await store.put(ACTIVE_LEARNING_RUNTIME_KEY, {}, 2)

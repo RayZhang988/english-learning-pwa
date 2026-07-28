@@ -24,6 +24,12 @@ import type {
 interface CapturedRouteProps {
   readonly task: LearningTask
   readonly timingSessionFactory: unknown
+  readonly supplyProvider?: {
+    next(request: unknown): Promise<unknown>
+  }
+  readonly trainingBudgetStatus?: () =>
+    | 'running'
+    | 'finish-current-item'
   readonly onCompleted?: () => void
   readonly onExit: () => void
 }
@@ -96,6 +102,10 @@ function task(moduleId: TrainingModuleId): LearningTask {
     origin: 'new',
     difficultyLevel: 1,
     estimatedSeconds: 137,
+    trainingBudget: {
+      schemaVersion: 1,
+      targetEffectiveSeconds: 900,
+    },
     required: true,
     dueAt: null,
     skipLimit: 2,
@@ -178,6 +188,11 @@ function stateFor(
           timingSegmentCount:
             source === 'timing-segments' ? 2 : undefined,
           effectiveTimeSource: source,
+          training: {
+            ...execution.training!,
+            remainingEffectiveSeconds: 0,
+            status: 'completed',
+          },
         })),
       }
     : initial
@@ -226,6 +241,26 @@ function appContext(state: LearningAppState): LearningAppContextValue {
     async initialize() {
       return state
     },
+    trainingBudgetStatus(
+      taskId: string,
+      expectedModuleId: TrainingModuleId,
+    ) {
+      if (state.status !== 'ready') {
+        throw new TypeError('Plan is not ready.')
+      }
+      const execution = state.runtime.activePlan.tasks.find(
+        (candidate) =>
+          candidate.task.taskId === taskId &&
+          candidate.task.targetModuleId === expectedModuleId,
+      )
+      if (!execution?.training) {
+        throw new TypeError('Training budget is unavailable.')
+      }
+      return execution.training.status === 'finish-current-item' ||
+        execution.training.status === 'completed'
+        ? 'finish-current-item'
+        : 'running'
+    },
   } as unknown as LearningAppCoordinator
   return { coordinator, state }
 }
@@ -257,7 +292,7 @@ describe('TrainingRouteHost R3 production integration', () => {
     'listening',
     'speaking',
   ] as const)(
-    'injects the shared production timing factory and task estimate into %s',
+    'injects the shared timing and continuous-supply ports into %s',
     (moduleId) => {
       routeCaptures.clear()
       const state = stateFor(moduleId, false)
@@ -270,12 +305,17 @@ describe('TrainingRouteHost R3 production integration', () => {
       expect(captured?.timingSessionFactory).toBe(
         productionEffectiveTimingSessions,
       )
+      expect(captured?.supplyProvider?.next).toEqual(
+        expect.any(Function),
+      )
+      expect(captured?.trainingBudgetStatus?.()).toBe('running')
       expect(captured?.onCompleted).toEqual(expect.any(Function))
       expect(captured?.onExit).toEqual(expect.any(Function))
-      expect(markup).toContain('data-estimate-seconds="137"')
+      expect(markup).toContain('data-budget-status="running"')
       expect(markup).toContain(
-        'data-duration-basis="content-baseline"',
+        'data-target-effective-seconds="900"',
       )
+      expect(markup).not.toContain('data-estimate-seconds')
     },
   )
 
@@ -296,6 +336,10 @@ describe('TrainingRouteHost R3 production integration', () => {
       expect(markup).toContain(title)
       expect(markup).toContain('data-duration-state="reliable"')
       expect(markup).toContain('实际有效练习')
+      expect(markup).toContain('data-budget-status="completed"')
+      expect(markup).toContain(
+        'data-remaining-effective-seconds="0"',
+      )
       expect(markup).toContain('返回今日计划')
     },
   )

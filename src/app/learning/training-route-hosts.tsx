@@ -23,14 +23,19 @@ import {
   ErrorState,
   LoadingState,
   TaskDurationEstimate,
+  TrainingBudgetProgress,
   TrainingCompletionDurationScreen,
 } from '../../ui/index.ts'
 import { productionEffectiveTimingSessions } from './effective-timing-production.ts'
 import { useLearningApp } from './learning-app-context.ts'
 import {
+  toTrainingBudgetProgressViewModel,
   toTaskDurationEstimateViewModel,
   toTrainingCompletionDurationViewModel,
 } from './view-model.ts'
+import {
+  createProductionTrainingSupplyProviders,
+} from './training-supply-providers.ts'
 
 const vocabularyContentSource = new CurrentVocabularyContentSource(
   offlineAssetStore,
@@ -44,6 +49,12 @@ const speakingContentSource = new CurrentSpeakingContentSource(
   offlineAssetStore,
   platformFetch,
 )
+const trainingSupplyProviders =
+  createProductionTrainingSupplyProviders({
+    vocabulary: vocabularyContentSource,
+    listening: listeningContentSource,
+    speaking: speakingContentSource,
+  })
 
 export function TrainingRouteHost({
   moduleId,
@@ -60,6 +71,10 @@ export function TrainingRouteHost({
   const completedTaskIdRef = useRef<string | null>(null)
   const restoredCompletionTaskIdRef = useRef<string | null>(null)
   const returnPendingTaskIdRef = useRef<string | null>(null)
+  const budgetPortRef = useRef<{
+    readonly key: string
+    readonly status: () => 'running' | 'finish-current-item'
+  } | null>(null)
   const [completionDurationTaskId, setCompletionDurationTaskId] =
     useState<string | null>(null)
   const taskId = searchParams.get('taskId')
@@ -158,6 +173,14 @@ export function TrainingRouteHost({
             execution.task.targetModuleId === moduleId,
         )
       : undefined
+  const budgetPortKey = `${task.planId}:${task.taskId}:${moduleId}:${state.localDate}`
+  if (budgetPortRef.current?.key !== budgetPortKey) {
+    budgetPortRef.current = {
+      key: budgetPortKey,
+      status: () =>
+        coordinator.trainingBudgetStatus(task.taskId, moduleId),
+    }
+  }
   const onExit = () => {
     if (
       completedTaskIdRef.current === task.taskId ||
@@ -185,6 +208,14 @@ export function TrainingRouteHost({
     timingSessionFactory: productionEffectiveTimingSessions,
     onCompleted,
     onExit,
+    supplyProvider:
+      task.trainingBudget === undefined
+        ? undefined
+        : trainingSupplyProviders[moduleId],
+    trainingBudgetStatus:
+      task.trainingBudget === undefined
+        ? undefined
+        : budgetPortRef.current.status,
   }
 
   if (
@@ -203,7 +234,11 @@ export function TrainingRouteHost({
     )
   }
 
-  const durationEstimate = (
+  const trainingBudget =
+    toTrainingBudgetProgressViewModel(currentExecution)
+  const durationSurface = trainingBudget ? (
+    <TrainingBudgetProgress viewModel={trainingBudget} />
+  ) : (
     <TaskDurationEstimate
       estimate={toTaskDurationEstimateViewModel(task)}
       appearance="strip"
@@ -213,7 +248,7 @@ export function TrainingRouteHost({
   if (moduleId === 'vocabulary') {
     return (
       <>
-        {durationEstimate}
+        {durationSurface}
         <VocabularyTrainingRoute
           {...commonProps}
           contentSource={vocabularyContentSource}
@@ -224,7 +259,7 @@ export function TrainingRouteHost({
   if (moduleId === 'listening') {
     return (
       <>
-        {durationEstimate}
+        {durationSurface}
         <ListeningTrainingRoute
           {...commonProps}
           contentSource={listeningContentSource}
@@ -234,7 +269,7 @@ export function TrainingRouteHost({
   }
   return (
     <>
-      {durationEstimate}
+      {durationSurface}
       <SpeakingTrainingRoute
         {...commonProps}
         contentSource={speakingContentSource}

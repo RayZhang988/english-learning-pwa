@@ -12,6 +12,7 @@ export const courseAssetBuildPolicy = {
   indexAssetNames: [
     'package-index.v1.json',
     'listening-exercise-extension-index.v1.json',
+    'training-supply-index.v1.json',
   ],
   workboxGlobPatterns: [
     '**/*.{js,css,html,ico,png,svg,woff2,json}',

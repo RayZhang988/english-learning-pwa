@@ -13,6 +13,7 @@ import {
   toSkipHistoryEntry,
   type LearningEngineState,
   type LearningEvent,
+  type LearningAttemptCompletedEvent,
   type LearningTask,
   type PlanProgress,
   type SkipHistoryEntry,
@@ -45,6 +46,23 @@ function taskForEvent(
   if (!execution) {
     throw new TypeError('Event taskId is not part of the active plan.')
   }
+  if (event.payload.planId !== progress.plan.planId) {
+    throw new TypeError(
+      'Event planId does not match the active plan.',
+    )
+  }
+  if (
+    event.payload.learningUnitId !==
+      execution.task.learningUnitId ||
+    event.payload.contentRef !== execution.task.contentRef ||
+    event.payload.domain !== execution.task.domain ||
+    event.payload.targetModuleId !==
+      execution.task.targetModuleId
+  ) {
+    throw new TypeError(
+      'Event identity does not match the scheduled task.',
+    )
+  }
   if (event.payload.localDate !== progress.plan.localDate) {
     throw new TypeError(
       'Event localDate does not match the active plan date.',
@@ -53,7 +71,12 @@ function taskForEvent(
   if (
     (event.type === 'learning.task.started.v1' ||
       event.type === 'learning.attempt.completed.v1' ||
-      event.type === 'learning.timing.segment.recorded.v1') &&
+      event.type === 'learning.timing.segment.recorded.v1' ||
+      event.type === 'learning.training.item.completed.v1' ||
+      event.type ===
+        'learning.training.content.exhausted.v1' ||
+      event.type ===
+        'learning.training.budget.completed.v1') &&
     event.payload.mode !== execution.task.mode
   ) {
     throw new TypeError('Event mode does not match the scheduled task.')
@@ -90,12 +113,29 @@ function withProcessedEvent(
   progress: PlanProgress,
   eventId: string,
   skipHistory: readonly SkipHistoryEntry[],
+  pendingTrainingAttempts:
+    readonly LearningAttemptCompletedEvent[] =
+      runtime.pendingTrainingAttempts ?? [],
 ): ActiveLearningRuntime {
   return createActiveLearningRuntime(progress, {
     completedLearningUnitIds: completedUnitIds(runtime, progress),
     processedEventIds: [...runtime.processedEventIds, eventId],
     skipHistory: skipHistory.slice(-MAX_SKIP_HISTORY_ENTRIES),
+    pendingTrainingAttempts,
   })
+}
+
+function withPendingTrainingAttempt(
+  attempts: readonly LearningAttemptCompletedEvent[],
+  event: LearningAttemptCompletedEvent,
+): readonly LearningAttemptCompletedEvent[] {
+  return [
+    ...attempts.filter(
+      (candidate) =>
+        candidate.payload.taskId !== event.payload.taskId,
+    ),
+    event,
+  ]
 }
 
 /**
@@ -179,19 +219,50 @@ export class ProductionLearningEventSink implements PlatformEventSink {
       runtime.skipHistory,
     )
     let nextEngineState = engineState
+    let pendingTrainingAttempts =
+      runtime.pendingTrainingAttempts ?? []
     if (event.type === 'learning.attempt.completed.v1') {
       nextEngineState = applyLearningAttempt(
         nextEngineState,
         event,
       ).state
-      nextEngineState = {
-        ...nextEngineState,
-        progress: recordTaskDurationSample(
-          nextEngineState.progress,
-          progress,
+      if (currentExecution?.training) {
+        pendingTrainingAttempts = withPendingTrainingAttempt(
+          pendingTrainingAttempts,
           event,
-        ),
+        )
+      } else {
+        nextEngineState = {
+          ...nextEngineState,
+          progress: recordTaskDurationSample(
+            nextEngineState.progress,
+            progress,
+            event,
+          ),
+        }
       }
+    } else if (
+      event.type === 'learning.training.budget.completed.v1'
+    ) {
+      const pendingAttempt = pendingTrainingAttempts.find(
+        (candidate) =>
+          candidate.payload.taskId === event.payload.taskId,
+      )
+      if (pendingAttempt) {
+        nextEngineState = {
+          ...nextEngineState,
+          progress: recordTaskDurationSample(
+            nextEngineState.progress,
+            progress,
+            pendingAttempt,
+          ),
+        }
+      }
+      pendingTrainingAttempts =
+        pendingTrainingAttempts.filter(
+          (candidate) =>
+            candidate.payload.taskId !== event.payload.taskId,
+        )
     }
     const activity = summarizePlanActivity(progress)
     nextEngineState = {
@@ -215,6 +286,7 @@ export class ProductionLearningEventSink implements PlatformEventSink {
       progress,
       event.id,
       skipHistory,
+      pendingTrainingAttempts,
     )
 
     await this.#engineStates.save(nextEngineState)

@@ -1,6 +1,11 @@
-import { AppError } from '../../core/index.ts'
+import {
+  AppError,
+  type PlatformEvent,
+} from '../../core/index.ts'
+import { parseLearningEvent } from '../../learning-engine/index.ts'
 import type {
   DailyPlan,
+  LearningAttemptCompletedEvent,
   LearningTask,
   PlanProgress,
   SkipHistoryEntry,
@@ -21,6 +26,12 @@ export interface ActiveLearningRuntime {
   readonly completedLearningUnitIds: readonly string[]
   readonly processedEventIds: readonly string[]
   readonly skipHistory: readonly SkipHistoryEntry[]
+  /**
+   * Latest stream attempt per budget task, retained until the budget-completed
+   * event can turn trusted timing segments into one idempotent duration sample.
+   * Records created before QA-011 omit it.
+   */
+  readonly pendingTrainingAttempts?: readonly LearningAttemptCompletedEvent[]
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -53,7 +64,10 @@ function requireFiniteNumber(
   }
 }
 
-function requireNonNegativeInteger(value: unknown, label: string): void {
+function requireNonNegativeInteger(
+  value: unknown,
+  label: string,
+): asserts value is number {
   requireFiniteNumber(value, label)
   if (!Number.isInteger(value)) {
     throw new TypeError(`${label} must be an integer.`)
@@ -112,6 +126,18 @@ function assertLearningTask(
   requireFiniteNumber(value.estimatedSeconds, `${label}.estimatedSeconds`)
   requireFiniteNumber(value.skipLimit, `${label}.skipLimit`)
   requireStringArray(value.tags, `${label}.tags`)
+  if (value.trainingBudget !== undefined) {
+    const budgetLabel = `${label}.trainingBudget`
+    if (
+      !isRecord(value.trainingBudget) ||
+      value.trainingBudget.schemaVersion !== 1 ||
+      value.trainingBudget.targetEffectiveSeconds !== 900
+    ) {
+      throw new TypeError(
+        `${budgetLabel} must be the supported 900-second v1 budget.`,
+      )
+    }
+  }
   if (value.durationEstimate !== undefined) {
     const estimateLabel = `${label}.durationEstimate`
     if (
@@ -270,6 +296,124 @@ function assertTaskExecution(
   requireString(value.startedAt, `${label}.startedAt`, true)
   requireString(value.updatedAt, `${label}.updatedAt`)
 
+  if (value.task.trainingBudget === undefined) {
+    if (value.training !== undefined) {
+      throw new TypeError(
+        `${label}.training is not allowed on a legacy task.`,
+      )
+    }
+  } else {
+    const trainingLabel = `${label}.training`
+    const training = value.training
+    if (
+      !isRecord(training) ||
+      training.schemaVersion !== 1 ||
+      training.targetEffectiveSeconds !==
+        value.task.trainingBudget.targetEffectiveSeconds
+    ) {
+      throw new TypeError(
+        `${trainingLabel} must match the scheduled training budget.`,
+      )
+    }
+    requireNonNegativeInteger(
+      training.remainingEffectiveSeconds,
+      `${trainingLabel}.remainingEffectiveSeconds`,
+    )
+    if (
+      training.remainingEffectiveSeconds >
+      value.task.trainingBudget.targetEffectiveSeconds
+    ) {
+      throw new TypeError(
+        `${trainingLabel}.remainingEffectiveSeconds exceeds its target.`,
+      )
+    }
+    if (
+      training.status !== 'running' &&
+      training.status !== 'finish-current-item' &&
+      training.status !== 'completed' &&
+      training.status !== 'content-exhausted'
+    ) {
+      throw new TypeError(`${trainingLabel}.status is unsupported.`)
+    }
+    requireStringArray(
+      training.completedItemIds,
+      `${trainingLabel}.completedItemIds`,
+    )
+    if (
+      new Set(training.completedItemIds as readonly string[]).size !==
+      (training.completedItemIds as readonly string[]).length
+    ) {
+      throw new TypeError(
+        `${trainingLabel}.completedItemIds contains duplicates.`,
+      )
+    }
+    requireString(
+      training.nextSupplyCursor,
+      `${trainingLabel}.nextSupplyCursor`,
+      true,
+    )
+    if (training.status === 'content-exhausted') {
+      if (!isRecord(training.contentExhausted)) {
+        throw new TypeError(
+          `${trainingLabel}.contentExhausted must describe the blocked supply request.`,
+        )
+      }
+      const exhausted = training.contentExhausted
+      requireString(
+        exhausted.requestId,
+        `${trainingLabel}.contentExhausted.requestId`,
+      )
+      requireString(
+        exhausted.cursor,
+        `${trainingLabel}.contentExhausted.cursor`,
+        true,
+      )
+      requireString(
+        exhausted.occurredAt,
+        `${trainingLabel}.contentExhausted.occurredAt`,
+      )
+      if (
+        exhausted.reason !== 'no-eligible-content' &&
+        exhausted.reason !==
+          'all-eligible-content-recently-used' &&
+        exhausted.reason !== 'provider-failure'
+      ) {
+        throw new TypeError(
+          `${trainingLabel}.contentExhausted.reason is unsupported.`,
+        )
+      }
+    } else if (training.contentExhausted !== null) {
+      throw new TypeError(
+        `${trainingLabel}.contentExhausted is only valid while blocked.`,
+      )
+    }
+    if (
+      (training.status === 'finish-current-item' ||
+        training.status === 'completed') &&
+      training.remainingEffectiveSeconds !== 0
+    ) {
+      throw new TypeError(
+        `${trainingLabel} reached a terminal budget state with time remaining.`,
+      )
+    }
+    if (
+      training.status === 'completed' &&
+      value.status !== 'completed'
+    ) {
+      throw new TypeError(
+        `${trainingLabel} is completed but the task is not completed.`,
+      )
+    }
+    if (
+      value.status === 'completed' &&
+      training.status !== 'completed'
+    ) {
+      throw new TypeError(
+        `${label} cannot complete before its training budget.`,
+      )
+    }
+  }
+
   const scheduledTask = plan.tasks[index]
   if (
     scheduledTask === undefined ||
@@ -277,6 +421,14 @@ function assertTaskExecution(
   ) {
     throw new TypeError(
       `${label}.task does not match the scheduled task order.`,
+    )
+  }
+  if (
+    scheduledTask.trainingBudget?.targetEffectiveSeconds !==
+    value.task.trainingBudget?.targetEffectiveSeconds
+  ) {
+    throw new TypeError(
+      `${label}.task training budget does not match the scheduled task.`,
     )
   }
 }
@@ -315,7 +467,8 @@ function assertActiveLearningRuntime(
   if (!isRecord(value) || value.schemaVersion !== 1) {
     throw new TypeError('Stored learning runtime is not schema version 1.')
   }
-  assertPlanProgress(value.activePlan)
+  const activePlan = value.activePlan
+  assertPlanProgress(activePlan)
   requireStringArray(
     value.completedLearningUnitIds,
     'completedLearningUnitIds',
@@ -344,6 +497,51 @@ function assertActiveLearningRuntime(
       throw new TypeError(`skipHistory[${index}].reason is unsupported.`)
     }
   })
+  if (value.pendingTrainingAttempts !== undefined) {
+    if (!Array.isArray(value.pendingTrainingAttempts)) {
+      throw new TypeError(
+        'pendingTrainingAttempts must be an array.',
+      )
+    }
+    const taskIds = new Set<string>()
+    value.pendingTrainingAttempts.forEach((entry, index) => {
+      if (!isRecord(entry)) {
+        throw new TypeError(
+          `pendingTrainingAttempts[${index}] is not a v1 attempt event.`,
+        )
+      }
+      const parsed = parseLearningEvent(
+        entry as unknown as PlatformEvent,
+      )
+      if (parsed.type !== 'learning.attempt.completed.v1') {
+        throw new TypeError(
+          `pendingTrainingAttempts[${index}] is not an attempt event.`,
+        )
+      }
+      const execution = activePlan.tasks.find(
+        (candidate) =>
+          candidate.task.taskId === parsed.payload.taskId,
+      )
+      if (
+        !execution?.task.trainingBudget ||
+        parsed.payload.planId !== activePlan.plan.planId ||
+        parsed.payload.localDate !==
+          activePlan.plan.localDate ||
+        parsed.payload.learningUnitId !==
+          execution.task.learningUnitId ||
+        parsed.payload.contentRef !== execution.task.contentRef ||
+        parsed.payload.domain !== execution.task.domain ||
+        parsed.payload.targetModuleId !==
+          execution.task.targetModuleId ||
+        taskIds.has(parsed.payload.taskId)
+      ) {
+        throw new TypeError(
+          `pendingTrainingAttempts[${index}] does not match one unique budget task.`,
+        )
+      }
+      taskIds.add(parsed.payload.taskId)
+    })
+  }
 }
 
 function uniqueRecent(
@@ -357,9 +555,17 @@ export function createActiveLearningRuntime(
   activePlan: PlanProgress,
   previous?: Pick<
     ActiveLearningRuntime,
-    'completedLearningUnitIds' | 'processedEventIds' | 'skipHistory'
+    | 'completedLearningUnitIds'
+    | 'processedEventIds'
+    | 'skipHistory'
+    | 'pendingTrainingAttempts'
   >,
 ): ActiveLearningRuntime {
+  const budgetTaskIds = new Set(
+    activePlan.tasks
+      .filter((execution) => execution.task.trainingBudget)
+      .map((execution) => execution.task.taskId),
+  )
   return {
     schemaVersion: 1,
     activePlan,
@@ -371,6 +577,12 @@ export function createActiveLearningRuntime(
     skipHistory: (previous?.skipHistory ?? []).slice(
       -MAX_SKIP_HISTORY_ENTRIES,
     ),
+    pendingTrainingAttempts:
+      previous?.pendingTrainingAttempts?.filter(
+        (event) =>
+          event.payload.planId === activePlan.plan.planId &&
+          budgetTaskIds.has(event.payload.taskId),
+      ) ?? [],
   }
 }
 

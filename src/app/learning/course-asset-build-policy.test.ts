@@ -11,6 +11,7 @@ describe('course asset build policy', () => {
     expect(courseAssetBuildPolicy.indexAssetNames).toEqual([
       'package-index.v1.json',
       'listening-exercise-extension-index.v1.json',
+      'training-supply-index.v1.json',
     ])
     expect(
       courseAssetBuildPolicy.workboxGlobPatterns.some((pattern) =>

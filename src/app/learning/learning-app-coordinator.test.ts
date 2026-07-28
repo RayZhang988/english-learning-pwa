@@ -250,6 +250,92 @@ async function publishActiveTiming(
   return segment
 }
 
+function streamItemCompletedEvent(
+  task: LearningTask,
+  localDate: string,
+): PlatformEvent {
+  const itemId = `${task.taskId}:stream-item`
+  return {
+    id: `item-completed:${task.taskId}`,
+    type: 'learning.training.item.completed.v1',
+    sourceModuleId: task.targetModuleId,
+    occurredAt: `${localDate}T08:15:01.000Z`,
+    schemaVersion: 1,
+    payload: {
+      planId: task.planId,
+      taskId: task.taskId,
+      learningUnitId: task.learningUnitId,
+      contentRef: task.contentRef,
+      domain: task.domain,
+      targetModuleId: task.targetModuleId,
+      localDate,
+      mode: task.mode,
+      item: {
+        itemId,
+        learningUnitId: task.learningUnitId,
+        contentRef: task.contentRef,
+        difficultyLevel: task.difficultyLevel,
+        tags: task.tags,
+      },
+      requestId: `${task.taskId}:supply:1:initial`,
+      nextSupplyCursor: itemId,
+      outcome: 'scored',
+    },
+  }
+}
+
+function budgetCompletedEvent(
+  task: LearningTask,
+  localDate: string,
+): PlatformEvent {
+  return {
+    id: `budget-completed:${task.taskId}`,
+    type: 'learning.training.budget.completed.v1',
+    sourceModuleId: task.targetModuleId,
+    occurredAt: `${localDate}T08:15:02.000Z`,
+    schemaVersion: 1,
+    payload: {
+      planId: task.planId,
+      taskId: task.taskId,
+      learningUnitId: task.learningUnitId,
+      contentRef: task.contentRef,
+      domain: task.domain,
+      targetModuleId: task.targetModuleId,
+      localDate,
+      mode: task.mode,
+      lastCompletedItemId: `${task.taskId}:stream-item`,
+      completedItemCount: 1,
+    },
+  }
+}
+
+async function publishBudgetTerminalEvents(
+  sink: PlatformEventSink,
+  task: LearningTask,
+  localDate: string,
+): Promise<void> {
+  await sink.publish(completedEvent(task, localDate))
+  await sink.publish(streamItemCompletedEvent(task, localDate))
+  await sink.publish(budgetCompletedEvent(task, localDate))
+}
+
+async function completeBudgetTask(
+  sink: PlatformEventSink,
+  task: LearningTask,
+  localDate: string,
+): Promise<void> {
+  if (!task.trainingBudget) {
+    await sink.publish(completedEvent(task, localDate))
+    return
+  }
+  await publishActiveTiming(sink, task, localDate, {
+    totalSeconds: task.trainingBudget.targetEffectiveSeconds,
+    phase: 'audio-listening',
+    reason: 'active-audio-listening',
+  })
+  await publishBudgetTerminalEvents(sink, task, localDate)
+}
+
 async function completedR1Profile() {
   const runtime = createTravelVocabularyAssessmentRuntimeR1({
     now: () => '2026-07-27T08:00:00.000Z',
@@ -328,6 +414,39 @@ describe('LearningAppCoordinator', () => {
       throw new Error('Expected a ready plan.')
     }
     expect(firstState.runtime.activePlan.plan.tasks).toHaveLength(3)
+    expect(
+      firstState.runtime.activePlan.plan.tasks.map(
+        (task) => task.trainingBudget,
+      ),
+    ).toEqual([
+      { schemaVersion: 1, targetEffectiveSeconds: 900 },
+      { schemaVersion: 1, targetEffectiveSeconds: 900 },
+      { schemaVersion: 1, targetEffectiveSeconds: 900 },
+    ])
+    expect(
+      firstState.runtime.activePlan.tasks.map(
+        (execution) => execution.training,
+      ),
+    ).toEqual([
+      expect.objectContaining({
+        remainingEffectiveSeconds: 900,
+        status: 'running',
+        completedItemIds: [],
+        nextSupplyCursor: null,
+      }),
+      expect.objectContaining({
+        remainingEffectiveSeconds: 900,
+        status: 'running',
+        completedItemIds: [],
+        nextSupplyCursor: null,
+      }),
+      expect.objectContaining({
+        remainingEffectiveSeconds: 900,
+        status: 'running',
+        completedItemIds: [],
+        nextSupplyCursor: null,
+      }),
+    ])
     expect(firstState.runtime.schemaVersion).toBe(1)
     expect(firstState.runtime.activePlan.schemaVersion).toBe(1)
     expect(firstState.taskAccess.schemaVersion).toBe(1)
@@ -376,6 +495,41 @@ describe('LearningAppCoordinator', () => {
     ).toThrow('requested training module')
   })
 
+  it('restores the exact budget status used by a production training route', async () => {
+    await profiles.saveLatest(abilityProfile())
+    const app = coordinator()
+    const state = await app.initialize()
+    if (state.status !== 'ready') {
+      throw new Error('Expected a ready plan.')
+    }
+    const listening = state.runtime.activePlan.plan.tasks.find(
+      (task) => task.targetModuleId === 'listening',
+    )
+    if (!listening) {
+      throw new Error('Expected a listening task.')
+    }
+
+    expect(
+      app.trainingBudgetStatus(listening.taskId, 'listening'),
+    ).toBe('running')
+    await publishActiveTiming(
+      app.eventSink,
+      listening,
+      state.localDate,
+      {
+        totalSeconds: 900,
+        phase: 'audio-listening',
+        reason: 'active-audio-listening',
+      },
+    )
+    expect(
+      app.trainingBudgetStatus(listening.taskId, 'listening'),
+    ).toBe('finish-current-item')
+    expect(() =>
+      app.trainingBudgetStatus(listening.taskId, 'vocabulary'),
+    ).toThrow('requested training module')
+  })
+
   it('takes an arbitrary UI task ID through routing, persistence, and partial refresh recovery', async () => {
     await profiles.saveLatest(abilityProfile())
     let app = coordinator()
@@ -402,8 +556,10 @@ describe('LearningAppCoordinator', () => {
       expect(app.routeForTask(task.taskId)).toBe(
         `/${task.targetModuleId}?taskId=${encodeURIComponent(task.taskId)}`,
       )
-      await app.eventSink.publish(
-        completedEvent(task, '2026-07-24'),
+      await completeBudgetTask(
+        app.eventSink,
+        task,
+        '2026-07-24',
       )
 
       app = coordinator()
@@ -566,11 +722,15 @@ describe('LearningAppCoordinator', () => {
         expect(current.taskAccess.startableTaskIds).toContain(
           task.taskId,
         )
-        await app.eventSink.publish(
-          completedEvent(task, '2026-07-24'),
+        await completeBudgetTask(
+          app.eventSink,
+          task,
+          '2026-07-24',
         )
-        await app.eventSink.publish(
-          completedEvent(task, '2026-07-24'),
+        await completeBudgetTask(
+          app.eventSink,
+          task,
+          '2026-07-24',
         )
       }
 
@@ -606,8 +766,10 @@ describe('LearningAppCoordinator', () => {
     }
     const tasks = firstState.runtime.activePlan.plan.tasks
     for (const task of tasks) {
-      await firstDay.eventSink.publish(
-        completedEvent(task, '2026-07-24'),
+      await completeBudgetTask(
+        firstDay.eventSink,
+        task,
+        '2026-07-24',
       )
     }
     expect(firstDay.state.status).toBe('ready')
@@ -638,15 +800,8 @@ describe('LearningAppCoordinator', () => {
     ).toBe(true)
   })
 
-  it('keeps one and two trusted samples on baseline, then uses the three-sample median without counting excluded time', async () => {
+  it('records only completed 900-second budget sessions and never lets personalization shorten the target', async () => {
     await profiles.saveLatest(abilityProfile())
-    const activeDurations: Readonly<
-      Record<TrainingModuleId, readonly number[]>
-    > = {
-      vocabulary: [500, 600, 700],
-      listening: [700, 800, 900],
-      speaking: [900, 1_000, 1_100],
-    }
     const excludedSegments: Readonly<
       Record<
         TrainingModuleId,
@@ -707,15 +862,17 @@ describe('LearningAppCoordinator', () => {
           basis: 'content-baseline',
           sampleCount: dayIndex,
         })
+        expect(task.trainingBudget).toEqual({
+          schemaVersion: 1,
+          targetEffectiveSeconds: 900,
+        })
         const active = activePhases[task.targetModuleId]
-        const effectiveSeconds =
-          activeDurations[task.targetModuleId][dayIndex]
         const activeSegmentCount = await publishActiveTiming(
           app.eventSink,
           task,
           initialized.localDate,
           {
-            totalSeconds: effectiveSeconds,
+            totalSeconds: 900,
             phase: active.phase,
             reason: active.reason,
           },
@@ -726,15 +883,17 @@ describe('LearningAppCoordinator', () => {
             timingEvent(task, initialized.localDate, {
               id: `timing:${task.taskId}:excluded`,
               elapsedSeconds: 60,
-              offsetSeconds: effectiveSeconds,
+              offsetSeconds: 900,
               phase: excluded.phase,
               reason: excluded.reason,
               visibility: excluded.visibility,
             }),
           )
         }
-        await app.eventSink.publish(
-          completedEvent(task, initialized.localDate),
+        await publishBudgetTerminalEvents(
+          app.eventSink,
+          task,
+          initialized.localDate,
         )
         if (app.state.status !== 'ready') {
           throw new Error('Expected the timed plan to remain ready.')
@@ -744,12 +903,16 @@ describe('LearningAppCoordinator', () => {
         )
         expect(execution).toMatchObject({
           status: 'completed',
-          effectiveSeconds,
+          effectiveSeconds: 900,
           effectiveTimeSource: 'timing-segments',
+          training: {
+            remainingEffectiveSeconds: 0,
+            status: 'completed',
+          },
         })
         if (dayIndex === 0) {
           expect(execution).toMatchObject({
-            spentSeconds: effectiveSeconds + 60,
+            spentSeconds: 960,
             excludedSeconds: 60,
             timingSegmentCount: activeSegmentCount + 1,
           })
@@ -770,18 +933,15 @@ describe('LearningAppCoordinator', () => {
     if (personalized.status !== 'ready') {
       throw new Error('Expected a personalized fourth-day plan.')
     }
-    const expectedMedians: Readonly<
-      Record<TrainingModuleId, number>
-    > = {
-      vocabulary: 600,
-      listening: 800,
-      speaking: 1_000,
-    }
     for (const task of personalized.runtime.activePlan.plan.tasks) {
       expect(task.durationEstimate).toMatchObject({
         basis: 'personal-history',
         sampleCount: 3,
-        estimateSeconds: expectedMedians[task.targetModuleId],
+        estimateSeconds: 900,
+      })
+      expect(task.trainingBudget).toEqual({
+        schemaVersion: 1,
+        targetEffectiveSeconds: 900,
       })
     }
     expect(

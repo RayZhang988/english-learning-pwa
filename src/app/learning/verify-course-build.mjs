@@ -19,6 +19,10 @@ const expectedCourseAssets = [
     directory: 'content/curriculum/',
     prefix: 'listening-exercise-extension-index.v1-',
   },
+  {
+    directory: 'content/curriculum/',
+    prefix: 'training-supply-index.v1-',
+  },
   { directory: 'assets/', prefix: 'listening-exercises.v1-' },
 ]
 
@@ -56,6 +60,22 @@ const courseAssetFiles = expectedCourseAssets.map(
     )
     return matches[0]
   },
+)
+
+const packageIndexAssetFile = courseAssetFiles.find((fileName) =>
+  fileName.startsWith('content/curriculum/package-index.v1-'),
+)
+assert.ok(
+  packageIndexAssetFile,
+  'Published package index asset is missing.',
+)
+const publishedPackageIndex = JSON.parse(
+  await readFile(new URL(packageIndexAssetFile, distUrl), 'utf8'),
+)
+assert.equal(
+  publishedPackageIndex.trainingSupplyIndexFile,
+  'content/curriculum/training-supply-index.v1.json',
+  'Published package index must declare the released training supply index.',
 )
 
 const javascriptFiles = files.filter(

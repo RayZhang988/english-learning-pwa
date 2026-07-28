@@ -13,6 +13,7 @@ import {
   toPracticeModulesViewModel,
   toProgressViewModel,
   toTaskDurationEstimateViewModel,
+  toTrainingBudgetProgressViewModel,
   toTrainingCompletionDurationViewModel,
 } from './view-model.ts'
 
@@ -41,6 +42,10 @@ function plan(): DailyPlan {
       origin: 'new',
       difficultyLevel: 1,
       estimatedSeconds: 900,
+      trainingBudget: {
+        schemaVersion: 1,
+        targetEffectiveSeconds: 900,
+      },
       required: true,
       dueAt: null,
       skipLimit: 2,
@@ -120,27 +125,18 @@ describe('learning app view-model integration', () => {
     expect(
       viewModel.tasks.map((task) =>
         task.availability === 'startable'
-          ? task.durationEstimate
+          ? task.trainingBudget
           : null,
       ),
     ).toEqual([
       {
-        estimateSeconds: 900,
-        basis: 'content-baseline',
-        sampleCount: 0,
-        confidence: 'low',
+        targetEffectiveSeconds: 900,
       },
       {
-        estimateSeconds: 900,
-        basis: 'content-baseline',
-        sampleCount: 0,
-        confidence: 'low',
+        targetEffectiveSeconds: 900,
       },
       {
-        estimateSeconds: 900,
-        basis: 'content-baseline',
-        sampleCount: 0,
-        confidence: 'low',
+        targetEffectiveSeconds: 900,
       },
     ])
     expect(viewModel).not.toHaveProperty('summary')
@@ -181,8 +177,8 @@ describe('learning app view-model integration', () => {
         module?.availability === 'startable' &&
         todayTask.availability === 'startable'
       ) {
-        expect(module.durationEstimate).toEqual(
-          todayTask.durationEstimate,
+        expect(module.trainingBudget).toEqual(
+          todayTask.trainingBudget,
         )
       }
     }
@@ -190,8 +186,12 @@ describe('learning app view-model integration', () => {
 
   it('copies a personal estimate without using plan allocation as a task estimate', () => {
     const initial = progress()
+    const {
+      trainingBudget: _trainingBudget,
+      ...legacyTask
+    } = initial.plan.tasks[0]
     const personalizedTask = {
-      ...initial.plan.tasks[0],
+      ...legacyTask,
       estimatedSeconds: 137,
       durationEstimate: {
         schemaVersion: 1 as const,
@@ -264,6 +264,64 @@ describe('learning app view-model integration', () => {
     })
     expect(JSON.stringify(today.tasks[0])).not.toContain('8888')
     expect(JSON.stringify(today.tasks[0])).not.toContain('9999')
+  })
+
+  it('maps the restored training budget without treating it as an estimate', () => {
+    const activePlan = progress()
+    const execution = {
+      ...activePlan.tasks[0],
+      status: 'blocked' as const,
+      training: {
+        ...activePlan.tasks[0].training!,
+        remainingEffectiveSeconds: 517,
+        status: 'content-exhausted' as const,
+        completedItemIds: ['item-1', 'item-2'],
+        nextSupplyCursor: 'item-2',
+        contentExhausted: {
+          requestId: 'supply-3',
+          cursor: 'item-2',
+          reason: 'all-eligible-content-recently-used' as const,
+          occurredAt: '2026-07-24T08:10:00.000Z',
+        },
+      },
+    }
+
+    expect(
+      toTrainingBudgetProgressViewModel(execution),
+    ).toEqual({
+      targetEffectiveSeconds: 900,
+      remainingEffectiveSeconds: 517,
+      completedItemCount: 2,
+      status: 'content-exhausted',
+      contentExhausted: {
+        reason: 'all-eligible-content-recently-used',
+        description:
+          '当前合格题目都已在本次训练中使用，进度与去重记录已保留。',
+      },
+      retryAction: {
+        label: '重新获取题目',
+      },
+    })
+    expect(
+      toTrainingCompletionDurationViewModel(
+        'vocabulary',
+        {
+          ...execution,
+          status: 'completed',
+          training: {
+            ...execution.training,
+            remainingEffectiveSeconds: 0,
+            status: 'completed',
+            contentExhausted: null,
+          },
+        },
+      ).trainingBudget,
+    ).toEqual({
+      targetEffectiveSeconds: 900,
+      remainingEffectiveSeconds: 0,
+      completedItemCount: 2,
+      status: 'completed',
+    })
   })
 
   it('reports only timing-segment durations and never treats missing modules as zero', () => {

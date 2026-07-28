@@ -17,6 +17,7 @@ import type {
   PracticeModuleViewModel,
   ProgressViewModel,
   TaskDurationEstimateViewModel,
+  TrainingBudgetProgressViewModel,
   TrainingCompletionDurationViewModel,
   TrainingTaskAccessViewModel,
 } from '../../ui/index.ts'
@@ -103,15 +104,78 @@ export function toActualEffectiveDurationViewModel(
   }
 }
 
+function exhaustedDescription(
+  reason: Extract<
+    TrainingBudgetProgressViewModel,
+    { readonly status: 'content-exhausted' }
+  >['contentExhausted']['reason'],
+): string {
+  if (reason === 'no-eligible-content') {
+    return '当前难度没有可继续使用的训练内容，进度已保留。'
+  }
+  if (reason === 'all-eligible-content-recently-used') {
+    return '当前合格题目都已在本次训练中使用，进度与去重记录已保留。'
+  }
+  return '训练题库暂时无法读取，进度与去重记录已保留。'
+}
+
+export function toTrainingBudgetProgressViewModel(
+  execution: TaskExecutionState | undefined,
+): TrainingBudgetProgressViewModel | undefined {
+  const training = execution?.training
+  if (!execution?.task.trainingBudget || !training) {
+    return undefined
+  }
+  const base = {
+    targetEffectiveSeconds: training.targetEffectiveSeconds,
+    remainingEffectiveSeconds: training.remainingEffectiveSeconds,
+    completedItemCount: training.completedItemIds.length,
+  }
+  if (
+    training.status === 'running' ||
+    training.status === 'finish-current-item' ||
+    training.status === 'completed'
+  ) {
+    return {
+      ...base,
+      status: training.status,
+    }
+  }
+  if (!training.contentExhausted) {
+    throw new TypeError(
+      'Content-exhausted training progress requires recovery details.',
+    )
+  }
+  return {
+    ...base,
+    status: 'content-exhausted',
+    contentExhausted: {
+      reason: training.contentExhausted.reason,
+      description: exhaustedDescription(
+        training.contentExhausted.reason,
+      ),
+    },
+    retryAction: {
+      label: '重新获取题目',
+    },
+  }
+}
+
 export function toTrainingCompletionDurationViewModel(
   moduleId: TrainingModuleId,
   execution: TaskExecutionState | undefined,
 ): TrainingCompletionDurationViewModel {
+  const trainingBudget =
+    toTrainingBudgetProgressViewModel(execution)
   return {
     moduleId,
     title: `${practiceModuleLabels[moduleId]}已完成`,
     description: '成绩与练习反馈已保存，下面只显示可信的实际有效练习时间。',
     actualDuration: toActualEffectiveDurationViewModel(execution),
+    trainingBudget:
+      trainingBudget?.status === 'completed'
+        ? trainingBudget
+        : undefined,
     actionLabel: '返回今日计划',
   }
 }
@@ -216,13 +280,25 @@ function trainingTaskAccessViewModel(
         actionLabel: '继续训练',
       },
     }[access.taskStatus]
+    const timing =
+      task.trainingBudget === undefined
+        ? {
+            durationEstimate:
+              toTaskDurationEstimateViewModel(task),
+          }
+        : {
+            trainingBudget: {
+              targetEffectiveSeconds:
+                task.trainingBudget.targetEffectiveSeconds,
+            },
+          }
     return {
       moduleId,
       availability: 'startable',
       taskId: access.taskId,
       status: access.taskStatus,
       recommended: access.recommended,
-      durationEstimate: toTaskDurationEstimateViewModel(task),
+      ...timing,
       ...statusPresentation,
     }
   }

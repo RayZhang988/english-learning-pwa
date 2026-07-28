@@ -170,6 +170,105 @@ function completedEvent(
   }
 }
 
+function budgetPlan(): DailyPlan {
+  const base = plan()
+  return {
+    ...base,
+    tasks: [
+      {
+        ...base.tasks[0],
+        trainingBudget: {
+          schemaVersion: 1,
+          targetEffectiveSeconds: 900,
+        },
+      },
+    ],
+  }
+}
+
+function streamItemCompletedEvent(
+  task: LearningTask,
+): PlatformEvent {
+  return {
+    id: 'stream-item-completed-1',
+    type: 'learning.training.item.completed.v1',
+    sourceModuleId: task.targetModuleId,
+    occurredAt: '2026-07-24T08:15:02.000Z',
+    schemaVersion: 1,
+    payload: {
+      planId: task.planId,
+      taskId: task.taskId,
+      learningUnitId: task.learningUnitId,
+      contentRef: task.contentRef,
+      domain: task.domain,
+      targetModuleId: task.targetModuleId,
+      localDate: '2026-07-24',
+      mode: task.mode,
+      item: {
+        itemId: 'vocabulary:item-1:term-to-meaning-choice',
+        learningUnitId: task.learningUnitId,
+        contentRef: task.contentRef,
+        difficultyLevel: task.difficultyLevel,
+        tags: task.tags,
+      },
+      requestId: `${task.taskId}:supply:1:initial`,
+      nextSupplyCursor:
+        'vocabulary:item-1:term-to-meaning-choice',
+      outcome: 'scored',
+    },
+  }
+}
+
+function budgetCompletedEvent(
+  task: LearningTask,
+): PlatformEvent {
+  return {
+    id: 'training-budget-completed-1',
+    type: 'learning.training.budget.completed.v1',
+    sourceModuleId: task.targetModuleId,
+    occurredAt: '2026-07-24T08:15:03.000Z',
+    schemaVersion: 1,
+    payload: {
+      planId: task.planId,
+      taskId: task.taskId,
+      learningUnitId: task.learningUnitId,
+      contentRef: task.contentRef,
+      domain: task.domain,
+      targetModuleId: task.targetModuleId,
+      localDate: '2026-07-24',
+      mode: task.mode,
+      lastCompletedItemId:
+        'vocabulary:item-1:term-to-meaning-choice',
+      completedItemCount: 1,
+    },
+  }
+}
+
+function contentExhaustedEvent(
+  task: LearningTask,
+): PlatformEvent {
+  return {
+    id: 'training-content-exhausted-2',
+    type: 'learning.training.content.exhausted.v1',
+    sourceModuleId: task.targetModuleId,
+    occurredAt: '2026-07-24T08:05:00.000Z',
+    schemaVersion: 1,
+    payload: {
+      planId: task.planId,
+      taskId: task.taskId,
+      learningUnitId: task.learningUnitId,
+      contentRef: task.contentRef,
+      domain: task.domain,
+      targetModuleId: task.targetModuleId,
+      localDate: '2026-07-24',
+      mode: task.mode,
+      requestId: `${task.taskId}:supply:2:vocabulary:item-1`,
+      cursor: 'vocabulary:item-1:term-to-meaning-choice',
+      reason: 'all-eligible-content-recently-used',
+    },
+  }
+}
+
 function timingEvent(
   task: LearningTask,
   input: {
@@ -177,8 +276,11 @@ function timingEvent(
     readonly startedAt: string
     readonly endedAt: string
     readonly elapsedSeconds: number
-    readonly phase?: 'answering' | 'idle'
-    readonly reason?: 'active-answering' | 'idle-timeout'
+    readonly phase?: 'answering' | 'audio-listening' | 'idle'
+    readonly reason?:
+      | 'active-answering'
+      | 'active-audio-listening'
+      | 'idle-timeout'
   },
 ): PlatformEvent {
   return {
@@ -382,6 +484,169 @@ describe('ProductionLearningEventSink', () => {
     ])
   })
 
+  it('keeps a budget task active after one attempt and completes only after the budget event', async () => {
+    const planStore = new MemoryNamespaceStore(
+      'app.learning-runtime',
+    )
+    const engineStore = new MemoryNamespaceStore('learning.engine')
+    const activePlans = new ActivePlanRepository(planStore)
+    const engineStates = new LearningEngineRepository(engineStore)
+    const dailyPlan = budgetPlan()
+    const task = dailyPlan.tasks[0]
+    await activePlans.save(
+      createActiveLearningRuntime(
+        createPlanProgress(
+          dailyPlan,
+          '2026-07-24T08:00:00.000Z',
+        ),
+      ),
+    )
+    await engineStates.save(
+      createLearningEngineState(
+        abilityProfile(),
+        '2026-07-24T08:00:00.000Z',
+      ),
+    )
+    const localSink = new ProductionLearningEventSink(
+      activePlans,
+      engineStates,
+    )
+    const finalTiming = timingEvent(task, {
+      id: 'budget-timing-900',
+      startedAt: '2026-07-24T08:00:00.000Z',
+      endedAt: '2026-07-24T08:15:00.000Z',
+      elapsedSeconds: 900,
+      phase: 'audio-listening',
+      reason: 'active-audio-listening',
+    })
+    const attempt = completedEvent()
+
+    await localSink.publish(finalTiming)
+    await localSink.publish(attempt)
+
+    let runtime = await activePlans.load()
+    expect(runtime?.activePlan.tasks[0]).toMatchObject({
+      status: 'active',
+      effectiveSeconds: 900,
+      training: {
+        remainingEffectiveSeconds: 0,
+        status: 'finish-current-item',
+        completedItemIds: [],
+      },
+    })
+    expect(runtime?.pendingTrainingAttempts).toEqual([attempt])
+    expect(runtime?.completedLearningUnitIds).toEqual([])
+    expect(
+      (await engineStates.load())?.progress.durationSamples,
+    ).toEqual([])
+
+    await localSink.publish(streamItemCompletedEvent(task))
+    runtime = await activePlans.load()
+    expect(runtime?.activePlan.tasks[0].training).toMatchObject({
+      status: 'finish-current-item',
+      completedItemIds: [
+        'vocabulary:item-1:term-to-meaning-choice',
+      ],
+      nextSupplyCursor:
+        'vocabulary:item-1:term-to-meaning-choice',
+    })
+
+    const completion = budgetCompletedEvent(task)
+    await localSink.publish(completion)
+    await localSink.publish(completion)
+
+    runtime = await activePlans.load()
+    expect(runtime?.activePlan).toMatchObject({
+      status: 'completed',
+      tasks: [
+        {
+          status: 'completed',
+          training: {
+            remainingEffectiveSeconds: 0,
+            status: 'completed',
+          },
+        },
+      ],
+    })
+    expect(runtime?.pendingTrainingAttempts).toEqual([])
+    expect(runtime?.completedLearningUnitIds).toEqual([
+      task.learningUnitId,
+    ])
+    expect(
+      (await engineStates.load())?.progress.durationSamples,
+    ).toEqual([
+      expect.objectContaining({
+        sampleId: attempt.id,
+        taskId: task.taskId,
+        effectiveSeconds: 900,
+        source: 'timing-segments',
+        reliable: true,
+      }),
+    ])
+  })
+
+  it('persists content exhaustion without completing or clearing the supply ledger', async () => {
+    const planStore = new MemoryNamespaceStore(
+      'app.learning-runtime',
+    )
+    const engineStore = new MemoryNamespaceStore('learning.engine')
+    const activePlans = new ActivePlanRepository(planStore)
+    const engineStates = new LearningEngineRepository(engineStore)
+    const dailyPlan = budgetPlan()
+    const task = dailyPlan.tasks[0]
+    await activePlans.save(
+      createActiveLearningRuntime(
+        createPlanProgress(
+          dailyPlan,
+          '2026-07-24T08:00:00.000Z',
+        ),
+      ),
+    )
+    await engineStates.save(
+      createLearningEngineState(
+        abilityProfile(),
+        '2026-07-24T08:00:00.000Z',
+      ),
+    )
+    const localSink = new ProductionLearningEventSink(
+      activePlans,
+      engineStates,
+    )
+
+    await localSink.publish(streamItemCompletedEvent(task))
+    const exhausted = contentExhaustedEvent(task)
+    await localSink.publish(exhausted)
+    await localSink.publish(exhausted)
+
+    const restored = await activePlans.load()
+    expect(restored?.activePlan).toMatchObject({
+      status: 'in-progress',
+      tasks: [
+        {
+          status: 'blocked',
+          training: {
+            status: 'content-exhausted',
+            remainingEffectiveSeconds: 900,
+            completedItemIds: [
+              'vocabulary:item-1:term-to-meaning-choice',
+            ],
+            nextSupplyCursor:
+              'vocabulary:item-1:term-to-meaning-choice',
+            contentExhausted: {
+              requestId:
+                `${task.taskId}:supply:2:vocabulary:item-1`,
+              cursor:
+                'vocabulary:item-1:term-to-meaning-choice',
+              reason:
+                'all-eligible-content-recently-used',
+            },
+          },
+        },
+      ],
+    })
+    expect(restored?.completedLearningUnitIds).toEqual([])
+  })
+
   it('notifies subscribers only after both local repositories save and retries without double counting', async () => {
     const planStore = new FailingNamespaceStore(
       'app.learning-runtime',
@@ -445,6 +710,74 @@ describe('ProductionLearningEventSink', () => {
       (await engineStates.load())?.progress.dailyActivity[0]
         .effectiveSeconds,
     ).toBe(5)
+  })
+
+  it('replays a failed budget completion without duplicating its pending duration sample', async () => {
+    const planStore = new FailingNamespaceStore(
+      'app.learning-runtime',
+    )
+    const engineStore = new MemoryNamespaceStore('learning.engine')
+    const activePlans = new ActivePlanRepository(planStore)
+    const engineStates = new LearningEngineRepository(engineStore)
+    const dailyPlan = budgetPlan()
+    const task = dailyPlan.tasks[0]
+    await activePlans.save(
+      createActiveLearningRuntime(
+        createPlanProgress(
+          dailyPlan,
+          '2026-07-24T08:00:00.000Z',
+        ),
+      ),
+    )
+    await engineStates.save(
+      createLearningEngineState(
+        abilityProfile(),
+        '2026-07-24T08:00:00.000Z',
+      ),
+    )
+    const localSink = new ProductionLearningEventSink(
+      activePlans,
+      engineStates,
+    )
+    await localSink.publish(
+      timingEvent(task, {
+        id: 'budget-replay-timing',
+        startedAt: '2026-07-24T08:00:00.000Z',
+        endedAt: '2026-07-24T08:15:00.000Z',
+        elapsedSeconds: 900,
+        phase: 'audio-listening',
+        reason: 'active-audio-listening',
+      }),
+    )
+    await localSink.publish(completedEvent())
+    await localSink.publish(streamItemCompletedEvent(task))
+    const completion = budgetCompletedEvent(task)
+
+    planStore.failNextPut = true
+    await expect(localSink.publish(completion)).rejects.toThrow(
+      'simulated local write failure',
+    )
+    expect(
+      (await activePlans.load())?.activePlan.tasks[0].status,
+    ).toBe('active')
+    expect(
+      (await activePlans.load())?.pendingTrainingAttempts,
+    ).toHaveLength(1)
+    expect(
+      (await engineStates.load())?.progress.durationSamples,
+    ).toHaveLength(1)
+
+    await localSink.publish(completion)
+
+    expect(
+      (await activePlans.load())?.activePlan.tasks[0].status,
+    ).toBe('completed')
+    expect(
+      (await activePlans.load())?.pendingTrainingAttempts,
+    ).toEqual([])
+    expect(
+      (await engineStates.load())?.progress.durationSamples,
+    ).toHaveLength(1)
   })
 
   it('rejects an event for another plan', async () => {

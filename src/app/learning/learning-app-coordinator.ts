@@ -221,6 +221,31 @@ export class LearningAppCoordinator {
     return `/${task.targetModuleId}?taskId=${encodeURIComponent(task.taskId)}`
   }
 
+  trainingBudgetStatus(
+    taskId: string,
+    expectedModuleId: TrainingModuleId,
+  ): 'running' | 'finish-current-item' {
+    const task = this.resolveTask(taskId, expectedModuleId)
+    const state = this.#state
+    if (state.status !== 'ready' || !task.trainingBudget) {
+      throw new TypeError(
+        'The requested task has no active training budget.',
+      )
+    }
+    const execution = state.runtime.activePlan.tasks.find(
+      (candidate) => candidate.task.taskId === taskId,
+    )
+    if (!execution?.training) {
+      throw new TypeError(
+        'The requested task has no restored training budget progress.',
+      )
+    }
+    return execution.training.status === 'finish-current-item' ||
+      execution.training.status === 'completed'
+      ? 'finish-current-item'
+      : 'running'
+  }
+
   async #initialize(): Promise<LearningAppState> {
     const now = this.#now()
     const localDate = formatLocalDate(now)
