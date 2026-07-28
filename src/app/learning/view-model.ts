@@ -2,16 +2,22 @@ import {
   buildProgressSnapshot,
   DEFAULT_DAILY_TARGET_SECONDS,
   type LearningEngineState,
+  type LearningTask,
   type PlanProgress,
   type PlanTaskAccess,
   type PlanTaskAvailability,
+  type TaskExecutionState,
   type TrainingModuleId,
 } from '../../learning-engine/index.ts'
 import type {
+  ActualEffectiveDurationViewModel,
+  DailyEffectiveDurationSummaryViewModel,
   DailyPlanViewModel,
   DailyTaskViewModel,
   PracticeModuleViewModel,
   ProgressViewModel,
+  TaskDurationEstimateViewModel,
+  TrainingCompletionDurationViewModel,
   TrainingTaskAccessViewModel,
 } from '../../ui/index.ts'
 
@@ -57,6 +63,105 @@ const practiceModuleLabels: Readonly<Record<TrainingModuleId, string>> = {
   speaking: '口语训练',
 }
 
+export function toTaskDurationEstimateViewModel(
+  task: LearningTask,
+): TaskDurationEstimateViewModel {
+  return {
+    estimateSeconds:
+      task.durationEstimate?.estimateSeconds ?? task.estimatedSeconds,
+    basis: task.durationEstimate?.basis ?? 'content-baseline',
+    sampleCount: task.durationEstimate?.sampleCount ?? 0,
+    confidence: task.durationEstimate?.confidence ?? 'low',
+  }
+}
+
+export function toActualEffectiveDurationViewModel(
+  execution: TaskExecutionState | undefined,
+): ActualEffectiveDurationViewModel {
+  if (execution?.effectiveTimeSource === 'legacy-event-duration') {
+    return {
+      state: 'unavailable',
+      reason: 'legacy-event-duration',
+    }
+  }
+  if (
+    execution?.effectiveTimeSource !== 'timing-segments' ||
+    !Number.isFinite(execution.effectiveSeconds) ||
+    execution.effectiveSeconds < 0 ||
+    !Number.isInteger(execution.timingSegmentCount) ||
+    (execution.timingSegmentCount ?? 0) < 1
+  ) {
+    return {
+      state: 'unavailable',
+      reason: 'missing-timing-segments',
+    }
+  }
+  return {
+    state: 'reliable',
+    effectiveSeconds: execution.effectiveSeconds,
+    source: 'timing-segments',
+  }
+}
+
+export function toTrainingCompletionDurationViewModel(
+  moduleId: TrainingModuleId,
+  execution: TaskExecutionState | undefined,
+): TrainingCompletionDurationViewModel {
+  return {
+    moduleId,
+    title: `${practiceModuleLabels[moduleId]}已完成`,
+    description: '成绩与练习反馈已保存，下面只显示可信的实际有效练习时间。',
+    actualDuration: toActualEffectiveDurationViewModel(execution),
+    actionLabel: '返回今日计划',
+  }
+}
+
+export function toDailyEffectiveDurationSummaryViewModel(
+  progress: PlanProgress,
+): DailyEffectiveDurationSummaryViewModel {
+  const items = practiceModuleIds.map((moduleId) => {
+    const executions = progress.tasks.filter(
+      (execution) => execution.task.targetModuleId === moduleId,
+    )
+    return {
+      moduleId,
+      label: practiceModuleLabels[moduleId],
+      duration: toActualEffectiveDurationViewModel(
+        executions.length === 1 ? executions[0] : undefined,
+      ),
+    }
+  })
+  const reliableItems = items.filter(
+    (
+      item,
+    ): item is typeof item & {
+      readonly duration: Extract<
+        ActualEffectiveDurationViewModel,
+        { readonly state: 'reliable' }
+      >
+    } => item.duration.state === 'reliable',
+  )
+
+  return {
+    items,
+    total:
+      reliableItems.length === 0
+        ? { coverage: 'unavailable' }
+        : {
+            coverage:
+              reliableItems.length === practiceModuleIds.length
+                ? 'complete'
+                : 'partial',
+            effectiveSeconds: reliableItems.reduce(
+              (total, item) =>
+                total + item.duration.effectiveSeconds,
+              0,
+            ),
+            source: 'timing-segments',
+          },
+  }
+}
+
 function unavailableDescription(
   moduleId: TrainingModuleId,
   access: PlanTaskAvailability,
@@ -83,12 +188,15 @@ function unavailableDescription(
 function trainingTaskAccessViewModel(
   moduleId: TrainingModuleId,
   access: PlanTaskAvailability,
+  task?: LearningTask,
 ): TrainingTaskAccessViewModel {
   if (
     access.availability === 'startable' &&
     access.taskStatus !== null &&
     access.taskStatus !== 'completed' &&
-    access.taskStatus !== 'skipped'
+    access.taskStatus !== 'skipped' &&
+    task?.taskId === access.taskId &&
+    task.targetModuleId === moduleId
   ) {
     const statusPresentation = {
       pending: {
@@ -114,30 +222,38 @@ function trainingTaskAccessViewModel(
       taskId: access.taskId,
       status: access.taskStatus,
       recommended: access.recommended,
+      durationEstimate: toTaskDurationEstimateViewModel(task),
       ...statusPresentation,
     }
   }
 
+  const normalizedAccess =
+    access.availability === 'startable'
+      ? invalidAccess(access.taskId, moduleId)
+      : access
   return {
     moduleId,
     availability: 'unavailable',
     taskId:
-      access.unavailableReason === 'not-in-active-plan'
+      normalizedAccess.unavailableReason === 'not-in-active-plan'
         ? null
-        : access.taskId,
-    status: access.taskStatus,
+        : normalizedAccess.taskId,
+    status: normalizedAccess.taskStatus,
     recommended: false,
     statusLabel:
-      access.taskStatus === 'completed'
+      normalizedAccess.taskStatus === 'completed'
         ? '已完成'
-        : access.taskStatus === 'skipped'
+        : normalizedAccess.taskStatus === 'skipped'
           ? '已跳过'
-          : access.unavailableReason === 'not-in-active-plan'
+          : normalizedAccess.unavailableReason === 'not-in-active-plan'
             ? '今日无任务'
             : '任务异常',
     unavailableReason:
-      access.unavailableReason ?? 'invalid-task-data',
-    unavailableDescription: unavailableDescription(moduleId, access),
+      normalizedAccess.unavailableReason ?? 'invalid-task-data',
+    unavailableDescription: unavailableDescription(
+      moduleId,
+      normalizedAccess,
+    ),
   }
 }
 
@@ -201,7 +317,10 @@ function specialtyPracticeModule(
   const access =
     taskAccess.tasks.find((task) => task.taskId === taskIds[0]) ??
     invalidAccess(taskIds[0], moduleId)
-  return trainingTaskAccessViewModel(moduleId, access)
+  const task = progress.plan.tasks.find(
+    (candidate) => candidate.taskId === taskIds[0],
+  )
+  return trainingTaskAccessViewModel(moduleId, access, task)
 }
 
 export function toPracticeModulesViewModel(
@@ -248,14 +367,16 @@ function taskViewModel(
     )
   }
   const presentation = modulePresentation[moduleId]
-  const taskState = trainingTaskAccessViewModel(moduleId, access)
+  const taskState = trainingTaskAccessViewModel(
+    moduleId,
+    access,
+    task,
+  )
 
   return {
     ...presentation,
     ...taskState,
-    meta: `${Math.round(task.estimatedSeconds / 60)} 分钟 · ${
-      modeLabels[task.mode]
-    }`,
+    contentSummary: modeLabels[task.mode],
   }
 }
 
@@ -295,13 +416,17 @@ export function toDailyPlanViewModel(
     dateLabel: dateLabel(progress.plan.localDate),
     greeting: '今天的英语学习',
     streakDays: progressSnapshot.streak.currentDays,
-    summary: `${Math.round(progress.plan.plannedSeconds / 60)} 分钟 · ${totalCount} 项训练`,
+    planTargetLabel: `今日目标约 ${Math.round(
+      progress.plan.targetSeconds / 60,
+    )} 分钟 · ${totalCount} 项训练`,
     progressLabel: `已完成 ${completedCount} 项`,
     progressPercent:
       totalCount === 0
         ? 0
         : Math.round((finishedCount / totalCount) * 100),
     tasks,
+    effectiveTimeSummary:
+      toDailyEffectiveDurationSummaryViewModel(progress),
   }
 }
 

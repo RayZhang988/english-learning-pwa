@@ -1,5 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import type { PlatformEvent } from '../../core/index.ts'
+import type {
+  PlatformEvent,
+  PlatformEventSink,
+} from '../../core/index.ts'
 import {
   AssessmentProfileRepository,
   createTravelVocabularyAssessmentRuntimeR1,
@@ -8,6 +11,8 @@ import {
 import {
   LearningEngineRepository,
   type LearningCandidate,
+  type LearningTimingPhase,
+  type LearningTimingSegmentReason,
   type LearningTask,
   type TrainingModuleId,
 } from '../../learning-engine/index.ts'
@@ -93,14 +98,18 @@ class SequencedCandidateSource implements LearningCandidateSource {
     this.loadCount += 1
     return (['vocabulary', 'listening', 'speaking'] as const)
       .filter((domain) => availableModuleIds.has(domain))
-      .flatMap((domain) => [
-        candidate(1, domain, true),
-        candidate(
-          2,
-          domain,
-          completedLearningUnitIds.has(`st4w-w1d1-${domain}`),
+      .flatMap((domain) =>
+        [1, 2, 3, 4].map((day) =>
+          candidate(
+            day,
+            domain,
+            day === 1 ||
+              completedLearningUnitIds.has(
+                `st4w-w1d${day - 1}-${domain}`,
+              ),
+          ),
         ),
-      ])
+      )
   }
 }
 
@@ -159,6 +168,86 @@ function startedEvent(
       mode: task.mode,
     },
   }
+}
+
+function timingEvent(
+  task: LearningTask,
+  localDate: string,
+  input: {
+    readonly id: string
+    readonly elapsedSeconds: number
+    readonly offsetSeconds?: number
+    readonly phase: LearningTimingPhase
+    readonly reason: LearningTimingSegmentReason
+    readonly visibility?: 'foreground' | 'background'
+  },
+): PlatformEvent {
+  const startedAtMs =
+    Date.parse(`${localDate}T08:00:00.000Z`) +
+    (input.offsetSeconds ?? 0) * 1_000
+  const endedAtMs = startedAtMs + input.elapsedSeconds * 1_000
+  return {
+    id: input.id,
+    type: 'learning.timing.segment.recorded.v1',
+    sourceModuleId: task.targetModuleId,
+    occurredAt: new Date(endedAtMs).toISOString(),
+    schemaVersion: 1,
+    payload: {
+      planId: task.planId,
+      taskId: task.taskId,
+      learningUnitId: task.learningUnitId,
+      contentRef: task.contentRef,
+      domain: task.domain,
+      targetModuleId: task.targetModuleId,
+      localDate,
+      mode: task.mode,
+      phase: input.phase,
+      reason: input.reason,
+      visibility: input.visibility ?? 'foreground',
+      startedAt: new Date(startedAtMs).toISOString(),
+      endedAt: new Date(endedAtMs).toISOString(),
+      elapsedSeconds: input.elapsedSeconds,
+      idleThresholdSeconds: 45,
+    },
+  }
+}
+
+async function publishActiveTiming(
+  sink: PlatformEventSink,
+  task: LearningTask,
+  localDate: string,
+  input: {
+    readonly totalSeconds: number
+    readonly phase: LearningTimingPhase
+    readonly reason: LearningTimingSegmentReason
+  },
+): Promise<number> {
+  const maximumSegmentSeconds =
+    input.phase === 'answering' || input.phase === 'feedback'
+      ? 45
+      : 900
+  let remainingSeconds = input.totalSeconds
+  let offsetSeconds = 0
+  let segment = 0
+  while (remainingSeconds > 0) {
+    const elapsedSeconds = Math.min(
+      remainingSeconds,
+      maximumSegmentSeconds,
+    )
+    await sink.publish(
+      timingEvent(task, localDate, {
+        id: `timing:${task.taskId}:active:${segment}`,
+        elapsedSeconds,
+        offsetSeconds,
+        phase: input.phase,
+        reason: input.reason,
+      }),
+    )
+    remainingSeconds -= elapsedSeconds
+    offsetSeconds += elapsedSeconds
+    segment += 1
+  }
+  return segment
 }
 
 async function completedR1Profile() {
@@ -545,6 +634,163 @@ describe('LearningAppCoordinator', () => {
     expect(
       (await engineStates.load())?.progress.dailyActivity.some(
         (activity) => activity.localDate === '2026-07-24',
+      ),
+    ).toBe(true)
+  })
+
+  it('keeps one and two trusted samples on baseline, then uses the three-sample median without counting excluded time', async () => {
+    await profiles.saveLatest(abilityProfile())
+    const activeDurations: Readonly<
+      Record<TrainingModuleId, readonly number[]>
+    > = {
+      vocabulary: [500, 600, 700],
+      listening: [700, 800, 900],
+      speaking: [900, 1_000, 1_100],
+    }
+    const excludedSegments: Readonly<
+      Record<
+        TrainingModuleId,
+        {
+          readonly phase: LearningTimingPhase
+          readonly reason: LearningTimingSegmentReason
+          readonly visibility: 'foreground' | 'background'
+        }
+      >
+    > = {
+      vocabulary: {
+        phase: 'idle',
+        reason: 'idle-timeout',
+        visibility: 'foreground',
+      },
+      listening: {
+        phase: 'answering',
+        reason: 'app-backgrounded',
+        visibility: 'background',
+      },
+      speaking: {
+        phase: 'paused',
+        reason: 'user-paused',
+        visibility: 'foreground',
+      },
+    }
+    const activePhases: Readonly<
+      Record<
+        TrainingModuleId,
+        {
+          readonly phase: LearningTimingPhase
+          readonly reason: LearningTimingSegmentReason
+        }
+      >
+    > = {
+      vocabulary: {
+        phase: 'answering',
+        reason: 'active-answering',
+      },
+      listening: {
+        phase: 'audio-listening',
+        reason: 'active-audio-listening',
+      },
+      speaking: {
+        phase: 'recording',
+        reason: 'active-recording',
+      },
+    }
+
+    for (let dayIndex = 0; dayIndex < 3; dayIndex += 1) {
+      const app = coordinator()
+      const initialized = await app.initialize()
+      if (initialized.status !== 'ready') {
+        throw new Error('Expected a ready timed plan.')
+      }
+      for (const task of initialized.runtime.activePlan.plan.tasks) {
+        expect(task.durationEstimate).toMatchObject({
+          basis: 'content-baseline',
+          sampleCount: dayIndex,
+        })
+        const active = activePhases[task.targetModuleId]
+        const effectiveSeconds =
+          activeDurations[task.targetModuleId][dayIndex]
+        const activeSegmentCount = await publishActiveTiming(
+          app.eventSink,
+          task,
+          initialized.localDate,
+          {
+            totalSeconds: effectiveSeconds,
+            phase: active.phase,
+            reason: active.reason,
+          },
+        )
+        if (dayIndex === 0) {
+          const excluded = excludedSegments[task.targetModuleId]
+          await app.eventSink.publish(
+            timingEvent(task, initialized.localDate, {
+              id: `timing:${task.taskId}:excluded`,
+              elapsedSeconds: 60,
+              offsetSeconds: effectiveSeconds,
+              phase: excluded.phase,
+              reason: excluded.reason,
+              visibility: excluded.visibility,
+            }),
+          )
+        }
+        await app.eventSink.publish(
+          completedEvent(task, initialized.localDate),
+        )
+        if (app.state.status !== 'ready') {
+          throw new Error('Expected the timed plan to remain ready.')
+        }
+        const execution = app.state.runtime.activePlan.tasks.find(
+          (candidate) => candidate.task.taskId === task.taskId,
+        )
+        expect(execution).toMatchObject({
+          status: 'completed',
+          effectiveSeconds,
+          effectiveTimeSource: 'timing-segments',
+        })
+        if (dayIndex === 0) {
+          expect(execution).toMatchObject({
+            spentSeconds: effectiveSeconds + 60,
+            excludedSeconds: 60,
+            timingSegmentCount: activeSegmentCount + 1,
+          })
+        }
+      }
+      currentDate = new Date(2026, 6, 25 + dayIndex, 8, 0, 0)
+    }
+
+    const sampledEngineState = await engineStates.load()
+    if (!sampledEngineState) {
+      throw new Error('Expected the sampled learning engine state.')
+    }
+    await engineStates.save({
+      ...sampledEngineState,
+      reviewItems: {},
+    })
+    const personalized = await coordinator().initialize()
+    if (personalized.status !== 'ready') {
+      throw new Error('Expected a personalized fourth-day plan.')
+    }
+    const expectedMedians: Readonly<
+      Record<TrainingModuleId, number>
+    > = {
+      vocabulary: 600,
+      listening: 800,
+      speaking: 1_000,
+    }
+    for (const task of personalized.runtime.activePlan.plan.tasks) {
+      expect(task.durationEstimate).toMatchObject({
+        basis: 'personal-history',
+        sampleCount: 3,
+        estimateSeconds: expectedMedians[task.targetModuleId],
+      })
+    }
+    expect(
+      personalized.engineState.progress.durationSamples,
+    ).toHaveLength(9)
+    expect(
+      personalized.engineState.progress.durationSamples?.every(
+        (sample) =>
+          sample.source === 'timing-segments' && sample.reliable,
       ),
     ).toBe(true)
   })

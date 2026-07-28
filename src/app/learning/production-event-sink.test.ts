@@ -308,6 +308,7 @@ describe('ProductionLearningEventSink', () => {
       'st4w-w1d1-vocabulary',
     ])
     expect(engine?.progress.attempts).toHaveLength(1)
+    expect(engine?.progress.durationSamples).toEqual([])
     expect(engine?.progress.dailyActivity[0]).toMatchObject({
       localDate: '2026-07-24',
       effectiveSeconds: 600,

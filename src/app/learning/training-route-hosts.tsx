@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import {
   CurrentListeningContentSource,
@@ -22,8 +22,15 @@ import {
   EmptyState,
   ErrorState,
   LoadingState,
+  TaskDurationEstimate,
+  TrainingCompletionDurationScreen,
 } from '../../ui/index.ts'
+import { productionEffectiveTimingSessions } from './effective-timing-production.ts'
 import { useLearningApp } from './learning-app-context.ts'
+import {
+  toTaskDurationEstimateViewModel,
+  toTrainingCompletionDurationViewModel,
+} from './view-model.ts'
 
 const vocabularyContentSource = new CurrentVocabularyContentSource(
   offlineAssetStore,
@@ -38,7 +45,7 @@ const speakingContentSource = new CurrentSpeakingContentSource(
   platformFetch,
 )
 
-function TrainingRouteHost({
+export function TrainingRouteHost({
   moduleId,
 }: {
   readonly moduleId: TrainingModuleId
@@ -50,6 +57,11 @@ function TrainingRouteHost({
     readonly taskId: string
     readonly task: LearningTask
   } | null>(null)
+  const completedTaskIdRef = useRef<string | null>(null)
+  const restoredCompletionTaskIdRef = useRef<string | null>(null)
+  const returnPendingTaskIdRef = useRef<string | null>(null)
+  const [completionDurationTaskId, setCompletionDurationTaskId] =
+    useState<string | null>(null)
   const taskId = searchParams.get('taskId')
 
   if (state.status === 'loading') {
@@ -98,51 +110,136 @@ function TrainingRouteHost({
         task: coordinator.resolveTask(taskId, moduleId),
       }
     } catch (error) {
-      return (
-        <ErrorState
-          title="无法打开训练任务"
-          description={
-            error instanceof Error
-              ? error.message
-              : '任务与今日计划不匹配。'
-          }
-        />
-      )
+      const completedExecution =
+        state.runtime.activePlan.plan.localDate === state.localDate
+          ? state.runtime.activePlan.tasks.find(
+              (execution) =>
+                execution.task.taskId === taskId &&
+                execution.task.targetModuleId === moduleId &&
+                execution.status === 'completed',
+            )
+          : undefined
+      if (!completedExecution) {
+        return (
+          <ErrorState
+            title="无法打开训练任务"
+            description={
+              error instanceof Error
+                ? error.message
+                : '任务与今日计划不匹配。'
+            }
+          />
+        )
+      }
+      taskRef.current = {
+        taskId,
+        task: completedExecution.task,
+      }
+      restoredCompletionTaskIdRef.current = taskId
     }
   }
 
+  if (!taskRef.current) {
+    return (
+      <ErrorState
+        title="无法打开训练任务"
+        description="任务与今日计划不匹配。"
+      />
+    )
+  }
+
   const task = taskRef.current.task
+  const currentExecution =
+    state.runtime.activePlan.plan.planId === task.planId &&
+    state.runtime.activePlan.plan.localDate === state.localDate
+      ? state.runtime.activePlan.tasks.find(
+          (execution) =>
+            execution.task.taskId === task.taskId &&
+            execution.task.targetModuleId === moduleId,
+        )
+      : undefined
   const onExit = () => {
+    if (
+      completedTaskIdRef.current === task.taskId ||
+      currentExecution?.status === 'completed'
+    ) {
+      setCompletionDurationTaskId(task.taskId)
+      return
+    }
+    navigate('/', { replace: true })
+  }
+  const onCompleted = () => {
+    completedTaskIdRef.current = task.taskId
+  }
+  const onReturnToPlan = () => {
+    if (returnPendingTaskIdRef.current === task.taskId) {
+      return
+    }
+    returnPendingTaskIdRef.current = task.taskId
     navigate('/', { replace: true })
   }
   const commonProps = {
     task,
     localDate: state.localDate,
     eventSink: coordinator.eventSink,
+    timingSessionFactory: productionEffectiveTimingSessions,
+    onCompleted,
     onExit,
   }
 
+  if (
+    completionDurationTaskId === task.taskId ||
+    (restoredCompletionTaskIdRef.current === task.taskId &&
+      currentExecution?.status === 'completed')
+  ) {
+    return (
+      <TrainingCompletionDurationScreen
+        viewModel={toTrainingCompletionDurationViewModel(
+          moduleId,
+          currentExecution,
+        )}
+        onAction={onReturnToPlan}
+      />
+    )
+  }
+
+  const durationEstimate = (
+    <TaskDurationEstimate
+      estimate={toTaskDurationEstimateViewModel(task)}
+      appearance="strip"
+    />
+  )
+
   if (moduleId === 'vocabulary') {
     return (
-      <VocabularyTrainingRoute
-        {...commonProps}
-        contentSource={vocabularyContentSource}
-      />
+      <>
+        {durationEstimate}
+        <VocabularyTrainingRoute
+          {...commonProps}
+          contentSource={vocabularyContentSource}
+        />
+      </>
     )
   }
   if (moduleId === 'listening') {
     return (
-      <ListeningTrainingRoute
-        {...commonProps}
-        contentSource={listeningContentSource}
-      />
+      <>
+        {durationEstimate}
+        <ListeningTrainingRoute
+          {...commonProps}
+          contentSource={listeningContentSource}
+        />
+      </>
     )
   }
   return (
-    <SpeakingTrainingRoute
-      {...commonProps}
-      contentSource={speakingContentSource}
-    />
+    <>
+      {durationEstimate}
+      <SpeakingTrainingRoute
+        {...commonProps}
+        contentSource={speakingContentSource}
+      />
+    </>
   )
 }
 

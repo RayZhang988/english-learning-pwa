@@ -8,9 +8,12 @@ import {
 } from '../../learning-engine/index.ts'
 import { abilityProfile } from '../../learning-engine/test-fixtures.ts'
 import {
+  toActualEffectiveDurationViewModel,
   toDailyPlanViewModel,
   toPracticeModulesViewModel,
   toProgressViewModel,
+  toTaskDurationEstimateViewModel,
+  toTrainingCompletionDurationViewModel,
 } from './view-model.ts'
 
 function plan(): DailyPlan {
@@ -108,6 +111,42 @@ describe('learning app view-model integration', () => {
           task.availability === 'startable' && task.recommended,
       ),
     ).toHaveLength(1)
+    expect(viewModel.planTargetLabel).toBe(
+      '今日目标约 45 分钟 · 3 项训练',
+    )
+    expect(
+      viewModel.tasks.map((task) => task.contentSummary),
+    ).toEqual(['新内容', '新内容', '新内容'])
+    expect(
+      viewModel.tasks.map((task) =>
+        task.availability === 'startable'
+          ? task.durationEstimate
+          : null,
+      ),
+    ).toEqual([
+      {
+        estimateSeconds: 900,
+        basis: 'content-baseline',
+        sampleCount: 0,
+        confidence: 'low',
+      },
+      {
+        estimateSeconds: 900,
+        basis: 'content-baseline',
+        sampleCount: 0,
+        confidence: 'low',
+      },
+      {
+        estimateSeconds: 900,
+        basis: 'content-baseline',
+        sampleCount: 0,
+        confidence: 'low',
+      },
+    ])
+    expect(viewModel).not.toHaveProperty('summary')
+    for (const task of viewModel.tasks) {
+      expect(task).not.toHaveProperty('meta')
+    }
     expect(JSON.stringify(viewModel)).not.toMatch(
       /primaryAction|尚未轮到|完成当前任务后/u,
     )
@@ -137,7 +176,215 @@ describe('learning app view-model integration', () => {
         taskId: todayTask.taskId,
         recommended: todayTask.recommended,
       })
+      if (
+        module?.moduleId !== 'assessment' &&
+        module?.availability === 'startable' &&
+        todayTask.availability === 'startable'
+      ) {
+        expect(module.durationEstimate).toEqual(
+          todayTask.durationEstimate,
+        )
+      }
     }
+  })
+
+  it('copies a personal estimate without using plan allocation as a task estimate', () => {
+    const initial = progress()
+    const personalizedTask = {
+      ...initial.plan.tasks[0],
+      estimatedSeconds: 137,
+      durationEstimate: {
+        schemaVersion: 1 as const,
+        estimateSeconds: 137,
+        basis: 'personal-history' as const,
+        sampleCount: 3,
+        confidence: 'medium' as const,
+        contentType: 'vocabulary-choice',
+        profileKey: 'vocabulary:learn:vocabulary-choice',
+        baselineSource: 'structured-content' as const,
+        reasonableRangeSeconds: {
+          lower: 100,
+          upper: 180,
+        },
+      },
+    }
+    const activePlan: PlanProgress = {
+      ...initial,
+      plan: {
+        ...initial.plan,
+        plannedSeconds: 9_999,
+        allocations: {
+          ...initial.plan.allocations,
+          vocabulary: {
+            ...initial.plan.allocations.vocabulary,
+            plannedSeconds: 8_888,
+          },
+        },
+        tasks: [
+          personalizedTask,
+          ...initial.plan.tasks.slice(1),
+        ],
+      },
+      tasks: [
+        {
+          ...initial.tasks[0],
+          task: personalizedTask,
+        },
+        ...initial.tasks.slice(1),
+      ],
+    }
+    const access = getPlanTaskAccess(activePlan)
+    const today = toDailyPlanViewModel(
+      activePlan,
+      engine(),
+      access,
+      '2026-07-24T08:00:00.000Z',
+    )
+    const practice = toPracticeModulesViewModel(activePlan, access)
+
+    expect(toTaskDurationEstimateViewModel(personalizedTask)).toEqual({
+      estimateSeconds: 137,
+      basis: 'personal-history',
+      sampleCount: 3,
+      confidence: 'medium',
+    })
+    expect(today.tasks[0]).toMatchObject({
+      durationEstimate: {
+        estimateSeconds: 137,
+        basis: 'personal-history',
+        sampleCount: 3,
+        confidence: 'medium',
+      },
+    })
+    expect(practice[1]).toMatchObject({
+      durationEstimate: {
+        estimateSeconds: 137,
+        basis: 'personal-history',
+      },
+    })
+    expect(JSON.stringify(today.tasks[0])).not.toContain('8888')
+    expect(JSON.stringify(today.tasks[0])).not.toContain('9999')
+  })
+
+  it('reports only timing-segment durations and never treats missing modules as zero', () => {
+    const initial = progress()
+    const activePlan: PlanProgress = {
+      ...initial,
+      status: 'in-progress',
+      tasks: initial.tasks.map((execution, index) =>
+        index === 0
+          ? {
+              ...execution,
+              status: 'completed',
+              completionKind: 'scored',
+              spentSeconds: 125,
+              effectiveSeconds: 120,
+              excludedSeconds: 5,
+              timingSegmentCount: 2,
+              effectiveTimeSource: 'timing-segments',
+            }
+          : index === 1
+            ? {
+                ...execution,
+                status: 'completed',
+                completionKind: 'scored',
+                spentSeconds: 600,
+                effectiveSeconds: 600,
+                effectiveTimeSource: 'legacy-event-duration',
+              }
+            : execution,
+      ),
+    }
+    const today = toDailyPlanViewModel(
+      activePlan,
+      engine(),
+      getPlanTaskAccess(activePlan),
+      '2026-07-24T08:00:00.000Z',
+    )
+
+    expect(today.effectiveTimeSummary).toEqual({
+      items: [
+        {
+          moduleId: 'vocabulary',
+          label: '词汇训练',
+          duration: {
+            state: 'reliable',
+            effectiveSeconds: 120,
+            source: 'timing-segments',
+          },
+        },
+        {
+          moduleId: 'listening',
+          label: '听力训练',
+          duration: {
+            state: 'unavailable',
+            reason: 'legacy-event-duration',
+          },
+        },
+        {
+          moduleId: 'speaking',
+          label: '口语训练',
+          duration: {
+            state: 'unavailable',
+            reason: 'missing-timing-segments',
+          },
+        },
+      ],
+      total: {
+        coverage: 'partial',
+        effectiveSeconds: 120,
+        source: 'timing-segments',
+      },
+    })
+    expect(
+      toActualEffectiveDurationViewModel(activePlan.tasks[1]),
+    ).toEqual({
+      state: 'unavailable',
+      reason: 'legacy-event-duration',
+    })
+    expect(
+      toTrainingCompletionDurationViewModel(
+        'listening',
+        activePlan.tasks[1],
+      ),
+    ).toMatchObject({
+      moduleId: 'listening',
+      title: '听力训练已完成',
+      actualDuration: {
+        state: 'unavailable',
+        reason: 'legacy-event-duration',
+      },
+    })
+  })
+
+  it('marks the daily total complete only when all three module durations are reliable', () => {
+    const initial = progress()
+    const activePlan: PlanProgress = {
+      ...initial,
+      status: 'completed',
+      tasks: initial.tasks.map((execution, index) => ({
+        ...execution,
+        status: 'completed',
+        completionKind: 'scored',
+        spentSeconds: 60 * (index + 1),
+        effectiveSeconds: 60 * (index + 1),
+        excludedSeconds: 0,
+        timingSegmentCount: 1,
+        effectiveTimeSource: 'timing-segments',
+      })),
+    }
+    const today = toDailyPlanViewModel(
+      activePlan,
+      engine(),
+      getPlanTaskAccess(activePlan),
+      '2026-07-24T08:00:00.000Z',
+    )
+
+    expect(today.effectiveTimeSummary?.total).toEqual({
+      coverage: 'complete',
+      effectiveSeconds: 360,
+      source: 'timing-segments',
+    })
   })
 
   it('keeps unfinished tasks startable after another task completes', () => {
