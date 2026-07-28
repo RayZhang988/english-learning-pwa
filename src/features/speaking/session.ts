@@ -165,6 +165,7 @@ export function createSpeakingSession(
     lastActiveAt: now,
     pendingEvents: [],
     failure: null,
+    stream: null,
   }
 }
 
@@ -204,6 +205,7 @@ export function createFailedSpeakingSession(
     lastActiveAt: null,
     pendingEvents: [],
     failure,
+    stream: null,
   }
 }
 

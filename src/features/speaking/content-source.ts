@@ -21,6 +21,10 @@ const CURRENT_ASSET_URLS: Readonly<Record<string, string>> = {
     '../../../content/curriculum/package-index.v1.json',
     import.meta.url,
   ).href,
+  'content/curriculum/training-supply-index.v1.json': new URL(
+    '../../../content/curriculum/training-supply-index.v1.json',
+    import.meta.url,
+  ).href,
   'content/curriculum/survival-travel-american-4w.v1.json': new URL(
     '../../../content/curriculum/survival-travel-american-4w.v1.json',
     import.meta.url,
@@ -46,6 +50,7 @@ const CURRENT_ASSET_URLS: Readonly<Record<string, string>> = {
 interface PackageIndexShape {
   readonly manifestFile: string
   readonly lessonFiles: readonly string[]
+  readonly trainingSupplyIndexFile?: string
 }
 
 function readPackageIndex(value: unknown): PackageIndexShape {
@@ -73,6 +78,10 @@ function readPackageIndex(value: unknown): PackageIndexShape {
   return {
     manifestFile: source.manifestFile,
     lessonFiles: source.lessonFiles as readonly string[],
+    trainingSupplyIndexFile:
+      typeof source.trainingSupplyIndexFile === 'string'
+        ? source.trainingSupplyIndexFile
+        : undefined,
   }
 }
 
@@ -142,6 +151,9 @@ export class CurrentSpeakingContentSource
     const packageIndex = await this.readJson(PACKAGE_INDEX_PATH, signal)
     const files = readPackageIndex(packageIndex)
     const manifest = await this.readJson(files.manifestFile, signal)
+    const trainingSupplyIndex = files.trainingSupplyIndexFile
+      ? await this.readJson(files.trainingSupplyIndexFile, signal)
+      : undefined
     const lessonsByPath: Record<string, unknown> = {}
     for (const path of files.lessonFiles) {
       lessonsByPath[path] = await this.readJson(path, signal)
@@ -150,6 +162,7 @@ export class CurrentSpeakingContentSource
       packageIndex,
       manifest,
       lessonsByPath,
+      trainingSupplyIndex,
     }
     return createSpeakingCatalog(documents)
   }

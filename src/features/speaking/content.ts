@@ -326,6 +326,7 @@ export function createSpeakingCatalog(
     packageVersion: '1.0.0',
     courseId: 'survival-travel-american-4w',
     units,
+    trainingSupplyIndex: documents.trainingSupplyIndex,
     getUnit: (contentRef) => byContentRef.get(contentRef),
   }
 }

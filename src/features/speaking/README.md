@@ -28,12 +28,26 @@
 ```tsx
 <SpeakingTrainingRoute
   timingSessionFactory={productionEffectiveTimingSessions}
+  trainingBudgetStatus={restoredSpeakingBudgetStatus}
   {...routeProps}
 />
 ```
 
 `SpeakingEffectiveTimingSessionFactoryPort` 与 01 的生产 factory 结构兼容；不传
 factory 的旧调用保持原行为。
+
+## QA-011 连续题流
+
+当且仅当 01 为带 `trainingBudget` 的任务注入 `trainingBudgetStatus` 时，08 读取 05 在
+`package-index.v1.json` 声明的 `trainingSupplyIndexFile`。供应器只消费已发布的
+`speaking-prompt` 与 `speaking-scene-quiz`，以稳定 `itemId`、cursor 和本流已完成 ID
+恢复；不创建新提示、不改写 `acceptedAnswers`，也不循环已排除题目。
+
+每道题自然进入反馈、用户明确推进后，按 outbox 顺序发布有限匹配/不可评分 attempt 与
+`learning.training.item.completed.v1`。未进入 `finish-current-item` 时下一题继续；已经
+进入该状态也不会中断当前录音、识别等待、回放或反馈，而是在该题推进后才发布
+`learning.training.budget.completed.v1`。候选耗尽会保留排除集、发布原始耗尽原因并进入
+可重试错误态，绝不清空集合回绕旧题。没有预算端口的旧任务维持原本单元完成路径。
 
 阶段声明遵循真实底层信号：
 
@@ -189,6 +203,11 @@ task.targetModuleId === 'speaking'
 - `learning.task.paused.v1`
 - `learning.task.skipped.v1`
 - `learning.attempt.completed.v1`
+
+预算任务额外发布 `learning.training.item.completed.v1`、
+`learning.training.content.exhausted.v1` 和
+`learning.training.budget.completed.v1`。最后一个事件仍在 timing `finish()` 成功后发布；
+逐题事件不会提前结束有效计时会话。
 
 事件先写入会话 outbox，再发布；成功后按事件 ID 删除。
 

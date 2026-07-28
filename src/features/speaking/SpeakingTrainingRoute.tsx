@@ -39,6 +39,7 @@ import { getSpeakingSessionResult } from './session.ts'
 import type {
   SpeakingEffectiveTimingSessionFactoryPort,
 } from './timing.ts'
+import type { SpeakingSupplyProvider } from './supply.ts'
 
 export interface SpeakingTrainingRouteProps {
   readonly task: LearningTask
@@ -55,6 +56,8 @@ export interface SpeakingTrainingRouteProps {
   readonly now?: () => string
   readonly createId?: () => string
   readonly timingSessionFactory?: SpeakingEffectiveTimingSessionFactoryPort
+  readonly supplyProvider?: SpeakingSupplyProvider
+  readonly trainingBudgetStatus?: () => 'running' | 'finish-current-item'
 }
 
 export function SpeakingTrainingRoute(
@@ -107,6 +110,8 @@ export function SpeakingTrainingRoute(
         now: props.now,
         createId: props.createId,
         timingSessionFactory: props.timingSessionFactory,
+        supplyProvider: props.supplyProvider,
+        trainingBudgetStatus: props.trainingBudgetStatus,
       }),
     }
   }
@@ -206,7 +211,7 @@ export function SpeakingTrainingRoute(
   const retry = useCallback(() => {
     const session = runtime.currentSession
     if (session?.phase === 'error') {
-      void perform(() => runtime.restart())
+      void perform(() => session.stream ? runtime.retrySupply() : runtime.restart())
     } else if (session) {
       void perform(() => runtime.retryPendingEvents())
     } else {

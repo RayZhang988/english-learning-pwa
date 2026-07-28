@@ -6,6 +6,7 @@ import type {
   LearningTask,
   LearningTaskPausedEvent,
   LearningTaskSkippedEvent,
+  LearningTaskSupplyRequest,
 } from '../../learning-engine/index.ts'
 import {
   browserMicrophonePermission,
@@ -21,6 +22,10 @@ import {
   createSpeakingTaskSkippedEvent,
   createSpeakingTaskStartedEvent,
   createSpeakingUnscorableEvent,
+  createSpeakingStreamAttemptEvent,
+  createSpeakingTrainingBudgetCompletedEvent,
+  createSpeakingTrainingContentExhaustedEvent,
+  createSpeakingTrainingItemCompletedEvent,
 } from './events.ts'
 import { SpeakingError, toSpeakingError } from './errors.ts'
 import { matchSpeakingText } from './matching.ts'
@@ -31,6 +36,7 @@ import {
   browserSpeakingRecorder,
 } from './recording.ts'
 import { SpeakingSessionRepository } from './repository.ts'
+import { SpeakingCatalogSupplyProvider, resolveSpeakingSupplyPrompt, type SpeakingSupplyProvider } from './supply.ts'
 import {
   advanceSpeakingSession,
   beginSpeakingRecording,
@@ -64,6 +70,8 @@ import type {
   SpeakingRecordingPort,
   SpeakingSession,
   SpeakingSessionFailure,
+  SpeakingStreamState,
+  SpeakingSupplyItem,
   SpeakingTextMatch,
 } from './types.ts'
 
@@ -84,6 +92,8 @@ export interface SpeakingTrainingRuntimeOptions {
   readonly now?: () => string
   readonly createId?: () => string
   readonly timingSessionFactory?: SpeakingEffectiveTimingSessionFactoryPort
+  readonly supplyProvider?: SpeakingSupplyProvider
+  readonly trainingBudgetStatus?: () => 'running' | 'finish-current-item'
 }
 
 function defaultId(): string {
@@ -187,6 +197,9 @@ export class SpeakingTrainingRuntime {
   private readonly now: () => string
   private readonly createId: () => string
   private readonly timing: SpeakingEffectiveTiming
+  private readonly suppliedProvider: SpeakingSupplyProvider | undefined
+  private readonly trainingBudgetStatus: (() => 'running' | 'finish-current-item') | undefined
+  private readonly continuousTraining: boolean
   private readonly listeners = new Set<SessionListener>()
   private session: SpeakingSession | null = null
   private recording: SpeakingRecording | null = null
@@ -223,6 +236,9 @@ export class SpeakingTrainingRuntime {
       this.task.taskId,
       options.timingSessionFactory,
     )
+    this.suppliedProvider = options.supplyProvider
+    this.trainingBudgetStatus = options.trainingBudgetStatus
+    this.continuousTraining = Boolean(this.task.trainingBudget && this.trainingBudgetStatus)
   }
 
   get currentSession(): SpeakingSession | null {
@@ -394,7 +410,11 @@ export class SpeakingTrainingRuntime {
     let session = this.requireSession()
     while (session.pendingEvents.length > 0) {
       const event = session.pendingEvents[0]
-      if (event.type === 'learning.attempt.completed.v1') {
+      if (
+        (event.type === 'learning.attempt.completed.v1' &&
+          (!this.continuousTraining || event.payload.taskCompleted)) ||
+        event.type === 'learning.training.budget.completed.v1'
+      ) {
         await this.timing.finish()
       }
       await this.eventSink.publish(event)
@@ -446,6 +466,54 @@ export class SpeakingTrainingRuntime {
     }
   }
 
+  private streamRequest(stream: SpeakingStreamState | null): LearningTaskSupplyRequest {
+    const completed = stream?.completedItemIds ?? []
+    const cursor = stream?.nextSupplyCursor ?? null
+    return {
+      schemaVersion: 1,
+      requestId: `${this.task.taskId}:supply:${completed.length + 1}:${cursor ?? 'initial'}`,
+      planId: this.task.planId, taskId: this.task.taskId,
+      domain: 'speaking', targetModuleId: 'speaking', mode: this.task.mode,
+      targetDifficulty: this.task.difficultyLevel, cursor, excludeItemIds: completed,
+      reason: completed.length === 0 ? 'initial' : 'continue-after-item',
+    }
+  }
+
+  private async nextStreamItem(catalog: SpeakingCatalog, stream: SpeakingStreamState | null) {
+    const provider = this.suppliedProvider ?? new SpeakingCatalogSupplyProvider(catalog.trainingSupplyIndex, catalog)
+    const request = this.streamRequest(stream)
+    const result = await provider.next(request)
+    if (result.requestId !== request.requestId) {
+      throw new SpeakingError('content-invalid', 'Speaking supply returned a mismatched request.')
+    }
+    return { request, result }
+  }
+
+  private streamState(
+    item: SpeakingSupplyItem | null, requestId: string, cursor: string | null,
+    prior: SpeakingStreamState | null = null,
+  ): SpeakingStreamState {
+    return {
+      activeItem: item, activeRequestId: requestId, nextSupplyCursor: cursor,
+      completedItemIds: prior?.completedItemIds ?? [],
+      completedItemCount: prior?.completedItemCount ?? 0,
+      recognizedItemCount: prior?.recognizedItemCount ?? 0,
+      unscorableItemCount: prior?.unscorableItemCount ?? 0,
+      finishCurrentItem: prior?.finishCurrentItem ?? this.trainingBudgetStatus?.() === 'finish-current-item',
+    }
+  }
+
+  private createStreamSession(
+    base: SpeakingSession, unit: import('./types.ts').SpeakingTrainingUnit,
+    prompt: import('./types.ts').SpeakingPrompt, stream: SpeakingStreamState,
+  ): SpeakingSession {
+    const seeded = createSpeakingSession(base.task, { ...unit, prompts: [prompt] }, base.permission,
+      base.network, this.recorder.capabilities(), this.recognition.capabilities(), this.now())
+    return { ...seeded, activeDurationSeconds: base.activeDurationSeconds,
+      reportedDurationSeconds: base.reportedDurationSeconds, startedAt: base.startedAt,
+      pendingEvents: base.pendingEvents, stream }
+  }
+
   private async startFresh(): Promise<SpeakingSession> {
     const now = this.now()
     const startedEvent = createSpeakingTaskStartedEvent(
@@ -458,16 +526,23 @@ export class SpeakingTrainingRuntime {
         this.contentSource.load(),
         this.permissionState(),
       ])
-      const unit = resolveSpeakingTask(catalog, this.task)
-      session = createSpeakingSession(
-        this.task,
-        unit,
-        permission,
-        this.networkStatus.current(),
-        this.recorder.capabilities(),
-        this.recognition.capabilities(),
-        now,
-      )
+      if (this.continuousTraining) {
+        const { request, result } = await this.nextStreamItem(catalog, null)
+        if (result.status !== 'item') {
+          session = createFailedSpeakingSession(this.task, { category: 'content', message: '当前没有可继续的口语题目。' }, now)
+          session = { ...session, stream: this.streamState(null, request.requestId, request.cursor) }
+          session = withPendingSpeakingEvent(session, startedEvent, now)
+          session = withPendingSpeakingEvent(session, createSpeakingTrainingContentExhaustedEvent(this.task, request.requestId, request.cursor, result.reason, this.identity(now)), now)
+          await this.save(session)
+          return this.flushPendingEvents()
+        }
+        const supplied = resolveSpeakingSupplyPrompt(catalog, result.item as SpeakingSupplyItem)
+        const base = createSpeakingSession(this.task, { ...supplied.unit, prompts: [supplied.prompt] }, permission, this.networkStatus.current(), this.recorder.capabilities(), this.recognition.capabilities(), now)
+        session = { ...base, stream: this.streamState(result.item as SpeakingSupplyItem, request.requestId, result.nextCursor) }
+      } else {
+        const unit = resolveSpeakingTask(catalog, this.task)
+        session = createSpeakingSession(this.task, unit, permission, this.networkStatus.current(), this.recorder.capabilities(), this.recognition.capabilities(), now)
+      }
       session = withPendingSpeakingEvent(session, startedEvent, now)
     } catch (error) {
       const failure = this.failureFor(error)
@@ -959,7 +1034,7 @@ export class SpeakingTrainingRuntime {
       current.phase === 'feedback' &&
       current.unit !== null &&
       current.promptIndex + 1 >= current.unit.prompts.length
-    if (isFinalPrompt) {
+    if (isFinalPrompt && !this.continuousTraining) {
       const preview = getSpeakingSessionResult(current)
       const terminalUnscorable =
         preview.performanceScore === null &&
@@ -983,7 +1058,45 @@ export class SpeakingTrainingRuntime {
       this.recognition.capabilities(),
       this.now(),
     )
-    if (session.phase === 'completed') {
+    const activeItem = current.stream?.activeItem
+    if (session.phase === 'completed' && this.continuousTraining && current.stream && activeItem) {
+      const active = current.stream
+      const result = getSpeakingSessionResult(current)
+      const alreadyCompleted = active.completedItemIds.includes(activeItem.itemId)
+      const completedStream: SpeakingStreamState = {
+        ...active,
+        completedItemIds: alreadyCompleted ? active.completedItemIds : [...active.completedItemIds, activeItem.itemId],
+        completedItemCount: active.completedItemCount + (alreadyCompleted ? 0 : 1),
+        recognizedItemCount: active.recognizedItemCount + (result.performanceScore === null ? 0 : 1),
+        unscorableItemCount: active.unscorableItemCount + (result.performanceScore === null ? 1 : 0),
+        finishCurrentItem: active.finishCurrentItem || this.trainingBudgetStatus?.() === 'finish-current-item',
+      }
+      const now = this.now()
+      session = { ...session, reportedDurationSeconds: session.activeDurationSeconds }
+      session = withPendingSpeakingEvent(session, createSpeakingStreamAttemptEvent(current, this.untrustedLegacyDuration(current), this.identity(now)), now)
+      session = withPendingSpeakingEvent(session, createSpeakingTrainingItemCompletedEvent(this.task, activeItem, active.activeRequestId, active.nextSupplyCursor, result.performanceScore === null ? 'unscorable-practice' : 'scored', this.identity(now)), now)
+      if (completedStream.finishCurrentItem) {
+        session = { ...session, stream: completedStream }
+        session = withPendingSpeakingEvent(session, createSpeakingTrainingBudgetCompletedEvent(this.task, activeItem.itemId, completedStream.completedItemCount, this.identity(now)), now)
+      } else {
+        try {
+          const catalog = await this.contentSource.load()
+          const { request, result: next } = await this.nextStreamItem(catalog, completedStream)
+          if (next.status !== 'item') {
+            session = { ...session, phase: 'error', pausedFromPhase: null, lastActiveAt: null,
+              failure: { category: 'content', message: '当前没有可继续的口语题目。' }, stream: completedStream, updatedAt: now }
+            session = withPendingSpeakingEvent(session, createSpeakingTrainingContentExhaustedEvent(this.task, request.requestId, request.cursor, next.reason, this.identity(now)), now)
+          } else {
+            const supplied = resolveSpeakingSupplyPrompt(catalog, next.item as SpeakingSupplyItem)
+            session = this.createStreamSession(session, supplied.unit, supplied.prompt,
+              this.streamState(next.item as SpeakingSupplyItem, request.requestId, next.nextCursor, completedStream))
+          }
+        } catch (error) {
+          session = { ...session, phase: 'error', pausedFromPhase: null, lastActiveAt: null,
+            failure: this.failureFor(error), stream: completedStream, updatedAt: now }
+        }
+      }
+    } else if (session.phase === 'completed') {
       const result = getSpeakingSessionResult(session)
       const durationSeconds = this.untrustedLegacyDuration(session)
       const now = this.now()
@@ -1117,6 +1230,33 @@ export class SpeakingTrainingRuntime {
       'retry-pending-events',
       () => this.flushPendingEvents(),
     )
+  }
+
+  retrySupply(): Promise<SpeakingSession> {
+    return this.runAction('retry-supply', async () => {
+      const current = this.requireSession()
+      if (!this.continuousTraining || current.phase !== 'error' || !current.stream) {
+        throw new SpeakingError('session-transition-invalid', 'Speaking supply is not awaiting a retry.')
+      }
+      await this.timing.startLoading()
+      try {
+        const catalog = await this.contentSource.load()
+        const { request, result } = await this.nextStreamItem(catalog, current.stream)
+        if (result.status !== 'item') {
+          const session = withPendingSpeakingEvent(current, createSpeakingTrainingContentExhaustedEvent(this.task, request.requestId, request.cursor, result.reason, this.identity(this.now())), this.now())
+          await this.save(session)
+          return this.flushPendingEvents()
+        }
+        const supplied = resolveSpeakingSupplyPrompt(catalog, result.item as SpeakingSupplyItem)
+        const session = this.createStreamSession(current, supplied.unit, supplied.prompt,
+          this.streamState(result.item as SpeakingSupplyItem, request.requestId, result.nextCursor, current.stream))
+        await this.saveDuringExcludedPersistence(session)
+        return this.flushPendingEvents()
+      } catch (error) {
+        const failed = { ...current, failure: this.failureFor(error), updatedAt: this.now() }
+        return this.save(failed)
+      }
+    })
   }
 
   private async restartInternal(): Promise<SpeakingSession> {

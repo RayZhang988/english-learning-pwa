@@ -67,6 +67,6 @@ describe('current speaking content source', () => {
 
     expect(installed.packageId).toBe(SPEAKING_CONTENT_PACKAGE_ID)
     expect(installed.version).toBe(SPEAKING_CONTENT_PACKAGE_VERSION)
-    expect(installed.assets).toHaveLength(6)
+    expect(installed.assets).toHaveLength(7)
   })
 })

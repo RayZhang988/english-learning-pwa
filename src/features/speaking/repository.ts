@@ -103,6 +103,7 @@ function restoreSession(
   }
   return {
     ...(value as unknown as SpeakingSession),
+    stream: (value as unknown as { stream?: SpeakingSession['stream'] }).stream ?? null,
     pendingEvents,
     recorder: {
       ...(value.recorder as unknown as SpeakingSession['recorder']),

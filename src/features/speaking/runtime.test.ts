@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { InMemoryPlatformEventSink } from '../../core/testing/index.ts'
+import { parseLearningEvent } from '../../learning-engine/index.ts'
 import type { ReadonlyDataSource } from '../../core/index.ts'
 import type {
   MicrophonePermissionService,
@@ -190,6 +191,65 @@ function runtime(options: {
 }
 
 describe('speaking training runtime fallbacks', () => {
+  it('streams durable non-repeating prompts and completes only after finish-current-item', async () => {
+    const secondPrompt = { ...speakingPrompt, id: 'w1d1-s2', cueZh: '说明你在纽约旅行。', modelAnswer: "I'm visiting New York.", acceptedAnswers: ["I'm visiting New York."] }
+    const catalog = createSpeakingCatalogFixture(createSpeakingUnit([speakingPrompt, secondPrompt]))
+    const items = [
+      { itemId: 'supply-1', learningUnitId: catalog.units[0].learningUnitId, contentRef: catalog.units[0].contentRef, difficultyLevel: 1, tags: ['scene:introductions'], source: { sourceType: 'speaking-prompt' as const, sourceId: 'w1d1-s1', variantId: 'activity-prompt' as const } },
+      { itemId: 'supply-2', learningUnitId: catalog.units[0].learningUnitId, contentRef: catalog.units[0].contentRef, difficultyLevel: 1, tags: ['scene:introductions'], source: { sourceType: 'speaking-prompt' as const, sourceId: 'w1d1-s2', variantId: 'activity-prompt' as const } },
+    ]
+    const supplyProvider = { async next(request: import('../../learning-engine/index.ts').LearningTaskSupplyRequest) {
+      const item = items.find((candidate) => !request.excludeItemIds.includes(candidate.itemId))
+      return item ? { schemaVersion: 1 as const, requestId: request.requestId, status: 'item' as const, item, nextCursor: item.itemId }
+        : { schemaVersion: 1 as const, requestId: request.requestId, status: 'content-exhausted' as const, reason: 'all-eligible-content-recently-used' as const }
+    } }
+    let budget: 'running' | 'finish-current-item' = 'running'
+    const store = new MemoryStore()
+    const sink = new InMemoryPlatformEventSink()
+    const options = {
+      task: createSpeakingTask({ trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } }), localDate: '2026-07-28',
+      contentSource: { load: async () => catalog }, eventSink: sink,
+      repository: new SpeakingSessionRepository(store), networkStatus: online, microphonePermission: permission(), recorder: new FakeRecorder(),
+      recognition: new FakeRecognition({ status: 'recognized' as const, transcript: "I'm from Shanghai.", alternatives: [] }), now: clock(), createId: ids('stream'), supplyProvider, trainingBudgetStatus: () => budget,
+    }
+    const training = new SpeakingTrainingRuntime(options)
+    let session = await training.initialize()
+    expect(session.stream?.activeItem?.itemId).toBe('supply-1')
+    await training.startRecording(); await training.stopRecording(); session = await training.advance()
+    expect(session.phase).toBe('practicing')
+    expect(session.stream?.completedItemIds).toEqual(['supply-1'])
+    expect(session.stream?.activeItem?.itemId).toBe('supply-2')
+
+    const restored = new SpeakingTrainingRuntime({ ...options, repository: new SpeakingSessionRepository(store) })
+    await restored.initialize()
+    budget = 'finish-current-item'
+    await restored.startRecording(); await restored.stopRecording(); session = await restored.advance()
+    expect(session.phase).toBe('completed')
+    const events = sink.events.map((event) => parseLearningEvent(event))
+    expect(events.filter((event) => event.type === 'learning.training.item.completed.v1')).toHaveLength(2)
+    expect(events.some((event) => event.type === 'learning.training.budget.completed.v1')).toBe(true)
+    expect(events.filter((event) => event.type === 'learning.attempt.completed.v1').every((event) => event.payload.taskCompleted === false)).toBe(true)
+  })
+
+  it('reports exhausted streams without clearing exclusions and allows an honest retry', async () => {
+    const catalog = createSpeakingCatalogFixture()
+    const item = { itemId: 'only-item', learningUnitId: catalog.units[0].learningUnitId, contentRef: catalog.units[0].contentRef, difficultyLevel: 1, tags: [], source: { sourceType: 'speaking-prompt' as const, sourceId: 'w1d1-s1', variantId: 'activity-prompt' as const } }
+    const requests: import('../../learning-engine/index.ts').LearningTaskSupplyRequest[] = []
+    const supplyProvider = { async next(request: import('../../learning-engine/index.ts').LearningTaskSupplyRequest) {
+      requests.push(request)
+      return request.excludeItemIds.includes(item.itemId)
+        ? { schemaVersion: 1 as const, requestId: request.requestId, status: 'content-exhausted' as const, reason: 'all-eligible-content-recently-used' as const }
+        : { schemaVersion: 1 as const, requestId: request.requestId, status: 'item' as const, item, nextCursor: item.itemId }
+    } }
+    const training = new SpeakingTrainingRuntime({ task: createSpeakingTask({ trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } }), localDate: '2026-07-28', contentSource: { load: async () => catalog }, eventSink: new InMemoryPlatformEventSink(), repository: new SpeakingSessionRepository(new MemoryStore()), networkStatus: online, microphonePermission: permission(), recorder: new FakeRecorder(), recognition: new FakeRecognition({ status: 'recognized', transcript: "I'm from Shanghai.", alternatives: [] }), now: clock(), createId: ids('exhausted'), supplyProvider, trainingBudgetStatus: () => 'running' })
+    await training.initialize(); await training.startRecording(); await training.stopRecording()
+    const exhausted = await training.advance()
+    expect(exhausted.phase).toBe('error')
+    expect(exhausted.stream?.completedItemIds).toEqual(['only-item'])
+    await training.retrySupply()
+    expect(training.currentSession?.phase).toBe('error')
+    expect(requests.at(-1)?.excludeItemIds).toEqual(['only-item'])
+  })
   it('publishes scored evidence from controlled recognition matching', async () => {
     const sink = new InMemoryPlatformEventSink()
     const training = runtime({ sink })

@@ -4,6 +4,10 @@ import type {
   LearningTaskPausedEvent,
   LearningTaskStartedEvent,
   LearningTaskSkippedEvent,
+  LearningTaskSupplyItem,
+  LearningTrainingBudgetCompletedEvent,
+  LearningTrainingContentExhaustedEvent,
+  LearningTrainingItemCompletedEvent,
 } from '../../learning-engine/index.ts'
 import { SpeakingError } from './errors.ts'
 import { getSpeakingSessionResult } from './session.ts'
@@ -178,4 +182,55 @@ export function createSpeakingUnscorableEvent(
       failureCategory,
     },
   }
+}
+
+export function createSpeakingStreamAttemptEvent(
+  session: SpeakingSession,
+  durationSeconds: number,
+  identity: EventIdentity,
+): LearningAttemptCompletedEvent {
+  const result = getSpeakingSessionResult(session)
+  const unscorable = result.performanceScore === null
+  if (unscorable && result.failureCategory === null) {
+    throw new SpeakingError('session-transition-invalid', 'Unscorable speaking stream item needs an honest failure category.')
+  }
+  return {
+    id: identity.eventId, type: 'learning.attempt.completed.v1', sourceModuleId: 'speaking',
+    occurredAt: identity.occurredAt, schemaVersion: 1,
+    payload: {
+      ...basePayload(session.task, identity.localDate), mode: session.task.mode,
+      difficultyLevel: session.task.difficultyLevel, estimatedSeconds: session.task.estimatedSeconds,
+      result: unscorable ? 'unscorable' : 'scored',
+      performanceScore: result.performanceScore,
+      evidenceQuality: unscorable ? 0 : result.evidenceQuality,
+      assistanceLevel: unscorable ? 0 : result.assistanceLevel,
+      durationSeconds: Math.max(0, Math.floor(durationSeconds)), taskCompleted: false,
+      errorTags: unscorable ? [] : result.errorTags, contentTags: session.task.tags,
+      failureCategory: unscorable ? result.failureCategory : null,
+    },
+  }
+}
+
+export function createSpeakingTrainingItemCompletedEvent(
+  task: LearningTask, item: LearningTaskSupplyItem, requestId: string,
+  nextSupplyCursor: string | null,
+  outcome: 'scored' | 'unscorable-practice', identity: EventIdentity,
+): LearningTrainingItemCompletedEvent {
+  return { id: identity.eventId, type: 'learning.training.item.completed.v1', sourceModuleId: 'speaking', occurredAt: identity.occurredAt, schemaVersion: 1,
+    payload: { ...basePayload(task, identity.localDate), mode: task.mode, item, requestId, nextSupplyCursor, outcome } }
+}
+
+export function createSpeakingTrainingContentExhaustedEvent(
+  task: LearningTask, requestId: string, cursor: string | null,
+  reason: LearningTrainingContentExhaustedEvent['payload']['reason'], identity: EventIdentity,
+): LearningTrainingContentExhaustedEvent {
+  return { id: identity.eventId, type: 'learning.training.content.exhausted.v1', sourceModuleId: 'speaking', occurredAt: identity.occurredAt, schemaVersion: 1,
+    payload: { ...basePayload(task, identity.localDate), mode: task.mode, requestId, cursor, reason } }
+}
+
+export function createSpeakingTrainingBudgetCompletedEvent(
+  task: LearningTask, lastCompletedItemId: string, completedItemCount: number, identity: EventIdentity,
+): LearningTrainingBudgetCompletedEvent {
+  return { id: identity.eventId, type: 'learning.training.budget.completed.v1', sourceModuleId: 'speaking', occurredAt: identity.occurredAt, schemaVersion: 1,
+    payload: { ...basePayload(task, identity.localDate), mode: task.mode, lastCompletedItemId, completedItemCount } }
 }

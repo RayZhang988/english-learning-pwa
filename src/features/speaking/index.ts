@@ -14,7 +14,12 @@ export {
   createSpeakingTaskSkippedEvent,
   createSpeakingTaskStartedEvent,
   createSpeakingUnscorableEvent,
+  createSpeakingStreamAttemptEvent,
+  createSpeakingTrainingBudgetCompletedEvent,
+  createSpeakingTrainingContentExhaustedEvent,
+  createSpeakingTrainingItemCompletedEvent,
 } from './events.ts'
+export { SpeakingCatalogSupplyProvider, resolveSpeakingSupplyPrompt, type SpeakingSupplyProvider } from './supply.ts'
 export {
   SpeakingError,
   toSpeakingError,
@@ -99,5 +104,7 @@ export type {
   SpeakingSessionResult,
   SpeakingTextMatch,
   SpeakingTrainingUnit,
+  SpeakingSupplyItem,
+  SpeakingStreamState,
 } from './types.ts'
 export { toSpeakingScreenViewModel } from './view-model.ts'

@@ -1,4 +1,4 @@
-import type { LearningEvent, LearningTask } from '../../learning-engine/index.ts'
+import type { LearningEvent, LearningTask, LearningTaskSupplyItem } from '../../learning-engine/index.ts'
 import type {
   MicrophonePermissionState,
   NetworkStatus,
@@ -35,6 +35,7 @@ export interface SpeakingCatalog {
   readonly packageVersion: '1.0.0'
   readonly courseId: 'survival-travel-american-4w'
   readonly units: readonly SpeakingTrainingUnit[]
+  readonly trainingSupplyIndex?: unknown
   getUnit(contentRef: string): SpeakingTrainingUnit | undefined
 }
 
@@ -42,6 +43,26 @@ export interface SpeakingContentDocuments {
   readonly packageIndex: unknown
   readonly manifest: unknown
   readonly lessonsByPath: Readonly<Record<string, unknown>>
+  readonly trainingSupplyIndex?: unknown
+}
+
+export interface SpeakingSupplyItem extends LearningTaskSupplyItem {
+  readonly source: {
+    readonly sourceType: 'speaking-prompt' | 'speaking-scene-quiz'
+    readonly sourceId: string
+    readonly variantId: 'activity-prompt' | 'scene-fixed-response'
+  }
+}
+
+export interface SpeakingStreamState {
+  readonly activeItem: SpeakingSupplyItem | null
+  readonly activeRequestId: string
+  readonly nextSupplyCursor: string | null
+  readonly completedItemIds: readonly string[]
+  readonly completedItemCount: number
+  readonly recognizedItemCount: number
+  readonly unscorableItemCount: number
+  readonly finishCurrentItem: boolean
 }
 
 export type SpeakingMatchLevel =
@@ -232,6 +253,8 @@ export interface SpeakingSession {
   readonly lastActiveAt: string | null
   readonly pendingEvents: readonly LearningEvent[]
   readonly failure: SpeakingSessionFailure | null
+  /** Present only when 01 has injected the QA-011 training-budget port. */
+  readonly stream: SpeakingStreamState | null
 }
 
 export interface SpeakingSessionResult {
