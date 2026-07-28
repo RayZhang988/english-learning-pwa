@@ -148,6 +148,14 @@ contentEstimate = clamp(raw, minimumSeconds, maximumSeconds)
 `learning.training.content.exhausted.v1`；04 将任务留在 `blocked/content-exhausted`，
 不增加完成数、不形成掌握证据，也不伪造每日完成。02/01 应显示并恢复这个真实错误。
 
+供应器后来能够返回新题时，06/07/08 必须先发布
+`learning.training.content.recovered.v1`，其中 `exhaustionRequestId` 精确等于先前耗尽
+事件的 `requestId`。04 只接受同一 plan/task/localDate 且当前确为
+`content-exhausted` 的恢复；恢复不增加有效时间、不改变 cursor、已完成 item 或排除集合。
+它只清除耗尽错误，并按原 `remainingEffectiveSeconds` 回到 `running`，或在剩余为 0 时回到
+`finish-current-item`。随后才可请求/使用新题。重复 event ID 无操作；错误请求、日期或状态
+会被拒绝。
+
 ### 可恢复有效计时片段
 
 01/06/07/08 通过 `learning.timing.segment.recorded.v1` 上报可序列化片段。payload 必须
@@ -285,6 +293,7 @@ contentEstimate = clamp(raw, minimumSeconds, maximumSeconds)
 - `learning.timing.segment.recorded.v1`
 - `learning.training.item.completed.v1`
 - `learning.training.content.exhausted.v1`
+- `learning.training.content.recovered.v1`
 - `learning.training.budget.completed.v1`
 
 事件时间必须是 ISO 8601 UTC；payload 必须带本地日期、计划、任务、内容引用和专项。
@@ -316,9 +325,9 @@ contentEstimate = clamp(raw, minimumSeconds, maximumSeconds)
 | --- | --- | --- |
 | 02 | `DailyPlan`、`PlanProgress.tasks[].training`、`PlanTaskAccess`、`ProgressSnapshot`、`ResumeDecision` | 展示剩余有效秒数、已完成题数和 content-exhausted；不得把推荐 taskId 改成唯一入口 |
 | 05 | `LearningCandidate`、`LearningTaskSupplyRequest`、`LearningTaskSupplyResult` | 供应一个符合 domain/mode/difficulty 的新 item；用 cursor 和 excludeItemIds 去重；耗尽必须诚实返回错误 |
-| 06 | `LearningTask`、`buildLearningTaskSupplyRequest()`、三种 training v1 事件 | 每题结束后续供；900 秒到达后只完成当前题；长时间无操作必须切出 active 片段 |
-| 07 | `LearningTask`、`buildLearningTaskSupplyRequest()`、三种 training v1 事件 | 主动听音可计 effective；媒体加载和后台等待不可计入；不得截断正在播放 |
-| 08 | `LearningTask`、`buildLearningTaskSupplyRequest()`、三种 training v1 事件 | 录音/回放可计 effective；权限/识别等待不可计入；不可评分 item 仍可推进预算 |
+| 06 | `LearningTask`、`buildLearningTaskSupplyRequest()`、四种 training v1 事件 | 供应恢复后先发 recovered，再完成新题；900 秒到达后只完成当前题；长时间无操作必须切出 active 片段 |
+| 07 | `LearningTask`、`buildLearningTaskSupplyRequest()`、四种 training v1 事件 | 供应恢复后先发 recovered；主动听音可计 effective，媒体加载和后台等待不可计入，且不得截断正在播放 |
+| 08 | `LearningTask`、`buildLearningTaskSupplyRequest()`、四种 training v1 事件 | 供应恢复后先发 recovered；录音/回放可计 effective，权限/识别等待不可计入，不可评分 item 仍可推进预算 |
 | 01 | `parseLearningEvent()`、`applyPlanEvent()`、公开 supply/budget 类型 | 串行保存 item、timing、预算完成与 cursor；刷新后不得重复累计或重新供应已完成 item |
 
 建议集成顺序：

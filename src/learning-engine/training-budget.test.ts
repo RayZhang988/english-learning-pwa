@@ -95,6 +95,35 @@ function itemEvent(task: LearningTask, requestId: string) {
   })
 }
 
+function recoveryEvent(
+  task: LearningTask,
+  input: {
+    readonly id?: string
+    readonly localDate?: string
+    readonly exhaustionRequestId?: string
+  } = {},
+) {
+  return parseLearningEvent({
+    id: input.id ?? 'content-recovered',
+    type: 'learning.training.content.recovered.v1',
+    sourceModuleId: task.targetModuleId,
+    schemaVersion: 1,
+    occurredAt: '2026-07-28T00:02:00.000Z',
+    payload: {
+      planId: task.planId,
+      taskId: task.taskId,
+      learningUnitId: task.learningUnitId,
+      contentRef: task.contentRef,
+      domain: task.domain,
+      targetModuleId: task.targetModuleId,
+      localDate: input.localDate ?? '2026-07-28',
+      mode: task.mode,
+      exhaustionRequestId:
+        input.exhaustionRequestId ?? `${task.taskId}:supply:1:initial`,
+    },
+  })
+}
+
 describe('required effective-training budget', () => {
   it('creates one independent 900-second stream per domain without using estimates as budgets', () => {
     const { progress } = taskAndProgress()
@@ -254,5 +283,144 @@ describe('required effective-training budget', () => {
       taskStatus: 'blocked',
     })
     expect(blocked.status).toBe('in-progress')
+  })
+
+  it('recovers the exact exhausted request without changing timing, cursor, or exclusions', () => {
+    const { task, progress } = taskAndProgress()
+    const firstItem = applyPlanEvent(
+      progress,
+      itemEvent(task, `${task.taskId}:supply:1:initial`),
+    )
+    const exhausted = applyPlanEvent(
+      firstItem,
+      parseLearningEvent({
+        id: 'content-exhausted-after-item',
+        type: 'learning.training.content.exhausted.v1',
+        sourceModuleId: task.targetModuleId,
+        schemaVersion: 1,
+        occurredAt: '2026-07-28T00:01:00.000Z',
+        payload: {
+          planId: task.planId,
+          taskId: task.taskId,
+          learningUnitId: task.learningUnitId,
+          contentRef: task.contentRef,
+          domain: task.domain,
+          targetModuleId: task.targetModuleId,
+          localDate: '2026-07-28',
+          mode: task.mode,
+          requestId: `${task.taskId}:supply:2:cursor-2`,
+          cursor: 'cursor-2',
+          reason: 'all-eligible-content-recently-used',
+        },
+      }),
+    )
+    const recoveredEvent = recoveryEvent(task, {
+      exhaustionRequestId: `${task.taskId}:supply:2:cursor-2`,
+    })
+    const recovered = applyPlanEvent(exhausted, recoveredEvent)
+    expect(recovered.tasks[0]).toMatchObject({
+      status: 'active',
+      effectiveSeconds: 0,
+      training: {
+        status: 'running',
+        remainingEffectiveSeconds: 900,
+        completedItemIds: ['stream-item-1'],
+        nextSupplyCursor: 'cursor-2',
+        contentExhausted: null,
+      },
+    })
+    expect(buildLearningTaskSupplyRequest(recovered.tasks[0])).toMatchObject({
+      requestId: `${task.taskId}:supply:2:cursor-2`,
+      excludeItemIds: ['stream-item-1'],
+    })
+    expect(applyPlanEvent(recovered, recoveredEvent)).toBe(recovered)
+  })
+
+  it('rejects recovery before exhaustion, for a different exhaustion request, or a different date', () => {
+    const { task, progress } = taskAndProgress()
+    expect(() => applyPlanEvent(progress, recoveryEvent(task))).toThrow(
+      'content-exhausted',
+    )
+    const exhausted = applyPlanEvent(
+      progress,
+      parseLearningEvent({
+        id: 'content-exhausted-for-rejection',
+        type: 'learning.training.content.exhausted.v1',
+        sourceModuleId: task.targetModuleId,
+        schemaVersion: 1,
+        occurredAt: '2026-07-28T00:01:00.000Z',
+        payload: {
+          planId: task.planId,
+          taskId: task.taskId,
+          learningUnitId: task.learningUnitId,
+          contentRef: task.contentRef,
+          domain: task.domain,
+          targetModuleId: task.targetModuleId,
+          localDate: '2026-07-28',
+          mode: task.mode,
+          requestId: `${task.taskId}:supply:1:initial`,
+          cursor: null,
+          reason: 'no-eligible-content',
+        },
+      }),
+    )
+    expect(() =>
+      applyPlanEvent(
+        exhausted,
+        recoveryEvent(task, { exhaustionRequestId: 'another-request' }),
+      ),
+    ).toThrow('does not match')
+    expect(() =>
+      applyPlanEvent(
+        exhausted,
+        recoveryEvent(task, { id: 'wrong-date', localDate: '2026-07-29' }),
+      ),
+    ).toThrow('localDate')
+    const wrongTask = recoveryEvent(task, { id: 'wrong-task' })
+    expect(() =>
+      applyPlanEvent(
+        exhausted,
+        {
+          ...wrongTask,
+          payload: { ...wrongTask.payload, taskId: 'not-in-this-plan' },
+        } as typeof wrongTask,
+      ),
+    ).toThrow('not part of this plan')
+  })
+
+  it('returns to finish-current-item when recovery happens after the effective deadline', () => {
+    const { task, progress } = taskAndProgress()
+    const atDeadline = applyPlanEvent(
+      progress,
+      timing(task, 'deadline-before-exhaustion', '2026-07-28T00:00:00.000Z', '2026-07-28T00:15:00.000Z', 900),
+    )
+    const exhausted = applyPlanEvent(
+      atDeadline,
+      parseLearningEvent({
+        id: 'deadline-content-exhausted',
+        type: 'learning.training.content.exhausted.v1',
+        sourceModuleId: task.targetModuleId,
+        schemaVersion: 1,
+        occurredAt: '2026-07-28T00:15:00.000Z',
+        payload: {
+          planId: task.planId,
+          taskId: task.taskId,
+          learningUnitId: task.learningUnitId,
+          contentRef: task.contentRef,
+          domain: task.domain,
+          targetModuleId: task.targetModuleId,
+          localDate: '2026-07-28',
+          mode: task.mode,
+          requestId: `${task.taskId}:supply:1:initial`,
+          cursor: null,
+          reason: 'provider-failure',
+        },
+      }),
+    )
+    const recovered = applyPlanEvent(exhausted, recoveryEvent(task))
+    expect(recovered.tasks[0]).toMatchObject({
+      status: 'active',
+      training: { remainingEffectiveSeconds: 0, status: 'finish-current-item' },
+    })
   })
 })

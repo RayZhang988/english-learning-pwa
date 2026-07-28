@@ -19,6 +19,7 @@ const EVENT_TYPES = [
   'learning.timing.segment.recorded.v1',
   'learning.training.item.completed.v1',
   'learning.training.content.exhausted.v1',
+  'learning.training.content.recovered.v1',
   'learning.training.budget.completed.v1',
 ] as const
 
@@ -310,6 +311,9 @@ export function parseLearningEvent(event: PlatformEvent): LearningEvent {
       throw new TypeError('cursor must be a string or null')
     }
     requireEnum(payload, 'reason', CONTENT_EXHAUSTION_REASONS)
+  } else if (event.type === 'learning.training.content.recovered.v1') {
+    requireEnum(payload, 'mode', MODES)
+    requireString(payload, 'exhaustionRequestId')
   } else {
     requireEnum(payload, 'mode', MODES)
     requireString(payload, 'lastCompletedItemId')

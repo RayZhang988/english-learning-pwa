@@ -685,6 +685,17 @@ export type LearningTrainingContentExhaustedPayload =
     readonly reason: TrainingTaskContentExhausted['reason']
   }
 
+/**
+ * A producer has successfully recovered the exact supply request that was
+ * previously reported as exhausted. It carries no replacement item: that
+ * item remains a normal subsequent supply/item-completed operation.
+ */
+export type LearningTrainingContentRecoveredPayload =
+  LearningEventBasePayload & {
+    readonly mode: LearningTaskMode
+    readonly exhaustionRequestId: string
+  }
+
 export type LearningTrainingBudgetCompletedPayload =
   LearningEventBasePayload & {
     readonly mode: LearningTaskMode
@@ -732,6 +743,11 @@ export type LearningTrainingContentExhaustedEvent = LearningPlatformEvent<
   LearningTrainingContentExhaustedPayload
 >
 
+export type LearningTrainingContentRecoveredEvent = LearningPlatformEvent<
+  'learning.training.content.recovered.v1',
+  LearningTrainingContentRecoveredPayload
+>
+
 export type LearningTrainingBudgetCompletedEvent = LearningPlatformEvent<
   'learning.training.budget.completed.v1',
   LearningTrainingBudgetCompletedPayload
@@ -745,6 +761,7 @@ export type LearningEvent =
   | LearningTimingSegmentRecordedEvent
   | LearningTrainingItemCompletedEvent
   | LearningTrainingContentExhaustedEvent
+  | LearningTrainingContentRecoveredEvent
   | LearningTrainingBudgetCompletedEvent
 
 export interface DailyPlanInput {

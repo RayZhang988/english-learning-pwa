@@ -53,6 +53,8 @@ export type {
   LearningTrainingBudgetCompletedPayload,
   LearningTrainingContentExhaustedEvent,
   LearningTrainingContentExhaustedPayload,
+  LearningTrainingContentRecoveredEvent,
+  LearningTrainingContentRecoveredPayload,
   LearningTrainingItemCompletedEvent,
   LearningTrainingItemCompletedPayload,
   LearningTrainingItemOutcome,

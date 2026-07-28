@@ -88,4 +88,27 @@ describe('learning event contract', () => {
       }),
     ).toThrow('nextSupplyCursor')
   })
+
+  it('accepts a content recovery event only with its exhausted request identity', () => {
+    const base = attemptEvent()
+    const event = {
+      ...base,
+      id: 'content-recovered-1',
+      type: 'learning.training.content.recovered.v1',
+      payload: {
+        ...base.payload,
+        exhaustionRequestId: 'task-1:supply:2:cursor-2',
+      },
+    } as PlatformEvent
+    expect(parseLearningEvent(event)).toEqual(event)
+    expect(() =>
+      parseLearningEvent({
+        ...event,
+        payload: {
+          ...(event.payload as Record<string, unknown>),
+          exhaustionRequestId: '',
+        },
+      }),
+    ).toThrow('exhaustionRequestId')
+  })
 })

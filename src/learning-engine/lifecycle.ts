@@ -209,6 +209,7 @@ export function applyPlanEvent(
       event.type === 'learning.timing.segment.recorded.v1' ||
       event.type === 'learning.training.item.completed.v1' ||
       event.type === 'learning.training.content.exhausted.v1' ||
+      event.type === 'learning.training.content.recovered.v1' ||
       event.type === 'learning.training.budget.completed.v1') &&
     event.payload.mode !== execution.task.mode
   ) {
@@ -316,6 +317,38 @@ export function applyPlanEvent(
           reason: event.payload.reason,
           occurredAt: event.occurredAt,
         },
+      },
+      updatedAt: event.occurredAt,
+    }
+  } else if (event.type === 'learning.training.content.recovered.v1') {
+    if (execution.training === undefined) {
+      throw new TypeError('Content recovery event requires a training budget')
+    }
+    if (event.payload.localDate !== progress.plan.localDate) {
+      throw new TypeError('Content recovery localDate does not match the plan')
+    }
+    if (
+      execution.training.status !== 'content-exhausted' ||
+      execution.training.contentExhausted === null
+    ) {
+      throw new TypeError('Content recovery requires a content-exhausted task')
+    }
+    if (
+      execution.training.contentExhausted.requestId !==
+      event.payload.exhaustionRequestId
+    ) {
+      throw new TypeError('Content recovery does not match the exhausted request')
+    }
+    updated = {
+      ...execution,
+      status: 'active',
+      training: {
+        ...execution.training,
+        status:
+          execution.training.remainingEffectiveSeconds === 0
+            ? 'finish-current-item'
+            : 'running',
+        contentExhausted: null,
       },
       updatedAt: event.occurredAt,
     }
