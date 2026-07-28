@@ -2,12 +2,12 @@
 
 ## 结论
 
-**QA-011 与 QA-012 已在正式站关闭；新发现的 QA-013 已在 HEAD `c29c63a` 本地
-修复通过，但尚未部署。R3 真机验收暂停在旧计划兼容回归，不能提前关闭。**
+**QA-011 与 QA-012 已在正式站关闭；QA-013 已完成正式站等价旧计划自动化，
+但仍待用户原 iPhone 数据确认，不能提前关闭。**
 
-正式候选 head `ff7b85f95080d1e3c8d06ee9d114c6b52fd636e8` 已由 Pages run
-`30341029089` 成功部署为 `index-DuWWQrUe.js`。隔离 Chrome 从正式 R1 生成首日计划，
-Today/Training 使用同一三个真实 taskId，并分别显示 15 分钟有效训练。
+当前正式候选 head `ac915a39a3adb0e7fa6888ff2383d7787f0604cc` 已由 Pages run
+`30345631519` 成功部署为 `index-yjGhjGzs.js`。既有 R3/release smoke 与新增 QA-013
+隔离旧计划回归均通过；QA-011/012 的正式关闭证据继续保留。
 
 ## QA-011/012 正式关闭（run `30341029089`）
 
@@ -59,11 +59,11 @@ typecheck、lint、生产构建、84 单元、808 候选、PWA、dist smoke 和 
 Refresh 非阻断警告。
 
 本轮必要专项为 11 文件/60 项通过，808 供应校验通过。QA-011 与 QA-012 已达到正式
-关闭门槛。随后用户原 iPhone 旧计划暴露 QA-013；必须先部署并在不清数据的前提下
-恢复听力/口语，才能继续 `iphone-checklist.md` 的锁屏、后台、真实媒体生命周期和
-900 秒自然收尾。
+关闭门槛。随后用户原 iPhone 旧计划暴露 QA-013；修复及正式等价旧计划自动化现已
+通过，但仍必须在不清数据的前提下由用户确认原计划能恢复听力/口语，才能继续
+`iphone-checklist.md` 的锁屏、后台、真实媒体生命周期和 900 秒自然收尾。
 
-## QA-013 本地修复验收（HEAD `c29c63a`）
+## QA-013 本地与正式自动化验收
 
 用户真实 iPhone 保留 QA-011 前生成的旧计划：词汇已完成 12 秒，听力和口语没有
 `trainingBudget`。进入任一模块发布事件时，仓储曾报
@@ -80,8 +80,22 @@ Refresh 非阻断警告。
   123 文件/669 项通过；`pnpm check`、84 单元、808 供应、PWA 与本地 release smoke
   全部通过。
 
-当前结论只能是“QA-013 本地修复通过，待正式站及用户原 iPhone 回归”。正式部署由
-00 统一执行；09 不部署，也不得要求用户清除网站数据。
+正式候选已由 Pages run `30345631519` 成功部署，head 为
+`ac915a39a3adb0e7fa6888ff2383d7787f0604cc`，资产为 `index-yjGhjGzs.js`。
+新增正式隔离浏览器以用户等价旧计划完成以下门禁：
+
+- 第一个临时 Profile 从正式 R1 生成档案、计划和真实 taskId；第二个临时 Profile
+  种入无 `trainingBudget` 的旧 active plan，词汇为 `completed/scored/12 秒`，听力和
+  口语 pending；未读取或清除用户日常浏览器数据。
+- listening 的 started、真实 speech 生命周期 1 秒 timing、完整 7 题 attempt 均在
+  各自保存后刷新恢复，最终 `completed/scored`。
+- speaking 的 started、真实 MediaRecorder 生命周期 1 秒 timing、三题录音回放降级
+  attempt 均在各自保存后刷新恢复，最终 `completed/unscorable-practice`。
+- 全程词汇 execution 与 12 秒记录完全不变，旧计划无 execution `training`，页面和
+  仓储没有 JSON-portable 错误；脚本自然退出 0。
+
+当前结论只能是“QA-013 正式自动化通过，待用户原 iPhone 确认”。隔离夹具不是用户
+原 IndexedDB，不能据此关闭 QA-013，也不得要求用户清除网站数据。
 
 ## 验收版本
 
@@ -104,7 +118,10 @@ Refresh 非阻断警告。
 - QA-011/012 Pages run：`30341029089`，`completed / success`
 - QA-011/012 正式资产：`assets/index-DuWWQrUe.js`
 - QA-013 修复：04 `1f847d3`
-- QA-013 01 仓储回归 / 当前 HEAD：`c29c63a`
+- QA-013 01 仓储回归：`c29c63a`
+- QA-013 正式验收 head：`ac915a39a3adb0e7fa6888ff2383d7787f0604cc`
+- QA-013 Pages run：`30345631519`，`completed / success`
+- QA-013 正式资产：`assets/index-yjGhjGzs.js`
 
 ## QA-011/012 正式站关闭证据
 

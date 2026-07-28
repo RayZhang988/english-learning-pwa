@@ -16,7 +16,7 @@
 | QA-010 | 已关闭 | S1 | 结构化时长任务被真实词汇路由拒绝，首日词汇无法进入 | 失败候选 `4e49d7f` / `b803bd1`；修复 `c86d879` | 06 主责，01 任务契约协同；09 回归 | 同一正式 run/asset；真实词汇入口加载 `0/6` 题面，无不可评分或 identity mismatch |
 | QA-011 | 已关闭 | S2 | 15 分钟目标前固定单元题目耗尽并提前完成任务 | 用户真实 iPhone / 正式 `79d90b6`；修复链至 `b878965` | 04/05/06/07/08/01/02 已交付；09 验收 | run `30341029089`、head `ff7b85f`、资产 `index-DuWWQrUe.js`；正式 Chrome 跨 6 题恢复第 7 题且预算 running |
 | QA-012 | 已关闭 | S1 | 正式 808 供应索引使口语预算任务首题即进入内容耗尽 | 失败 `2b75173`；修复 08 `b878965` | 08 主责；05/01 无需返工 | 同一正式 run/asset；口语首题 `practicing` 无 provider-failure，索引含 122 口语/28 scene |
-| QA-013 | 本地修复通过，待正式站回归 | S1 | 旧 iPhone 计划启动听力/口语时写入非 JSON-portable 的 `training: undefined` | 用户真实 iPhone 旧计划；修复 04 `1f847d3`，01 回归 `c29c63a` | 04 主责；01 仓储集成；09 回归 | QA 外部 1/1 通过；既有词汇完成 12 秒、听力/口语 started+timing+attempt 与逐次刷新均保留 |
+| QA-013 | 正式自动化通过，待用户原 iPhone 确认 | S1 | 旧 iPhone 计划启动听力/口语时写入非 JSON-portable 的 `training: undefined` | 用户真实 iPhone 旧计划；修复 04 `1f847d3`，01 回归 `c29c63a`；正式 `ac915a3` | 04 主责；01 仓储集成；09 回归 | run `30345631519` / `index-yjGhjGzs.js`；隔离正式 E2E 自然 exit 0，词汇 12 秒不变，听力/口语 started+timing+attempt 逐次刷新通过；仍未用用户原数据验证 |
 
 ## QA-001｜课程索引未随生产版本发布
 
@@ -733,7 +733,7 @@ task.difficultyLevel=1
 ## QA-013｜旧 iPhone 计划事件写入非 JSON-portable training 字段
 
 ```text
-状态：本地修复通过，待正式站回归
+状态：正式自动化通过，待用户原 iPhone 确认
 严重度：S1
 环境：用户真实 iPhone；QA-011 之前生成、没有 trainingBudget 的旧 active plan
 前置状态：词汇已完成，实际有效时间 12 秒；听力和口语仍未完成
@@ -774,13 +774,33 @@ started、timing、attempt 保存和刷新均可继续，既有词汇 12 秒完�
   123 文件/669 项通过；`pnpm check`、84 单元、808 供应、PWA 和本地 release smoke
   全部通过。
 
+正式自动化证据（2026-07-28）：
+
+- 修复已随 Pages run `30345631519` 部署；run 为 `completed/success`，head
+  `ac915a39a3adb0e7fa6888ff2383d7787f0604cc`，正式资产
+  `index-yjGhjGzs.js`；首页、Manifest、SW 和资产均 HTTP 200。
+- `tests/e2e/qa-013-legacy-plan-portability.mjs` 使用两个临时隔离 Chrome Profile：
+  第一个从正式 R1 生成合法档案、计划和三个真实 taskId，第二个只种入用户等价的旧
+  active plan；没有读取或清除日常浏览器及用户原 iPhone 数据。
+- 种入计划不含 `trainingBudget` 或 execution `training`；词汇预置为
+  `completed / scored / 12 秒`，听力和口语为 pending。
+- 听力依次验证 started、真实语音生命周期产生的 1 秒 timing、完整 7 题 attempt；
+  每步刷新后分别恢复为 active、`timing-segments`、`completed/scored`。
+- 口语依次验证 started、真实 MediaRecorder 生命周期产生的 1 秒 timing、三题录音
+  回放降级 attempt；每步刷新后最终为 `completed/unscorable-practice`。
+- 全程词汇 execution 与 12 秒记录完全不变，旧计划仍无 `training` 自有字段，页面和
+ 运行时均未出现 JSON-portable 错误；脚本最终自然退出 0。
+
+当前状态不是关闭。正式自动化只能证明部署版本能处理等价旧计划，不能证明用户原
+iPhone 上的既有 IndexedDB、主屏幕安装态和媒体权限已经恢复。
+
 正式关闭门槛：
 
-1. 部署包含 `1f847d3` 和 `c29c63a` 的候选，不得要求用户清数据。
-2. 正式站使用隔离的旧计划夹具重跑 listening/speaking started+timing+attempt 与刷新
-   恢复，保存过程不得出现 `not JSON-portable`。
-3. 用户在原 iPhone 数据上重新进入听力和口语，既有词汇 12 秒完成进度仍保留。
-4. 正式自动化和用户原数据均通过后，QA-013 才能关闭并继续 R3 真机清单。
+1. 用户在原 iPhone 数据上重新进入听力和口语，既有词汇 12 秒完成进度仍保留。
+2. 听力和口语各完成至少一题并刷新，不能再出现 `not JSON-portable`，不能生成新
+   计划、清空旧计划或要求重做评估。
+3. 用户原数据通过后，QA-013 才能关闭并继续 R3 真机清单；当前正式自动化通过不足以
+   关闭缺陷。
 
 ## 缺陷模板
 

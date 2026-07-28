@@ -20,11 +20,14 @@
 - QA-011/012 正式 head：`ff7b85f95080d1e3c8d06ee9d114c6b52fd636e8`
 - QA-011/012 GitHub Pages run：`30341029089`，`success`
 - QA-011/012 正式资产：`assets/index-DuWWQrUe.js`
-- QA-013 本地修复：04 `1f847d3`；01 仓储回归 / HEAD `c29c63a`
+- QA-013 修复：04 `1f847d3`；01 仓储回归 `c29c63a`
+- QA-013 正式 head：`ac915a39a3adb0e7fa6888ff2383d7787f0604cc`
+- QA-013 GitHub Pages run：`30345631519`，`success`
+- QA-013 正式资产：`assets/index-yjGhjGzs.js`
 
 状态只使用：`通过`、`本地修复通过，待正式站`、`本地候选通过，待正式站`、
-`自动化通过，待真机`、`正式站通过`、`正式站通过，待真机`、`待用户真机`、
-`不通过`。
+`自动化通过，待真机`、`正式自动化通过，待用户原 iPhone 确认`、`正式站通过`、
+`正式站通过，待真机`、`待用户真机`、`不通过`。
 
 ## QA-011 修订门禁（正式 run `30341029089`）
 
@@ -46,19 +49,19 @@ QA-012（S1）已正式关闭：08 `b878965` 可解析完整 122 个口语候选
 taskId 已进入 `supply-v1-speaking-w1d1-s1` / `practicing`，没有 `provider-failure`；
 离线正式索引复核 122/28，供应专项验证 scene 引用可解析。
 
-## QA-013 旧计划 JSON-portable 门禁（本地 HEAD `c29c63a`）
+## QA-013 旧计划 JSON-portable 门禁（正式 run `30345631519`）
 
 用户真实 iPhone 保留的是 QA-011 前生成的旧计划：词汇已经完成 12 秒，听力/口语
 任务没有 `trainingBudget`。进入后生产保存曾因 `training: undefined` 被严格仓储拒绝。
 
 | ID | QA-013 要求 | 当前证据 | 状态 |
 | --- | --- | --- | --- |
-| QA013-01 | 旧任务 create/start/timing/attempt 后完全省略 execution.training | 04 `1f847d3` 与学习引擎专项；09 外部严格 portable 仓储 1/1 | 本地修复通过，待正式站 |
-| QA013-02 | listening started+7 秒 timing+attempt 每步保存并刷新恢复 | 09 每个事件后重建 ActivePlanRepository 并加载；状态 active→completed | 本地修复通过，待正式站 |
-| QA013-03 | speaking started+9 秒 timing+attempt 每步保存并刷新恢复 | 同一外部验收；状态 active→completed，学习引擎新增 attempt | 本地修复通过，待正式站 |
-| QA013-04 | 既有词汇 completed/scored/12 秒及 completedLearningUnitId 全程保留 | 每次 reload 均核对，最终三项 completed；原计划仍无 trainingBudget | 本地修复通过，待正式站 |
-| QA013-05 | 不清数据；正式部署后原 iPhone 旧计划可继续 | 当前尚未部署，不能用新空计划替代 | 待用户原设备 |
-| QA013-06 | QA-013、09、R3、全量和工程门禁零失败 | 3/42、10/57、27/203、123/669；pnpm check、84、808、PWA、release smoke 通过 | 本地修复通过，待正式站 |
+| QA013-01 | 旧任务 create/start/timing/attempt 后完全省略 execution.training | 04 `1f847d3` 与学习引擎专项；正式隔离 E2E 全程检查 raw IndexedDB 无 undefined/`training` | 正式自动化通过，待用户原 iPhone 确认 |
+| QA013-02 | listening started+timing+attempt 每步保存并刷新恢复 | 正式真实 taskId：started→1 秒 speech timing→7 题 attempt；各步刷新，最终 `completed/scored` | 正式自动化通过，待用户原 iPhone 确认 |
+| QA013-03 | speaking started+timing+attempt 每步保存并刷新恢复 | 正式真实 taskId：started→1 秒 MediaRecorder timing→三题回放降级 attempt；各步刷新，最终 `completed/unscorable-practice` | 正式自动化通过，待用户原 iPhone 确认 |
+| QA013-04 | 既有词汇 completed/scored/12 秒及 completedLearningUnitId 全程保留 | 正式每个检查点深比较同一 execution；最终三项 completed，词汇 12 秒不变，原计划仍无 trainingBudget | 正式自动化通过，待用户原 iPhone 确认 |
+| QA013-05 | 不清数据；正式部署后原 iPhone 旧计划可继续 | 正式脚本使用隔离等价夹具且未触碰用户数据；用户原 iPhone 仍必须亲自验证 | 待用户原设备 |
+| QA013-06 | QA-013、09、R3、全量和工程门禁零失败 | 本地 3/42、10/57、27/203、123/669 及完整工程门禁已通过；正式 QA-013 E2E 自然 exit 0 | 正式自动化通过，待用户原 iPhone 确认 |
 
 | ID | R3 要求 | 自动化与黑盒证据 | 通过门槛 | 状态 |
 | --- | --- | --- | --- | --- |
@@ -85,9 +88,9 @@ QA-009/010 的正式历史证据仍有效：内容结构估算为 `123/211/181`�
 `plannedSeconds=515`。QA-011 不再把这些估算当每日完成预算；三个模块各自使用 900
 秒有效训练目标，内容单元结束只推进供应 cursor。
 
-run `30341029089` / head `ff7b85f95080d1e3c8d06ee9d114c6b52fd636e8` /
-`index-DuWWQrUe.js` 已通过正式 R3 E2E、release smoke、精确缓存和离线恢复；QA-011
-与 QA-012 正式关闭。QA-013 已由 `1f847d3` / `c29c63a` 在本地通过，但尚未部署。
-下一步必须在不清数据的前提下对正式站旧计划夹具和用户原 iPhone 计划回归；通过后
-才继续锁屏、后台、MediaRecorder、SpeechSynthesis、语音识别、900 秒自然收尾和安装态
-缓存更新。完成前不能开始 14 天计时，也不能关闭 R3。
+run `30345631519` / head `ac915a39a3adb0e7fa6888ff2383d7787f0604cc` /
+`index-yjGhjGzs.js` 已通过正式 R3/release smoke 及 QA-013 等价旧计划回归；QA-011
+与 QA-012 正式关闭，QA-013 的正式自动化门禁通过。下一步必须在不清数据的前提下
+由用户用原 iPhone 计划确认听力、口语及词汇 12 秒记录；通过后才继续锁屏、后台、
+MediaRecorder、SpeechSynthesis、语音识别、900 秒自然收尾和安装态缓存更新。完成前
+不能开始 14 天计时，也不能关闭 QA-013 或 R3。

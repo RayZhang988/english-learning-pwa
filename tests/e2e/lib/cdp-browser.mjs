@@ -10,6 +10,23 @@ function delay(milliseconds) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds))
 }
 
+function waitForChildExit(child, timeoutMilliseconds) {
+  if (child.exitCode !== null || child.signalCode !== null) {
+    return Promise.resolve(true)
+  }
+  return new Promise((resolve) => {
+    const timeout = setTimeout(() => {
+      child.off('exit', onExit)
+      resolve(false)
+    }, timeoutMilliseconds)
+    const onExit = () => {
+      clearTimeout(timeout)
+      resolve(true)
+    }
+    child.once('exit', onExit)
+  })
+}
+
 export class CdpClient {
   static async connect(url) {
     const socket = new WebSocket(url)
@@ -92,9 +109,16 @@ export class CdpClient {
   }
 
   async close() {
+    if (this.socket.readyState >= WebSocket.CLOSED) {
+      return
+    }
+    const closed = new Promise((resolve) => {
+      this.socket.addEventListener('close', resolve, { once: true })
+    })
     if (this.socket.readyState < WebSocket.CLOSING) {
       this.socket.close()
     }
+    await Promise.race([closed, delay(1_000)])
   }
 }
 
@@ -183,12 +207,15 @@ export async function launchQaChrome(options = {}) {
     } catch {
       child.kill('SIGTERM')
     }
-    await Promise.race([
-      new Promise((resolve) => child.once('exit', resolve)),
-      delay(2_000),
-    ])
     await page.close()
     await browser.close()
+    if (!(await waitForChildExit(child, 2_000))) {
+      child.kill('SIGTERM')
+      if (!(await waitForChildExit(child, 1_000))) {
+        child.kill('SIGKILL')
+        await waitForChildExit(child, 1_000)
+      }
+    }
     if (process.env.QA_KEEP_PROFILE !== '1') {
       await rm(profileDirectory, { recursive: true, force: true })
     }
