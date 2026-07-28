@@ -49,6 +49,10 @@ import {
   withPendingSpeakingEvent,
   withoutPendingSpeakingEvent,
 } from './session.ts'
+import {
+  SpeakingEffectiveTiming,
+  type SpeakingEffectiveTimingSessionFactoryPort,
+} from './timing.ts'
 import type {
   SpeakingCatalog,
   SpeakingFallbackReason,
@@ -79,6 +83,7 @@ export interface SpeakingTrainingRuntimeOptions {
   readonly recognition?: SpeakingRecognitionPort
   readonly now?: () => string
   readonly createId?: () => string
+  readonly timingSessionFactory?: SpeakingEffectiveTimingSessionFactoryPort
 }
 
 function defaultId(): string {
@@ -181,11 +186,23 @@ export class SpeakingTrainingRuntime {
   private readonly recognition: SpeakingRecognitionPort
   private readonly now: () => string
   private readonly createId: () => string
+  private readonly timing: SpeakingEffectiveTiming
   private readonly listeners = new Set<SessionListener>()
   private session: SpeakingSession | null = null
   private recording: SpeakingRecording | null = null
   private recognitionHandle: SpeakingRecognitionHandle | null = null
   private initializing: Promise<SpeakingSession> | null = null
+  private operationTail: Promise<void> | null = null
+  private readonly pendingActions = new Map<
+    string,
+    Promise<SpeakingSession>
+  >()
+  private mediaTimingWrite: Promise<void> = Promise.resolve()
+  private recordingGeneration = 0
+  private playbackGeneration = 0
+  private disposePromise: Promise<void> | null = null
+  private interruptionRevision = 0
+  private readonly interruptionWaiters = new Set<() => void>()
 
   constructor(options: SpeakingTrainingRuntimeOptions) {
     this.task = options.task
@@ -202,6 +219,10 @@ export class SpeakingTrainingRuntime {
       options.recognition ?? browserSpeakingRecognition
     this.now = options.now ?? (() => new Date().toISOString())
     this.createId = options.createId ?? defaultId
+    this.timing = new SpeakingEffectiveTiming(
+      this.task.taskId,
+      options.timingSessionFactory,
+    )
   }
 
   get currentSession(): SpeakingSession | null {
@@ -221,6 +242,81 @@ export class SpeakingTrainingRuntime {
     }
   }
 
+  private enqueue<T>(operation: () => Promise<T>): Promise<T> {
+    let result: Promise<T>
+    if (this.operationTail === null) {
+      try {
+        result = operation()
+      } catch (error) {
+        result = Promise.reject(error)
+      }
+    } else {
+      result = this.operationTail.then(operation, operation)
+    }
+    const tail = result.then(
+      () => undefined,
+      () => undefined,
+    )
+    this.operationTail = tail
+    void tail.then(() => {
+      if (this.operationTail === tail) {
+        this.operationTail = null
+      }
+    })
+    return result
+  }
+
+  private runAction(
+    key: string,
+    operation: () => Promise<SpeakingSession>,
+  ): Promise<SpeakingSession> {
+    const pending = this.pendingActions.get(key)
+    if (pending) {
+      return pending
+    }
+    const result = this.enqueue(operation)
+    this.pendingActions.set(key, result)
+    const clear = () => {
+      if (this.pendingActions.get(key) === result) {
+        this.pendingActions.delete(key)
+      }
+    }
+    void result.then(clear, clear)
+    return result
+  }
+
+  private trackMediaTiming(operation: () => Promise<void>): void {
+    const write = this.mediaTimingWrite
+      .catch(() => undefined)
+      .then(operation)
+    this.mediaTimingWrite = write
+    void write.catch(() => undefined)
+  }
+
+  private interruption(
+    expectedRevision: number,
+  ): {
+    readonly promise: Promise<void>
+    readonly release: () => void
+  } {
+    let release = () => undefined
+    const promise = new Promise<void>((resolve) => {
+      if (this.interruptionRevision !== expectedRevision) {
+        resolve()
+        return
+      }
+      const waiter = () => {
+        this.interruptionWaiters.delete(waiter)
+        resolve()
+      }
+      this.interruptionWaiters.add(waiter)
+      release = () => {
+        this.interruptionWaiters.delete(waiter)
+      }
+    })
+    return { promise, release }
+  }
+
   private identity(now: string) {
     return {
       eventId: `speaking:${this.task.taskId}:${this.createId()}`,
@@ -229,11 +325,59 @@ export class SpeakingTrainingRuntime {
     }
   }
 
-  private async save(session: SpeakingSession): Promise<SpeakingSession> {
+  private async save(
+    session: SpeakingSession,
+    notify = true,
+  ): Promise<SpeakingSession> {
     this.session = session
     await this.repository.save(session)
-    this.notify(session)
+    if (notify) {
+      this.notify(session)
+    }
     return session
+  }
+
+  private activeTimingPhase(
+    session: SpeakingSession = this.requireSession(),
+  ): 'practicing' | 'feedback' {
+    if (
+      session.phase === 'feedback' ||
+      (session.phase === 'paused' &&
+        session.pausedFromPhase === 'feedback')
+    ) {
+      return 'feedback'
+    }
+    return 'practicing'
+  }
+
+  private async saveDuringExcludedPersistence(
+    session: SpeakingSession,
+    options: {
+      readonly fromPhase?: 'practicing' | 'feedback'
+      readonly recordActivity?: boolean
+      readonly activateAfter?: boolean
+      readonly notify?: boolean
+    } = {},
+  ): Promise<SpeakingSession> {
+    const fromPhase =
+      options.fromPhase ?? this.activeTimingPhase()
+    await this.timing.beginPersistenceWait(
+      fromPhase,
+      options.recordActivity ?? false,
+    )
+    const saved = await this.save(
+      session,
+      options.notify ?? true,
+    )
+    const nextPhase =
+      session.phase === 'feedback' ? 'feedback' : 'practicing'
+    await this.timing.endPersistenceWait(
+      nextPhase,
+      options.activateAfter ??
+        (session.phase === 'practicing' ||
+          session.phase === 'feedback'),
+    )
+    return saved
   }
 
   private requireSession(): SpeakingSession {
@@ -250,6 +394,9 @@ export class SpeakingTrainingRuntime {
     let session = this.requireSession()
     while (session.pendingEvents.length > 0) {
       const event = session.pendingEvents[0]
+      if (event.type === 'learning.attempt.completed.v1') {
+        await this.timing.finish()
+      }
       await this.eventSink.publish(event)
       session = withoutPendingSpeakingEvent(
         session,
@@ -259,6 +406,19 @@ export class SpeakingTrainingRuntime {
       await this.save(session)
     }
     return session
+  }
+
+  private untrustedLegacyDuration(
+    session: SpeakingSession,
+  ): number {
+    if (this.timing.enabled) {
+      return 0
+    }
+    return Math.max(
+      0,
+      session.activeDurationSeconds -
+        session.reportedDurationSeconds,
+    )
   }
 
   private async permissionState(): Promise<MicrophonePermissionState> {
@@ -329,9 +489,12 @@ export class SpeakingTrainingRuntime {
   }
 
   private async initializeInternal(): Promise<SpeakingSession> {
+    await this.timing.startLoading()
     const stored = await this.repository.load(this.task)
     if (!stored) {
-      return this.startFresh()
+      const session = await this.startFresh()
+      await this.timing.synchronize(session.phase)
+      return session
     }
     const refreshed = refreshSpeakingEnvironment(
       stored,
@@ -342,7 +505,9 @@ export class SpeakingTrainingRuntime {
       this.now(),
     )
     await this.save(refreshed)
-    return this.flushPendingEvents()
+    const session = await this.flushPendingEvents()
+    await this.timing.synchronize(session.phase)
+    return session
   }
 
   initialize(): Promise<SpeakingSession> {
@@ -366,7 +531,39 @@ export class SpeakingTrainingRuntime {
     }
   }
 
-  async startRecording(): Promise<SpeakingSession> {
+  private recordingLifecycle(generation: number) {
+    const current = () => generation === this.recordingGeneration
+    return {
+      onStarted: () => {
+        if (current()) {
+          this.trackMediaTiming(() => this.timing.recordingStarted())
+        }
+      },
+      onPaused: () => {
+        if (current()) {
+          this.trackMediaTiming(() => this.timing.recordingPaused())
+        }
+      },
+      onResumed: () => {
+        if (current()) {
+          this.trackMediaTiming(() => this.timing.recordingResumed())
+        }
+      },
+      onStopped: () => {
+        if (current()) {
+          this.trackMediaTiming(() => this.timing.recordingStopped())
+        }
+      },
+      onError: (_error: unknown) => {
+        if (current()) {
+          this.trackMediaTiming(() => this.timing.recordingStopped())
+        }
+      },
+    }
+  }
+
+  private async startRecordingInternal(): Promise<SpeakingSession> {
+    const interruptionRevision = this.interruptionRevision
     let session = this.requireSession()
     if (session.phase === 'feedback') {
       this.discardRecording()
@@ -376,7 +573,10 @@ export class SpeakingTrainingRuntime {
         this.recognition.capabilities(),
         this.now(),
       )
-      await this.save(session)
+      await this.saveDuringExcludedPersistence(session, {
+        fromPhase: 'feedback',
+        recordActivity: true,
+      })
     }
     if (session.phase !== 'practicing') {
       throw new SpeakingError(
@@ -394,12 +594,43 @@ export class SpeakingTrainingRuntime {
       this.recognition.capabilities(),
       this.now(),
     )
-    await this.save(session)
+    await this.saveDuringExcludedPersistence(session, {
+      recordActivity: true,
+    })
 
     let stream: MediaStream
+    await this.timing.beginPermissionWait()
+    if (this.interruptionRevision !== interruptionRevision) {
+      return this.requireSession()
+    }
+    const request = this.microphonePermission.request()
+    const interrupted = this.interruption(interruptionRevision)
     try {
-      stream = await this.microphonePermission.request()
+      const requestResult = await Promise.race([
+        request.then((value) => ({
+          status: 'granted' as const,
+          stream: value,
+        })),
+        interrupted.promise.then(() => ({
+          status: 'interrupted' as const,
+          stream: null,
+        })),
+      ])
+      interrupted.release()
+      if (requestResult.status === 'interrupted') {
+        void request.then(
+          (lateStream) => {
+            for (const track of lateStream.getTracks()) {
+              track.stop()
+            }
+          },
+          () => undefined,
+        )
+        return this.requireSession()
+      }
+      stream = requestResult.stream
     } catch (error) {
+      interrupted.release()
       const permission = permissionFrom(error)
       const permissionDenied = permission === 'denied'
       const unavailable = markSpeakingCaptureUnavailable(
@@ -413,14 +644,19 @@ export class SpeakingTrainingRuntime {
           : '无法访问麦克风。没有音频就无法提供录音回放。',
         this.now(),
       )
-      return this.save(unavailable)
+      return this.saveDuringExcludedPersistence(unavailable)
     }
 
     const recognitionAvailable =
       network === 'online' &&
       this.recognition.capabilities().supported
+    await this.timing.beginRecordingWait()
+    const recordingGeneration = ++this.recordingGeneration
     try {
-      this.recorder.start(stream)
+      this.recorder.start(
+        stream,
+        this.recordingLifecycle(recordingGeneration),
+      )
       this.recognitionHandle = recognitionAvailable
         ? this.recognition.start('en-US')
         : null
@@ -430,8 +666,13 @@ export class SpeakingTrainingRuntime {
         recognitionAvailable,
         this.now(),
       )
-      return this.save(recordingSession)
+      return this.saveDuringExcludedPersistence(recordingSession)
     } catch (error) {
+      this.recordingGeneration += 1
+      this.recorder.cancel()
+      this.recognitionHandle?.abort()
+      this.recognitionHandle = null
+      await this.timing.recordingStopped()
       for (const track of stream.getTracks()) {
         track.stop()
       }
@@ -442,8 +683,15 @@ export class SpeakingTrainingRuntime {
         toSpeakingError(error).message,
         this.now(),
       )
-      return this.save(failed)
+      return this.saveDuringExcludedPersistence(failed)
     }
+  }
+
+  startRecording(): Promise<SpeakingSession> {
+    return this.runAction(
+      'start-recording',
+      () => this.startRecordingInternal(),
+    )
   }
 
   private fallbackWithoutRecognition(
@@ -463,10 +711,15 @@ export class SpeakingTrainingRuntime {
     }
   }
 
-  async stopRecording(): Promise<SpeakingSession> {
+  private async stopRecordingInternal(): Promise<SpeakingSession> {
     let session = this.requireSession()
+    this.recordingGeneration += 1
+    await this.mediaTimingWrite
+    await this.timing.recordingStopped()
     session = processSpeakingRecording(session, this.now())
-    await this.save(session)
+    await this.saveDuringExcludedPersistence(session, {
+      activateAfter: false,
+    })
 
     const handle = this.recognitionHandle
     const recognitionResult = handle?.result
@@ -490,14 +743,30 @@ export class SpeakingTrainingRuntime {
         'device',
         this.now(),
       )
-      return this.save(reviewed)
+      return this.saveDuringExcludedPersistence(reviewed)
     }
     this.recording = recording
     this.recognitionHandle = null
 
+    const recognitionRevision = this.interruptionRevision
+    if (recognitionResult) {
+      await this.timing.beginRecognitionWait()
+    }
+    const recognitionInterrupted =
+      this.interruption(recognitionRevision)
     const outcome = recognitionResult
-      ? await recognitionResult
+      ? await Promise.race([
+          recognitionResult,
+          recognitionInterrupted.promise.then(
+            (): SpeakingRecognitionOutcome => ({
+              status: 'failed',
+              code: 'aborted',
+              message: '语音识别被页面中断。',
+            }),
+          ),
+        ])
       : this.fallbackWithoutRecognition(session)
+    recognitionInterrupted.release()
     const prompt = getCurrentSpeakingPrompt(session)
     if (!prompt) {
       throw new SpeakingError(
@@ -518,7 +787,7 @@ export class SpeakingTrainingRuntime {
         },
         this.now(),
       )
-      return this.save(reviewed)
+      return this.saveDuringExcludedPersistence(reviewed)
     }
 
     const fallback = recognitionFailure(outcome.code)
@@ -534,10 +803,48 @@ export class SpeakingTrainingRuntime {
       },
       this.now(),
     )
-    return this.save(reviewed)
+    return this.saveDuringExcludedPersistence(reviewed)
   }
 
-  async playRecording(): Promise<SpeakingSession> {
+  stopRecording(): Promise<SpeakingSession> {
+    return this.runAction(
+      'stop-recording',
+      () => this.stopRecordingInternal(),
+    )
+  }
+
+  private playbackLifecycle(generation: number) {
+    const current = () => generation === this.playbackGeneration
+    return {
+      onStarted: () => {
+        if (current()) {
+          this.trackMediaTiming(() => this.timing.playbackStarted())
+        }
+      },
+      onPaused: () => {
+        if (current()) {
+          this.trackMediaTiming(() => this.timing.playbackPaused())
+        }
+      },
+      onWaiting: () => {
+        if (current()) {
+          this.trackMediaTiming(() => this.timing.playbackWaiting())
+        }
+      },
+      onEnded: () => {
+        if (current()) {
+          this.trackMediaTiming(() => this.timing.playbackEnded())
+        }
+      },
+      onError: (_error: unknown) => {
+        if (current()) {
+          this.trackMediaTiming(() => this.timing.playbackEnded())
+        }
+      },
+    }
+  }
+
+  private async playRecordingInternal(): Promise<SpeakingSession> {
     const session = this.requireSession()
     if (!this.recording || !session.recorder.playbackAvailable) {
       throw new SpeakingError(
@@ -545,6 +852,7 @@ export class SpeakingTrainingRuntime {
         'No in-memory speaking recording is available to play.',
       )
     }
+    await this.timing.beginPlaybackWait()
     const playing = {
       ...session,
       recorder: {
@@ -554,10 +862,19 @@ export class SpeakingTrainingRuntime {
       },
       updatedAt: this.now(),
     }
-    await this.save(playing)
+    await this.saveDuringExcludedPersistence(playing, {
+      fromPhase: 'feedback',
+      activateAfter: false,
+    })
+    const playbackGeneration = ++this.playbackGeneration
     try {
-      await this.recorder.play(this.recording)
-      return this.save({
+      await this.recorder.play(
+        this.recording,
+        this.playbackLifecycle(playbackGeneration),
+      )
+      await this.mediaTimingWrite
+      await this.timing.playbackEnded()
+      return this.saveDuringExcludedPersistence({
         ...playing,
         recorder: {
           ...playing.recorder,
@@ -565,9 +882,13 @@ export class SpeakingTrainingRuntime {
           message: '录音播放完毕。',
         },
         updatedAt: this.now(),
+      }, {
+        fromPhase: 'feedback',
       })
     } catch (error) {
-      return this.save({
+      await this.mediaTimingWrite
+      await this.timing.playbackEnded()
+      return this.saveDuringExcludedPersistence({
         ...playing,
         recorder: {
           ...playing.recorder,
@@ -576,11 +897,21 @@ export class SpeakingTrainingRuntime {
           message: toSpeakingError(error).message,
         },
         updatedAt: this.now(),
+      }, {
+        fromPhase: 'feedback',
       })
     }
   }
 
-  async continueWithoutRecording(): Promise<SpeakingSession> {
+  playRecording(): Promise<SpeakingSession> {
+    return this.runAction(
+      'play-recording',
+      () => this.playRecordingInternal(),
+    )
+  }
+
+  private async continueWithoutRecordingInternal():
+    Promise<SpeakingSession> {
     const session = this.requireSession()
     const permissionDenied =
       session.permission === 'denied' ||
@@ -593,10 +924,18 @@ export class SpeakingTrainingRuntime {
       permissionDenied ? 'permission' : 'device',
       this.now(),
     )
-    return this.save(reviewed)
+    return this.saveDuringExcludedPersistence(reviewed, {
+      recordActivity: true,
+    })
   }
 
-  async retry(): Promise<SpeakingSession> {
+  continueWithoutRecording(): Promise<SpeakingSession> {
+    return this.runAction('continue-without-recording', () =>
+      this.continueWithoutRecordingInternal(),
+    )
+  }
+
+  private async retryInternal(): Promise<SpeakingSession> {
     this.discardRecording()
     const retried = retrySpeakingPrompt(
       this.requireSession(),
@@ -604,10 +943,17 @@ export class SpeakingTrainingRuntime {
       this.recognition.capabilities(),
       this.now(),
     )
-    return this.save(retried)
+    return this.saveDuringExcludedPersistence(retried, {
+      fromPhase: 'feedback',
+      recordActivity: true,
+    })
   }
 
-  async advance(): Promise<SpeakingSession> {
+  retry(): Promise<SpeakingSession> {
+    return this.runAction('retry-prompt', () => this.retryInternal())
+  }
+
+  private async advanceInternal(): Promise<SpeakingSession> {
     const current = this.requireSession()
     const isFinalPrompt =
       current.phase === 'feedback' &&
@@ -624,10 +970,13 @@ export class SpeakingTrainingRuntime {
         preview.performanceScore === null &&
         !terminalUnscorable
       ) {
-        return this.pause('device-failure')
+        return this.pauseInternal('device-failure')
       }
     }
     this.discardRecording()
+    this.playbackGeneration += 1
+    this.recorder.stopPlayback()
+    await this.mediaTimingWrite
     let session = advanceSpeakingSession(
       this.requireSession(),
       this.recorder.capabilities(),
@@ -636,11 +985,7 @@ export class SpeakingTrainingRuntime {
     )
     if (session.phase === 'completed') {
       const result = getSpeakingSessionResult(session)
-      const durationSeconds = Math.max(
-        0,
-        session.activeDurationSeconds -
-          session.reportedDurationSeconds,
-      )
+      const durationSeconds = this.untrustedLegacyDuration(session)
       const now = this.now()
       const event =
         result.performanceScore === null
@@ -660,24 +1005,47 @@ export class SpeakingTrainingRuntime {
       }
       session = withPendingSpeakingEvent(session, event, now)
     }
-    await this.save(session)
+    await this.saveDuringExcludedPersistence(session, {
+      fromPhase: 'feedback',
+      recordActivity: true,
+      activateAfter: session.phase !== 'completed',
+      notify: session.phase !== 'completed',
+    })
     return this.flushPendingEvents()
   }
 
-  async pause(reason: TaskPauseReason): Promise<SpeakingSession> {
+  advance(): Promise<SpeakingSession> {
+    return this.runAction('advance', () => this.advanceInternal())
+  }
+
+  private interruptMedia(): void {
+    this.interruptionRevision += 1
+    for (const interrupt of [...this.interruptionWaiters]) {
+      interrupt()
+    }
+    this.recordingGeneration += 1
+    this.playbackGeneration += 1
     this.recorder.cancel()
+    this.recorder.stopPlayback()
     this.recognitionHandle?.abort()
     this.recognitionHandle = null
+  }
+
+  private async pauseInternal(
+    reason: TaskPauseReason,
+  ): Promise<SpeakingSession> {
+    const current = this.requireSession()
+    if (current.phase === 'paused') {
+      return current
+    }
+    await this.mediaTimingWrite
+    await this.timing.pause()
     this.discardRecording()
     let session = pauseSpeakingSession(
-      this.requireSession(),
+      current,
       this.now(),
     )
-    const durationSeconds = Math.max(
-      0,
-      session.activeDurationSeconds -
-        session.reportedDurationSeconds,
-    )
+    const durationSeconds = this.untrustedLegacyDuration(session)
     const now = this.now()
     session = {
       ...session,
@@ -697,17 +1065,31 @@ export class SpeakingTrainingRuntime {
     return this.flushPendingEvents()
   }
 
-  async resume(): Promise<SpeakingSession> {
+  pause(reason: TaskPauseReason): Promise<SpeakingSession> {
+    const key = `pause:${reason}`
+    if (!this.pendingActions.has(key)) {
+      this.interruptMedia()
+    }
+    return this.runAction(key, () => this.pauseInternal(reason))
+  }
+
+  private async resumeInternal(): Promise<SpeakingSession> {
     const resumed = resumeSpeakingSession(
       this.requireSession(),
       this.recorder.capabilities(),
       this.recognition.capabilities(),
       this.now(),
     )
-    return this.save(resumed)
+    return this.saveDuringExcludedPersistence(resumed)
   }
 
-  async skip(reason: TaskSkipReason): Promise<SpeakingSession> {
+  resume(): Promise<SpeakingSession> {
+    return this.runAction('resume', () => this.resumeInternal())
+  }
+
+  private async skipInternal(
+    reason: TaskSkipReason,
+  ): Promise<SpeakingSession> {
     const session = this.requireSession()
     const now = this.now()
     const withEvent = withPendingSpeakingEvent(
@@ -723,23 +1105,59 @@ export class SpeakingTrainingRuntime {
     return this.flushPendingEvents()
   }
 
-  retryPendingEvents(): Promise<SpeakingSession> {
-    return this.flushPendingEvents()
+  skip(reason: TaskSkipReason): Promise<SpeakingSession> {
+    return this.runAction(
+      `skip:${reason}`,
+      () => this.skipInternal(reason),
+    )
   }
 
-  async restart(): Promise<SpeakingSession> {
-    this.dispose()
+  retryPendingEvents(): Promise<SpeakingSession> {
+    return this.runAction(
+      'retry-pending-events',
+      () => this.flushPendingEvents(),
+    )
+  }
+
+  private async restartInternal(): Promise<SpeakingSession> {
+    this.interruptMedia()
+    await this.mediaTimingWrite
+    await this.timing.startLoading()
+    if (this.session && this.session.pendingEvents.length > 0) {
+      await this.flushPendingEvents()
+    }
     await this.repository.remove(this.task.taskId)
     this.session = null
     this.initializing = null
-    return this.initialize()
+    const session = await this.startFresh()
+    await this.timing.synchronize(session.phase)
+    return session
   }
 
-  dispose(): void {
+  restart(): Promise<SpeakingSession> {
+    return this.runAction('restart', () => this.restartInternal())
+  }
+
+  dispose(): Promise<void> {
+    if (this.disposePromise) {
+      return this.disposePromise
+    }
+    this.interruptMedia()
     this.recorder.dispose()
-    this.recognitionHandle?.abort()
-    this.recognitionHandle = null
-    this.recording = null
-    this.listeners.clear()
+    const disposal = this.enqueue(async () => {
+      await this.initializing
+      await this.mediaTimingWrite
+      await this.timing.dispose()
+      this.recording = null
+      this.listeners.clear()
+    })
+    this.disposePromise = disposal
+    const clear = () => {
+      if (this.disposePromise === disposal) {
+        this.disposePromise = null
+      }
+    }
+    void disposal.then(clear, clear)
+    return disposal
   }
 }

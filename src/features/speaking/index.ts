@@ -41,6 +41,10 @@ export {
   SPEAKING_STORAGE_SCHEMA_VERSION,
 } from './repository.ts'
 export {
+  SpeakingRuntimeMountLifecycle,
+  type SpeakingRuntimeDisposalPort,
+} from './route-lifecycle.ts'
+export {
   SpeakingTrainingRuntime,
   type SpeakingTrainingRuntimeOptions,
 } from './runtime.ts'
@@ -60,6 +64,12 @@ export {
   submitSpeakingRecording,
   submitSpeakingWithoutRecording,
 } from './session.ts'
+export {
+  SpeakingEffectiveTiming,
+  type SpeakingEffectiveTimingSessionFactoryPort,
+  type SpeakingEffectiveTimingSessionPort,
+  type SpeakingTimingPhaseDeclaration,
+} from './timing.ts'
 export { SpeakingSessionScreen } from './SpeakingSessionScreen.tsx'
 export {
   SpeakingTrainingRoute,
@@ -80,7 +90,9 @@ export type {
   SpeakingRecognitionPort,
   SpeakingRecording,
   SpeakingRecordingCapabilities,
+  SpeakingRecordingLifecycleCallbacks,
   SpeakingRecordingPort,
+  SpeakingPlaybackLifecycleCallbacks,
   SpeakingSession,
   SpeakingSessionFailure,
   SpeakingSessionPhase,

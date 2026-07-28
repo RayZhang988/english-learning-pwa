@@ -17,6 +17,54 @@
 
 模块不修改 `src/app/**`。最终路由注册由 01 在集成步骤完成。
 
+## R3 真实有效计时
+
+08 只声明业务阶段，不读取浏览器可见性、不创建时钟、45 秒空闲计时器、快照或
+`learning.timing.segment.recorded.v1` 事件 ID。上述能力仍由 01 的
+`ProductionEffectiveTimingSessionFactory` 负责。
+
+唯一生产注入点是：
+
+```tsx
+<SpeakingTrainingRoute
+  timingSessionFactory={productionEffectiveTimingSessions}
+  {...routeProps}
+/>
+```
+
+`SpeakingEffectiveTimingSessionFactoryPort` 与 01 的生产 factory 结构兼容；不传
+factory 的旧调用保持原行为。
+
+阶段声明遵循真实底层信号：
+
+- 内容、会话和业务状态持久化：`loading / content-loading`，不计时；
+- 麦克风权限请求：`permission-wait / permission-wait`，不计时；
+- `MediaRecorder` 真正发出 `start` 后：
+  `recording / active-recording`；
+- 录音暂停、停止、错误或页面后台化立即关闭录音片段；
+- 识别结果等待：`network-wait / network-wait`，不计时；
+- 本地录音媒体真正发出 `playing` 后：
+  `playback / active-playback`；
+- 回放的 `pause`、`ended`、`error`、`waiting` 和 `seeking` 会立即停止或排除
+  回放时间；
+- 目标表达页面：`answering / active-answering`；
+- 结果反馈页面：`feedback / active-feedback`。
+
+回答和反馈的 45 秒空闲截断、后台/前台生命周期和连续媒体上限由 01 统一执行。前台
+恢复不会自动重新开始录音、回放或计时；用户必须明确恢复任务或媒体必须重新发出真实
+开始事件。刷新只恢复阶段声明，不补算页面关闭期间的时间。
+
+完成路径（包括合法的 `unscorable-practice`）必须先成功执行 timing `finish()`，保存并
+发布最后一个 timing segment，之后才发布口语 `learning.attempt.completed.v1` 并通知
+完成页面。`finish()` 失败时口语完成事件保留在 outbox，重试成功前不会发布。启用 R3
+timing 后，口语完成和暂停事件的旧墙钟 `durationSeconds` 固定为 0；04 只使用
+`source = timing-segments` 的可信片段累计有效时间。
+
+未完成退出会停止录音、回放和识别，并等待 timing `dispose()`。权限提示或识别服务迟迟
+不返回时，退出/后台信号会解除运行时等待；迟到返回的麦克风流会立即停止全部 track。
+React StrictMode cleanup/setup 探测不会创建第二个 timing session，快速重复录音、停止
+和完成操作也不会产生重叠媒体或重复完成事件。
+
 ## 输入
 
 ### 学习任务
@@ -190,13 +238,13 @@ task.targetModuleId === 'speaking'
 - 会话恢复、录音不跨页面恢复、事件 outbox、模块元数据和 UI ViewModel；
 - 可评分与不可评分学习事件。
 
-交付时全项目 `pnpm check` 通过：
+R3 的确定性测试使用手动单调时钟，不依赖真实 sleep，覆盖权限等待、录音真实
+start/pause/resume/stop/error、回放 playing/pause/waiting/seeking/ended/error、识别
+网络等待、回答/反馈与 45 秒空闲、慢持久化、后台中断、退出/刷新恢复、可评分完成、
+不可评分完成、最终事件顺序、`finish()` 失败重试、StrictMode 和无 factory 旧调用。
 
-- 50 个测试文件；
-- 150 项测试；
-- TypeScript 类型检查；
-- lint；
-- Vite 生产构建与 PWA 产物生成。
+最新测试数字和全项目检查结果以本轮 08 交接为准；01 尚未注入生产 factory 前，不得把
+08 模块通过称为 R3 已完成。
 
 ## 已知限制
 

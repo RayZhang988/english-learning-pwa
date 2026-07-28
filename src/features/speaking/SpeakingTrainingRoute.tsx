@@ -32,9 +32,13 @@ import type {
   SpeakingSession,
 } from './types.ts'
 import { SpeakingSessionRepository } from './repository.ts'
+import { SpeakingRuntimeMountLifecycle } from './route-lifecycle.ts'
 import { SpeakingTrainingRuntime } from './runtime.ts'
 import { SpeakingSessionScreen } from './SpeakingSessionScreen.tsx'
 import { getSpeakingSessionResult } from './session.ts'
+import type {
+  SpeakingEffectiveTimingSessionFactoryPort,
+} from './timing.ts'
 
 export interface SpeakingTrainingRouteProps {
   readonly task: LearningTask
@@ -50,6 +54,7 @@ export interface SpeakingTrainingRouteProps {
   readonly recognition?: SpeakingRecognitionPort
   readonly now?: () => string
   readonly createId?: () => string
+  readonly timingSessionFactory?: SpeakingEffectiveTimingSessionFactoryPort
 }
 
 export function SpeakingTrainingRoute(
@@ -62,17 +67,32 @@ export function SpeakingTrainingRoute(
   const [state, setState] = useState<AsyncDataState<SpeakingSession>>({
     status: 'loading',
   })
+  const operationPendingRef = useRef(false)
+  const exitPendingRef = useRef(false)
   const runtimeKey = `${props.task.planId}:${props.task.taskId}`
   const runtimeRef = useRef<{
     readonly key: string
     readonly runtime: SpeakingTrainingRuntime
+    readonly timingSessionFactory:
+      | SpeakingEffectiveTimingSessionFactoryPort
+      | undefined
   } | null>(null)
+  const runtimeMountLifecycleRef =
+    useRef<SpeakingRuntimeMountLifecycle | null>(null)
   const completedTaskRef = useRef<string | null>(null)
+  if (!runtimeMountLifecycleRef.current) {
+    runtimeMountLifecycleRef.current =
+      new SpeakingRuntimeMountLifecycle()
+  }
 
-  if (runtimeRef.current?.key !== runtimeKey) {
-    runtimeRef.current?.runtime.dispose()
+  if (
+    runtimeRef.current?.key !== runtimeKey ||
+    runtimeRef.current.timingSessionFactory !==
+      props.timingSessionFactory
+  ) {
     runtimeRef.current = {
       key: runtimeKey,
+      timingSessionFactory: props.timingSessionFactory,
       runtime: new SpeakingTrainingRuntime({
         task: props.task,
         localDate: props.localDate,
@@ -86,6 +106,7 @@ export function SpeakingTrainingRoute(
         recognition: props.recognition,
         now: props.now,
         createId: props.createId,
+        timingSessionFactory: props.timingSessionFactory,
       }),
     }
   }
@@ -105,10 +126,16 @@ export function SpeakingTrainingRoute(
   }, [])
   const perform = useCallback(
     async (operation: () => Promise<SpeakingSession>) => {
+      if (operationPendingRef.current) {
+        return
+      }
+      operationPendingRef.current = true
       try {
         showSession(await operation())
       } catch (error) {
         showError(error)
+      } finally {
+        operationPendingRef.current = false
       }
     },
     [showError, showSession],
@@ -118,6 +145,8 @@ export function SpeakingTrainingRoute(
 
   useEffect(() => {
     let active = true
+    const releaseRuntime =
+      runtimeMountLifecycleRef.current!.retain(runtime)
     setState({ status: 'loading' })
     void runtime.initialize().then(
       (session) => {
@@ -133,7 +162,7 @@ export function SpeakingTrainingRoute(
     )
     return () => {
       active = false
-      runtime.dispose()
+      releaseRuntime()
     }
   }, [runtime, showError, showSession])
 
@@ -186,20 +215,28 @@ export function SpeakingTrainingRoute(
   }, [perform, runtime])
 
   const exit = useCallback(() => {
-    const session = runtime.currentSession
-    if (
-      session &&
-      (session.phase === 'practicing' ||
-        session.phase === 'feedback')
-    ) {
-      void runtime.pause('user-paused').then(
-        props.onExit,
-        props.onExit,
-      )
+    if (exitPendingRef.current) {
       return
     }
-    props.onExit()
-  }, [props, runtime])
+    exitPendingRef.current = true
+    const session = runtime.currentSession
+    void (async () => {
+      try {
+        if (
+          session &&
+          (session.phase === 'practicing' ||
+            session.phase === 'feedback')
+        ) {
+          await runtime.pause('user-paused')
+        }
+        await runtime.dispose()
+        props.onExit()
+      } catch (error) {
+        exitPendingRef.current = false
+        showError(error)
+      }
+    })()
+  }, [props, runtime, showError])
 
   if (state.status === 'loading' || state.status === 'idle') {
     return <LoadingState label="正在加载口语训练" />

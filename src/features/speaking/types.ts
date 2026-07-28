@@ -110,12 +110,34 @@ export interface SpeakingRecording {
   readonly durationMs: number
 }
 
+export interface SpeakingRecordingLifecycleCallbacks {
+  onStarted(): void
+  onPaused(): void
+  onResumed(): void
+  onStopped(): void
+  onError(error: unknown): void
+}
+
+export interface SpeakingPlaybackLifecycleCallbacks {
+  onStarted(): void
+  onPaused(): void
+  onWaiting(): void
+  onEnded(): void
+  onError(error: unknown): void
+}
+
 export interface SpeakingRecordingPort {
   capabilities(): SpeakingRecordingCapabilities
-  start(stream: MediaStream): void
+  start(
+    stream: MediaStream,
+    lifecycle?: SpeakingRecordingLifecycleCallbacks,
+  ): void
   stop(): Promise<SpeakingRecording>
   cancel(): void
-  play(recording: SpeakingRecording): Promise<void>
+  play(
+    recording: SpeakingRecording,
+    lifecycle?: SpeakingPlaybackLifecycleCallbacks,
+  ): Promise<void>
   stopPlayback(): void
   discard(recording: SpeakingRecording): void
   dispose(): void

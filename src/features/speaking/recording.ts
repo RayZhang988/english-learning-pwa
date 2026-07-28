@@ -1,7 +1,9 @@
 import { SpeakingError } from './errors.ts'
 import type {
+  SpeakingPlaybackLifecycleCallbacks,
   SpeakingRecording,
   SpeakingRecordingCapabilities,
+  SpeakingRecordingLifecycleCallbacks,
   SpeakingRecordingPort,
 } from './types.ts'
 
@@ -15,6 +17,10 @@ const preferredMimeTypes = [
 interface PlaybackAudio {
   onended: ((event: Event) => void) | null
   onerror: ((event: Event) => void) | null
+  onpause?: ((event: Event) => void) | null
+  onplaying?: ((event: Event) => void) | null
+  onwaiting?: ((event: Event) => void) | null
+  onseeking?: ((event: Event) => void) | null
   currentTime: number
   play(): Promise<void>
   pause(): void
@@ -61,6 +67,12 @@ export class BrowserSpeakingRecorder
   private activeAudio: PlaybackAudio | null = null
   private activeAudioUrl: string | null = null
   private finishPlayback: ((error?: Error) => void) | null = null
+  private recordingLifecycle:
+    | SpeakingRecordingLifecycleCallbacks
+    | null = null
+  private playbackLifecycle:
+    | SpeakingPlaybackLifecycleCallbacks
+    | null = null
 
   constructor(options: BrowserSpeakingRecorderOptions = {}) {
     this.nowMs = options.nowMs ?? (() => performance.now())
@@ -81,7 +93,10 @@ export class BrowserSpeakingRecorder
     return getSpeakingRecordingCapabilities()
   }
 
-  start(stream: MediaStream): void {
+  start(
+    stream: MediaStream,
+    lifecycle?: SpeakingRecordingLifecycleCallbacks,
+  ): void {
     if (this.recorder) {
       throw new SpeakingError(
         'session-transition-invalid',
@@ -110,8 +125,22 @@ export class BrowserSpeakingRecorder
     }
     this.stream = stream
     this.recorder = recorder
+    this.recordingLifecycle = lifecycle ?? null
     this.chunks = []
     this.startedAt = this.nowMs()
+    recorder.onstart = () => {
+      this.recordingLifecycle?.onStarted()
+    }
+    recorder.onpause = () => {
+      this.recordingLifecycle?.onPaused()
+    }
+    recorder.onresume = () => {
+      this.recordingLifecycle?.onResumed()
+    }
+    recorder.onerror = (event) => {
+      this.recordingLifecycle?.onError(event.error)
+      this.clearRecorder()
+    }
     recorder.ondataavailable = (event) => {
       if (event.data.size > 0) {
         this.chunks.push(event.data)
@@ -120,6 +149,7 @@ export class BrowserSpeakingRecorder
     try {
       recorder.start()
     } catch (error) {
+      this.recordingLifecycle?.onError(error)
       this.clearRecorder()
       throw new SpeakingError(
         'recording-failed',
@@ -142,6 +172,7 @@ export class BrowserSpeakingRecorder
     return new Promise<SpeakingRecording>((resolve, reject) => {
       const startedAt = this.startedAt
       recorder.onerror = (event) => {
+        this.recordingLifecycle?.onError(event.error)
         this.clearRecorder()
         reject(
           new SpeakingError(
@@ -161,6 +192,7 @@ export class BrowserSpeakingRecorder
           0,
           Math.round(this.nowMs() - startedAt),
         )
+        this.recordingLifecycle?.onStopped()
         this.clearRecorder()
         if (blob.size === 0) {
           reject(
@@ -181,6 +213,7 @@ export class BrowserSpeakingRecorder
       try {
         recorder.stop()
       } catch (error) {
+        this.recordingLifecycle?.onError(error)
         this.clearRecorder()
         reject(
           new SpeakingError(
@@ -195,6 +228,7 @@ export class BrowserSpeakingRecorder
 
   cancel(): void {
     const recorder = this.recorder
+    const lifecycle = this.recordingLifecycle
     if (recorder && recorder.state !== 'inactive') {
       recorder.ondataavailable = null
       recorder.onstop = null
@@ -205,15 +239,20 @@ export class BrowserSpeakingRecorder
         // The capture is already unusable; tracks are still stopped below.
       }
     }
+    lifecycle?.onStopped()
     this.clearRecorder()
   }
 
-  play(recording: SpeakingRecording): Promise<void> {
+  play(
+    recording: SpeakingRecording,
+    lifecycle?: SpeakingPlaybackLifecycleCallbacks,
+  ): Promise<void> {
     this.stopPlayback()
     const url = this.createObjectUrl(recording.blob)
     const audio = this.createAudio(url)
     this.activeAudio = audio
     this.activeAudioUrl = url
+    this.playbackLifecycle = lifecycle ?? null
     return new Promise<void>((resolve, reject) => {
       let settled = false
       const finish = (error?: Error) => {
@@ -229,34 +268,51 @@ export class BrowserSpeakingRecorder
         }
       }
       this.finishPlayback = finish
-      audio.onended = () => finish()
-      audio.onerror = () =>
-        finish(
-          new SpeakingError(
-            'playback-failed',
-            'The browser could not play the recorded audio.',
-          ),
+      audio.onplaying = () => {
+        this.playbackLifecycle?.onStarted()
+      }
+      audio.onpause = () => {
+        this.playbackLifecycle?.onPaused()
+      }
+      audio.onwaiting = () => {
+        this.playbackLifecycle?.onWaiting()
+      }
+      audio.onseeking = () => {
+        this.playbackLifecycle?.onWaiting()
+      }
+      audio.onended = () => {
+        this.playbackLifecycle?.onEnded()
+        finish()
+      }
+      audio.onerror = () => {
+        const error = new SpeakingError(
+          'playback-failed',
+          'The browser could not play the recorded audio.',
         )
-      void audio.play().catch((error: unknown) =>
-        finish(
-          new SpeakingError(
-            'playback-failed',
-            'The browser blocked or failed recorded audio playback.',
-            {
-              cause:
-                error instanceof Error
-                  ? error
-                  : new Error(String(error)),
-            },
-          ),
-        ),
-      )
+        this.playbackLifecycle?.onError(error)
+        finish(error)
+      }
+      void audio.play().catch((error: unknown) => {
+        const playbackError = new SpeakingError(
+          'playback-failed',
+          'The browser blocked or failed recorded audio playback.',
+          {
+            cause:
+              error instanceof Error
+                ? error
+                : new Error(String(error)),
+          },
+        )
+        this.playbackLifecycle?.onError(playbackError)
+        finish(playbackError)
+      })
     })
   }
 
   stopPlayback(): void {
     const finish = this.finishPlayback
     if (this.activeAudio) {
+      this.playbackLifecycle?.onPaused()
       this.activeAudio.pause()
       this.activeAudio.currentTime = 0
     }
@@ -283,6 +339,14 @@ export class BrowserSpeakingRecorder
   }
 
   private clearRecorder(): void {
+    if (this.recorder) {
+      this.recorder.onstart = null
+      this.recorder.onpause = null
+      this.recorder.onresume = null
+      this.recorder.ondataavailable = null
+      this.recorder.onerror = null
+      this.recorder.onstop = null
+    }
     if (this.stream) {
       this.stopTracks(this.stream)
     }
@@ -290,12 +354,17 @@ export class BrowserSpeakingRecorder
     this.stream = null
     this.chunks = []
     this.startedAt = 0
+    this.recordingLifecycle = null
   }
 
   private releaseAudio(): void {
     if (this.activeAudio) {
       this.activeAudio.onended = null
       this.activeAudio.onerror = null
+      this.activeAudio.onpause = null
+      this.activeAudio.onplaying = null
+      this.activeAudio.onwaiting = null
+      this.activeAudio.onseeking = null
     }
     if (this.activeAudioUrl) {
       this.revokeObjectUrl(this.activeAudioUrl)
@@ -303,6 +372,7 @@ export class BrowserSpeakingRecorder
     this.activeAudio = null
     this.activeAudioUrl = null
     this.finishPlayback = null
+    this.playbackLifecycle = null
   }
 }
 
