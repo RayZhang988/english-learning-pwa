@@ -15,8 +15,11 @@
     "lessonFiles",
     "schemaFiles",
     "documentationFiles",
+    "validationFiles",
     "mediaAssets",
     "totals",
+    "durationBaselinePolicyFile",
+    "durationBaselineTotals",
     "learningCandidateProjection"
   ],
   "properties": {
@@ -67,6 +70,15 @@
         "pattern": "^content/curriculum/.+\\.md$"
       }
     },
+    "validationFiles": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^content/curriculum/.+\\.mjs$"
+      }
+    },
     "mediaAssets": {
       "type": "array",
       "items": {"type": "object"}
@@ -95,6 +107,27 @@
         "candidateSeconds": {"type": "integer", "minimum": 1}
       }
     },
+    "durationBaselinePolicyFile": {
+      "const": "content/curriculum/duration-baseline-authoring.v1.json"
+    },
+    "durationBaselineTotals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "learningUnits",
+        "vocabularySeconds",
+        "listeningSeconds",
+        "speakingSeconds",
+        "allUnitsSeconds"
+      ],
+      "properties": {
+        "learningUnits": {"const": 84},
+        "vocabularySeconds": {"type": "integer", "minimum": 1},
+        "listeningSeconds": {"type": "integer", "minimum": 1},
+        "speakingSeconds": {"type": "integer", "minimum": 1},
+        "allUnitsSeconds": {"type": "integer", "minimum": 3}
+      }
+    },
     "learningCandidateProjection": {
       "type": "object",
       "additionalProperties": false,
@@ -102,9 +135,12 @@
       "properties": {
         "staticFields": {
           "type": "array",
-          "minItems": 6,
+          "minItems": 7,
           "uniqueItems": true,
-          "items": {"type": "string", "minLength": 1}
+          "items": {"type": "string", "minLength": 1},
+          "contains": {"const": "durationBaseline"},
+          "minContains": 1,
+          "maxContains": 1
         },
         "runtimeField": {"const": "prerequisitesMet"},
         "runtimeSource": {"const": "learningUnit.prerequisiteUnitIds"}

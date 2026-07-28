@@ -21,6 +21,19 @@
           "domain": "vocabulary",
           "difficultyLevel": 3,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "vocabulary-set-v1",
+            "fixedSeconds": 15,
+            "itemCount": 8,
+            "secondsPerItem": 12,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 16,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 90,
+            "maximumSeconds": 600
+          },
           "tags": ["scene:airport", "week:4", "day:22", "focus:arrival", "focus:connection"],
           "prerequisiteUnitIds": ["st4w-w3d21-vocabulary"],
           "activity": {
@@ -43,6 +56,19 @@
           "domain": "listening",
           "difficultyLevel": 3.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "structured-listening-set-v1",
+            "fixedSeconds": 20,
+            "itemCount": 7,
+            "secondsPerItem": 10,
+            "activeAudioSeconds": 115,
+            "expectedAudioPlaythroughs": 1,
+            "interactionStepCount": 21,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 150,
+            "maximumSeconds": 900
+          },
           "tags": ["scene:airport", "week:4", "day:22", "skill:detail", "skill:inference", "focus:missing-bag"],
           "prerequisiteUnitIds": ["st4w-w3d21-listening"],
           "activity": {
@@ -72,6 +98,19 @@
           "domain": "speaking",
           "difficultyLevel": 3.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "fixed-response-v1",
+            "fixedSeconds": 25,
+            "itemCount": 3,
+            "secondsPerItem": 36,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 12,
+            "secondsPerInteractionStep": 4,
+            "minimumSeconds": 90,
+            "maximumSeconds": 720
+          },
           "tags": ["scene:airport", "week:4", "day:22", "task:fixed-response", "focus:arrival"],
           "prerequisiteUnitIds": ["st4w-w3d21-speaking"],
           "activity": {
@@ -129,6 +168,19 @@
           "domain": "vocabulary",
           "difficultyLevel": 3,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "vocabulary-set-v1",
+            "fixedSeconds": 15,
+            "itemCount": 8,
+            "secondsPerItem": 12,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 16,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 90,
+            "maximumSeconds": 600
+          },
           "tags": ["scene:simple-help", "week:4", "day:23", "focus:help", "safety:urgent-communication"],
           "prerequisiteUnitIds": ["st4w-w4d22-vocabulary"],
           "activity": {
@@ -151,6 +203,19 @@
           "domain": "listening",
           "difficultyLevel": 3.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "structured-listening-set-v1",
+            "fixedSeconds": 20,
+            "itemCount": 7,
+            "secondsPerItem": 10,
+            "activeAudioSeconds": 96,
+            "expectedAudioPlaythroughs": 1,
+            "interactionStepCount": 21,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 150,
+            "maximumSeconds": 900
+          },
           "tags": ["scene:simple-help", "week:4", "day:23", "skill:detail", "focus:location", "safety:urgent-communication"],
           "prerequisiteUnitIds": ["st4w-w4d22-listening"],
           "activity": {
@@ -178,6 +243,19 @@
           "domain": "speaking",
           "difficultyLevel": 3.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "fixed-response-v1",
+            "fixedSeconds": 25,
+            "itemCount": 4,
+            "secondsPerItem": 36,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 16,
+            "secondsPerInteractionStep": 4,
+            "minimumSeconds": 90,
+            "maximumSeconds": 720
+          },
           "tags": ["scene:simple-help", "week:4", "day:23", "task:fixed-response", "safety:urgent-communication"],
           "prerequisiteUnitIds": ["st4w-w4d22-speaking"],
           "activity": {
@@ -242,6 +320,19 @@
           "domain": "vocabulary",
           "difficultyLevel": 3.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "vocabulary-set-v1",
+            "fixedSeconds": 15,
+            "itemCount": 8,
+            "secondsPerItem": 12,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 16,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 90,
+            "maximumSeconds": 600
+          },
           "tags": ["scene:integrated-travel", "week:4", "day:24", "focus:small-talk"],
           "prerequisiteUnitIds": ["st4w-w4d23-vocabulary"],
           "activity": {
@@ -264,6 +355,19 @@
           "domain": "listening",
           "difficultyLevel": 4,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "structured-listening-set-v1",
+            "fixedSeconds": 20,
+            "itemCount": 7,
+            "secondsPerItem": 10,
+            "activeAudioSeconds": 107,
+            "expectedAudioPlaythroughs": 1,
+            "interactionStepCount": 21,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 150,
+            "maximumSeconds": 900
+          },
           "tags": ["scene:integrated-travel", "week:4", "day:24", "skill:gist", "skill:detail", "skill:inference", "focus:small-talk"],
           "prerequisiteUnitIds": ["st4w-w4d23-listening"],
           "activity": {
@@ -294,6 +398,19 @@
           "domain": "speaking",
           "difficultyLevel": 4,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "fixed-response-v1",
+            "fixedSeconds": 25,
+            "itemCount": 4,
+            "secondsPerItem": 36,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 16,
+            "secondsPerInteractionStep": 4,
+            "minimumSeconds": 90,
+            "maximumSeconds": 720
+          },
           "tags": ["scene:integrated-travel", "week:4", "day:24", "task:fixed-response", "focus:small-talk"],
           "prerequisiteUnitIds": ["st4w-w4d23-speaking"],
           "activity": {
@@ -358,6 +475,19 @@
           "domain": "vocabulary",
           "difficultyLevel": 4,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "vocabulary-review-v1",
+            "fixedSeconds": 15,
+            "itemCount": 11,
+            "secondsPerItem": 12,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 22,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 90,
+            "maximumSeconds": 600
+          },
           "tags": ["scene:integrated-travel", "week:4", "day:25", "focus:arrival-to-hotel", "capstone:part-1"],
           "prerequisiteUnitIds": ["st4w-w4d24-vocabulary"],
           "activity": {
@@ -378,6 +508,19 @@
           "domain": "listening",
           "difficultyLevel": 4.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "structured-listening-set-v1",
+            "fixedSeconds": 20,
+            "itemCount": 7,
+            "secondsPerItem": 10,
+            "activeAudioSeconds": 153,
+            "expectedAudioPlaythroughs": 1,
+            "interactionStepCount": 21,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 150,
+            "maximumSeconds": 900
+          },
           "tags": ["scene:integrated-travel", "week:4", "day:25", "skill:sequence", "skill:detail", "skill:inference", "capstone:part-1"],
           "prerequisiteUnitIds": ["st4w-w4d24-listening"],
           "activity": {
@@ -409,6 +552,19 @@
           "domain": "speaking",
           "difficultyLevel": 4.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "guided-roleplay-v1",
+            "fixedSeconds": 25,
+            "itemCount": 4,
+            "secondsPerItem": 36,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 16,
+            "secondsPerInteractionStep": 4,
+            "minimumSeconds": 90,
+            "maximumSeconds": 720
+          },
           "tags": ["scene:integrated-travel", "week:4", "day:25", "task:guided-roleplay", "capstone:part-1"],
           "prerequisiteUnitIds": ["st4w-w4d24-speaking"],
           "activity": {
@@ -473,6 +629,19 @@
           "domain": "vocabulary",
           "difficultyLevel": 4.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "vocabulary-review-v1",
+            "fixedSeconds": 15,
+            "itemCount": 11,
+            "secondsPerItem": 12,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 22,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 90,
+            "maximumSeconds": 600
+          },
           "tags": ["scene:integrated-travel", "week:4", "day:26", "focus:city-day", "capstone:part-2"],
           "prerequisiteUnitIds": ["st4w-w4d25-vocabulary"],
           "activity": {
@@ -493,6 +662,19 @@
           "domain": "listening",
           "difficultyLevel": 5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "structured-listening-set-v1",
+            "fixedSeconds": 20,
+            "itemCount": 7,
+            "secondsPerItem": 10,
+            "activeAudioSeconds": 149,
+            "expectedAudioPlaythroughs": 1,
+            "interactionStepCount": 21,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 150,
+            "maximumSeconds": 900
+          },
           "tags": ["scene:integrated-travel", "week:4", "day:26", "skill:sequence", "skill:detail", "skill:inference", "capstone:part-2"],
           "prerequisiteUnitIds": ["st4w-w4d25-listening"],
           "activity": {
@@ -523,6 +705,19 @@
           "domain": "speaking",
           "difficultyLevel": 5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "guided-roleplay-v1",
+            "fixedSeconds": 25,
+            "itemCount": 4,
+            "secondsPerItem": 36,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 16,
+            "secondsPerInteractionStep": 4,
+            "minimumSeconds": 90,
+            "maximumSeconds": 720
+          },
           "tags": ["scene:integrated-travel", "week:4", "day:26", "task:guided-roleplay", "capstone:part-2"],
           "prerequisiteUnitIds": ["st4w-w4d25-speaking"],
           "activity": {
@@ -587,6 +782,19 @@
           "domain": "vocabulary",
           "difficultyLevel": 5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "vocabulary-review-v1",
+            "fixedSeconds": 15,
+            "itemCount": 11,
+            "secondsPerItem": 12,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 22,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 90,
+            "maximumSeconds": 600
+          },
           "tags": ["scene:integrated-travel", "week:4", "day:27", "focus:return-trip", "capstone:part-3"],
           "prerequisiteUnitIds": ["st4w-w4d26-vocabulary"],
           "activity": {
@@ -607,6 +815,19 @@
           "domain": "listening",
           "difficultyLevel": 5.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "structured-listening-set-v1",
+            "fixedSeconds": 20,
+            "itemCount": 7,
+            "secondsPerItem": 10,
+            "activeAudioSeconds": 167,
+            "expectedAudioPlaythroughs": 1,
+            "interactionStepCount": 21,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 150,
+            "maximumSeconds": 900
+          },
           "tags": ["scene:integrated-travel", "week:4", "day:27", "skill:sequence", "skill:detail", "skill:inference", "capstone:part-3"],
           "prerequisiteUnitIds": ["st4w-w4d26-listening"],
           "activity": {
@@ -637,6 +858,19 @@
           "domain": "speaking",
           "difficultyLevel": 5.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "guided-roleplay-v1",
+            "fixedSeconds": 25,
+            "itemCount": 4,
+            "secondsPerItem": 36,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 16,
+            "secondsPerInteractionStep": 4,
+            "minimumSeconds": 90,
+            "maximumSeconds": 720
+          },
           "tags": ["scene:integrated-travel", "week:4", "day:27", "task:guided-roleplay", "capstone:part-3"],
           "prerequisiteUnitIds": ["st4w-w4d26-speaking"],
           "activity": {
@@ -702,6 +936,19 @@
           "domain": "vocabulary",
           "difficultyLevel": 5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "vocabulary-review-v1",
+            "fixedSeconds": 15,
+            "itemCount": 19,
+            "secondsPerItem": 12,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 38,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 90,
+            "maximumSeconds": 600
+          },
           "tags": ["scene:integrated-travel", "week:4", "day:28", "focus:full-review", "checkpoint:course"],
           "prerequisiteUnitIds": ["st4w-w4d27-vocabulary"],
           "activity": {
@@ -734,6 +981,19 @@
           "domain": "listening",
           "difficultyLevel": 5.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "structured-listening-set-v1",
+            "fixedSeconds": 20,
+            "itemCount": 8,
+            "secondsPerItem": 10,
+            "activeAudioSeconds": 351,
+            "expectedAudioPlaythroughs": 1,
+            "interactionStepCount": 24,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 150,
+            "maximumSeconds": 900
+          },
           "tags": ["scene:integrated-travel", "week:4", "day:28", "skill:gist", "skill:sequence", "skill:detail", "skill:inference", "checkpoint:course"],
           "prerequisiteUnitIds": ["st4w-w4d27-listening"],
           "activity": {
@@ -769,6 +1029,19 @@
           "domain": "speaking",
           "difficultyLevel": 5.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "guided-roleplay-v1",
+            "fixedSeconds": 25,
+            "itemCount": 5,
+            "secondsPerItem": 36,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 20,
+            "secondsPerInteractionStep": 4,
+            "minimumSeconds": 90,
+            "maximumSeconds": 720
+          },
           "tags": ["scene:integrated-travel", "week:4", "day:28", "task:guided-roleplay", "checkpoint:course"],
           "prerequisiteUnitIds": ["st4w-w4d27-speaking"],
           "activity": {

@@ -79,6 +79,17 @@
 这些字段只描述内容许可，不实现控制器、不规定按钮外观，也不保证设备一定支持。
 07 必须把设备能力与内容许可取交集；设备或资源失败时按 07 契约降级。
 
+## R3 名义音频时长
+
+核心听力单元的 `durationBaseline.activeAudioSeconds` 按
+`content/curriculum/duration-baseline-authoring.v1.json` 复算。它包含每道扩展题
+primary 来源一次、完整 transcript 按核心检查数各一次、场景 `audioText` 一次。
+
+`expectedAudioPlaythroughs` 固定为 1，表示正常完成每题的一次首播；内容允许重复不等于
+预计必然重复，用户额外播放由真实有效计时和个人历史吸收。名义秒数以 1×、150
+英文词元/分钟及版本化标点停顿计算，只是无历史时的内容基线，不声称等于某台设备的
+Web Speech 实际时长。
+
 ## 07 接入顺序
 
 1. 读取扩展唯一入口并验证其 Schema。

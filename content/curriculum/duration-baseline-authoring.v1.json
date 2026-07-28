@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "documentType": "duration-baseline-authoring-rules",
+  "rulesVersion": "1.0.0",
+  "courseId": "survival-travel-american-4w",
+  "packageVersion": "1.0.0",
+  "formula": "fixedSeconds + itemCount * secondsPerItem + activeAudioSeconds * expectedAudioPlaythroughs + interactionStepCount * secondsPerInteractionStep",
+  "nominalTts": {
+    "locale": "en-US",
+    "productRate": 1,
+    "wordUnitsPerMinute": 150,
+    "secondsPerWordUnit": 0.4,
+    "wordUnitPattern": "[A-Za-z0-9]+(?:['’][A-Za-z0-9]+)*",
+    "minorPunctuationPattern": "[,;:]",
+    "secondsPerMinorPunctuation": 0.18,
+    "terminalPunctuationPattern": "[.!?]",
+    "secondsPerTerminalPunctuation": 0.32,
+    "minimumUtteranceSeconds": 0.8,
+    "transcriptJoiner": " ",
+    "rounding": "sum-question-utterances-then-nearest-integer",
+    "deviceTimingClaim": "nominal-content-baseline-not-device-measurement"
+  },
+  "modules": {
+    "vocabulary": {
+      "contentTypeByActivity": {
+        "vocabulary-set": "vocabulary-set-v1",
+        "vocabulary-review": "vocabulary-review-v1"
+      },
+      "fixedSeconds": 15,
+      "secondsPerItem": 12,
+      "activeAudioSeconds": 0,
+      "expectedAudioPlaythroughs": 0,
+      "interactionStepsPerItem": 2,
+      "secondsPerInteractionStep": 3,
+      "minimumSeconds": 90,
+      "maximumSeconds": 600,
+      "itemCountMethod": "distinct-review-and-new-items-plus-generated-scene-questions",
+      "interactionMethod": "submit-answer-plus-review-feedback-and-advance",
+      "parameterRationale": "15 seconds covers task orientation; 12 seconds per item covers reading and deciding; two 3-second interaction steps cover submission and feedback/advance; 90–600 seconds is a corruption guard, not a daily-budget target."
+    },
+    "listening": {
+      "contentType": "structured-listening-set-v1",
+      "fixedSeconds": 20,
+      "secondsPerItem": 10,
+      "expectedAudioPlaythroughs": 1,
+      "interactionStepsPerItem": 3,
+      "secondsPerInteractionStep": 3,
+      "minimumSeconds": 150,
+      "maximumSeconds": 900,
+      "itemCountMethod": "extension-exercises-plus-core-checks-plus-one-scene-quiz",
+      "audioMethod": "each-extension-primary-source-once-plus-full-transcript-once-per-core-check-plus-scene-audio-once",
+      "optionalRepeatIncluded": false,
+      "interactionMethod": "start-primary-audio-plus-submit-response-plus-review-feedback-and-advance",
+      "parameterRationale": "20 seconds covers task orientation; 10 seconds per item covers reading the prompt and options; three 3-second interaction steps cover starting audio, submitting, and feedback/advance; 150–900 seconds is a corruption guard, not a daily-budget target."
+    },
+    "speaking": {
+      "contentTypeByActivity": {
+        "fixed-response": "fixed-response-v1",
+        "guided-roleplay": "guided-roleplay-v1"
+      },
+      "fixedSeconds": 25,
+      "secondsPerItem": 36,
+      "activeAudioSeconds": 0,
+      "expectedAudioPlaythroughs": 0,
+      "interactionStepsPerItem": 4,
+      "secondsPerInteractionStep": 4,
+      "minimumSeconds": 90,
+      "maximumSeconds": 720,
+      "itemCountMethod": "activity-prompts",
+      "interactionMethod": "prepare-and-start-recording-plus-stop-plus-playback-decision-plus-review-feedback-and-advance",
+      "contentAudioMethod": "zero-because-partner-line-is-display-only-and-user-recording-is-not-content-owned-audio",
+      "parameterRationale": "25 seconds covers task orientation; 36 seconds per prompt covers preparation and a concise spoken response; four 4-second interaction steps cover recording start, stop, playback decision, and feedback/advance; 90–720 seconds is a corruption guard, not a daily-budget target."
+    }
+  }
+}

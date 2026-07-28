@@ -21,6 +21,19 @@
           "domain": "vocabulary",
           "difficultyLevel": 2,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "vocabulary-set-v1",
+            "fixedSeconds": 15,
+            "itemCount": 7,
+            "secondsPerItem": 12,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 14,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 90,
+            "maximumSeconds": 600
+          },
           "tags": ["scene:restaurant", "week:2", "day:8", "focus:seating"],
           "prerequisiteUnitIds": ["st4w-w1d7-vocabulary"],
           "activity": {
@@ -42,6 +55,19 @@
           "domain": "listening",
           "difficultyLevel": 2.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "structured-listening-set-v1",
+            "fixedSeconds": 20,
+            "itemCount": 7,
+            "secondsPerItem": 10,
+            "activeAudioSeconds": 83,
+            "expectedAudioPlaythroughs": 1,
+            "interactionStepCount": 21,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 150,
+            "maximumSeconds": 900
+          },
           "tags": ["scene:restaurant", "week:2", "day:8", "skill:detail", "focus:seating"],
           "prerequisiteUnitIds": ["st4w-w1d7-listening"],
           "activity": {
@@ -69,6 +95,19 @@
           "domain": "speaking",
           "difficultyLevel": 2.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "fixed-response-v1",
+            "fixedSeconds": 25,
+            "itemCount": 3,
+            "secondsPerItem": 36,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 12,
+            "secondsPerInteractionStep": 4,
+            "minimumSeconds": 90,
+            "maximumSeconds": 720
+          },
           "tags": ["scene:restaurant", "week:2", "day:8", "task:fixed-response", "focus:seating"],
           "prerequisiteUnitIds": ["st4w-w1d7-speaking"],
           "activity": {
@@ -125,6 +164,19 @@
           "domain": "vocabulary",
           "difficultyLevel": 2,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "vocabulary-set-v1",
+            "fixedSeconds": 15,
+            "itemCount": 7,
+            "secondsPerItem": 12,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 14,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 90,
+            "maximumSeconds": 600
+          },
           "tags": ["scene:restaurant", "week:2", "day:9", "focus:food-order"],
           "prerequisiteUnitIds": ["st4w-w2d8-vocabulary"],
           "activity": {
@@ -146,6 +198,19 @@
           "domain": "listening",
           "difficultyLevel": 2.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "structured-listening-set-v1",
+            "fixedSeconds": 20,
+            "itemCount": 7,
+            "secondsPerItem": 10,
+            "activeAudioSeconds": 79,
+            "expectedAudioPlaythroughs": 1,
+            "interactionStepCount": 21,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 150,
+            "maximumSeconds": 900
+          },
           "tags": ["scene:restaurant", "week:2", "day:9", "skill:detail", "skill:inference", "focus:food-order"],
           "prerequisiteUnitIds": ["st4w-w2d8-listening"],
           "activity": {
@@ -174,6 +239,19 @@
           "domain": "speaking",
           "difficultyLevel": 2.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "fixed-response-v1",
+            "fixedSeconds": 25,
+            "itemCount": 3,
+            "secondsPerItem": 36,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 12,
+            "secondsPerInteractionStep": 4,
+            "minimumSeconds": 90,
+            "maximumSeconds": 720
+          },
           "tags": ["scene:restaurant", "week:2", "day:9", "task:fixed-response", "focus:food-order"],
           "prerequisiteUnitIds": ["st4w-w2d8-speaking"],
           "activity": {
@@ -230,6 +308,19 @@
           "domain": "vocabulary",
           "difficultyLevel": 2.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "vocabulary-set-v1",
+            "fixedSeconds": 15,
+            "itemCount": 7,
+            "secondsPerItem": 12,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 14,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 90,
+            "maximumSeconds": 600
+          },
           "tags": ["scene:restaurant", "week:2", "day:10", "focus:payment", "focus:problem"],
           "prerequisiteUnitIds": ["st4w-w2d9-vocabulary"],
           "activity": {
@@ -251,6 +342,19 @@
           "domain": "listening",
           "difficultyLevel": 3,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "structured-listening-set-v1",
+            "fixedSeconds": 20,
+            "itemCount": 7,
+            "secondsPerItem": 10,
+            "activeAudioSeconds": 84,
+            "expectedAudioPlaythroughs": 1,
+            "interactionStepCount": 21,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 150,
+            "maximumSeconds": 900
+          },
           "tags": ["scene:restaurant", "week:2", "day:10", "skill:detail", "skill:inference", "focus:check-error"],
           "prerequisiteUnitIds": ["st4w-w2d9-listening"],
           "activity": {
@@ -279,6 +383,19 @@
           "domain": "speaking",
           "difficultyLevel": 3,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "fixed-response-v1",
+            "fixedSeconds": 25,
+            "itemCount": 3,
+            "secondsPerItem": 36,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 12,
+            "secondsPerInteractionStep": 4,
+            "minimumSeconds": 90,
+            "maximumSeconds": 720
+          },
           "tags": ["scene:restaurant", "week:2", "day:10", "task:fixed-response", "focus:check-error"],
           "prerequisiteUnitIds": ["st4w-w2d9-speaking"],
           "activity": {
@@ -335,6 +452,19 @@
           "domain": "vocabulary",
           "difficultyLevel": 2,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "vocabulary-set-v1",
+            "fixedSeconds": 15,
+            "itemCount": 7,
+            "secondsPerItem": 12,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 14,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 90,
+            "maximumSeconds": 600
+          },
           "tags": ["scene:directions-and-transport", "week:2", "day:11", "focus:walking-directions"],
           "prerequisiteUnitIds": ["st4w-w2d10-vocabulary"],
           "activity": {
@@ -356,6 +486,19 @@
           "domain": "listening",
           "difficultyLevel": 2.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "structured-listening-set-v1",
+            "fixedSeconds": 20,
+            "itemCount": 7,
+            "secondsPerItem": 10,
+            "activeAudioSeconds": 82,
+            "expectedAudioPlaythroughs": 1,
+            "interactionStepCount": 21,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 150,
+            "maximumSeconds": 900
+          },
           "tags": ["scene:directions-and-transport", "week:2", "day:11", "skill:sequence", "skill:detail"],
           "prerequisiteUnitIds": ["st4w-w2d10-listening"],
           "activity": {
@@ -383,6 +526,19 @@
           "domain": "speaking",
           "difficultyLevel": 2.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "fixed-response-v1",
+            "fixedSeconds": 25,
+            "itemCount": 3,
+            "secondsPerItem": 36,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 12,
+            "secondsPerInteractionStep": 4,
+            "minimumSeconds": 90,
+            "maximumSeconds": 720
+          },
           "tags": ["scene:directions-and-transport", "week:2", "day:11", "task:fixed-response", "focus:directions"],
           "prerequisiteUnitIds": ["st4w-w2d10-speaking"],
           "activity": {
@@ -439,6 +595,19 @@
           "domain": "vocabulary",
           "difficultyLevel": 2.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "vocabulary-set-v1",
+            "fixedSeconds": 15,
+            "itemCount": 7,
+            "secondsPerItem": 12,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 14,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 90,
+            "maximumSeconds": 600
+          },
           "tags": ["scene:directions-and-transport", "week:2", "day:12", "focus:public-transit"],
           "prerequisiteUnitIds": ["st4w-w2d11-vocabulary"],
           "activity": {
@@ -460,6 +629,19 @@
           "domain": "listening",
           "difficultyLevel": 3,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "structured-listening-set-v1",
+            "fixedSeconds": 20,
+            "itemCount": 7,
+            "secondsPerItem": 10,
+            "activeAudioSeconds": 82,
+            "expectedAudioPlaythroughs": 1,
+            "interactionStepCount": 21,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 150,
+            "maximumSeconds": 900
+          },
           "tags": ["scene:directions-and-transport", "week:2", "day:12", "skill:sequence", "skill:detail", "focus:transfer"],
           "prerequisiteUnitIds": ["st4w-w2d11-listening"],
           "activity": {
@@ -487,6 +669,19 @@
           "domain": "speaking",
           "difficultyLevel": 3,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "fixed-response-v1",
+            "fixedSeconds": 25,
+            "itemCount": 3,
+            "secondsPerItem": 36,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 12,
+            "secondsPerInteractionStep": 4,
+            "minimumSeconds": 90,
+            "maximumSeconds": 720
+          },
           "tags": ["scene:directions-and-transport", "week:2", "day:12", "task:fixed-response", "focus:public-transit"],
           "prerequisiteUnitIds": ["st4w-w2d11-speaking"],
           "activity": {
@@ -543,6 +738,19 @@
           "domain": "vocabulary",
           "difficultyLevel": 2.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "vocabulary-set-v1",
+            "fixedSeconds": 15,
+            "itemCount": 7,
+            "secondsPerItem": 12,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 14,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 90,
+            "maximumSeconds": 600
+          },
           "tags": ["scene:directions-and-transport", "week:2", "day:13", "focus:tickets", "focus:rides"],
           "prerequisiteUnitIds": ["st4w-w2d12-vocabulary"],
           "activity": {
@@ -564,6 +772,19 @@
           "domain": "listening",
           "difficultyLevel": 3,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "structured-listening-set-v1",
+            "fixedSeconds": 20,
+            "itemCount": 7,
+            "secondsPerItem": 10,
+            "activeAudioSeconds": 94,
+            "expectedAudioPlaythroughs": 1,
+            "interactionStepCount": 21,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 150,
+            "maximumSeconds": 900
+          },
           "tags": ["scene:directions-and-transport", "week:2", "day:13", "skill:detail", "focus:ride-pickup"],
           "prerequisiteUnitIds": ["st4w-w2d12-listening"],
           "activity": {
@@ -591,6 +812,19 @@
           "domain": "speaking",
           "difficultyLevel": 3,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "fixed-response-v1",
+            "fixedSeconds": 25,
+            "itemCount": 3,
+            "secondsPerItem": 36,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 12,
+            "secondsPerInteractionStep": 4,
+            "minimumSeconds": 90,
+            "maximumSeconds": 720
+          },
           "tags": ["scene:directions-and-transport", "week:2", "day:13", "task:fixed-response", "focus:tickets", "focus:rides"],
           "prerequisiteUnitIds": ["st4w-w2d12-speaking"],
           "activity": {
@@ -647,6 +881,19 @@
           "domain": "vocabulary",
           "difficultyLevel": 3,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "vocabulary-review-v1",
+            "fixedSeconds": 15,
+            "itemCount": 10,
+            "secondsPerItem": 12,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 20,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 90,
+            "maximumSeconds": 600
+          },
           "tags": ["scene:integrated-travel", "week:2", "day:14", "focus:review", "checkpoint:week-2"],
           "prerequisiteUnitIds": ["st4w-w2d13-vocabulary"],
           "activity": {
@@ -666,6 +913,19 @@
           "domain": "listening",
           "difficultyLevel": 3,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "structured-listening-set-v1",
+            "fixedSeconds": 20,
+            "itemCount": 7,
+            "secondsPerItem": 10,
+            "activeAudioSeconds": 106,
+            "expectedAudioPlaythroughs": 1,
+            "interactionStepCount": 21,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 150,
+            "maximumSeconds": 900
+          },
           "tags": ["scene:integrated-travel", "week:2", "day:14", "skill:sequence", "skill:detail", "checkpoint:week-2"],
           "prerequisiteUnitIds": ["st4w-w2d13-listening"],
           "activity": {
@@ -694,6 +954,19 @@
           "domain": "speaking",
           "difficultyLevel": 3,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "guided-roleplay-v1",
+            "fixedSeconds": 25,
+            "itemCount": 4,
+            "secondsPerItem": 36,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 16,
+            "secondsPerInteractionStep": 4,
+            "minimumSeconds": 90,
+            "maximumSeconds": 720
+          },
           "tags": ["scene:integrated-travel", "week:2", "day:14", "task:guided-roleplay", "checkpoint:week-2"],
           "prerequisiteUnitIds": ["st4w-w2d13-speaking"],
           "activity": {

@@ -123,6 +123,7 @@
         "domain",
         "difficultyLevel",
         "estimatedSeconds",
+        "durationBaseline",
         "tags",
         "prerequisiteUnitIds",
         "activity"
@@ -148,6 +149,9 @@
         "estimatedSeconds": {
           "type": "integer",
           "minimum": 1
+        },
+        "durationBaseline": {
+          "$ref": "#/$defs/durationBaseline"
         },
         "tags": {
           "type": "array",
@@ -180,6 +184,150 @@
               ]
             }
           }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"domain": {"const": "vocabulary"}},
+            "required": ["domain"]
+          },
+          "then": {
+            "properties": {
+              "durationBaseline": {
+                "properties": {
+                  "contentType": {
+                    "enum": [
+                      "vocabulary-set-v1",
+                      "vocabulary-review-v1"
+                    ]
+                  },
+                  "fixedSeconds": {"const": 15},
+                  "secondsPerItem": {"const": 12},
+                  "activeAudioSeconds": {"const": 0},
+                  "expectedAudioPlaythroughs": {"const": 0},
+                  "secondsPerInteractionStep": {"const": 3},
+                  "minimumSeconds": {"const": 90},
+                  "maximumSeconds": {"const": 600}
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {"domain": {"const": "listening"}},
+            "required": ["domain"]
+          },
+          "then": {
+            "properties": {
+              "durationBaseline": {
+                "properties": {
+                  "contentType": {
+                    "const": "structured-listening-set-v1"
+                  },
+                  "fixedSeconds": {"const": 20},
+                  "secondsPerItem": {"const": 10},
+                  "activeAudioSeconds": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "expectedAudioPlaythroughs": {"const": 1},
+                  "secondsPerInteractionStep": {"const": 3},
+                  "minimumSeconds": {"const": 150},
+                  "maximumSeconds": {"const": 900}
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {"domain": {"const": "speaking"}},
+            "required": ["domain"]
+          },
+          "then": {
+            "properties": {
+              "durationBaseline": {
+                "properties": {
+                  "contentType": {
+                    "enum": [
+                      "fixed-response-v1",
+                      "guided-roleplay-v1"
+                    ]
+                  },
+                  "fixedSeconds": {"const": 25},
+                  "secondsPerItem": {"const": 36},
+                  "activeAudioSeconds": {"const": 0},
+                  "expectedAudioPlaythroughs": {"const": 0},
+                  "secondsPerInteractionStep": {"const": 4},
+                  "minimumSeconds": {"const": 90},
+                  "maximumSeconds": {"const": 720}
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "durationBaseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "contentType",
+        "fixedSeconds",
+        "itemCount",
+        "secondsPerItem",
+        "activeAudioSeconds",
+        "expectedAudioPlaythroughs",
+        "interactionStepCount",
+        "secondsPerInteractionStep",
+        "minimumSeconds",
+        "maximumSeconds"
+      ],
+      "properties": {
+        "schemaVersion": {"const": 1},
+        "contentType": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^|]+$"
+        },
+        "fixedSeconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "itemCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "secondsPerItem": {
+          "type": "number",
+          "minimum": 0
+        },
+        "activeAudioSeconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "expectedAudioPlaythroughs": {
+          "type": "number",
+          "minimum": 0
+        },
+        "interactionStepCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "secondsPerInteractionStep": {
+          "type": "number",
+          "minimum": 0
+        },
+        "minimumSeconds": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "maximumSeconds": {
+          "type": "number",
+          "exclusiveMinimum": 0
         }
       }
     },

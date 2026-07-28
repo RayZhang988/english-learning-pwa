@@ -21,6 +21,19 @@
           "domain": "vocabulary",
           "difficultyLevel": 2,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "vocabulary-set-v1",
+            "fixedSeconds": 15,
+            "itemCount": 8,
+            "secondsPerItem": 12,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 16,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 90,
+            "maximumSeconds": 600
+          },
           "tags": ["scene:shopping-and-payment", "week:3", "day:15", "focus:size-and-fit"],
           "prerequisiteUnitIds": ["st4w-w2d14-vocabulary"],
           "activity": {
@@ -43,6 +56,19 @@
           "domain": "listening",
           "difficultyLevel": 2.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "structured-listening-set-v1",
+            "fixedSeconds": 20,
+            "itemCount": 7,
+            "secondsPerItem": 10,
+            "activeAudioSeconds": 90,
+            "expectedAudioPlaythroughs": 1,
+            "interactionStepCount": 21,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 150,
+            "maximumSeconds": 900
+          },
           "tags": ["scene:shopping-and-payment", "week:3", "day:15", "skill:detail", "focus:size-and-fit"],
           "prerequisiteUnitIds": ["st4w-w2d14-listening"],
           "activity": {
@@ -71,6 +97,19 @@
           "domain": "speaking",
           "difficultyLevel": 2.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "fixed-response-v1",
+            "fixedSeconds": 25,
+            "itemCount": 3,
+            "secondsPerItem": 36,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 12,
+            "secondsPerInteractionStep": 4,
+            "minimumSeconds": 90,
+            "maximumSeconds": 720
+          },
           "tags": ["scene:shopping-and-payment", "week:3", "day:15", "task:fixed-response", "focus:size-and-fit"],
           "prerequisiteUnitIds": ["st4w-w2d14-speaking"],
           "activity": {
@@ -127,6 +166,19 @@
           "domain": "vocabulary",
           "difficultyLevel": 2.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "vocabulary-set-v1",
+            "fixedSeconds": 15,
+            "itemCount": 8,
+            "secondsPerItem": 12,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 16,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 90,
+            "maximumSeconds": 600
+          },
           "tags": ["scene:shopping-and-payment", "week:3", "day:16", "focus:payment", "focus:returns"],
           "prerequisiteUnitIds": ["st4w-w3d15-vocabulary"],
           "activity": {
@@ -149,6 +201,19 @@
           "domain": "listening",
           "difficultyLevel": 3,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "structured-listening-set-v1",
+            "fixedSeconds": 20,
+            "itemCount": 7,
+            "secondsPerItem": 10,
+            "activeAudioSeconds": 92,
+            "expectedAudioPlaythroughs": 1,
+            "interactionStepCount": 21,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 150,
+            "maximumSeconds": 900
+          },
           "tags": ["scene:shopping-and-payment", "week:3", "day:16", "skill:detail", "focus:exchange"],
           "prerequisiteUnitIds": ["st4w-w3d15-listening"],
           "activity": {
@@ -177,6 +242,19 @@
           "domain": "speaking",
           "difficultyLevel": 3,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "fixed-response-v1",
+            "fixedSeconds": 25,
+            "itemCount": 3,
+            "secondsPerItem": 36,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 12,
+            "secondsPerInteractionStep": 4,
+            "minimumSeconds": 90,
+            "maximumSeconds": 720
+          },
           "tags": ["scene:shopping-and-payment", "week:3", "day:16", "task:fixed-response", "focus:returns"],
           "prerequisiteUnitIds": ["st4w-w3d15-speaking"],
           "activity": {
@@ -233,6 +311,19 @@
           "domain": "vocabulary",
           "difficultyLevel": 2.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "vocabulary-set-v1",
+            "fixedSeconds": 15,
+            "itemCount": 8,
+            "secondsPerItem": 12,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 16,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 90,
+            "maximumSeconds": 600
+          },
           "tags": ["scene:hotel", "week:3", "day:17", "focus:check-in"],
           "prerequisiteUnitIds": ["st4w-w3d16-vocabulary"],
           "activity": {
@@ -255,6 +346,19 @@
           "domain": "listening",
           "difficultyLevel": 3,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "structured-listening-set-v1",
+            "fixedSeconds": 20,
+            "itemCount": 7,
+            "secondsPerItem": 10,
+            "activeAudioSeconds": 108,
+            "expectedAudioPlaythroughs": 1,
+            "interactionStepCount": 21,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 150,
+            "maximumSeconds": 900
+          },
           "tags": ["scene:hotel", "week:3", "day:17", "skill:detail", "focus:check-in"],
           "prerequisiteUnitIds": ["st4w-w3d16-listening"],
           "activity": {
@@ -283,6 +387,19 @@
           "domain": "speaking",
           "difficultyLevel": 3,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "fixed-response-v1",
+            "fixedSeconds": 25,
+            "itemCount": 3,
+            "secondsPerItem": 36,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 12,
+            "secondsPerInteractionStep": 4,
+            "minimumSeconds": 90,
+            "maximumSeconds": 720
+          },
           "tags": ["scene:hotel", "week:3", "day:17", "task:fixed-response", "focus:check-in"],
           "prerequisiteUnitIds": ["st4w-w3d16-speaking"],
           "activity": {
@@ -339,6 +456,19 @@
           "domain": "vocabulary",
           "difficultyLevel": 3,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "vocabulary-set-v1",
+            "fixedSeconds": 15,
+            "itemCount": 7,
+            "secondsPerItem": 12,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 14,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 90,
+            "maximumSeconds": 600
+          },
           "tags": ["scene:hotel", "week:3", "day:18", "focus:room-problems"],
           "prerequisiteUnitIds": ["st4w-w3d17-vocabulary"],
           "activity": {
@@ -360,6 +490,19 @@
           "domain": "listening",
           "difficultyLevel": 3.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "structured-listening-set-v1",
+            "fixedSeconds": 20,
+            "itemCount": 7,
+            "secondsPerItem": 10,
+            "activeAudioSeconds": 95,
+            "expectedAudioPlaythroughs": 1,
+            "interactionStepCount": 21,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 150,
+            "maximumSeconds": 900
+          },
           "tags": ["scene:hotel", "week:3", "day:18", "skill:detail", "skill:inference", "focus:room-problems"],
           "prerequisiteUnitIds": ["st4w-w3d17-listening"],
           "activity": {
@@ -388,6 +531,19 @@
           "domain": "speaking",
           "difficultyLevel": 3.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "fixed-response-v1",
+            "fixedSeconds": 25,
+            "itemCount": 3,
+            "secondsPerItem": 36,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 12,
+            "secondsPerInteractionStep": 4,
+            "minimumSeconds": 90,
+            "maximumSeconds": 720
+          },
           "tags": ["scene:hotel", "week:3", "day:18", "task:fixed-response", "focus:room-problems"],
           "prerequisiteUnitIds": ["st4w-w3d17-speaking"],
           "activity": {
@@ -444,6 +600,19 @@
           "domain": "vocabulary",
           "difficultyLevel": 3,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "vocabulary-set-v1",
+            "fixedSeconds": 15,
+            "itemCount": 8,
+            "secondsPerItem": 12,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 16,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 90,
+            "maximumSeconds": 600
+          },
           "tags": ["scene:airport", "week:3", "day:19", "focus:check-in"],
           "prerequisiteUnitIds": ["st4w-w3d18-vocabulary"],
           "activity": {
@@ -466,6 +635,19 @@
           "domain": "listening",
           "difficultyLevel": 3.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "structured-listening-set-v1",
+            "fixedSeconds": 20,
+            "itemCount": 7,
+            "secondsPerItem": 10,
+            "activeAudioSeconds": 98,
+            "expectedAudioPlaythroughs": 1,
+            "interactionStepCount": 21,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 150,
+            "maximumSeconds": 900
+          },
           "tags": ["scene:airport", "week:3", "day:19", "skill:detail", "focus:check-in"],
           "prerequisiteUnitIds": ["st4w-w3d18-listening"],
           "activity": {
@@ -494,6 +676,19 @@
           "domain": "speaking",
           "difficultyLevel": 3.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "fixed-response-v1",
+            "fixedSeconds": 25,
+            "itemCount": 3,
+            "secondsPerItem": 36,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 12,
+            "secondsPerInteractionStep": 4,
+            "minimumSeconds": 90,
+            "maximumSeconds": 720
+          },
           "tags": ["scene:airport", "week:3", "day:19", "task:fixed-response", "focus:check-in"],
           "prerequisiteUnitIds": ["st4w-w3d18-speaking"],
           "activity": {
@@ -550,6 +745,19 @@
           "domain": "vocabulary",
           "difficultyLevel": 3,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "vocabulary-set-v1",
+            "fixedSeconds": 15,
+            "itemCount": 8,
+            "secondsPerItem": 12,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 16,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 90,
+            "maximumSeconds": 600
+          },
           "tags": ["scene:airport", "week:3", "day:20", "focus:security", "focus:gate"],
           "prerequisiteUnitIds": ["st4w-w3d19-vocabulary"],
           "activity": {
@@ -572,6 +780,19 @@
           "domain": "listening",
           "difficultyLevel": 3.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "structured-listening-set-v1",
+            "fixedSeconds": 20,
+            "itemCount": 7,
+            "secondsPerItem": 10,
+            "activeAudioSeconds": 73,
+            "expectedAudioPlaythroughs": 1,
+            "interactionStepCount": 21,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 150,
+            "maximumSeconds": 900
+          },
           "tags": ["scene:airport", "week:3", "day:20", "skill:detail", "skill:inference", "focus:gate-change"],
           "prerequisiteUnitIds": ["st4w-w3d19-listening"],
           "activity": {
@@ -598,6 +819,19 @@
           "domain": "speaking",
           "difficultyLevel": 3.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "fixed-response-v1",
+            "fixedSeconds": 25,
+            "itemCount": 3,
+            "secondsPerItem": 36,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 12,
+            "secondsPerInteractionStep": 4,
+            "minimumSeconds": 90,
+            "maximumSeconds": 720
+          },
           "tags": ["scene:airport", "week:3", "day:20", "task:fixed-response", "focus:gate-information"],
           "prerequisiteUnitIds": ["st4w-w3d19-speaking"],
           "activity": {
@@ -654,6 +888,19 @@
           "domain": "vocabulary",
           "difficultyLevel": 3.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "vocabulary-review-v1",
+            "fixedSeconds": 15,
+            "itemCount": 10,
+            "secondsPerItem": 12,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 20,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 90,
+            "maximumSeconds": 600
+          },
           "tags": ["scene:integrated-travel", "week:3", "day:21", "focus:review", "checkpoint:week-3"],
           "prerequisiteUnitIds": ["st4w-w3d20-vocabulary"],
           "activity": {
@@ -673,6 +920,19 @@
           "domain": "listening",
           "difficultyLevel": 3.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "structured-listening-set-v1",
+            "fixedSeconds": 20,
+            "itemCount": 7,
+            "secondsPerItem": 10,
+            "activeAudioSeconds": 126,
+            "expectedAudioPlaythroughs": 1,
+            "interactionStepCount": 21,
+            "secondsPerInteractionStep": 3,
+            "minimumSeconds": 150,
+            "maximumSeconds": 900
+          },
           "tags": ["scene:integrated-travel", "week:3", "day:21", "skill:sequence", "skill:detail", "checkpoint:week-3"],
           "prerequisiteUnitIds": ["st4w-w3d20-listening"],
           "activity": {
@@ -701,6 +961,19 @@
           "domain": "speaking",
           "difficultyLevel": 3.5,
           "estimatedSeconds": 900,
+          "durationBaseline": {
+            "schemaVersion": 1,
+            "contentType": "guided-roleplay-v1",
+            "fixedSeconds": 25,
+            "itemCount": 4,
+            "secondsPerItem": 36,
+            "activeAudioSeconds": 0,
+            "expectedAudioPlaythroughs": 0,
+            "interactionStepCount": 16,
+            "secondsPerInteractionStep": 4,
+            "minimumSeconds": 90,
+            "maximumSeconds": 720
+          },
           "tags": ["scene:integrated-travel", "week:3", "day:21", "task:guided-roleplay", "checkpoint:week-3"],
           "prerequisiteUnitIds": ["st4w-w3d20-speaking"],
           "activity": {

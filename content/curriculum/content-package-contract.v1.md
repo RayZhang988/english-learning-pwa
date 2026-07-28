@@ -26,6 +26,9 @@
 4. `learningUnitId` 表示跨版本学习进度身份；纯文字修订可以保留。
 5. `contentRef` 指向精确包版本。已经进入复习状态的旧 `contentRef` 必须仍可解析，
    或由文件所有者提供显式迁移；不得静默让旧引用读取新语义。
+6. `durationBaseline` 是对既有训练内容量的附加运行时事实，不改变题目、答案、
+   `learningUnitId` 或 `contentRef`。为修复 QA-009，当前 `1.0.0` 包在不改变教学语义
+   的前提下补齐该字段；旧 `estimatedSeconds` 继续保留用于 schema 1 恢复。
 
 ## 3. 课程清单
 
@@ -40,7 +43,7 @@
 | `targetLocale` | 目标语言与 TTS 基线，当前 `en-US` |
 | `supportLocale` | 解释语言，当前 `zh-CN` |
 | `recommendedDays` | 推荐解锁长度，不是 04 的每日计划 |
-| `dailyCandidateSeconds` | 每个顺序内容块提供的候选总时长 |
+| `dailyCandidateSeconds` | 旧版 2700 秒兼容值，不再是预计时长真值 |
 | `lessonFiles` | 必须读取的周内容文件 |
 | `totals` | 包级期望数量，用于完整性检查 |
 | `difficultyScale` | 03/04 内部等级范围及非认证声明 |
@@ -70,7 +73,8 @@
 | `contentRef` | 全包唯一，格式为 `lesson://<course>/<package>/<day>/<domain>` |
 | `domain` | `vocabulary`、`listening`、`speaking` 之一 |
 | `difficultyLevel` | 03/04 的 `0–12` 内部等级 |
-| `estimatedSeconds` | 正整数；当前每单元 900 |
+| `estimatedSeconds` | 旧版兼容值；当前保留 900，不再作为新任务预计时长真值 |
+| `durationBaseline` | 04 原生 schema v1 内容量基线，必须由作者规则复算 |
 | `tags` | 只放可移植字符串，用于内容筛选和事件上报 |
 | `prerequisiteUnitIds` | 前置学习单元 ID；空数组表示首个单元 |
 | `activity` | 该专项的训练内容 |
@@ -95,6 +99,7 @@
   domain: unit.domain,
   difficultyLevel: unit.difficultyLevel,
   estimatedSeconds: unit.estimatedSeconds,
+  durationBaseline: unit.durationBaseline,
   tags: unit.tags,
   prerequisitesMet: runtimeHasCompleted(unit.prerequisiteUnitIds)
 }
@@ -102,6 +107,65 @@
 
 只有 `prerequisitesMet` 是运行时状态。05 只声明 `prerequisiteUnitIds`，不得代替 04
 决定用户是否满足前置条件，也不得在课程包中预排当天任务。
+
+### 6.1 R3 内容量基线
+
+公开作者规则位于：
+
+`content/curriculum/duration-baseline-authoring.v1.json`
+
+可复现校验位于：
+
+`content/curriculum/validate-duration-baselines.v1.mjs`
+
+04 使用的原生公式为：
+
+```text
+raw = fixedSeconds
+    + itemCount × secondsPerItem
+    + activeAudioSeconds × expectedAudioPlaythroughs
+    + interactionStepCount × secondsPerInteractionStep
+
+estimate = round(clamp(raw, minimumSeconds, maximumSeconds))
+```
+
+首批包的统一作者常量：
+
+| 专项 | `fixedSeconds` | `secondsPerItem` | 每题交互步数 | `secondsPerInteractionStep` | 范围 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| vocabulary | 15 | 12 | 2 | 3 | 90–600 秒 |
+| listening | 20 | 10 | 3 | 3 | 150–900 秒 |
+| speaking | 25 | 36 | 4 | 4 | 90–720 秒 |
+
+这些常量表达无个人历史时的内容作者假设：
+
+- 各专项 `fixedSeconds` 只覆盖进入任务和阅读一次说明；`secondsPerItem` 覆盖题目本身
+  的阅读、判断、准备或简短作答；交互步时间只覆盖实际按钮动作和反馈推进，不含加载、
+  权限、网络或后台等待。
+- 词汇 `itemCount` 是去重后的新词/复习词训练题，加实际生成的场景题；没有内容音频，
+  因此 `activeAudioSeconds` 和播放次数均为 0。
+- 听力 `itemCount` 是三道扩展题、全部核心检查和一题场景测验。正常完成假设每题首播
+  一次，`expectedAudioPlaythroughs = 1`；用户主动重复是个体行为，不预先虚增。
+- 口语 `itemCount` 是实际 prompt 数。`partnerLine` 当前只显示，用户录音与回放不是
+  内容拥有的固定音频，因此 `activeAudioSeconds = 0`；准备、录音、回放决定和反馈由
+  每题时间与交互步骤表达。
+- min/max 是损坏数据或未来异常稀疏/密集内容的保护，不是把短内容填满到 15 分钟的
+  手段。当前 84 个 raw 值都落在各专项范围内，没有靠边界制造结果。
+
+听力名义音频秒数不是设备实测。作者规则以产品 1×、`en-US`、150 个英文词元/分钟
+为基线，每词元 0.4 秒；逗号、分号、冒号各加 0.18 秒，句号、问号、感叹号各加
+0.32 秒，每个 utterance 至少 0.8 秒。词元、标点正则和舍入方式都在规则 JSON 中
+版本化。
+
+听力一轮正常完成的 `activeAudioSeconds` 包含：
+
+1. 每道扩展题的 primary TTS 或 transcript 片段一次；
+2. 完整 transcript 按核心检查题数量各播放一次；
+3. 场景测验 `audioText` 一次。
+
+当前发布包的结构化总量为 17,566 秒：词汇 4,740、听力 7,238、口语 5,588。
+旧 `candidateSeconds = 75,600` 只保留兼容。04/01 不得用每日 45 分钟预算反向改写
+单元预计时长，也不得在 `durationBaseline` 缺失或非法时静默假装成结构化内容。
 
 投影时还必须排除：
 

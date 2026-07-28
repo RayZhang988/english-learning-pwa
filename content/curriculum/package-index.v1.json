@@ -24,6 +24,9 @@
     "content/curriculum/content-quality-notes.v1.md",
     "content/curriculum/handoff-v1.md"
   ],
+  "validationFiles": [
+    "content/curriculum/validate-duration-baselines.v1.mjs"
+  ],
   "mediaAssets": [],
   "totals": {
     "weeks": 4,
@@ -35,6 +38,14 @@
     "sceneQuizItems": 84,
     "candidateSeconds": 75600
   },
+  "durationBaselinePolicyFile": "content/curriculum/duration-baseline-authoring.v1.json",
+  "durationBaselineTotals": {
+    "learningUnits": 84,
+    "vocabularySeconds": 4740,
+    "listeningSeconds": 7238,
+    "speakingSeconds": 5588,
+    "allUnitsSeconds": 17566
+  },
   "learningCandidateProjection": {
     "staticFields": [
       "learningUnitId",
@@ -42,6 +53,7 @@
       "domain",
       "difficultyLevel",
       "estimatedSeconds",
+      "durationBaseline",
       "tags"
     ],
     "runtimeField": "prerequisitesMet",
