@@ -23,6 +23,7 @@ import {
   createVocabularyStreamAttemptEvent,
   createVocabularyTrainingBudgetCompletedEvent,
   createVocabularyTrainingContentExhaustedEvent,
+  createVocabularyTrainingContentRecoveredEvent,
   createVocabularyTrainingItemCompletedEvent,
 } from './events.ts'
 import { buildVocabularyQuestions, buildVocabularySupplyQuestion } from './questions.ts'
@@ -302,7 +303,7 @@ export class VocabularyTrainingRuntime {
         }
         const question = this.supplyQuestion(catalog, result.item as import('./types.ts').VocabularySupplyItem)
         session = createVocabularySession(this.task, [question], now)
-        session = { ...session, stream: { activeItem: result.item as import('./types.ts').VocabularySupplyItem, activeRequestId: request.requestId, nextSupplyCursor: result.nextCursor, completedItemIds: [], completedItemCount: 0, correctItemCount: 0, finishCurrentItem: this.trainingBudgetStatus?.() === 'finish-current-item' } }
+        session = { ...session, stream: { activeItem: result.item as import('./types.ts').VocabularySupplyItem, activeRequestId: request.requestId, nextSupplyCursor: result.nextCursor, completedItemIds: [], completedItemCount: 0, correctItemCount: 0, finishCurrentItem: this.trainingBudgetStatus?.() === 'finish-current-item', exhaustionRequestId: null, recoveryEventId: null } }
       } else {
         const questions = buildVocabularyQuestions(unit)
         session = createVocabularySession(this.task, questions, now)
@@ -404,7 +405,7 @@ export class VocabularyTrainingRuntime {
             const catalog = await this.contentSource.load()
             const { request, result } = await this.nextStreamItem(catalog, completedStream)
             if (result.status !== 'item') {
-              session = { ...session, phase: 'error', pausedFromPhase: null, lastActiveAt: null, failure: { category: 'content', message: '当前没有可继续的词汇题目。' }, stream: completedStream, updatedAt: now }
+              session = { ...session, phase: 'error', pausedFromPhase: null, lastActiveAt: null, failure: { category: 'content', message: '当前没有可继续的词汇题目。' }, stream: { ...completedStream, exhaustionRequestId: request.requestId, recoveryEventId: null }, updatedAt: now }
               session = withPendingVocabularyEvent(session, createVocabularyTrainingContentExhaustedEvent(this.task, request.requestId, request.cursor, result.reason, this.identity(now)), now)
             } else {
               session = replaceVocabularyStreamQuestion(session, this.supplyQuestion(catalog, result.item as import('./types.ts').VocabularySupplyItem), { ...completedStream, activeItem: result.item as import('./types.ts').VocabularySupplyItem, activeRequestId: request.requestId, nextSupplyCursor: result.nextCursor }, now)
@@ -588,15 +589,36 @@ export class VocabularyTrainingRuntime {
       if (!this.continuousTraining || current.phase !== 'error' || !current.stream) {
         throw new VocabularyError('session-transition-invalid', 'Only an exhausted vocabulary stream can request more content.')
       }
+      if (current.stream.exhaustionRequestId === null) {
+        throw new VocabularyError('session-transition-invalid', 'Vocabulary stream has no acknowledged exhaustion to recover.')
+      }
+      const exhaustionRequestId = current.stream.exhaustionRequestId
+      const recoveryEventId = current.stream.recoveryEventId ??
+        `vocabulary:${this.task.taskId}:content-recovered:${exhaustionRequestId}`
       const catalog = await this.contentSource.load()
       const { request, result } = await this.nextStreamItem(catalog, current.stream)
       if (result.status !== 'item') {
-        let session = withPendingVocabularyEvent(current, createVocabularyTrainingContentExhaustedEvent(this.task, request.requestId, request.cursor, result.reason, this.identity(this.now())), this.now())
-        await this.save(session)
-        return this.flushPendingEvents()
+        // The task is already blocked by the persisted exhaustion request.
+        // Do not replace that identity or create an invalid second exhaustion.
+        return this.requireSession()
       }
       const now = this.now()
-      const session = replaceVocabularyStreamQuestion(current, this.supplyQuestion(catalog, result.item as import('./types.ts').VocabularySupplyItem), { ...current.stream, activeItem: result.item as import('./types.ts').VocabularySupplyItem, activeRequestId: request.requestId, nextSupplyCursor: result.nextCursor }, now)
+      let recovery = this.requireSession()
+      if (recovery.stream?.recoveryEventId === null) {
+        recovery = { ...recovery, stream: { ...recovery.stream, recoveryEventId }, updatedAt: now }
+        recovery = withPendingVocabularyEvent(
+          recovery,
+          createVocabularyTrainingContentRecoveredEvent(
+            this.task,
+            exhaustionRequestId,
+            { eventId: recoveryEventId, occurredAt: now, localDate: this.localDate },
+          ),
+          now,
+        )
+        await this.save(recovery)
+      }
+      recovery = await this.flushPendingEvents()
+      const session = replaceVocabularyStreamQuestion(recovery, this.supplyQuestion(catalog, result.item as import('./types.ts').VocabularySupplyItem), { ...recovery.stream!, activeItem: result.item as import('./types.ts').VocabularySupplyItem, activeRequestId: request.requestId, nextSupplyCursor: result.nextCursor, exhaustionRequestId: null, recoveryEventId: null }, now)
       await this.save(session)
       await this.timing.synchronize(session.phase)
       return session

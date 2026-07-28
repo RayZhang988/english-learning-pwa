@@ -121,6 +121,10 @@ export interface VocabularyStreamState {
   readonly completedItemCount: number
   readonly correctItemCount: number
   readonly finishCurrentItem: boolean
+  /** The acknowledged exhausted request that a recovery event must match. */
+  readonly exhaustionRequestId: string | null
+  /** Stable outbox identity while an exhaustion recovery is being published. */
+  readonly recoveryEventId: string | null
 }
 
 export interface VocabularyAnswerRecord {

@@ -6,6 +6,7 @@ import type {
   LearningTaskStartedEvent,
   LearningTrainingBudgetCompletedEvent,
   LearningTrainingContentExhaustedEvent,
+  LearningTrainingContentRecoveredEvent,
   LearningTrainingItemCompletedEvent,
   LearningTaskSupplyItem,
   LearningTaskSkippedEvent,
@@ -181,6 +182,15 @@ export function createVocabularyTrainingContentExhaustedEvent(
 ): LearningTrainingContentExhaustedEvent {
   return { id: identity.eventId, type: 'learning.training.content.exhausted.v1', sourceModuleId: 'vocabulary', occurredAt: identity.occurredAt, schemaVersion: 1,
     payload: { ...basePayload(task, identity.localDate), mode: task.mode, requestId, cursor, reason } }
+}
+
+export function createVocabularyTrainingContentRecoveredEvent(
+  task: LearningTask,
+  exhaustionRequestId: string,
+  identity: EventIdentity,
+): LearningTrainingContentRecoveredEvent {
+  return { id: identity.eventId, type: 'learning.training.content.recovered.v1', sourceModuleId: 'vocabulary', occurredAt: identity.occurredAt, schemaVersion: 1,
+    payload: { ...basePayload(task, identity.localDate), mode: task.mode, exhaustionRequestId } }
 }
 
 export function createVocabularyTrainingBudgetCompletedEvent(

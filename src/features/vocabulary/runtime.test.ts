@@ -17,6 +17,8 @@ import { createVocabularyCatalog } from './content.ts'
 import { VocabularyError } from './errors.ts'
 import { VocabularySessionRepository } from './repository.ts'
 import { VocabularyTrainingRuntime } from './runtime.ts'
+import type { VocabularySupplyProvider } from './supply.ts'
+import type { VocabularySupplyItem } from './types.ts'
 import {
   loadActualVocabularyDocuments,
   vocabularyTaskFor,
@@ -64,6 +66,19 @@ class FailOnceEventSink implements PlatformEventSink {
     if (!this.failed) {
       this.failed = true
       throw new Error('temporary event sink failure')
+    }
+    this.events.push(event)
+  }
+}
+
+class FailRecoveredOnceEventSink implements PlatformEventSink {
+  readonly events: PlatformEvent[] = []
+  private failed = false
+
+  async publish(event: PlatformEvent): Promise<void> {
+    if (event.type === 'learning.training.content.recovered.v1' && !this.failed) {
+      this.failed = true
+      throw new Error('temporary recovery publish failure')
     }
     this.events.push(event)
   }
@@ -147,6 +162,81 @@ const structuredDurationEstimate = {
 } as const
 
 describe('vocabulary training runtime', () => {
+  it('publishes one durable recovery before a retried item and budget completion', async () => {
+    const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
+    const candidates = (catalog.trainingSupplyIndex as { candidates: VocabularySupplyItem[] }).candidates
+    const [first, second] = candidates.filter((item) => item.itemId.includes('w1d1-v') && item.source.variantId === 'term-to-meaning-choice')
+    let calls = 0
+    const supplyProvider: VocabularySupplyProvider = {
+      async next(request) {
+        calls += 1
+        if (calls === 1) return { schemaVersion: 1, requestId: request.requestId, status: 'item', item: first, nextCursor: first.itemId }
+        if (calls === 2) return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
+        return { schemaVersion: 1, requestId: request.requestId, status: 'item', item: second, nextCursor: second.itemId }
+      },
+    }
+    let budget: 'running' | 'finish-current-item' = 'running'
+    const sink = new InMemoryPlatformEventSink()
+    const task = vocabularyTaskFor(catalog.units[0], { trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } })
+    const store = new MemoryNamespaceStore()
+    const repository = new VocabularySessionRepository(store)
+    const runtime = new VocabularyTrainingRuntime({ task, localDate: '2026-07-28', contentSource: createStaticDataSource(catalog), eventSink: sink, repository, now: sequenceClock(), createId: sequenceIds(), supplyProvider, trainingBudgetStatus: () => budget })
+    let session = await runtime.initialize()
+    session = await runtime.select(session.questions[0].correctOptionId)
+    session = await runtime.submit()
+    session = await runtime.advance()
+    expect(session.phase).toBe('error')
+    const exhaustion = sink.events.find((event) => event.type === 'learning.training.content.exhausted.v1')
+    expect(exhaustion).toBeDefined()
+
+    const refreshed = new VocabularyTrainingRuntime({ task, localDate: '2026-07-28', contentSource: createStaticDataSource(catalog), eventSink: sink, repository: new VocabularySessionRepository(store), now: sequenceClock(), createId: sequenceIds(), supplyProvider, trainingBudgetStatus: () => budget })
+    await refreshed.initialize()
+    session = await refreshed.retrySupply()
+    expect(session.phase).toBe('answering')
+    expect(session.stream?.completedItemIds).toEqual([first.itemId])
+    expect(session.stream?.exhaustionRequestId).toBeNull()
+    const recovery = sink.events.filter((event) => event.type === 'learning.training.content.recovered.v1')
+    expect(recovery).toHaveLength(1)
+    const exhaustedPayload = (parseLearningEvent(exhaustion!) as Extract<ReturnType<typeof parseLearningEvent>, { type: 'learning.training.content.exhausted.v1' }>).payload
+    const recoveredPayload = (parseLearningEvent(recovery[0]) as Extract<ReturnType<typeof parseLearningEvent>, { type: 'learning.training.content.recovered.v1' }>).payload
+    expect(recoveredPayload.exhaustionRequestId).toBe(exhaustedPayload.requestId)
+
+    budget = 'finish-current-item'
+    session = await refreshed.select(session.questions[0].correctOptionId)
+    session = await refreshed.submit()
+    session = await refreshed.advance()
+    const types = sink.events.map((event) => event.type)
+    expect(types.indexOf('learning.training.content.recovered.v1')).toBeLessThan(types.lastIndexOf('learning.training.item.completed.v1'))
+    expect(types.indexOf('learning.training.content.recovered.v1')).toBeLessThan(types.indexOf('learning.training.budget.completed.v1'))
+  })
+
+  it('restores a failed recovery outbox event without generating a second recovery identity', async () => {
+    const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
+    const candidates = (catalog.trainingSupplyIndex as { candidates: VocabularySupplyItem[] }).candidates
+    const [first, second] = candidates.filter((item) => item.itemId.includes('w1d1-v') && item.source.variantId === 'term-to-meaning-choice')
+    let calls = 0
+    const supplyProvider: VocabularySupplyProvider = { async next(request) {
+      calls += 1
+      if (calls === 1) return { schemaVersion: 1, requestId: request.requestId, status: 'item', item: first, nextCursor: first.itemId }
+      if (calls === 2) return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
+      return { schemaVersion: 1, requestId: request.requestId, status: 'item', item: second, nextCursor: second.itemId }
+    } }
+    const sink = new FailRecoveredOnceEventSink()
+    const runtime = new VocabularyTrainingRuntime({
+      task: vocabularyTaskFor(catalog.units[0], { trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } }), localDate: '2026-07-28', contentSource: createStaticDataSource(catalog), eventSink: sink, repository: new VocabularySessionRepository(new MemoryNamespaceStore()), now: sequenceClock(), createId: sequenceIds(), supplyProvider, trainingBudgetStatus: () => 'running',
+    })
+    let session = await runtime.initialize()
+    session = await runtime.select(session.questions[0].correctOptionId)
+    session = await runtime.submit()
+    await runtime.advance()
+    await expect(runtime.retrySupply()).rejects.toThrow('temporary recovery publish failure')
+    expect(runtime.currentSession?.pendingEvents.filter((event) => event.type === 'learning.training.content.recovered.v1')).toHaveLength(1)
+    session = await runtime.retrySupply()
+    expect(session.phase).toBe('answering')
+    expect(sink.events.filter((event) => event.type === 'learning.training.content.recovered.v1')).toHaveLength(1)
+    expect(session.stream?.completedItemIds).toEqual([first.itemId])
+  })
+
   it('streams a stable next item and completes only after finish-current-item', async () => {
     const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
     const task = vocabularyTaskFor(catalog.units[0], {

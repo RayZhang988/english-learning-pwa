@@ -91,6 +91,10 @@
   发布 `learning.training.budget.completed.v1`。供应器返回内容耗尽时发布明确
   `content-exhausted` 原因，保存当前 cursor/排除集并停在可恢复错误态；`retrySupply()`
   只能从该状态重试，不能清空排除集或伪造 task completion。
+- 已发布 `content-exhausted` 后，供应恢复成功会先以稳定 outbox ID 发布
+  `learning.training.content.recovered.v1`，其 `exhaustionRequestId` 精确对应此前耗尽
+  请求；该事件成功后才保存并展示新题。恢复发布失败可跨刷新重试同一事件，且不重置
+  cursor、排除集或已完成题目。
 - started、paused、skipped 和 attempt.completed 先写入会话 outbox，再发布；发布成功
   后才移除。崩溃后的重复发布沿用同一事件 ID，由 04 幂等处理。
 - 选择、提交、下一题、暂停/退出及 outbox 更新进入同一运行时队列；即使本地仓库写入

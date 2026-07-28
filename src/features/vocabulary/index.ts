@@ -22,6 +22,7 @@ export {
   createVocabularyStreamAttemptEvent,
   createVocabularyTrainingBudgetCompletedEvent,
   createVocabularyTrainingContentExhaustedEvent,
+  createVocabularyTrainingContentRecoveredEvent,
   createVocabularyTrainingItemCompletedEvent,
 } from './events.ts'
 export { createVocabularyFeatureModule } from './feature-module.ts'
