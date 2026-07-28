@@ -31,6 +31,7 @@ import {
 import {
   LEARNING_ENGINE_STORAGE_NAMESPACE,
   LearningEngineRepository,
+  type LearningTask,
 } from '../../src/learning-engine/index.ts'
 import type {
   MicrophonePermissionService,
@@ -45,6 +46,7 @@ import {
   type LearningCandidateSource,
 } from '../../src/app/learning/course-candidate-source.ts'
 import { LearningAppCoordinator } from '../../src/app/learning/learning-app-coordinator.ts'
+import { createProductionTrainingSupplyProviders } from '../../src/app/learning/training-supply-providers.ts'
 import { AssessmentAppCoordinator } from '../../src/app/assessment/assessment-app-coordinator.ts'
 import { AssessmentRuntimeSnapshotRepository } from '../../src/app/assessment/assessment-runtime-snapshot-repository.ts'
 import {
@@ -154,6 +156,54 @@ const grantedMicrophone: MicrophonePermissionService = {
     ({
       getTracks: () => [{ stop() {} }],
     }) as unknown as MediaStream,
+}
+
+function activeTimingEvent(
+  task: LearningTask,
+  localDate: string,
+  id: string,
+  startedAt: string,
+  elapsedSeconds: number,
+): PlatformEvent {
+  const endedAt = new Date(
+    Date.parse(startedAt) + elapsedSeconds * 1_000,
+  ).toISOString()
+  const phase =
+    task.targetModuleId === 'vocabulary'
+      ? 'answering'
+      : task.targetModuleId === 'listening'
+        ? 'audio-listening'
+        : 'recording'
+  const reason =
+    task.targetModuleId === 'vocabulary'
+      ? 'active-answering'
+      : task.targetModuleId === 'listening'
+        ? 'active-audio-listening'
+        : 'active-recording'
+  return {
+    id,
+    type: 'learning.timing.segment.recorded.v1',
+    sourceModuleId: task.targetModuleId,
+    occurredAt: endedAt,
+    schemaVersion: 1,
+    payload: {
+      planId: task.planId,
+      taskId: task.taskId,
+      learningUnitId: task.learningUnitId,
+      contentRef: task.contentRef,
+      domain: task.domain,
+      targetModuleId: task.targetModuleId,
+      localDate,
+      mode: task.mode,
+      phase,
+      reason,
+      visibility: 'foreground',
+      startedAt,
+      endedAt,
+      elapsedSeconds,
+      idleThresholdSeconds: 45,
+    },
+  }
 }
 
 describe('09 first-use production acceptance', () => {
@@ -317,12 +367,43 @@ describe('09 first-use production acceptance', () => {
     )
 
     const catalogs = releasedCatalogs()
+    const supplyProviders = createProductionTrainingSupplyProviders({
+      vocabulary: { load: async () => catalogs.vocabulary },
+      listening: { load: async () => catalogs.listening },
+      speaking: { load: async () => catalogs.speaking },
+    })
     const publishedEvents: PlatformEvent[] = []
     const recordingProductionSink: PlatformEventSink = {
       publish: async (event) => {
         publishedEvents.push(event)
         await learning.eventSink.publish(event)
       },
+    }
+    const publishEffectiveSeconds = async (
+      task: LearningTask,
+      idPrefix: string,
+      startedAt: string,
+      totalSeconds: number,
+    ) => {
+      let remaining = totalSeconds
+      let offsetSeconds = 0
+      let segment = 0
+      while (remaining > 0) {
+        const elapsedSeconds = Math.min(45, remaining)
+        await recordingProductionSink.publish(
+          activeTimingEvent(
+            task,
+            originalPlan.localDate,
+            `${idPrefix}-${++segment}`,
+            new Date(
+              Date.parse(startedAt) + offsetSeconds * 1_000,
+            ).toISOString(),
+            elapsedSeconds,
+          ),
+        )
+        remaining -= elapsedSeconds
+        offsetSeconds += elapsedSeconds
+      }
     }
     const vocabularyTask = originalPlan.tasks.find(
       (task) => task.targetModuleId === 'vocabulary',
@@ -336,6 +417,32 @@ describe('09 first-use production acceptance', () => {
     if (!vocabularyTask || !listeningTask || !speakingTask) {
       throw new Error('First-day plan lacks one or more training modules.')
     }
+    const executionFor = (task: LearningTask) => {
+      if (learning.state.status !== 'ready') {
+        throw new Error('Learning state was lost during budget training.')
+      }
+      const execution =
+        learning.state.runtime.activePlan.tasks.find(
+          (candidate) =>
+            candidate.task.taskId === task.taskId,
+        )
+      if (!execution) {
+        throw new Error(`Missing task execution ${task.taskId}.`)
+      }
+      return execution
+    }
+    for (const task of originalPlan.tasks) {
+      expect(task.trainingBudget).toEqual({
+        schemaVersion: 1,
+        targetEffectiveSeconds: 900,
+      })
+      expect(executionFor(task).training).toMatchObject({
+        status: 'running',
+        remainingEffectiveSeconds: 900,
+        completedItemIds: [],
+        nextSupplyCursor: null,
+      })
+    }
 
     const vocabulary = new VocabularyTrainingRuntime({
       task: learning.resolveTask(vocabularyTask.taskId, 'vocabulary'),
@@ -348,28 +455,88 @@ describe('09 first-use production acceptance', () => {
       networkStatus: online,
       now: sequenceNow(),
       createId: sequenceIds('qa-vocabulary'),
+      supplyProvider: supplyProviders.vocabulary,
+      trainingBudgetStatus: () =>
+        learning.trainingBudgetStatus(
+          vocabularyTask.taskId,
+          'vocabulary',
+        ),
     })
     let vocabularySession = await vocabulary.initialize()
-    while (vocabularySession.phase !== 'completed') {
-      const question = getCurrentVocabularyQuestion(
-        vocabularySession,
-      )
-      if (!question) {
-        throw new Error(
-          `Vocabulary session lost its real question: ${JSON.stringify({
-            phase: vocabularySession.phase,
-            taskId: vocabularySession.task.taskId,
-            learningUnitId: vocabularySession.task.learningUnitId,
-            questionIndex: vocabularySession.questionIndex,
-            questionCount: vocabularySession.questions.length,
-            failure: vocabularySession.failure,
-          })}`,
-        )
-      }
-      await vocabulary.select(question.correctOptionId)
-      await vocabulary.submit()
-      vocabularySession = await vocabulary.advance()
+    const firstVocabularyItem =
+      vocabularySession.stream?.activeItem?.itemId
+    let vocabularyQuestion = getCurrentVocabularyQuestion(
+      vocabularySession,
+    )
+    if (!firstVocabularyItem || !vocabularyQuestion) {
+      throw new Error('Vocabulary stream did not load its first real item.')
     }
+    await publishEffectiveSeconds(
+      vocabularyTask,
+      'qa-vocabulary-timing-initial',
+      '2026-07-25T00:59:59.000Z',
+      1,
+    )
+    await vocabulary.select(vocabularyQuestion.correctOptionId)
+    await vocabulary.submit()
+    vocabularySession = await vocabulary.advance()
+    expect(vocabularySession.phase).toBe('answering')
+    expect(vocabularySession.stream?.completedItemIds).toEqual([
+      firstVocabularyItem,
+    ])
+    expect(vocabularySession.stream?.activeItem?.itemId).not.toBe(
+      firstVocabularyItem,
+    )
+    expect(executionFor(vocabularyTask)).toMatchObject({
+      status: 'active',
+      effectiveSeconds: 1,
+      training: {
+        status: 'running',
+        remainingEffectiveSeconds: 899,
+        completedItemIds: [firstVocabularyItem],
+      },
+    })
+    await publishEffectiveSeconds(
+      vocabularyTask,
+      'qa-vocabulary-timing-899',
+      '2026-07-25T01:00:00.000Z',
+      898,
+    )
+    expect(executionFor(vocabularyTask).training).toMatchObject({
+      status: 'running',
+      remainingEffectiveSeconds: 1,
+    })
+    await publishEffectiveSeconds(
+      vocabularyTask,
+      'qa-vocabulary-timing-900',
+      '2026-07-25T01:14:59.000Z',
+      1,
+    )
+    expect(executionFor(vocabularyTask)).toMatchObject({
+      status: 'active',
+      training: {
+        status: 'finish-current-item',
+        remainingEffectiveSeconds: 0,
+      },
+    })
+    vocabularyQuestion = getCurrentVocabularyQuestion(
+      vocabularySession,
+    )
+    if (!vocabularyQuestion) {
+      throw new Error('Vocabulary stream lost its finish-current item.')
+    }
+    await vocabulary.select(vocabularyQuestion.correctOptionId)
+    await vocabulary.submit()
+    vocabularySession = await vocabulary.advance()
+    expect(vocabularySession.phase).toBe('completed')
+    expect(executionFor(vocabularyTask)).toMatchObject({
+      status: 'completed',
+      effectiveSeconds: 900,
+      training: {
+        status: 'completed',
+        remainingEffectiveSeconds: 0,
+      },
+    })
 
     const listening = new ListeningTrainingRuntime({
       task: learning.resolveTask(listeningTask.taskId, 'listening'),
@@ -383,9 +550,15 @@ describe('09 first-use production acceptance', () => {
       speech: new ImmediateSpeech(),
       now: sequenceNow(),
       createId: sequenceIds('qa-listening'),
+      supplyProvider: supplyProviders.listening,
+      trainingBudgetStatus: () =>
+        learning.trainingBudgetStatus(
+          listeningTask.taskId,
+          'listening',
+        ),
     })
     let listeningSession = await listening.initialize()
-    while (listeningSession.phase !== 'completed') {
+    const answerListeningItem = async () => {
       await listening.togglePlayback()
       const question = getCurrentListeningQuestion(listeningSession)
       if (!question) {
@@ -399,6 +572,67 @@ describe('09 first-use production acceptance', () => {
       await listening.submit()
       listeningSession = await listening.advance()
     }
+    const firstListeningItem =
+      listeningSession.stream?.activeItem?.itemId
+    if (!firstListeningItem) {
+      throw new Error('Listening stream did not load its first real item.')
+    }
+    await publishEffectiveSeconds(
+      listeningTask,
+      'qa-listening-timing-initial',
+      '2026-07-25T01:59:59.000Z',
+      1,
+    )
+    await answerListeningItem()
+    expect(listeningSession.phase).toBe('answering')
+    expect(listeningSession.stream?.completedItemIds).toEqual([
+      firstListeningItem,
+    ])
+    expect(listeningSession.stream?.activeItem?.itemId).not.toBe(
+      firstListeningItem,
+    )
+    expect(executionFor(listeningTask)).toMatchObject({
+      status: 'active',
+      effectiveSeconds: 1,
+      training: {
+        status: 'running',
+        remainingEffectiveSeconds: 899,
+        completedItemIds: [firstListeningItem],
+      },
+    })
+    await publishEffectiveSeconds(
+      listeningTask,
+      'qa-listening-timing-899',
+      '2026-07-25T02:00:00.000Z',
+      898,
+    )
+    expect(executionFor(listeningTask).training).toMatchObject({
+      status: 'running',
+      remainingEffectiveSeconds: 1,
+    })
+    await publishEffectiveSeconds(
+      listeningTask,
+      'qa-listening-timing-900',
+      '2026-07-25T02:14:59.000Z',
+      1,
+    )
+    expect(executionFor(listeningTask)).toMatchObject({
+      status: 'active',
+      training: {
+        status: 'finish-current-item',
+        remainingEffectiveSeconds: 0,
+      },
+    })
+    await answerListeningItem()
+    expect(listeningSession.phase).toBe('completed')
+    expect(executionFor(listeningTask)).toMatchObject({
+      status: 'completed',
+      effectiveSeconds: 900,
+      training: {
+        status: 'completed',
+        remainingEffectiveSeconds: 0,
+      },
+    })
 
     const recorder = new MemoryRecorder()
     let speaking: SpeakingTrainingRuntime
@@ -433,15 +667,92 @@ describe('09 first-use production acceptance', () => {
       recognition,
       now: sequenceNow(),
       createId: sequenceIds('qa-speaking'),
+      supplyProvider: supplyProviders.speaking,
+      trainingBudgetStatus: () =>
+        learning.trainingBudgetStatus(
+          speakingTask.taskId,
+          'speaking',
+        ),
     })
     let speakingSession = await speaking.initialize()
-    while (speakingSession.phase !== 'completed') {
+    const completeSpeakingItem = async () => {
       await speaking.startRecording()
       speakingSession = await speaking.stopRecording()
       expect(speakingSession.recorder.playbackAvailable).toBe(true)
       await speaking.playRecording()
       speakingSession = await speaking.advance()
     }
+    const firstSpeakingItem =
+      speakingSession.stream?.activeItem?.itemId
+    if (!firstSpeakingItem) {
+      throw new Error(
+        `Speaking stream did not load its first real item: ${JSON.stringify({
+          phase: speakingSession.phase,
+          failure: speakingSession.failure,
+          stream: speakingSession.stream,
+          task: {
+            mode: speakingTask.mode,
+            difficultyLevel: speakingTask.difficultyLevel,
+          },
+        })}`,
+      )
+    }
+    await publishEffectiveSeconds(
+      speakingTask,
+      'qa-speaking-timing-initial',
+      '2026-07-25T02:59:59.000Z',
+      1,
+    )
+    await completeSpeakingItem()
+    expect(speakingSession.phase).toBe('practicing')
+    expect(speakingSession.stream?.completedItemIds).toEqual([
+      firstSpeakingItem,
+    ])
+    expect(speakingSession.stream?.activeItem?.itemId).not.toBe(
+      firstSpeakingItem,
+    )
+    expect(executionFor(speakingTask)).toMatchObject({
+      status: 'active',
+      effectiveSeconds: 1,
+      training: {
+        status: 'running',
+        remainingEffectiveSeconds: 899,
+        completedItemIds: [firstSpeakingItem],
+      },
+    })
+    await publishEffectiveSeconds(
+      speakingTask,
+      'qa-speaking-timing-899',
+      '2026-07-25T03:00:00.000Z',
+      898,
+    )
+    expect(executionFor(speakingTask).training).toMatchObject({
+      status: 'running',
+      remainingEffectiveSeconds: 1,
+    })
+    await publishEffectiveSeconds(
+      speakingTask,
+      'qa-speaking-timing-900',
+      '2026-07-25T03:14:59.000Z',
+      1,
+    )
+    expect(executionFor(speakingTask)).toMatchObject({
+      status: 'active',
+      training: {
+        status: 'finish-current-item',
+        remainingEffectiveSeconds: 0,
+      },
+    })
+    await completeSpeakingItem()
+    expect(speakingSession.phase).toBe('completed')
+    expect(executionFor(speakingTask)).toMatchObject({
+      status: 'completed',
+      effectiveSeconds: 900,
+      training: {
+        status: 'completed',
+        remainingEffectiveSeconds: 0,
+      },
+    })
     expect(recorder.played).toBeGreaterThan(0)
 
     expect(learning.state.status).toBe('ready')

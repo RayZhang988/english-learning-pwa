@@ -14,6 +14,8 @@
 | QA-008 | 已关闭 | S2 | 底部“训练”页四个公开入口全部进入“暂无可用训练”占位页 | 失败资产 `index-DQn2F3sQ.js`；修复 `1b504c9` / `a326f97` | 01 主责，02 公开入口契约协同；08 无需返工 | Pages run `30149442712`；资产 `index-BAJtI4Qx.js`；正式完整 E2E exit 0，占位命中 0/4 |
 | QA-009 | 已关闭 | S2 | R3 正式首日计划仍把词汇、听力、口语全部标为固定 15 分钟 | 失败 `16b9788` / `9ab305a`；修复 `4e49d7f` / `b803bd1` | 01 主责，05 内容事实协同；09 回归 | run `30330487187`、head `79d90b6`、资产 `index-Cm31haDv.js`；正式 V/L/S=`123/211/181`、计划 515 |
 | QA-010 | 已关闭 | S1 | 结构化时长任务被真实词汇路由拒绝，首日词汇无法进入 | 失败候选 `4e49d7f` / `b803bd1`；修复 `c86d879` | 06 主责，01 任务契约协同；09 回归 | 同一正式 run/asset；真实词汇入口加载 `0/6` 题面，无不可评分或 identity mismatch |
+| QA-011 | 待回归 | S2 | 15 分钟目标前固定单元题目耗尽并提前完成任务 | 用户真实 iPhone / 正式 `79d90b6`；本地候选 HEAD `2b75173` | 04/05/06/07/08/01/02 已交付；09 验收 | 用户首日词汇仅 6 题、12 秒即完成；连续供应候选尚未通过完整 09 门禁 |
+| QA-012 | 已交回 | S1 | 正式 808 供应索引使口语预算任务首题即进入内容耗尽 | 本地候选 HEAD `2b75173` | 08 主责；05/01 无需以绕过方式返工 | `first-use-production.acceptance.test.ts` 生产链路稳定失败：`provider-failure` / “当前没有可继续的口语题目” |
 
 ## QA-001｜课程索引未随生产版本发布
 
@@ -612,6 +614,70 @@ QA-010 在本地候选阶段达到“修复通过”门槛，但当时尚不能�
   提交按钮；没有“本次词汇任务无法评分”或 `does not match its course unit`。
 - R3 专项 26/181、09 外部 8/49、全量 114/588、typecheck、lint、构建、课程校验和
   PWA 全部通过。
+
+## QA-012｜口语正式供应索引无法完整解析
+
+```text
+状态：已交回
+严重度：S1
+环境：本地生产同构验收；HEAD 2b75173
+前置条件：使用正式 package-index、四周课程和
+content/curriculum/training-supply-index.v1.json；生成带 900 秒
+trainingBudget 的首日真实口语 taskId
+复现步骤：
+1. 通过 createProductionTrainingSupplyProviders() 为正式三模块创建供应器。
+2. 使用真实首日 speaking task 初始化 SpeakingTrainingRuntime。
+3. 让运行时按 taskId 请求第一道正式供应题。
+实际结果：口语 session 进入 phase=error，failure.category=content，
+页面语义为“当前没有可继续的口语题目”；stream.exhaustionRequestId 等于首个
+supply request，生产适配器返回 provider-failure。
+期望结果：首个请求返回可解析的 speaking item，口语进入 practicing；单个 item
+完成后继续供应下一题，不能把供应器构造错误伪装成内容耗尽。
+影响：新预算口语任务完全不可开始，用户无法完成每天三项 15 分钟训练，阻止
+QA-011、R3、候选部署和真机验收。
+责任任务：08 主责。05 已按公开交付生成 122 个口语候选，01 正确加载并注入正式
+供应器；不得通过 01 过滤候选或 09 放宽门槛绕过。
+```
+
+根因证据：
+
+- 正式索引同时包含 `speaking-prompt / activity-prompt` 和
+  `speaking-scene-quiz / scene-fixed-response`。
+- 08 的 `SpeakingCatalogSupplyProvider` 在构造时会校验全部 122 个口语候选。
+- 08 的 `resolveSpeakingSupplyPrompt()` 只在 `unit.prompts` 中查找
+  `sourceId`；`w1d1-q3` 等 scene quiz 不属于该数组，因此校验抛出
+  `content-reference-missing`。
+- 01 的延迟生产适配器按契约把该构造异常转为
+  `content-exhausted / provider-failure`，所以问题表现为首题即耗尽，而不是显式崩溃。
+
+稳定复现命令：
+
+```bash
+pnpm exec vitest run tests/qa/first-use-production.acceptance.test.ts
+```
+
+失败证据：
+
+```text
+Speaking stream did not load its first real item
+phase=error
+failure.category=content
+failure.message=当前没有可继续的口语题目。
+stream.activeRequestId=...:task:3:supply:1:initial
+stream.exhaustionRequestId=...:task:3:supply:1:initial
+task.mode=learn
+task.difficultyLevel=1
+```
+
+应回退步骤与回归门槛：
+
+1. 请先到 `08｜口语训练` 修复正式供应解析：两类公开候选都必须解析为真实
+   `SpeakingPrompt`，不得删除 scene quiz、过滤索引或回退固定三题。
+2. 08 专项必须覆盖 production 122/122 候选可解析、第一题可启动、跨题不重复、
+   `finish-current-item` 不截断录音/识别/回放，以及耗尽恢复。
+3. 回到 09 重跑当前失败的 first-use 生产链路；口语第一题必须为 item 而非
+   provider-failure。
+4. 之后才继续 QA-011 的三模块恢复、899/900 秒、本地第 7 题、全量和浏览器门禁。
 
 ## 缺陷模板
 

@@ -1,6 +1,7 @@
 import packageIndex from '../../../content/curriculum/package-index.v1.json'
 import manifest from '../../../content/curriculum/survival-travel-american-4w.v1.json'
 import extensionIndex from '../../../content/curriculum/listening-exercise-extension-index.v1.json'
+import trainingSupplyIndex from '../../../content/curriculum/training-supply-index.v1.json'
 import exercises from '../../../content/lessons/survival-travel-american-4w/listening-exercises.v1.json'
 import week1 from '../../../content/lessons/survival-travel-american-4w/week-1.v1.json'
 import week2 from '../../../content/lessons/survival-travel-american-4w/week-2.v1.json'
@@ -70,6 +71,7 @@ export const releasedCourseDocuments = {
   packageIndex,
   manifest,
   extensionIndex,
+  trainingSupplyIndex,
   lessonsByPath,
   exerciseBundlesByPath: {
     [extensionIndex.exerciseBundleFiles[0]]: exercises,
@@ -82,12 +84,14 @@ export function releasedCatalogs() {
       packageIndex,
       manifest,
       lessonsByPath,
+      trainingSupplyIndex,
     }),
     listening: createListeningCatalog(releasedCourseDocuments),
     speaking: createSpeakingCatalog({
       packageIndex,
       manifest,
       lessonsByPath,
+      trainingSupplyIndex,
     }),
   }
 }
@@ -136,6 +140,7 @@ export {
   packageIndex,
   manifest,
   extensionIndex,
+  trainingSupplyIndex,
   exercises,
   week1,
   week2,

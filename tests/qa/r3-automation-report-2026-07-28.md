@@ -2,12 +2,55 @@
 
 ## 结论
 
-**QA-009 与 QA-010 的正式站回归通过，两项缺陷已关闭；R3 仍待真实 iPhone 验收。**
+**QA-009 与 QA-010 的历史正式站回归仍有效，但 QA-011 重新打开 R3；当前
+HEAD `2b75173` 的 09 本地验收又发现 QA-012，候选不通过，不得部署。**
 
 01 `4e49d7f`、05 `b803bd1` 和 06 `c86d879` 已进入正式资产
 `index-Cm31haDv.js`。隔离、无旧缓存 Chrome 从正式 R1 生成首日计划，得到
 `123/211/181` 秒和 515 秒真实计划，并进入 6 题词汇训练；没有回退 900 秒或出现课程
 身份错误。
+
+## QA-011 当前本地候选（HEAD `2b75173`）
+
+用户在真实 iPhone 上用 12 秒完成首日 6 题词汇任务，证明“显示真实估算”并未解决
+每日任务在 15 分钟目标前耗尽的问题。当前产品链已改为三模块各 900 秒有效预算、
+连续内容供应和到时完成当前题后结束。09 已开始迁移旧 first-use 生产验收：
+
+- 正式首日计划的三项 task 均携带 `targetEffectiveSeconds=900`；
+- 单个词汇 item 与单个听力 item 完成后，task 保持 active；
+- 1 秒初始有效训练加 898 秒后仍为 running/剩余 1 秒；
+- 第 900 秒只进入 `finish-current-item`，当前题自然完成并发布
+  `budget.completed` 后对应 task 才完成；
+- 测试夹具已改为加载与生产相同的 808 候选正式索引，未再用固定 6/7/3 题目录
+  冒充连续供应。
+
+但同一生产链在初始化口语第一题时稳定失败：
+
+```text
+phase=error
+failure.category=content
+failure.message=当前没有可继续的口语题目。
+stream.activeRequestId=...:task:3:supply:1:initial
+stream.exhaustionRequestId=...:task:3:supply:1:initial
+task.mode=learn
+task.difficultyLevel=1
+```
+
+QA-012 已按 S1 交回 08。根因是正式索引包含
+`speaking-scene-quiz / scene-fixed-response`，而 08 的生产供应解析只在
+`unit.prompts` 查找 sourceId，导致 122 个口语候选的整体构造失败；01 按契约将异常
+诚实转成 `provider-failure`。05 不应删除这些公开候选，01/09 也不得过滤绕过。
+
+因此以下门禁尚未执行或不得宣称通过：
+
+- 三模块 `content-exhausted → retry → content.recovered → continue` 全链路；
+- 本地生产浏览器跨过原 6 题并看到第 7 题；
+- QA-011/R3/09 专项与完整工程门禁；
+- 本地 release smoke、PWA 和最终差异审计。
+
+修复顺序：08 先让两类口语供应候选全部可解析并补专项回归；回到 09 重跑同一
+first-use 生产用例，随后继续剩余 QA-011 浏览器与全量门禁。QA-012 修复并完成上述
+步骤前，QA-011、R3 和正式候选均不得关闭。
 
 ## 验收版本
 
