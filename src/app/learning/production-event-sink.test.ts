@@ -7,6 +7,7 @@ import {
   LearningEngineRepository,
   type DailyPlan,
   type LearningTask,
+  type TrainingModuleId,
 } from '../../learning-engine/index.ts'
 import { abilityProfile } from '../../learning-engine/test-fixtures.ts'
 import type {
@@ -269,6 +270,189 @@ function contentExhaustedEvent(
   }
 }
 
+const trainingModules = [
+  'vocabulary',
+  'listening',
+  'speaking',
+] as const satisfies readonly TrainingModuleId[]
+
+function recoveryBudgetPlan(
+  moduleId: TrainingModuleId,
+): DailyPlan {
+  const base = budgetPlan()
+  const scheduled = base.tasks[0]
+  const task: LearningTask = {
+    ...scheduled,
+    taskId: `${base.planId}:${moduleId}:recovery`,
+    learningUnitId: `st4w-w1d1-${moduleId}`,
+    contentRef:
+      `lesson://survival-travel-american-4w/1.0.0/w1d1/${moduleId}`,
+    domain: moduleId,
+    targetModuleId: moduleId,
+  }
+  return {
+    ...base,
+    tasks: [task],
+    allocations: {
+      vocabulary: {
+        ...base.allocations.vocabulary,
+        plannedSeconds: moduleId === 'vocabulary' ? 900 : 0,
+      },
+      listening: {
+        ...base.allocations.listening,
+        plannedSeconds: moduleId === 'listening' ? 900 : 0,
+      },
+      speaking: {
+        ...base.allocations.speaking,
+        plannedSeconds: moduleId === 'speaking' ? 900 : 0,
+      },
+    },
+  }
+}
+
+function recoveryItemCompletedEvent(
+  task: LearningTask,
+  index: number,
+): PlatformEvent {
+  const itemId = `${task.targetModuleId}:recovery-item-${index}`
+  return {
+    id: `${task.targetModuleId}:item-completed:${index}`,
+    type: 'learning.training.item.completed.v1',
+    sourceModuleId: task.targetModuleId,
+    occurredAt: `2026-07-24T08:0${index}:00.000Z`,
+    schemaVersion: 1,
+    payload: {
+      planId: task.planId,
+      taskId: task.taskId,
+      learningUnitId: task.learningUnitId,
+      contentRef: task.contentRef,
+      domain: task.domain,
+      targetModuleId: task.targetModuleId,
+      localDate: '2026-07-24',
+      mode: task.mode,
+      item: {
+        itemId,
+        learningUnitId: task.learningUnitId,
+        contentRef: task.contentRef,
+        difficultyLevel: task.difficultyLevel,
+        tags: task.tags,
+      },
+      requestId: `${task.taskId}:supply:${index}:recovery`,
+      nextSupplyCursor: itemId,
+      outcome: 'scored',
+    },
+  }
+}
+
+function recoveryContentExhaustedEvent(
+  task: LearningTask,
+  exhaustionRequestId: string,
+): PlatformEvent {
+  return {
+    id: `${task.targetModuleId}:content-exhausted`,
+    type: 'learning.training.content.exhausted.v1',
+    sourceModuleId: task.targetModuleId,
+    occurredAt: '2026-07-24T08:05:00.000Z',
+    schemaVersion: 1,
+    payload: {
+      planId: task.planId,
+      taskId: task.taskId,
+      learningUnitId: task.learningUnitId,
+      contentRef: task.contentRef,
+      domain: task.domain,
+      targetModuleId: task.targetModuleId,
+      localDate: '2026-07-24',
+      mode: task.mode,
+      requestId: exhaustionRequestId,
+      cursor: `${task.targetModuleId}:recovery-item-1`,
+      reason: 'all-eligible-content-recently-used',
+    },
+  }
+}
+
+function recoveryContentRecoveredEvent(
+  task: LearningTask,
+  exhaustionRequestId: string,
+): PlatformEvent {
+  return {
+    id: `${task.targetModuleId}:content-recovered:${exhaustionRequestId}`,
+    type: 'learning.training.content.recovered.v1',
+    sourceModuleId: task.targetModuleId,
+    occurredAt: '2026-07-24T08:06:00.000Z',
+    schemaVersion: 1,
+    payload: {
+      planId: task.planId,
+      taskId: task.taskId,
+      learningUnitId: task.learningUnitId,
+      contentRef: task.contentRef,
+      domain: task.domain,
+      targetModuleId: task.targetModuleId,
+      localDate: '2026-07-24',
+      mode: task.mode,
+      exhaustionRequestId,
+    },
+  }
+}
+
+function recoveryAttemptCompletedEvent(
+  task: LearningTask,
+): PlatformEvent {
+  return {
+    id: `${task.targetModuleId}:recovery-attempt`,
+    type: 'learning.attempt.completed.v1',
+    sourceModuleId: task.targetModuleId,
+    occurredAt: '2026-07-24T08:15:01.000Z',
+    schemaVersion: 1,
+    payload: {
+      planId: task.planId,
+      taskId: task.taskId,
+      learningUnitId: task.learningUnitId,
+      contentRef: task.contentRef,
+      domain: task.domain,
+      targetModuleId: task.targetModuleId,
+      localDate: '2026-07-24',
+      mode: task.mode,
+      difficultyLevel: task.difficultyLevel,
+      estimatedSeconds: task.estimatedSeconds,
+      result: 'scored',
+      performanceScore: 0.8,
+      evidenceQuality: 0.9,
+      assistanceLevel: 0,
+      durationSeconds: 900,
+      taskCompleted: false,
+      errorTags: [],
+      contentTags: task.tags,
+      failureCategory: null,
+    },
+  }
+}
+
+function recoveryBudgetCompletedEvent(
+  task: LearningTask,
+  completedItemCount: number,
+): PlatformEvent {
+  return {
+    id: `${task.targetModuleId}:recovery-budget-completed`,
+    type: 'learning.training.budget.completed.v1',
+    sourceModuleId: task.targetModuleId,
+    occurredAt: '2026-07-24T08:15:03.000Z',
+    schemaVersion: 1,
+    payload: {
+      planId: task.planId,
+      taskId: task.taskId,
+      learningUnitId: task.learningUnitId,
+      contentRef: task.contentRef,
+      domain: task.domain,
+      targetModuleId: task.targetModuleId,
+      localDate: '2026-07-24',
+      mode: task.mode,
+      lastCompletedItemId:
+        `${task.targetModuleId}:recovery-item-${completedItemCount}`,
+      completedItemCount,
+    },
+  }
+}
+
 function timingEvent(
   task: LearningTask,
   input: {
@@ -369,6 +553,39 @@ function unscorableSpeakingEvent(task: LearningTask): PlatformEvent {
       contentTags: task.tags,
       failureCategory: 'network',
     },
+  }
+}
+
+async function createRecoveryHarness(
+  moduleId: TrainingModuleId,
+  planStore: MemoryNamespaceStore = new MemoryNamespaceStore(
+    'app.learning-runtime',
+  ),
+) {
+  const engineStore = new MemoryNamespaceStore('learning.engine')
+  const activePlans = new ActivePlanRepository(planStore)
+  const engineStates = new LearningEngineRepository(engineStore)
+  const dailyPlan = recoveryBudgetPlan(moduleId)
+  await activePlans.save(
+    createActiveLearningRuntime(
+      createPlanProgress(
+        dailyPlan,
+        '2026-07-24T08:00:00.000Z',
+      ),
+    ),
+  )
+  await engineStates.save(
+    createLearningEngineState(
+      abilityProfile(),
+      '2026-07-24T08:00:00.000Z',
+    ),
+  )
+  return {
+    activePlans,
+    engineStates,
+    planStore,
+    engineStore,
+    task: dailyPlan.tasks[0],
   }
 }
 
@@ -645,6 +862,269 @@ describe('ProductionLearningEventSink', () => {
       ],
     })
     expect(restored?.completedLearningUnitIds).toEqual([])
+  })
+
+  it.each(trainingModules)(
+    'restores, completes, and refresh-recovers the %s budget after content exhaustion',
+    async (moduleId) => {
+      const harness = await createRecoveryHarness(moduleId)
+      const firstSink = new ProductionLearningEventSink(
+        harness.activePlans,
+        harness.engineStates,
+      )
+      const exhaustionRequestId =
+        `${harness.task.taskId}:supply:2:recovery-item-1`
+      await firstSink.publish(
+        recoveryItemCompletedEvent(harness.task, 1),
+      )
+      await firstSink.publish(
+        recoveryContentExhaustedEvent(
+          harness.task,
+          exhaustionRequestId,
+        ),
+      )
+
+      const refreshedPlans = new ActivePlanRepository(
+        harness.planStore,
+      )
+      const refreshedEngines = new LearningEngineRepository(
+        harness.engineStore,
+      )
+      const refreshedSink = new ProductionLearningEventSink(
+        refreshedPlans,
+        refreshedEngines,
+      )
+      const updates: unknown[] = []
+      refreshedSink.subscribe((update) => updates.push(update))
+      const recovered = recoveryContentRecoveredEvent(
+        harness.task,
+        exhaustionRequestId,
+      )
+
+      await refreshedSink.publish(recovered)
+      await refreshedSink.publish(recovered)
+
+      expect(updates).toHaveLength(1)
+      expect((await refreshedPlans.load())?.activePlan.tasks[0]).toMatchObject({
+        status: 'active',
+        training: {
+          status: 'running',
+          remainingEffectiveSeconds: 900,
+          completedItemIds: [
+            `${moduleId}:recovery-item-1`,
+          ],
+          nextSupplyCursor: `${moduleId}:recovery-item-1`,
+          contentExhausted: null,
+        },
+      })
+
+      await refreshedSink.publish(
+        timingEvent(harness.task, {
+          id: `${moduleId}:recovery-timing`,
+          startedAt: '2026-07-24T08:00:00.000Z',
+          endedAt: '2026-07-24T08:15:00.000Z',
+          elapsedSeconds: 900,
+          phase: 'audio-listening',
+          reason: 'active-audio-listening',
+        }),
+      )
+      await refreshedSink.publish(
+        recoveryAttemptCompletedEvent(harness.task),
+      )
+      await refreshedSink.publish(
+        recoveryItemCompletedEvent(harness.task, 2),
+      )
+      await refreshedSink.publish(
+        recoveryBudgetCompletedEvent(harness.task, 2),
+      )
+
+      const afterRefresh = await new ActivePlanRepository(
+        harness.planStore,
+      ).load()
+      expect(afterRefresh?.activePlan.tasks[0]).toMatchObject({
+        status: 'completed',
+        effectiveSeconds: 900,
+        training: {
+          status: 'completed',
+          remainingEffectiveSeconds: 0,
+          completedItemIds: [
+            `${moduleId}:recovery-item-1`,
+            `${moduleId}:recovery-item-2`,
+          ],
+          contentExhausted: null,
+        },
+      })
+      expect(
+        afterRefresh?.processedEventIds.filter(
+          (eventId) => eventId === recovered.id,
+        ),
+      ).toEqual([recovered.id])
+      expect(
+        (await refreshedEngines.load())?.progress.durationSamples,
+      ).toEqual([
+        expect.objectContaining({
+          sampleId: `${moduleId}:recovery-attempt`,
+          taskId: harness.task.taskId,
+          effectiveSeconds: 900,
+          source: 'timing-segments',
+          reliable: true,
+        }),
+      ])
+    },
+  )
+
+  it.each(trainingModules)(
+    'publishes the restored %s budget as finish-current-item when time already reached zero',
+    async (moduleId) => {
+      const harness = await createRecoveryHarness(moduleId)
+      const localSink = new ProductionLearningEventSink(
+        harness.activePlans,
+        harness.engineStates,
+      )
+      const exhaustionRequestId =
+        `${harness.task.taskId}:supply:2:recovery-item-1`
+      await localSink.publish(
+        recoveryItemCompletedEvent(harness.task, 1),
+      )
+      await localSink.publish(
+        timingEvent(harness.task, {
+          id: `${moduleId}:timing-before-exhaustion`,
+          startedAt: '2026-07-24T08:00:00.000Z',
+          endedAt: '2026-07-24T08:15:00.000Z',
+          elapsedSeconds: 900,
+          phase: 'audio-listening',
+          reason: 'active-audio-listening',
+        }),
+      )
+      await localSink.publish(
+        recoveryContentExhaustedEvent(
+          harness.task,
+          exhaustionRequestId,
+        ),
+      )
+      await localSink.publish(
+        recoveryContentRecoveredEvent(
+          harness.task,
+          exhaustionRequestId,
+        ),
+      )
+
+      expect(
+        (await harness.activePlans.load())?.activePlan.tasks[0],
+      ).toMatchObject({
+        status: 'active',
+        training: {
+          status: 'finish-current-item',
+          remainingEffectiveSeconds: 0,
+          contentExhausted: null,
+        },
+      })
+    },
+  )
+
+  it.each(trainingModules)(
+    'replays the same %s recovery after a failed plan save without exposing or double-applying it',
+    async (moduleId) => {
+      const planStore = new FailingNamespaceStore(
+        'app.learning-runtime',
+      )
+      const harness = await createRecoveryHarness(
+        moduleId,
+        planStore,
+      )
+      const localSink = new ProductionLearningEventSink(
+        harness.activePlans,
+        harness.engineStates,
+      )
+      const exhaustionRequestId =
+        `${harness.task.taskId}:supply:1:initial`
+      await localSink.publish(
+        recoveryContentExhaustedEvent(
+          harness.task,
+          exhaustionRequestId,
+        ),
+      )
+      const recovered = recoveryContentRecoveredEvent(
+        harness.task,
+        exhaustionRequestId,
+      )
+      const updates: unknown[] = []
+      localSink.subscribe((update) => updates.push(update))
+
+      planStore.failNextPut = true
+      await expect(localSink.publish(recovered)).rejects.toThrow(
+        'simulated local write failure',
+      )
+      expect(updates).toEqual([])
+      expect(
+        (await harness.activePlans.load())?.activePlan.tasks[0],
+      ).toMatchObject({
+        status: 'blocked',
+        training: {
+          status: 'content-exhausted',
+          contentExhausted: {
+            requestId: exhaustionRequestId,
+          },
+        },
+      })
+
+      await localSink.publish(recovered)
+      await localSink.publish(recovered)
+
+      const restored = await new ActivePlanRepository(
+        harness.planStore,
+      ).load()
+      expect(updates).toHaveLength(1)
+      expect(restored?.activePlan.tasks[0]).toMatchObject({
+        status: 'active',
+        training: {
+          status: 'running',
+          contentExhausted: null,
+        },
+      })
+      expect(
+        restored?.processedEventIds.filter(
+          (eventId) => eventId === recovered.id,
+        ),
+      ).toEqual([recovered.id])
+    },
+  )
+
+  it('rejects a recovery mode that does not match the scheduled task', async () => {
+    const harness = await createRecoveryHarness('vocabulary')
+    const localSink = new ProductionLearningEventSink(
+      harness.activePlans,
+      harness.engineStates,
+    )
+    const exhaustionRequestId =
+      `${harness.task.taskId}:supply:1:initial`
+    await localSink.publish(
+      recoveryContentExhaustedEvent(
+        harness.task,
+        exhaustionRequestId,
+      ),
+    )
+    const recovered = recoveryContentRecoveredEvent(
+      harness.task,
+      exhaustionRequestId,
+    )
+    if (
+      recovered.payload === null ||
+      typeof recovered.payload !== 'object' ||
+      Array.isArray(recovered.payload)
+    ) {
+      throw new Error('Expected an object recovery payload.')
+    }
+
+    await expect(
+      localSink.publish({
+        ...recovered,
+        payload: {
+          ...recovered.payload,
+          mode: 'review',
+        },
+      }),
+    ).rejects.toThrow('mode')
   })
 
   it('notifies subscribers only after both local repositories save and retries without double counting', async () => {

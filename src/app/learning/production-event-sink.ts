@@ -76,6 +76,8 @@ function taskForEvent(
       event.type ===
         'learning.training.content.exhausted.v1' ||
       event.type ===
+        'learning.training.content.recovered.v1' ||
+      event.type ===
         'learning.training.budget.completed.v1') &&
     event.payload.mode !== execution.task.mode
   ) {

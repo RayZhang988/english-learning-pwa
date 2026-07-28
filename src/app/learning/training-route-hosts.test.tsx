@@ -83,6 +83,12 @@ vi.mock('../../features/speaking/index.ts', async (importOriginal) => {
 import { productionEffectiveTimingSessions } from './effective-timing-production.ts'
 import { TrainingRouteHost } from './training-route-hosts.tsx'
 
+const trainingModules = [
+  'vocabulary',
+  'listening',
+  'speaking',
+] as const satisfies readonly TrainingModuleId[]
+
 function task(moduleId: TrainingModuleId): LearningTask {
   return {
     schemaVersion: 1,
@@ -209,6 +215,48 @@ function stateFor(
   }
 }
 
+function activeBudgetStateFor(
+  moduleId: TrainingModuleId,
+  status:
+    | 'running'
+    | 'finish-current-item'
+    | 'content-exhausted',
+): Extract<LearningAppState, { readonly status: 'ready' }> {
+  const current = stateFor(moduleId, false)
+  const remainingEffectiveSeconds =
+    status === 'finish-current-item' ? 0 : 900
+  const progress: PlanProgress = {
+    ...current.runtime.activePlan,
+    status: 'in-progress',
+    tasks: current.runtime.activePlan.tasks.map((execution) => ({
+      ...execution,
+      status: status === 'content-exhausted' ? 'blocked' : 'active',
+      training: {
+        ...execution.training!,
+        status,
+        remainingEffectiveSeconds,
+        contentExhausted:
+          status === 'content-exhausted'
+            ? {
+                requestId: `${execution.task.taskId}:supply:1:initial`,
+                cursor: null,
+                reason: 'all-eligible-content-recently-used' as const,
+                occurredAt: '2026-07-28T08:05:00.000Z',
+              }
+            : null,
+      },
+      updatedAt: '2026-07-28T08:06:00.000Z',
+    })),
+    updatedAt: '2026-07-28T08:06:00.000Z',
+  }
+  const runtime = createActiveLearningRuntime(progress)
+  return {
+    ...current,
+    runtime,
+    taskAccess: getPlanTaskAccess(progress),
+  }
+}
+
 function appContext(state: LearningAppState): LearningAppContextValue {
   const coordinator = {
     state,
@@ -316,6 +364,50 @@ describe('TrainingRouteHost R3 production integration', () => {
         'data-target-effective-seconds="900"',
       )
       expect(markup).not.toContain('data-estimate-seconds')
+    },
+  )
+
+  it.each(trainingModules)(
+    'immediately reflects %s retry recovery from exhausted to running or finish-current-item',
+    (moduleId) => {
+      routeCaptures.clear()
+      const exhaustedMarkup = renderHost(
+        moduleId,
+        activeBudgetStateFor(moduleId, 'content-exhausted'),
+      )
+      expect(exhaustedMarkup).toContain(
+        'data-budget-status="content-exhausted"',
+      )
+
+      routeCaptures.clear()
+      const runningMarkup = renderHost(
+        moduleId,
+        activeBudgetStateFor(moduleId, 'running'),
+      )
+      expect(routeCaptures.get(moduleId)?.trainingBudgetStatus?.()).toBe(
+        'running',
+      )
+      expect(runningMarkup).toContain(
+        'data-budget-status="running"',
+      )
+      expect(runningMarkup).not.toContain(
+        'data-budget-status="content-exhausted"',
+      )
+
+      routeCaptures.clear()
+      const finishingMarkup = renderHost(
+        moduleId,
+        activeBudgetStateFor(moduleId, 'finish-current-item'),
+      )
+      expect(routeCaptures.get(moduleId)?.trainingBudgetStatus?.()).toBe(
+        'finish-current-item',
+      )
+      expect(finishingMarkup).toContain(
+        'data-budget-status="finish-current-item"',
+      )
+      expect(finishingMarkup).toContain(
+        'data-remaining-effective-seconds="0"',
+      )
     },
   )
 
