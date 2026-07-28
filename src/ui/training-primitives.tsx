@@ -1,4 +1,5 @@
 import { useId, type ReactNode } from 'react'
+import { TaskDurationEstimate } from './duration-surfaces.tsx'
 import { Icon } from './icons.tsx'
 import type {
   AudioPlayerViewModel,
@@ -53,6 +54,15 @@ export function TrainingScreen({
         </div>
         <span className="training-topbar__spacer" aria-hidden="true" />
       </header>
+
+      {header.durationEstimate ? (
+        <div className="training-duration-strip">
+          <TaskDurationEstimate
+            estimate={header.durationEstimate}
+            appearance="strip"
+          />
+        </div>
+      ) : null}
 
       {header.progress ? (
         <div className="training-progress">

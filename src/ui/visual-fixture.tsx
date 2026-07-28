@@ -17,6 +17,10 @@ import {
   type PracticeModuleViewModel,
   type ProgressViewModel,
 } from './learning-app-prototype.tsx'
+import {
+  DailyEffectiveDurationSummary,
+  TrainingCompletionDurationScreen,
+} from './duration-surfaces.tsx'
 import { ProgressOverviewScreen } from './progress-overview-screen.tsx'
 import { MicrophonePermissionCard } from './system-state-surfaces.tsx'
 import { TravelVocabularyR1VisualFixture } from './travel-vocabulary-r1-fixture.tsx'
@@ -43,7 +47,7 @@ const demoPlan: DailyPlanViewModel = {
   dateLabel: '周五 · 7月24日',
   greeting: '晚上好，Ray',
   streakDays: 5,
-  summary: '45 分钟 · 3 项训练',
+  planTargetLabel: '今日目标约 45 分钟 · 3 项训练',
   progressLabel: '已完成 1 项',
   progressPercent: 34,
   tasks: [
@@ -51,12 +55,18 @@ const demoPlan: DailyPlanViewModel = {
       moduleId: 'vocabulary',
       taskId: 'demo-plan-2026-07-24:task:1',
       title: '词汇复习',
-      meta: '15 分钟 · 12 项',
+      contentSummary: '12 个词',
       status: 'pending',
       statusLabel: '未完成',
       availability: 'startable',
       recommended: false,
       actionLabel: '开始训练',
+      durationEstimate: {
+        estimateSeconds: 165,
+        basis: 'content-baseline',
+        sampleCount: 0,
+        confidence: 'low',
+      },
       icon: 'book',
       accent: 'mint',
     },
@@ -64,12 +74,18 @@ const demoPlan: DailyPlanViewModel = {
       moduleId: 'listening',
       taskId: 'demo-plan-2026-07-24:task:2',
       title: '听力训练',
-      meta: '15 分钟 · 1 组',
+      contentSummary: '1 组对话',
       status: 'active',
       statusLabel: '进行中',
       availability: 'startable',
       recommended: true,
       actionLabel: '继续训练',
+      durationEstimate: {
+        estimateSeconds: 245,
+        basis: 'personal-history',
+        sampleCount: 4,
+        confidence: 'medium',
+      },
       icon: 'headphones',
       accent: 'indigo',
     },
@@ -77,12 +93,18 @@ const demoPlan: DailyPlanViewModel = {
       moduleId: 'speaking',
       taskId: 'demo-plan-2026-07-24:task:3',
       title: '口语跟读',
-      meta: '15 分钟 · 1 组',
+      contentSummary: '1 组跟读',
       status: 'pending',
       statusLabel: '未完成',
       availability: 'startable',
       recommended: false,
       actionLabel: '开始训练',
+      durationEstimate: {
+        estimateSeconds: 52,
+        basis: 'content-baseline',
+        sampleCount: 1,
+        confidence: 'low',
+      },
       icon: 'mic',
       accent: 'coral',
     },
@@ -121,6 +143,12 @@ const demoPracticeModules: readonly PracticeModuleViewModel[] = [
     availability: 'startable',
     recommended: false,
     actionLabel: '开始训练',
+    durationEstimate: {
+      estimateSeconds: 165,
+      basis: 'content-baseline',
+      sampleCount: 0,
+      confidence: 'low',
+    },
   },
   {
     moduleId: 'listening',
@@ -130,6 +158,12 @@ const demoPracticeModules: readonly PracticeModuleViewModel[] = [
     availability: 'startable',
     recommended: true,
     actionLabel: '继续训练',
+    durationEstimate: {
+      estimateSeconds: 245,
+      basis: 'personal-history',
+      sampleCount: 4,
+      confidence: 'medium',
+    },
   },
   {
     moduleId: 'speaking',
@@ -139,6 +173,12 @@ const demoPracticeModules: readonly PracticeModuleViewModel[] = [
     availability: 'startable',
     recommended: false,
     actionLabel: '开始训练',
+    durationEstimate: {
+      estimateSeconds: 52,
+      basis: 'content-baseline',
+      sampleCount: 1,
+      confidence: 'low',
+    },
   },
 ]
 
@@ -168,6 +208,69 @@ export function UiVisualFixture({ id }: { readonly id: UiVisualFixtureId }) {
 
   if (id === 'today-task-request') {
     return <LearningAppVisualDemo />
+  }
+
+  if (id === 'r3-training-completion') {
+    return (
+      <TrainingCompletionDurationScreen
+        viewModel={{
+          moduleId: 'listening',
+          title: '听力训练完成',
+          description: '本次练习结果已保存。这里显示的是前台有效练习，不包含后台、暂停和长时间无操作。',
+          actualDuration: {
+            state: 'reliable',
+            effectiveSeconds: 247,
+            source: 'timing-segments',
+          },
+          actionLabel: '返回今日计划',
+        }}
+        onAction={() => undefined}
+      />
+    )
+  }
+
+  if (id === 'r3-daily-duration-summary') {
+    return (
+      <main className="visual-fixture-canvas">
+        <DailyEffectiveDurationSummary
+          viewModel={{
+            items: [
+              {
+                moduleId: 'vocabulary',
+                label: '词汇',
+                duration: {
+                  state: 'reliable',
+                  effectiveSeconds: 183,
+                  source: 'timing-segments',
+                },
+              },
+              {
+                moduleId: 'listening',
+                label: '听力',
+                duration: {
+                  state: 'reliable',
+                  effectiveSeconds: 247,
+                  source: 'timing-segments',
+                },
+              },
+              {
+                moduleId: 'speaking',
+                label: '口语',
+                duration: {
+                  state: 'unavailable',
+                  reason: 'legacy-event-duration',
+                },
+              },
+            ],
+            total: {
+              coverage: 'partial',
+              effectiveSeconds: 430,
+              source: 'timing-segments',
+            },
+          }}
+        />
+      </main>
+    )
   }
 
   if (isTravelVocabularyR1VisualFixtureId(id)) {
@@ -449,6 +552,12 @@ export function UiVisualFixture({ id }: { readonly id: UiVisualFixtureId }) {
             eyebrow: 'REVIEW',
             title: '词汇复习',
             progress: { label: '3 / 8', value: 38 },
+            durationEstimate: {
+              estimateSeconds: 165,
+              basis: 'content-baseline',
+              sampleCount: 0,
+              confidence: 'low',
+            },
           },
           instruction: '选择最合适的含义',
           term: 'check in',
@@ -483,6 +592,12 @@ export function UiVisualFixture({ id }: { readonly id: UiVisualFixtureId }) {
             eyebrow: 'LISTENING',
             title: '听力训练',
             progress: { label: '2 / 6', value: 34 },
+            durationEstimate: {
+              estimateSeconds: 245,
+              basis: 'personal-history',
+              sampleCount: 4,
+              confidence: 'medium',
+            },
           },
           instruction: '听一遍，然后回答',
           player: {
@@ -580,6 +695,12 @@ export function UiVisualFixture({ id }: { readonly id: UiVisualFixtureId }) {
             eyebrow: 'LISTENING',
             title: '关键词听写',
             progress: { label: '3 / 6', value: 50 },
+            durationEstimate: {
+              estimateSeconds: 245,
+              basis: 'personal-history',
+              sampleCount: 4,
+              confidence: 'medium',
+            },
           },
           instruction: '听清关键词，再输入英文',
           player: {
@@ -660,6 +781,12 @@ export function UiVisualFixture({ id }: { readonly id: UiVisualFixtureId }) {
             eyebrow: 'SPEAKING',
             title: '口语跟读',
             progress: { label: '1 / 4', value: 25 },
+            durationEstimate: {
+              estimateSeconds: 52,
+              basis: 'content-baseline',
+              sampleCount: 1,
+              confidence: 'low',
+            },
           },
           instruction: '跟读这句话',
           prompt: 'I have a reservation under Chen.',

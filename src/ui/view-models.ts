@@ -1,3 +1,5 @@
+import type { TaskDurationEstimateViewModel } from './duration-view-models.ts'
+
 export type AbilityDomainId = 'vocabulary' | 'listening' | 'speaking'
 
 export type ChoiceVisualState =
@@ -23,6 +25,7 @@ export interface TrainingHeaderViewModel {
   readonly eyebrow: string
   readonly title: string
   readonly progress?: TrainingProgressViewModel
+  readonly durationEstimate?: TaskDurationEstimateViewModel
 }
 
 export interface FeedbackViewModel {

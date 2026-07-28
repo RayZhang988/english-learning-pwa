@@ -15,6 +15,8 @@ export type TravelVocabularyR1VisualFixtureId =
 
 export const uiVisualFixtureIds = [
   'today-task-request',
+  'r3-training-completion',
+  'r3-daily-duration-summary',
   'assessment-intro',
   'assessment-choice',
   'assessment-feedback',

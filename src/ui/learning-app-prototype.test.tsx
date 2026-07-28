@@ -28,21 +28,39 @@ const taskIds = {
 const taskPresentation = {
   vocabulary: {
     title: '词汇复习',
-    meta: '12 项',
+    contentSummary: '12 个词',
     icon: 'book',
     accent: 'mint',
+    durationEstimate: {
+      estimateSeconds: 59,
+      basis: 'content-baseline',
+      sampleCount: 0,
+      confidence: 'low',
+    },
   },
   listening: {
     title: '听力训练',
-    meta: '1 组',
+    contentSummary: '1 组对话',
     icon: 'headphones',
     accent: 'indigo',
+    durationEstimate: {
+      estimateSeconds: 180,
+      basis: 'personal-history',
+      sampleCount: 3,
+      confidence: 'medium',
+    },
   },
   speaking: {
     title: '口语跟读',
-    meta: '1 组',
+    contentSummary: '1 组跟读',
     icon: 'mic',
     accent: 'coral',
+    durationEstimate: {
+      estimateSeconds: 125,
+      basis: 'content-baseline',
+      sampleCount: 1,
+      confidence: 'low',
+    },
   },
 } as const
 
@@ -138,7 +156,7 @@ function dailyPlan(
     dateLabel: '周日 · 7月27日',
     greeting: '晚上好',
     streakDays: 5,
-    summary: '3 项训练',
+    planTargetLabel: '3 项训练',
     progressLabel: '已完成 0 项',
     progressPercent: 0,
     tasks,
@@ -160,7 +178,7 @@ function practiceModules(
     ...tasks.map(
       ({
         title: _title,
-        meta: _meta,
+        contentSummary: _contentSummary,
         icon: _icon,
         accent: _accent,
         ...taskAccess
@@ -498,5 +516,74 @@ describe('R2 mobile and accessibility guardrails', () => {
     expect(css).toContain('min-height: 82px')
     expect(css).toContain('overflow-wrap: anywhere')
     expect(taskTitleRule).not.toContain('white-space')
+  })
+})
+
+describe('R3 task duration presentation', () => {
+  it('shows an independent upstream estimate for all three today tasks', () => {
+    const tasks = allStartableTasks()
+    const screen = TodayTaskList({
+      tasks,
+      onTaskRequested: () => undefined,
+    })
+    const markup = renderToStaticMarkup(screen)
+
+    expect(markup).toContain('data-estimate-seconds="59"')
+    expect(markup).toContain('data-estimate-seconds="180"')
+    expect(markup).toContain('data-estimate-seconds="125"')
+    expect(markup).toContain('内容估算')
+    expect(markup).toContain('按你的近期速度')
+    expect(markup).toContain('不足 1 分钟')
+    expect(markup).toContain('约 3 分钟')
+    expect(markup).toContain('约 2 分钟')
+    expect(markup).not.toContain('15 分钟')
+
+    expect(
+      taskButton(screen, 'vocabulary').props['aria-label'],
+    ).toContain('预计有效练习不足 1 分钟，内容估算')
+    expect(
+      taskButton(screen, 'listening').props['aria-label'],
+    ).toContain('预计有效练习约 3 分钟，按你的近期速度')
+  })
+
+  it('uses the same estimates in training cards without changing task access', () => {
+    const screen = PracticeModuleGrid({
+      modules: practiceModules(),
+      onAssessmentRequested: () => undefined,
+      onTaskRequested: () => undefined,
+    })
+    const markup = renderToStaticMarkup(screen)
+
+    expect(markup.match(/data-estimate-seconds=/g)).toHaveLength(3)
+    expect(markup).not.toContain('15 分钟')
+    for (const moduleId of [
+      'vocabulary',
+      'listening',
+      'speaking',
+    ] as const) {
+      const button = taskButton(screen, moduleId)
+      expect(button.props.disabled).toBe(false)
+      expect(button.props['data-task-id']).toBe(taskIds[moduleId])
+      expect(button.props['aria-label']).toContain(
+        '预计有效练习',
+      )
+    }
+  })
+
+  it('keeps daily allocation wording separate from per-task duration', () => {
+    const markup = renderToStaticMarkup(
+      <LearningAppPrototype
+        plan={{
+          ...dailyPlan(),
+          planTargetLabel: '今日目标约 45 分钟 · 3 项训练',
+        }}
+        progress={progress}
+        onTaskRequested={() => undefined}
+      />,
+    )
+
+    expect(markup).toContain('今日目标约 45 分钟')
+    expect(markup).toContain('data-estimate-seconds="59"')
+    expect(markup).not.toContain('15 分钟')
   })
 })

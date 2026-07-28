@@ -1,0 +1,241 @@
+.duration-estimate {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  color: var(--ink-soft);
+}
+
+.duration-estimate > span {
+  display: inline-flex;
+  min-width: 0;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.duration-estimate small {
+  color: var(--ink-faint);
+  font-size: 0.64rem;
+  line-height: 1.4;
+}
+
+.duration-estimate strong {
+  color: var(--ink);
+  font-family: var(--utility-font);
+  font-size: 0.68rem;
+  line-height: 1.4;
+}
+
+.duration-estimate em {
+  flex: 0 0 auto;
+  padding: 3px 6px;
+  border-radius: 999px;
+  color: var(--indigo-strong);
+  background: var(--indigo-soft);
+  font-size: 0.58rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.duration-estimate--compact {
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.duration-estimate--strip {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 11px;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.training-duration-strip {
+  margin-top: 14px;
+}
+
+.actual-duration {
+  width: 100%;
+  margin-top: 20px;
+  padding: 17px;
+  border: 1px solid color-mix(in srgb, var(--mint) 32%, var(--line));
+  border-radius: 18px;
+  text-align: left;
+  background: var(--mint-soft);
+}
+
+.actual-duration > strong {
+  display: block;
+  margin-top: 5px;
+  color: var(--ink);
+  font-family: var(--display-font);
+  font-size: 1.35rem;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.actual-duration p {
+  margin: 7px 0 0;
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  line-height: 1.55;
+}
+
+.actual-duration--unavailable {
+  border-color: var(--line);
+  background: var(--canvas);
+}
+
+.training-completion-screen {
+  display: grid;
+  width: min(100%, 480px);
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding:
+    max(24px, env(safe-area-inset-top))
+    max(20px, env(safe-area-inset-right))
+    max(24px, env(safe-area-inset-bottom))
+    max(20px, env(safe-area-inset-left));
+  place-items: center;
+  color: var(--ink);
+  background: var(--canvas);
+}
+
+.training-completion-card {
+  width: min(100%, 400px);
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  text-align: center;
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+
+.training-completion-card__icon {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 18px;
+  place-items: center;
+  border-radius: 18px;
+  color: #ffffff;
+  background: var(--mint);
+}
+
+.training-completion-card__icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.training-completion-card h1 {
+  margin: 6px 0 9px;
+  font-family: var(--display-font);
+  font-size: clamp(1.45rem, 7vw, 1.9rem);
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+}
+
+.training-completion-card > p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.daily-duration-summary {
+  margin-top: 28px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--surface);
+  box-shadow: 0 8px 24px rgb(31 45 84 / 4%);
+}
+
+.daily-duration-summary .section-heading {
+  align-items: center;
+}
+
+.daily-duration-summary__total {
+  display: grid;
+  min-width: 0;
+  justify-items: end;
+  gap: 2px;
+  text-align: right;
+}
+
+.daily-duration-summary__total small {
+  color: var(--ink-faint);
+  font-size: 0.62rem;
+}
+
+.daily-duration-summary__total strong {
+  font-family: var(--utility-font);
+  font-size: 0.72rem;
+  overflow-wrap: anywhere;
+}
+
+.daily-duration-summary ul {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  gap: 1px;
+  border-radius: 14px;
+  overflow: hidden;
+  list-style: none;
+  background: var(--line);
+}
+
+.daily-duration-summary li {
+  display: flex;
+  min-height: 48px;
+  padding: 10px 12px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--canvas);
+  font-size: 0.75rem;
+}
+
+.daily-duration-summary li strong {
+  color: var(--ink);
+  font-family: var(--utility-font);
+  font-size: 0.68rem;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.daily-duration-summary
+  li[data-duration-state="unavailable"]
+  strong {
+  color: var(--ink-faint);
+  font-family: inherit;
+}
+
+.daily-duration-summary > p {
+  margin: 12px 2px 0;
+  color: var(--ink-soft);
+  font-size: 0.68rem;
+  line-height: 1.55;
+}
+
+@media (width <= 360px) {
+  .duration-estimate--compact {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .daily-duration-summary .section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .daily-duration-summary__total {
+    justify-items: start;
+    text-align: left;
+  }
+}

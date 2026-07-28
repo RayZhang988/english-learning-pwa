@@ -42,6 +42,10 @@ import { ... } from '../../ui/index.ts'
 - `KeywordDictationField`
 - `Recorder`
 - `FeedbackPanel`
+- `TaskDurationEstimate`
+- `ActualEffectiveDuration`
+- `TrainingCompletionDurationScreen`
+- `DailyEffectiveDurationSummary`
 - `SystemStateCard`
 - `SystemBanner`
 - `MicrophonePermissionCard`
@@ -105,7 +109,8 @@ import { ... } from '../../ui/index.ts'
 ## ViewModel 约束
 
 - 所有进度值使用 `0..100` 的展示值，由适配层提供。
-- 时间、等级、区间、置信度和百分比由适配层格式化为最终可读字符串。
+- 等级、区间、置信度和百分比由适配层格式化为最终可读字符串。R3 训练时长例外：
+  适配层传入可信秒数和来源，UI 使用集中格式化函数生成文案。
 - UI 组件不接收 IndexedDB、Cache Storage、MediaStream、Blob 或识别器对象。
 - 回调表达用户意图，例如 `onSubmit`、`onToggleAudio`、`onRecorderAction`；是否允许
   执行由业务状态决定。
@@ -153,13 +158,14 @@ import {
 | `availability` | `PlanTaskAvailability.availability` | 唯一的可用性来源；UI 不从状态、顺序或推荐反推 |
 | `status` | `PlanTaskAvailability.taskStatus` | 原样传入；用于显示真实 pending / active / paused / blocked / completed / skipped |
 | `recommended` | `PlanTaskAvailability.recommended` | 只显示“建议先做”，不改变其他任务的按钮状态 |
+| `durationEstimate` | `LearningTask.durationEstimate` 或兼容 `estimatedSeconds` | 复制上游已计算的秒数与 basis；UI 不读取计划分配分钟数 |
 | `unavailableReason` | `PlanTaskAvailability.unavailableReason` | 只允许 `not-in-active-plan`、`task-finished`、`invalid-task-data` |
 | `onTaskRequested(taskId)` | 用户点击任一 `startable` 任务 | 返回该卡片 `taskId` 原值，一次点击只发送一次 |
 
 `TrainingTaskAccessViewModel` 是判别联合：
 
 - `availability: "startable"`：必须提供非空 `taskId`、非终态 `status`、
-  `recommended`、`statusLabel` 和 `actionLabel`。
+  `recommended`、`statusLabel`、`actionLabel` 和 `durationEstimate`。
 - `availability: "unavailable"`：提供 `taskId | null`、`status | null`、
   `recommended: false`、`statusLabel`、`unavailableReason` 和
   `unavailableDescription`。
@@ -228,6 +234,13 @@ const practiceModules = [
     statusLabel: '未完成',
     recommended: false,
     actionLabel: '开始训练',
+    durationEstimate: {
+      estimateSeconds: vocabularyLearningTask.durationEstimate?.estimateSeconds
+        ?? vocabularyLearningTask.estimatedSeconds,
+      basis: vocabularyLearningTask.durationEstimate?.basis ?? 'content-baseline',
+      sampleCount: vocabularyLearningTask.durationEstimate?.sampleCount ?? 0,
+      confidence: vocabularyLearningTask.durationEstimate?.confidence ?? 'low',
+    },
   },
   {
     moduleId: 'listening',
@@ -237,6 +250,7 @@ const practiceModules = [
     statusLabel: '进行中',
     recommended: true,
     actionLabel: '继续训练',
+    durationEstimate: listeningDurationEstimate,
   },
   {
     moduleId: 'speaking',
@@ -246,6 +260,7 @@ const practiceModules = [
     statusLabel: '未完成',
     recommended: false,
     actionLabel: '开始训练',
+    durationEstimate: speakingDurationEstimate,
   },
 ] satisfies readonly PracticeModuleViewModel[]
 ```
@@ -559,6 +574,121 @@ import {
 ?ui-fixture=travel-r1-results
 ?ui-fixture=travel-r1-status
 ```
+
+## R3｜训练预计时长与实际有效时长
+
+01、06、07、08 只从 `src/ui/index.ts` 导入：
+
+```ts
+import {
+  ActualEffectiveDuration,
+  DailyEffectiveDurationSummary,
+  TaskDurationEstimate,
+  TrainingCompletionDurationScreen,
+  formatEffectiveDuration,
+  formatEstimatedDuration,
+  type ActualEffectiveDurationViewModel,
+  type DailyEffectiveDurationSummaryViewModel,
+  type TaskDurationEstimateViewModel,
+  type TrainingCompletionDurationViewModel,
+} from '../../ui/index.ts'
+```
+
+### 预计时长
+
+`TaskDurationEstimateViewModel` 必须由 01 从 04 已计算结果映射：
+
+```ts
+const taskDurationEstimate: TaskDurationEstimateViewModel = {
+  estimateSeconds:
+    task.durationEstimate?.estimateSeconds ?? task.estimatedSeconds,
+  basis: task.durationEstimate?.basis ?? 'content-baseline',
+  sampleCount: task.durationEstimate?.sampleCount ?? 0,
+  confidence: task.durationEstimate?.confidence ?? 'low',
+}
+```
+
+禁止把 `PlanProgress.plannedSeconds`、`DailyPlan.targetMinutes`、任务分配分钟数、每日预算或
+旧的“15 分钟”字符串写入 `estimateSeconds`。`basis: "personal-history"` 只能来自 04
+已经认定的个人历史估算；UI 不根据 `sampleCount` 自行升级 basis。
+
+公开接入点：
+
+| 页面 | 字段 / 组件 | 01 的注入责任 |
+| --- | --- | --- |
+| “今天”任务行 | startable `DailyTaskViewModel.durationEstimate` | 每个可启动任务传自己的真实估算；`contentSummary` 只放题量或内容范围 |
+| “训练”模块卡 | startable `TrainingTaskAccessViewModel.durationEstimate` | 与“今天”使用同一任务、同一估算，不因推荐改变 |
+| 词汇 / 听力 / 口语过程页 | `TrainingHeaderViewModel.durationEstimate?` | 启动真实任务时注入；音频 `durationLabel` 仍只表示媒体长度 |
+| 其他纯展示位置 | `TaskDurationEstimate` | 直接传同一 ViewModel，不重算 |
+
+集中格式化规则：
+
+- `0..59` 秒显示“不足 1 分钟”，不向上虚报为多分钟；
+- `60` 秒起使用整分钟近似，例如 `60` 秒为“约 1 分钟”、`125` 秒为“约 2 分钟”；
+- 内容基线显示“内容估算”；个人历史显示“按你的近期速度”；
+- 组件读屏名同时包含“预计有效练习”、时长和 basis。
+
+### 实际有效时长
+
+实际用时是判别联合，02 不接受一个无来源的裸数字：
+
+```ts
+type ActualEffectiveDurationViewModel =
+  | {
+      state: 'reliable'
+      effectiveSeconds: number
+      source: 'timing-segments'
+    }
+  | {
+      state: 'unavailable'
+      reason: 'missing-timing-segments' | 'legacy-event-duration'
+    }
+```
+
+只有 `TaskExecutionState.effectiveTimeSource === "timing-segments"` 时，01 才能构造
+`state: "reliable"`，并原样复制 `effectiveSeconds`。`spentSeconds`、旧 attempt
+duration、页面墙钟和 `legacy-event-duration` 都不能回退成实际有效时长。无可信来源时
+传 `state: "unavailable"`，页面固定显示“本次暂无可靠用时”。
+
+任务结束页如果现有模块没有通用完成入口，06 / 07 / 08 将模块原有成绩和反馈保留在自己的
+结果页，并在其中嵌入 `ActualEffectiveDuration`；若需要独立完成页，可使用：
+
+```tsx
+<TrainingCompletionDurationScreen
+  viewModel={completionDurationViewModel}
+  onAction={onReturnToPlan}
+/>
+```
+
+此组件只显示外部 `title`、`description`、实际有效时长和动作，不计算成绩、不保存事件、
+不决定路由。
+
+### 每日可信汇总
+
+`DailyEffectiveDurationSummaryViewModel.items` 可同时提供词汇、听力、口语三个模块的
+独立状态。`total` 必须由 01 / 04 提供，UI 不对列表求和：
+
+- `coverage: "complete"`：三个模块都有可信 timing segments；
+- `coverage: "partial"`：只显示上游已确认合计，并明确缺失项没有按 0 处理；
+- `coverage: "unavailable"`：不提供数字，也不显示推测总时长。
+
+`DailyPlanViewModel.effectiveTimeSummary?` 是“今天”页的唯一现成汇总插槽。每日计划卡的
+`planTargetLabel` 只是计划目标文案，不能替代任一任务的预计时长或今日实际有效时长。
+
+视觉检查夹具：
+
+```text
+?ui-fixture=today-task-request
+?ui-fixture=vocabulary
+?ui-fixture=listening
+?ui-fixture=speaking
+?ui-fixture=r3-training-completion
+?ui-fixture=r3-daily-duration-summary
+```
+
+02 不调用 `Date.now()`、`performance.now()`，不计算中位数、可信样本数或校准偏差，也不
+读写 timing segment。上述数据采集、恢复、可靠性判定、历史样本保存和生产路由全部属于
+01 / 04 / 06 / 07 / 08。
 
 ## 当前限制
 

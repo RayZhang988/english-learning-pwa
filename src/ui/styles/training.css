@@ -53,13 +53,12 @@
 }
 
 .training-topbar__title h1 {
-  overflow: hidden;
   margin: 2px 0 0;
   font-family: var(--display-font);
   font-size: 1.05rem;
   letter-spacing: -0.02em;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
 .training-topbar__spacer {

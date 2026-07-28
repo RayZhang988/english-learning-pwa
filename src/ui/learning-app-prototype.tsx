@@ -1,4 +1,17 @@
 import { useState, type CSSProperties } from 'react'
+import {
+  formatDurationEstimateBasis,
+  formatEstimatedDuration,
+} from './duration-format.ts'
+import {
+  DailyEffectiveDurationSummary,
+  TaskDurationEstimate,
+} from './duration-surfaces.tsx'
+import type {
+  DailyEffectiveDurationSummaryViewModel,
+  DurationTrainingModuleId,
+  TaskDurationEstimateViewModel,
+} from './duration-view-models.ts'
 import { OfflineNotice } from './feedback-states.tsx'
 import { Icon, type IconName } from './icons.tsx'
 
@@ -11,7 +24,7 @@ export type PracticeModuleId =
 export type TrainingPracticeModuleId = Exclude<
   PracticeModuleId,
   'assessment'
->
+> & DurationTrainingModuleId
 export type TrainingTaskStatus =
   | 'pending'
   | 'active'
@@ -46,6 +59,10 @@ export type TrainingTaskAccessViewModel =
       readonly status: StartableTrainingTaskStatus
       readonly recommended: boolean
       readonly actionLabel: string
+      /**
+       * Already calculated by 04/01. UI only formats estimateSeconds.
+       */
+      readonly durationEstimate: TaskDurationEstimateViewModel
     })
   | (TrainingTaskAccessBase & {
       readonly availability: 'unavailable'
@@ -62,7 +79,11 @@ export type TrainingTaskAccessViewModel =
 
 interface DailyTaskPresentation {
   readonly title: string
-  readonly meta: string
+  /**
+   * Content quantity or scope only, for example "12 个词".
+   * Duration belongs to durationEstimate and must not be embedded here.
+   */
+  readonly contentSummary: string
   readonly icon: IconName
   readonly accent: 'indigo' | 'coral' | 'mint'
 }
@@ -74,10 +95,14 @@ export interface DailyPlanViewModel {
   readonly dateLabel: string
   readonly greeting: string
   readonly streakDays: number
-  readonly summary: string
+  /**
+   * Optional daily allocation target. This is not a per-task estimate.
+   */
+  readonly planTargetLabel: string
   readonly progressLabel: string
   readonly progressPercent: number
   readonly tasks: readonly DailyTaskViewModel[]
+  readonly effectiveTimeSummary?: DailyEffectiveDurationSummaryViewModel
 }
 
 export interface ProgressViewModel {
@@ -303,7 +328,7 @@ function TodayPage({
         </div>
         <h2>保持一点节奏，<br />比一次学很多更重要。</h2>
         <div className="daily-brief__footer">
-          <span>{plan.summary}</span>
+          <span>{plan.planTargetLabel}</span>
           <span aria-hidden="true">{plan.progressPercent}%</span>
         </div>
         <div
@@ -334,6 +359,11 @@ function TodayPage({
           onTaskRequested={onTaskRequested}
         />
       </section>
+      {plan.effectiveTimeSummary ? (
+        <DailyEffectiveDurationSummary
+          viewModel={plan.effectiveTimeSummary}
+        />
+      ) : null}
     </>
   )
 }
@@ -342,6 +372,12 @@ function recommendedAriaDescription(recommended: boolean): string {
   return recommended
     ? '。建议先做；其他未完成任务同样可选'
     : ''
+}
+
+function durationEstimateAriaDescription(
+  estimate: TaskDurationEstimateViewModel,
+): string {
+  return `。预计有效练习${formatEstimatedDuration(estimate.estimateSeconds)}，${formatDurationEstimateBasis(estimate.basis)}`
 }
 
 export function TodayTaskList({
@@ -363,14 +399,14 @@ export function TodayTaskList({
         const detail =
           task.availability === 'unavailable'
             ? task.unavailableDescription
-            : task.meta
+            : task.contentSummary
         const actionLabel =
           task.availability === 'startable'
             ? task.actionLabel
             : task.statusLabel
         const ariaLabel =
           task.availability === 'startable'
-            ? `${task.actionLabel}：${task.title}${recommendedAriaDescription(task.recommended)}`
+            ? `${task.actionLabel}：${task.title}${durationEstimateAriaDescription(task.durationEstimate)}${recommendedAriaDescription(task.recommended)}`
             : `${task.statusLabel}：${task.title}。${task.unavailableDescription}`
 
         return (
@@ -412,6 +448,11 @@ export function TodayTaskList({
                   ) : null}
                 </span>
                 <small>{detail}</small>
+                {task.availability === 'startable' ? (
+                  <TaskDurationEstimate
+                    estimate={task.durationEstimate}
+                  />
+                ) : null}
               </span>
               <span
                 className={`task-row__status task-row__status--${stateClass}`}
@@ -463,9 +504,22 @@ export function PracticeModuleGrid({
             : module.availability === 'startable'
               ? module.actionLabel
               : module.statusLabel
-          const ariaLabel = isDisabled
-            ? `${presentation.title}：${description}`
-            : `${actionLabel}：${presentation.title}${recommendedAriaDescription(isRecommended)}`
+          let ariaLabel: string
+          if (module.moduleId === 'assessment') {
+            ariaLabel =
+              module.request.state === 'disabled'
+                ? `${presentation.title}：${description}`
+                : `${actionLabel}：${presentation.title}`
+          } else if (module.availability === 'unavailable') {
+            ariaLabel = `${presentation.title}：${description}`
+          } else {
+            ariaLabel =
+              `${actionLabel}：${presentation.title}` +
+              durationEstimateAriaDescription(
+                module.durationEstimate,
+              ) +
+              recommendedAriaDescription(isRecommended)
+          }
           let onClick: (() => void) | undefined
           if (isAssessment) {
             if (module.request.state === 'enabled') {
@@ -520,6 +574,12 @@ export function PracticeModuleGrid({
               </span>
               <h2>{presentation.title}</h2>
               <p>{description}</p>
+              {!isAssessment &&
+              module.availability === 'startable' ? (
+                <TaskDurationEstimate
+                  estimate={module.durationEstimate}
+                />
+              ) : null}
               <span className="module-card__action">
                 {actionLabel}
                 {!isDisabled ? <Icon name="arrow-right" /> : null}

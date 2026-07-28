@@ -120,6 +120,26 @@ export {
   Recorder,
   TrainingScreen,
 } from './training-primitives.tsx'
+export {
+  formatDurationEstimateBasis,
+  formatEffectiveDuration,
+  formatEstimatedDuration,
+} from './duration-format.ts'
+export {
+  ActualEffectiveDuration,
+  DailyEffectiveDurationSummary,
+  TaskDurationEstimate,
+  TrainingCompletionDurationScreen,
+} from './duration-surfaces.tsx'
+export type {
+  ActualEffectiveDurationViewModel,
+  DailyEffectiveDurationItemViewModel,
+  DailyEffectiveDurationSummaryViewModel,
+  DailyEffectiveDurationTotalViewModel,
+  DurationTrainingModuleId,
+  TaskDurationEstimateViewModel,
+  TrainingCompletionDurationViewModel,
+} from './duration-view-models.ts'
 export type {
   AbilityDomainId,
   AbilityResultViewModel,
