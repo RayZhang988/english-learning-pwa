@@ -143,7 +143,7 @@ describe('R3 actual effective duration honesty', () => {
     expect(markup).toContain('52 秒')
     expect(markup).toContain('返回今日计划')
     expect(markup).toContain('data-module-id="speaking"')
-    screen.props.children.props.children[5].props.onClick()
+    screen.props.children.props.children.at(-1).props.onClick()
     expect(onAction).toHaveBeenCalledOnce()
   })
 })

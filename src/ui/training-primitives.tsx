@@ -1,5 +1,6 @@
 import { useId, type ReactNode } from 'react'
 import { TaskDurationEstimate } from './duration-surfaces.tsx'
+import { TrainingBudgetProgress } from './training-budget-surfaces.tsx'
 import { Icon } from './icons.tsx'
 import type {
   AudioPlayerViewModel,
@@ -20,6 +21,7 @@ export function TrainingScreen({
   children,
   action,
   actionLayout = 'single',
+  onRetryTrainingContent,
 }: {
   readonly className?: string
   readonly header: TrainingHeaderViewModel
@@ -28,6 +30,7 @@ export function TrainingScreen({
   readonly children: ReactNode
   readonly action?: ReactNode
   readonly actionLayout?: 'single' | 'stacked' | 'input'
+  readonly onRetryTrainingContent?: () => void
 }) {
   return (
     <main
@@ -55,7 +58,12 @@ export function TrainingScreen({
         <span className="training-topbar__spacer" aria-hidden="true" />
       </header>
 
-      {header.durationEstimate ? (
+      {header.trainingBudget ? (
+        <TrainingBudgetProgress
+          viewModel={header.trainingBudget}
+          onRetryContent={onRetryTrainingContent}
+        />
+      ) : header.durationEstimate ? (
         <div className="training-duration-strip">
           <TaskDurationEstimate
             estimate={header.durationEstimate}

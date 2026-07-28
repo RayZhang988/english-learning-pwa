@@ -61,12 +61,7 @@ const demoPlan: DailyPlanViewModel = {
       availability: 'startable',
       recommended: false,
       actionLabel: '开始训练',
-      durationEstimate: {
-        estimateSeconds: 165,
-        basis: 'content-baseline',
-        sampleCount: 0,
-        confidence: 'low',
-      },
+      trainingBudget: { targetEffectiveSeconds: 900 },
       icon: 'book',
       accent: 'mint',
     },
@@ -80,12 +75,7 @@ const demoPlan: DailyPlanViewModel = {
       availability: 'startable',
       recommended: true,
       actionLabel: '继续训练',
-      durationEstimate: {
-        estimateSeconds: 245,
-        basis: 'personal-history',
-        sampleCount: 4,
-        confidence: 'medium',
-      },
+      trainingBudget: { targetEffectiveSeconds: 900 },
       icon: 'headphones',
       accent: 'indigo',
     },
@@ -99,12 +89,7 @@ const demoPlan: DailyPlanViewModel = {
       availability: 'startable',
       recommended: false,
       actionLabel: '开始训练',
-      durationEstimate: {
-        estimateSeconds: 52,
-        basis: 'content-baseline',
-        sampleCount: 1,
-        confidence: 'low',
-      },
+      trainingBudget: { targetEffectiveSeconds: 900 },
       icon: 'mic',
       accent: 'coral',
     },
@@ -143,12 +128,7 @@ const demoPracticeModules: readonly PracticeModuleViewModel[] = [
     availability: 'startable',
     recommended: false,
     actionLabel: '开始训练',
-    durationEstimate: {
-      estimateSeconds: 165,
-      basis: 'content-baseline',
-      sampleCount: 0,
-      confidence: 'low',
-    },
+    trainingBudget: { targetEffectiveSeconds: 900 },
   },
   {
     moduleId: 'listening',
@@ -158,12 +138,7 @@ const demoPracticeModules: readonly PracticeModuleViewModel[] = [
     availability: 'startable',
     recommended: true,
     actionLabel: '继续训练',
-    durationEstimate: {
-      estimateSeconds: 245,
-      basis: 'personal-history',
-      sampleCount: 4,
-      confidence: 'medium',
-    },
+    trainingBudget: { targetEffectiveSeconds: 900 },
   },
   {
     moduleId: 'speaking',
@@ -173,12 +148,7 @@ const demoPracticeModules: readonly PracticeModuleViewModel[] = [
     availability: 'startable',
     recommended: false,
     actionLabel: '开始训练',
-    durationEstimate: {
-      estimateSeconds: 52,
-      basis: 'content-baseline',
-      sampleCount: 1,
-      confidence: 'low',
-    },
+    trainingBudget: { targetEffectiveSeconds: 900 },
   },
 ]
 
@@ -221,6 +191,12 @@ export function UiVisualFixture({ id }: { readonly id: UiVisualFixtureId }) {
             state: 'reliable',
             effectiveSeconds: 247,
             source: 'timing-segments',
+          },
+          trainingBudget: {
+            status: 'completed',
+            targetEffectiveSeconds: 900,
+            remainingEffectiveSeconds: 0,
+            completedItemCount: 18,
           },
           actionLabel: '返回今日计划',
         }}
@@ -552,11 +528,11 @@ export function UiVisualFixture({ id }: { readonly id: UiVisualFixtureId }) {
             eyebrow: 'REVIEW',
             title: '词汇复习',
             progress: { label: '3 / 8', value: 38 },
-            durationEstimate: {
-              estimateSeconds: 165,
-              basis: 'content-baseline',
-              sampleCount: 0,
-              confidence: 'low',
+            trainingBudget: {
+              status: 'running',
+              targetEffectiveSeconds: 900,
+              remainingEffectiveSeconds: 742,
+              completedItemCount: 3,
             },
           },
           instruction: '选择最合适的含义',
@@ -580,6 +556,7 @@ export function UiVisualFixture({ id }: { readonly id: UiVisualFixtureId }) {
         onExit={() => undefined}
         onSelect={() => undefined}
         onAction={() => undefined}
+        onRetryTrainingContent={() => undefined}
       />
     )
   }
@@ -592,11 +569,11 @@ export function UiVisualFixture({ id }: { readonly id: UiVisualFixtureId }) {
             eyebrow: 'LISTENING',
             title: '听力训练',
             progress: { label: '2 / 6', value: 34 },
-            durationEstimate: {
-              estimateSeconds: 245,
-              basis: 'personal-history',
-              sampleCount: 4,
-              confidence: 'medium',
+            trainingBudget: {
+              status: 'finish-current-item',
+              targetEffectiveSeconds: 900,
+              remainingEffectiveSeconds: 0,
+              completedItemCount: 8,
             },
           },
           instruction: '听一遍，然后回答',
@@ -683,6 +660,7 @@ export function UiVisualFixture({ id }: { readonly id: UiVisualFixtureId }) {
         onRepeatModeChange={() => undefined}
         onQuestionInput={() => undefined}
         onAction={() => undefined}
+        onRetryTrainingContent={() => undefined}
       />
     )
   }
@@ -695,11 +673,11 @@ export function UiVisualFixture({ id }: { readonly id: UiVisualFixtureId }) {
             eyebrow: 'LISTENING',
             title: '关键词听写',
             progress: { label: '3 / 6', value: 50 },
-            durationEstimate: {
-              estimateSeconds: 245,
-              basis: 'personal-history',
-              sampleCount: 4,
-              confidence: 'medium',
+            trainingBudget: {
+              status: 'running',
+              targetEffectiveSeconds: 900,
+              remainingEffectiveSeconds: 481,
+              completedItemCount: 6,
             },
           },
           instruction: '听清关键词，再输入英文',
@@ -769,6 +747,7 @@ export function UiVisualFixture({ id }: { readonly id: UiVisualFixtureId }) {
           }
         }}
         onAction={() => undefined}
+        onRetryTrainingContent={() => undefined}
       />
     )
   }
@@ -781,11 +760,19 @@ export function UiVisualFixture({ id }: { readonly id: UiVisualFixtureId }) {
             eyebrow: 'SPEAKING',
             title: '口语跟读',
             progress: { label: '1 / 4', value: 25 },
-            durationEstimate: {
-              estimateSeconds: 52,
-              basis: 'content-baseline',
-              sampleCount: 1,
-              confidence: 'low',
+            trainingBudget: {
+              status: 'content-exhausted',
+              targetEffectiveSeconds: 900,
+              remainingEffectiveSeconds: 318,
+              completedItemCount: 11,
+              contentExhausted: {
+                reason: 'provider-failure',
+                description:
+                  '题库提供器暂时无法返回新的合格口语题。',
+              },
+              retryAction: {
+                label: '重新获取题目',
+              },
             },
           },
           instruction: '跟读这句话',
@@ -811,6 +798,7 @@ export function UiVisualFixture({ id }: { readonly id: UiVisualFixtureId }) {
         onPlayback={() => undefined}
         onAction={() => undefined}
         onSecondaryAction={() => undefined}
+        onRetryTrainingContent={() => undefined}
       />
     )
   }

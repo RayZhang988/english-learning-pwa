@@ -97,6 +97,11 @@ export {
   type ListeningTrainingScreenCallbacks,
   type ListeningTrainingScreenProps,
   type SpeakingScreenViewModel,
+  type SpeakingTrainingScreenCallbacks,
+  type SpeakingTrainingScreenProps,
+  type TrainingContentRetryCallbacks,
+  type VocabularyTrainingScreenCallbacks,
+  type VocabularyTrainingScreenProps,
   type VocabularyScreenViewModel,
 } from './practice-screens.tsx'
 export {
@@ -120,6 +125,21 @@ export {
   Recorder,
   TrainingScreen,
 } from './training-primitives.tsx'
+export {
+  TrainingBudgetProgress,
+  TrainingBudgetTarget,
+} from './training-budget-surfaces.tsx'
+export {
+  formatTrainingBudgetClock,
+  formatTrainingBudgetTarget,
+} from './training-budget-format.ts'
+export type {
+  TrainingBudgetProgressViewModel,
+  TrainingBudgetRetryActionViewModel,
+  TrainingBudgetStatus,
+  TrainingBudgetTargetViewModel,
+  TrainingContentExhaustedReason,
+} from './training-budget-view-models.ts'
 export {
   formatDurationEstimateBasis,
   formatEffectiveDuration,

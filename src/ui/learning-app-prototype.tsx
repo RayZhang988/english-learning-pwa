@@ -7,11 +7,13 @@ import {
   DailyEffectiveDurationSummary,
   TaskDurationEstimate,
 } from './duration-surfaces.tsx'
+import { TrainingBudgetTarget } from './training-budget-surfaces.tsx'
 import type {
   DailyEffectiveDurationSummaryViewModel,
   DurationTrainingModuleId,
   TaskDurationEstimateViewModel,
 } from './duration-view-models.ts'
+import type { TrainingBudgetTargetViewModel } from './training-budget-view-models.ts'
 import { OfflineNotice } from './feedback-states.tsx'
 import { Icon, type IconName } from './icons.tsx'
 
@@ -49,21 +51,35 @@ interface TrainingTaskAccessBase {
   readonly statusLabel: string
 }
 
-export type TrainingTaskAccessViewModel =
-  | (TrainingTaskAccessBase & {
-      readonly availability: 'startable'
+type StartableTrainingTaskDurationViewModel =
+  | {
       /**
-       * Exact LearningTask.taskId. The UI returns it unchanged.
+       * New 900-second effective-training completion budget from 04.
+       * A budget task must not also present a content-duration estimate.
        */
-      readonly taskId: string
-      readonly status: StartableTrainingTaskStatus
-      readonly recommended: boolean
-      readonly actionLabel: string
+      readonly trainingBudget: TrainingBudgetTargetViewModel
+      readonly durationEstimate?: never
+    }
+  | {
       /**
-       * Already calculated by 04/01. UI only formats estimateSeconds.
+       * Compatibility presentation for a task with no trainingBudget.
        */
+      readonly trainingBudget?: undefined
       readonly durationEstimate: TaskDurationEstimateViewModel
-    })
+    }
+
+export type TrainingTaskAccessViewModel =
+  | (TrainingTaskAccessBase &
+      StartableTrainingTaskDurationViewModel & {
+        readonly availability: 'startable'
+        /**
+         * Exact LearningTask.taskId. The UI returns it unchanged.
+         */
+        readonly taskId: string
+        readonly status: StartableTrainingTaskStatus
+        readonly recommended: boolean
+        readonly actionLabel: string
+      })
   | (TrainingTaskAccessBase & {
       readonly availability: 'unavailable'
       /**
@@ -81,7 +97,8 @@ interface DailyTaskPresentation {
   readonly title: string
   /**
    * Content quantity or scope only, for example "12 个词".
-   * Duration belongs to durationEstimate and must not be embedded here.
+   * Time belongs to trainingBudget or durationEstimate and must not be
+   * embedded here.
    */
   readonly contentSummary: string
   readonly icon: IconName
@@ -380,6 +397,25 @@ function durationEstimateAriaDescription(
   return `。预计有效练习${formatEstimatedDuration(estimate.estimateSeconds)}，${formatDurationEstimateBasis(estimate.basis)}`
 }
 
+function trainingTaskDurationAriaDescription(
+  task: Extract<
+    TrainingTaskAccessViewModel,
+    { readonly availability: 'startable' }
+  >,
+): string {
+  return task.trainingBudget
+    ? `。训练目标${formatTrainingBudgetTargetAriaLabel(task.trainingBudget.targetEffectiveSeconds)}`
+    : durationEstimateAriaDescription(task.durationEstimate)
+}
+
+function formatTrainingBudgetTargetAriaLabel(seconds: number): string {
+  if (Number.isFinite(seconds) && seconds >= 0 && seconds % 60 === 0) {
+    return `${seconds / 60} 分钟有效训练，只累计前台有效练习`
+  }
+
+  return '有效训练目标，以运行时提供的有效时间为准'
+}
+
 export function TodayTaskList({
   tasks,
   onTaskRequested,
@@ -406,7 +442,7 @@ export function TodayTaskList({
             : task.statusLabel
         const ariaLabel =
           task.availability === 'startable'
-            ? `${task.actionLabel}：${task.title}${durationEstimateAriaDescription(task.durationEstimate)}${recommendedAriaDescription(task.recommended)}`
+            ? `${task.actionLabel}：${task.title}${trainingTaskDurationAriaDescription(task)}${recommendedAriaDescription(task.recommended)}`
             : `${task.statusLabel}：${task.title}。${task.unavailableDescription}`
 
         return (
@@ -449,9 +485,15 @@ export function TodayTaskList({
                 </span>
                 <small>{detail}</small>
                 {task.availability === 'startable' ? (
-                  <TaskDurationEstimate
-                    estimate={task.durationEstimate}
-                  />
+                  task.trainingBudget ? (
+                    <TrainingBudgetTarget
+                      viewModel={task.trainingBudget}
+                    />
+                  ) : (
+                    <TaskDurationEstimate
+                      estimate={task.durationEstimate}
+                    />
+                  )
                 ) : null}
               </span>
               <span
@@ -515,9 +557,7 @@ export function PracticeModuleGrid({
           } else {
             ariaLabel =
               `${actionLabel}：${presentation.title}` +
-              durationEstimateAriaDescription(
-                module.durationEstimate,
-              ) +
+              trainingTaskDurationAriaDescription(module) +
               recommendedAriaDescription(isRecommended)
           }
           let onClick: (() => void) | undefined
@@ -576,9 +616,15 @@ export function PracticeModuleGrid({
               <p>{description}</p>
               {!isAssessment &&
               module.availability === 'startable' ? (
-                <TaskDurationEstimate
-                  estimate={module.durationEstimate}
-                />
+                module.trainingBudget ? (
+                  <TrainingBudgetTarget
+                    viewModel={module.trainingBudget}
+                  />
+                ) : (
+                  <TaskDurationEstimate
+                    estimate={module.durationEstimate}
+                  />
+                )
               ) : null}
               <span className="module-card__action">
                 {actionLabel}

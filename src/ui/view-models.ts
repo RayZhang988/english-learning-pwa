@@ -1,4 +1,5 @@
 import type { TaskDurationEstimateViewModel } from './duration-view-models.ts'
+import type { TrainingBudgetProgressViewModel } from './training-budget-view-models.ts'
 
 export type AbilityDomainId = 'vocabulary' | 'listening' | 'speaking'
 
@@ -21,12 +22,30 @@ export interface TrainingProgressViewModel {
   readonly value: number
 }
 
-export interface TrainingHeaderViewModel {
+interface TrainingHeaderBaseViewModel {
   readonly eyebrow: string
   readonly title: string
   readonly progress?: TrainingProgressViewModel
-  readonly durationEstimate?: TaskDurationEstimateViewModel
 }
+
+export type TrainingHeaderViewModel =
+  TrainingHeaderBaseViewModel &
+    (
+      | {
+          /**
+           * Legacy or non-budget task estimate. It never controls completion.
+           */
+          readonly durationEstimate?: TaskDurationEstimateViewModel
+          readonly trainingBudget?: undefined
+        }
+      | {
+          /**
+           * Exact upstream training-budget snapshot. UI never advances it.
+           */
+          readonly trainingBudget: TrainingBudgetProgressViewModel
+          readonly durationEstimate?: never
+        }
+    )
 
 export interface FeedbackViewModel {
   readonly tone: 'success' | 'correction' | 'info' | 'device'

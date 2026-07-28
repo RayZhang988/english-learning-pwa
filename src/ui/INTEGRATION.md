@@ -158,14 +158,15 @@ import {
 | `availability` | `PlanTaskAvailability.availability` | 唯一的可用性来源；UI 不从状态、顺序或推荐反推 |
 | `status` | `PlanTaskAvailability.taskStatus` | 原样传入；用于显示真实 pending / active / paused / blocked / completed / skipped |
 | `recommended` | `PlanTaskAvailability.recommended` | 只显示“建议先做”，不改变其他任务的按钮状态 |
-| `durationEstimate` | `LearningTask.durationEstimate` 或兼容 `estimatedSeconds` | 复制上游已计算的秒数与 basis；UI 不读取计划分配分钟数 |
+| `trainingBudget` / `durationEstimate` | `LearningTask.trainingBudget`；仅旧无预算任务使用已有估算 | 两者互斥；预算任务显示有效训练目标，旧任务显示估算 |
 | `unavailableReason` | `PlanTaskAvailability.unavailableReason` | 只允许 `not-in-active-plan`、`task-finished`、`invalid-task-data` |
 | `onTaskRequested(taskId)` | 用户点击任一 `startable` 任务 | 返回该卡片 `taskId` 原值，一次点击只发送一次 |
 
 `TrainingTaskAccessViewModel` 是判别联合：
 
 - `availability: "startable"`：必须提供非空 `taskId`、非终态 `status`、
-  `recommended`、`statusLabel`、`actionLabel` 和 `durationEstimate`。
+  `recommended`、`statusLabel`、`actionLabel`，以及二选一的 `trainingBudget` /
+  `durationEstimate`。
 - `availability: "unavailable"`：提供 `taskId | null`、`status | null`、
   `recommended: false`、`statusLabel`、`unavailableReason` 和
   `unavailableDescription`。
@@ -234,12 +235,9 @@ const practiceModules = [
     statusLabel: '未完成',
     recommended: false,
     actionLabel: '开始训练',
-    durationEstimate: {
-      estimateSeconds: vocabularyLearningTask.durationEstimate?.estimateSeconds
-        ?? vocabularyLearningTask.estimatedSeconds,
-      basis: vocabularyLearningTask.durationEstimate?.basis ?? 'content-baseline',
-      sampleCount: vocabularyLearningTask.durationEstimate?.sampleCount ?? 0,
-      confidence: vocabularyLearningTask.durationEstimate?.confidence ?? 'low',
+    trainingBudget: {
+      targetEffectiveSeconds:
+        vocabularyLearningTask.trainingBudget.targetEffectiveSeconds,
     },
   },
   {
@@ -250,7 +248,10 @@ const practiceModules = [
     statusLabel: '进行中',
     recommended: true,
     actionLabel: '继续训练',
-    durationEstimate: listeningDurationEstimate,
+    trainingBudget: {
+      targetEffectiveSeconds:
+        listeningLearningTask.trainingBudget.targetEffectiveSeconds,
+    },
   },
   {
     moduleId: 'speaking',
@@ -260,7 +261,10 @@ const practiceModules = [
     statusLabel: '未完成',
     recommended: false,
     actionLabel: '开始训练',
-    durationEstimate: speakingDurationEstimate,
+    trainingBudget: {
+      targetEffectiveSeconds:
+        speakingLearningTask.trainingBudget.targetEffectiveSeconds,
+    },
   },
 ] satisfies readonly PracticeModuleViewModel[]
 ```
@@ -584,17 +588,25 @@ import {
   ActualEffectiveDuration,
   DailyEffectiveDurationSummary,
   TaskDurationEstimate,
+  TrainingBudgetProgress,
+  TrainingBudgetTarget,
   TrainingCompletionDurationScreen,
   formatEffectiveDuration,
   formatEstimatedDuration,
+  formatTrainingBudgetClock,
   type ActualEffectiveDurationViewModel,
   type DailyEffectiveDurationSummaryViewModel,
   type TaskDurationEstimateViewModel,
+  type ListeningTrainingScreenProps,
+  type SpeakingTrainingScreenProps,
+  type TrainingBudgetProgressViewModel,
+  type TrainingBudgetTargetViewModel,
   type TrainingCompletionDurationViewModel,
+  type VocabularyTrainingScreenProps,
 } from '../../ui/index.ts'
 ```
 
-### 预计时长
+### 旧任务的预计时长
 
 `TaskDurationEstimateViewModel` 必须由 01 从 04 已计算结果映射：
 
@@ -628,6 +640,104 @@ const taskDurationEstimate: TaskDurationEstimateViewModel = {
 - 内容基线显示“内容估算”；个人历史显示“按你的近期速度”；
 - 组件读屏名同时包含“预计有效练习”、时长和 basis。
 
+### QA-011｜新预算任务的 15 分钟有效训练
+
+`LearningTask.trainingBudget` 存在时，它是完成条件，不能再把
+`durationEstimate` 当成入口时长。入口判别联合固定为：
+
+```ts
+type StartableTrainingTaskDurationViewModel =
+  | {
+      trainingBudget: TrainingBudgetTargetViewModel
+      durationEstimate?: never
+    }
+  | {
+      trainingBudget?: undefined
+      durationEstimate: TaskDurationEstimateViewModel
+    }
+```
+
+01 对同一真实任务在“今天”和“训练”两个入口使用同一映射：
+
+```ts
+const durationPresentation = task.trainingBudget
+  ? {
+      trainingBudget: {
+        targetEffectiveSeconds:
+          task.trainingBudget.targetEffectiveSeconds,
+      },
+    }
+  : {
+      durationEstimate: toTaskDurationEstimateViewModel(task),
+    }
+```
+
+新预算任务固定显示“15 分钟有效训练”；旧无预算任务继续显示已有内容估算或个人历史估算。
+不得同时提供 `trainingBudget` 和 `durationEstimate`，不得把个人历史速度用于缩短
+900 秒预算。推荐和任务可用性仍只来自 `PlanTaskAccess`，时长字段不参与权限判断。
+
+词汇、听力、口语训练页统一把上游预算快照映射为：
+
+```ts
+type TrainingBudgetProgressViewModel =
+  | {
+      status: 'running' | 'finish-current-item' | 'completed'
+      targetEffectiveSeconds: number
+      remainingEffectiveSeconds: number
+      completedItemCount: number
+    }
+  | {
+      status: 'content-exhausted'
+      targetEffectiveSeconds: number
+      remainingEffectiveSeconds: number
+      completedItemCount: number
+      contentExhausted: {
+        reason:
+          | 'no-eligible-content'
+          | 'all-eligible-content-recently-used'
+          | 'provider-failure'
+        description: string
+      }
+      retryAction: {
+        label: string
+        disabled?: boolean
+        loading?: boolean
+        disabledReason?: string
+      }
+    }
+```
+
+精确输入来源：
+
+| UI 字段 | 01 / 模块来源 | 约束 |
+| --- | --- | --- |
+| `targetEffectiveSeconds` | `LearningTask.trainingBudget.targetEffectiveSeconds` / `TaskExecutionState.training.targetEffectiveSeconds` | 原样复制；当前契约为 900 |
+| `remainingEffectiveSeconds` | `TaskExecutionState.training.remainingEffectiveSeconds` | 原样复制；UI 不扣秒 |
+| `status` | `TaskExecutionState.training.status` 或模块公开 budget status | 原样复制；UI 不从剩余秒数反推 |
+| `completedItemCount` | 模块公开 stream 的 `completedItemCount`，或 01 已形成的显式计数 | UI 不遍历内容、事件或 ID 集合求值 |
+| `contentExhausted.reason/description` | 模块的供应耗尽状态 | 描述必须说明题库暂时不足且任务未完成 |
+| `retryAction` | 01 / 06 / 07 / 08 的供应重试状态 | 忙碌时禁用，不能重复触发 |
+
+三个训练页面都接受 `onRetryTrainingContent?()` 并原样透传到统一
+`TrainingBudgetProgress`。生产中一旦传入 `status: "content-exhausted"`，01 / 模块必须
+同时提供真实重试回调；回调只请求上游重新供应，不选择下一题、不发布
+`item-completed` / `budget-completed`，也不把耗尽态改成完成态。
+
+状态文案固定：
+
+- `running`：有效训练进行中；
+- `finish-current-item`：时间已到，完成本题后结束；
+- `content-exhausted`：题库暂时不足，训练尚未完成，并显示上游说明与“重新获取题目”；
+- `completed`：有效训练目标已由运行时确认完成。
+
+`TrainingHeaderViewModel` 使用 `trainingBudget` 与 `durationEstimate` 的判别联合。新预算训练页
+传 `trainingBudget`；旧训练页继续传 `durationEstimate`。`TrainingCompletionDurationViewModel`
+对新预算任务额外传 `trainingBudget: { status: "completed", ... }`，随后仍用
+`actualDuration` 显示可信 timing-segments 真值。
+
+02 只把秒数格式化为 `15:00`、`12:22` 等可读时钟，不建立 interval，不读取
+`Date.now()` / `performance.now()`，不自行暂停、扣秒、选择题目或决定完成。
+
 ### 实际有效时长
 
 实际用时是判别联合，02 不接受一个无来源的裸数字：
@@ -660,8 +770,8 @@ duration、页面墙钟和 `legacy-event-duration` 都不能回退成实际有�
 />
 ```
 
-此组件只显示外部 `title`、`description`、实际有效时长和动作，不计算成绩、不保存事件、
-不决定路由。
+此组件只显示外部 `title`、`description`、可选的已完成预算快照、实际有效时长和动作，
+不计算成绩、不保存事件、不决定路由。
 
 ### 每日可信汇总
 

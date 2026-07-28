@@ -1,5 +1,6 @@
 import { useId } from 'react'
 import { Icon } from './icons.tsx'
+import { TrainingBudgetProgress } from './training-budget-surfaces.tsx'
 import {
   formatDurationEstimateBasis,
   formatEffectiveDuration,
@@ -150,6 +151,9 @@ export function TrainingCompletionDurationScreen({
         <span className="eyebrow">SESSION COMPLETE</span>
         <h1>{viewModel.title}</h1>
         <p>{viewModel.description}</p>
+        {viewModel.trainingBudget ? (
+          <TrainingBudgetProgress viewModel={viewModel.trainingBudget} />
+        ) : null}
         <ActualEffectiveDuration
           duration={viewModel.actualDuration}
         />

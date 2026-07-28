@@ -56,5 +56,12 @@ export interface TrainingCompletionDurationViewModel {
   readonly title: string
   readonly description: string
   readonly actualDuration: ActualEffectiveDurationViewModel
+  /**
+   * Optional completed budget snapshot. Required for new budget tasks and
+   * absent for legacy tasks.
+   */
+  readonly trainingBudget?: import('./training-budget-view-models.ts').TrainingBudgetProgressViewModel & {
+    readonly status: 'completed'
+  }
   readonly actionLabel: string
 }

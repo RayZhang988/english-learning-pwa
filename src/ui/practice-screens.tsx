@@ -26,6 +26,14 @@ interface TrainingActionViewModel {
   readonly loading?: boolean
 }
 
+export interface TrainingContentRetryCallbacks {
+  /**
+   * User intent only. The owning runtime decides whether and how to retry
+   * content supply; UI never selects the next item.
+   */
+  readonly onRetryTrainingContent?: () => void
+}
+
 export interface VocabularyScreenViewModel {
   readonly header: TrainingHeaderViewModel
   readonly instruction: string
@@ -39,22 +47,31 @@ export interface VocabularyScreenViewModel {
   readonly action: TrainingActionViewModel
 }
 
+export interface VocabularyTrainingScreenCallbacks
+  extends TrainingContentRetryCallbacks {
+  readonly onExit: () => void
+  readonly onSelect: (id: string) => void
+  readonly onAction: () => void
+}
+
+export interface VocabularyTrainingScreenProps
+  extends VocabularyTrainingScreenCallbacks {
+  readonly viewModel: VocabularyScreenViewModel
+}
+
 export function VocabularyTrainingScreen({
   viewModel,
   onExit,
   onSelect,
   onAction,
-}: {
-  readonly viewModel: VocabularyScreenViewModel
-  readonly onExit: () => void
-  readonly onSelect: (id: string) => void
-  readonly onAction: () => void
-}) {
+  onRetryTrainingContent,
+}: VocabularyTrainingScreenProps) {
   return (
     <TrainingScreen
       header={viewModel.header}
       exitLabel="退出词汇训练"
       onExit={onExit}
+      onRetryTrainingContent={onRetryTrainingContent}
       action={(
         <button
           className="primary-button"
@@ -119,7 +136,8 @@ export interface ListeningScreenViewModel {
   readonly action: TrainingActionViewModel
 }
 
-export interface ListeningTrainingScreenCallbacks {
+export interface ListeningTrainingScreenCallbacks
+  extends TrainingContentRetryCallbacks {
   readonly onExit: () => void
   readonly onToggleAudio: () => void
   readonly onPlaybackRateChange: (value: number) => void
@@ -143,12 +161,14 @@ export function ListeningTrainingScreen({
   onRepeatModeChange,
   onQuestionInput,
   onAction,
+  onRetryTrainingContent,
 }: ListeningTrainingScreenProps) {
   return (
     <TrainingScreen
       header={viewModel.header}
       exitLabel="退出听力训练"
       onExit={onExit}
+      onRetryTrainingContent={onRetryTrainingContent}
       actionLayout={
         viewModel.question.kind === 'keyword-dictation' ? 'input' : 'single'
       }
@@ -228,6 +248,20 @@ export interface SpeakingScreenViewModel {
   readonly secondaryActionLabel?: string
 }
 
+export interface SpeakingTrainingScreenCallbacks
+  extends TrainingContentRetryCallbacks {
+  readonly onExit: () => void
+  readonly onRecorderAction: () => void
+  readonly onPlayback?: () => void
+  readonly onAction: () => void
+  readonly onSecondaryAction?: () => void
+}
+
+export interface SpeakingTrainingScreenProps
+  extends SpeakingTrainingScreenCallbacks {
+  readonly viewModel: SpeakingScreenViewModel
+}
+
 export function SpeakingTrainingScreen({
   viewModel,
   onExit,
@@ -235,19 +269,14 @@ export function SpeakingTrainingScreen({
   onPlayback,
   onAction,
   onSecondaryAction,
-}: {
-  readonly viewModel: SpeakingScreenViewModel
-  readonly onExit: () => void
-  readonly onRecorderAction: () => void
-  readonly onPlayback?: () => void
-  readonly onAction: () => void
-  readonly onSecondaryAction?: () => void
-}) {
+  onRetryTrainingContent,
+}: SpeakingTrainingScreenProps) {
   return (
     <TrainingScreen
       header={viewModel.header}
       exitLabel="退出口语训练"
       onExit={onExit}
+      onRetryTrainingContent={onRetryTrainingContent}
       actionLayout="stacked"
       action={(
         <div className="training-action__stack">
