@@ -8,6 +8,7 @@ export {
 } from './ability-profile.ts'
 export {
   DEFAULT_DAILY_TARGET_SECONDS,
+  REQUIRED_TASK_EFFECTIVE_SECONDS,
   LEARNING_ENGINE_SCHEMA_VERSION,
   LEARNING_EVENT_SCHEMA_VERSION,
   MAX_CONTINUOUS_ACTIVE_MEDIA_SECONDS,
@@ -40,11 +41,21 @@ export type {
   LearningAbilityProfile,
   LearningEvent,
   LearningTask,
+  LearningTaskSupplyItem,
+  LearningTaskSupplyRequest,
+  LearningTaskSupplyResult,
   LearningTaskMode,
   LearningTimingPhase,
   LearningTimingSegmentReason,
   LearningTimingSegmentRecordedEvent,
   LearningTimingSegmentRecordedPayload,
+  LearningTrainingBudgetCompletedEvent,
+  LearningTrainingBudgetCompletedPayload,
+  LearningTrainingContentExhaustedEvent,
+  LearningTrainingContentExhaustedPayload,
+  LearningTrainingItemCompletedEvent,
+  LearningTrainingItemCompletedPayload,
+  LearningTrainingItemOutcome,
   LearningTaskPausedEvent,
   LearningTaskPausedPayload,
   LearningTaskSkippedEvent,
@@ -69,6 +80,10 @@ export type {
   StreakMetric,
   TaskExecutionState,
   TaskExecutionStatus,
+  TrainingTaskBudget,
+  TrainingTaskContentExhausted,
+  TrainingTaskProgress,
+  TrainingTaskProgressStatus,
   TaskCompletionKind,
   TaskDurationBaseline,
   TaskDurationEstimate,
@@ -128,6 +143,11 @@ export {
   getDurationProfileKey,
   recordTaskDurationSample,
 } from './timing.ts'
+export {
+  buildLearningTaskSupplyRequest,
+  initialTrainingTaskProgress,
+  remainingEffectiveSeconds,
+} from './training-budget.ts'
 export type {
   EstimateTaskDurationInput,
   TimingSegmentClassification,

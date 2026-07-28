@@ -18,6 +18,11 @@ import {
 } from './utils.ts'
 import { getPlanTaskAccess } from './task-access.ts'
 import { classifyTimingSegment } from './timing.ts'
+import {
+  appendCompletedStreamItem,
+  initialTrainingTaskProgress,
+  withBudgetAfterEffectiveTime,
+} from './training-budget.ts'
 
 export function createPlanProgress(
   plan: PlanProgress['plan'],
@@ -38,6 +43,7 @@ export function createPlanProgress(
       excludedSeconds: 0,
       effectiveTimeSource: null,
       skipCount: 0,
+      training: initialTrainingTaskProgress(task),
       startedAt: null,
       updatedAt: createdAt,
     })),
@@ -200,7 +206,10 @@ export function applyPlanEvent(
   if (
     (event.type === 'learning.task.started.v1' ||
       event.type === 'learning.attempt.completed.v1' ||
-      event.type === 'learning.timing.segment.recorded.v1') &&
+      event.type === 'learning.timing.segment.recorded.v1' ||
+      event.type === 'learning.training.item.completed.v1' ||
+      event.type === 'learning.training.content.exhausted.v1' ||
+      event.type === 'learning.training.budget.completed.v1') &&
     event.payload.mode !== execution.task.mode
   ) {
     throw new TypeError('Event mode does not match scheduled task')
@@ -251,6 +260,8 @@ export function applyPlanEvent(
     }
   } else if (event.type === 'learning.timing.segment.recorded.v1') {
     const classification = classifyTimingSegment(event.payload)
+    const effectiveSeconds =
+      execution.effectiveSeconds + classification.effectiveSeconds
     updated = {
       ...execution,
       status:
@@ -259,17 +270,80 @@ export function applyPlanEvent(
           : execution.status,
       spentSeconds:
         execution.spentSeconds + event.payload.elapsedSeconds,
-      effectiveSeconds:
-        execution.effectiveSeconds + classification.effectiveSeconds,
+      effectiveSeconds,
       timingSegmentCount: (execution.timingSegmentCount ?? 0) + 1,
       excludedSeconds:
         (execution.excludedSeconds ?? 0) +
         classification.excludedSeconds,
       effectiveTimeSource: 'timing-segments',
+      training: withBudgetAfterEffectiveTime(execution, effectiveSeconds),
       startedAt:
         classification.included
           ? execution.startedAt ?? event.payload.startedAt
           : execution.startedAt,
+      updatedAt: event.occurredAt,
+    }
+  } else if (event.type === 'learning.training.item.completed.v1') {
+    if (execution.training === undefined) {
+      throw new TypeError('Stream item event requires a training budget')
+    }
+    if (execution.training.status === 'content-exhausted') {
+      throw new TypeError('Cannot complete an item after content exhaustion')
+    }
+    updated = {
+      ...execution,
+      status: execution.status === 'pending' ? 'active' : execution.status,
+      training: appendCompletedStreamItem(
+        execution.training,
+        event.payload.item.itemId,
+        event.payload.nextSupplyCursor,
+      ),
+      updatedAt: event.occurredAt,
+    }
+  } else if (event.type === 'learning.training.content.exhausted.v1') {
+    if (execution.training === undefined) {
+      throw new TypeError('Content exhaustion event requires a training budget')
+    }
+    updated = {
+      ...execution,
+      status: 'blocked',
+      training: {
+        ...execution.training,
+        status: 'content-exhausted',
+        contentExhausted: {
+          requestId: event.payload.requestId,
+          cursor: event.payload.cursor,
+          reason: event.payload.reason,
+          occurredAt: event.occurredAt,
+        },
+      },
+      updatedAt: event.occurredAt,
+    }
+  } else if (event.type === 'learning.training.budget.completed.v1') {
+    if (execution.training === undefined) {
+      throw new TypeError('Budget completion event requires a training budget')
+    }
+    if (execution.training.status !== 'finish-current-item') {
+      throw new TypeError('Training budget has not reached its effective target')
+    }
+    if (
+      execution.training.completedItemIds.length !==
+        event.payload.completedItemCount ||
+      !execution.training.completedItemIds.includes(
+        event.payload.lastCompletedItemId,
+      )
+    ) {
+      throw new TypeError('Budget completion does not match completed stream items')
+    }
+    updated = {
+      ...execution,
+      status: 'completed',
+      completionKind: 'scored',
+      training: {
+        ...execution.training,
+        status: 'completed',
+        remainingEffectiveSeconds: 0,
+      },
       updatedAt: event.occurredAt,
     }
   } else {
@@ -278,27 +352,35 @@ export function applyPlanEvent(
     const legacyDuration = hasTimingSegments
       ? 0
       : Math.max(0, event.payload.durationSeconds)
+    const streamTask = execution.training !== undefined
     const legacyEffectiveDuration =
-      disposition === 'scored-completion' ? legacyDuration : 0
+      !streamTask && disposition === 'scored-completion' ? legacyDuration : 0
+    const effectiveSeconds = execution.effectiveSeconds + legacyEffectiveDuration
     updated = {
       ...execution,
       status:
-        disposition === 'retry-required' ? 'paused' : 'completed',
+        streamTask
+          ? 'active'
+          : disposition === 'retry-required'
+            ? 'paused'
+            : 'completed',
       completionKind:
-        disposition === 'scored-completion'
+        streamTask
+          ? null
+          : disposition === 'scored-completion'
           ? 'scored'
           : disposition === 'unscorable-practice-completion'
             ? 'unscorable-practice'
             : null,
       spentSeconds:
         execution.spentSeconds + legacyDuration,
-      effectiveSeconds:
-        execution.effectiveSeconds + legacyEffectiveDuration,
+      effectiveSeconds,
       effectiveTimeSource: hasTimingSegments
         ? 'timing-segments'
         : legacyEffectiveDuration > 0
           ? 'legacy-event-duration'
           : execution.effectiveTimeSource ?? null,
+      training: withBudgetAfterEffectiveTime(execution, effectiveSeconds),
       updatedAt: event.occurredAt,
     }
   }
@@ -338,6 +420,16 @@ export function getResumeDecision(
     )
   ) {
     throw new TypeError('PlanProgress contains invalid task data')
+  }
+  if (progress.tasks.some((task) => task.training?.status === 'content-exhausted')) {
+    return {
+      schemaVersion: 1,
+      action: 'resume-plan',
+      nextTaskId: null,
+      recommendedTaskId: null,
+      carryOverTasks: [],
+      reason: 'content-exhausted',
+    }
   }
   if (taskAccess.recommendedTaskId === null) {
     return {

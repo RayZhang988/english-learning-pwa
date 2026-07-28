@@ -20,6 +20,8 @@ export type LearningAbilityProfile = AnyAbilityProfile
 export const LEARNING_ENGINE_SCHEMA_VERSION = 1 as const
 export const LEARNING_EVENT_SCHEMA_VERSION = 1 as const
 export const DEFAULT_DAILY_TARGET_SECONDS = 45 * 60
+/** Every required daily domain is an effective-practice stream of 15 minutes. */
+export const REQUIRED_TASK_EFFECTIVE_SECONDS = 15 * 60
 export const MINIMUM_DAILY_BUDGET_SECONDS = 5 * 60
 export const MAX_INTERACTION_IDLE_SECONDS = 45 as const
 export const MAX_CONTINUOUS_ACTIVE_MEDIA_SECONDS = 15 * 60
@@ -139,11 +141,65 @@ export interface LearningTask {
    * `estimatedSeconds`.
    */
   readonly durationEstimate?: TaskDurationEstimate
+  /**
+   * A required effective-practice budget, separate from the content estimate.
+   * It is absent only on plans persisted before QA-011 and those plans retain
+   * their legacy completion semantics.
+   */
+  readonly trainingBudget?: TrainingTaskBudget
   readonly required: boolean
   readonly dueAt: string | null
   readonly skipLimit: number
   readonly tags: readonly string[]
 }
+
+export interface TrainingTaskBudget {
+  readonly schemaVersion: 1
+  readonly targetEffectiveSeconds: typeof REQUIRED_TASK_EFFECTIVE_SECONDS
+}
+
+/** A content-agnostic pointer. 04 never interprets the item itself. */
+export type LearningTaskSupplyItem = {
+  readonly itemId: string
+  readonly learningUnitId: string
+  readonly contentRef: string
+  readonly difficultyLevel: number
+  readonly tags: readonly string[]
+} & { readonly [key: string]: PortableData }
+
+export interface LearningTaskSupplyRequest {
+  readonly schemaVersion: 1
+  readonly requestId: string
+  readonly planId: string
+  readonly taskId: string
+  readonly domain: AbilityDomain
+  readonly targetModuleId: TrainingModuleId
+  readonly mode: LearningTaskMode
+  readonly targetDifficulty: number
+  /** Opaque provider cursor restored exactly as last acknowledged. */
+  readonly cursor: string | null
+  /** Includes completed stream items, so providers can avoid short repeats. */
+  readonly excludeItemIds: readonly string[]
+  readonly reason: 'initial' | 'continue-after-item'
+}
+
+export type LearningTaskSupplyResult =
+  | {
+      readonly schemaVersion: 1
+      readonly requestId: string
+      readonly status: 'item'
+      readonly item: LearningTaskSupplyItem
+      readonly nextCursor: string | null
+    }
+  | {
+      readonly schemaVersion: 1
+      readonly requestId: string
+      readonly status: 'content-exhausted'
+      readonly reason:
+        | 'no-eligible-content'
+        | 'all-eligible-content-recently-used'
+        | 'provider-failure'
+    }
 
 export interface DomainAllocation {
   readonly domain: AbilityDomain
@@ -403,8 +459,36 @@ export interface TaskExecutionState {
     | 'legacy-event-duration'
     | null
   readonly skipCount: number
+  /** Additive state for a required continuous-training task. */
+  readonly training?: TrainingTaskProgress
   readonly startedAt: string | null
   readonly updatedAt: string
+}
+
+export type TrainingTaskProgressStatus =
+  | 'running'
+  | 'finish-current-item'
+  | 'completed'
+  | 'content-exhausted'
+
+export interface TrainingTaskContentExhausted {
+  readonly requestId: string
+  readonly cursor: string | null
+  readonly reason:
+    | 'no-eligible-content'
+    | 'all-eligible-content-recently-used'
+    | 'provider-failure'
+  readonly occurredAt: string
+}
+
+export interface TrainingTaskProgress {
+  readonly schemaVersion: 1
+  readonly targetEffectiveSeconds: typeof REQUIRED_TASK_EFFECTIVE_SECONDS
+  readonly remainingEffectiveSeconds: number
+  readonly status: TrainingTaskProgressStatus
+  readonly completedItemIds: readonly string[]
+  readonly nextSupplyCursor: string | null
+  readonly contentExhausted: TrainingTaskContentExhausted | null
 }
 
 export interface PlanProgress {
@@ -450,6 +534,7 @@ export interface ResumeDecision {
   readonly reason:
     | 'same-day-incomplete'
     | 'cross-day-carry-over'
+    | 'content-exhausted'
     | 'plan-complete'
     | 'no-incomplete-tasks'
 }
@@ -525,6 +610,10 @@ export type LearningTimingSegmentReason =
   | 'network-wait'
   | 'media-loading'
 
+export type LearningTrainingItemOutcome =
+  | 'scored'
+  | 'unscorable-practice'
+
 type LearningEventBasePayload = {
   readonly planId: string
   readonly taskId: string
@@ -579,6 +668,30 @@ export type LearningTimingSegmentRecordedPayload =
     readonly idleThresholdSeconds: typeof MAX_INTERACTION_IDLE_SECONDS
   }
 
+export type LearningTrainingItemCompletedPayload =
+  LearningEventBasePayload & {
+    readonly mode: LearningTaskMode
+    readonly item: LearningTaskSupplyItem
+    readonly requestId: string
+    readonly nextSupplyCursor: string | null
+    readonly outcome: LearningTrainingItemOutcome
+  }
+
+export type LearningTrainingContentExhaustedPayload =
+  LearningEventBasePayload & {
+    readonly mode: LearningTaskMode
+    readonly requestId: string
+    readonly cursor: string | null
+    readonly reason: TrainingTaskContentExhausted['reason']
+  }
+
+export type LearningTrainingBudgetCompletedPayload =
+  LearningEventBasePayload & {
+    readonly mode: LearningTaskMode
+    readonly lastCompletedItemId: string
+    readonly completedItemCount: number
+  }
+
 type LearningPlatformEvent<
   TType extends string,
   TPayload extends PortableData,
@@ -609,12 +722,30 @@ export type LearningTimingSegmentRecordedEvent = LearningPlatformEvent<
   LearningTimingSegmentRecordedPayload
 >
 
+export type LearningTrainingItemCompletedEvent = LearningPlatformEvent<
+  'learning.training.item.completed.v1',
+  LearningTrainingItemCompletedPayload
+>
+
+export type LearningTrainingContentExhaustedEvent = LearningPlatformEvent<
+  'learning.training.content.exhausted.v1',
+  LearningTrainingContentExhaustedPayload
+>
+
+export type LearningTrainingBudgetCompletedEvent = LearningPlatformEvent<
+  'learning.training.budget.completed.v1',
+  LearningTrainingBudgetCompletedPayload
+>
+
 export type LearningEvent =
   | LearningTaskStartedEvent
   | LearningTaskPausedEvent
   | LearningTaskSkippedEvent
   | LearningAttemptCompletedEvent
   | LearningTimingSegmentRecordedEvent
+  | LearningTrainingItemCompletedEvent
+  | LearningTrainingContentExhaustedEvent
+  | LearningTrainingBudgetCompletedEvent
 
 export interface DailyPlanInput {
   readonly planId: string

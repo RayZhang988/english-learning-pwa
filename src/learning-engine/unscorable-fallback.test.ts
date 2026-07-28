@@ -76,7 +76,15 @@ function threeTaskPlan() {
       learningCandidate('vocabulary', 1),
     ],
   })
-  return { engineState, plan }
+  // Verify QA-002 compatibility with plans persisted before the required
+  // continuous-training budget was introduced.
+  return {
+    engineState,
+    plan: {
+      ...plan,
+      tasks: plan.tasks.map((task) => ({ ...task, trainingBudget: undefined })),
+    },
+  }
 }
 
 describe('unscorable speaking fallback completion', () => {
@@ -91,7 +99,7 @@ describe('unscorable speaking fallback completion', () => {
       const { plan } = threeTaskPlan()
       expect(
         resolveAttemptPlanDisposition(
-          unscorableEvent(plan.tasks[0], { failureCategory }),
+          unscorableEvent(plan.tasks.find((task) => task.domain === 'speaking')!, { failureCategory }),
         ),
       ).toBe('unscorable-practice-completion')
     },
@@ -99,7 +107,7 @@ describe('unscorable speaking fallback completion', () => {
 
   it('ends the plan task without creating mastery evidence or a skip', () => {
     const { engineState, plan } = threeTaskPlan()
-    const speakingTask = plan.tasks[0]
+    const speakingTask = plan.tasks.find((task) => task.domain === 'speaking')!
     expect(speakingTask.domain).toBe('speaking')
     const event = parseLearningEvent(
       unscorableEvent(speakingTask),
@@ -123,7 +131,7 @@ describe('unscorable speaking fallback completion', () => {
       plan.generatedAt,
     )
     const updated = applyPlanEvent(initialProgress, event)
-    const speakingExecution = updated.tasks[0]
+    const speakingExecution = updated.tasks.find((entry) => entry.task.taskId === speakingTask.taskId)!
     expect(speakingExecution).toMatchObject({
       status: 'completed',
       completionKind: 'unscorable-practice',
@@ -143,7 +151,7 @@ describe('unscorable speaking fallback completion', () => {
     const sameDayResume = getResumeDecision(updated, '2026-07-07')
     expect(sameDayResume).toMatchObject({
       action: 'resume-plan',
-      nextTaskId: updated.tasks[1].task.taskId,
+      nextTaskId: updated.tasks.find((entry) => entry.status !== 'completed')!.task.taskId,
     })
     expect(sameDayResume.nextTaskId).not.toBe(speakingTask.taskId)
     expect(
@@ -184,7 +192,7 @@ describe('unscorable speaking fallback completion', () => {
 
   it('keeps unsupported speaking content resumable', () => {
     const { plan } = threeTaskPlan()
-    const speakingTask = plan.tasks[0]
+    const speakingTask = plan.tasks.find((task) => task.domain === 'speaking')!
     const event = unscorableEvent(speakingTask, {
       eventId: 'speaking-content-unavailable',
       failureCategory: 'content',
@@ -195,7 +203,7 @@ describe('unscorable speaking fallback completion', () => {
       createPlanProgress(plan, plan.generatedAt),
       event,
     )
-    expect(updated.tasks[0]).toMatchObject({
+    expect(updated.tasks.find((entry) => entry.task.taskId === speakingTask.taskId)).toMatchObject({
       status: 'paused',
       completionKind: null,
     })

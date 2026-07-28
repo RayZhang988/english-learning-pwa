@@ -73,10 +73,9 @@ active → paused → blocked → retry → carry-over → due review → 其余
 
 ### 三种时间不能混用
 
-- `DailyPlan.targetSeconds`：用户当天可用的计划目标，默认 2700 秒。它只用于任务选择
-  和未填满预算统计。
-- `DailyPlan.plannedSeconds` / `DomainAllocation.plannedSeconds`：已选任务的
-  `estimatedSeconds` 之和，是计划预算统计，不是实际学习时间。
+- `DailyPlan.targetSeconds`：每日三个必做专项的有效训练总目标，固定 2700 秒。
+- `DailyPlan.plannedSeconds` / `DomainAllocation.plannedSeconds`：为兼容 v1，仍是首个
+  种子内容单元的 `estimatedSeconds` 汇总，不能用作完成条件或实际学习时间。
 - `LearningTask.estimatedSeconds`：开始任务前展示的预计**有效练习**时间。调度器不再
   为了凑满 45 分钟改写它；预算有缺口时返回 `unfilledSeconds`。
 - `TaskExecutionState.effectiveSeconds`：经片段规则确认的前台有效练习时间，与是否产生
@@ -128,6 +127,26 @@ contentEstimate = clamp(raw, minimumSeconds, maximumSeconds)
 `LearningTask.durationEstimate` 同时输出 `estimateSeconds`、`sampleCount`、`basis`、
 `confidence`、`reasonableRangeSeconds`、`contentType`、`profileKey` 和基线来源。
 该字段是 additive v1；旧持久化任务缺失时仍使用原 `estimatedSeconds`。
+
+### QA-011：15 分钟连续题流
+
+新生成的每个词汇、听力、口语 `LearningTask` 都带有
+`trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 }`。这是完成条件，
+不是 `durationEstimate`，也不会被个人速度历史缩短。旧 active plan 缺少该字段时按旧
+完成语义恢复，绝不在刷新时悄悄把已开始单元改为 15 分钟流。
+
+`PlanProgress.tasks[].training` 是可持久化恢复状态：它保存剩余有效秒数、已完成 item ID、
+不透明 `nextSupplyCursor` 和终态。有效片段累计到 900 秒时，状态从 `running` 变为
+`finish-current-item`，剩余显示为 0；当前播放、作答、反馈、录音或回放必须自然结束。
+随后模块先提交 `learning.training.item.completed.v1`，再提交
+`learning.training.budget.completed.v1`，04 才把任务标为 `completed`。因此普通
+`attempt.completed` 不再能让带预算任务在第 6 题提前结束。
+
+训练模块通过 `buildLearningTaskSupplyRequest(execution)` 请求下一题。请求 ID 由 task ID、
+已完成 item 数和 cursor 确定，刷新后保持不变；请求包含已完成 item ID，供 05 规避短期
+重复。05 返回一个不透明 `LearningTaskSupplyItem` 或 `content-exhausted`。后者必须发布
+`learning.training.content.exhausted.v1`；04 将任务留在 `blocked/content-exhausted`，
+不增加完成数、不形成掌握证据，也不伪造每日完成。02/01 应显示并恢复这个真实错误。
 
 ### 可恢复有效计时片段
 
@@ -239,7 +258,7 @@ contentEstimate = clamp(raw, minimumSeconds, maximumSeconds)
 - `taskCompleted: true` 表示产生评分证据的正常完成。口语模块在全部提示均无法识别、
   但用户已经走完 08 定义的录音/回放或无录音降级流程时，仍合法发布
   `result: 'unscorable'`、`taskCompleted: false`。
-- 上述口语事件在计划层形成 `status: 'completed'`、
+- 对不带 `trainingBudget` 的旧计划，上述口语事件在计划层形成 `status: 'completed'`、
   `completionKind: 'unscorable-practice'`。它是“练习流程已结束、没有评分证据”，
   不是 `scored`，也不是 `user-skipped`。其他未完成任务始终保持可启动。
 - 06/07 的不可评分事件以及口语的 `content` 故障默认保持 `paused`，
@@ -264,12 +283,17 @@ contentEstimate = clamp(raw, minimumSeconds, maximumSeconds)
 - `learning.task.skipped.v1`
 - `learning.attempt.completed.v1`
 - `learning.timing.segment.recorded.v1`
+- `learning.training.item.completed.v1`
+- `learning.training.content.exhausted.v1`
+- `learning.training.budget.completed.v1`
 
 事件时间必须是 ISO 8601 UTC；payload 必须带本地日期、计划、任务、内容引用和专项。
 可评分尝试还必须提供表现、证据质量、辅助程度和错误标签。模块内部原始答案、录音、
 识别音频和题型状态不进入学习引擎。
 
-原 attempt v1 兼容规则不修改既有字段；R3 通过独立 timing v1 事件增加真实计时：
+原 attempt v1 兼容规则不修改既有字段；R3 通过独立 timing v1 事件增加真实计时。对于
+带 `trainingBudget` 的新任务，attempt 是单题学习证据而非任务终态；计划终态只能由预算
+完成事件产生：
 
 - `resolveAttemptPlanDisposition()` 将 `scored + taskCompleted` 解释为正常完成；
 - 仅当来源、专项和目标模块均为 `speaking`，结果为 `unscorable`，且失败类别为
@@ -290,11 +314,12 @@ contentEstimate = clamp(raw, minimumSeconds, maximumSeconds)
 
 | 接收任务 | 只使用的公开契约 | 禁止自行改写的语义 |
 | --- | --- | --- |
-| 02 | `DailyPlan`、`PlanProgress`、`PlanTaskAccess`、`ProgressSnapshot`、`ResumeDecision`、`ReassessmentRecommendation` | 不得把推荐 taskId 改成唯一入口；不得自行生成“尚未轮到” |
-| 05 | `LearningCandidate` | 候选单元只声明内容事实，不预排用户每天的主课程 |
-| 06 | `LearningTask` 中 `targetModuleId === 'vocabulary'` 的任务；五类 `LearningEvent` | 不在词汇模块内另算掌握度或全局复习时间；长时间无操作必须切出 active 片段 |
-| 07 | `LearningTask` 中 `targetModuleId === 'listening'` 的任务；五类 `LearningEvent` | 主动听音可计 effective；媒体加载和后台等待不可计入 |
-| 08 | `LearningTask` 中 `targetModuleId === 'speaking'` 的任务；五类 `LearningEvent` | 录音/回放可计 effective；权限/识别等待不可计入；不可评分不得压低口语能力 |
+| 02 | `DailyPlan`、`PlanProgress.tasks[].training`、`PlanTaskAccess`、`ProgressSnapshot`、`ResumeDecision` | 展示剩余有效秒数、已完成题数和 content-exhausted；不得把推荐 taskId 改成唯一入口 |
+| 05 | `LearningCandidate`、`LearningTaskSupplyRequest`、`LearningTaskSupplyResult` | 供应一个符合 domain/mode/difficulty 的新 item；用 cursor 和 excludeItemIds 去重；耗尽必须诚实返回错误 |
+| 06 | `LearningTask`、`buildLearningTaskSupplyRequest()`、三种 training v1 事件 | 每题结束后续供；900 秒到达后只完成当前题；长时间无操作必须切出 active 片段 |
+| 07 | `LearningTask`、`buildLearningTaskSupplyRequest()`、三种 training v1 事件 | 主动听音可计 effective；媒体加载和后台等待不可计入；不得截断正在播放 |
+| 08 | `LearningTask`、`buildLearningTaskSupplyRequest()`、三种 training v1 事件 | 录音/回放可计 effective；权限/识别等待不可计入；不可评分 item 仍可推进预算 |
+| 01 | `parseLearningEvent()`、`applyPlanEvent()`、公开 supply/budget 类型 | 串行保存 item、timing、预算完成与 cursor；刷新后不得重复累计或重新供应已完成 item |
 
 建议集成顺序：
 

@@ -17,6 +17,9 @@ const EVENT_TYPES = [
   'learning.task.skipped.v1',
   'learning.attempt.completed.v1',
   'learning.timing.segment.recorded.v1',
+  'learning.training.item.completed.v1',
+  'learning.training.content.exhausted.v1',
+  'learning.training.budget.completed.v1',
 ] as const
 
 const MODES = ['learn', 'calibration', 'review', 'retry'] as const
@@ -80,6 +83,11 @@ const ERROR_TAGS: readonly StandardErrorTag[] = [
   'timeout',
   'other',
 ]
+const CONTENT_EXHAUSTION_REASONS = [
+  'no-eligible-content',
+  'all-eligible-content-recently-used',
+  'provider-failure',
+] as const
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return (
@@ -170,6 +178,20 @@ function validateBase(
   assertLocalDate(requireString(payload, 'localDate'))
 }
 
+function validateStreamItem(payload: Record<string, unknown>): void {
+  if (!isRecord(payload.item)) {
+    throw new TypeError('item must be an object')
+  }
+  requireString(payload.item, 'itemId')
+  requireString(payload.item, 'learningUnitId')
+  requireString(payload.item, 'contentRef')
+  const difficultyLevel = requireNumber(payload.item, 'difficultyLevel')
+  if (difficultyLevel < 0 || difficultyLevel > 12) {
+    throw new RangeError('item.difficultyLevel must be between 0 and 12')
+  }
+  requireStringArray(payload.item, 'tags')
+}
+
 export function parseLearningEvent(event: PlatformEvent): LearningEvent {
   if (
     !EVENT_TYPES.includes(
@@ -258,7 +280,7 @@ export function parseLearningEvent(event: PlatformEvent): LearningEvent {
       throw new TypeError('errorTags contains an unsupported tag')
     }
     requireStringArray(payload, 'contentTags')
-  } else {
+  } else if (event.type === 'learning.timing.segment.recorded.v1') {
     requireEnum(payload, 'mode', MODES)
     requireEnum(payload, 'phase', TIMING_PHASES)
     requireEnum(payload, 'reason', TIMING_REASONS)
@@ -273,6 +295,28 @@ export function parseLearningEvent(event: PlatformEvent): LearningEvent {
         { type: 'learning.timing.segment.recorded.v1' }
       >['payload'],
     )
+  } else if (event.type === 'learning.training.item.completed.v1') {
+    requireEnum(payload, 'mode', MODES)
+    validateStreamItem(payload)
+    requireString(payload, 'requestId')
+    if (payload.nextSupplyCursor !== null && typeof payload.nextSupplyCursor !== 'string') {
+      throw new TypeError('nextSupplyCursor must be a string or null')
+    }
+    requireEnum(payload, 'outcome', ['scored', 'unscorable-practice'])
+  } else if (event.type === 'learning.training.content.exhausted.v1') {
+    requireEnum(payload, 'mode', MODES)
+    requireString(payload, 'requestId')
+    if (payload.cursor !== null && typeof payload.cursor !== 'string') {
+      throw new TypeError('cursor must be a string or null')
+    }
+    requireEnum(payload, 'reason', CONTENT_EXHAUSTION_REASONS)
+  } else {
+    requireEnum(payload, 'mode', MODES)
+    requireString(payload, 'lastCompletedItemId')
+    const completedItemCount = requireNumber(payload, 'completedItemCount')
+    if (!Number.isInteger(completedItemCount) || completedItemCount <= 0) {
+      throw new RangeError('completedItemCount must be a positive integer')
+    }
   }
 
   return event as unknown as LearningEvent

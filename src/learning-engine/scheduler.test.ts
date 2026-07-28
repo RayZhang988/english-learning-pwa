@@ -54,7 +54,7 @@ describe('daily scheduler', () => {
     ).toBe(true)
   })
 
-  it('assigns more time to a materially weaker domain without starving the others', () => {
+  it('uses weakness for level selection while every required domain keeps a 15-minute budget', () => {
     const progress = createInitialProgressState(
       abilityProfile(),
       '2026-07-01T00:00:00.000Z',
@@ -100,11 +100,10 @@ describe('daily scheduler', () => {
     expect(plan.allocations.listening.weaknessWeight).toBeGreaterThan(
       plan.allocations.vocabulary.weaknessWeight,
     )
-    expect(plan.allocations.listening.plannedSeconds).toBeGreaterThan(
-      plan.allocations.vocabulary.plannedSeconds,
-    )
+    expect(plan.allocations.listening.plannedSeconds).toBeGreaterThan(0)
     expect(plan.allocations.vocabulary.plannedSeconds).toBeGreaterThan(0)
     expect(plan.allocations.speaking.plannedSeconds).toBeGreaterThan(0)
+    expect(plan.tasks.every((task) => task.trainingBudget?.targetEffectiveSeconds === 900)).toBe(true)
   })
 
   it('puts overdue work first after missed days', () => {
@@ -147,7 +146,7 @@ describe('daily scheduler', () => {
     expect(plan.tasks[0].required).toBe(true)
   })
 
-  it('honors a short day instead of pretending to schedule 45 minutes', () => {
+  it('does not let a legacy availableSeconds input shorten required 15-minute streams', () => {
     const progress = createInitialProgressState(
       abilityProfile(),
       '2026-07-01T00:00:00.000Z',
@@ -162,12 +161,11 @@ describe('daily scheduler', () => {
       candidates: candidatesPerDomain(10),
     })
 
-    expect(plan.targetSeconds).toBe(600)
-    expect(plan.plannedSeconds).toBeLessThanOrEqual(690)
-    expect(plan.warnings).toContain('short-day-budget')
-    expect(new Set(plan.tasks.map((task) => task.learningUnitId)).size).toBe(
-      plan.tasks.length,
-    )
+    expect(plan.targetSeconds).toBe(2700)
+    expect(plan.plannedSeconds).toBe(540)
+    expect(plan.warnings).toContain('legacy-available-seconds-ignored')
+    expect(plan.tasks).toHaveLength(3)
+    expect(plan.tasks.every((task) => task.trainingBudget?.targetEffectiveSeconds === 900)).toBe(true)
   })
 
   it('returns an empty partial result when no eligible content exists', () => {
@@ -243,7 +241,7 @@ describe('daily scheduler', () => {
       ],
     })
 
-    expect(plan.targetSeconds).toBe(600)
+    expect(plan.targetSeconds).toBe(2700)
     expect(plan.tasks[0]).toMatchObject({
       estimatedSeconds: 120,
       durationEstimate: {
@@ -253,6 +251,6 @@ describe('daily scheduler', () => {
       },
     })
     expect(plan.plannedSeconds).toBe(120)
-    expect(plan.unfilledSeconds).toBe(480)
+    expect(plan.unfilledSeconds).toBe(2580)
   })
 })

@@ -14,6 +14,7 @@ import type {
 import {
   DEFAULT_DAILY_TARGET_SECONDS,
   MINIMUM_DAILY_BUDGET_SECONDS,
+  REQUIRED_TASK_EFFECTIVE_SECONDS,
 } from './contracts.ts'
 import { buildProgressSnapshot } from './progress.ts'
 import { isRetryDue, isReviewDue } from './review.ts'
@@ -141,19 +142,6 @@ function calculateTargetDifficulties(
       return [domain, round(clamp(state.currentLevel + adjustment, 0, 12), 2)]
     }),
   ) as Readonly<Record<AbilityDomain, number>>
-}
-
-function targetSecondsByDomain(
-  budgetSeconds: number,
-  weights: Readonly<Record<AbilityDomain, number>>,
-): Readonly<Record<AbilityDomain, number>> {
-  const vocabulary = Math.floor(budgetSeconds * weights.vocabulary)
-  const listening = Math.floor(budgetSeconds * weights.listening)
-  return {
-    vocabulary,
-    listening,
-    speaking: budgetSeconds - vocabulary - listening,
-  }
 }
 
 function taskSeedFromReview(
@@ -302,63 +290,6 @@ function validateInput(input: DailyPlanInput): number {
   return Math.round(budget)
 }
 
-function fitsBudget(
-  plannedSeconds: number,
-  estimatedSeconds: number,
-  budgetSeconds: number,
-): boolean {
-  return plannedSeconds + estimatedSeconds <= budgetSeconds + 90
-}
-
-function selectNewSeed(
-  candidates: readonly PreparedCandidate[],
-  selectedIds: ReadonlySet<string>,
-  plannedByDomain: Readonly<Record<AbilityDomain, number>>,
-  targetByDomain: Readonly<Record<AbilityDomain, number>>,
-  targetDifficulties: Readonly<Record<AbilityDomain, number>>,
-  weaknessWeights: Readonly<Record<AbilityDomain, number>>,
-  plannedSeconds: number,
-  budgetSeconds: number,
-): PreparedCandidate | undefined {
-  return candidates
-    .filter(
-      ({ candidate, durationEstimate }) =>
-        candidate.prerequisitesMet &&
-        !selectedIds.has(candidate.learningUnitId) &&
-        fitsBudget(
-          plannedSeconds,
-          durationEstimate.estimateSeconds,
-          budgetSeconds,
-        ),
-    )
-    .map((prepared) => {
-      const { candidate } = prepared
-      const deficit =
-        targetByDomain[candidate.domain] -
-        plannedByDomain[candidate.domain]
-      const normalizedDeficit =
-        deficit / Math.max(1, targetByDomain[candidate.domain])
-      const difficultyDistance = Math.abs(
-        candidate.difficultyLevel -
-          targetDifficulties[candidate.domain],
-      )
-      const score =
-        normalizedDeficit * 3 +
-        weaknessWeights[candidate.domain] * 2 -
-        difficultyDistance * 0.35
-      return { prepared, score }
-    })
-    .sort(
-      (left, right) =>
-        right.score - left.score ||
-        left.prepared.durationEstimate.estimateSeconds -
-          right.prepared.durationEstimate.estimateSeconds ||
-        left.prepared.candidate.learningUnitId.localeCompare(
-          right.prepared.candidate.learningUnitId,
-        ),
-    )[0]?.prepared
-}
-
 function materializeTasks(
   planId: string,
   seeds: readonly TaskSeed[],
@@ -377,6 +308,10 @@ function materializeTasks(
     difficultyLevel: seed.difficultyLevel,
     estimatedSeconds: seed.estimatedSeconds,
     durationEstimate: seed.durationEstimate,
+    trainingBudget: {
+      schemaVersion: 1,
+      targetEffectiveSeconds: REQUIRED_TASK_EFFECTIVE_SECONDS,
+    },
     required: seed.required,
     dueAt: seed.dueAt,
     skipLimit: seed.skipLimit,
@@ -385,16 +320,21 @@ function materializeTasks(
 }
 
 export function generateDailyPlan(input: DailyPlanInput): DailyPlan {
-  const budgetSeconds = validateInput(input)
+  validateInput(input)
+  // `availableSeconds` was a legacy scheduling cap. Required daily streams
+  // are now always three independent 15-minute effective-practice budgets.
+  const budgetSeconds = DEFAULT_DAILY_TARGET_SECONDS
   const weaknessWeights = calculateWeaknessWeights(input.progress)
   const targetDifficulties = calculateTargetDifficulties(input)
-  const targetByDomain = targetSecondsByDomain(
-    budgetSeconds,
-    weaknessWeights,
-  )
+  const targetByDomain = Object.fromEntries(
+    ABILITY_DOMAINS.map((domain) => [
+      domain,
+      REQUIRED_TASK_EFFECTIVE_SECONDS,
+    ]),
+  ) as Readonly<Record<AbilityDomain, number>>
   const warnings: string[] = []
-  if (budgetSeconds < DEFAULT_DAILY_TARGET_SECONDS) {
-    warnings.push('short-day-budget')
+  if (input.availableSeconds !== undefined && input.availableSeconds !== budgetSeconds) {
+    warnings.push('legacy-available-seconds-ignored')
   }
 
   const retrySeeds = Object.values(input.reviewItems)
@@ -418,43 +358,11 @@ export function generateDailyPlan(input: DailyPlanInput): DailyPlan {
     )
     .map((item) => taskSeedFromReview(item, 'review', input.progress))
 
-  const mandatoryCap = Math.round(
-    budgetSeconds * (budgetSeconds <= 15 * 60 ? 0.75 : 0.55),
-  )
   const selectedSeeds: TaskSeed[] = []
-  const selectedIds = new Set<string>()
-  let plannedSeconds = 0
   const plannedByDomain: Record<AbilityDomain, number> = {
     vocabulary: 0,
     listening: 0,
     speaking: 0,
-  }
-
-  for (const seed of [...retrySeeds, ...carrySeeds, ...dueReviewSeeds]) {
-    if (selectedIds.has(seed.learningUnitId)) {
-      continue
-    }
-    const isStrictPriority = seed.mode === 'retry'
-    if (
-      !fitsBudget(plannedSeconds, seed.estimatedSeconds, budgetSeconds) ||
-      (!isStrictPriority &&
-        plannedSeconds + seed.estimatedSeconds > mandatoryCap)
-    ) {
-      continue
-    }
-    selectedSeeds.push(seed)
-    selectedIds.add(seed.learningUnitId)
-    plannedSeconds += seed.estimatedSeconds
-    plannedByDomain[seed.domain] += seed.estimatedSeconds
-  }
-
-  const mandatoryCount = new Set(
-    [...retrySeeds, ...carrySeeds, ...dueReviewSeeds].map(
-      (seed) => seed.learningUnitId,
-    ),
-  ).size
-  if (selectedSeeds.length < mandatoryCount) {
-    warnings.push('review-or-carry-over-backlog-truncated')
   }
 
   const knownReviewIds = new Set(
@@ -465,29 +373,50 @@ export function generateDailyPlan(input: DailyPlanInput): DailyPlan {
       (candidate) => !knownReviewIds.has(candidate.learningUnitId),
     )
     .map((candidate) => prepareCandidate(candidate, input.progress))
-  while (plannedSeconds < budgetSeconds) {
-    const next = selectNewSeed(
-      newCandidates,
-      selectedIds,
-      plannedByDomain,
-      targetByDomain,
-      targetDifficulties,
-      weaknessWeights,
-      plannedSeconds,
-      budgetSeconds,
+  for (const domain of ABILITY_DOMAINS) {
+    const priority = [...retrySeeds, ...carrySeeds, ...dueReviewSeeds].find(
+      (seed) => seed.domain === domain,
     )
-    if (next === undefined) {
-      break
+    const selected =
+      priority ??
+      newCandidates
+        .filter(
+          ({ candidate }) =>
+            candidate.domain === domain && candidate.prerequisitesMet,
+        )
+        .map((prepared) => ({
+          prepared,
+          distance: Math.abs(
+            prepared.candidate.difficultyLevel - targetDifficulties[domain],
+          ),
+        }))
+        .sort(
+          (left, right) =>
+            left.distance - right.distance ||
+            right.prepared.candidate.difficultyLevel -
+              left.prepared.candidate.difficultyLevel ||
+            left.prepared.candidate.learningUnitId.localeCompare(
+              right.prepared.candidate.learningUnitId,
+            ),
+        )[0]?.prepared
+    if (selected === undefined) {
+      continue
     }
-    const seed = taskSeedFromCandidate(next)
+    const seed = 'candidate' in selected
+      ? taskSeedFromCandidate(selected)
+      : selected
     selectedSeeds.push(seed)
-    selectedIds.add(seed.learningUnitId)
-    plannedSeconds += seed.estimatedSeconds
-    plannedByDomain[seed.domain] += seed.estimatedSeconds
+    plannedByDomain[domain] = seed.estimatedSeconds
   }
 
-  const unfilledSeconds = Math.max(0, budgetSeconds - plannedSeconds)
-  if (unfilledSeconds > 90) {
+  // Retain the v1 reporting meaning: this is the sum of content estimates,
+  // not the required stream completion budget (which lives on each task).
+  const plannedSeconds = selectedSeeds.reduce(
+    (total, seed) => total + seed.estimatedSeconds,
+    0,
+  )
+  const unfilledSeconds = budgetSeconds - plannedSeconds
+  if (unfilledSeconds > 0) {
     warnings.push('insufficient-eligible-content')
   }
   const tasks = materializeTasks(input.planId, selectedSeeds)
@@ -506,7 +435,7 @@ export function generateDailyPlan(input: DailyPlanInput): DailyPlan {
   const status =
     tasks.length === 0
       ? 'empty'
-      : unfilledSeconds > 90
+      : unfilledSeconds > 0
         ? 'partial'
         : 'ready'
 

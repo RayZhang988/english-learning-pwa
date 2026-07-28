@@ -253,10 +253,14 @@ function singleTask(
       }),
     ],
   })
+  // Existing persisted plans do not gain a new required-stream budget while
+  // being restored. Keep legacy timing compatibility separate from QA-011.
+  const task = { ...plan.tasks[0], trainingBudget: undefined }
+  const legacyPlan = { ...plan, tasks: [task] }
   return {
     state,
-    task: plan.tasks[0],
-    progress: createPlanProgress(plan, plan.generatedAt),
+    task,
+    progress: createPlanProgress(legacyPlan, legacyPlan.generatedAt),
   }
 }
 

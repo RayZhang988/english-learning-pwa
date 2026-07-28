@@ -56,4 +56,36 @@ describe('learning event contract', () => {
       ),
     ).toBe('unscorable-practice-completion')
   })
+
+  it('accepts a serializable stream item event and rejects malformed cursors', () => {
+    const base = attemptEvent()
+    const event = {
+      ...base,
+      id: 'stream-item-1',
+      type: 'learning.training.item.completed.v1',
+      payload: {
+        ...base.payload,
+        requestId: 'task-1:supply:1:initial',
+        nextSupplyCursor: 'cursor-2',
+        outcome: 'scored',
+        item: {
+          itemId: 'item-1',
+          learningUnitId: 'vocabulary-1',
+          contentRef: 'lesson://vocabulary/1',
+          difficultyLevel: 4,
+          tags: ['travel'],
+        },
+      },
+    } as PlatformEvent
+    expect(parseLearningEvent(event)).toEqual(event)
+    expect(() =>
+      parseLearningEvent({
+        ...event,
+        payload: {
+          ...(event.payload as Record<string, unknown>),
+          nextSupplyCursor: 1,
+        },
+      }),
+    ).toThrow('nextSupplyCursor')
+  })
 })
