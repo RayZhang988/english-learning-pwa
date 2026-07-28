@@ -17,7 +17,19 @@ export interface ListeningPlaybackControllerOptions {
   readonly speech: ListeningSpeechPort
   readonly onStateChange?: (state: ListeningPlaybackState) => void
   readonly onFailure?: (code: ListeningSpeechErrorCode) => void
+  readonly onPlaybackEvent?: (
+    event: ListeningPlaybackLifecycleEvent,
+  ) => void
 }
+
+export type ListeningPlaybackLifecycleEvent =
+  | 'waiting'
+  | 'started'
+  | 'paused'
+  | 'resumed'
+  | 'ended'
+  | 'canceled'
+  | 'error'
 
 function validateState(
   question: ListeningQuestion,
@@ -53,8 +65,13 @@ export class ListeningPlaybackController {
     state: ListeningPlaybackState,
   ) => void
   private readonly onFailure?: (code: ListeningSpeechErrorCode) => void
+  private readonly onPlaybackEvent?: (
+    event: ListeningPlaybackLifecycleEvent,
+  ) => void
   private generation = 0
   private selectedSegmentOnly: boolean
+  private activeUtteranceStarted = false
+  private activeUtterancePaused = false
 
   constructor(options: ListeningPlaybackControllerOptions) {
     validateState(options.question, options.initialState)
@@ -67,6 +84,7 @@ export class ListeningPlaybackController {
         options.question.primarySegmentId
     this.onStateChange = options.onStateChange
     this.onFailure = options.onFailure
+    this.onPlaybackEvent = options.onPlaybackEvent
     if (!this.speech.capabilities().supported) {
       this.state = {
         ...this.state,
@@ -119,6 +137,9 @@ export class ListeningPlaybackController {
   }
 
   private stopQueue(nextStatus: 'idle' | 'paused'): void {
+    this.onPlaybackEvent?.('canceled')
+    this.activeUtteranceStarted = false
+    this.activeUtterancePaused = false
     this.generation += 1
     this.speech.cancel()
     this.update({
@@ -138,6 +159,9 @@ export class ListeningPlaybackController {
     const token = ++this.generation
     let started = false
     try {
+      this.activeUtteranceStarted = false
+      this.activeUtterancePaused = false
+      this.onPlaybackEvent?.('waiting')
       this.update({
         status: 'playing',
         errorMessage: null,
@@ -154,6 +178,9 @@ export class ListeningPlaybackController {
               return
             }
             started = true
+            this.activeUtteranceStarted = true
+            this.activeUtterancePaused = false
+            this.onPlaybackEvent?.('started')
             this.update((current) => ({
               ...current,
               status: 'playing',
@@ -169,11 +196,22 @@ export class ListeningPlaybackController {
           },
           onPause: () => {
             if (token === this.generation) {
+              if (
+                this.activeUtteranceStarted &&
+                !this.activeUtterancePaused
+              ) {
+                this.activeUtterancePaused = true
+                this.onPlaybackEvent?.('paused')
+              }
               this.update({ status: 'paused' })
             }
           },
           onResume: () => {
             if (token === this.generation) {
+              if (this.activeUtteranceStarted) {
+                this.activeUtterancePaused = false
+                this.onPlaybackEvent?.('resumed')
+              }
               this.update({ status: 'playing' })
             }
           },
@@ -181,6 +219,9 @@ export class ListeningPlaybackController {
             if (token !== this.generation) {
               return
             }
+            this.activeUtteranceStarted = false
+            this.activeUtterancePaused = false
+            this.onPlaybackEvent?.('ended')
             if (
               this.state.repeatMode === 'segment' ||
               this.state.repeatMode === 'all'
@@ -194,6 +235,9 @@ export class ListeningPlaybackController {
             if (token !== this.generation) {
               return
             }
+            this.activeUtteranceStarted = false
+            this.activeUtterancePaused = false
+            this.onPlaybackEvent?.('error')
             this.update({
               status: 'error',
               errorMessage: `设备语音播放失败：${code}`,
@@ -206,6 +250,9 @@ export class ListeningPlaybackController {
       if (token !== this.generation) {
         return
       }
+      this.activeUtteranceStarted = false
+      this.activeUtterancePaused = false
+      this.onPlaybackEvent?.('error')
       const message =
         error instanceof Error
           ? error.message
@@ -224,6 +271,13 @@ export class ListeningPlaybackController {
     }
     if (this.state.status === 'playing') {
       this.speech.pause()
+      if (
+        this.activeUtteranceStarted &&
+        !this.activeUtterancePaused
+      ) {
+        this.activeUtterancePaused = true
+        this.onPlaybackEvent?.('paused')
+      }
       this.update({ status: 'paused' })
       return this.state
     }
@@ -306,7 +360,15 @@ export class ListeningPlaybackController {
     state: ListeningPlaybackState,
   ): ListeningPlaybackState {
     validateState(question, state)
+    const hadActiveRequest =
+      this.state.status === 'playing' ||
+      this.state.status === 'paused'
     this.generation += 1
+    if (hadActiveRequest) {
+      this.onPlaybackEvent?.('canceled')
+    }
+    this.activeUtteranceStarted = false
+    this.activeUtterancePaused = false
     this.speech.cancel()
     this.question = question
     this.state = state
@@ -325,6 +387,14 @@ export class ListeningPlaybackController {
   }
 
   dispose(): void {
+    if (
+      this.state.status === 'playing' ||
+      this.state.status === 'paused'
+    ) {
+      this.onPlaybackEvent?.('canceled')
+    }
+    this.activeUtteranceStarted = false
+    this.activeUtterancePaused = false
     this.generation += 1
     this.speech.cancel()
   }

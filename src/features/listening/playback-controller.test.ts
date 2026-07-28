@@ -159,6 +159,60 @@ describe('listening playback controller', () => {
     expect(controller.snapshot.status).toBe('playing')
   })
 
+  it('emits truthful media lifecycle only from actual speech state', () => {
+    const speech = new FakeSpeech()
+    const events: string[] = []
+    const controller = new ListeningPlaybackController({
+      question: choiceQuestion,
+      initialState,
+      speech,
+      onPlaybackEvent: (event) => events.push(event),
+    })
+
+    controller.toggle()
+    expect(events).toEqual(['waiting'])
+    speech.callbacks?.onStart?.()
+    expect(events).toEqual(['waiting', 'started'])
+
+    controller.toggle()
+    speech.callbacks?.onPause?.()
+    expect(events).toEqual(['waiting', 'started', 'paused'])
+
+    controller.toggle()
+    expect(events).toEqual(['waiting', 'started', 'paused'])
+    speech.callbacks?.onResume?.()
+    expect(events).toEqual([
+      'waiting',
+      'started',
+      'paused',
+      'resumed',
+    ])
+
+    speech.callbacks?.onEnd?.()
+    expect(events.at(-1)).toBe('ended')
+  })
+
+  it('closes an actual utterance on cancel or synthesis error', () => {
+    const speech = new FakeSpeech()
+    const events: string[] = []
+    const controller = new ListeningPlaybackController({
+      question: choiceQuestion,
+      initialState,
+      speech,
+      onPlaybackEvent: (event) => events.push(event),
+    })
+
+    controller.toggle()
+    speech.callbacks?.onStart?.()
+    controller.setRate(0.75)
+    expect(events.at(-1)).toBe('canceled')
+
+    controller.toggle()
+    speech.callbacks?.onStart?.()
+    speech.callbacks?.onError?.('audio-busy')
+    expect(events.at(-1)).toBe('error')
+  })
+
   it('validates content rates and segment-selection policy', () => {
     const controller = new ListeningPlaybackController({
       question: choiceQuestion,

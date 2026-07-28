@@ -33,6 +33,7 @@ export {
 } from './ListeningTrainingRoute.tsx'
 export {
   ListeningPlaybackController,
+  type ListeningPlaybackLifecycleEvent,
   type ListeningPlaybackControllerOptions,
 } from './playback-controller.ts'
 export {
@@ -44,6 +45,12 @@ export {
   ListeningTrainingRuntime,
   type ListeningTrainingRuntimeOptions,
 } from './runtime.ts'
+export {
+  ListeningEffectiveTiming,
+  type ListeningEffectiveTimingSessionFactoryPort,
+  type ListeningEffectiveTimingSessionPort,
+  type ListeningTimingPhaseDeclaration,
+} from './timing.ts'
 export {
   advanceListeningSession,
   canSubmitListeningAnswer,

@@ -15,6 +15,40 @@
 
 模块不会修改 `src/app/**`。最终路由注册由 01 在集成步骤完成。
 
+### R3 有效计时接入
+
+- 07 公开 `ListeningEffectiveTimingSessionFactoryPort`，其结构与 01 的
+  `ProductionEffectiveTimingSessionFactory` 兼容。07 不读取浏览器可见性、不创建
+  时钟、45 秒空闲定时器、快照或 timing event ID。
+- 课程、会话、voice/media 初始化和恢复使用 `loading / content-loading`；调用
+  `speechSynthesis.speak()` 后到真实 `onstart` 前使用
+  `loading / media-loading`，按钮点击本身不会预先计入听音。
+- 只有当前有效 utterance 的 `onstart` 或 `onresume` 才进入
+  `audio-listening / active-audio-listening`。`onpause`、`onend`、`onerror`、取消、
+  切换速度、切句、后台暂停和卸载会立即关闭真实听音片段。
+- 完整连续场景、明确选择的单句、`segment`/`all` 重复和三个批准速度共用同一套
+  utterance 生命周期；计时接入没有改变单一中性系统 voice、连续正文、`pitch = 1`
+  或用户选择的原始 rate。
+- 音频结束或用户真实作答后进入 `answering / active-answering`；提交后的反馈页进入
+  `feedback / active-feedback`。选择、输入、提交、下一题和恢复会报告 activity。
+  01 统一处理 DOM 活动、后台和 45 秒空闲，07 不补算离线或崩溃间隔。
+- 听力会话仓储和业务事件发布期间切到 excluded loading。关键词听写仍先同步发布最新
+  草稿，再串行保存；多个草稿并发时，直到最新写入完成才恢复有效阶段。
+- 真实完成必须先成功调用 timing `finish()`，发布并保存最后一个
+  `learning.timing.segment.recorded.v1`，随后才允许发布
+  `learning.attempt.completed.v1` 并向 UI 通知 completed。失败重试复用同一 timing
+  pending event 和听力 outbox。
+- 注入新计时后，paused/unscorable/completed 业务事件的旧墙钟
+  `durationSeconds` 固定为 0，由 04 只使用 `source = timing-segments` 的可信片段累计
+  有效时长；未注入 factory 的旧调用方继续保留原兼容行为。
+- 未完成退出与真实 Route 卸载会等待最新草稿、播放状态和 outbox 后调用 `dispose()`；
+  React StrictMode cleanup/setup 探测通过模块内延迟释放避免重复 session。
+
+01 的唯一生产注入点是
+`src/app/learning/training-route-hosts.tsx` 中的 `ListeningTrainingRoute`：
+传入 `timingSessionFactory={productionEffectiveTimingSessions}`。该应用集成不属于
+07 文件所有权，本次模块交付没有修改或部署 `src/app/**`。
+
 ## 输入
 
 ### 学习任务
@@ -139,8 +173,16 @@ transcript 迁移为逐句片段，并把旧完整场景的播放次数转移到
 - 恢复 `abc` 后同周期追加为 `abcdef` 并立即提交或退出时，慢写存储中的最终草稿、
   答案和终态都保持 `abcdef`；
 - 会话恢复、事件 outbox、模块元数据和 UI ViewModel。
+- R3 使用真实 `EffectiveTimingSession` 和手动单调时钟覆盖：
+  `onstart/onpause/onresume/onend/onerror/cancel`、语音启动等待、完整/单句共用播放
+  语义、后台/前台不自动续算、45 秒空闲、答题/反馈、慢速持久化、快速听写、
+  刷新/卸载不补时、StrictMode、完成事件顺序和 `finish()` 失败重试。
 
 交付时全项目 `pnpm check` 通过。
+
+本轮 R3 复验：07 专项 14 个测试文件、59 项测试通过；全量 108 个测试文件、528 项测试
+通过，lint、构建型 TypeScript、Vite 生产构建、PWA 20 项预缓存和 8 个课程资源发布
+校验均通过。
 
 ## 已知限制
 
@@ -159,3 +201,6 @@ transcript 迁移为逐句片段，并把旧完整场景的播放次数转移到
 - Web Speech 被后台或其他系统音频打断后从片段开头恢复，不承诺字词级续播。
 - 真实 iPhone Safari、主屏幕 Web App、静音模式、来电和其他音频竞争仍由 09 做真机
   黑盒验收。
+- R3 的 07 factory 尚未由 01 注入生产 Route，也未部署或经 09 正式站回归；当前生产
+  听力训练仍不会创建有效计时 session。模块自动化只能验证阶段与事件顺序，不能替代
+  真机后台、中断和听感验收。

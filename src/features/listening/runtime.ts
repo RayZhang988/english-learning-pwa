@@ -22,6 +22,7 @@ import {
 } from './events.ts'
 import {
   ListeningPlaybackController,
+  type ListeningPlaybackLifecycleEvent,
 } from './playback-controller.ts'
 import { ListeningSessionRepository } from './repository.ts'
 import {
@@ -44,6 +45,10 @@ import {
   type ListeningSpeechErrorCode,
   type ListeningSpeechPort,
 } from './speech-synthesis.ts'
+import {
+  ListeningEffectiveTiming,
+  type ListeningEffectiveTimingSessionFactoryPort,
+} from './timing.ts'
 import type {
   ListeningCatalog,
   ListeningRepeatMode,
@@ -65,6 +70,7 @@ export interface ListeningTrainingRuntimeOptions {
   readonly speech?: ListeningSpeechPort
   readonly now?: () => string
   readonly createId?: () => string
+  readonly timingSessionFactory?: ListeningEffectiveTimingSessionFactoryPort
 }
 
 function defaultId(): string {
@@ -81,6 +87,7 @@ export class ListeningTrainingRuntime {
   private readonly speech: ListeningSpeechPort
   private readonly now: () => string
   private readonly createId: () => string
+  private readonly timing: ListeningEffectiveTiming
   private readonly listeners = new Set<SessionListener>()
   private session: ListeningSession | null = null
   private controller: ListeningPlaybackController | null = null
@@ -90,7 +97,11 @@ export class ListeningTrainingRuntime {
   private inputRevision = 0
   private inputWrite: Promise<void> = Promise.resolve()
   private playbackWrite: Promise<void> = Promise.resolve()
+  private playbackTimingWrite: Promise<void> = Promise.resolve()
+  private speechFailureWrite: Promise<void> = Promise.resolve()
+  private operationTail: Promise<void> | null = null
   private reportingSpeechFailure = false
+  private disposePromise: Promise<void> | null = null
 
   constructor(options: ListeningTrainingRuntimeOptions) {
     this.task = options.task
@@ -103,6 +114,10 @@ export class ListeningTrainingRuntime {
     this.speech = options.speech ?? browserListeningSpeech
     this.now = options.now ?? (() => new Date().toISOString())
     this.createId = options.createId ?? defaultId
+    this.timing = new ListeningEffectiveTiming(
+      this.task.taskId,
+      options.timingSessionFactory,
+    )
   }
 
   get currentSession(): ListeningSession | null {
@@ -120,6 +135,30 @@ export class ListeningTrainingRuntime {
     for (const listener of this.listeners) {
       listener(session)
     }
+  }
+
+  private enqueue<T>(operation: () => Promise<T>): Promise<T> {
+    let result: Promise<T>
+    if (this.operationTail === null) {
+      try {
+        result = operation()
+      } catch (error) {
+        result = Promise.reject(error)
+      }
+    } else {
+      result = this.operationTail.then(operation, operation)
+    }
+    const tail = result.then(
+      () => undefined,
+      () => undefined,
+    )
+    this.operationTail = tail
+    void tail.then(() => {
+      if (this.operationTail === tail) {
+        this.operationTail = null
+      }
+    })
+    return result
   }
 
   private identity(now: string) {
@@ -144,11 +183,20 @@ export class ListeningTrainingRuntime {
     return this.sessionRevision
   }
 
-  private async save(session: ListeningSession): Promise<ListeningSession> {
+  private async save(
+    session: ListeningSession,
+    options: {
+      readonly notify?: boolean
+      readonly beforeNotify?: () => Promise<void>
+    } = {},
+  ): Promise<ListeningSession> {
     const revision = this.stageSession(session)
     await this.queueSessionWrite(session)
+    await options.beforeNotify?.()
     if (revision === this.sessionRevision) {
-      this.notify(session)
+      if (options.notify !== false) {
+        this.notify(session)
+      }
     }
     return this.requireSession()
   }
@@ -157,10 +205,14 @@ export class ListeningTrainingRuntime {
     session: ListeningSession,
   ): Promise<ListeningSession> {
     this.stageSession(session)
-    const write = this.queueSessionWrite(session)
+    this.notify(session)
+    const write = (async () => {
+      await this.timing.beginPersistenceWait('answering', true)
+      await this.queueSessionWrite(session)
+      await this.timing.endPersistenceWait('answering', true)
+    })()
     this.inputRevision += 1
     this.inputWrite = write
-    this.notify(session)
     await write
     return this.requireSession()
   }
@@ -194,10 +246,68 @@ export class ListeningTrainingRuntime {
     return this.session
   }
 
+  private activeTimingPhase(
+    session: ListeningSession = this.requireSession(),
+  ): 'answering' | 'feedback' {
+    if (session.phase === 'feedback') {
+      return 'feedback'
+    }
+    if (
+      session.phase === 'paused' &&
+      session.pausedFromPhase === 'feedback'
+    ) {
+      return 'feedback'
+    }
+    return 'answering'
+  }
+
+  private trackPlaybackTiming(operation: Promise<void>): void {
+    const previous = this.playbackTimingWrite
+    this.playbackTimingWrite = Promise.all([
+      previous,
+      operation,
+    ]).then(() => undefined)
+    void this.playbackTimingWrite.catch(() => undefined)
+  }
+
+  private handlePlaybackEvent(
+    event: ListeningPlaybackLifecycleEvent,
+  ): void {
+    const session = this.session
+    if (!session) {
+      return
+    }
+    const phase = this.activeTimingPhase(session)
+    const operation =
+      event === 'waiting'
+        ? this.timing.beginMediaWait()
+        : event === 'started' || event === 'resumed'
+          ? this.timing.mediaStarted()
+          : event === 'paused'
+            ? this.timing.mediaPaused()
+            : event === 'ended'
+              ? this.timing.mediaEnded(phase)
+              : this.timing.mediaCanceled()
+    this.trackPlaybackTiming(operation)
+  }
+
   private queuePlaybackSave(session: ListeningSession): void {
     this.stageSession(session)
     this.notify(session)
-    this.playbackWrite = this.queueSessionWrite(session)
+    const phase = this.activeTimingPhase(session)
+    const activatePhase =
+      session.playback.status === 'ended' ||
+      session.phase === 'feedback'
+    this.playbackWrite = (async () => {
+      if (session.phase === 'paused') {
+        await this.queueSessionWrite(session)
+        return
+      }
+      await this.timing.beginPersistenceWait(phase, false)
+      await this.queueSessionWrite(session)
+      await this.timing.endPersistenceWait(phase, activatePhase)
+    })()
+    void this.playbackWrite.catch(() => undefined)
   }
 
   private handlePlaybackState(
@@ -232,7 +342,7 @@ export class ListeningTrainingRuntime {
         : code === 'canceled' || code === 'interrupted'
           ? 'interrupted'
           : 'device'
-    void this.reportFailure({
+    const reporting = this.reportFailure({
       category,
       message:
         category === 'network'
@@ -240,9 +350,14 @@ export class ListeningTrainingRuntime {
           : category === 'interrupted'
             ? '设备中断了本次语音播放。'
             : '设备合成语音暂时不可用。',
-    }).finally(() => {
+    }).then(() => undefined)
+    this.speechFailureWrite = reporting
+    void reporting.finally(() => {
+      if (this.speechFailureWrite === reporting) {
+        this.speechFailureWrite = Promise.resolve()
+      }
       this.reportingSpeechFailure = false
-    })
+    }).catch(() => undefined)
   }
 
   private attachController(session: ListeningSession): void {
@@ -263,6 +378,8 @@ export class ListeningTrainingRuntime {
       speech: this.speech,
       onStateChange: (playback) =>
         this.handlePlaybackState(playback),
+      onPlaybackEvent: (event) =>
+        this.handlePlaybackEvent(event),
       onFailure: (code) => this.handleSpeechFailure(code),
     })
   }
@@ -271,6 +388,12 @@ export class ListeningTrainingRuntime {
     let session = this.requireSession()
     while (session.pendingEvents.length > 0) {
       const event = session.pendingEvents[0]
+      if (
+        event.type === 'learning.attempt.completed.v1' &&
+        event.payload.taskCompleted
+      ) {
+        await this.timing.finish()
+      }
       await this.eventSink.publish(event)
       session = withoutPendingListeningEvent(
         session,
@@ -280,6 +403,18 @@ export class ListeningTrainingRuntime {
       await this.save(session)
     }
     return session
+  }
+
+  private untrustedLegacyDuration(
+    session: ListeningSession,
+  ): number {
+    if (this.timing.enabled) {
+      return 0
+    }
+    return Math.max(
+      0,
+      session.activeDurationSeconds - session.reportedDurationSeconds,
+    )
   }
 
   private failureFor(error: unknown): ListeningSessionFailure {
@@ -345,6 +480,7 @@ export class ListeningTrainingRuntime {
   }
 
   private async initializeInternal(): Promise<ListeningSession> {
+    await this.timing.startLoading()
     const stored = await this.repository.load(this.task)
     if (stored) {
       const restored =
@@ -356,9 +492,17 @@ export class ListeningTrainingRuntime {
           : stored
       this.session = restored
       this.attachController(restored)
-      return this.flushPendingEvents()
+      const session = await this.flushPendingEvents()
+      await this.timing.synchronize(session.phase, {
+        activateAnswering:
+          session.phase === 'answering' &&
+          session.playback.status === 'ended',
+      })
+      return session
     }
-    return this.startFresh()
+    const session = await this.startFresh()
+    await this.timing.synchronize(session.phase)
+    return session
   }
 
   initialize(): Promise<ListeningSession> {
@@ -384,7 +528,10 @@ export class ListeningTrainingRuntime {
       )
     }
     this.controller.toggle()
-    await this.playbackWrite
+    await Promise.all([
+      this.playbackWrite,
+      this.playbackTimingWrite,
+    ])
     return this.requireSession()
   }
 
@@ -396,7 +543,10 @@ export class ListeningTrainingRuntime {
       )
     }
     this.controller.setRate(rate)
-    await this.playbackWrite
+    await Promise.all([
+      this.playbackWrite,
+      this.playbackTimingWrite,
+    ])
     return this.requireSession()
   }
 
@@ -408,7 +558,10 @@ export class ListeningTrainingRuntime {
       )
     }
     this.controller.selectSegment(segmentId)
-    await this.playbackWrite
+    await Promise.all([
+      this.playbackWrite,
+      this.playbackTimingWrite,
+    ])
     return this.requireSession()
   }
 
@@ -422,7 +575,10 @@ export class ListeningTrainingRuntime {
       )
     }
     this.controller.setRepeatMode(mode)
-    await this.playbackWrite
+    await Promise.all([
+      this.playbackWrite,
+      this.playbackTimingWrite,
+    ])
     return this.requireSession()
   }
 
@@ -446,24 +602,38 @@ export class ListeningTrainingRuntime {
     )
   }
 
-  async submit(): Promise<ListeningSession> {
+  private async submitInternal(): Promise<ListeningSession> {
     this.controller?.interrupt()
-    await this.playbackWrite
+    await Promise.all([
+      this.playbackWrite,
+      this.playbackTimingWrite,
+    ])
     await this.waitForInputDrafts()
+    await this.timing.beginPersistenceWait('answering', true)
     return this.save(
       submitListeningAnswer(this.requireSession(), this.now()),
+      {
+        beforeNotify: () =>
+          this.timing.endPersistenceWait('feedback', true),
+      },
     )
   }
 
-  async advance(): Promise<ListeningSession> {
+  submit(): Promise<ListeningSession> {
+    return this.enqueue(() => this.submitInternal())
+  }
+
+  private async advanceInternal(): Promise<ListeningSession> {
     this.controller?.dispose()
+    await Promise.all([
+      this.playbackWrite,
+      this.playbackTimingWrite,
+    ])
+    await this.timing.beginPersistenceWait('feedback', true)
     const now = this.now()
     let session = advanceListeningSession(this.requireSession(), now)
     if (session.phase === 'completed') {
-      const durationSeconds = Math.max(
-        0,
-        session.activeDurationSeconds - session.reportedDurationSeconds,
-      )
+      const durationSeconds = this.untrustedLegacyDuration(session)
       session = {
         ...session,
         reportedDurationSeconds: session.activeDurationSeconds,
@@ -478,21 +648,39 @@ export class ListeningTrainingRuntime {
         now,
       )
     }
-    await this.save(session)
+    await this.save(session, {
+      notify: session.phase !== 'completed',
+      beforeNotify:
+        session.phase === 'completed'
+          ? undefined
+          : () =>
+              this.timing.endPersistenceWait('answering', false),
+    })
     this.attachController(session)
     return this.flushPendingEvents()
   }
 
-  async pause(reason: TaskPauseReason): Promise<ListeningSession> {
+  advance(): Promise<ListeningSession> {
+    return this.enqueue(() => this.advanceInternal())
+  }
+
+  private async pauseInternal(
+    reason: TaskPauseReason,
+  ): Promise<ListeningSession> {
+    const current = this.requireSession()
+    if (current.phase === 'paused') {
+      return current
+    }
     this.controller?.interrupt()
-    await this.playbackWrite
+    await Promise.all([
+      this.playbackWrite,
+      this.playbackTimingWrite,
+    ])
     await this.waitForInputDrafts()
+    await this.timing.pause()
     const now = this.now()
     let session = pauseListeningSession(this.requireSession(), now)
-    const durationSeconds = Math.max(
-      0,
-      session.activeDurationSeconds - session.reportedDurationSeconds,
-    )
+    const durationSeconds = this.untrustedLegacyDuration(session)
     session = {
       ...session,
       reportedDurationSeconds: session.activeDurationSeconds,
@@ -512,7 +700,12 @@ export class ListeningTrainingRuntime {
     return this.flushPendingEvents()
   }
 
-  async resume(): Promise<ListeningSession> {
+  pause(reason: TaskPauseReason): Promise<ListeningSession> {
+    return this.enqueue(() => this.pauseInternal(reason))
+  }
+
+  private async resumeInternal(): Promise<ListeningSession> {
+    await this.timing.startLoading()
     const now = this.now()
     let session = resumeListeningSession(this.requireSession(), now)
     session = withPendingListeningEvent(
@@ -525,13 +718,24 @@ export class ListeningTrainingRuntime {
     )
     await this.save(session)
     this.attachController(session)
-    return this.flushPendingEvents()
+    session = await this.flushPendingEvents()
+    await this.timing.synchronize(session.phase, {
+      resume: true,
+      activateAnswering: true,
+    })
+    return session
   }
 
-  async skip(reason: TaskSkipReason): Promise<ListeningSession> {
+  resume(): Promise<ListeningSession> {
+    return this.enqueue(() => this.resumeInternal())
+  }
+
+  private async skipInternal(
+    reason: TaskSkipReason,
+  ): Promise<ListeningSession> {
     let session = this.requireSession()
     if (session.phase === 'answering' || session.phase === 'feedback') {
-      session = await this.pause(
+      session = await this.pauseInternal(
         reason === 'time-budget-ended'
           ? 'time-budget-ended'
           : reason === 'device-failure'
@@ -555,7 +759,11 @@ export class ListeningTrainingRuntime {
     return this.flushPendingEvents()
   }
 
-  async reportFailure(
+  skip(reason: TaskSkipReason): Promise<ListeningSession> {
+    return this.enqueue(() => this.skipInternal(reason))
+  }
+
+  private async reportFailureInternal(
     failure: ListeningSessionFailure,
   ): Promise<ListeningSession> {
     const current = this.requireSession()
@@ -563,12 +771,14 @@ export class ListeningTrainingRuntime {
       return current
     }
     this.controller?.dispose()
+    await Promise.all([
+      this.playbackWrite,
+      this.playbackTimingWrite,
+    ])
+    await this.timing.startLoading()
     const now = this.now()
     let session = failListeningSession(current, failure, now)
-    const durationSeconds = Math.max(
-      0,
-      session.activeDurationSeconds - session.reportedDurationSeconds,
-    )
+    const durationSeconds = this.untrustedLegacyDuration(session)
     session = {
       ...session,
       reportedDurationSeconds: session.activeDurationSeconds,
@@ -587,23 +797,68 @@ export class ListeningTrainingRuntime {
     return this.flushPendingEvents()
   }
 
-  retryPendingEvents(): Promise<ListeningSession> {
+  reportFailure(
+    failure: ListeningSessionFailure,
+  ): Promise<ListeningSession> {
+    return this.enqueue(() =>
+      this.reportFailureInternal(failure),
+    )
+  }
+
+  private async retryPendingEventsInternal(): Promise<ListeningSession> {
+    await this.speechFailureWrite
     return this.flushPendingEvents()
   }
 
-  async restart(): Promise<ListeningSession> {
+  retryPendingEvents(): Promise<ListeningSession> {
+    return this.enqueue(() => this.retryPendingEventsInternal())
+  }
+
+  private async restartInternal(): Promise<ListeningSession> {
     this.controller?.dispose()
+    await Promise.all([
+      this.playbackWrite,
+      this.playbackTimingWrite,
+    ])
+    await this.timing.startLoading()
     if (this.session && this.session.pendingEvents.length > 0) {
       await this.flushPendingEvents()
     }
     await this.repository.delete(this.task.taskId)
     this.session = null
-    return this.startFresh()
+    const session = await this.startFresh()
+    await this.timing.synchronize(session.phase)
+    return session
   }
 
-  dispose(): void {
+  restart(): Promise<ListeningSession> {
+    return this.enqueue(() => this.restartInternal())
+  }
+
+  dispose(): Promise<void> {
+    if (this.disposePromise) {
+      return this.disposePromise
+    }
     this.controller?.dispose()
     this.controller = null
-    this.listeners.clear()
+    const disposal = this.enqueue(async () => {
+      await this.initializing
+      await Promise.all([
+        this.playbackWrite,
+        this.playbackTimingWrite,
+        this.speechFailureWrite,
+      ])
+      await this.waitForInputDrafts()
+      await this.timing.dispose()
+      this.listeners.clear()
+    })
+    this.disposePromise = disposal
+    const clear = () => {
+      if (this.disposePromise === disposal) {
+        this.disposePromise = null
+      }
+    }
+    void disposal.then(clear, clear)
+    return disposal
   }
 }

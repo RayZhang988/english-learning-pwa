@@ -26,8 +26,12 @@ import {
 } from './content-source.ts'
 import { ListeningSessionScreen } from './ListeningSessionScreen.tsx'
 import { ListeningSessionRepository } from './repository.ts'
+import { ListeningRuntimeMountLifecycle } from './route-lifecycle.ts'
 import { ListeningTrainingRuntime } from './runtime.ts'
 import type { ListeningSpeechPort } from './speech-synthesis.ts'
+import type {
+  ListeningEffectiveTimingSessionFactoryPort,
+} from './timing.ts'
 import type {
   ListeningCatalog,
   ListeningRepeatMode,
@@ -46,6 +50,7 @@ export interface ListeningTrainingRouteProps {
   readonly speech?: ListeningSpeechPort
   readonly now?: () => string
   readonly createId?: () => string
+  readonly timingSessionFactory?: ListeningEffectiveTimingSessionFactoryPort
 }
 
 export function ListeningTrainingRoute(
@@ -58,17 +63,31 @@ export function ListeningTrainingRoute(
   const [state, setState] = useState<AsyncDataState<ListeningSession>>({
     status: 'loading',
   })
+  const exitPendingRef = useRef(false)
   const runtimeKey = `${props.task.planId}:${props.task.taskId}`
   const runtimeRef = useRef<{
     readonly key: string
     readonly runtime: ListeningTrainingRuntime
+    readonly timingSessionFactory:
+      | ListeningEffectiveTimingSessionFactoryPort
+      | undefined
   } | null>(null)
+  const runtimeMountLifecycleRef =
+    useRef<ListeningRuntimeMountLifecycle | null>(null)
   const completedTaskRef = useRef<string | null>(null)
+  if (!runtimeMountLifecycleRef.current) {
+    runtimeMountLifecycleRef.current =
+      new ListeningRuntimeMountLifecycle()
+  }
 
-  if (runtimeRef.current?.key !== runtimeKey) {
-    runtimeRef.current?.runtime.dispose()
+  if (
+    runtimeRef.current?.key !== runtimeKey ||
+    runtimeRef.current.timingSessionFactory !==
+      props.timingSessionFactory
+  ) {
     runtimeRef.current = {
       key: runtimeKey,
+      timingSessionFactory: props.timingSessionFactory,
       runtime: new ListeningTrainingRuntime({
         task: props.task,
         localDate: props.localDate,
@@ -80,6 +99,7 @@ export function ListeningTrainingRoute(
         speech: props.speech,
         now: props.now,
         createId: props.createId,
+        timingSessionFactory: props.timingSessionFactory,
       }),
     }
   }
@@ -112,6 +132,8 @@ export function ListeningTrainingRoute(
 
   useEffect(() => {
     let active = true
+    const releaseRuntime =
+      runtimeMountLifecycleRef.current!.retain(runtime)
     setState({ status: 'loading' })
     void runtime.initialize().then(
       (session) => {
@@ -127,7 +149,7 @@ export function ListeningTrainingRoute(
     )
     return () => {
       active = false
-      runtime.dispose()
+      releaseRuntime()
     }
   }, [runtime, showError, showSession])
 
@@ -180,20 +202,28 @@ export function ListeningTrainingRoute(
   }, [perform, runtime])
 
   const exit = useCallback(() => {
-    const session = runtime.currentSession
-    if (
-      session &&
-      (session.phase === 'answering' ||
-        session.phase === 'feedback')
-    ) {
-      void runtime.pause('user-paused').then(
-        props.onExit,
-        props.onExit,
-      )
+    if (exitPendingRef.current) {
       return
     }
-    props.onExit()
-  }, [props, runtime])
+    exitPendingRef.current = true
+    const session = runtime.currentSession
+    void (async () => {
+      try {
+        if (
+          session &&
+          (session.phase === 'answering' ||
+            session.phase === 'feedback')
+        ) {
+          await runtime.pause('user-paused')
+        }
+        await runtime.dispose()
+        props.onExit()
+      } catch (error) {
+        exitPendingRef.current = false
+        showError(error)
+      }
+    })()
+  }, [props, runtime, showError])
 
   if (state.status === 'loading' || state.status === 'idle') {
     return <LoadingState label="正在加载听力训练" />
