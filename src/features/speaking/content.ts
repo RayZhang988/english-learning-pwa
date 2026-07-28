@@ -144,6 +144,36 @@ function parsePrompt(value: unknown, label: string): SpeakingPrompt {
   }
 }
 
+/** Scene quizzes do not declare a separate partner line. The released Chinese
+ * scenario prompt is therefore shown verbatim in both required session fields;
+ * no English dialogue or answer is invented here. */
+function parseScenePrompt(value: unknown, label: string): SpeakingPrompt {
+  const scene = record(value, label)
+  if (scene.domain !== 'speaking' || scene.format !== 'fixed-response') {
+    throw new SpeakingError(
+      'content-invalid',
+      `${label} is not a fixed-response speaking scene quiz.`,
+    )
+  }
+  const cueZh = stringValue(scene, 'promptZh', label)
+  const modelAnswer = stringValue(scene, 'modelAnswer', label)
+  const acceptedAnswers = stringArray(scene, 'acceptedAnswers', label)
+  if (!acceptedAnswers.includes(modelAnswer)) {
+    throw new SpeakingError(
+      'content-invalid',
+      `${label}.modelAnswer must be in acceptedAnswers.`,
+    )
+  }
+  return {
+    id: stringValue(scene, 'id', label),
+    cueZh,
+    partnerLine: cueZh,
+    modelAnswer,
+    acceptedAnswers,
+    requiredConcepts: stringArray(scene, 'requiredConcepts', label),
+  }
+}
+
 function activityType(
   value: string,
   label: string,
@@ -160,6 +190,7 @@ function activityType(
 function parseSpeakingUnit(
   value: unknown,
   lessonId: string,
+  scenePrompts: readonly SpeakingPrompt[],
 ): SpeakingTrainingUnit {
   const unit = record(value, `${lessonId}.speakingUnit`)
   if (unit.domain !== 'speaking') {
@@ -225,6 +256,7 @@ function parseSpeakingUnit(
       `${learningUnitId}.activity`,
     ),
     prompts,
+    scenePrompts,
   }
 }
 
@@ -302,7 +334,27 @@ export function createSpeakingCatalog(
           `${lessonId} has no speaking learning unit.`,
         )
       }
-      const unit = parseSpeakingUnit(speakingValue, lessonId)
+      const scenePrompts = arrayValue(
+        lesson,
+        'sceneQuiz',
+        lessonId,
+      )
+        .filter((scene) => isRecord(scene) && scene.domain === 'speaking')
+        .map((scene, sceneIndex) =>
+          parseScenePrompt(scene, `${lessonId}.sceneQuiz[${sceneIndex}]`),
+        )
+      const scenePromptIds = scenePrompts.map((prompt) => prompt.id)
+      if (new Set(scenePromptIds).size !== scenePromptIds.length) {
+        throw new SpeakingError(
+          'content-invalid',
+          `${lessonId} contains duplicate speaking scene quiz ids.`,
+        )
+      }
+      const unit = parseSpeakingUnit(
+        speakingValue,
+        lessonId,
+        scenePrompts,
+      )
       if (
         learningUnitIds.has(unit.learningUnitId) ||
         contentRefs.has(unit.contentRef)

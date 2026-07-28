@@ -28,6 +28,8 @@ export interface SpeakingTrainingUnit {
   readonly activityType: SpeakingActivityType
   readonly instructionsZh: string
   readonly prompts: readonly SpeakingPrompt[]
+  /** Fixed-response prompts declared in the lesson's published sceneQuiz. */
+  readonly scenePrompts: readonly SpeakingPrompt[]
 }
 
 export interface SpeakingCatalog {

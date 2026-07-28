@@ -52,6 +52,7 @@ export function createSpeakingUnit(
     activityType: 'fixed-response',
     instructionsZh: '用完整但简短的句子回答。',
     prompts,
+    scenePrompts: [],
   }
 }
 

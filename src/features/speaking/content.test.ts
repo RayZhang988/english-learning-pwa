@@ -40,6 +40,9 @@ describe('speaking content catalog', () => {
     expect(
       catalog.units.flatMap((unit) => unit.prompts),
     ).toHaveLength(94)
+    expect(
+      catalog.units.flatMap((unit) => unit.scenePrompts),
+    ).toHaveLength(28)
   })
 
   it('resolves only tasks whose id and content reference both match', () => {

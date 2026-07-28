@@ -249,6 +249,30 @@ describe('speaking training runtime fallbacks', () => {
     expect(events.filter((event) => event.type === 'learning.attempt.completed.v1').every((event) => event.payload.taskCompleted === false)).toBe(true)
   })
 
+  it('starts a scene fixed-response supply item in practicing without inventing a prompt', async () => {
+    const scenePrompt = {
+      id: 'w1d1-q3', cueZh: '对方说“Nice to meet you.” 请回应。',
+      partnerLine: '对方说“Nice to meet you.” 请回应。',
+      modelAnswer: 'Nice to meet you, too.',
+      acceptedAnswers: ['Nice to meet you, too.'], requiredConcepts: ['polite-response'],
+    }
+    const catalog = createSpeakingCatalogFixture({
+      ...createSpeakingUnit(), scenePrompts: [scenePrompt],
+    })
+    const sceneItem = {
+      itemId: 'scene-first', learningUnitId: catalog.units[0].learningUnitId,
+      contentRef: catalog.units[0].contentRef, difficultyLevel: 1, tags: [],
+      source: { sourceType: 'speaking-scene-quiz' as const, sourceId: 'w1d1-q3', variantId: 'scene-fixed-response' as const },
+    }
+    const supplyProvider = { async next(request: import('../../learning-engine/index.ts').LearningTaskSupplyRequest) {
+      return { schemaVersion: 1 as const, requestId: request.requestId, status: 'item' as const, item: sceneItem, nextCursor: sceneItem.itemId }
+    } }
+    const training = new SpeakingTrainingRuntime({ task: createSpeakingTask({ trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } }), localDate: '2026-07-28', contentSource: { load: async () => catalog }, eventSink: new InMemoryPlatformEventSink(), repository: new SpeakingSessionRepository(new MemoryStore()), networkStatus: online, microphonePermission: permission(), recorder: new FakeRecorder(), recognition: new FakeRecognition({ status: 'recognized', transcript: 'Nice to meet you, too.', alternatives: [] }), now: clock(), createId: ids('scene-first'), supplyProvider, trainingBudgetStatus: () => 'running' })
+    const session = await training.initialize()
+    expect(session.phase).toBe('practicing')
+    expect(session.unit?.prompts[0]).toEqual(scenePrompt)
+  })
+
   it('reports exhausted streams without clearing exclusions and allows an honest retry', async () => {
     const catalog = createSpeakingCatalogFixture()
     const item = { itemId: 'only-item', learningUnitId: catalog.units[0].learningUnitId, contentRef: catalog.units[0].contentRef, difficultyLevel: 1, tags: [], source: { sourceType: 'speaking-prompt' as const, sourceId: 'w1d1-s1', variantId: 'activity-prompt' as const } }

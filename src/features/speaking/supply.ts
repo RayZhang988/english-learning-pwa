@@ -54,7 +54,9 @@ export class SpeakingCatalogSupplyProvider implements SpeakingSupplyProvider {
     if (!root || root.schemaVersion !== 1 || !Array.isArray(root.candidates)) {
       throw new SpeakingError('content-invalid', 'Speaking training supply index is missing or unsupported.')
     }
-    const items = root.candidates.map(parseItem)
+    const items = root.candidates
+      .filter((candidate) => record(candidate)?.domain === 'speaking')
+      .map(parseItem)
     if (items.some((item) => item === null)) {
       throw new SpeakingError('content-invalid', 'Speaking training supply index contains an invalid candidate.')
     }
@@ -90,7 +92,9 @@ export function resolveSpeakingSupplyPrompt(
   item: SpeakingSupplyItem,
 ): { readonly unit: SpeakingTrainingUnit; readonly prompt: SpeakingPrompt } {
   const unit = catalog.getUnit(item.contentRef)
-  const prompt = unit?.prompts.find((candidate) => candidate.id === item.source.sourceId)
+  const prompt = item.source.sourceType === 'speaking-prompt'
+    ? unit?.prompts.find((candidate) => candidate.id === item.source.sourceId)
+    : unit?.scenePrompts.find((candidate) => candidate.id === item.source.sourceId)
   if (!unit || unit.learningUnitId !== item.learningUnitId || !prompt ||
     (item.source.sourceType === 'speaking-prompt' && item.source.variantId !== 'activity-prompt') ||
     (item.source.sourceType === 'speaking-scene-quiz' && item.source.variantId !== 'scene-fixed-response')) {
