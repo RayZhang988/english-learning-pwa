@@ -1,0 +1,156 @@
+import { describe, expect, it } from 'vitest'
+import type { NamespaceStore, StoredRecord } from '../../storage/index.ts'
+import { ExtraListeningTrainingRuntime } from './extra-training.ts'
+import { ExtraListeningTrainingRepository } from './extra-training-repository.ts'
+import type { ListeningSpeechCallbacks, ListeningSpeechPort } from './speech-synthesis.ts'
+import type { ListeningQuestion } from './types.ts'
+
+class Store implements NamespaceStore {
+  records = new Map<string, StoredRecord<unknown>>()
+  async get<T>(key: string) { return this.records.get(key) as StoredRecord<T> | undefined }
+  async put<T>(key: string, value: T, schemaVersion = 1) { this.records.set(key, { namespace: 'test', key, value, schemaVersion, updatedAt: '2026-07-29T00:00:00.000Z' }) }
+  async delete(key: string) { this.records.delete(key) }
+  async keys() { return [...this.records.keys()] }
+  async clear() { this.records.clear() }
+}
+
+const session = {
+  schemaVersion: 1, sessionId: 'extra-listening', localDate: '2026-07-29',
+  domain: 'listening', targetModuleId: 'listening', mode: 'learn', targetDifficulty: 1,
+  targetEffectiveSeconds: 900, remainingEffectiveSeconds: 900, status: 'running',
+  nextSupplyCursor: null, excludeItemIds: [], completedItemCount: 0,
+  startedAt: '2026-07-29T00:00:00.000Z', updatedAt: '2026-07-29T00:00:00.000Z',
+  endedAt: null, endReason: null,
+} as const
+const item = {
+  itemId: 'listening-supply-1', learningUnitId: 'unit-1', contentRef: 'lesson://unit-1',
+  difficultyLevel: 1, tags: ['travel'],
+  source: { sourceType: 'listening-extension', sourceId: 'exercise', variantId: 'word' },
+} as const
+const baseQuestion = {
+  id: 'word', promptZh: '选择', primarySegmentId: 'line-1',
+  segments: [{ id: 'line-1', locale: 'en-US' as const, text: 'Maya says hello.', label: 'Maya', speaker: 'Maya' }],
+  playbackPolicy: { allowSegmentSelection: true, allowRepeat: true, allowedRates: [0.75, 1, 1.25] as const, sequenceMode: 'all-segments' as const },
+  rationaleZh: '提示', errorTag: 'sound-discrimination' as const,
+}
+const wordQuestion = { ...baseQuestion, type: 'word-discrimination' as const, options: [{ id: 'right', label: '对' }, { id: 'wrong', label: '错' }], correctOptionId: 'right' }
+const sentenceQuestion = { ...baseQuestion, id: 'sentence', type: 'short-sentence-choice' as const, options: [{ id: 'right', label: '对' }, { id: 'wrong', label: '错' }], correctOptionId: 'right', errorTag: 'detail-missed' as const }
+const dictationQuestion = { ...baseQuestion, id: 'dictation', type: 'keyword-dictation' as const, targetKeywords: ['hello'], standardAnswer: 'hello', acceptedAnswers: ['hello'], normalizationHints: { trim: true, caseFoldLocale: 'en-US' as const, collapseWhitespace: true, normalizeApostrophes: true, stripTerminalPunctuation: true } as const }
+const unit = { learningUnitId: 'unit-1', contentRef: 'lesson://unit-1', difficultyLevel: 1, estimatedSeconds: 12, tags: ['travel'], activityType: 'listening-dialogue' as const, titleZh: '对话', transcript: [{ id: 'line-1', speaker: 'Maya', text: 'Maya says hello.', translationZh: '你好' }], questions: [wordQuestion] }
+
+class Speech implements ListeningSpeechPort {
+  calls: { text: string; rate: number; pitch?: number }[] = []
+  callbacks: ListeningSpeechCallbacks | null = null
+  paused = false
+  capabilities() { return { supported: true, voicesKnown: true, enUsVoiceAvailable: true, localEnUsVoiceCount: 1, pauseResumeAvailable: true, supportedRates: [0.75, 1, 1.25] as const } }
+  voices() { return [{ id: 'neutral', locale: 'en-US' as const, localService: true as const }] }
+  speak(request: { text: string; locale: 'en-US'; rate: 0.75 | 1 | 1.25 }, callbacks: ListeningSpeechCallbacks) { this.calls.push(request); this.callbacks = callbacks; callbacks.onStart?.() }
+  cancel() { this.callbacks?.onEnd?.(); this.callbacks = null }
+  pause() { this.paused = true; this.callbacks?.onPause?.() }
+  resume() { this.paused = false; this.callbacks?.onResume?.() }
+  isPaused() { return this.paused }
+  isSpeaking() { return this.callbacks !== null && !this.paused }
+}
+
+function request() {
+  return { schemaVersion: 1 as const, requestId: 'request-1', sessionId: session.sessionId, localDate: session.localDate, domain: 'listening' as const, targetModuleId: 'listening' as const, mode: 'learn' as const, targetDifficulty: 1, cursor: null, excludeItemIds: [], priority: ['recent-error', 'due-review', 'same-day-variant', 'new-optional-content'] as const, priorityItemIds: { 'recent-error': [], 'due-review': [], 'same-day-variant': [], 'new-optional-content': [] }, reason: 'initial' as const }
+}
+function options(question: ListeningQuestion = wordQuestion) {
+  const timing: string[] = []
+  return {
+    session, repository: new ExtraListeningTrainingRepository(new Store()), speech: new Speech(),
+    supplyRequest: () => request(),
+    supplyProvider: { next: async (value: { requestId: string }) => ({ schemaVersion: 1 as const, requestId: value.requestId, status: 'item' as const, item, nextCursor: item.itemId }) },
+    questionForItem: async () => ({ unit, question }),
+    timingSessionFactory: { create: async () => ({ start: async () => { timing.push('start') }, transition: async (value: { phase: string }) => { timing.push(`transition:${value.phase}`) }, activity: async () => { timing.push('activity') }, pause: async () => { timing.push('pause') }, resume: async (value: { phase: string }) => { timing.push(`resume:${value.phase}`) }, finish: async () => { timing.push('finish') }, dispose: async () => {} }) },
+    eventSink: { publishExtraTrainingEvent: async () => {} }, timing,
+  }
+}
+
+describe('extra listening commands', () => {
+  it.each([wordQuestion, sentenceQuestion])('answers choice exercise %s without a daily task identity', async (question) => {
+    const configured = options(question)
+    const runtime = new ExtraListeningTrainingRuntime(configured)
+    await runtime.initialize(); await runtime.next(); await runtime.select('right'); await runtime.submit(); await runtime.completeCurrentItem()
+    expect(runtime.currentSnapshot?.session.completedItemCount).toBe(1)
+    expect(JSON.stringify(runtime.currentSnapshot)).not.toMatch(/planId|taskId/)
+  })
+
+  it('persists the latest dictation input across restore and submits it', async () => {
+    const configured = options(dictationQuestion)
+    const first = new ExtraListeningTrainingRuntime(configured)
+    await first.initialize(); await first.next(); await first.changeDictation('a'); await first.changeDictation('ab'); await first.changeDictation('hello')
+    const restored = new ExtraListeningTrainingRuntime({ ...configured, repository: configured.repository })
+    await restored.initialize(); expect(restored.currentSnapshot?.dictationInput).toBe('hello')
+    await restored.submit(); expect(restored.currentSnapshot?.answer?.response).toBe('hello')
+  })
+
+  it('uses the exact four-level priority request and natural single-voice speech parameters', async () => {
+    let supplied: unknown
+    const configured = options(wordQuestion)
+    const priority = { ...request(), priorityItemIds: { 'recent-error': [item.itemId], 'due-review': ['due'], 'same-day-variant': ['same'], 'new-optional-content': ['new'] } }
+    const runtime = new ExtraListeningTrainingRuntime({ ...configured, supplyRequest: () => priority, supplyProvider: { next: async (value) => { supplied = value; return { schemaVersion: 1 as const, requestId: value.requestId, status: 'item' as const, item, nextCursor: item.itemId } } } })
+    await runtime.initialize(); await runtime.next(); await runtime.toggleAudio()
+    expect(supplied).toEqual(priority)
+    expect(configured.speech.calls).toEqual([{ text: 'Maya says hello.', locale: 'en-US', rate: 1 }])
+  })
+
+  it('does not truncate active playback at 900 seconds and publishes completion in order after feedback', async () => {
+    const configured = options(wordQuestion)
+    const published: string[] = []
+    const runtime = new ExtraListeningTrainingRuntime({ ...configured, eventSink: { publishExtraTrainingEvent: async (event) => { published.push(event.type) } } })
+    await runtime.initialize(); await runtime.next(); await runtime.toggleAudio(); await runtime.recordEffectiveSeconds(900)
+    expect(runtime.currentSnapshot?.session.status).toBe('finish-current-item')
+    expect(runtime.currentSnapshot?.playback?.status).toBe('playing')
+    await runtime.select('right'); await runtime.submit(); await runtime.completeCurrentItem()
+    expect(runtime.currentSnapshot?.session.status).toBe('completed')
+    expect(published.slice(-3)).toEqual(['learning.extra-training.attempt.completed.v1', 'learning.extra-training.item.completed.v1', 'learning.extra-training.budget.completed.v1'])
+  })
+
+  it('starts timing only from speech start and pauses it for pause, resume, and cancellation', async () => {
+    const configured = options(wordQuestion)
+    const runtime = new ExtraListeningTrainingRuntime(configured)
+    await runtime.initialize(); await runtime.next(); await runtime.toggleAudio()
+    expect(configured.timing).toEqual(expect.arrayContaining(['transition:loading', 'start']))
+    await runtime.toggleAudio(); await runtime.toggleAudio(); await runtime.setPlaybackRate(1.25)
+    expect(configured.timing.filter((entry) => entry === 'pause').length).toBeGreaterThanOrEqual(2)
+    expect(configured.timing).toContain('resume:audio-listening')
+    expect(configured.timing).toContain('transition:answering')
+  })
+
+  it('persists exit and retries the same extra outbox id after a publish failure', async () => {
+    const configured = options(wordQuestion)
+    let fail = true
+    const delivered: string[] = []
+    const first = new ExtraListeningTrainingRuntime({ ...configured, eventSink: { publishExtraTrainingEvent: async (event) => { if (fail) { fail = false; throw new Error('offline') }; delivered.push(event.id) } } })
+    await first.initialize(); await first.next(); const paused = await first.exit(); const exitId = paused.pendingEvents.at(-1)!.id
+    await expect(first.flush()).rejects.toThrow('offline')
+    const second = new ExtraListeningTrainingRuntime({ ...configured, repository: configured.repository, eventSink: { publishExtraTrainingEvent: async (event) => { delivered.push(event.id) } } })
+    await second.initialize(); await second.flush(); await second.flush()
+    expect(delivered.filter((id) => id === exitId)).toEqual([exitId])
+  })
+
+  it('preserves cursor/exclude on acknowledged exhaustion and isolates provider failure', async () => {
+    let available = false
+    const configured = options(wordQuestion)
+    const initial = { ...session, completedItemCount: 3, nextSupplyCursor: 'old', excludeItemIds: ['old'] }
+    const runtime = new ExtraListeningTrainingRuntime({ ...configured, session: initial, supplyProvider: { next: async (value) => available ? { schemaVersion: 1 as const, requestId: value.requestId, status: 'item' as const, item, nextCursor: item.itemId } : { schemaVersion: 1 as const, requestId: value.requestId, status: 'content-exhausted' as const, reason: 'no-eligible-content' as const } } })
+    await runtime.initialize(); await runtime.next(); available = true; await runtime.retryContent()
+    expect(runtime.currentSnapshot?.session.excludeItemIds).toEqual(['old'])
+    expect(runtime.currentSnapshot?.session.nextSupplyCursor).toBe('old')
+    const failed = new ExtraListeningTrainingRuntime({ ...options(), supplyProvider: { next: async (value) => ({ schemaVersion: 1 as const, requestId: value.requestId, status: 'content-exhausted' as const, reason: 'provider-failure' as const }) } })
+    await failed.initialize(); await failed.next(); expect(failed.currentSnapshot?.session.endReason).toBe('provider-failure')
+    await expect(failed.retryContent()).rejects.toThrow('Only content-exhausted')
+  })
+
+  it('does not mutate an already completed daily 3/3 record', async () => {
+    const daily = { planId: 'daily', completedUnitIds: ['vocabulary', 'listening', 'speaking'], status: 'completed' }
+    const before = structuredClone(daily)
+    const events: unknown[] = []
+    const runtime = new ExtraListeningTrainingRuntime({ ...options(), eventSink: { publishExtraTrainingEvent: async (event) => { events.push(event) } } })
+    await runtime.initialize(); await runtime.next(); await runtime.select('right'); await runtime.submit(); await runtime.completeCurrentItem()
+    expect(daily).toEqual(before)
+    expect(JSON.stringify(runtime.currentSnapshot)).not.toMatch(/planId|taskId/)
+    expect(JSON.stringify(events)).not.toMatch(/planId|taskId/)
+  })
+})

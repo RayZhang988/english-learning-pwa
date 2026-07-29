@@ -51,6 +51,16 @@ export {
   type ListeningTrainingRuntimeOptions,
 } from './runtime.ts'
 export {
+  ExtraListeningTrainingRuntime,
+  type ExtraListeningSupplyProvider,
+  type ExtraListeningTrainingRuntimeOptions,
+  type ExtraListeningTrainingSnapshot,
+} from './extra-training.ts'
+export {
+  ExtraListeningTrainingRepository,
+  EXTRA_LISTENING_TRAINING_STORAGE_NAMESPACE,
+} from './extra-training-repository.ts'
+export {
   ListeningCatalogSupplyProvider,
   resolveListeningSupplyQuestion,
   type ListeningSupplyProvider,

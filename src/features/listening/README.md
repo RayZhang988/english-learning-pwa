@@ -68,6 +68,29 @@
 传入 `timingSessionFactory={productionEffectiveTimingSessions}`。该应用集成不属于
 07 文件所有权，本次模块交付没有修改或部署 `src/app/**`。
 
+### R6 额外训练（待 01 路由接线）
+
+- `ExtraListeningTrainingRuntime` 是与每日 `ListeningTrainingRuntime` 完全独立的公开入口：
+  它只接收 04 的 `ExtraTrainingSession`、`ExtraTrainingSupplyRequest`、05 供应器、
+  `ExtraTrainingEffectiveTimingSessionFactoryPort` 与 `ExtraTrainingEventSink`，不接收或强转
+  `LearningTask`，也不读取应用路由。
+- 它使用 `feature.listening.extra-training` 下按 `sessionId` 分区的 JSON 可移植仓储和专用
+  outbox。快照及事件中没有 `planId`、`taskId`；只发布 `learning.extra-training.*.v1`。
+  因此完成、退出、失败和跨日清理不会改变每日计划的 3/3 深度。
+- 每次请求把 04/05 给出的四级优先顺序及精确 `priorityItemIds` 原样传给供应器，并保存
+  cursor、exclude 和 completed count。内容耗尽仅可对已确认的 `content-exhausted` 重试；
+  `provider-failure` 仍是隔离失败，不能伪装为可恢复耗尽。
+- 900 秒只把 session 置为 `finish-current-item`，不会取消 SpeechSynthesis 或截断输入。
+  当前题进入反馈后按 `attempt.completed → item.completed → budget.completed` 顺序持久化并发布；
+  在预算完成事件前先调用额外训练 timing 的 `finish()`。
+- 播放和听写复用本模块既有的单一中性系统 voice、连续正文、`pitch = 1`、原始用户 rate、
+  片段/重复控制以及草稿串行保存。刷新后的“playing”语音诚实恢复为暂停状态，绝不自动
+  伪造继续播放或离线时长。
+
+01 的后续唯一接线事项：在用户已完成当日 3/3 后创建/恢复 04 的额外会话，将 05 的听力
+`SupplyRequest`/供应器、正式 item resolver、生产 extra timing factory 和 extra event sink
+注入本 runtime；UI 路由与每日计划状态不属于 07。
+
 ## 输入
 
 ### 学习任务
@@ -223,6 +246,5 @@ transcript 迁移为逐句片段，并把旧完整场景的播放次数转移到
 - Web Speech 被后台或其他系统音频打断后从片段开头恢复，不承诺字词级续播。
 - 真实 iPhone Safari、主屏幕 Web App、静音模式、来电和其他音频竞争仍由 09 做真机
   黑盒验收。
-- R3 的 07 factory 尚未由 01 注入生产 Route，也未部署或经 09 正式站回归；当前生产
-  听力训练仍不会创建有效计时 session。模块自动化只能验证阶段与事件顺序，不能替代
-  真机后台、中断和听感验收。
+- R6 的 extra runtime 尚未由 01 接入公开路由、02 的选择入口或 09 的正式站验收；在这些
+  集成完成前，生产入口不会自行暴露额外训练。
