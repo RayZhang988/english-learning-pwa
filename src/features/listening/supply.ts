@@ -1,4 +1,5 @@
 import type {
+  ExtraTrainingSupplyRequest,
   LearningTaskSupplyRequest,
   LearningTaskSupplyResult,
 } from '../../learning-engine/index.ts'
@@ -56,7 +57,15 @@ function parseItem(value: unknown): IndexedListeningSupplyItem {
 }
 
 export interface ListeningSupplyProvider {
-  next(request: LearningTaskSupplyRequest): Promise<LearningTaskSupplyResult>
+  next(
+    request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
+  ): Promise<LearningTaskSupplyResult>
+}
+
+function isExtraTrainingRequest(
+  request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
+): request is ExtraTrainingSupplyRequest {
+  return 'priority' in request
 }
 
 /** Strict, local implementation of the 05 training-supply handoff v1 selection. */
@@ -85,7 +94,9 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
     }
   }
 
-  async next(request: LearningTaskSupplyRequest): Promise<LearningTaskSupplyResult> {
+  async next(
+    request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
+  ): Promise<LearningTaskSupplyResult> {
     if (request.schemaVersion !== 1 || request.domain !== 'listening' || request.targetModuleId !== 'listening') {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
     }
@@ -99,8 +110,25 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'no-eligible-content' }
     }
     const excluded = new Set(request.excludeItemIds)
-    if (eligible.every((item) => excluded.has(item.itemId))) {
+    const available = eligible.filter((item) => !excluded.has(item.itemId))
+    if (available.length === 0) {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'all-eligible-content-recently-used' }
+    }
+    if (isExtraTrainingRequest(request)) {
+      const allPriorityIds = request.priority.flatMap(
+        (priority) => request.priorityItemIds[priority],
+      )
+      if (allPriorityIds.some((itemId) => !this.items.some((item) => item.itemId === itemId))) {
+        return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
+      }
+      for (const priority of request.priority) {
+        const selected = request.priorityItemIds[priority]
+          .map((itemId) => this.items.find((item) => item.itemId === itemId)!)
+          .find((item) => available.includes(item))
+        if (selected) {
+          return { schemaVersion: 1, requestId: request.requestId, status: 'item', item: selected, nextCursor: selected.itemId }
+        }
+      }
     }
     const cursorIndex = request.cursor === null ? -1 : eligible.findIndex((item) => item.itemId === request.cursor)
     if (request.cursor !== null && cursorIndex < 0) {
