@@ -29,6 +29,8 @@ export interface ProductionExtraTrainingEffectiveTimingSessionFactoryOptions {
   readonly lifecycle?: TimingLifecyclePort
   readonly clock?: EffectiveTimingClock
   readonly scheduler?: EffectiveTimingScheduler
+  readonly interactionIdleClockSeconds?: number
+  readonly maximumActiveClockSeconds?: number
   readonly createId?: () => string
   readonly onError?: (error: unknown) => void
 }
@@ -205,6 +207,10 @@ export class ProductionExtraTrainingEffectiveTimingSessionFactory
       lifecycle: this.#lifecycle,
       clock: this.#options.clock,
       scheduler: this.#options.scheduler,
+      interactionIdleClockSeconds:
+        this.#options.interactionIdleClockSeconds,
+      maximumActiveClockSeconds:
+        this.#options.maximumActiveClockSeconds,
       createId: this.#options.createId,
       onError: this.#options.onError,
     })

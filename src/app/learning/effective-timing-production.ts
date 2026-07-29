@@ -18,6 +18,11 @@ import {
   EFFECTIVE_TIMING_STORAGE_NAMESPACE,
   EffectiveTimingSnapshotRepository,
 } from './effective-timing-snapshot-repository.ts'
+import {
+  createTrainingTimingClock,
+  createTrainingTimingScheduler,
+  trainingTestMode,
+} from '../../config/training-test-mode.ts'
 import { learningAppCoordinator } from './learning-app-coordinator.ts'
 
 export interface ResolvedTimingTask {
@@ -35,6 +40,8 @@ export interface ProductionEffectiveTimingSessionFactoryOptions {
   readonly lifecycle: TimingLifecyclePort
   readonly clock?: EffectiveTimingClock
   readonly scheduler?: EffectiveTimingScheduler
+  readonly interactionIdleClockSeconds?: number
+  readonly maximumActiveClockSeconds?: number
   readonly createId?: () => string
   readonly onError?: (error: unknown) => void
 }
@@ -90,6 +97,10 @@ export class ProductionEffectiveTimingSessionFactory {
       lifecycle: this.#options.lifecycle,
       clock: this.#options.clock,
       scheduler: this.#options.scheduler,
+      interactionIdleClockSeconds:
+        this.#options.interactionIdleClockSeconds,
+      maximumActiveClockSeconds:
+        this.#options.maximumActiveClockSeconds,
       createId: this.#options.createId,
       onError: this.#options.onError,
     })
@@ -114,6 +125,12 @@ const productionTimingSnapshots =
 
 export const productionEffectiveTimingSessions =
   new ProductionEffectiveTimingSessionFactory({
+    clock: createTrainingTimingClock(),
+    scheduler: createTrainingTimingScheduler(),
+    interactionIdleClockSeconds:
+      trainingTestMode.enabled ? 45 * trainingTestMode.timeScale : undefined,
+    maximumActiveClockSeconds:
+      trainingTestMode.enabled ? 900 : undefined,
     resolveTask(taskId, expectedModuleId) {
       const task = learningAppCoordinator.resolveTask(
         taskId,
@@ -137,4 +154,3 @@ export const productionEffectiveTimingSessions =
       console.error('Effective timing lifecycle operation failed', error)
     },
   })
-

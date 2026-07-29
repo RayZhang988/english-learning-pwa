@@ -50,6 +50,11 @@ import {
   ProductionExtraTrainingEffectiveTimingSessionFactory,
 } from './extra-training-effective-timing-production.ts'
 import {
+  createTrainingTimingClock,
+  createTrainingTimingScheduler,
+  trainingTestMode,
+} from '../../config/training-test-mode.ts'
+import {
   vocabularyContentSource,
 } from './training-production-resources.ts'
 
@@ -189,6 +194,14 @@ export class LearningAppCoordinator {
     this.extraTrainingTimingSessions =
       new ProductionExtraTrainingEffectiveTimingSessionFactory({
         eventSink: this.extraTraining.eventSink,
+        clock: createTrainingTimingClock(),
+        scheduler: createTrainingTimingScheduler(),
+        interactionIdleClockSeconds:
+          trainingTestMode.enabled
+            ? 45 * trainingTestMode.timeScale
+            : undefined,
+        maximumActiveClockSeconds:
+          trainingTestMode.enabled ? 900 : undefined,
       })
     this.eventSink.subscribe((update) => {
       this.#acceptRuntimeUpdate(update)

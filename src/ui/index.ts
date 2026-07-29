@@ -210,3 +210,4 @@ export type {
 } from './view-models.ts'
 export { Icon, type IconName } from './icons.tsx'
 export { appTheme } from './theme.ts'
+export { TrainingTestModeBanner } from './training-test-mode-banner.tsx'

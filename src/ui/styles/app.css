@@ -5,6 +5,20 @@
 @import "./system-states.css";
 @import "./travel-vocabulary-r1.css";
 
+.training-test-mode-banner {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  padding: 10px 16px;
+  color: #642b00;
+  background: #fff0c2;
+  border-bottom: 1px solid #e9b949;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+}
+
 :root {
   font-family:
     "PingFang SC", "SF Pro Text", -apple-system, BlinkMacSystemFont,

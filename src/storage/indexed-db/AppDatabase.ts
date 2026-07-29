@@ -1,4 +1,5 @@
 import Dexie, { type EntityTable } from 'dexie'
+import { trainingTestMode } from '../../config/training-test-mode.ts'
 
 export interface DatabaseRecord {
   readonly id: string
@@ -21,4 +22,6 @@ export class AppDatabase extends Dexie {
   }
 }
 
-export const appDatabase = new AppDatabase()
+export const appDatabase = new AppDatabase(
+  trainingTestMode.databaseName,
+)

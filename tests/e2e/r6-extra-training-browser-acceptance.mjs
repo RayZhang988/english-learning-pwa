@@ -11,6 +11,11 @@ const expectedAsset = process.env.QA_EXPECTED_ASSET ?? null
 const expectedPagesRun = process.env.QA_PAGES_RUN ?? null
 const dailyFirstOnly =
   process.env.QA_R6_DAILY_FIRST_ONLY === '1'
+const verifyThirtySecondTestMode =
+  process.env.QA_VERIFY_30_SECOND_TEST_MODE === '1'
+const appDatabaseName = verifyThirtySecondTestMode
+  ? 'english-learning-pwa-training-test-30s'
+  : 'english-learning-pwa'
 const MODULES = ['vocabulary', 'listening', 'speaking']
 const evidence = {
   status: 'running',
@@ -212,7 +217,7 @@ async function putRecords(page, records) {
   await page.evaluate(`(async () => {
     const records = ${JSON.stringify(records)}
     const database = await new Promise((resolve, reject) => {
-      const request = indexedDB.open('english-learning-pwa')
+      const request = indexedDB.open(${JSON.stringify(appDatabaseName)})
       request.onsuccess = () => resolve(request.result)
       request.onerror = () => reject(request.error)
     })
@@ -442,14 +447,20 @@ async function answerListening(page) {
 
 async function submitVocabularyAnswer(page) {
   await page.clickFirstEnabledChoice()
-  await page.waitFor(
-    `[...document.querySelectorAll('button')].some((button) =>
-      button.innerText.trim() === '提交答案' &&
-      !button.disabled &&
-      button.getAttribute('aria-disabled') !== 'true'
-    )`,
-    20_000,
-  )
+  try {
+    await page.waitFor(
+      `[...document.querySelectorAll('button')].some((button) =>
+        button.innerText.trim() === '提交答案' &&
+        !button.disabled &&
+        button.getAttribute('aria-disabled') !== 'true'
+      )`,
+      10_000,
+    )
+  } catch {
+    throw new Error(
+      `Vocabulary submit did not unlock: ${await page.bodyText()}`,
+    )
+  }
   await page.clickByText('提交答案')
 }
 
@@ -648,6 +659,71 @@ async function dailyPlanToThreeOfThree(page) {
     true,
   )
   return runtime
+}
+
+async function verifyThirtySecondMode(page) {
+  assert.match(await page.bodyText(), /测试模式：每项 30 秒/u)
+  const databaseNames = await page.evaluate(`(async () =>
+    (await indexedDB.databases()).map((database) => database.name)
+  )()`)
+  assert.ok(
+    databaseNames.includes(
+      'english-learning-pwa-training-test-30s',
+    ),
+  )
+  assert.equal(
+    databaseNames.includes('english-learning-pwa'),
+    false,
+  )
+
+  await clickDailyModule(page, 'vocabulary')
+  await waitForDailyQuestion(page, 'vocabulary')
+  const startedAt = Date.now()
+  const deadline = startedAt + 35_000
+  let execution
+  while (Date.now() < deadline) {
+    execution = executionFor(
+      activeRuntime(await page.dumpIndexedDb()),
+      'vocabulary',
+    )
+    if (execution.training?.status === 'finish-current-item') {
+      break
+    }
+    await new Promise((resolve) => setTimeout(resolve, 250))
+  }
+  const elapsedWallSeconds = (Date.now() - startedAt) / 1_000
+  assert.equal(execution?.training?.status, 'finish-current-item')
+  assert.equal(
+    execution?.training?.remainingEffectiveSeconds,
+    0,
+  )
+  assert.ok(
+    elapsedWallSeconds >= 28 && elapsedWallSeconds <= 35,
+    `30-second mode ended after ${elapsedWallSeconds}s.`,
+  )
+  assert.match(
+    await page.bodyText(),
+    /时间已到，完成本题后结束/u,
+  )
+  await submitVocabularyAnswer(page)
+  await page.waitFor(
+    `[...document.querySelectorAll('button')].some((button) =>
+      ['完成训练', '完成本题并结束'].includes(
+        button.innerText.trim()
+      ) && !button.disabled
+    )`,
+    20_000,
+  )
+  await page.clickByText('完成训练')
+  const completedRuntime = await waitForDailyExecutionCompleted(
+    page,
+    'vocabulary',
+  )
+  assert.equal(
+    executionFor(completedRuntime, 'vocabulary').status,
+    'completed',
+  )
+  return { databaseNames, elapsedWallSeconds }
 }
 
 async function waitForPicker(page) {
@@ -1045,6 +1121,10 @@ async function run() {
         'vocabulary',
       )
       await returnFromDailyModule(qa.page, 'vocabulary')
+      const diagnostic = await completionTransitionDiagnostic(
+        qa.page,
+        'vocabulary',
+      )
       checkpoint('r6-daily-first-only', {
         status: executionFor(
           vocabularyRuntime,
@@ -1052,7 +1132,16 @@ async function run() {
         ).status,
         activePlanStatus:
           vocabularyRuntime.activePlan.status,
+        diagnostic,
       })
+      evidence.status = 'passed'
+      console.log(JSON.stringify(evidence, null, 2))
+      return
+    }
+
+    if (verifyThirtySecondTestMode) {
+      const result = await verifyThirtySecondMode(qa.page)
+      checkpoint('training-test-mode-30-seconds', result)
       evidence.status = 'passed'
       console.log(JSON.stringify(evidence, null, 2))
       return

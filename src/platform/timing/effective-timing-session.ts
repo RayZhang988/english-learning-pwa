@@ -41,6 +41,8 @@ interface CreateEffectiveTimingSessionOptions {
   readonly lifecycle: TimingLifecyclePort
   readonly clock?: EffectiveTimingClock
   readonly scheduler?: EffectiveTimingScheduler
+  readonly interactionIdleClockSeconds?: number
+  readonly maximumActiveClockSeconds?: number
   readonly createId?: () => string
   readonly onError?: (error: unknown) => void
 }
@@ -63,6 +65,8 @@ interface CreateAdaptedEffectiveTimingSessionOptions<
   readonly lifecycle: TimingLifecyclePort
   readonly clock?: EffectiveTimingClock
   readonly scheduler?: EffectiveTimingScheduler
+  readonly interactionIdleClockSeconds?: number
+  readonly maximumActiveClockSeconds?: number
   readonly createId?: () => string
   readonly onError?: (error: unknown) => void
 }
@@ -184,6 +188,8 @@ export class EffectiveTimingSession<
   readonly #lifecycle: TimingLifecyclePort
   readonly #clock: EffectiveTimingClock
   readonly #scheduler: EffectiveTimingScheduler
+  readonly #interactionIdleClockSeconds: number
+  readonly #maximumActiveClockSeconds: number | undefined
   readonly #createId: () => string
   readonly #onError: ((error: unknown) => void) | undefined
   #sessionId = ''
@@ -214,6 +220,11 @@ export class EffectiveTimingSession<
     this.#lifecycle = options.lifecycle
     this.#clock = options.clock ?? defaultClock()
     this.#scheduler = options.scheduler ?? defaultScheduler()
+    this.#interactionIdleClockSeconds =
+      options.interactionIdleClockSeconds ??
+      MAX_INTERACTION_IDLE_SECONDS
+    this.#maximumActiveClockSeconds =
+      options.maximumActiveClockSeconds
     this.#createId = options.createId ?? defaultId
     this.#onError = options.onError
     this.#visibility = this.#lifecycle.currentVisibility()
@@ -699,6 +710,18 @@ export class EffectiveTimingSession<
     return events
   }
 
+  #maximumSegmentSeconds(
+    reason: LearningTimingSegmentReason,
+  ): number {
+    if (
+      this.#maximumActiveClockSeconds !== undefined &&
+      isActiveReason(reason)
+    ) {
+      return this.#maximumActiveClockSeconds
+    }
+    return maximumSegmentSeconds(reason)
+  }
+
   /**
    * Settles every boundary that is already in the past before handling the
    * current action. Browser timers may be delayed by a busy main thread or
@@ -718,12 +741,12 @@ export class EffectiveTimingSession<
       }
       const segmentDeadline =
         open.startedAtMonotonicMs +
-        maximumSegmentSeconds(open.reason) * 1_000
+        this.#maximumSegmentSeconds(open.reason) * 1_000
       const idleDeadline =
         ACTIVE_INTERACTION_REASONS.has(open.reason) &&
         this.#lastActivityAtMonotonicMs !== null
           ? this.#lastActivityAtMonotonicMs +
-            MAX_INTERACTION_IDLE_SECONDS * 1_000
+            this.#interactionIdleClockSeconds * 1_000
           : Number.POSITIVE_INFINITY
       const deadline = Math.min(segmentDeadline, idleDeadline)
       if (monotonicTimeMs < deadline) {
@@ -813,7 +836,7 @@ export class EffectiveTimingSession<
     }
     let deadline =
       open.startedAtMonotonicMs +
-      maximumSegmentSeconds(open.reason) * 1_000
+      this.#maximumSegmentSeconds(open.reason) * 1_000
     if (
       ACTIVE_INTERACTION_REASONS.has(open.reason) &&
       this.#lastActivityAtMonotonicMs !== null
@@ -821,7 +844,7 @@ export class EffectiveTimingSession<
       deadline = Math.min(
         deadline,
         this.#lastActivityAtMonotonicMs +
-          MAX_INTERACTION_IDLE_SECONDS * 1_000,
+          this.#interactionIdleClockSeconds * 1_000,
       )
     }
     const now = this.#now()
