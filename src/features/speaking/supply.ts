@@ -1,4 +1,5 @@
 import type {
+  ExtraTrainingSupplyRequest,
   LearningTaskSupplyRequest,
   LearningTaskSupplyResult,
 } from '../../learning-engine/index.ts'
@@ -34,7 +35,10 @@ function parseItem(value: unknown): SpeakingSupplyItem | null {
   return item as unknown as SpeakingSupplyItem
 }
 
-function eligible(item: SpeakingSupplyItem, request: LearningTaskSupplyRequest): boolean {
+function eligible(
+  item: SpeakingSupplyItem,
+  request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
+): boolean {
   if (!(item.allowedModes as readonly string[]).includes(request.mode)) return false
   return request.targetDifficulty < 0.5
     ? item.difficultyLevel >= 0.5 && item.difficultyLevel <= 2.5
@@ -42,7 +46,15 @@ function eligible(item: SpeakingSupplyItem, request: LearningTaskSupplyRequest):
 }
 
 export interface SpeakingSupplyProvider {
-  next(request: LearningTaskSupplyRequest): Promise<LearningTaskSupplyResult>
+  next(
+    request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
+  ): Promise<LearningTaskSupplyResult>
+}
+
+function isExtraTrainingRequest(
+  request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
+): request is ExtraTrainingSupplyRequest {
+  return 'priority' in request
 }
 
 /** Strict local adapter for the 05 index; it never invents prompts or repeats excluded IDs. */
@@ -69,17 +81,35 @@ export class SpeakingCatalogSupplyProvider implements SpeakingSupplyProvider {
     }
   }
 
-  async next(request: LearningTaskSupplyRequest): Promise<LearningTaskSupplyResult> {
+  async next(
+    request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
+  ): Promise<LearningTaskSupplyResult> {
     const base = { requestId: request.requestId } as const
     if (request.domain !== 'speaking' || request.targetModuleId !== 'speaking') {
       return { schemaVersion: 1, ...base, status: 'content-exhausted', reason: 'provider-failure' }
     }
     const candidates = this.items.filter((item) => eligible(item, request))
     if (!candidates.length) return { schemaVersion: 1, ...base, status: 'content-exhausted', reason: 'no-eligible-content' }
+    const excluded = new Set(request.excludeItemIds)
+    const available = candidates.filter((item) => !excluded.has(item.itemId))
+    if (!available.length) return { schemaVersion: 1, ...base, status: 'content-exhausted', reason: 'all-eligible-content-recently-used' }
+    if (isExtraTrainingRequest(request)) {
+      const allPriorityIds = request.priority.flatMap(
+        (priority) => request.priorityItemIds[priority],
+      )
+      if (allPriorityIds.some((itemId) => !this.items.some((item) => item.itemId === itemId))) {
+        return { schemaVersion: 1, ...base, status: 'content-exhausted', reason: 'provider-failure' }
+      }
+      for (const priority of request.priority) {
+        const item = request.priorityItemIds[priority]
+          .map((itemId) => this.items.find((candidate) => candidate.itemId === itemId)!)
+          .find((candidate) => available.includes(candidate))
+        if (item) return { schemaVersion: 1, ...base, status: 'item', item, nextCursor: item.itemId }
+      }
+    }
     const cursor = request.cursor
     const cursorIndex = cursor === null ? -1 : candidates.findIndex((item) => item.itemId === cursor)
     if (cursor !== null && cursorIndex < 0) return { schemaVersion: 1, ...base, status: 'content-exhausted', reason: 'provider-failure' }
-    const excluded = new Set(request.excludeItemIds)
     const ordered = [...candidates.slice(cursorIndex + 1), ...candidates.slice(0, cursorIndex + 1)]
     const item = ordered.find((candidate) => !excluded.has(candidate.itemId))
     if (!item) return { schemaVersion: 1, ...base, status: 'content-exhausted', reason: 'all-eligible-content-recently-used' }
