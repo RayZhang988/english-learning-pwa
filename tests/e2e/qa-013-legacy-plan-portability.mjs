@@ -16,6 +16,8 @@ const expectedHeadSha =
   process.env.QA_EXPECTED_HEAD_SHA ??
   'ac915a39a3adb0e7fa6888ff2383d7787f0604cc'
 const rolloverOnly = process.env.QA_ROLLOVER_ONLY === '1'
+const sameDayUpgradeOnly =
+  process.env.QA_SAME_DAY_UPGRADE_ONLY === '1'
 const modules = ['vocabulary', 'listening', 'speaking']
 const evidence = {
   baseUrl: baseUrl.href,
@@ -868,6 +870,60 @@ async function runFormalLegacyPlan() {
   const records = asUserEquivalentLegacyRecords(generated)
   const qa = await prepareBrowser()
   try {
+    if (sameDayUpgradeOnly) {
+      await qa.page.navigate(new URL('#/', baseUrl).href)
+      await qa.page.waitFor(`document.readyState === 'complete'`)
+      await putRecords(qa.page, records)
+      const legacy = activeRuntime(await qa.page.dumpIndexedDb())
+      assertLegacyShape(legacy)
+      const previousPlanId = legacy.activePlan.plan.planId
+      const previousLocalDate = legacy.activePlan.plan.localDate
+
+      await qa.page.reload()
+      await waitForHome(qa.page)
+      const upgraded = activeRuntime(
+        await qa.page.dumpIndexedDb(),
+      )
+      assert.notEqual(
+        upgraded.activePlan.plan.planId,
+        previousPlanId,
+      )
+      assert.equal(
+        upgraded.activePlan.plan.localDate,
+        previousLocalDate,
+      )
+      assert.equal(
+        upgraded.activePlan.plan.tasks.every(
+          (task) =>
+            task.trainingBudget?.targetEffectiveSeconds === 900,
+        ),
+        true,
+      )
+      assert.equal(
+        upgraded.activePlan.tasks.every(
+          (execution) =>
+            execution.training?.targetEffectiveSeconds === 900 &&
+            execution.training?.status === 'running',
+        ),
+        true,
+      )
+      checkpoint('qa-014-formal-same-day-upgrade', {
+        previousPlanId,
+        previousLocalDate,
+        currentPlanId: upgraded.activePlan.plan.planId,
+        currentLocalDate: upgraded.activePlan.plan.localDate,
+        completedLearningUnitIds:
+          upgraded.completedLearningUnitIds,
+        tasks: upgraded.activePlan.plan.tasks.map((task) => ({
+          moduleId: task.targetModuleId,
+          targetEffectiveSeconds:
+            task.trainingBudget?.targetEffectiveSeconds,
+        })),
+        userDataCleared: false,
+      })
+      return
+    }
+
     await seedLegacyRecords(qa.page, records)
     const seeded = activeRuntime(await qa.page.dumpIndexedDb())
     assertLegacyShape(seeded)

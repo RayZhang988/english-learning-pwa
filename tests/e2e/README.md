@@ -129,3 +129,17 @@ QA_ROLLOVER_ONLY=1 \
 
 该正式回归不会读取或清除用户设备数据，且必须观察到旧计划日期变化、三项
 `targetEffectiveSeconds=900` 和初始化后的 `running` 预算状态。
+
+同日旧计划升级使用最新正式资产运行：
+
+```bash
+QA_BASE_URL=https://rayzhang988.github.io/english-learning-pwa/ \
+QA_EXPECTED_ASSET=index-BW16H4eG.js \
+QA_PAGES_RUN=30415214326 \
+QA_EXPECTED_HEAD_SHA=46091ea48c37e3fe814e6e0f8aa11b5229b08ef3 \
+QA_SAME_DAY_UPGRADE_ONLY=1 \
+  node tests/e2e/qa-013-legacy-plan-portability.mjs
+```
+
+它必须保留完成单元历史，在相同本地日期生成新的计划ID，并把三个模块全部升级为
+900秒running预算。
