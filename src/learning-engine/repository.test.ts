@@ -169,4 +169,30 @@ describe('LearningEngineRepository', () => {
       'Stored learning engine state is invalid',
     )
   })
+
+  it('round-trips additive R6 extra-training state while legacy schema 1 records still omit it', async () => {
+    const store = new MemoryNamespaceStore()
+    const repository = new LearningEngineRepository(store)
+    const state = createLearningEngineState(abilityProfile(), '2026-07-29T00:00:00.000Z')
+    const withExtraTraining = {
+      ...state,
+      extraTraining: {
+        schemaVersion: 1 as const,
+        processedEventIds: ['extra-event-1'],
+        sessions: {
+          'extra-1': {
+            schemaVersion: 1 as const, sessionId: 'extra-1', localDate: '2026-07-29',
+            domain: 'speaking' as const, targetModuleId: 'speaking' as const, mode: 'learn' as const,
+            targetDifficulty: 3, targetEffectiveSeconds: 900 as const, remainingEffectiveSeconds: 600,
+            status: 'paused' as const, nextSupplyCursor: 'cursor-1', excludeItemIds: ['item-1'], completedItemCount: 1,
+            startedAt: '2026-07-29T01:00:00.000Z', updatedAt: '2026-07-29T01:05:00.000Z', endedAt: '2026-07-29T01:05:00.000Z', endReason: 'user-exited' as const,
+          },
+        },
+      },
+    }
+    await repository.save(withExtraTraining)
+    await expect(repository.load()).resolves.toEqual(withExtraTraining)
+    await repository.save(state)
+    await expect(repository.load()).resolves.toEqual(state)
+  })
 })

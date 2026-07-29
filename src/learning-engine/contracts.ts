@@ -22,6 +22,8 @@ export const LEARNING_EVENT_SCHEMA_VERSION = 1 as const
 export const DEFAULT_DAILY_TARGET_SECONDS = 45 * 60
 /** Every required daily domain is an effective-practice stream of 15 minutes. */
 export const REQUIRED_TASK_EFFECTIVE_SECONDS = 15 * 60
+/** Every optional R6 training block has the same independent effective budget. */
+export const EXTRA_TRAINING_EFFECTIVE_SECONDS = 15 * 60
 export const MINIMUM_DAILY_BUDGET_SECONDS = 5 * 60
 export const MAX_INTERACTION_IDLE_SECONDS = 45 as const
 export const MAX_CONTINUOUS_ACTIVE_MEDIA_SECONDS = 15 * 60
@@ -201,6 +203,74 @@ export type LearningTaskSupplyResult =
         | 'provider-failure'
     }
 
+/**
+ * R6 optional-session priority is a request to the content owner, not a
+ * content-selection implementation. Providers try these buckets in order.
+ */
+export type ExtraTrainingContentPriority =
+  | 'recent-error'
+  | 'due-review'
+  | 'same-day-variant'
+  | 'new-optional-content'
+
+export type ExtraTrainingStatus =
+  | 'running'
+  | 'finish-current-item'
+  | 'paused'
+  | 'completed'
+  | 'failed'
+  | 'expired'
+
+export type ExtraTrainingEndReason =
+  | 'budget-reached'
+  | 'user-exited'
+  | 'content-exhausted'
+  | 'provider-failure'
+  | 'device-failure'
+  | 'cross-day-expired'
+
+/** Independent from PlanProgress: extra sessions never become daily tasks. */
+export interface ExtraTrainingSession {
+  readonly schemaVersion: 1
+  readonly sessionId: string
+  readonly localDate: string
+  readonly domain: AbilityDomain
+  readonly targetModuleId: TrainingModuleId
+  readonly mode: 'learn'
+  readonly targetDifficulty: number
+  readonly targetEffectiveSeconds: typeof EXTRA_TRAINING_EFFECTIVE_SECONDS
+  readonly remainingEffectiveSeconds: number
+  readonly status: ExtraTrainingStatus
+  readonly nextSupplyCursor: string | null
+  readonly excludeItemIds: readonly string[]
+  readonly completedItemCount: number
+  readonly startedAt: string
+  readonly updatedAt: string
+  readonly endedAt: string | null
+  readonly endReason: ExtraTrainingEndReason | null
+}
+
+export interface ExtraTrainingState {
+  readonly schemaVersion: 1
+  readonly sessions: Readonly<Record<string, ExtraTrainingSession>>
+  readonly processedEventIds: readonly string[]
+}
+
+export interface ExtraTrainingSupplyRequest {
+  readonly schemaVersion: 1
+  readonly requestId: string
+  readonly sessionId: string
+  readonly localDate: string
+  readonly domain: AbilityDomain
+  readonly targetModuleId: TrainingModuleId
+  readonly mode: 'learn'
+  readonly targetDifficulty: number
+  readonly cursor: string | null
+  readonly excludeItemIds: readonly string[]
+  readonly priority: readonly ExtraTrainingContentPriority[]
+  readonly reason: 'initial' | 'continue-after-item' | 'resume'
+}
+
 export interface DomainAllocation {
   readonly domain: AbilityDomain
   readonly weaknessWeight: number
@@ -361,6 +431,8 @@ export interface LearningEngineState {
   readonly schemaVersion: 1
   readonly progress: ProgressState
   readonly reviewItems: Readonly<Record<string, ReviewItemState>>
+  /** Additive R6 state. Old schema-1 records omit it unchanged. */
+  readonly extraTraining?: ExtraTrainingState
 }
 
 export type ProgressTrend =
@@ -703,6 +775,65 @@ export type LearningTrainingBudgetCompletedPayload =
     readonly completedItemCount: number
   }
 
+type ExtraTrainingEventBasePayload = {
+  readonly sessionId: string
+  readonly localDate: string
+  readonly domain: AbilityDomain
+  readonly targetModuleId: TrainingModuleId
+  readonly mode: 'learn'
+}
+
+export type ExtraTrainingStartedPayload = ExtraTrainingEventBasePayload
+
+export type ExtraTrainingTimingSegmentRecordedPayload =
+  ExtraTrainingEventBasePayload & {
+    readonly phase: LearningTimingPhase
+    readonly reason: LearningTimingSegmentReason
+    readonly visibility: 'foreground' | 'background'
+    readonly startedAt: string
+    readonly endedAt: string
+    readonly elapsedSeconds: number
+    readonly idleThresholdSeconds: typeof MAX_INTERACTION_IDLE_SECONDS
+  }
+
+export type ExtraTrainingItemCompletedPayload = ExtraTrainingEventBasePayload & {
+  readonly item: LearningTaskSupplyItem
+  readonly requestId: string
+  readonly nextSupplyCursor: string | null
+}
+
+export type ExtraTrainingExitedPayload = ExtraTrainingEventBasePayload
+
+export type ExtraTrainingBudgetCompletedPayload =
+  ExtraTrainingEventBasePayload & {
+    readonly completedItemCount: number
+  }
+
+export type ExtraTrainingFailedPayload = ExtraTrainingEventBasePayload & {
+  readonly reason: Exclude<ExtraTrainingEndReason, 'budget-reached' | 'user-exited' | 'cross-day-expired'>
+}
+
+/**
+ * This event deliberately has no `planId` or daily `taskId`. Its scored
+ * evidence can update review state through applyExtraTrainingAttempt(), but
+ * it is not accepted by applyPlanEvent().
+ */
+export type ExtraTrainingAttemptCompletedPayload =
+  ExtraTrainingEventBasePayload & {
+    readonly learningUnitId: string
+    readonly contentRef: string
+    readonly difficultyLevel: number
+    readonly estimatedSeconds: number
+    readonly result: 'scored' | 'unscorable'
+    readonly performanceScore: number | null
+    readonly evidenceQuality: number
+    readonly assistanceLevel: number
+    readonly durationSeconds: number
+    readonly errorTags: readonly StandardErrorTag[]
+    readonly contentTags: readonly string[]
+    readonly failureCategory: AttemptFailureCategory | null
+  }
+
 type LearningPlatformEvent<
   TType extends string,
   TPayload extends PortableData,
@@ -752,6 +883,44 @@ export type LearningTrainingBudgetCompletedEvent = LearningPlatformEvent<
   'learning.training.budget.completed.v1',
   LearningTrainingBudgetCompletedPayload
 >
+
+export type ExtraTrainingStartedEvent = LearningPlatformEvent<
+  'learning.extra-training.started.v1',
+  ExtraTrainingStartedPayload
+>
+export type ExtraTrainingTimingSegmentRecordedEvent = LearningPlatformEvent<
+  'learning.extra-training.timing.segment.recorded.v1',
+  ExtraTrainingTimingSegmentRecordedPayload
+>
+export type ExtraTrainingItemCompletedEvent = LearningPlatformEvent<
+  'learning.extra-training.item.completed.v1',
+  ExtraTrainingItemCompletedPayload
+>
+export type ExtraTrainingExitedEvent = LearningPlatformEvent<
+  'learning.extra-training.exited.v1',
+  ExtraTrainingExitedPayload
+>
+export type ExtraTrainingBudgetCompletedEvent = LearningPlatformEvent<
+  'learning.extra-training.budget.completed.v1',
+  ExtraTrainingBudgetCompletedPayload
+>
+export type ExtraTrainingFailedEvent = LearningPlatformEvent<
+  'learning.extra-training.failed.v1',
+  ExtraTrainingFailedPayload
+>
+export type ExtraTrainingAttemptCompletedEvent = LearningPlatformEvent<
+  'learning.extra-training.attempt.completed.v1',
+  ExtraTrainingAttemptCompletedPayload
+>
+
+export type ExtraTrainingEvent =
+  | ExtraTrainingStartedEvent
+  | ExtraTrainingTimingSegmentRecordedEvent
+  | ExtraTrainingItemCompletedEvent
+  | ExtraTrainingExitedEvent
+  | ExtraTrainingBudgetCompletedEvent
+  | ExtraTrainingFailedEvent
+  | ExtraTrainingAttemptCompletedEvent
 
 export type LearningEvent =
   | LearningTaskStartedEvent

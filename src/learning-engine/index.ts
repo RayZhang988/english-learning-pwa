@@ -8,6 +8,7 @@ export {
 } from './ability-profile.ts'
 export {
   DEFAULT_DAILY_TARGET_SECONDS,
+  EXTRA_TRAINING_EFFECTIVE_SECONDS,
   REQUIRED_TASK_EFFECTIVE_SECONDS,
   LEARNING_ENGINE_SCHEMA_VERSION,
   LEARNING_EVENT_SCHEMA_VERSION,
@@ -23,6 +24,27 @@ export type {
   AbilityDomain,
   AbilityProfile,
   ApplyAttemptResult,
+  ExtraTrainingAttemptCompletedEvent,
+  ExtraTrainingAttemptCompletedPayload,
+  ExtraTrainingBudgetCompletedEvent,
+  ExtraTrainingBudgetCompletedPayload,
+  ExtraTrainingContentPriority,
+  ExtraTrainingEndReason,
+  ExtraTrainingEvent,
+  ExtraTrainingExitedEvent,
+  ExtraTrainingExitedPayload,
+  ExtraTrainingFailedEvent,
+  ExtraTrainingFailedPayload,
+  ExtraTrainingItemCompletedEvent,
+  ExtraTrainingItemCompletedPayload,
+  ExtraTrainingSession,
+  ExtraTrainingStartedEvent,
+  ExtraTrainingStartedPayload,
+  ExtraTrainingState,
+  ExtraTrainingStatus,
+  ExtraTrainingSupplyRequest,
+  ExtraTrainingTimingSegmentRecordedEvent,
+  ExtraTrainingTimingSegmentRecordedPayload,
   AttemptPlanDisposition,
   AttemptEvidence,
   AttemptFailureCategory,
@@ -97,11 +119,14 @@ export type {
   TrainingModuleId,
 } from './contracts.ts'
 export {
+  applyExtraTrainingAttempt,
   applyLearningAttempt,
   createLearningEngineState,
 } from './engine.ts'
 export {
+  isExtraTrainingEvent,
   isLearningEvent,
+  parseExtraTrainingEvent,
   parseLearningEvent,
 } from './events.ts'
 export {
@@ -150,6 +175,14 @@ export {
   initialTrainingTaskProgress,
   remainingEffectiveSeconds,
 } from './training-budget.ts'
+export {
+  applyExtraTrainingEvent,
+  buildExtraTrainingSupplyRequest,
+  createExtraTrainingSession,
+  createExtraTrainingState,
+  expireExtraTrainingSessions,
+} from './extra-training.ts'
+export type { CreateExtraTrainingSessionInput } from './extra-training.ts'
 export type {
   EstimateTaskDurationInput,
   TimingSegmentClassification,

@@ -63,6 +63,41 @@ function hasValidDurationSamples(progress: Record<string, unknown>): boolean {
   })
 }
 
+function hasValidExtraTraining(value: Record<string, unknown>): boolean {
+  if (!('extraTraining' in value)) {
+    return true
+  }
+  const extra = value.extraTraining
+  if (
+    typeof extra !== 'object' || extra === null ||
+    !('schemaVersion' in extra) || extra.schemaVersion !== 1 ||
+    !('sessions' in extra) || typeof extra.sessions !== 'object' || extra.sessions === null ||
+    !('processedEventIds' in extra) || !Array.isArray(extra.processedEventIds) ||
+    extra.processedEventIds.some((id) => typeof id !== 'string')
+  ) {
+    return false
+  }
+  return Object.entries(extra.sessions).every(([sessionId, session]) => {
+    if (typeof session !== 'object' || session === null) return false
+    const record = session as Record<string, unknown>
+    return (
+      record.schemaVersion === 1 && record.sessionId === sessionId &&
+      typeof record.localDate === 'string' && Number.isFinite(Date.parse(`${record.localDate}T00:00:00Z`)) &&
+      (record.domain === 'vocabulary' || record.domain === 'listening' || record.domain === 'speaking') &&
+      record.targetModuleId === record.domain && record.mode === 'learn' &&
+      record.targetEffectiveSeconds === 900 &&
+      typeof record.remainingEffectiveSeconds === 'number' && Number.isFinite(record.remainingEffectiveSeconds) && record.remainingEffectiveSeconds >= 0 && record.remainingEffectiveSeconds <= 900 &&
+      ['running', 'finish-current-item', 'paused', 'completed', 'failed', 'expired'].includes(record.status as string) &&
+      (record.nextSupplyCursor === null || typeof record.nextSupplyCursor === 'string') &&
+      Array.isArray(record.excludeItemIds) && record.excludeItemIds.every((id) => typeof id === 'string') &&
+      typeof record.completedItemCount === 'number' && Number.isInteger(record.completedItemCount) && record.completedItemCount >= 0 &&
+      typeof record.startedAt === 'string' && Number.isFinite(Date.parse(record.startedAt)) &&
+      typeof record.updatedAt === 'string' && Number.isFinite(Date.parse(record.updatedAt)) &&
+      (record.endedAt === null || (typeof record.endedAt === 'string' && Number.isFinite(Date.parse(record.endedAt))))
+    )
+  })
+}
+
 function assertLearningEngineState(
   value: unknown,
 ): asserts value is LearningEngineState {
@@ -84,6 +119,7 @@ function assertLearningEngineState(
     !hasValidDurationSamples(
       value.progress as Record<string, unknown>,
     ) ||
+    !hasValidExtraTraining(value as Record<string, unknown>) ||
     !('reviewItems' in value) ||
     typeof value.reviewItems !== 'object' ||
     value.reviewItems === null

@@ -319,7 +319,7 @@ export function estimateTaskDuration(
 }
 
 function segmentElapsedSeconds(
-  payload: LearningTimingSegmentRecordedPayload,
+  payload: TimingSegmentForClassification,
 ): number {
   parseTimestamp(payload.startedAt, 'startedAt')
   parseTimestamp(payload.endedAt, 'endedAt')
@@ -348,8 +348,19 @@ function segmentElapsedSeconds(
   return payload.elapsedSeconds
 }
 
+type TimingSegmentForClassification = Pick<
+  LearningTimingSegmentRecordedPayload,
+  | 'phase'
+  | 'reason'
+  | 'visibility'
+  | 'startedAt'
+  | 'endedAt'
+  | 'elapsedSeconds'
+  | 'idleThresholdSeconds'
+>
+
 export function classifyTimingSegment(
-  payload: LearningTimingSegmentRecordedPayload,
+  payload: TimingSegmentForClassification,
 ): TimingSegmentClassification {
   const elapsedSeconds = segmentElapsedSeconds(payload)
   const activePhase =

@@ -1,5 +1,6 @@
 import type {
   ApplyAttemptResult,
+  ExtraTrainingAttemptCompletedEvent,
   LearningAttemptCompletedEvent,
   LearningEngineState,
   ReviewItemState,
@@ -103,4 +104,44 @@ export function applyLearningAttempt(
     evidenceAccepted: true,
     reason: 'scored',
   }
+}
+
+/**
+ * Scored optional practice uses the same review algorithm, while carrying a
+ * reserved non-plan evidence identity. It never enters applyPlanEvent(), so
+ * it cannot alter a completed daily plan or manufacture a fourth daily task.
+ */
+export function applyExtraTrainingAttempt(
+  state: LearningEngineState,
+  event: ExtraTrainingAttemptCompletedEvent,
+): ApplyAttemptResult {
+  const payload = event.payload
+  return applyLearningAttempt(state, {
+    id: event.id,
+    type: 'learning.attempt.completed.v1',
+    sourceModuleId: event.sourceModuleId,
+    schemaVersion: event.schemaVersion,
+    occurredAt: event.occurredAt,
+    payload: {
+      planId: `extra-training:${payload.localDate}`,
+      taskId: payload.sessionId,
+      learningUnitId: payload.learningUnitId,
+      contentRef: payload.contentRef,
+      domain: payload.domain,
+      targetModuleId: payload.targetModuleId,
+      localDate: payload.localDate,
+      mode: payload.mode,
+      difficultyLevel: payload.difficultyLevel,
+      estimatedSeconds: payload.estimatedSeconds,
+      result: payload.result,
+      performanceScore: payload.performanceScore,
+      evidenceQuality: payload.evidenceQuality,
+      assistanceLevel: payload.assistanceLevel,
+      durationSeconds: payload.durationSeconds,
+      taskCompleted: false,
+      errorTags: payload.errorTags,
+      contentTags: payload.contentTags,
+      failureCategory: payload.failureCategory,
+    },
+  })
 }

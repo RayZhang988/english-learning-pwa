@@ -1,5 +1,6 @@
 import type { PlatformEvent } from '../core/index.ts'
 import type {
+  ExtraTrainingEvent,
   LearningEvent,
   StandardErrorTag,
 } from './contracts.ts'
@@ -21,6 +22,16 @@ const EVENT_TYPES = [
   'learning.training.content.exhausted.v1',
   'learning.training.content.recovered.v1',
   'learning.training.budget.completed.v1',
+] as const
+
+const EXTRA_TRAINING_EVENT_TYPES = [
+  'learning.extra-training.started.v1',
+  'learning.extra-training.timing.segment.recorded.v1',
+  'learning.extra-training.item.completed.v1',
+  'learning.extra-training.exited.v1',
+  'learning.extra-training.budget.completed.v1',
+  'learning.extra-training.failed.v1',
+  'learning.extra-training.attempt.completed.v1',
 ] as const
 
 const MODES = ['learn', 'calibration', 'review', 'retry'] as const
@@ -179,6 +190,37 @@ function validateBase(
   assertLocalDate(requireString(payload, 'localDate'))
 }
 
+function validateExtraTrainingBase(
+  event: PlatformEvent,
+  payload: Record<string, unknown>,
+): void {
+  if (event.id.trim().length === 0) {
+    throw new TypeError('event.id cannot be empty')
+  }
+  if (event.schemaVersion !== 1) {
+    throw new TypeError('Unsupported extra-training event schemaVersion')
+  }
+  parseTimestamp(event.occurredAt, 'event.occurredAt')
+  const domain = requireEnum(payload, 'domain', [
+    'vocabulary',
+    'listening',
+    'speaking',
+  ])
+  const targetModuleId = requireEnum(payload, 'targetModuleId', [
+    'vocabulary',
+    'listening',
+    'speaking',
+  ])
+  if (domain !== targetModuleId || event.sourceModuleId !== targetModuleId) {
+    throw new TypeError('domain, targetModuleId, and sourceModuleId must match')
+  }
+  requireString(payload, 'sessionId')
+  assertLocalDate(requireString(payload, 'localDate'))
+  if (payload.mode !== 'learn') {
+    throw new TypeError('Extra-training mode must be learn')
+  }
+}
+
 function validateStreamItem(payload: Record<string, unknown>): void {
   if (!isRecord(payload.item)) {
     throw new TypeError('item must be an object')
@@ -329,6 +371,92 @@ export function parseLearningEvent(event: PlatformEvent): LearningEvent {
 export function isLearningEvent(event: PlatformEvent): boolean {
   try {
     parseLearningEvent(event)
+    return true
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Extra-training events intentionally parse through a separate boundary: they
+ * carry a session identity, never a daily plan/task identity, and must not be
+ * passed to applyPlanEvent().
+ */
+export function parseExtraTrainingEvent(
+  event: PlatformEvent,
+): ExtraTrainingEvent {
+  if (!EXTRA_TRAINING_EVENT_TYPES.includes(event.type as (typeof EXTRA_TRAINING_EVENT_TYPES)[number])) {
+    throw new TypeError(`Unsupported extra-training event type: ${event.type}`)
+  }
+  if (!isRecord(event.payload)) {
+    throw new TypeError('extra-training event payload must be an object')
+  }
+  const payload = event.payload
+  validateExtraTrainingBase(event, payload)
+
+  if (event.type === 'learning.extra-training.timing.segment.recorded.v1') {
+    requireEnum(payload, 'phase', TIMING_PHASES)
+    requireEnum(payload, 'reason', TIMING_REASONS)
+    requireEnum(payload, 'visibility', ['foreground', 'background'])
+    requireString(payload, 'startedAt')
+    requireString(payload, 'endedAt')
+    requireNumber(payload, 'elapsedSeconds')
+    requireNumber(payload, 'idleThresholdSeconds')
+    classifyTimingSegment(payload as never)
+  } else if (event.type === 'learning.extra-training.item.completed.v1') {
+    validateStreamItem(payload)
+    requireString(payload, 'requestId')
+    if (payload.nextSupplyCursor !== null && typeof payload.nextSupplyCursor !== 'string') {
+      throw new TypeError('nextSupplyCursor must be a string or null')
+    }
+  } else if (event.type === 'learning.extra-training.budget.completed.v1') {
+    const count = requireNumber(payload, 'completedItemCount')
+    if (!Number.isInteger(count) || count <= 0) {
+      throw new RangeError('completedItemCount must be a positive integer')
+    }
+  } else if (event.type === 'learning.extra-training.failed.v1') {
+    requireEnum(payload, 'reason', [
+      'content-exhausted',
+      'provider-failure',
+      'device-failure',
+    ])
+  } else if (event.type === 'learning.extra-training.attempt.completed.v1') {
+    requireString(payload, 'learningUnitId')
+    requireString(payload, 'contentRef')
+    const difficultyLevel = requireNumber(payload, 'difficultyLevel')
+    if (difficultyLevel < 0 || difficultyLevel > 12) {
+      throw new RangeError('difficultyLevel must be between 0 and 12')
+    }
+    assertPositiveSeconds(requireNumber(payload, 'estimatedSeconds'), 'estimatedSeconds')
+    const result = requireEnum(payload, 'result', ['scored', 'unscorable'])
+    if (result === 'scored') {
+      assertUnitInterval(requireNumber(payload, 'performanceScore'), 'performanceScore')
+      if (payload.failureCategory !== null) {
+        throw new TypeError('scored attempt cannot include a failureCategory')
+      }
+    } else if (payload.performanceScore !== null) {
+      throw new TypeError('unscorable attempt must use a null performanceScore')
+    } else {
+      requireEnum(payload, 'failureCategory', FAILURE_CATEGORIES)
+    }
+    assertUnitInterval(requireNumber(payload, 'evidenceQuality'), 'evidenceQuality')
+    assertUnitInterval(requireNumber(payload, 'assistanceLevel'), 'assistanceLevel')
+    const durationSeconds = requireNumber(payload, 'durationSeconds')
+    if (durationSeconds < 0) {
+      throw new RangeError('durationSeconds cannot be negative')
+    }
+    const errorTags = requireStringArray(payload, 'errorTags')
+    if (errorTags.some((tag) => !ERROR_TAGS.includes(tag as StandardErrorTag))) {
+      throw new TypeError('errorTags contains an unsupported tag')
+    }
+    requireStringArray(payload, 'contentTags')
+  }
+  return event as unknown as ExtraTrainingEvent
+}
+
+export function isExtraTrainingEvent(event: PlatformEvent): boolean {
+  try {
+    parseExtraTrainingEvent(event)
     return true
   } catch {
     return false
