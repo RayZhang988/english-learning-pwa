@@ -143,3 +143,18 @@ QA_SAME_DAY_UPGRADE_ONLY=1 \
 
 它必须保留完成单元历史，在相同本地日期生成新的计划ID，并把三个模块全部升级为
 900秒running预算。
+
+QA-015 使用已完成第一日听力的旧计划，要求升级后的第二日听力任务能够接收供应器
+返回的第一日已发布题目，不得再触发任务与内容单元身份冲突：
+
+```bash
+QA_BASE_URL=https://rayzhang988.github.io/english-learning-pwa/ \
+QA_EXPECTED_ASSET=index-B28uL1yR.js \
+QA_PAGES_RUN=30416221942 \
+QA_EXPECTED_HEAD_SHA=840d46ec2d4c1b5ce1738a1fc84c635998be9db3 \
+QA_LISTENING_CROSS_UNIT_ONLY=1 \
+  node tests/e2e/qa-013-legacy-plan-portability.mjs
+```
+
+正式回归必须观察到任务与供应题来自不同 `learningUnitId`，同时会话进入
+`answering`、播放器存在且 `failure=null`。

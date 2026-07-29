@@ -18,6 +18,8 @@ const expectedHeadSha =
 const rolloverOnly = process.env.QA_ROLLOVER_ONLY === '1'
 const sameDayUpgradeOnly =
   process.env.QA_SAME_DAY_UPGRADE_ONLY === '1'
+const listeningCrossUnitOnly =
+  process.env.QA_LISTENING_CROSS_UNIT_ONLY === '1'
 const modules = ['vocabulary', 'listening', 'speaking']
 const evidence = {
   baseUrl: baseUrl.href,
@@ -444,6 +446,34 @@ function asUserEquivalentLegacyRecords(records) {
   return copied
 }
 
+function completeLegacyListening(records) {
+  const activePlanRecord = records.find(
+    (record) =>
+      record.namespace === 'app.learning-runtime' &&
+      record.key === 'active-plan',
+  )
+  assert.ok(activePlanRecord)
+  const runtime = activePlanRecord.value
+  const listening = executionFor(runtime, 'listening')
+  Object.assign(listening, {
+    status: 'completed',
+    completionKind: 'scored',
+    spentSeconds: 38,
+    effectiveSeconds: 38,
+    timingSegmentCount: 0,
+    excludedSeconds: 0,
+    effectiveTimeSource: 'legacy-event-duration',
+    startedAt: '2026-07-24T08:01:00.000Z',
+    updatedAt: '2026-07-24T08:01:38.000Z',
+  })
+  runtime.completedLearningUnitIds = [
+    ...new Set([
+      ...runtime.completedLearningUnitIds,
+      listening.task.learningUnitId,
+    ]),
+  ]
+}
+
 async function seedLegacyRecords(page, records) {
   await page.navigate(new URL('#/', baseUrl).href)
   await page.waitFor(`document.readyState === 'complete'`)
@@ -868,9 +898,12 @@ async function releaseEvidence() {
 async function runFormalLegacyPlan() {
   const generated = await createProductionPlanRecords()
   const records = asUserEquivalentLegacyRecords(generated)
+  if (listeningCrossUnitOnly) {
+    completeLegacyListening(records)
+  }
   const qa = await prepareBrowser()
   try {
-    if (sameDayUpgradeOnly) {
+    if (sameDayUpgradeOnly || listeningCrossUnitOnly) {
       await qa.page.navigate(new URL('#/', baseUrl).href)
       await qa.page.waitFor(`document.readyState === 'complete'`)
       await putRecords(qa.page, records)
@@ -921,6 +954,46 @@ async function runFormalLegacyPlan() {
         })),
         userDataCleared: false,
       })
+      if (listeningCrossUnitOnly) {
+        const listeningTask = upgraded.activePlan.plan.tasks.find(
+          (task) => task.targetModuleId === 'listening',
+        )
+        assert.ok(listeningTask)
+        const taskId = await clickModule(
+          qa.page,
+          'listening',
+        )
+        assert.equal(taskId, listeningTask.taskId)
+        await qa.page.waitFor(
+          `Boolean(document.querySelector(
+            'button[aria-label="播放音频"]'
+          ))`,
+          20_000,
+        )
+        const text = await qa.page.bodyText()
+        assert.doesNotMatch(
+          text,
+          /identities do not match|本次听力任务无法评分/u,
+        )
+        const session = listeningSession(
+          await qa.page.dumpIndexedDb(),
+        )
+        assert.ok(session.stream?.activeItem)
+        assert.notEqual(
+          session.stream.activeItem.learningUnitId,
+          listeningTask.learningUnitId,
+          'The formal fixture did not exercise a cross-unit listening item.',
+        )
+        checkpoint('qa-015-formal-cross-unit-listening', {
+          taskId,
+          taskLearningUnitId: listeningTask.learningUnitId,
+          suppliedLearningUnitId:
+            session.stream.activeItem.learningUnitId,
+          activeItemId: session.stream.activeItem.itemId,
+          phase: session.phase,
+          failure: session.failure,
+        })
+      }
       return
     }
 
