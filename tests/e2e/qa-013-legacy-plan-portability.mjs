@@ -15,6 +15,7 @@ const expectedPagesRun =
 const expectedHeadSha =
   process.env.QA_EXPECTED_HEAD_SHA ??
   'ac915a39a3adb0e7fa6888ff2383d7787f0604cc'
+const rolloverOnly = process.env.QA_ROLLOVER_ONLY === '1'
 const modules = ['vocabulary', 'listening', 'speaking']
 const evidence = {
   baseUrl: baseUrl.href,
@@ -886,6 +887,70 @@ async function runFormalLegacyPlan() {
         speaking: taskIds.speaking,
       },
     })
+
+    if (rolloverOnly) {
+      const previousPlanId = seeded.activePlan.plan.planId
+      const previousLocalDate = seeded.activePlan.plan.localDate
+      await qa.page.evaluate(
+        `globalThis.__qaAdvanceTime(24 * 60 * 60 * 1_000)`,
+      )
+      await qa.page.evaluate(
+        `window.dispatchEvent(new Event('pageshow'))`,
+      )
+
+      const deadline = Date.now() + 20_000
+      let rolledOver = null
+      while (Date.now() < deadline) {
+        const runtime = activeRuntime(
+          await qa.page.dumpIndexedDb(),
+        )
+        if (runtime.activePlan.plan.planId !== previousPlanId) {
+          rolledOver = runtime
+          break
+        }
+        await qa.page.evaluate(
+          `new Promise((resolve) => setTimeout(resolve, 100))`,
+        )
+      }
+      assert.ok(
+        rolledOver,
+        'The foreground pageshow event did not roll the stale plan to the current date.',
+      )
+      assert.notEqual(
+        rolledOver.activePlan.plan.localDate,
+        previousLocalDate,
+      )
+      assert.equal(
+        rolledOver.activePlan.plan.tasks.every(
+          (task) =>
+            task.trainingBudget?.targetEffectiveSeconds === 900,
+        ),
+        true,
+        'The foreground rollover did not create three 900-second budget tasks.',
+      )
+      assert.equal(
+        rolledOver.activePlan.tasks.every(
+          (execution) =>
+            execution.training?.targetEffectiveSeconds === 900 &&
+            execution.training?.status === 'running',
+        ),
+        true,
+        'The foreground rollover did not initialize running budget progress.',
+      )
+      checkpoint('qa-014-formal-foreground-rollover', {
+        previousPlanId,
+        previousLocalDate,
+        currentPlanId: rolledOver.activePlan.plan.planId,
+        currentLocalDate: rolledOver.activePlan.plan.localDate,
+        tasks: rolledOver.activePlan.plan.tasks.map((task) => ({
+          moduleId: task.targetModuleId,
+          targetEffectiveSeconds:
+            task.trainingBudget?.targetEffectiveSeconds,
+        })),
+        userDataCleared: false,
+      })
+      return
+    }
 
     const listeningTaskId = await clickModule(
       qa.page,

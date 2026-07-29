@@ -114,3 +114,18 @@ QA_BASE_URL=http://127.0.0.1:4173/ \
 `123/211/181` 秒，Today/Training taskId 与估算一致；真实词汇 Route 显示
 “已完成 0 / 6”和生产题面，不再出现不可评分错误。QA-009/010 已关闭；真实 iPhone
 锁屏、后台、媒体和主屏幕缓存更新仍需用户验收。
+
+QA-014 使用用户等价的无预算旧计划，在同一浏览器实例中推进24小时并触发前台恢复，
+验证计划自动跨日且三个模块都升级为900秒预算：
+
+```bash
+QA_BASE_URL=https://rayzhang988.github.io/english-learning-pwa/ \
+QA_EXPECTED_ASSET=index-ByLSTdMG.js \
+QA_PAGES_RUN=30414938099 \
+QA_EXPECTED_HEAD_SHA=3cf373ec1cbf847077fbbd9ff60efba928725ea5 \
+QA_ROLLOVER_ONLY=1 \
+  node tests/e2e/qa-013-legacy-plan-portability.mjs
+```
+
+该正式回归不会读取或清除用户设备数据，且必须观察到旧计划日期变化、三项
+`targetEffectiveSeconds=900` 和初始化后的 `running` 预算状态。
