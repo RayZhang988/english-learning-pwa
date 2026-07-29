@@ -132,6 +132,7 @@ function expectedCandidates() {
     ]) {
       candidates.push({
         itemId: `supply-v1-vocabulary-${item.id}-${variantId}`,
+        variantFamilyId: `supply-family-v1-vocabulary-${item.id}`,
         ...candidateBase(unit, 'vocabulary', nextOrder('vocabulary')),
         nominalEffectiveSeconds: 18,
         source: {
@@ -152,6 +153,7 @@ function expectedCandidates() {
       const audioSeconds = nominalUtteranceSeconds(extensionAudioText(exercise, unit))
       candidates.push({
         itemId: `supply-v1-listening-${exercise.exerciseId}`,
+        variantFamilyId: `supply-family-v1-listening-${unit.learningUnitId}`,
         ...candidateBase(unit, 'listening', nextOrder('listening')),
         nominalEffectiveSeconds: Math.round(audioSeconds + 19),
         source: {
@@ -166,6 +168,7 @@ function expectedCandidates() {
     for (const check of unit.activity.checks) {
       candidates.push({
         itemId: `supply-v1-listening-${check.id}`,
+        variantFamilyId: `supply-family-v1-listening-${unit.learningUnitId}`,
         ...candidateBase(unit, 'listening', nextOrder('listening')),
         nominalEffectiveSeconds: coreSeconds,
         source: {
@@ -179,6 +182,7 @@ function expectedCandidates() {
     assert(sceneQuiz?.format === 'single-choice' && typeof sceneQuiz.audioText === 'string', `${lesson.lessonId} lacks a listening scene quiz.`)
     candidates.push({
       itemId: `supply-v1-listening-${sceneQuiz.id}`,
+      variantFamilyId: `supply-family-v1-listening-${unit.learningUnitId}`,
       ...candidateBase(unit, 'listening', nextOrder('listening')),
       nominalEffectiveSeconds: Math.round(nominalUtteranceSeconds(sceneQuiz.audioText) + 19),
       source: {
@@ -194,6 +198,7 @@ function expectedCandidates() {
     for (const prompt of unit.activity.prompts) {
       candidates.push({
         itemId: `supply-v1-speaking-${prompt.id}`,
+        variantFamilyId: `supply-family-v1-speaking-${unit.learningUnitId}`,
         ...candidateBase(unit, 'speaking', nextOrder('speaking')),
         nominalEffectiveSeconds: 52,
         source: {
@@ -207,6 +212,7 @@ function expectedCandidates() {
     assert(sceneQuiz?.format === 'fixed-response', `${lesson.lessonId} lacks a speaking scene quiz.`)
     candidates.push({
       itemId: `supply-v1-speaking-${sceneQuiz.id}`,
+      variantFamilyId: `supply-family-v1-speaking-${unit.learningUnitId}`,
       ...candidateBase(unit, 'speaking', nextOrder('speaking')),
       nominalEffectiveSeconds: 52,
       source: {
@@ -259,7 +265,7 @@ function expectedIndex() {
   return {
     schemaVersion: 1,
     documentType: 'continuous-training-supply-index',
-    supplyVersion: '1.0.0',
+    supplyVersion: '1.1.0',
     baseCourseId: packageIndex.courseId,
     basePackageVersion: packageIndex.packageVersion,
     basePackageIndex: packageIndexPath,
@@ -284,6 +290,15 @@ function expectedIndex() {
         noEligible: 'no-eligible-content',
         allRecentlyUsed: 'all-eligible-content-recently-used',
         providerFailure: 'provider-failure',
+      },
+      extraTrainingPriority: {
+        input: 'request.priorityItemIds',
+        itemIdentity: 'published-candidate-item-id',
+        order: ['recent-error', 'due-review', 'same-day-variant', 'new-optional-content'],
+        sameDayVariantFamilyField: 'candidate.variantFamilyId',
+        unknownPriorityItem: 'provider-failure',
+        allPriorityItemsExcluded: 'all-eligible-content-recently-used',
+        fallback: 'continue-in-declared-priority-order-without-repeating-excluded-item',
       },
     },
     capacityPolicy: {
@@ -311,6 +326,21 @@ function assertSelectionContract(index) {
   for (const domain of domains) {
     const orders = index.candidates.filter((candidate) => candidate.domain === domain).map((candidate) => candidate.supplyOrder)
     assert(orders.every((order, index) => order === index + 1), `${domain} supplyOrder is not stable and contiguous.`)
+  }
+  for (const candidate of index.candidates) {
+    assert(
+      typeof candidate.variantFamilyId === 'string' && candidate.variantFamilyId.length > 0,
+      `${candidate.itemId} lacks a stable same-day variant family.`,
+    )
+  }
+  for (const candidate of index.candidates) {
+    const family = index.candidates.filter((other) =>
+      other.domain === candidate.domain && other.variantFamilyId === candidate.variantFamilyId,
+    )
+    assert(
+      family.length >= 2,
+      `${candidate.itemId} has no published same-day variant.`,
+    )
   }
 }
 
@@ -349,6 +379,74 @@ function selectForAudit(index, request) {
     status: 'content-exhausted',
     reason: 'all-eligible-content-recently-used',
   }
+}
+
+function orderedEligible(index, request) {
+  const eligible = index.candidates
+    .filter((candidate) =>
+      candidate.domain === request.domain &&
+      candidate.targetModuleId === request.domain &&
+      candidate.allowedModes.includes(request.mode) &&
+      isDifficultyEligible(candidate, request.targetDifficulty),
+    )
+    .sort((left, right) => left.supplyOrder - right.supplyOrder)
+  if (request.cursor === null) {
+    return eligible
+  }
+  const cursorIndex = eligible.findIndex((candidate) => candidate.itemId === request.cursor)
+  if (cursorIndex < 0) {
+    return null
+  }
+  return [...eligible.slice(cursorIndex + 1), ...eligible.slice(0, cursorIndex + 1)]
+}
+
+function selectExtraTrainingForAudit(index, request) {
+  const ordered = orderedEligible(index, request)
+  if (ordered === null || typeof request.priorityItemIds !== 'object' || request.priorityItemIds === null || Array.isArray(request.priorityItemIds)) {
+    return { status: 'content-exhausted', reason: 'provider-failure' }
+  }
+  if (ordered.length === 0) {
+    return { status: 'content-exhausted', reason: 'no-eligible-content' }
+  }
+  const byId = new Map(index.candidates.map((candidate) => [candidate.itemId, candidate]))
+  const excluded = new Set(request.excludeItemIds)
+  const priorityItemIds = request.priorityItemIds
+  for (const [priority, itemIds] of Object.entries(priorityItemIds)) {
+    if (!['recent-error', 'due-review', 'same-day-variant', 'new-optional-content'].includes(priority) ||
+      !Array.isArray(itemIds) || itemIds.some((itemId) => typeof itemId !== 'string')) {
+      return { status: 'content-exhausted', reason: 'provider-failure' }
+    }
+  }
+  const itemIdsFor = (priority) => priorityItemIds[priority] ?? []
+  for (const priority of ['recent-error', 'due-review']) {
+    for (const itemId of itemIdsFor(priority)) {
+      const candidate = byId.get(itemId)
+      if (!candidate) {
+        return { status: 'content-exhausted', reason: 'provider-failure' }
+      }
+      if (ordered.some((eligible) => eligible.itemId === candidate.itemId) && !excluded.has(candidate.itemId)) {
+        return { status: 'item', item: candidate, nextCursor: candidate.itemId, priority }
+      }
+    }
+  }
+  for (const itemId of itemIdsFor('same-day-variant')) {
+    const source = byId.get(itemId)
+    if (!source) {
+      return { status: 'content-exhausted', reason: 'provider-failure' }
+    }
+    const variant = ordered.find((candidate) =>
+      candidate.variantFamilyId === source.variantFamilyId &&
+      candidate.itemId !== source.itemId && !excluded.has(candidate.itemId),
+    )
+    if (variant) {
+      return { status: 'item', item: variant, nextCursor: variant.itemId, priority: 'same-day-variant' }
+    }
+  }
+  const optional = ordered.find((candidate) => !excluded.has(candidate.itemId))
+  if (optional) {
+    return { status: 'item', item: optional, nextCursor: optional.itemId, priority: 'new-optional-content' }
+  }
+  return { status: 'content-exhausted', reason: 'all-eligible-content-recently-used' }
 }
 
 function assertExhaustionContract(index) {
@@ -403,6 +501,61 @@ function assertExhaustionContract(index) {
   )
 }
 
+function assertExtraTrainingPriorityContract(index) {
+  for (const domain of domains) {
+    const requestBase = {
+      domain,
+      mode: 'learn',
+      targetDifficulty: 2.5,
+      cursor: null,
+      excludeItemIds: [],
+    }
+    const eligible = orderedEligible(index, requestBase)
+    assert(eligible !== null && eligible.length >= 3, `${domain} lacks enough candidates for priority checks.`)
+    const [recent, due, sameDay] = eligible
+    const request = (priorityItemIds, overrides = {}) => ({
+      ...requestBase,
+      priorityItemIds,
+      ...overrides,
+    })
+    const emptyBuckets = {
+      'recent-error': [],
+      'due-review': [],
+      'same-day-variant': [],
+      'new-optional-content': [],
+    }
+    const recentFirst = selectExtraTrainingForAudit(index, request({
+      ...emptyBuckets,
+      'recent-error': [recent.itemId],
+    }))
+    assert(recentFirst.status === 'item' && recentFirst.item.itemId === recent.itemId && recentFirst.priority === 'recent-error', `${domain} does not prefer a recent-error item.`)
+    const dueAfterRecentExcluded = selectExtraTrainingForAudit(index, request({
+      ...emptyBuckets,
+      'recent-error': [recent.itemId],
+      'due-review': [due.itemId],
+    }, { excludeItemIds: [recent.itemId] }))
+    assert(dueAfterRecentExcluded.status === 'item' && dueAfterRecentExcluded.item.itemId === due.itemId && dueAfterRecentExcluded.priority === 'due-review', `${domain} does not fall through from excluded recent-error to due-review.`)
+    const variant = selectExtraTrainingForAudit(index, request({
+      ...emptyBuckets,
+      'same-day-variant': [sameDay.itemId],
+    }))
+    assert(variant.status === 'item' && variant.priority === 'same-day-variant' && variant.item.itemId !== sameDay.itemId && variant.item.variantFamilyId === sameDay.variantFamilyId, `${domain} cannot resolve a distinct same-day variant from published content.`)
+    const optional = selectExtraTrainingForAudit(index, request(emptyBuckets))
+    assert(optional.status === 'item' && optional.priority === 'new-optional-content', `${domain} does not fall through to new optional content.`)
+    const repeatable = selectExtraTrainingForAudit(index, request(emptyBuckets))
+    assert(deepEqual(optional, repeatable), `${domain} does not restore the same cursor deterministically.`)
+    const exhausted = selectExtraTrainingForAudit(index, request(emptyBuckets, {
+      excludeItemIds: eligible.map((candidate) => candidate.itemId),
+    }))
+    assert(exhausted.status === 'content-exhausted' && exhausted.reason === 'all-eligible-content-recently-used', `${domain} does not report recently excluded exhaustion.`)
+    const unknown = selectExtraTrainingForAudit(index, request({
+      ...emptyBuckets,
+      'recent-error': ['supply-v1-unknown-item'],
+    }))
+    assert(unknown.status === 'content-exhausted' && unknown.reason === 'provider-failure', `${domain} does not report an unknown priority item as provider failure.`)
+  }
+}
+
 const expected = expectedIndex()
 if (writeMode) {
   writeJson(supplyIndexPath, expected)
@@ -414,6 +567,7 @@ const observed = readJson(supplyIndexPath)
 assert(deepEqual(observed, expected), 'Training supply index has drifted from released content facts.')
 assertSelectionContract(observed)
 assertExhaustionContract(observed)
+assertExtraTrainingPriorityContract(observed)
 assert(packageIndex.trainingSupplyIndexFile === supplyIndexPath, 'Package index does not expose the training supply index.')
 assert(
   packageIndex.trainingSupplyIndexSchemaFile ===

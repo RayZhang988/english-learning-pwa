@@ -19,7 +19,7 @@
   "properties": {
     "schemaVersion": {"const": 1},
     "documentType": {"const": "continuous-training-supply-index"},
-    "supplyVersion": {"const": "1.0.0"},
+    "supplyVersion": {"const": "1.1.0"},
     "baseCourseId": {"const": "survival-travel-american-4w"},
     "basePackageVersion": {"const": "1.0.0"},
     "basePackageIndex": {"const": "content/curriculum/package-index.v1.json"},
@@ -27,7 +27,7 @@
     "supplyPolicy": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["supportedTargetDifficulty", "cursor", "deduplication", "contentExhaustion"],
+      "required": ["supportedTargetDifficulty", "cursor", "deduplication", "contentExhaustion", "extraTrainingPriority"],
       "properties": {
         "supportedTargetDifficulty": {
           "type": "object",
@@ -67,6 +67,23 @@
             "noEligible": {"const": "no-eligible-content"},
             "allRecentlyUsed": {"const": "all-eligible-content-recently-used"},
             "providerFailure": {"const": "provider-failure"}
+          }
+        },
+        "extraTrainingPriority": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["input", "itemIdentity", "order", "sameDayVariantFamilyField", "unknownPriorityItem", "allPriorityItemsExcluded", "fallback"],
+          "properties": {
+            "input": {"const": "request.priorityItemIds"},
+            "itemIdentity": {"const": "published-candidate-item-id"},
+            "order": {
+              "type": "array",
+              "const": ["recent-error", "due-review", "same-day-variant", "new-optional-content"]
+            },
+            "sameDayVariantFamilyField": {"const": "candidate.variantFamilyId"},
+            "unknownPriorityItem": {"const": "provider-failure"},
+            "allPriorityItemsExcluded": {"const": "all-eligible-content-recently-used"},
+            "fallback": {"const": "continue-in-declared-priority-order-without-repeating-excluded-item"}
           }
         }
       }
@@ -145,9 +162,10 @@
     "candidate": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["itemId", "supplyOrder", "domain", "targetModuleId", "learningUnitId", "contentRef", "difficultyLevel", "tags", "allowedModes", "nominalEffectiveSeconds", "source"],
+      "required": ["itemId", "variantFamilyId", "supplyOrder", "domain", "targetModuleId", "learningUnitId", "contentRef", "difficultyLevel", "tags", "allowedModes", "nominalEffectiveSeconds", "source"],
       "properties": {
         "itemId": {"type": "string", "pattern": "^supply-v1-(vocabulary|listening|speaking)-[a-z0-9-]+$"},
+        "variantFamilyId": {"type": "string", "pattern": "^supply-family-v1-(vocabulary|listening|speaking)-[a-z0-9-]+$"},
         "supplyOrder": {"type": "integer", "minimum": 1},
         "domain": {"enum": ["vocabulary", "listening", "speaking"]},
         "targetModuleId": {"enum": ["vocabulary", "listening", "speaking"]},
