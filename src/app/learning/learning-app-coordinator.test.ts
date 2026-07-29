@@ -839,6 +839,60 @@ describe('LearningAppCoordinator', () => {
     expect(candidates.loadCount).toBe(firstLoadCount + 1)
   })
 
+  it('upgrades a same-day legacy fixed-item plan without clearing learning history', async () => {
+    await profiles.saveLatest(abilityProfile())
+    const firstState = await coordinator().initialize()
+    if (firstState.status !== 'ready') {
+      throw new Error('Expected a ready budget plan.')
+    }
+    const legacyRuntime = structuredClone(firstState.runtime)
+    for (const task of legacyRuntime.activePlan.plan.tasks) {
+      delete (
+        task as LearningTask & {
+          trainingBudget?: LearningTask['trainingBudget']
+        }
+      ).trainingBudget
+    }
+    for (const execution of legacyRuntime.activePlan.tasks) {
+      delete (
+        execution.task as LearningTask & {
+          trainingBudget?: LearningTask['trainingBudget']
+        }
+      ).trainingBudget
+      delete (
+        execution as typeof execution & {
+          training?: typeof execution.training
+        }
+      ).training
+    }
+    await activePlans.save(legacyRuntime)
+
+    const upgraded = await coordinator().initialize()
+    if (upgraded.status !== 'ready') {
+      throw new Error('Expected an upgraded ready plan.')
+    }
+    expect(upgraded.localDate).toBe('2026-07-24')
+    expect(upgraded.runtime.activePlan.plan.planId).not.toBe(
+      legacyRuntime.activePlan.plan.planId,
+    )
+    expect(
+      upgraded.runtime.activePlan.plan.tasks.every(
+        (task) =>
+          task.trainingBudget?.targetEffectiveSeconds === 900,
+      ),
+    ).toBe(true)
+    expect(
+      upgraded.runtime.activePlan.tasks.every(
+        (execution) =>
+          execution.training?.targetEffectiveSeconds === 900 &&
+          execution.training.status === 'running',
+      ),
+    ).toBe(true)
+    expect(upgraded.runtime.completedLearningUnitIds).toEqual(
+      legacyRuntime.completedLearningUnitIds,
+    )
+  })
+
   it('records only completed 900-second budget sessions and never lets personalization shorten the target', async () => {
     await profiles.saveLatest(abilityProfile())
     const excludedSegments: Readonly<

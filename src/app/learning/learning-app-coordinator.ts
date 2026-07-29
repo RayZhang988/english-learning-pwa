@@ -13,6 +13,7 @@ import {
   LEARNING_ENGINE_STORAGE_NAMESPACE,
   LearningEngineRepository,
   recordDailyActivity,
+  REQUIRED_TASK_EFFECTIVE_SECONDS,
   summarizePlanActivity,
   type LearningEngineState,
   type LearningAbilityProfile,
@@ -109,6 +110,27 @@ function runtimeState(
     assessmentProfileSchemaVersion,
     taskAccess: getPlanTaskAccess(runtime.activePlan),
   }
+}
+
+function hasCurrentTrainingBudgets(
+  runtime: ActiveLearningRuntime,
+): boolean {
+  if (runtime.activePlan.plan.status === 'empty') {
+    return true
+  }
+  return (
+    runtime.activePlan.plan.tasks.length > 0 &&
+    runtime.activePlan.plan.tasks.every(
+      (task) =>
+        task.trainingBudget?.targetEffectiveSeconds ===
+        REQUIRED_TASK_EFFECTIVE_SECONDS,
+    ) &&
+    runtime.activePlan.tasks.every(
+      (execution) =>
+        execution.training?.targetEffectiveSeconds ===
+        REQUIRED_TASK_EFFECTIVE_SECONDS,
+    )
+  )
 }
 
 export class LearningAppCoordinator {
@@ -286,7 +308,8 @@ export class LearningAppCoordinator {
       const previousRuntime = await this.#activePlans.load()
       if (
         !profileChanged &&
-        previousRuntime?.activePlan.plan.localDate === localDate
+        previousRuntime?.activePlan.plan.localDate === localDate &&
+        hasCurrentTrainingBudgets(previousRuntime)
       ) {
         return this.#setState(
           runtimeState(
