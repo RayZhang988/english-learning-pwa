@@ -13,11 +13,20 @@ import type {
   TrainingHeaderViewModel,
 } from './view-models.ts'
 
+export interface TrainingContextNoticeViewModel {
+  readonly eyebrow: string
+  readonly title: string
+  readonly description: string
+}
+
 export function TrainingScreen({
   className,
   header,
   exitLabel,
+  exitDisabled,
+  exitBusy,
   onExit,
+  contextNotice,
   children,
   action,
   actionLayout = 'single',
@@ -26,7 +35,10 @@ export function TrainingScreen({
   readonly className?: string
   readonly header: TrainingHeaderViewModel
   readonly exitLabel: string
+  readonly exitDisabled?: boolean
+  readonly exitBusy?: boolean
   readonly onExit: () => void
+  readonly contextNotice?: TrainingContextNoticeViewModel
   readonly children: ReactNode
   readonly action?: ReactNode
   readonly actionLayout?: 'single' | 'stacked' | 'input'
@@ -46,7 +58,9 @@ export function TrainingScreen({
         <button
           className="icon-button"
           type="button"
-          onClick={onExit}
+          disabled={exitDisabled || exitBusy}
+          aria-busy={exitBusy || undefined}
+          onClick={exitDisabled || exitBusy ? undefined : onExit}
           aria-label={exitLabel}
         >
           <Icon name="close" />
@@ -57,6 +71,17 @@ export function TrainingScreen({
         </div>
         <span className="training-topbar__spacer" aria-hidden="true" />
       </header>
+
+      {contextNotice ? (
+        <section
+          className="training-context-notice"
+          aria-label={`${contextNotice.title}。${contextNotice.description}`}
+        >
+          <span className="eyebrow">{contextNotice.eyebrow}</span>
+          <h2>{contextNotice.title}</h2>
+          <p>{contextNotice.description}</p>
+        </section>
+      ) : null}
 
       {header.trainingBudget ? (
         <TrainingBudgetProgress

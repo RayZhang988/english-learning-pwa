@@ -124,7 +124,33 @@ export {
   ListeningPlaybackControls,
   Recorder,
   TrainingScreen,
+  type TrainingContextNoticeViewModel,
 } from './training-primitives.tsx'
+export {
+  ExtraListeningTrainingScreen,
+  ExtraSpeakingTrainingScreen,
+  ExtraTrainingCompletionScreen,
+  ExtraTrainingPickerScreen,
+  ExtraVocabularyTrainingScreen,
+} from './extra-training-surfaces.tsx'
+export type {
+  ExtraListeningTrainingScreenProps,
+  ExtraSpeakingTrainingScreenProps,
+  ExtraTrainingCompletionScreenProps,
+  ExtraTrainingPickerScreenProps,
+  ExtraVocabularyTrainingScreenProps,
+} from './extra-training-surfaces.tsx'
+export type {
+  CompletedDailyPlanExtraTrainingEntryViewModel,
+  ExtraTrainingActionViewModel,
+  ExtraTrainingActiveBudgetViewModel,
+  ExtraTrainingActiveSessionViewModel,
+  ExtraTrainingCompletionViewModel,
+  ExtraTrainingFailureReason,
+  ExtraTrainingModuleId,
+  ExtraTrainingModuleViewModel,
+  ExtraTrainingPickerViewModel,
+} from './extra-training-view-models.ts'
 export {
   TrainingBudgetProgress,
   TrainingBudgetTarget,

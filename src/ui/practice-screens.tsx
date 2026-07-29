@@ -7,6 +7,7 @@ import {
   ListeningPlaybackControls,
   Recorder,
   TrainingScreen,
+  type TrainingContextNoticeViewModel,
 } from './training-primitives.tsx'
 import type {
   AudioPlayerViewModel,
@@ -24,6 +25,13 @@ interface TrainingActionViewModel {
   readonly label: string
   readonly disabled?: boolean
   readonly loading?: boolean
+}
+
+interface TrainingScreenPresentationProps {
+  readonly exitLabel?: string
+  readonly exitDisabled?: boolean
+  readonly exitBusy?: boolean
+  readonly contextNotice?: TrainingContextNoticeViewModel
 }
 
 export interface TrainingContentRetryCallbacks {
@@ -55,7 +63,8 @@ export interface VocabularyTrainingScreenCallbacks
 }
 
 export interface VocabularyTrainingScreenProps
-  extends VocabularyTrainingScreenCallbacks {
+  extends VocabularyTrainingScreenCallbacks,
+    TrainingScreenPresentationProps {
   readonly viewModel: VocabularyScreenViewModel
 }
 
@@ -65,12 +74,19 @@ export function VocabularyTrainingScreen({
   onSelect,
   onAction,
   onRetryTrainingContent,
+  exitLabel = '退出词汇训练',
+  exitDisabled,
+  exitBusy,
+  contextNotice,
 }: VocabularyTrainingScreenProps) {
   return (
     <TrainingScreen
       header={viewModel.header}
-      exitLabel="退出词汇训练"
+      exitLabel={exitLabel}
+      exitDisabled={exitDisabled}
+      exitBusy={exitBusy}
       onExit={onExit}
+      contextNotice={contextNotice}
       onRetryTrainingContent={onRetryTrainingContent}
       action={(
         <button
@@ -148,7 +164,8 @@ export interface ListeningTrainingScreenCallbacks
 }
 
 export interface ListeningTrainingScreenProps
-  extends ListeningTrainingScreenCallbacks {
+  extends ListeningTrainingScreenCallbacks,
+    TrainingScreenPresentationProps {
   readonly viewModel: ListeningScreenViewModel
 }
 
@@ -162,12 +179,19 @@ export function ListeningTrainingScreen({
   onQuestionInput,
   onAction,
   onRetryTrainingContent,
+  exitLabel = '退出听力训练',
+  exitDisabled,
+  exitBusy,
+  contextNotice,
 }: ListeningTrainingScreenProps) {
   return (
     <TrainingScreen
       header={viewModel.header}
-      exitLabel="退出听力训练"
+      exitLabel={exitLabel}
+      exitDisabled={exitDisabled}
+      exitBusy={exitBusy}
       onExit={onExit}
+      contextNotice={contextNotice}
       onRetryTrainingContent={onRetryTrainingContent}
       actionLayout={
         viewModel.question.kind === 'keyword-dictation' ? 'input' : 'single'
@@ -258,7 +282,8 @@ export interface SpeakingTrainingScreenCallbacks
 }
 
 export interface SpeakingTrainingScreenProps
-  extends SpeakingTrainingScreenCallbacks {
+  extends SpeakingTrainingScreenCallbacks,
+    TrainingScreenPresentationProps {
   readonly viewModel: SpeakingScreenViewModel
 }
 
@@ -270,12 +295,19 @@ export function SpeakingTrainingScreen({
   onAction,
   onSecondaryAction,
   onRetryTrainingContent,
+  exitLabel = '退出口语训练',
+  exitDisabled,
+  exitBusy,
+  contextNotice,
 }: SpeakingTrainingScreenProps) {
   return (
     <TrainingScreen
       header={viewModel.header}
-      exitLabel="退出口语训练"
+      exitLabel={exitLabel}
+      exitDisabled={exitDisabled}
+      exitBusy={exitBusy}
       onExit={onExit}
+      contextNotice={contextNotice}
       onRetryTrainingContent={onRetryTrainingContent}
       actionLayout="stacked"
       action={(

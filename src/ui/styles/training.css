@@ -47,6 +47,12 @@
   height: 20px;
 }
 
+.icon-button:disabled {
+  color: var(--ink-faint);
+  background: var(--line);
+  cursor: not-allowed;
+}
+
 .training-topbar__title {
   min-width: 0;
   text-align: center;

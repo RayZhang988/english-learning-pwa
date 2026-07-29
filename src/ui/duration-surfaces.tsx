@@ -132,10 +132,19 @@ export function DailyEffectiveDurationSummary({
 export function TrainingCompletionDurationScreen({
   viewModel,
   onAction,
+  onContinueTraining,
 }: {
   readonly viewModel: TrainingCompletionDurationViewModel
   readonly onAction: () => void
+  readonly onContinueTraining?: () => void
 }) {
+  const extraTrainingEntry = viewModel.extraTrainingEntry
+  const continueAction = extraTrainingEntry?.action
+  const continueDisabled =
+    Boolean(continueAction?.disabled) ||
+    Boolean(continueAction?.loading) ||
+    !onContinueTraining
+
   return (
     <main
       className="training-completion-screen"
@@ -157,8 +166,45 @@ export function TrainingCompletionDurationScreen({
         <ActualEffectiveDuration
           duration={viewModel.actualDuration}
         />
+        {extraTrainingEntry ? (
+          <section
+            className="daily-completion-extra-entry"
+            aria-label="今日计划 3/3 已完成后的额外练习"
+          >
+            <span className="eyebrow">OPTIONAL PRACTICE</span>
+            <h2>今日计划 3/3 已完成</h2>
+            <p>
+              可继续选择词汇、听力或口语。每次为 15 分钟有效训练，
+              额外练习不会改变今日完成状态。
+            </p>
+            {extraTrainingEntry.action.disabledReason ? (
+              <small>
+                {extraTrainingEntry.action.disabledReason}
+              </small>
+            ) : null}
+            <button
+              className="primary-button"
+              type="button"
+              disabled={continueDisabled}
+              aria-busy={
+                extraTrainingEntry.action.loading || undefined
+              }
+              onClick={
+                continueDisabled ? undefined : onContinueTraining
+              }
+            >
+              {extraTrainingEntry.action.loading
+                ? '正在打开'
+                : extraTrainingEntry.action.label}
+            </button>
+          </section>
+        ) : null}
         <button
-          className="primary-button"
+          className={
+            extraTrainingEntry
+              ? 'secondary-button training-completion-card__return'
+              : 'primary-button'
+          }
           type="button"
           onClick={onAction}
         >

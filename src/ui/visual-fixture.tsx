@@ -21,6 +21,11 @@ import {
   DailyEffectiveDurationSummary,
   TrainingCompletionDurationScreen,
 } from './duration-surfaces.tsx'
+import {
+  ExtraTrainingCompletionScreen,
+  ExtraTrainingPickerScreen,
+  ExtraVocabularyTrainingScreen,
+} from './extra-training-surfaces.tsx'
 import { ProgressOverviewScreen } from './progress-overview-screen.tsx'
 import { MicrophonePermissionCard } from './system-state-surfaces.tsx'
 import { TravelVocabularyR1VisualFixture } from './travel-vocabulary-r1-fixture.tsx'
@@ -246,6 +251,137 @@ export function UiVisualFixture({ id }: { readonly id: UiVisualFixtureId }) {
           }}
         />
       </main>
+    )
+  }
+
+  if (id === 'r6-daily-complete') {
+    return (
+      <TrainingCompletionDurationScreen
+        viewModel={{
+          moduleId: 'speaking',
+          title: '口语训练完成',
+          description: '最后一个每日任务已经保存。',
+          actualDuration: {
+            state: 'reliable',
+            effectiveSeconds: 2_734,
+            source: 'timing-segments',
+          },
+          extraTrainingEntry: {
+            action: { label: '继续训练' },
+          },
+          actionLabel: '返回今日计划',
+        }}
+        onAction={() => undefined}
+        onContinueTraining={() => undefined}
+      />
+    )
+  }
+
+  if (id === 'r6-extra-training-picker') {
+    return (
+      <ExtraTrainingPickerScreen
+        viewModel={{
+          modules: [
+            {
+              moduleId: 'vocabulary',
+              title: '词汇额外训练',
+              description: '继续巩固旅游场景中的高频表达。',
+              targetEffectiveSeconds: 900,
+              status: 'available',
+              startAction: { label: '开始 15 分钟' },
+            },
+            {
+              moduleId: 'listening',
+              title: '听力额外训练',
+              description: '从上次保存的旅行听力继续。',
+              targetEffectiveSeconds: 900,
+              status: 'paused',
+              sessionId: 'demo-extra-listening',
+              remainingEffectiveSeconds: 734,
+              completedItemCount: 5,
+              resumeAction: { label: '继续上次训练' },
+            },
+            {
+              moduleId: 'speaking',
+              title: '口语额外训练',
+              description: '继续练习旅行场景表达。',
+              targetEffectiveSeconds: 900,
+              status: 'content-exhausted',
+              sessionId: 'demo-extra-speaking',
+              remainingEffectiveSeconds: 518,
+              completedItemCount: 7,
+              failureDescription:
+                '当前范围内的近期题目已全部使用，进度已经保存。',
+              retryAction: { label: '重新获取题目' },
+            },
+          ],
+          returnAction: { label: '返回今日完成' },
+        }}
+        onStartRequested={() => undefined}
+        onResumeRequested={() => undefined}
+        onRetryRequested={() => undefined}
+        onReturnToCompletedPlan={() => undefined}
+      />
+    )
+  }
+
+  if (id === 'r6-extra-training-active') {
+    return (
+      <ExtraVocabularyTrainingScreen
+        viewModel={{
+          header: {
+            eyebrow: 'VOCABULARY',
+            title: '旅行词汇',
+          },
+          instruction: '选择最合适的含义',
+          term: 'departure',
+          pronunciation: '/dɪˈpɑːrtʃər/',
+          partOfSpeech: '名词',
+          choices: selectedChoices(
+            ['出发', '到达', '换乘', '延误'],
+            selectedId,
+          ),
+          action: { label: '提交答案' },
+        }}
+        extraTraining={{
+          sessionId: 'demo-extra-vocabulary',
+          moduleId: 'vocabulary',
+          budget: {
+            status: 'running',
+            targetEffectiveSeconds: 900,
+            remainingEffectiveSeconds: 612,
+            completedItemCount: 6,
+          },
+          exitAction: { label: '退出并保存' },
+        }}
+        onExitRequested={() => undefined}
+        onRetryRequested={() => undefined}
+        onSelect={setSelectedId}
+        onAction={() => undefined}
+      />
+    )
+  }
+
+  if (id === 'r6-extra-training-complete') {
+    return (
+      <ExtraTrainingCompletionScreen
+        viewModel={{
+          sessionId: 'demo-extra-listening-complete',
+          moduleId: 'listening',
+          title: '额外听力训练完成',
+          description: '这轮有效训练已经保存，不会改变今日 3/3。',
+          completedItemCount: 21,
+          actualDuration: {
+            state: 'reliable',
+            effectiveSeconds: 917,
+            source: 'timing-segments',
+          },
+          chooseAgainAction: { label: '再练 15 分钟' },
+          returnAction: { label: '返回今日完成' },
+        }}
+        onChooseAnotherRequested={() => undefined}
+        onReturnToCompletedPlan={() => undefined}
+      />
     )
   }
 

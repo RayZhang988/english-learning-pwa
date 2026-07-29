@@ -63,5 +63,10 @@ export interface TrainingCompletionDurationViewModel {
   readonly trainingBudget?: import('./training-budget-view-models.ts').TrainingBudgetProgressViewModel & {
     readonly status: 'completed'
   }
+  /**
+   * Supplied only after the application has confirmed the daily plan is 3/3.
+   * Its presence never changes PlanProgress inside UI.
+   */
+  readonly extraTrainingEntry?: import('./extra-training-view-models.ts').CompletedDailyPlanExtraTrainingEntryViewModel
   readonly actionLabel: string
 }

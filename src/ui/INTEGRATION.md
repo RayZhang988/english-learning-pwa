@@ -31,6 +31,11 @@ import { ... } from '../../ui/index.ts'
 - `VocabularyTrainingScreen`
 - `ListeningTrainingScreen`
 - `SpeakingTrainingScreen`
+- `ExtraTrainingPickerScreen`
+- `ExtraVocabularyTrainingScreen`
+- `ExtraListeningTrainingScreen`
+- `ExtraSpeakingTrainingScreen`
+- `ExtraTrainingCompletionScreen`
 - `ProgressOverviewScreen`
 
 当前公开展示原语：
@@ -799,6 +804,151 @@ duration、页面墙钟和 `legacy-event-duration` 都不能回退成实际有�
 02 不调用 `Date.now()`、`performance.now()`，不计算中位数、可信样本数或校准偏差，也不
 读写 timing segment。上述数据采集、恢复、可靠性判定、历史样本保存和生产路由全部属于
 01 / 04 / 06 / 07 / 08。
+
+## R6｜每日 3/3 完成后的额外训练
+
+01 只从 `src/ui/index.ts` 导入：
+
+```ts
+import {
+  ExtraListeningTrainingScreen,
+  ExtraSpeakingTrainingScreen,
+  ExtraTrainingCompletionScreen,
+  ExtraTrainingPickerScreen,
+  ExtraVocabularyTrainingScreen,
+  TrainingCompletionDurationScreen,
+  type CompletedDailyPlanExtraTrainingEntryViewModel,
+  type ExtraListeningTrainingScreenProps,
+  type ExtraSpeakingTrainingScreenProps,
+  type ExtraTrainingActiveSessionViewModel,
+  type ExtraTrainingCompletionViewModel,
+  type ExtraTrainingModuleViewModel,
+  type ExtraTrainingPickerViewModel,
+  type ExtraVocabularyTrainingScreenProps,
+} from '../../ui/index.ts'
+```
+
+### 3/3 完成入口
+
+只有 01 已从 04 确认同一本地日期的每日计划为 3/3 时，才给现有
+`TrainingCompletionDurationScreen` 增加：
+
+```ts
+const extraTrainingEntry:
+  CompletedDailyPlanExtraTrainingEntryViewModel = {
+    action: {
+      label: '继续训练',
+      disabled: false,
+      loading: false,
+    },
+  }
+```
+
+并传入 `onContinueTraining()`。该回调只打开模块选择页，不创建额外训练会话。UI 固定说明
+每轮为 15 分钟有效训练、属于额外练习且不会改变今日 3/3；它不读取或改写
+`PlanProgress`。没有 `extraTrainingEntry` 时，原有每日任务/单模块完成页保持原样。
+
+### 模块选择状态
+
+`ExtraTrainingPickerViewModel.modules` 的每一项使用稳定 `moduleId` 和判别联合：
+
+| `status` | 必需身份 / 快照 | 页面动作 |
+| --- | --- | --- |
+| `available` | 无 `sessionId`；上游确认可新开始 | `onStartRequested(moduleId)` |
+| `paused` | 原始 `sessionId`、剩余有效秒数、累计题数 | `onResumeRequested(sessionId)` |
+| `running` | 原始 `sessionId`、剩余有效秒数、累计题数 | `onResumeRequested(sessionId)`，进入当前会话 |
+| `completed` | 原始 `sessionId`、最终累计题数 | `onStartRequested(moduleId)`，请求另开一轮 |
+| `content-exhausted` | 原始 `sessionId`、剩余秒数、题数、上游耗尽说明 | `onRetryRequested(sessionId)` |
+| `failed` | 原始 `sessionId`、剩余秒数、题数、设备/供应失败说明 | `onRetryRequested(sessionId)` |
+| `expired` | 原始旧 `sessionId`、上次累计题数 | `onStartRequested(moduleId)`，请求今天的新一轮 |
+
+每个状态的动作都包含 `label / disabled? / loading? / disabledReason?`。02 在忙碌和禁用时不
+发送意图，并对同一个已渲染按钮的快速重复点击做单次在途保护。业务层仍必须通过自己的
+幂等键和状态机防重；不能把 UI 防重复当成会话幂等实现。
+
+`moduleId` 只用于请求新会话的模块身份。`sessionId` 必须来自
+`ExtraTrainingSession.sessionId`，并由 UI 原样传回；02 不使用随机数、日期、数组索引或
+模块名生成会话 ID。
+
+### 三模块训练页适配
+
+06 / 07 / 08 保留已有题面 ViewModel 和题目回调，01 另传：
+
+```ts
+const extraTraining:
+  ExtraTrainingActiveSessionViewModel<'vocabulary'> = {
+    sessionId: snapshot.session.sessionId,
+    moduleId: 'vocabulary',
+    budget: {
+      status: snapshot.session.status,
+      targetEffectiveSeconds:
+        snapshot.session.targetEffectiveSeconds,
+      remainingEffectiveSeconds:
+        snapshot.session.remainingEffectiveSeconds,
+      completedItemCount:
+        snapshot.session.completedItemCount,
+      // content-exhausted 时同时提供 contentExhausted / retryAction
+    },
+    exitAction: {
+      label: '退出并保存',
+      loading: saveInFlight,
+    },
+  }
+```
+
+接入组件与快照来源：
+
+| 组件 | 题面 ViewModel | 额外训练快照 |
+| --- | --- | --- |
+| `ExtraVocabularyTrainingScreen` | 原 `VocabularyScreenViewModel` | 06 `ExtraVocabularyTrainingSnapshot` |
+| `ExtraListeningTrainingScreen` | 原 `ListeningScreenViewModel` | 07 `ExtraListeningTrainingSnapshot` |
+| `ExtraSpeakingTrainingScreen` | 原 `SpeakingScreenViewModel` | 08 `ExtraSpeakingTrainingSnapshot` |
+
+三个适配页都会用 `extraTraining.budget` 替换普通页面头部时长展示，并固定显示“额外训练”、
+“退出并保存当前进度”和“不改变今日 3/3”。`running`、`finish-current-item`、
+`content-exhausted` 文案继续复用 QA-011 的统一预算组件；尤其到时状态必须显示
+“时间已到，完成本题后结束”。
+
+公开会话动作：
+
+```ts
+onExitRequested(sessionId)
+onRetryRequested(sessionId)
+```
+
+两者只表达意图。02 不保存快照、不恢复游标、不重新供应题目、不扣秒，也不发布
+`extra-training.completed` 或每日计划完成事件。退出后显示的是已保存的额外训练，不得映射
+成“完成每日任务”。
+
+### 额外训练完成页
+
+04 / 01 确认独立会话完成后，传 `ExtraTrainingCompletionViewModel`。其中
+`actualDuration` 继续使用 R3 的 `timing-segments` 真值，`completedItemCount` 原样使用
+模块快照；02 不计算得分或正确率。
+
+```tsx
+<ExtraTrainingCompletionScreen
+  viewModel={completion}
+  onChooseAnotherRequested={(sessionId) => {
+    // 01 返回模块选择页；这里不直接启动同一模块。
+  }}
+  onReturnToCompletedPlan={(sessionId) => {
+    // 01 返回仍然保持 3/3 的今日完成页。
+  }}
+/>
+```
+
+两个可见动作固定语义为“再练 15 分钟”（重新选择模块）和“返回今日完成”。R6 页面不展示
+R7 得分、等级、单元评价或新的每日必做进度。
+
+视觉检查夹具：
+
+```text
+?ui-fixture=r6-daily-complete
+?ui-fixture=r6-extra-training-picker
+?ui-fixture=r6-extra-training-active
+?ui-fixture=r6-extra-training-complete
+```
 
 ## 当前限制
 
