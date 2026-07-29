@@ -120,7 +120,7 @@ function initialRecognition(
   }
 }
 
-export function createSpeakingSession(
+function createSpeakingSessionInternal(
   task: LearningTask,
   unit: SpeakingTrainingUnit,
   permission: MicrophonePermissionState,
@@ -128,11 +128,13 @@ export function createSpeakingSession(
   recordingCapabilities: SpeakingRecordingCapabilities,
   recognitionCapabilities: SpeakingRecognitionCapabilities,
   now: string,
+  requireTaskUnitIdentity: boolean,
 ): SpeakingSession {
   assertTask(task)
   if (
-    task.learningUnitId !== unit.learningUnitId ||
-    task.contentRef !== unit.contentRef
+    requireTaskUnitIdentity &&
+    (task.learningUnitId !== unit.learningUnitId ||
+      task.contentRef !== unit.contentRef)
   ) {
     throw new SpeakingError(
       'task-incompatible',
@@ -167,6 +169,48 @@ export function createSpeakingSession(
     failure: null,
     stream: null,
   }
+}
+
+export function createSpeakingSession(
+  task: LearningTask,
+  unit: SpeakingTrainingUnit,
+  permission: MicrophonePermissionState,
+  network: NetworkStatus,
+  recordingCapabilities: SpeakingRecordingCapabilities,
+  recognitionCapabilities: SpeakingRecognitionCapabilities,
+  now: string,
+): SpeakingSession {
+  return createSpeakingSessionInternal(
+    task,
+    unit,
+    permission,
+    network,
+    recordingCapabilities,
+    recognitionCapabilities,
+    now,
+    true,
+  )
+}
+
+export function createSpeakingStreamSession(
+  task: LearningTask,
+  unit: SpeakingTrainingUnit,
+  permission: MicrophonePermissionState,
+  network: NetworkStatus,
+  recordingCapabilities: SpeakingRecordingCapabilities,
+  recognitionCapabilities: SpeakingRecognitionCapabilities,
+  now: string,
+): SpeakingSession {
+  return createSpeakingSessionInternal(
+    task,
+    unit,
+    permission,
+    network,
+    recordingCapabilities,
+    recognitionCapabilities,
+    now,
+    false,
+  )
 }
 
 export function createFailedSpeakingSession(

@@ -43,6 +43,7 @@ import {
   beginSpeakingRecording,
   createFailedSpeakingSession,
   createSpeakingSession,
+  createSpeakingStreamSession,
   getCurrentSpeakingPrompt,
   getSpeakingSessionResult,
   markSpeakingCaptureUnavailable,
@@ -510,7 +511,7 @@ export class SpeakingTrainingRuntime {
     base: SpeakingSession, unit: import('./types.ts').SpeakingTrainingUnit,
     prompt: import('./types.ts').SpeakingPrompt, stream: SpeakingStreamState,
   ): SpeakingSession {
-    const seeded = createSpeakingSession(base.task, { ...unit, prompts: [prompt] }, base.permission,
+    const seeded = createSpeakingStreamSession(base.task, { ...unit, prompts: [prompt] }, base.permission,
       base.network, this.recorder.capabilities(), this.recognition.capabilities(), this.now())
     return { ...seeded, activeDurationSeconds: base.activeDurationSeconds,
       reportedDurationSeconds: base.reportedDurationSeconds, startedAt: base.startedAt,
@@ -540,7 +541,7 @@ export class SpeakingTrainingRuntime {
           return this.flushPendingEvents()
         }
         const supplied = resolveSpeakingSupplyPrompt(catalog, result.item as SpeakingSupplyItem)
-        const base = createSpeakingSession(this.task, { ...supplied.unit, prompts: [supplied.prompt] }, permission, this.networkStatus.current(), this.recorder.capabilities(), this.recognition.capabilities(), now)
+        const base = createSpeakingStreamSession(this.task, { ...supplied.unit, prompts: [supplied.prompt] }, permission, this.networkStatus.current(), this.recorder.capabilities(), this.recognition.capabilities(), now)
         session = { ...base, stream: this.streamState(result.item as SpeakingSupplyItem, request.requestId, result.nextCursor) }
       } else {
         const unit = resolveSpeakingTask(catalog, this.task)
@@ -1243,7 +1244,7 @@ export class SpeakingTrainingRuntime {
         throw new SpeakingError('session-transition-invalid', 'Speaking supply is not awaiting a retry.')
       }
       if (current.stream.exhaustionRequestId === null) {
-        throw new SpeakingError('session-transition-invalid', 'Speaking stream has no acknowledged exhaustion to recover.')
+        return this.restartInternal()
       }
       await this.timing.startLoading()
       const exhaustionRequestId = current.stream.exhaustionRequestId

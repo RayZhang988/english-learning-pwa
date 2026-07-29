@@ -209,6 +209,194 @@ function runtime(options: {
 }
 
 describe('speaking training runtime fallbacks', () => {
+  it('continues from the plan seed into a prompt from another published unit', async () => {
+    const secondPrompt = {
+      ...speakingPrompt,
+      id: 'w1d2-s1',
+      cueZh: '说明你要去机场。',
+      modelAnswer: 'I need to go to the airport.',
+      acceptedAnswers: ['I need to go to the airport.'],
+    }
+    const firstUnit = createSpeakingUnit()
+    const secondUnit = {
+      ...createSpeakingUnit([secondPrompt]),
+      learningUnitId: 'st4w-w1d2-speaking',
+      contentRef:
+        'lesson://survival-travel-american-4w/1.0.0/w1d2/speaking',
+      tags: ['scene:airport', 'task:fixed-response'],
+    }
+    const catalog: SpeakingCatalog = {
+      schemaVersion: 1,
+      packageVersion: '1.0.0',
+      courseId: 'survival-travel-american-4w',
+      units: [firstUnit, secondUnit],
+      getUnit: (contentRef) =>
+        [firstUnit, secondUnit].find(
+          (unit) => unit.contentRef === contentRef,
+        ),
+    }
+    const items = [
+      {
+        itemId: 'cross-unit-speaking-1',
+        learningUnitId: firstUnit.learningUnitId,
+        contentRef: firstUnit.contentRef,
+        difficultyLevel: 1,
+        tags: firstUnit.tags,
+        source: {
+          sourceType: 'speaking-prompt' as const,
+          sourceId: speakingPrompt.id,
+          variantId: 'activity-prompt' as const,
+        },
+      },
+      {
+        itemId: 'cross-unit-speaking-2',
+        learningUnitId: secondUnit.learningUnitId,
+        contentRef: secondUnit.contentRef,
+        difficultyLevel: 1,
+        tags: secondUnit.tags,
+        source: {
+          sourceType: 'speaking-prompt' as const,
+          sourceId: secondPrompt.id,
+          variantId: 'activity-prompt' as const,
+        },
+      },
+    ]
+    const training = new SpeakingTrainingRuntime({
+      task: createSpeakingTask({
+        trainingBudget: {
+          schemaVersion: 1,
+          targetEffectiveSeconds: 900,
+        },
+      }),
+      localDate: '2026-07-29',
+      contentSource: { load: async () => catalog },
+      eventSink: new InMemoryPlatformEventSink(),
+      repository: new SpeakingSessionRepository(new MemoryStore()),
+      networkStatus: online,
+      microphonePermission: permission(),
+      recorder: new FakeRecorder(),
+      recognition: new FakeRecognition({
+        status: 'recognized',
+        transcript: "I'm from Shanghai.",
+        alternatives: [],
+      }),
+      now: clock(),
+      createId: ids('cross-unit-speaking'),
+      supplyProvider: {
+        async next(request) {
+          const item = items.find(
+            (candidate) =>
+              !request.excludeItemIds.includes(candidate.itemId),
+          )
+          return item
+            ? {
+                schemaVersion: 1,
+                requestId: request.requestId,
+                status: 'item',
+                item,
+                nextCursor: item.itemId,
+              }
+            : {
+                schemaVersion: 1,
+                requestId: request.requestId,
+                status: 'content-exhausted',
+                reason: 'all-eligible-content-recently-used',
+              }
+        },
+      },
+      trainingBudgetStatus: () => 'running',
+    })
+
+    await training.initialize()
+    await training.startRecording()
+    await training.stopRecording()
+    const continued = await training.advance()
+
+    expect(continued.phase).toBe('practicing')
+    expect(continued.failure).toBeNull()
+    expect(continued.task.learningUnitId).toBe(
+      firstUnit.learningUnitId,
+    )
+    expect(continued.unit?.learningUnitId).toBe(
+      secondUnit.learningUnitId,
+    )
+    expect(continued.stream?.activeItem?.itemId).toBe(
+      'cross-unit-speaking-2',
+    )
+  })
+
+  it('restarts a failed stream that has no acknowledged exhaustion instead of attempting a false recovery', async () => {
+    const catalog = createSpeakingCatalogFixture()
+    const item = {
+      itemId: 'restart-after-content-error',
+      learningUnitId: catalog.units[0].learningUnitId,
+      contentRef: catalog.units[0].contentRef,
+      difficultyLevel: 1,
+      tags: catalog.units[0].tags,
+      source: {
+        sourceType: 'speaking-prompt' as const,
+        sourceId: speakingPrompt.id,
+        variantId: 'activity-prompt' as const,
+      },
+    }
+    let contentAvailable = true
+    const training = new SpeakingTrainingRuntime({
+      task: createSpeakingTask({
+        trainingBudget: {
+          schemaVersion: 1,
+          targetEffectiveSeconds: 900,
+        },
+      }),
+      localDate: '2026-07-29',
+      contentSource: {
+        load: async () => {
+          if (!contentAvailable) {
+            throw new Error('temporary content resolution failure')
+          }
+          return catalog
+        },
+      },
+      eventSink: new InMemoryPlatformEventSink(),
+      repository: new SpeakingSessionRepository(new MemoryStore()),
+      networkStatus: online,
+      microphonePermission: permission(),
+      recorder: new FakeRecorder(),
+      recognition: new FakeRecognition({
+        status: 'recognized',
+        transcript: "I'm from Shanghai.",
+        alternatives: [],
+      }),
+      now: clock(),
+      createId: ids('restart-after-content-error'),
+      supplyProvider: {
+        async next(request) {
+          return {
+            schemaVersion: 1,
+            requestId: request.requestId,
+            status: 'item',
+            item,
+            nextCursor: item.itemId,
+          }
+        },
+      },
+      trainingBudgetStatus: () => 'running',
+    })
+
+    await training.initialize()
+    await training.startRecording()
+    await training.stopRecording()
+    contentAvailable = false
+    const failed = await training.advance()
+    expect(failed.phase).toBe('error')
+    expect(failed.stream?.exhaustionRequestId).toBeNull()
+
+    contentAvailable = true
+    const restarted = await training.retrySupply()
+    expect(restarted.phase).toBe('practicing')
+    expect(restarted.failure).toBeNull()
+    expect(restarted.stream?.activeItem?.itemId).toBe(item.itemId)
+  })
+
   it('streams durable non-repeating prompts and completes only after finish-current-item', async () => {
     const secondPrompt = { ...speakingPrompt, id: 'w1d1-s2', cueZh: '说明你在纽约旅行。', modelAnswer: "I'm visiting New York.", acceptedAnswers: ["I'm visiting New York."] }
     const catalog = createSpeakingCatalogFixture(createSpeakingUnit([speakingPrompt, secondPrompt]))

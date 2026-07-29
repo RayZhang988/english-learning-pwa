@@ -59,6 +59,7 @@ export {
   beginSpeakingRecording,
   createFailedSpeakingSession,
   createSpeakingSession,
+  createSpeakingStreamSession,
   getCurrentSpeakingPrompt,
   getSpeakingSessionResult,
   markSpeakingCaptureUnavailable,

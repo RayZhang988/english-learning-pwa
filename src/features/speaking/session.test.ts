@@ -4,6 +4,7 @@ import {
   advanceSpeakingSession,
   beginSpeakingRecording,
   createSpeakingSession,
+  createSpeakingStreamSession,
   getSpeakingSessionResult,
   markSpeakingCaptureUnavailable,
   processSpeakingRecording,
@@ -48,6 +49,43 @@ function sessionWithTwoPrompts() {
 }
 
 describe('speaking session state machine', () => {
+  it('allows only continuous streams to use a prompt from another published unit', () => {
+    const task = createSpeakingTask()
+    const suppliedUnit = {
+      ...createSpeakingUnit(),
+      learningUnitId: 'st4w-w1d2-speaking',
+      contentRef:
+        'lesson://survival-travel-american-4w/1.0.0/w1d2/speaking',
+    }
+
+    expect(() =>
+      createSpeakingSession(
+        task,
+        suppliedUnit,
+        'granted',
+        'online',
+        recordingCapabilities,
+        recognitionCapabilities,
+        now,
+      ),
+    ).toThrow(
+      'Speaking task and content unit identities do not match.',
+    )
+
+    const streamed = createSpeakingStreamSession(
+      task,
+      suppliedUnit,
+      'granted',
+      'online',
+      recordingCapabilities,
+      recognitionCapabilities,
+      now,
+    )
+    expect(streamed.task).toEqual(task)
+    expect(streamed.unit).toEqual(suppliedUnit)
+    expect(streamed.phase).toBe('practicing')
+  })
+
   it('records recognized text and advances only after review', () => {
     let session = sessionWithTwoPrompts()
     session = beginSpeakingRecording(
