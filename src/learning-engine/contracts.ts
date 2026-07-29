@@ -213,6 +213,10 @@ export type ExtraTrainingContentPriority =
   | 'same-day-variant'
   | 'new-optional-content'
 
+export type ExtraTrainingPriorityItemIds = Readonly<
+  Record<ExtraTrainingContentPriority, readonly string[]>
+>
+
 export type ExtraTrainingStatus =
   | 'running'
   | 'finish-current-item'
@@ -243,6 +247,8 @@ export interface ExtraTrainingSession {
   readonly status: ExtraTrainingStatus
   readonly nextSupplyCursor: string | null
   readonly excludeItemIds: readonly string[]
+  /** Published candidate item IDs supplied by 01/05; 04 never infers them. */
+  readonly priorityItemIds?: ExtraTrainingPriorityItemIds
   readonly completedItemCount: number
   readonly startedAt: string
   readonly updatedAt: string
@@ -268,6 +274,7 @@ export interface ExtraTrainingSupplyRequest {
   readonly cursor: string | null
   readonly excludeItemIds: readonly string[]
   readonly priority: readonly ExtraTrainingContentPriority[]
+  readonly priorityItemIds: ExtraTrainingPriorityItemIds
   readonly reason: 'initial' | 'continue-after-item' | 'resume'
 }
 

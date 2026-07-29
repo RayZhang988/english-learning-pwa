@@ -1,5 +1,6 @@
 import type {
   ExtraTrainingEvent,
+  ExtraTrainingPriorityItemIds,
   ExtraTrainingSession,
   ExtraTrainingState,
   ExtraTrainingSupplyRequest,
@@ -18,12 +19,67 @@ const PRIORITY = [
   'new-optional-content',
 ] as const
 
+function emptyPriorityItemIds(): ExtraTrainingPriorityItemIds {
+  return {
+    'recent-error': [],
+    'due-review': [],
+    'same-day-variant': [],
+    'new-optional-content': [],
+  }
+}
+
+function normalizePriorityItemIds(
+  value: unknown,
+  fieldName = 'priorityItemIds',
+): ExtraTrainingPriorityItemIds {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+    throw new TypeError(`${fieldName} must contain every priority group`)
+  }
+  const record = value as Record<string, unknown>
+  const seen = new Set<string>()
+  const groups = PRIORITY.map((priority) => {
+    const itemIds = record[priority]
+    if (!Array.isArray(itemIds)) {
+      throw new TypeError(`${fieldName}.${priority} must be an itemId array`)
+    }
+    const normalized: string[] = []
+    for (const itemId of itemIds) {
+      if (typeof itemId !== 'string' || itemId.trim().length === 0) {
+        throw new TypeError(`${fieldName}.${priority} contains an invalid itemId`)
+      }
+      if (!seen.has(itemId)) {
+        seen.add(itemId)
+        normalized.push(itemId)
+      }
+    }
+    return [priority, normalized] as const
+  })
+  if (Object.keys(record).some((key) => !PRIORITY.includes(key as typeof PRIORITY[number]))) {
+    throw new TypeError(`${fieldName} contains an unsupported priority group`)
+  }
+  return {
+    'recent-error': groups[0][1],
+    'due-review': groups[1][1],
+    'same-day-variant': groups[2][1],
+    'new-optional-content': groups[3][1],
+  }
+}
+
+function sessionPriorityItemIds(
+  session: ExtraTrainingSession,
+): ExtraTrainingPriorityItemIds {
+  return session.priorityItemIds === undefined
+    ? emptyPriorityItemIds()
+    : normalizePriorityItemIds(session.priorityItemIds)
+}
+
 export interface CreateExtraTrainingSessionInput {
   readonly sessionId: string
   readonly localDate: string
   readonly domain: ExtraTrainingSession['domain']
   readonly targetModuleId: ExtraTrainingSession['targetModuleId']
   readonly targetDifficulty: number
+  readonly priorityItemIds: ExtraTrainingPriorityItemIds
   readonly startedAt: string
 }
 
@@ -104,6 +160,7 @@ export function createExtraTrainingSession(
     status: 'running',
     nextSupplyCursor: null,
     excludeItemIds: [],
+    priorityItemIds: normalizePriorityItemIds(input.priorityItemIds),
     completedItemCount: 0,
     startedAt: input.startedAt,
     updatedAt: input.startedAt,
@@ -134,6 +191,7 @@ export function buildExtraTrainingSupplyRequest(
     cursor: session.nextSupplyCursor,
     excludeItemIds: session.excludeItemIds,
     priority: PRIORITY,
+    priorityItemIds: sessionPriorityItemIds(session),
     reason:
       session.completedItemCount === 0
         ? 'initial'

@@ -36,7 +36,15 @@ function completedDailyPlan(): PlanProgress {
   }
 }
 
-function create(domain: 'vocabulary' | 'listening' | 'speaking' = 'vocabulary') {
+function create(
+  domain: 'vocabulary' | 'listening' | 'speaking' = 'vocabulary',
+  priorityItemIds = {
+    'recent-error': ['published-error-1', 'published-error-1'],
+    'due-review': ['published-due-1'],
+    'same-day-variant': ['published-variant-1'],
+    'new-optional-content': [],
+  },
+) {
   return createExtraTrainingSession(
     createExtraTrainingState(),
     completedDailyPlan(),
@@ -46,6 +54,7 @@ function create(domain: 'vocabulary' | 'listening' | 'speaking' = 'vocabulary') 
       domain,
       targetModuleId: domain,
       targetDifficulty: 3,
+      priorityItemIds,
       startedAt: '2026-07-29T01:00:00.000Z',
     },
   )
@@ -90,6 +99,7 @@ describe('R6 independent extra-training sessions', () => {
       ...completedDailyPlan(), status: 'in-progress',
     }, {
       sessionId: 'blocked', localDate: '2026-07-29', domain: 'vocabulary', targetModuleId: 'vocabulary', targetDifficulty: 2, startedAt: '2026-07-29T01:00:00.000Z',
+      priorityItemIds: { 'recent-error': [], 'due-review': [], 'same-day-variant': [], 'new-optional-content': [] },
     })).toThrow('completed daily plan')
     expect(JSON.parse(JSON.stringify(state))).toEqual(state)
   })
@@ -110,6 +120,12 @@ describe('R6 independent extra-training sessions', () => {
     expect(initialRequest?.priority).toEqual([
       'recent-error', 'due-review', 'same-day-variant', 'new-optional-content',
     ])
+    expect(initialRequest?.priorityItemIds).toEqual({
+      'recent-error': ['published-error-1'],
+      'due-review': ['published-due-1'],
+      'same-day-variant': ['published-variant-1'],
+      'new-optional-content': [],
+    })
     state = applyExtraTrainingEvent(state, event('learning.extra-training.item.completed.v1', undefined, {
       requestId: 'request-1', nextSupplyCursor: 'cursor-2', item: { itemId: 'item-1', learningUnitId: 'unit-1', contentRef: 'lesson://unit-1', difficultyLevel: 3, tags: [] },
     }))
@@ -117,9 +133,26 @@ describe('R6 independent extra-training sessions', () => {
     const restored = JSON.parse(JSON.stringify(state))
     expect(restored.sessions['vocabulary-extra-1']).toMatchObject({
       status: 'paused', endReason: 'user-exited', nextSupplyCursor: 'cursor-2', excludeItemIds: ['item-1'], completedItemCount: 1,
+      priorityItemIds: initialRequest?.priorityItemIds,
     })
     const resumed = applyExtraTrainingEvent(restored, event('learning.extra-training.started.v1'))
     expect(buildExtraTrainingSupplyRequest(resumed.sessions['vocabulary-extra-1'])?.reason).toBe('resume')
+  })
+
+  it('rejects invalid priority item identities and reads old sessions as four empty groups', () => {
+    expect(() => create('vocabulary', {
+      'recent-error': [''],
+      'due-review': [],
+      'same-day-variant': [],
+      'new-optional-content': [],
+    })).toThrow('priorityItemIds')
+    const current = create()
+    const { priorityItemIds: _missing, ...legacySession } = current.sessions['vocabulary-extra-1']
+    expect(buildExtraTrainingSupplyRequest(legacySession)).toMatchObject({
+      priorityItemIds: {
+        'recent-error': [], 'due-review': [], 'same-day-variant': [], 'new-optional-content': [],
+      },
+    })
   })
 
   it('counts only valid foreground time, reaches finish-current-item, and completes only after that item', () => {

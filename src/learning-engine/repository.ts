@@ -77,10 +77,29 @@ function hasValidExtraTraining(value: Record<string, unknown>): boolean {
   ) {
     return false
   }
+  const priorityGroups = [
+    'recent-error',
+    'due-review',
+    'same-day-variant',
+    'new-optional-content',
+  ]
   return Object.entries(extra.sessions).every(([sessionId, session]) => {
     if (typeof session !== 'object' || session === null) return false
     const record = session as Record<string, unknown>
-    return (
+    const priorityItemIds = record.priorityItemIds
+    const priorityRecord = priorityItemIds as Record<string, unknown>
+    const validPriorityItemIds =
+      priorityItemIds === undefined || (
+        typeof priorityItemIds === 'object' && priorityItemIds !== null && !Array.isArray(priorityItemIds) &&
+        Object.keys(priorityItemIds).length === priorityGroups.length &&
+        priorityGroups.every((group) =>
+          Array.isArray(priorityRecord[group]) &&
+          (priorityRecord[group] as unknown[]).every((itemId: unknown) =>
+            typeof itemId === 'string' && itemId.trim().length > 0,
+          ),
+        )
+      )
+    return validPriorityItemIds && (
       record.schemaVersion === 1 && record.sessionId === sessionId &&
       typeof record.localDate === 'string' && Number.isFinite(Date.parse(`${record.localDate}T00:00:00Z`)) &&
       (record.domain === 'vocabulary' || record.domain === 'listening' || record.domain === 'speaking') &&

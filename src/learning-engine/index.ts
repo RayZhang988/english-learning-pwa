@@ -31,6 +31,7 @@ export type {
   ExtraTrainingContentPriority,
   ExtraTrainingEndReason,
   ExtraTrainingEvent,
+  ExtraTrainingPriorityItemIds,
   ExtraTrainingExitedEvent,
   ExtraTrainingExitedPayload,
   ExtraTrainingFailedEvent,

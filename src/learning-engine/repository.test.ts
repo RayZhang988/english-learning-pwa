@@ -185,6 +185,10 @@ describe('LearningEngineRepository', () => {
             domain: 'speaking' as const, targetModuleId: 'speaking' as const, mode: 'learn' as const,
             targetDifficulty: 3, targetEffectiveSeconds: 900 as const, remainingEffectiveSeconds: 600,
             status: 'paused' as const, nextSupplyCursor: 'cursor-1', excludeItemIds: ['item-1'], completedItemCount: 1,
+            priorityItemIds: {
+              'recent-error': ['published-error-1'], 'due-review': ['published-due-1'],
+              'same-day-variant': ['published-variant-1'], 'new-optional-content': [],
+            },
             startedAt: '2026-07-29T01:00:00.000Z', updatedAt: '2026-07-29T01:05:00.000Z', endedAt: '2026-07-29T01:05:00.000Z', endReason: 'user-exited' as const,
           },
         },

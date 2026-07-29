@@ -218,8 +218,11 @@ contentEstimate = clamp(raw, minimumSeconds, maximumSeconds)
 同样不触碰每日计划。
 
 `buildExtraTrainingSupplyRequest()` 把内容优先级明确交给 05/训练模块：
-`recent-error → due-review → same-day-variant → new-optional-content`。04 不选择或编写任何
-课程内容。旧 `LearningEngineState` 省略可选 `extraTraining` 字段时仍按原 schema-1 读取。
+`recent-error → due-review → same-day-variant → new-optional-content`。创建会话时，01 必须把
+已经由 05 发布的 candidate `itemId` 以四组 `priorityItemIds` 显式传入；04 按优先级全局去重、
+拒绝空 ID 或缺组，并把这些身份保存到会话，在退出/刷新后原样请求。04 不选择、生成或猜测
+课程内容；`new-optional-content` 始终由上游传空数组。旧持久化会话缺少该新增字段时，读取为
+四组空数组，保持 schema-1 兼容。
 
 ## 1. 指标定义
 
