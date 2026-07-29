@@ -43,8 +43,19 @@ export {
 } from './runtime.ts'
 export {
   VocabularyCatalogSupplyProvider,
+  type ExtraVocabularySupplyProvider,
   type VocabularySupplyProvider,
 } from './supply.ts'
+export {
+  ExtraVocabularyTrainingRuntime,
+  type ExtraVocabularySupplyProvider as ExtraVocabularyTrainingSupplyProvider,
+  type ExtraVocabularyTrainingRuntimeOptions,
+  type ExtraVocabularyTrainingSnapshot,
+} from './extra-training.ts'
+export {
+  EXTRA_VOCABULARY_TRAINING_STORAGE_NAMESPACE,
+  ExtraVocabularyTrainingRepository,
+} from './extra-training-repository.ts'
 export {
   advanceVocabularySession,
   createFailedVocabularySession,

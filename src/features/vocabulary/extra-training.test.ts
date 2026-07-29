@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { ExtraVocabularyTrainingRuntime } from './extra-training.ts'
 import { ExtraVocabularyTrainingRepository } from './extra-training-repository.ts'
+import {
+  ExtraVocabularyTrainingRuntime as BarrelRuntime,
+  ExtraVocabularyTrainingRepository as BarrelRepository,
+} from './index.ts'
 import type { NamespaceStore, StoredRecord } from '../../storage/index.ts'
+import type { ExtraTrainingSession } from '../../learning-engine/index.ts'
 
 class Store implements NamespaceStore { records = new Map<string, StoredRecord<unknown>>(); async get<T>(key:string){ return this.records.get(key) as StoredRecord<T>|undefined }; async put<T>(key:string,value:T,schemaVersion=1){ this.records.set(key,{namespace:'test',key,value,schemaVersion,updatedAt:'2026-07-29T00:00:00.000Z'}) }; async delete(key:string){this.records.delete(key)}; async keys(){return [...this.records.keys()]}; async clear(){this.records.clear()} }
 
@@ -10,7 +15,7 @@ const item = { itemId: 'supply-vocabulary-1', learningUnitId: 'unit-1', contentR
 
 describe('extra vocabulary commands', () => {
   const question = { id: 'question', type: 'term-to-meaning' as const, instructionZh: '选择', prompt: 'word', promptLocale: 'en-US' as const, partOfSpeech: null, options: [{ id: 'right', label: '对' }, { id: 'wrong', label: '错' }], correctOptionId: 'right', exampleEn: null, explanationZh: null, errorTag: 'meaning-recall' as const }
-  function options() { return { session, repository: new ExtraVocabularyTrainingRepository(new Store()), supplyRequest: () => ({ schemaVersion: 1 as const, requestId: 'supply', sessionId: session.sessionId, localDate: session.localDate, domain: 'vocabulary' as const, targetModuleId: 'vocabulary' as const, mode: 'learn' as const, targetDifficulty: 1, cursor: null, excludeItemIds: [], priority: ['recent-error', 'due-review', 'same-day-variant', 'new-optional-content'] as const, priorityItemIds: { 'recent-error': [], 'due-review': [], 'same-day-variant': [], 'new-optional-content': [] }, reason: 'initial' as const }), supplyProvider: { next: async (request: { requestId: string }) => ({ schemaVersion: 1 as const, requestId: request.requestId, status: 'item' as const, item, nextCursor: item.itemId }) }, questionForItem: async () => question, timingSessionFactory: { create: async () => ({ start: async () => {}, transition: async () => {}, activity: async () => {}, pause: async () => {}, resume: async () => {}, finish: async () => {}, dispose: async () => {} }) }, eventSink: { publishExtraTrainingEvent: async () => {} } } }
+  function options() { return { session, repository: new ExtraVocabularyTrainingRepository(new Store()), supplyRequest: (current: ExtraTrainingSession) => ({ schemaVersion: 1 as const, requestId: 'supply', sessionId: current.sessionId, localDate: current.localDate, domain: 'vocabulary' as const, targetModuleId: 'vocabulary' as const, mode: 'learn' as const, targetDifficulty: current.targetDifficulty, cursor: current.nextSupplyCursor, excludeItemIds: current.excludeItemIds, priority: ['recent-error', 'due-review', 'same-day-variant', 'new-optional-content'] as const, priorityItemIds: { 'recent-error': [], 'due-review': [], 'same-day-variant': [], 'new-optional-content': [] }, reason: 'initial' as const }), supplyProvider: { next: async (request: { requestId: string }) => ({ schemaVersion: 1 as const, requestId: request.requestId, status: 'item' as const, item, nextCursor: item.itemId }) }, questionForItem: async () => question, timingSessionFactory: { create: async () => ({ start: async () => {}, transition: async () => {}, activity: async () => {}, pause: async () => {}, resume: async () => {}, finish: async () => {}, dispose: async () => {} }) }, eventSink: { publishExtraTrainingEvent: async () => {} } } }
   it('marks 899→900 as finish-current-item without truncating answering', async () => {
     const runtime = new ExtraVocabularyTrainingRuntime({ session, supplyRequest: () => null, supplyProvider: { next: async () => { throw new Error('unused') } }, questionForItem: async () => { throw new Error('unused') }, timingSessionFactory: { create: async () => ({ start: async () => {}, transition: async () => {}, activity: async () => {}, pause: async () => {}, resume: async () => {}, finish: async () => {}, dispose: async () => {} }) }, eventSink: { publishExtraTrainingEvent: async () => {} } })
     await runtime.initialize(); await runtime.recordEffectiveSeconds(899); const snapshot = await runtime.recordEffectiveSeconds(1)
@@ -24,6 +29,15 @@ describe('extra vocabulary commands', () => {
     expect(completed.session.status).toBe('completed')
     expect(completed.pendingEvents.map((event) => event.type)).toEqual(expect.arrayContaining(['learning.extra-training.attempt.completed.v1', 'learning.extra-training.item.completed.v1', 'learning.extra-training.budget.completed.v1']))
     await expect(runtime.completeCurrentItem()).rejects.toThrow()
+  })
+  it('atomically advances ordinary feedback once without asking the host to alter a snapshot', async () => {
+    const runtime = new ExtraVocabularyTrainingRuntime(options())
+    await runtime.initialize(); await runtime.next(); await runtime.select('right'); await runtime.submit()
+    const advanced = await runtime.advanceAfterFeedback()
+    expect(advanced.phase).toBe('answering')
+    expect(advanced.session.completedItemCount).toBe(1)
+    expect(advanced.pendingEvents.filter((event) => event.type === 'learning.extra-training.attempt.completed.v1')).toHaveLength(1)
+    await expect(runtime.advanceAfterFeedback()).rejects.toThrow('feedback')
   })
   it('persists exit and replays a failed outbox event with the same identity', async () => {
     const repository = new ExtraVocabularyTrainingRepository(new Store())
@@ -39,7 +53,7 @@ describe('extra vocabulary commands', () => {
     let request: unknown
     const runtime = new ExtraVocabularyTrainingRuntime({
       ...options(),
-      supplyRequest: () => ({ ...(options().supplyRequest()!), priorityItemIds: { 'recent-error': [item.itemId], 'due-review': [], 'same-day-variant': [], 'new-optional-content': [] } }),
+      supplyRequest: (current) => ({ ...(options().supplyRequest(current)!), priorityItemIds: { 'recent-error': [item.itemId], 'due-review': [], 'same-day-variant': [], 'new-optional-content': [] } }),
       supplyProvider: { next: async (value) => { request = value; return { schemaVersion: 1 as const, requestId: value.requestId, status: 'item' as const, item, nextCursor: item.itemId } } },
     })
     await runtime.initialize(); await runtime.next()
@@ -70,14 +84,40 @@ describe('extra vocabulary commands', () => {
     expect(recovered.session.nextSupplyCursor).toBe('previous-item')
   })
 
-  it('rejects provider failures instead of disguising them as recoverable exhaustion', async () => {
+  it('retries a provider failure with the same cursor/exclusions and preserves prior failure delivery', async () => {
+    let available = false
     const runtime = new ExtraVocabularyTrainingRuntime({
       ...options(),
-      supplyProvider: { next: async (request) => ({ schemaVersion: 1 as const, requestId: request.requestId, status: 'content-exhausted' as const, reason: 'provider-failure' as const }) },
+      session: { ...session, nextSupplyCursor: 'cursor-1', excludeItemIds: ['done-1'] },
+      supplyProvider: { next: async (request) => {
+        expect(request.cursor).toBe('cursor-1')
+        expect(request.excludeItemIds).toEqual(['done-1'])
+        return available
+          ? { schemaVersion: 1 as const, requestId: request.requestId, status: 'item' as const, item, nextCursor: item.itemId }
+          : { schemaVersion: 1 as const, requestId: request.requestId, status: 'content-exhausted' as const, reason: 'provider-failure' as const }
+      } },
     })
     await runtime.initialize(); await runtime.next()
     expect(runtime.currentSnapshot?.session.endReason).toBe('provider-failure')
-    await expect(runtime.retryContent()).rejects.toThrow('Only content-exhausted')
+    const failedEventId = runtime.currentSnapshot!.pendingEvents.at(-1)!.id
+    available = true
+    const recovered = await runtime.retry()
+    expect(recovered.session.status).toBe('running')
+    expect(recovered.pendingEvents.map((event) => event.id)).toContain(failedEventId)
+    expect(recovered.pendingEvents.map((event) => event.type).slice(-1)).toEqual(['learning.extra-training.started.v1'])
+  })
+
+  it('keeps the same failed checkpoint when a retry fails again', async () => {
+    const runtime = new ExtraVocabularyTrainingRuntime({ ...options(), supplyProvider: { next: async (request) => ({ schemaVersion: 1 as const, requestId: request.requestId, status: 'content-exhausted' as const, reason: 'provider-failure' as const }) } })
+    await runtime.initialize(); const failed = await runtime.next(); const ids = failed.pendingEvents.map((event) => event.id)
+    const retried = await runtime.retry()
+    expect(retried).toEqual(failed)
+    expect(retried.pendingEvents.map((event) => event.id)).toEqual(ids)
+  })
+
+  it('exports runtime and repository through the vocabulary barrel', () => {
+    expect(BarrelRuntime).toBe(ExtraVocabularyTrainingRuntime)
+    expect(BarrelRepository).toBe(ExtraVocabularyTrainingRepository)
   })
 
   it('never mutates a completed daily plan snapshot', async () => {
