@@ -169,6 +169,18 @@ export class LearningAppCoordinator {
     return initialization
   }
 
+  refreshForCurrentDate(): Promise<LearningAppState> {
+    const state = this.#state
+    const currentLocalDate = formatLocalDate(this.#now())
+    if (
+      state.status !== 'loading' &&
+      state.localDate === currentLocalDate
+    ) {
+      return Promise.resolve(state)
+    }
+    return this.initialize()
+  }
+
   resolveTask(
     taskId: string,
     expectedModuleId?: TrainingModuleId,

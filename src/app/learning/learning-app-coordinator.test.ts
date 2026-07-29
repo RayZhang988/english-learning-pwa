@@ -800,6 +800,45 @@ describe('LearningAppCoordinator', () => {
     ).toBe(true)
   })
 
+  it('refreshes the same foreground app instance after midnight and creates budget tasks', async () => {
+    await profiles.saveLatest(abilityProfile())
+    const app = coordinator()
+    const firstState = await app.initialize()
+    if (firstState.status !== 'ready') {
+      throw new Error('Expected a ready first-day plan.')
+    }
+    expect(
+      firstState.runtime.activePlan.plan.tasks.every(
+        (task) =>
+          task.trainingBudget?.targetEffectiveSeconds === 900,
+      ),
+    ).toBe(true)
+    const firstPlanId = firstState.runtime.activePlan.plan.planId
+    const firstLoadCount = candidates.loadCount
+
+    await expect(app.refreshForCurrentDate()).resolves.toBe(
+      firstState,
+    )
+    expect(candidates.loadCount).toBe(firstLoadCount)
+
+    currentDate = new Date(2026, 6, 25, 8, 0, 0)
+    const secondState = await app.refreshForCurrentDate()
+    if (secondState.status !== 'ready') {
+      throw new Error('Expected a ready next-day plan.')
+    }
+    expect(secondState.localDate).toBe('2026-07-25')
+    expect(secondState.runtime.activePlan.plan.planId).not.toBe(
+      firstPlanId,
+    )
+    expect(
+      secondState.runtime.activePlan.plan.tasks.every(
+        (task) =>
+          task.trainingBudget?.targetEffectiveSeconds === 900,
+      ),
+    ).toBe(true)
+    expect(candidates.loadCount).toBe(firstLoadCount + 1)
+  })
+
   it('records only completed 900-second budget sessions and never lets personalization shorten the target', async () => {
     await profiles.saveLatest(abilityProfile())
     const excludedSegments: Readonly<

@@ -24,7 +24,28 @@ export function LearningAppProvider({
   useEffect(() => {
     const unsubscribe = coordinator.subscribe(setState)
     void coordinator.initialize()
-    return unsubscribe
+
+    const refreshForForeground = () => {
+      if (document.visibilityState !== 'hidden') {
+        void coordinator.refreshForCurrentDate()
+      }
+    }
+    document.addEventListener(
+      'visibilitychange',
+      refreshForForeground,
+    )
+    window.addEventListener('pageshow', refreshForForeground)
+    window.addEventListener('focus', refreshForForeground)
+
+    return () => {
+      unsubscribe()
+      document.removeEventListener(
+        'visibilitychange',
+        refreshForForeground,
+      )
+      window.removeEventListener('pageshow', refreshForForeground)
+      window.removeEventListener('focus', refreshForForeground)
+    }
   }, [coordinator])
 
   return (
