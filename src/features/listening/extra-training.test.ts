@@ -140,7 +140,46 @@ describe('extra listening commands', () => {
     expect(runtime.currentSnapshot?.session.nextSupplyCursor).toBe('old')
     const failed = new ExtraListeningTrainingRuntime({ ...options(), supplyProvider: { next: async (value) => ({ schemaVersion: 1 as const, requestId: value.requestId, status: 'content-exhausted' as const, reason: 'provider-failure' as const }) } })
     await failed.initialize(); await failed.next(); expect(failed.currentSnapshot?.session.endReason).toBe('provider-failure')
-    await expect(failed.retryContent()).rejects.toThrow('Only content-exhausted')
+    await expect(failed.retryFailure()).resolves.toMatchObject({ session: { endReason: 'provider-failure' } })
+  })
+
+  it('retries content/provider failures from the durable cursor exactly once after refresh', async () => {
+    const configured = options(wordQuestion)
+    let attempts = 0
+    const provider = { next: async (value: { requestId: string }) => {
+      attempts += 1
+      return attempts === 1
+        ? { schemaVersion: 1 as const, requestId: value.requestId, status: 'content-exhausted' as const, reason: 'provider-failure' as const }
+        : attempts === 2
+          ? { schemaVersion: 1 as const, requestId: value.requestId, status: 'content-exhausted' as const, reason: 'provider-failure' as const }
+          : { schemaVersion: 1 as const, requestId: value.requestId, status: 'item' as const, item, nextCursor: item.itemId }
+    } }
+    const first = new ExtraListeningTrainingRuntime({ ...configured, supplyProvider: provider })
+    await first.initialize(); await first.flush(); await first.next()
+    const failedId = first.currentSnapshot!.pendingEvents.at(-1)!.id
+    const restored = new ExtraListeningTrainingRuntime({ ...configured, repository: configured.repository, supplyProvider: provider })
+    await restored.initialize(); await restored.retryFailure()
+    expect(restored.currentSnapshot?.pendingEvents.map((event) => event.id)).toContain(failedId)
+    expect(restored.currentSnapshot?.session.endReason).toBe('provider-failure')
+    await restored.retryFailure()
+    expect(restored.currentSnapshot?.activeItem?.itemId).toBe(item.itemId)
+    expect(restored.currentSnapshot?.pendingEvents.filter((event) => event.type === 'learning.extra-training.started.v1')).toHaveLength(1)
+    await expect(restored.retryFailure()).rejects.toThrow('Only failed')
+  })
+
+  it('rebuilds the same item after device failure without resupplying or changing neutral speech', async () => {
+    const configured = options(wordQuestion)
+    let supplied = 0
+    const runtime = new ExtraListeningTrainingRuntime({ ...configured, supplyProvider: { next: async (value) => { supplied += 1; return { schemaVersion: 1 as const, requestId: value.requestId, status: 'item' as const, item, nextCursor: item.itemId } } } })
+    await runtime.initialize(); await runtime.flush(); await runtime.next(); await runtime.toggleAudio()
+    configured.speech.callbacks?.onError?.('audio-hardware')
+    await runtime.retryFailure()
+    expect(runtime.currentSnapshot?.activeItem?.itemId).toBe(item.itemId)
+    expect(runtime.currentSnapshot?.session.status).toBe('running')
+    expect(supplied).toBe(1)
+    await runtime.toggleAudio()
+    expect(configured.speech.calls.at(-1)).toEqual({ text: 'Maya says hello.', locale: 'en-US', rate: 1 })
+    expect(runtime.currentSnapshot?.pendingEvents.filter((event) => event.type === 'learning.extra-training.started.v1')).toHaveLength(1)
   })
 
   it('does not mutate an already completed daily 3/3 record', async () => {

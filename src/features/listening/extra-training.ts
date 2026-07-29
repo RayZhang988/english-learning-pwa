@@ -195,9 +195,47 @@ export class ExtraListeningTrainingRuntime {
     const event = { ...base, payload: { ...base.payload, reason } } as ExtraTrainingEvent
     return this.save({ ...snapshot, phase: 'error', pendingEvents: [...snapshot.pendingEvents, event], session: { ...snapshot.session, status: 'failed', endReason: reason, endedAt: event.occurredAt, updatedAt: event.occurredAt }, updatedAt: event.occurredAt })
   }
-  async retryContent(): Promise<ExtraListeningTrainingSnapshot> { return this.queue(async () => {
+  /**
+   * Recovers the current extra-training session without creating a daily task.
+   * A content/provider failure asks the same durable cursor again; a device
+   * failure keeps its resolved item and only recreates the local controller.
+   */
+  async retryFailure(): Promise<ExtraListeningTrainingSnapshot> { return this.queue(async () => {
     const snapshot = this.require()
-    if (snapshot.session.endReason !== 'content-exhausted') throw new ListeningError('session-transition-invalid', 'Only content-exhausted extra listening can retry content.')
+    if (snapshot.session.status === 'completed' || snapshot.session.status === 'expired') {
+      throw new ListeningError('session-transition-invalid', 'Completed or expired extra listening cannot retry.')
+    }
+    if (snapshot.session.status !== 'failed') {
+      throw new ListeningError('session-transition-invalid', 'Only failed extra listening can retry.')
+    }
+    if (snapshot.session.endReason === 'device-failure') {
+      if (!snapshot.activeItem || !snapshot.question || !snapshot.unit) {
+        throw new ListeningError('session-transition-invalid', 'Device recovery requires the current extra listening item.')
+      }
+      const started = this.base('learning.extra-training.started.v1')
+      const playback = snapshot.playback
+        ? { ...snapshot.playback, status: 'idle' as const, errorMessage: null }
+        : initialPlayback(snapshot.question)
+      const recovered = await this.save({
+        ...snapshot,
+        playback,
+        phase: snapshot.answer ? 'feedback' : 'answering',
+        pendingEvents: [...snapshot.pendingEvents, started],
+        session: {
+          ...snapshot.session,
+          status: snapshot.session.remainingEffectiveSeconds === 0 ? 'finish-current-item' : 'running',
+          endReason: null,
+          endedAt: null,
+          updatedAt: started.occurredAt,
+        },
+        updatedAt: started.occurredAt,
+      })
+      this.attachController(recovered)
+      return recovered
+    }
+    if (snapshot.session.endReason !== 'content-exhausted' && snapshot.session.endReason !== 'provider-failure') {
+      throw new ListeningError('session-transition-invalid', 'Extra listening failure cannot retry.')
+    }
     const request = this.options.supplyRequest({
       ...snapshot.session,
       // The engine deliberately makes failed sessions non-supplyable. Retrying an
@@ -213,6 +251,8 @@ export class ExtraListeningTrainingRuntime {
     this.attachController(next)
     return next
   }) }
+  /** @deprecated Use retryFailure(), which also covers provider and device failures. */
+  retryContent(): Promise<ExtraListeningTrainingSnapshot> { return this.retryFailure() }
   toggleAudio() { return this.queue(async () => { const snapshot = this.require(); if (!this.controller) return snapshot; this.controller.toggle(); await this.playbackWrites; await this.timingWork; return this.require() }) }
   setPlaybackRate(rate: number) { return this.queue(async () => { if (!this.controller) return this.require(); this.controller.setRate(rate); await this.playbackWrites; return this.require() }) }
   selectSegment(segmentId: string) { return this.queue(async () => { if (!this.controller) return this.require(); this.controller.selectSegment(segmentId); await this.playbackWrites; return this.require() }) }

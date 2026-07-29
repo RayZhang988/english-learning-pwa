@@ -79,7 +79,12 @@
   因此完成、退出、失败和跨日清理不会改变每日计划的 3/3 深度。
 - 每次请求把 04/05 给出的四级优先顺序及精确 `priorityItemIds` 原样传给供应器，并保存
   cursor、exclude 和 completed count。内容耗尽仅可对已确认的 `content-exhausted` 重试；
-  `provider-failure` 仍是隔离失败，不能伪装为可恢复耗尽。
+  `provider-failure` 仍是隔离失败，不能伪装为内容耗尽。
+- 公开的 `retryFailure()` 覆盖三类已保存失败：`content-exhausted` 与
+  `provider-failure` 以相同 cursor/exclude/priority 重新请求供应；无可用结果时保留原
+  failure、进度和 pending failed event。`device-failure` 不重选题，重建同一题的单一中性
+  Speech controller。成功恢复才追加一个 `started`；重复点击不会重复追加或重新开始。
+  `retryContent()` 仅保留为兼容别名。
 - 900 秒只把 session 置为 `finish-current-item`，不会取消 SpeechSynthesis 或截断输入。
   当前题进入反馈后按 `attempt.completed → item.completed → budget.completed` 顺序持久化并发布；
   在预算完成事件前先调用额外训练 timing 的 `finish()`。
