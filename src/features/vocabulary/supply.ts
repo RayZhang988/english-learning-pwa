@@ -1,4 +1,5 @@
 import type {
+  ExtraTrainingSupplyRequest,
   LearningTaskSupplyRequest,
   LearningTaskSupplyResult,
 } from '../../learning-engine/index.ts'
@@ -17,7 +18,13 @@ function strings(value: unknown): readonly string[] | null {
     : null
 }
 
-function parseItem(value: unknown): VocabularySupplyItem & { readonly supplyOrder: number; readonly allowedModes: readonly string[] } {
+type IndexedVocabularySupplyItem = VocabularySupplyItem & {
+  readonly supplyOrder: number
+  readonly allowedModes: readonly string[]
+  readonly variantFamilyId: string
+}
+
+function parseItem(value: unknown): IndexedVocabularySupplyItem {
   if (!isRecord(value) || !isRecord(value.source)) {
     throw new VocabularyError('content-invalid', 'Training supply item must be an object.')
   }
@@ -28,7 +35,8 @@ function parseItem(value: unknown): VocabularySupplyItem & { readonly supplyOrde
     typeof value.itemId !== 'string' || typeof value.learningUnitId !== 'string' ||
     typeof value.contentRef !== 'string' || typeof value.difficultyLevel !== 'number' ||
     !Number.isFinite(value.difficultyLevel) || typeof value.supplyOrder !== 'number' ||
-    !Number.isInteger(value.supplyOrder) || !tags || !modes ||
+    !Number.isInteger(value.supplyOrder) || typeof value.variantFamilyId !== 'string' ||
+    value.variantFamilyId.length === 0 || !tags || !modes ||
     value.source.sourceType !== 'vocabulary-item' || typeof value.source.sourceId !== 'string' ||
     !['term-to-meaning-choice', 'meaning-to-term-choice', 'example-gap-choice'].includes(String(value.source.variantId)) ||
     !distractorItemIds
@@ -43,6 +51,7 @@ function parseItem(value: unknown): VocabularySupplyItem & { readonly supplyOrde
     tags,
     supplyOrder: value.supplyOrder,
     allowedModes: modes,
+    variantFamilyId: value.variantFamilyId,
     source: {
       sourceType: 'vocabulary-item',
       sourceId: value.source.sourceId,
@@ -56,9 +65,14 @@ export interface VocabularySupplyProvider {
   next(request: LearningTaskSupplyRequest): Promise<LearningTaskSupplyResult>
 }
 
+/** R6 provider: preserves 05's exact extra-training priority ordering. */
+export interface ExtraVocabularySupplyProvider {
+  next(request: ExtraTrainingSupplyRequest): Promise<LearningTaskSupplyResult>
+}
+
 /** Strict, local implementation of the 05 training-supply handoff v1 selection. */
-export class VocabularyCatalogSupplyProvider implements VocabularySupplyProvider {
-  private readonly items: readonly (VocabularySupplyItem & { readonly supplyOrder: number; readonly allowedModes: readonly string[] })[]
+export class VocabularyCatalogSupplyProvider implements VocabularySupplyProvider, ExtraVocabularySupplyProvider {
+  private readonly items: readonly IndexedVocabularySupplyItem[]
 
   constructor(index: unknown, catalog: VocabularyCatalog) {
     if (!isRecord(index) || index.schemaVersion !== 1 || !Array.isArray(index.candidates)) {
@@ -78,7 +92,7 @@ export class VocabularyCatalogSupplyProvider implements VocabularySupplyProvider
     }
   }
 
-  async next(request: LearningTaskSupplyRequest): Promise<LearningTaskSupplyResult> {
+  async next(request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest): Promise<LearningTaskSupplyResult> {
     if (request.schemaVersion !== 1 || request.domain !== 'vocabulary' || request.targetModuleId !== 'vocabulary') {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
     }
@@ -95,6 +109,29 @@ export class VocabularyCatalogSupplyProvider implements VocabularySupplyProvider
     const available = eligible.filter((item) => !excluded.has(item.itemId))
     if (available.length === 0) {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'all-eligible-content-recently-used' }
+    }
+    if ('priority' in request) {
+      const allIds = request.priority.flatMap((priority) => request.priorityItemIds[priority])
+      if (allIds.some((itemId) => !this.items.some((item) => item.itemId === itemId))) {
+        return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
+      }
+      for (const priority of request.priority) {
+        const ids = request.priorityItemIds[priority]
+        if (priority === 'recent-error' || priority === 'due-review') {
+          const selected = ids
+            .map((itemId) => this.items.find((item) => item.itemId === itemId)!)
+            .find((item) => available.includes(item))
+          if (selected) return { schemaVersion: 1, requestId: request.requestId, status: 'item', item: selected, nextCursor: selected.itemId }
+        } else if (priority === 'same-day-variant') {
+          const selected = ids
+            .flatMap((itemId) => {
+              const source = this.items.find((item) => item.itemId === itemId)!
+              return available.filter((item) => item.itemId !== itemId && item.variantFamilyId === source.variantFamilyId)
+            })
+            .sort((left, right) => left.supplyOrder - right.supplyOrder)[0]
+          if (selected) return { schemaVersion: 1, requestId: request.requestId, status: 'item', item: selected, nextCursor: selected.itemId }
+        }
+      }
     }
     const cursorIndex = request.cursor === null ? -1 : eligible.findIndex((item) => item.itemId === request.cursor)
     if (request.cursor !== null && cursorIndex < 0) {

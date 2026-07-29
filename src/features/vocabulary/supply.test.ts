@@ -31,4 +31,15 @@ describe('vocabulary training supply', () => {
     const result = await provider.next({ schemaVersion: 1, requestId: 'request', planId: 'plan', taskId: 'task', domain: 'vocabulary', targetModuleId: 'vocabulary', mode: 'learn', targetDifficulty: 0.5, cursor: null, excludeItemIds: (catalog.trainingSupplyIndex as { candidates: { itemId: string }[] }).candidates.map((item) => item.itemId), reason: 'continue-after-item' })
     expect(result).toMatchObject({ status: 'content-exhausted', reason: 'all-eligible-content-recently-used' })
   })
+
+  it('selects the exact published recent-error item before falling back', async () => {
+    const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
+    const provider = new VocabularyCatalogSupplyProvider(catalog.trainingSupplyIndex, catalog)
+    const candidates = (catalog.trainingSupplyIndex as { candidates: { itemId: string; difficultyLevel: number }[] }).candidates
+      .filter((candidate) => candidate.itemId.startsWith('supply-v1-vocabulary-') && candidate.difficultyLevel === 1)
+    const [recent, due] = candidates
+    const request = { schemaVersion: 1 as const, requestId: 'extra-priority', sessionId: 'extra-session', localDate: '2026-07-29', domain: 'vocabulary' as const, targetModuleId: 'vocabulary' as const, mode: 'learn' as const, targetDifficulty: 1, cursor: null, excludeItemIds: [], priority: ['recent-error', 'due-review', 'same-day-variant', 'new-optional-content'] as const, priorityItemIds: { 'recent-error': [recent.itemId], 'due-review': [due.itemId], 'same-day-variant': [], 'new-optional-content': [] }, reason: 'initial' as const }
+    await expect(provider.next(request)).resolves.toMatchObject({ status: 'item', item: { itemId: recent.itemId } })
+    await expect(provider.next({ ...request, excludeItemIds: [recent.itemId] })).resolves.toMatchObject({ status: 'item', item: { itemId: due.itemId } })
+  })
 })
