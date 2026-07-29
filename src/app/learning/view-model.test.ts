@@ -656,4 +656,50 @@ describe('learning app view-model integration', () => {
       unavailableReason: 'invalid-task-data',
     })
   })
+
+  it('turns all three finished practice cards into extra-training entries after 3/3', () => {
+    const initial = progress()
+    const completed: PlanProgress = {
+      ...initial,
+      status: 'completed',
+      tasks: initial.tasks.map((task) => ({
+        ...task,
+        status: 'completed',
+        completionKind: 'scored',
+      })),
+    }
+
+    const modules = toPracticeModulesViewModel(
+      completed,
+      getPlanTaskAccess(completed),
+      3,
+      true,
+    )
+
+    expect(modules.slice(1)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          moduleId: 'vocabulary',
+          availability: 'extra-training',
+          actionLabel: '继续训练',
+          taskId: null,
+          trainingBudget: { targetEffectiveSeconds: 900 },
+        }),
+        expect.objectContaining({
+          moduleId: 'listening',
+          availability: 'extra-training',
+          actionLabel: '继续训练',
+          taskId: null,
+          trainingBudget: { targetEffectiveSeconds: 900 },
+        }),
+        expect.objectContaining({
+          moduleId: 'speaking',
+          availability: 'extra-training',
+          actionLabel: '继续训练',
+          taskId: null,
+          trainingBudget: { targetEffectiveSeconds: 900 },
+        }),
+      ]),
+    )
+  })
 })

@@ -4,6 +4,7 @@ export {
   TodayTaskList,
   type DailyPlanViewModel,
   type DailyTaskViewModel,
+  type DailyTrainingTaskAccessViewModel,
   type LearningAppPrototypeProps,
   type PracticeModuleId,
   type PracticeModuleViewModel,

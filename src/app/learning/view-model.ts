@@ -11,6 +11,7 @@ import {
 } from '../../learning-engine/index.ts'
 import type {
   ActualEffectiveDurationViewModel,
+  DailyTrainingTaskAccessViewModel,
   DailyEffectiveDurationSummaryViewModel,
   DailyPlanViewModel,
   DailyTaskViewModel,
@@ -19,7 +20,6 @@ import type {
   TaskDurationEstimateViewModel,
   TrainingBudgetProgressViewModel,
   TrainingCompletionDurationViewModel,
-  TrainingTaskAccessViewModel,
 } from '../../ui/index.ts'
 
 const modulePresentation: Readonly<
@@ -253,7 +253,7 @@ function trainingTaskAccessViewModel(
   moduleId: TrainingModuleId,
   access: PlanTaskAvailability,
   task?: LearningTask,
-): TrainingTaskAccessViewModel {
+): DailyTrainingTaskAccessViewModel {
   if (
     access.availability === 'startable' &&
     access.taskStatus !== null &&
@@ -403,6 +403,7 @@ export function toPracticeModulesViewModel(
   progress: PlanProgress,
   taskAccess: PlanTaskAccess,
   assessmentProfileSchemaVersion: 1 | 2 | 3 = 3,
+  extraTrainingAvailable = false,
 ): readonly PracticeModuleViewModel[] {
   return [
     {
@@ -415,9 +416,37 @@ export function toPracticeModulesViewModel(
             : '开始 R1 词汇测试',
       },
     },
-    ...practiceModuleIds.map((moduleId) =>
-      specialtyPracticeModule(moduleId, progress, taskAccess),
-    ),
+    ...practiceModuleIds.map((moduleId) => {
+      const module = specialtyPracticeModule(
+        moduleId,
+        progress,
+        taskAccess,
+      )
+      if (
+        extraTrainingAvailable &&
+        module.moduleId !== 'assessment' &&
+        module.availability === 'unavailable' &&
+        module.unavailableReason === 'task-finished' &&
+        (module.status === 'completed' ||
+          module.status === 'skipped')
+      ) {
+        return {
+          moduleId,
+          availability: 'extra-training' as const,
+          taskId: null,
+          status: module.status,
+          recommended: false as const,
+          actionLabel: '继续训练',
+          extraTrainingDescription:
+            '今日任务已完成，可以开始一轮不影响今日 3/3 状态的额外训练。',
+          trainingBudget: {
+            targetEffectiveSeconds: 900,
+          },
+          statusLabel: module.statusLabel,
+        }
+      }
+      return module
+    }),
   ]
 }
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router'
 import {
   browserNetworkStatus,
@@ -22,6 +22,7 @@ import {
 } from './learning/extra-training-route-hosts.tsx'
 import {
   isDailyPlanCompleted3Of3,
+  toExtraTrainingPickerViewModel,
 } from './learning/extra-training-view-model.ts'
 import {
   toDailyPlanViewModel,
@@ -47,6 +48,7 @@ export function PlatformReadyPage() {
   const [requestError, setRequestError] = useState<Error>()
   const [showCompletedPlan, setShowCompletedPlan] =
     useState(false)
+  const extraTrainingRequestPending = useRef(false)
 
   useEffect(
     () => browserNetworkStatus.subscribe(setNetwork),
@@ -175,6 +177,10 @@ export function PlatformReadyPage() {
         state.runtime.activePlan,
         state.taskAccess,
         state.assessmentProfileSchemaVersion,
+        isDailyPlanCompleted3Of3(
+          state.runtime.activePlan,
+          state.localDate,
+        ),
       )}
       offline={network === 'offline'}
       onAssessmentRequested={() => {
@@ -194,6 +200,57 @@ export function PlatformReadyPage() {
               : new Error('任务与当前计划不匹配。'),
           )
         }
+      }}
+      onExtraTrainingRequested={(moduleId) => {
+        if (extraTrainingRequestPending.current) {
+          return
+        }
+        extraTrainingRequestPending.current = true
+        void (async () => {
+          try {
+            const module = toExtraTrainingPickerViewModel(
+              state.engineState,
+              state.localDate,
+            ).modules.find(
+              (candidate) => candidate.moduleId === moduleId,
+            )
+            if (!module) {
+              throw new TypeError('找不到对应的额外训练模块。')
+            }
+            if (
+              module.status === 'available' ||
+              module.status === 'completed' ||
+              module.status === 'expired'
+            ) {
+              const session =
+                await coordinator.startExtraTraining(moduleId)
+              navigate(
+                coordinator.routeForExtraTrainingSession(
+                  session.sessionId,
+                ),
+              )
+              return
+            }
+            const route =
+              coordinator.routeForExtraTrainingSession(
+                module.sessionId,
+              )
+            navigate(
+              module.status === 'content-exhausted' ||
+                module.status === 'failed'
+                ? `${route}&retry=1`
+                : route,
+            )
+          } catch (error) {
+            setRequestError(
+              error instanceof Error
+                ? error
+                : new Error('无法打开额外训练。'),
+            )
+          } finally {
+            extraTrainingRequestPending.current = false
+          }
+        })()
       }}
     />
   )

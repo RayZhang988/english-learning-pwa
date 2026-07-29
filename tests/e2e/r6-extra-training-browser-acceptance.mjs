@@ -1200,7 +1200,64 @@ async function run() {
       ),
     })
 
-    await qa.page.clickByText('继续训练')
+    await qa.page.clickByText('查看今日计划')
+    await qa.page.waitFor(
+      `location.hash === '#/' &&
+        document.body.innerText.includes('今日计划')`,
+      20_000,
+    )
+    await qa.page.clickByText('训练')
+    await qa.page.waitFor(
+      `document.querySelectorAll(
+        '.module-card[data-availability="extra-training"]'
+      ).length === 3`,
+      20_000,
+    )
+    const practiceEntries = await qa.page.evaluate(`(() =>
+      [...document.querySelectorAll(
+        '.module-card[data-availability="extra-training"]'
+      )].map((card) => ({
+        moduleId: card.dataset.moduleId,
+        disabled: Boolean(card.disabled),
+        text: card.innerText.trim(),
+      }))
+    )()`)
+    assert.deepEqual(
+      practiceEntries.map(({ moduleId, disabled }) => ({
+        moduleId,
+        disabled,
+      })),
+      MODULES.map((moduleId) => ({
+        moduleId,
+        disabled: false,
+      })),
+    )
+    assert.equal(
+      practiceEntries.every(
+        (entry) =>
+          entry.text.includes('继续训练') &&
+          entry.text.includes('15 分钟有效训练'),
+      ),
+      true,
+    )
+    const directVocabularyStart = await qa.page.evaluate(`(() => {
+      const card = document.querySelector(
+        '.module-card[data-module-id="vocabulary"]' +
+        '[data-availability="extra-training"]'
+      )
+      if (!card || card.disabled) return false
+      card.click()
+      return true
+    })()`)
+    assert.equal(directVocabularyStart, true)
+    await qa.page.waitFor(
+      `location.hash.startsWith(
+        '#/extra-training/vocabulary?sessionId='
+      )`,
+      20_000,
+    )
+    await waitForExtraQuestion(qa.page, 'vocabulary')
+    await exitExtra(qa.page, 'vocabulary')
     await waitForPicker(qa.page)
     const initialPicker = await pickerSnapshot(qa.page)
     assert.deepEqual(
@@ -1208,10 +1265,11 @@ async function run() {
         moduleId,
         status,
       })),
-      MODULES.map((moduleId) => ({
-        moduleId,
-        status: 'available',
-      })),
+      [
+        { moduleId: 'vocabulary', status: 'paused' },
+        { moduleId: 'listening', status: 'available' },
+        { moduleId: 'speaking', status: 'available' },
+      ],
     )
     assert.equal(
       initialPicker.every(
@@ -1231,6 +1289,9 @@ async function run() {
       390,
       'R6 picker',
     )
+    checkpoint('r6-training-tab-direct-extra-entry', {
+      practiceEntries,
+    })
 
     const recovery = {}
     for (const [index, moduleId] of MODULES.entries()) {

@@ -389,6 +389,60 @@ describe('R2 today task choices', () => {
 })
 
 describe('R2 practice task choices', () => {
+  it('opens the selected extra-training module from the 3/3 practice grid', () => {
+    const onExtraTrainingRequested = vi.fn()
+    const modules = [
+      {
+        moduleId: 'assessment' as const,
+        request: {
+          state: 'enabled' as const,
+          label: '查看测试结果',
+        },
+      },
+      ...(['vocabulary', 'listening', 'speaking'] as const).map(
+        (moduleId) => ({
+          moduleId,
+          availability: 'extra-training' as const,
+          taskId: null,
+          status: 'completed' as const,
+          recommended: false as const,
+          actionLabel: '继续训练',
+          extraTrainingDescription:
+            '今日任务已完成，可以开始额外训练。',
+          trainingBudget: { targetEffectiveSeconds: 900 },
+          statusLabel: '已完成',
+        }),
+      ),
+    ]
+    const screen = PracticeModuleGrid({
+      modules,
+      onAssessmentRequested: () => undefined,
+      onTaskRequested: () => undefined,
+      onExtraTrainingRequested,
+    })
+
+    for (const moduleId of [
+      'vocabulary',
+      'listening',
+      'speaking',
+    ] as const) {
+      const button = taskButton(screen, moduleId)
+      expect(button.props.disabled).toBe(false)
+      expect(button.props['data-availability']).toBe(
+        'extra-training',
+      )
+      expect(button.props['data-task-id']).toBeUndefined()
+      expect(button.props['aria-label']).toContain('继续训练')
+      button.props.onClick?.()
+    }
+
+    expect(onExtraTrainingRequested.mock.calls).toEqual([
+      ['vocabulary'],
+      ['listening'],
+      ['speaking'],
+    ])
+  })
+
   it('keeps all three specialty cards clickable and does not swap or duplicate task ids', () => {
     const onTaskRequested = vi.fn()
     const screen = PracticeModuleGrid({

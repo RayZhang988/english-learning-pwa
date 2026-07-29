@@ -92,6 +92,15 @@ export type TrainingTaskAccessViewModel =
       readonly unavailableReason: TrainingTaskUnavailableReason
       readonly unavailableDescription: string
     })
+  | (TrainingTaskAccessBase & {
+      readonly availability: 'extra-training'
+      readonly taskId: null
+      readonly status: 'completed' | 'skipped'
+      readonly recommended: false
+      readonly actionLabel: string
+      readonly extraTrainingDescription: string
+      readonly trainingBudget: TrainingBudgetTargetViewModel
+    })
 
 interface DailyTaskPresentation {
   readonly title: string
@@ -105,8 +114,13 @@ interface DailyTaskPresentation {
   readonly accent: 'indigo' | 'coral' | 'mint'
 }
 
+export type DailyTrainingTaskAccessViewModel = Exclude<
+  TrainingTaskAccessViewModel,
+  { readonly availability: 'extra-training' }
+>
+
 export type DailyTaskViewModel =
-  TrainingTaskAccessViewModel & DailyTaskPresentation
+  DailyTrainingTaskAccessViewModel & DailyTaskPresentation
 
 export interface DailyPlanViewModel {
   readonly dateLabel: string
@@ -157,6 +171,9 @@ interface LearningAppPrototypeBaseProps {
   readonly progress: ProgressViewModel
   readonly offline?: boolean
   readonly onTaskRequested: (taskId: string) => void
+  readonly onExtraTrainingRequested?: (
+    moduleId: TrainingPracticeModuleId,
+  ) => void
 }
 
 export type LearningAppPrototypeProps =
@@ -267,6 +284,7 @@ export function LearningAppPrototype({
   progress,
   offline = false,
   onTaskRequested,
+  onExtraTrainingRequested,
   practiceModules,
   onAssessmentRequested,
 }: LearningAppPrototypeProps) {
@@ -289,6 +307,7 @@ export function LearningAppPrototype({
               onAssessmentRequested ?? (() => undefined)
             }
             onTaskRequested={onTaskRequested}
+            onExtraTrainingRequested={onExtraTrainingRequested}
           />
         ) : null}
         {section === 'progress' ? <ProgressPage progress={progress} /> : null}
@@ -513,10 +532,14 @@ export function PracticeModuleGrid({
   modules,
   onAssessmentRequested,
   onTaskRequested,
+  onExtraTrainingRequested,
 }: {
   readonly modules: readonly PracticeModuleViewModel[]
   readonly onAssessmentRequested: () => void
   readonly onTaskRequested: (taskId: string) => void
+  readonly onExtraTrainingRequested?: (
+    moduleId: TrainingPracticeModuleId,
+  ) => void
 }) {
   return (
     <>
@@ -531,7 +554,9 @@ export function PracticeModuleGrid({
           const isAssessment = module.moduleId === 'assessment'
           const isDisabled = isAssessment
             ? module.request.state === 'disabled'
-            : module.availability === 'unavailable'
+            : module.availability === 'unavailable' ||
+              (module.availability === 'extra-training' &&
+                !onExtraTrainingRequested)
           const taskId = isAssessment ? undefined : module.taskId ?? undefined
           const isRecommended = !isAssessment && module.recommended
           const description = isAssessment
@@ -540,11 +565,15 @@ export function PracticeModuleGrid({
               : presentation.description
             : module.availability === 'unavailable'
               ? module.unavailableDescription
+              : module.availability === 'extra-training'
+                ? module.extraTrainingDescription
               : presentation.description
           const actionLabel = isAssessment
             ? module.request.label
             : module.availability === 'startable'
               ? module.actionLabel
+              : module.availability === 'extra-training'
+                ? module.actionLabel
               : module.statusLabel
           let ariaLabel: string
           if (module.moduleId === 'assessment') {
@@ -554,6 +583,10 @@ export function PracticeModuleGrid({
                 : `${actionLabel}：${presentation.title}`
           } else if (module.availability === 'unavailable') {
             ariaLabel = `${presentation.title}：${description}`
+          } else if (module.availability === 'extra-training') {
+            ariaLabel =
+              `${module.actionLabel}：${presentation.title}。${description}` +
+              `。训练目标${formatTrainingBudgetTargetAriaLabel(module.trainingBudget.targetEffectiveSeconds)}`
           } else {
             ariaLabel =
               `${actionLabel}：${presentation.title}` +
@@ -568,6 +601,13 @@ export function PracticeModuleGrid({
           } else if (module.availability === 'startable') {
             const requestedTaskId = module.taskId
             onClick = () => onTaskRequested(requestedTaskId)
+          } else if (
+            module.availability === 'extra-training' &&
+            onExtraTrainingRequested
+          ) {
+            const requestedModuleId = module.moduleId
+            onClick = () =>
+              onExtraTrainingRequested(requestedModuleId)
           }
 
           return (
@@ -615,7 +655,8 @@ export function PracticeModuleGrid({
               <h2>{presentation.title}</h2>
               <p>{description}</p>
               {!isAssessment &&
-              module.availability === 'startable' ? (
+              (module.availability === 'startable' ||
+                module.availability === 'extra-training') ? (
                 module.trainingBudget ? (
                   <TrainingBudgetTarget
                     viewModel={module.trainingBudget}
