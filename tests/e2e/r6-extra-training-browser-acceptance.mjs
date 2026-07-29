@@ -375,7 +375,27 @@ async function forceDailyFinishCurrent(page, moduleId) {
     },
   )
   await page.reload()
-  await waitForDailyQuestion(page, moduleId)
+  try {
+    await waitForDailyQuestion(page, moduleId)
+  } catch (error) {
+    throw new Error(
+      `Daily ${moduleId} did not restore after forcing finish-current-item: ${JSON.stringify(
+        {
+          cause:
+            error instanceof Error
+              ? error.message
+              : String(error),
+          url: await page.url(),
+          bodyText: await page.bodyText(),
+          pageErrors: [...page.pageErrors],
+          consoleMessages: [...page.consoleMessages],
+          runtime: activeRuntime(await page.dumpIndexedDb()),
+        },
+        null,
+        2,
+      )}`,
+    )
+  }
 }
 
 async function finishControlledSpeech(page) {
