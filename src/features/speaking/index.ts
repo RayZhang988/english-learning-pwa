@@ -79,6 +79,16 @@ export {
 } from './timing.ts'
 export { SpeakingSessionScreen } from './SpeakingSessionScreen.tsx'
 export {
+  ExtraSpeakingTrainingRuntime,
+  type ExtraSpeakingTrainingRuntimeOptions,
+  type ExtraSpeakingTrainingSnapshot,
+  type ExtraSpeakingSupplyProvider,
+} from './extra-training.ts'
+export {
+  ExtraSpeakingTrainingRepository,
+  EXTRA_SPEAKING_TRAINING_STORAGE_NAMESPACE,
+} from './extra-training-repository.ts'
+export {
   SpeakingTrainingRoute,
   type SpeakingTrainingRouteProps,
 } from './SpeakingTrainingRoute.tsx'
