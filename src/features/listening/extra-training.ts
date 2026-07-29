@@ -73,6 +73,9 @@ function initialPlayback(question: ListeningQuestion): ListeningPlaybackState {
 /** A listening-only, optional training block. It has no LearningTask, planId, or taskId. */
 export class ExtraListeningTrainingRuntime {
   private snapshot: ExtraListeningTrainingSnapshot | null = null
+  private readonly listeners = new Set<
+    (snapshot: ExtraListeningTrainingSnapshot) => void
+  >()
   private tail: Promise<void> = Promise.resolve()
   private playbackWrites: Promise<void> = Promise.resolve()
   private timingWork: Promise<void> = Promise.resolve()
@@ -92,6 +95,19 @@ export class ExtraListeningTrainingRuntime {
     this.speech = options.speech ?? browserListeningSpeech
   }
   get currentSnapshot() { return this.snapshot }
+  subscribe(
+    listener: (snapshot: ExtraListeningTrainingSnapshot) => void,
+  ): () => void {
+    this.listeners.add(listener)
+    return () => {
+      this.listeners.delete(listener)
+    }
+  }
+  private notify(snapshot: ExtraListeningTrainingSnapshot) {
+    for (const listener of this.listeners) {
+      listener(snapshot)
+    }
+  }
   private queue<T>(operation: () => Promise<T>): Promise<T> {
     const result = this.tail.then(operation, operation)
     this.tail = result.then(() => undefined, () => undefined)
@@ -111,6 +127,7 @@ export class ExtraListeningTrainingRuntime {
   }
   private async save(snapshot: ExtraListeningTrainingSnapshot) {
     this.snapshot = snapshot
+    this.notify(snapshot)
     await this.repository.save(snapshot)
     return snapshot
   }
@@ -119,6 +136,7 @@ export class ExtraListeningTrainingRuntime {
     if (!snapshot || !snapshot.question) return
     const next = { ...snapshot, playback, updatedAt: this.now() }
     this.snapshot = next
+    this.notify(next)
     this.playbackWrites = this.playbackWrites.catch(() => undefined).then(() => this.repository.save(next))
   }
   private stageTiming(event: ListeningPlaybackLifecycleEvent) {

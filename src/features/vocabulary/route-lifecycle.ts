@@ -11,7 +11,8 @@ export class VocabularyRuntimeMountLifecycle {
     readonly schedule?: (callback: () => void) => void
     readonly onDisposeError?: (error: unknown) => void
   } = {}) {
-    this.#schedule = options.schedule ?? queueMicrotask
+    this.#schedule =
+      options.schedule ?? ((callback) => queueMicrotask(callback))
     this.#onDisposeError = options.onDisposeError ?? (() => undefined)
   }
 

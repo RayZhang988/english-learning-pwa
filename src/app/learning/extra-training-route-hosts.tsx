@@ -67,7 +67,7 @@ export const EXTRA_TRAINING_ROUTE = '/extra-training'
 
 function useDurableRuntime<
   TSnapshot,
-  TRuntime,
+  TRuntime extends object,
 >(
   runtime: TRuntime,
   initialize: () => Promise<TSnapshot>,
@@ -87,6 +87,16 @@ function useDurableRuntime<
     const generation = generationRef.current + 1
     generationRef.current = generation
     let active = true
+    const snapshotSource = runtime as {
+      readonly subscribe?: (
+        listener: (snapshot: TSnapshot) => void,
+      ) => () => void
+    }
+    const unsubscribe = snapshotSource.subscribe?.((next) => {
+      if (active) {
+        setSnapshot(next)
+      }
+    })
     busyRef.current = true
     setBusy(true)
     setError(undefined)
@@ -112,6 +122,7 @@ function useDurableRuntime<
     )
     return () => {
       active = false
+      unsubscribe?.()
       queueMicrotask(() => {
         if (generationRef.current === generation) {
           void disposeRef.current()
@@ -744,11 +755,12 @@ function ExtraSpeakingRoute({
         controller.busy,
       )}
       onRecorderAction={() => {
-        void controller.run(() =>
-          runtime.currentSnapshot?.recordingAvailable
+        void controller.run(async () => {
+          await syncBudget()
+          return runtime.currentSnapshot?.recordingAvailable
             ? runtime.stopRecording()
-            : runtime.startRecording(),
-        )
+            : runtime.startRecording()
+        })
       }}
       onPlayback={() => {
         void controller.run(() => runtime.playRecording())
@@ -769,9 +781,10 @@ function ExtraSpeakingRoute({
         })
       }}
       onSecondaryAction={() => {
-        void controller.run(() =>
-          runtime.continueWithoutRecording(),
-        )
+        void controller.run(async () => {
+          await syncBudget()
+          return runtime.continueWithoutRecording()
+        })
       }}
       onExitRequested={async () => {
         await controller.run(async () => {

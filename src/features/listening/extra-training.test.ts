@@ -95,6 +95,22 @@ describe('extra listening commands', () => {
     expect(configured.speech.calls).toEqual([{ text: 'Maya says hello.', locale: 'en-US', rate: 1 }])
   })
 
+  it('notifies the route when browser speech ends outside a command', async () => {
+    const configured = options(wordQuestion)
+    const runtime = new ExtraListeningTrainingRuntime(configured)
+    const observed: string[] = []
+    const unsubscribe = runtime.subscribe((snapshot) => {
+      observed.push(snapshot.playback?.status ?? 'none')
+    })
+    await runtime.initialize()
+    await runtime.next()
+    await runtime.toggleAudio()
+    configured.speech.callbacks?.onEnd?.()
+    expect(observed).toContain('playing')
+    expect(observed.at(-1)).toBe('ended')
+    unsubscribe()
+  })
+
   it('does not truncate active playback at 900 seconds and publishes completion in order after feedback', async () => {
     const configured = options(wordQuestion)
     const published: string[] = []
