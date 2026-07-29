@@ -32,14 +32,18 @@ export {
 } from './timing/browser-timing-lifecycle.ts'
 export {
   EffectiveTimingSession,
+  type CreateAdaptedEffectiveTimingSessionOptions,
   type CreateEffectiveTimingSessionOptions,
 } from './timing/effective-timing-session.ts'
 export {
   EFFECTIVE_TIMING_ACTIVITY_THROTTLE_MS,
   EFFECTIVE_TIMING_SNAPSHOT_SCHEMA_VERSION,
   type EffectiveTimingClock,
+  type EffectiveTimingEventSink,
   type EffectiveTimingPhaseDeclaration,
   type EffectiveTimingScheduler,
+  type EffectiveTimingSegmentEventFactory,
+  type EffectiveTimingSegmentEventInput,
   type EffectiveTimingSessionLifecycle,
   type EffectiveTimingSessionSnapshot,
   type EffectiveTimingSessionState,

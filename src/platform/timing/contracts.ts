@@ -1,3 +1,4 @@
+import type { PlatformEvent } from '../../core/index.ts'
 import type {
   LearningTaskMode,
   LearningTimingPhase,
@@ -18,6 +19,35 @@ export interface EffectiveTimingTaskIdentity {
   readonly targetModuleId: TrainingModuleId
   readonly localDate: string
   readonly mode: LearningTaskMode
+}
+
+export interface EffectiveTimingSegmentEventInput<TIdentity> {
+  readonly identity: TIdentity
+  readonly id: string
+  readonly occurredAt: string
+  readonly phase: LearningTimingPhase
+  readonly reason: LearningTimingSegmentReason
+  readonly visibility: 'foreground'
+  readonly startedAt: string
+  readonly endedAt: string
+  readonly elapsedSeconds: number
+  readonly idleThresholdSeconds: number
+}
+
+/** Type-specific event port used by an adapted timing session. */
+export interface EffectiveTimingEventSink<
+  TEvent extends PlatformEvent,
+> {
+  publish(event: TEvent): Promise<void>
+}
+
+export interface EffectiveTimingSegmentEventFactory<
+  TIdentity,
+  TEvent extends PlatformEvent,
+> {
+  create(
+    input: EffectiveTimingSegmentEventInput<TIdentity>,
+  ): TEvent
 }
 
 /**
@@ -104,10 +134,13 @@ export interface PersistedTimingOpenSegment {
   readonly startedAt: string
 }
 
-export interface EffectiveTimingSessionSnapshot {
+export interface EffectiveTimingSessionSnapshot<
+  TIdentity = EffectiveTimingTaskIdentity,
+  TEvent extends PlatformEvent = LearningTimingSegmentRecordedEvent,
+> {
   readonly schemaVersion: typeof EFFECTIVE_TIMING_SNAPSHOT_SCHEMA_VERSION
   readonly sessionId: string
-  readonly identity: EffectiveTimingTaskIdentity
+  readonly identity: TIdentity
   readonly declaration: EffectiveTimingPhaseDeclaration | null
   /**
    * This is crash-detection metadata, not a resumable stopwatch. Restore
@@ -116,16 +149,21 @@ export interface EffectiveTimingSessionSnapshot {
   readonly openSegment: PersistedTimingOpenSegment | null
   readonly suspended: boolean
   readonly nextEventSequence: number
-  readonly pendingEvents: readonly LearningTimingSegmentRecordedEvent[]
+  readonly pendingEvents: readonly TEvent[]
   readonly updatedAt: string
 }
 
-export interface EffectiveTimingSnapshotStore {
+export interface EffectiveTimingSnapshotStore<
+  TIdentity = EffectiveTimingTaskIdentity,
+  TEvent extends PlatformEvent = LearningTimingSegmentRecordedEvent,
+> {
   load(
-    identity: EffectiveTimingTaskIdentity,
-  ): Promise<EffectiveTimingSessionSnapshot | undefined>
-  save(snapshot: EffectiveTimingSessionSnapshot): Promise<void>
-  delete(identity: EffectiveTimingTaskIdentity): Promise<void>
+    identity: TIdentity,
+  ): Promise<EffectiveTimingSessionSnapshot<TIdentity, TEvent> | undefined>
+  save(
+    snapshot: EffectiveTimingSessionSnapshot<TIdentity, TEvent>,
+  ): Promise<void>
+  delete(identity: TIdentity): Promise<void>
 }
 
 export type EffectiveTimingSessionLifecycle =
@@ -141,4 +179,3 @@ export interface EffectiveTimingSessionState {
   readonly suspended: boolean
   readonly pendingEventCount: number
 }
-

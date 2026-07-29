@@ -1,4 +1,5 @@
 import type {
+  PlatformEvent,
   PlatformEventSink,
 } from '../../core/index.ts'
 import {
@@ -13,8 +14,10 @@ import {
   EFFECTIVE_TIMING_ACTIVITY_THROTTLE_MS,
   EFFECTIVE_TIMING_SNAPSHOT_SCHEMA_VERSION,
   type EffectiveTimingClock,
+  type EffectiveTimingEventSink,
   type EffectiveTimingPhaseDeclaration,
   type EffectiveTimingScheduler,
+  type EffectiveTimingSegmentEventFactory,
   type EffectiveTimingSessionState,
   type EffectiveTimingSnapshotStore,
   type EffectiveTimingTaskIdentity,
@@ -35,6 +38,28 @@ interface CreateEffectiveTimingSessionOptions {
   readonly identity: EffectiveTimingTaskIdentity
   readonly eventSink: PlatformEventSink
   readonly snapshotStore: EffectiveTimingSnapshotStore
+  readonly lifecycle: TimingLifecyclePort
+  readonly clock?: EffectiveTimingClock
+  readonly scheduler?: EffectiveTimingScheduler
+  readonly createId?: () => string
+  readonly onError?: (error: unknown) => void
+}
+
+interface CreateAdaptedEffectiveTimingSessionOptions<
+  TIdentity,
+  TEvent extends PlatformEvent,
+> {
+  readonly identity: TIdentity
+  readonly eventSink: EffectiveTimingEventSink<TEvent>
+  readonly eventFactory: EffectiveTimingSegmentEventFactory<
+    TIdentity,
+    TEvent
+  >
+  readonly eventIdPrefix: string
+  readonly snapshotStore: EffectiveTimingSnapshotStore<
+    TIdentity,
+    TEvent
+  >
   readonly lifecycle: TimingLifecyclePort
   readonly clock?: EffectiveTimingClock
   readonly scheduler?: EffectiveTimingScheduler
@@ -141,10 +166,21 @@ function isoTimestamp(wallTimeMs: number): string {
  * Modules declare phases. This class owns browser lifecycle handling,
  * segmentation, event identity, durable retry, and the 45-second idle policy.
  */
-export class EffectiveTimingSession {
-  readonly #identity: EffectiveTimingTaskIdentity
-  readonly #eventSink: PlatformEventSink
-  readonly #snapshotStore: EffectiveTimingSnapshotStore
+export class EffectiveTimingSession<
+  TIdentity = EffectiveTimingTaskIdentity,
+  TEvent extends PlatformEvent = LearningTimingSegmentRecordedEvent,
+> {
+  readonly #identity: TIdentity
+  readonly #eventSink: EffectiveTimingEventSink<TEvent>
+  readonly #eventFactory: EffectiveTimingSegmentEventFactory<
+    TIdentity,
+    TEvent
+  >
+  readonly #eventIdPrefix: string
+  readonly #snapshotStore: EffectiveTimingSnapshotStore<
+    TIdentity,
+    TEvent
+  >
   readonly #lifecycle: TimingLifecyclePort
   readonly #clock: EffectiveTimingClock
   readonly #scheduler: EffectiveTimingScheduler
@@ -156,7 +192,7 @@ export class EffectiveTimingSession {
   #openSegment: RuntimeOpenSegment | null = null
   #suspended = true
   #nextEventSequence = 1
-  #pendingEvents: LearningTimingSegmentRecordedEvent[] = []
+  #pendingEvents: TEvent[] = []
   #lastActivityAtMonotonicMs: number | null = null
   #lastHandledActivityAtMonotonicMs = Number.NEGATIVE_INFINITY
   #timer: unknown
@@ -164,9 +200,16 @@ export class EffectiveTimingSession {
   #lifecycleState: EffectiveTimingSessionState['lifecycle'] = 'ready'
   #operationQueue: Promise<void> = Promise.resolve()
 
-  private constructor(options: CreateEffectiveTimingSessionOptions) {
+  private constructor(
+    options: CreateAdaptedEffectiveTimingSessionOptions<
+      TIdentity,
+      TEvent
+    >,
+  ) {
     this.#identity = options.identity
     this.#eventSink = options.eventSink
+    this.#eventFactory = options.eventFactory
+    this.#eventIdPrefix = options.eventIdPrefix
     this.#snapshotStore = options.snapshotStore
     this.#lifecycle = options.lifecycle
     this.#clock = options.clock ?? defaultClock()
@@ -179,7 +222,55 @@ export class EffectiveTimingSession {
   static async create(
     options: CreateEffectiveTimingSessionOptions,
   ): Promise<EffectiveTimingSession> {
-    const session = new EffectiveTimingSession(options)
+    return EffectiveTimingSession.createAdapted<
+      EffectiveTimingTaskIdentity,
+      LearningTimingSegmentRecordedEvent
+    >({
+      ...options,
+      eventFactory: {
+        create(input): LearningTimingSegmentRecordedEvent {
+          return {
+            id: input.id,
+            type: 'learning.timing.segment.recorded.v1',
+            sourceModuleId: input.identity.targetModuleId,
+            occurredAt: input.occurredAt,
+            schemaVersion: 1,
+            payload: {
+              ...input.identity,
+              phase: input.phase,
+              reason: input.reason,
+              visibility: input.visibility,
+              startedAt: input.startedAt,
+              endedAt: input.endedAt,
+              elapsedSeconds: input.elapsedSeconds,
+              idleThresholdSeconds:
+                MAX_INTERACTION_IDLE_SECONDS,
+            },
+          }
+        },
+      },
+      eventIdPrefix: 'timing',
+    })
+  }
+
+  static async createAdapted<
+    TAdaptedIdentity,
+    TAdaptedEvent extends PlatformEvent,
+  >(
+    options: CreateAdaptedEffectiveTimingSessionOptions<
+      TAdaptedIdentity,
+      TAdaptedEvent
+    >,
+  ): Promise<
+    EffectiveTimingSession<TAdaptedIdentity, TAdaptedEvent>
+  > {
+    if (options.eventIdPrefix.trim().length === 0) {
+      throw new TypeError('Timing event ID prefix cannot be empty.')
+    }
+    const session = new EffectiveTimingSession<
+      TAdaptedIdentity,
+      TAdaptedEvent
+    >(options)
     await session.#initialize()
     return session
   }
@@ -557,7 +648,7 @@ export class EffectiveTimingSession {
 
   #closeOpenSegment(
     endedAtMonotonicMs: number,
-  ): LearningTimingSegmentRecordedEvent[] {
+  ): TEvent[] {
     const open = this.#openSegment
     if (!open) {
       return []
@@ -575,7 +666,7 @@ export class EffectiveTimingSession {
       return []
     }
 
-    const events: LearningTimingSegmentRecordedEvent[] = []
+    const events: TEvent[] = []
     const maximum = maximumSegmentSeconds(open.reason)
     let remaining = elapsedSeconds
     let startedAtWallMs = open.startedAtWallMs
@@ -587,23 +678,21 @@ export class EffectiveTimingSession {
       const endedAt = isoTimestamp(endedAtWallMs)
       const sequence = this.#nextEventSequence
       this.#nextEventSequence += 1
-      events.push({
-        id: `timing:${this.#sessionId}:${String(sequence).padStart(6, '0')}`,
-        type: 'learning.timing.segment.recorded.v1',
-        sourceModuleId: this.#identity.targetModuleId,
-        occurredAt: endedAt,
-        schemaVersion: 1,
-        payload: {
-          ...this.#identity,
+      events.push(
+        this.#eventFactory.create({
+          identity: this.#identity,
+          id: `${this.#eventIdPrefix}:${this.#sessionId}:${String(sequence).padStart(6, '0')}`,
+          occurredAt: endedAt,
           phase: open.phase,
           reason: open.reason,
           visibility: open.visibility,
           startedAt,
           endedAt,
           elapsedSeconds: chunkSeconds,
-          idleThresholdSeconds: MAX_INTERACTION_IDLE_SECONDS,
-        },
-      })
+          idleThresholdSeconds:
+            MAX_INTERACTION_IDLE_SECONDS,
+        }),
+      )
       remaining -= chunkSeconds
       startedAtWallMs = endedAtWallMs
     }
@@ -618,8 +707,8 @@ export class EffectiveTimingSession {
    */
   #settleDueBoundariesThrough(
     monotonicTimeMs: number,
-  ): LearningTimingSegmentRecordedEvent[] {
-    const events: LearningTimingSegmentRecordedEvent[] = []
+  ): TEvent[] {
+    const events: TEvent[] = []
     while (this.#openSegment) {
       const open = this.#openSegment
       if (monotonicTimeMs < open.startedAtMonotonicMs) {
@@ -672,7 +761,7 @@ export class EffectiveTimingSession {
   }
 
   async #commit(
-    events: readonly LearningTimingSegmentRecordedEvent[],
+    events: readonly TEvent[],
   ): Promise<void> {
     this.#pendingEvents.push(...events)
     await this.#saveSnapshot()
@@ -781,4 +870,7 @@ export class EffectiveTimingSession {
   }
 }
 
-export type { CreateEffectiveTimingSessionOptions }
+export type {
+  CreateAdaptedEffectiveTimingSessionOptions,
+  CreateEffectiveTimingSessionOptions,
+}

@@ -96,6 +96,37 @@ and rejected with a recoverable error; it cannot contaminate another task.
 All persistence is device-local and works offline. This infrastructure does
 not read, clear, or migrate assessment answers or daily-plan business data.
 
+## R6 extra-training timing boundary
+
+Optional training must not call the daily
+`ProductionEffectiveTimingSessionFactory`. Its public entry is
+`ProductionExtraTrainingEffectiveTimingSessionFactory.create(session)`,
+where `session` is the real schema-1 `ExtraTrainingSession`. Construct the
+factory with an `ExtraTrainingEventSink` that implements the separate
+`publishExtraTrainingEvent()` port; a daily `PlatformEventSink` is
+intentionally not type-compatible with that port.
+
+The returned session has the same `start / transition / activity / pause /
+resume / finish / dispose` lifecycle and the same foreground, 45-second idle,
+15-minute media segmentation, crash recovery, and serialized persistence
+rules described above. The differences are deliberate:
+
+- identity is exactly `sessionId / localDate / domain / targetModuleId / mode`;
+- events are
+  `learning.extra-training.timing.segment.recorded.v1`, with no `planId` or
+  daily `taskId`;
+- event IDs are
+  `extra-timing:<timing-session-id>:<sequence>`;
+- snapshots use namespace `app.extra-training-effective-timing`, schema 1,
+  and key `session:<encoded extra-training sessionId>`;
+- the injected sink must parse/apply/save through the extra-training state
+  boundary. It must never forward these events to `applyPlanEvent()`.
+
+Vocabulary declares interactive answering/feedback phases. Listening and
+speaking declare their real audio, recording, and playback phases. The
+factory does not infer module content or construct extra-training business
+events other than timing segments.
+
 ## Integration order for training modules
 
 A route integration must:
