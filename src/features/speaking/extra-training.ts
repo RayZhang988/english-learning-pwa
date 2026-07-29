@@ -144,18 +144,23 @@ export class ExtraSpeakingTrainingRuntime {
     const event = { ...base, payload: { ...base.payload, reason } } as ExtraTrainingEvent
     return this.save({ ...snapshot, phase: 'error', pendingEvents: [...snapshot.pendingEvents, event], session: { ...snapshot.session, status: 'failed', endReason: reason, endedAt: event.occurredAt, updatedAt: event.occurredAt }, updatedAt: event.occurredAt })
   }
-  async retryContent() { return this.queue(async () => {
+  /** Retry a recoverable supply failure without treating recording/recognition fallback as a failed session. */
+  async retryFailure() { return this.queue(async () => {
     const snapshot = this.require()
-    if (snapshot.session.endReason !== 'content-exhausted') throw new SpeakingError('session-transition-invalid', 'Only content-exhausted extra speaking can retry content.')
+    if (snapshot.session.status === 'completed' || snapshot.session.status === 'expired') throw new SpeakingError('session-transition-invalid', 'Completed or expired extra speaking cannot retry content.')
+    if (snapshot.session.status !== 'failed' || (snapshot.session.endReason !== 'content-exhausted' && snapshot.session.endReason !== 'provider-failure')) return snapshot
     const request = this.options.supplyRequest({ ...snapshot.session, status: 'paused', endReason: 'user-exited', endedAt: null })
     if (!request) throw new SpeakingError('session-transition-invalid', 'Extra speaking session cannot retry content.')
     const result = await this.options.supplyProvider.next(request)
     if (result.status !== 'item') return snapshot
     const item = result.item as SpeakingSupplyItem
-    const resolved = await this.options.promptForItem(item)
+    let resolved: { readonly unit: SpeakingTrainingUnit; readonly prompt: SpeakingPrompt }
+    try { resolved = await this.options.promptForItem(item) } catch { return snapshot }
     const event = this.base('learning.extra-training.started.v1')
     return this.save({ ...snapshot, unit: resolved.unit, prompt: resolved.prompt, activeItem: item, activeRequestId: result.requestId, suppliedNextCursor: result.nextCursor, phase: 'practicing', answer: null, recordingAvailable: false, pendingEvents: [...snapshot.pendingEvents, event], session: { ...snapshot.session, status: snapshot.session.remainingEffectiveSeconds === 0 ? 'finish-current-item' : 'running', endReason: null, endedAt: null, updatedAt: event.occurredAt }, updatedAt: event.occurredAt })
   }) }
+  /** @deprecated Use retryFailure so provider failures can recover through the same durable request. */
+  retryContent() { return this.retryFailure() }
   async recordEffectiveSeconds(seconds: number) { return this.queue(async () => { const s = this.require(); if (!Number.isFinite(seconds) || seconds < 0) throw new SpeakingError('session-transition-invalid', 'Effective seconds must be non-negative.'); const remaining = Math.max(0, s.session.remainingEffectiveSeconds - Math.floor(seconds)); return this.save({ ...s, session: { ...s.session, remainingEffectiveSeconds: remaining, status: s.session.status === 'running' && remaining === 0 ? 'finish-current-item' : s.session.status, updatedAt: this.now() }, updatedAt: this.now() }) }) }
   async startRecording() { return this.queue(async () => {
     const s = this.require(); if (!s.prompt || s.phase !== 'practicing') throw new SpeakingError('session-transition-invalid', 'Extra speaking prompt is not ready to record.')

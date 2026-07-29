@@ -79,20 +79,41 @@ describe('extra speaking training', () => {
     expect(restored.currentSnapshot?.session.completedItemCount).toBe(0)
   })
 
-  it('keeps cursor and exclusions through acknowledged exhaustion, while provider failure is not recoverable', async () => {
+  it('retries content exhaustion through refresh without changing cursor, exclusions, or the original failed event', async () => {
     let available = false
-    const runtime = new ExtraSpeakingTrainingRuntime({ ...options(), session: { ...session, completedItemCount: 2, nextSupplyCursor: 'previous-item', excludeItemIds: ['previous-item'] }, supplyProvider: { next: async (value) => available ? { schemaVersion: 1 as const, requestId: value.requestId, status: 'item' as const, item, nextCursor: item.itemId } : { schemaVersion: 1 as const, requestId: value.requestId, status: 'content-exhausted' as const, reason: 'no-eligible-content' as const } } })
-    await runtime.initialize(); await runtime.next()
-    expect(runtime.currentSnapshot?.session.endReason).toBe('content-exhausted')
+    const repository = new ExtraSpeakingTrainingRepository(new Store())
+    const configured = { ...options(), repository, session: { ...session, completedItemCount: 2, nextSupplyCursor: 'previous-item', excludeItemIds: ['previous-item'] }, supplyProvider: { next: async (value: { requestId: string }) => available ? { schemaVersion: 1 as const, requestId: value.requestId, status: 'item' as const, item, nextCursor: item.itemId } : { schemaVersion: 1 as const, requestId: value.requestId, status: 'content-exhausted' as const, reason: 'no-eligible-content' as const } } }
+    const runtime = new ExtraSpeakingTrainingRuntime(configured)
+    await runtime.initialize(); const exhausted = await runtime.next()
+    const failedId = exhausted.pendingEvents.at(-1)!.id
+    const refreshed = new ExtraSpeakingTrainingRuntime(configured)
+    await refreshed.initialize()
+    expect(refreshed.currentSnapshot?.session.endReason).toBe('content-exhausted')
     available = true
-    const recovered = await runtime.retryContent()
+    const [recovered, repeated] = await Promise.all([refreshed.retryFailure(), refreshed.retryFailure()])
     expect(recovered.activeItem?.itemId).toBe(item.itemId)
+    expect(repeated.pendingEvents.filter((event) => event.type === 'learning.extra-training.started.v1')).toHaveLength(2)
     expect(recovered.session.excludeItemIds).toEqual(['previous-item'])
     expect(recovered.session.nextSupplyCursor).toBe('previous-item')
-    const failed = new ExtraSpeakingTrainingRuntime({ ...options(), supplyProvider: { next: async (value) => ({ schemaVersion: 1 as const, requestId: value.requestId, status: 'content-exhausted' as const, reason: 'provider-failure' as const }) } })
-    await failed.initialize(); await failed.next()
-    expect(failed.currentSnapshot?.session.endReason).toBe('provider-failure')
-    await expect(failed.retryContent()).rejects.toThrow('Only content-exhausted')
+    expect(recovered.pendingEvents.map((event) => event.id)).toContain(failedId)
+    expect(recovered.pendingEvents.map((event) => event.type)).toEqual([
+      'learning.extra-training.started.v1',
+      'learning.extra-training.failed.v1',
+      'learning.extra-training.started.v1',
+    ])
+  })
+
+  it('retries provider failure with a released scene-quiz, but preserves failure when the provider still fails', async () => {
+    let recovered = false
+    const runtime = new ExtraSpeakingTrainingRuntime({ ...options(sceneItem), supplyProvider: { next: async (value) => recovered ? { schemaVersion: 1 as const, requestId: value.requestId, status: 'item' as const, item: sceneItem, nextCursor: sceneItem.itemId } : { schemaVersion: 1 as const, requestId: value.requestId, status: 'content-exhausted' as const, reason: 'provider-failure' as const } } })
+    await runtime.initialize(); const failed = await runtime.next(); const failedEventId = failed.pendingEvents.at(-1)!.id
+    const stillFailed = await runtime.retryFailure()
+    expect(stillFailed.session.endReason).toBe('provider-failure')
+    expect(stillFailed.pendingEvents.at(-1)?.id).toBe(failedEventId)
+    recovered = true
+    const next = await runtime.retryFailure()
+    expect(next.activeItem?.source.sourceType).toBe('speaking-scene-quiz')
+    expect(next.pendingEvents.filter((event) => event.type === 'learning.extra-training.started.v1')).toHaveLength(2)
   })
 
   it('replays a failed outbox event with its stable identity and leaves a daily 3/3 record unchanged', async () => {
