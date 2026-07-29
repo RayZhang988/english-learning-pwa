@@ -6,6 +6,10 @@ import {
   PlatformReadyPage,
   PlatformShell,
 } from './platform-pages.tsx'
+import {
+  ExtraTrainingPickerRouteHost,
+  ExtraTrainingRouteHost,
+} from './learning/extra-training-route-hosts.tsx'
 
 export const appRouter = createHashRouter([
   {
@@ -16,6 +20,14 @@ export const appRouter = createHashRouter([
       {
         index: true,
         element: <PlatformReadyPage />,
+      },
+      {
+        path: 'extra-training',
+        element: <ExtraTrainingPickerRouteHost />,
+      },
+      {
+        path: 'extra-training/:moduleId',
+        element: <ExtraTrainingRouteHost />,
       },
       ...featureRegistry.routes,
       {

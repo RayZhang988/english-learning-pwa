@@ -10,6 +10,7 @@ import {
   LearningAppPrototype,
   LoadingState,
   PlatformPrototype,
+  TrainingCompletionDurationScreen,
 } from '../ui/index.ts'
 import {
   ASSESSMENT_ROUTE,
@@ -17,9 +18,16 @@ import {
 } from './assessment/TravelVocabularyR1RouteHost.tsx'
 import { useLearningApp } from './learning/learning-app-context.ts'
 import {
+  EXTRA_TRAINING_ROUTE,
+} from './learning/extra-training-route-hosts.tsx'
+import {
+  isDailyPlanCompleted3Of3,
+} from './learning/extra-training-view-model.ts'
+import {
   toDailyPlanViewModel,
   toPracticeModulesViewModel,
   toProgressViewModel,
+  toTrainingCompletionDurationViewModel,
 } from './learning/view-model.ts'
 
 export function PlatformShell() {
@@ -37,6 +45,8 @@ export function PlatformReadyPage() {
     browserNetworkStatus.current(),
   )
   const [requestError, setRequestError] = useState<Error>()
+  const [showCompletedPlan, setShowCompletedPlan] =
+    useState(false)
 
   useEffect(
     () => browserNetworkStatus.subscribe(setNetwork),
@@ -108,6 +118,47 @@ export function PlatformReadyPage() {
         />
       </main>
     )
+  }
+
+  if (
+    !showCompletedPlan &&
+    isDailyPlanCompleted3Of3(
+      state.runtime.activePlan,
+      state.localDate,
+    )
+  ) {
+    const completedExecution = [...state.runtime.activePlan.tasks]
+      .sort(
+        (left, right) =>
+          right.task.sequence - left.task.sequence,
+      )[0]
+    if (completedExecution) {
+      return (
+        <TrainingCompletionDurationScreen
+          viewModel={{
+            ...toTrainingCompletionDurationViewModel(
+              completedExecution.task.targetModuleId,
+              completedExecution,
+            ),
+            title: '今日计划 3/3 已完成',
+            description:
+              '三个必做训练都已保存；可以查看今日计划，或开始一轮不影响完成状态的额外练习。',
+            extraTrainingEntry: {
+              action: {
+                label: '继续训练',
+                disabled: false,
+                loading: false,
+              },
+            },
+            actionLabel: '查看今日计划',
+          }}
+          onAction={() => setShowCompletedPlan(true)}
+          onContinueTraining={() =>
+            navigate(EXTRA_TRAINING_ROUTE)
+          }
+        />
+      )
+    }
   }
 
   const now = new Date().toISOString()

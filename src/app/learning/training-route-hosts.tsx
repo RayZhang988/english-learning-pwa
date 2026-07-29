@@ -1,23 +1,12 @@
 import { useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
-import {
-  CurrentListeningContentSource,
-  ListeningTrainingRoute,
-} from '../../features/listening/index.ts'
-import {
-  CurrentSpeakingContentSource,
-  SpeakingTrainingRoute,
-} from '../../features/speaking/index.ts'
-import {
-  CurrentVocabularyContentSource,
-  VocabularyTrainingRoute,
-} from '../../features/vocabulary/index.ts'
+import { ListeningTrainingRoute } from '../../features/listening/index.ts'
+import { SpeakingTrainingRoute } from '../../features/speaking/index.ts'
+import { VocabularyTrainingRoute } from '../../features/vocabulary/index.ts'
 import type {
   LearningTask,
   TrainingModuleId,
 } from '../../learning-engine/index.ts'
-import { platformFetch } from '../../platform/index.ts'
-import { offlineAssetStore } from '../../pwa/index.ts'
 import {
   EmptyState,
   ErrorState,
@@ -33,28 +22,13 @@ import {
   toTaskDurationEstimateViewModel,
   toTrainingCompletionDurationViewModel,
 } from './view-model.ts'
+import { isDailyPlanCompleted3Of3 } from './extra-training-view-model.ts'
 import {
-  createProductionTrainingSupplyProviders,
-} from './training-supply-providers.ts'
-
-const vocabularyContentSource = new CurrentVocabularyContentSource(
-  offlineAssetStore,
-  platformFetch,
-)
-const listeningContentSource = new CurrentListeningContentSource(
-  offlineAssetStore,
-  platformFetch,
-)
-const speakingContentSource = new CurrentSpeakingContentSource(
-  offlineAssetStore,
-  platformFetch,
-)
-const trainingSupplyProviders =
-  createProductionTrainingSupplyProviders({
-    vocabulary: vocabularyContentSource,
-    listening: listeningContentSource,
-    speaking: speakingContentSource,
-  })
+  listeningContentSource,
+  speakingContentSource,
+  trainingSupplyProviders,
+  vocabularyContentSource,
+} from './training-production-resources.ts'
 
 export function TrainingRouteHost({
   moduleId,
@@ -223,13 +197,33 @@ export function TrainingRouteHost({
     (restoredCompletionTaskIdRef.current === task.taskId &&
       currentExecution?.status === 'completed')
   ) {
+    const dailyCompleted = isDailyPlanCompleted3Of3(
+      state.runtime.activePlan,
+      state.localDate,
+    )
     return (
       <TrainingCompletionDurationScreen
-        viewModel={toTrainingCompletionDurationViewModel(
-          moduleId,
-          currentExecution,
-        )}
+        viewModel={{
+          ...toTrainingCompletionDurationViewModel(
+            moduleId,
+            currentExecution,
+          ),
+          extraTrainingEntry: dailyCompleted
+            ? {
+                action: {
+                  label: '继续训练',
+                  disabled: false,
+                  loading: false,
+                },
+              }
+            : undefined,
+        }}
         onAction={onReturnToPlan}
+        onContinueTraining={
+          dailyCompleted
+            ? () => navigate('/extra-training')
+            : undefined
+        }
       />
     )
   }

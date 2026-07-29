@@ -15,6 +15,7 @@ import {
   recordDailyActivity,
   REQUIRED_TASK_EFFECTIVE_SECONDS,
   summarizePlanActivity,
+  type ExtraTrainingSession,
   type LearningEngineState,
   type LearningAbilityProfile,
   type LearningTask,
@@ -37,6 +38,20 @@ import {
   ProductionLearningEventSink,
   type LearningRuntimeUpdate,
 } from './production-event-sink.ts'
+import {
+  ProductionExtraTrainingCoordinator,
+} from './extra-training-coordinator.ts'
+import {
+  emptyExtraTrainingPrioritySource,
+  ProductionExtraTrainingPrioritySource,
+  type ExtraTrainingPrioritySource,
+} from './extra-training-priority-source.ts'
+import {
+  ProductionExtraTrainingEffectiveTimingSessionFactory,
+} from './extra-training-effective-timing-production.ts'
+import {
+  vocabularyContentSource,
+} from './training-production-resources.ts'
 
 export type LearningAppState =
   | { readonly status: 'loading' }
@@ -74,6 +89,7 @@ export interface LearningAppCoordinatorOptions {
   readonly engineStates: LearningEngineRepository
   readonly candidates: LearningCandidateSource
   readonly availableModuleIds: ReadonlySet<TrainingModuleId>
+  readonly extraTrainingPriorities?: ExtraTrainingPrioritySource
   readonly now?: () => Date
   readonly createId?: () => string
 }
@@ -143,6 +159,9 @@ export class LearningAppCoordinator {
   readonly #createId: () => string
   readonly #listeners = new Set<LearningAppStateListener>()
   readonly eventSink: ProductionLearningEventSink
+  readonly extraTraining: ProductionExtraTrainingCoordinator
+  readonly extraTrainingTimingSessions:
+    ProductionExtraTrainingEffectiveTimingSessionFactory
   #state: LearningAppState = { status: 'loading' }
   #initializing: Promise<LearningAppState> | null = null
 
@@ -158,8 +177,24 @@ export class LearningAppCoordinator {
       this.#activePlans,
       this.#engineStates,
     )
+    this.extraTraining = new ProductionExtraTrainingCoordinator({
+      activePlans: this.#activePlans,
+      engineStates: this.#engineStates,
+      priorities:
+        options.extraTrainingPriorities ??
+        emptyExtraTrainingPrioritySource,
+      now: this.#now,
+      createId: this.#createId,
+    })
+    this.extraTrainingTimingSessions =
+      new ProductionExtraTrainingEffectiveTimingSessionFactory({
+        eventSink: this.extraTraining.eventSink,
+      })
     this.eventSink.subscribe((update) => {
       this.#acceptRuntimeUpdate(update)
+    })
+    this.extraTraining.subscribe((update) => {
+      this.#acceptExtraTrainingUpdate(update.engineState)
     })
   }
 
@@ -280,6 +315,65 @@ export class LearningAppCoordinator {
       : 'running'
   }
 
+  startExtraTraining(
+    moduleId: TrainingModuleId,
+  ): Promise<ExtraTrainingSession> {
+    return this.extraTraining.start(moduleId)
+  }
+
+  resolveExtraTrainingSession(
+    sessionId: string,
+    expectedModuleId?: TrainingModuleId,
+  ): ExtraTrainingSession {
+    const state = this.#state
+    if (state.status !== 'ready') {
+      throw new TypeError(
+        'The daily learning plan is not ready for extra training.',
+      )
+    }
+    const progress = state.runtime.activePlan
+    if (
+      progress.plan.localDate !== state.localDate ||
+      progress.status !== 'completed' ||
+      progress.tasks.length !== 3 ||
+      !progress.tasks.every(
+        (task) =>
+          task.status === 'completed' ||
+          task.status === 'skipped',
+      )
+    ) {
+      throw new TypeError(
+        'Extra training requires the current daily plan completed 3/3.',
+      )
+    }
+    const session =
+      state.engineState.extraTraining?.sessions[sessionId]
+    if (!session) {
+      throw new TypeError(
+        'Extra-training sessionId does not exist.',
+      )
+    }
+    if (session.localDate !== state.localDate) {
+      throw new TypeError(
+        'Extra-training session is not for the current date.',
+      )
+    }
+    if (
+      expectedModuleId !== undefined &&
+      session.targetModuleId !== expectedModuleId
+    ) {
+      throw new TypeError(
+        'Extra-training session does not belong to the requested module.',
+      )
+    }
+    return session
+  }
+
+  routeForExtraTrainingSession(sessionId: string): string {
+    const session = this.resolveExtraTrainingSession(sessionId)
+    return `/extra-training/${session.targetModuleId}?sessionId=${encodeURIComponent(session.sessionId)}`
+  }
+
   async #initialize(): Promise<LearningAppState> {
     const now = this.#now()
     const localDate = formatLocalDate(now)
@@ -303,6 +397,10 @@ export class LearningAppCoordinator {
         engineState = createLearningEngineState(profile, generatedAt)
         await this.#engineStates.save(engineState)
         profileChanged = true
+      }
+      if (!profileChanged) {
+        engineState =
+          await this.extraTraining.restoreForCurrentDate()
       }
 
       const previousRuntime = await this.#activePlans.load()
@@ -401,6 +499,26 @@ export class LearningAppCoordinator {
     )
   }
 
+  #acceptExtraTrainingUpdate(
+    engineState: LearningEngineState,
+  ): void {
+    const current = this.#state
+    if (
+      current.status !== 'ready' &&
+      current.status !== 'empty'
+    ) {
+      return
+    }
+    this.#setState(
+      runtimeState(
+        current.runtime,
+        engineState,
+        current.localDate,
+        current.assessmentProfileSchemaVersion,
+      ),
+    )
+  }
+
   #setState(state: LearningAppState): LearningAppState {
     this.#state = state
     for (const listener of this.#listeners) {
@@ -419,6 +537,10 @@ const activePlans = new ActivePlanRepository(
 const engineStates = new LearningEngineRepository(
   localStorageService.namespace(LEARNING_ENGINE_STORAGE_NAMESPACE),
 )
+const extraTrainingPriorities =
+  new ProductionExtraTrainingPrioritySource(
+    vocabularyContentSource,
+  )
 
 export const learningAppCoordinator = new LearningAppCoordinator({
   profiles: assessmentProfiles,
@@ -430,4 +552,5 @@ export const learningAppCoordinator = new LearningAppCoordinator({
     'listening',
     'speaking',
   ]),
+  extraTrainingPriorities,
 })

@@ -215,6 +215,71 @@ function stateFor(
   }
 }
 
+function completedDailyPlanState(): Extract<
+  LearningAppState,
+  { readonly status: 'ready' }
+> {
+  const tasks = trainingModules.map(task)
+  const basePlan = plan('vocabulary')
+  const dailyPlan: DailyPlan = {
+    ...basePlan,
+    tasks,
+    plannedSeconds: tasks.reduce(
+      (total, learningTask) =>
+        total + learningTask.estimatedSeconds,
+      0,
+    ),
+    allocations: {
+      vocabulary: {
+        ...basePlan.allocations.vocabulary,
+        plannedSeconds: tasks[0].estimatedSeconds,
+      },
+      listening: {
+        ...basePlan.allocations.listening,
+        plannedSeconds: tasks[1].estimatedSeconds,
+      },
+      speaking: {
+        ...basePlan.allocations.speaking,
+        plannedSeconds: tasks[2].estimatedSeconds,
+      },
+    },
+  }
+  const initial = createPlanProgress(
+    dailyPlan,
+    '2026-07-28T08:00:00.000Z',
+  )
+  const progress: PlanProgress = {
+    ...initial,
+    status: 'completed',
+    tasks: initial.tasks.map((execution) => ({
+      ...execution,
+      status: 'completed',
+      completionKind: 'scored',
+      spentSeconds: 125,
+      effectiveSeconds: 125,
+      excludedSeconds: 0,
+      timingSegmentCount: 3,
+      effectiveTimeSource: 'timing-segments',
+      training: {
+        ...execution.training!,
+        remainingEffectiveSeconds: 0,
+        status: 'completed',
+      },
+    })),
+  }
+  return {
+    status: 'ready',
+    localDate: dailyPlan.localDate,
+    runtime: createActiveLearningRuntime(progress),
+    engineState: createLearningEngineState(
+      abilityProfile(),
+      '2026-07-28T08:00:00.000Z',
+    ),
+    assessmentProfileSchemaVersion: 3,
+    taskAccess: getPlanTaskAccess(progress),
+  }
+}
+
 function activeBudgetStateFor(
   moduleId: TrainingModuleId,
   status:
@@ -445,5 +510,15 @@ describe('TrainingRouteHost R3 production integration', () => {
     expect(markup).toContain('data-duration-state="unavailable"')
     expect(markup).toContain('本次暂无可靠用时')
     expect(markup).not.toContain('10 分钟')
+  })
+
+  it('offers the real extra-training entry only after the daily plan is completed 3/3', () => {
+    const markup = renderHost(
+      'vocabulary',
+      completedDailyPlanState(),
+    )
+
+    expect(markup).toContain('今日计划 3/3 已完成')
+    expect(markup).toContain('继续训练')
   })
 })

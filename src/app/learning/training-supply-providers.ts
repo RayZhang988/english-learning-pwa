@@ -2,19 +2,17 @@ import type { ReadonlyDataSource } from '../../core/index.ts'
 import {
   ListeningCatalogSupplyProvider,
   type ListeningCatalog,
-  type ListeningSupplyProvider,
 } from '../../features/listening/index.ts'
 import {
   SpeakingCatalogSupplyProvider,
   type SpeakingCatalog,
-  type SpeakingSupplyProvider,
 } from '../../features/speaking/index.ts'
 import {
   VocabularyCatalogSupplyProvider,
   type VocabularyCatalog,
-  type VocabularySupplyProvider,
 } from '../../features/vocabulary/index.ts'
 import type {
+  ExtraTrainingSupplyRequest,
   LearningTaskSupplyRequest,
   LearningTaskSupplyResult,
 } from '../../learning-engine/index.ts'
@@ -23,9 +21,11 @@ interface TrainingSupplyCatalog {
   readonly trainingSupplyIndex?: unknown
 }
 
-interface TrainingSupplyProvider {
+export interface ProductionTrainingSupplyProvider {
   next(
-    request: LearningTaskSupplyRequest,
+    request:
+      | LearningTaskSupplyRequest
+      | ExtraTrainingSupplyRequest,
   ): Promise<LearningTaskSupplyResult>
 }
 
@@ -37,8 +37,8 @@ interface TrainingSupplyProvider {
  */
 class LazyCatalogSupplyProvider<
   Catalog extends TrainingSupplyCatalog,
-  Provider extends TrainingSupplyProvider,
-> implements TrainingSupplyProvider {
+  Provider extends ProductionTrainingSupplyProvider,
+> implements ProductionTrainingSupplyProvider {
   readonly #source: ReadonlyDataSource<Catalog>
   readonly #createProvider: (
     index: unknown,
@@ -58,7 +58,9 @@ class LazyCatalogSupplyProvider<
   }
 
   async next(
-    request: LearningTaskSupplyRequest,
+    request:
+      | LearningTaskSupplyRequest
+      | ExtraTrainingSupplyRequest,
   ): Promise<LearningTaskSupplyResult> {
     try {
       const provider = await this.#provider()
@@ -93,9 +95,9 @@ class LazyCatalogSupplyProvider<
 }
 
 export interface ProductionTrainingSupplyProviders {
-  readonly vocabulary: VocabularySupplyProvider
-  readonly listening: ListeningSupplyProvider
-  readonly speaking: SpeakingSupplyProvider
+  readonly vocabulary: ProductionTrainingSupplyProvider
+  readonly listening: ProductionTrainingSupplyProvider
+  readonly speaking: ProductionTrainingSupplyProvider
 }
 
 export function createProductionTrainingSupplyProviders(sources: {

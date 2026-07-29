@@ -1,0 +1,250 @@
+import {
+  createExtraTrainingSession,
+  expireExtraTrainingSessions,
+  type ExtraTrainingSession,
+  type LearningEngineRepository,
+  type LearningEngineState,
+  type TrainingModuleId,
+} from '../../learning-engine/index.ts'
+import type { ActivePlanRepository } from './active-plan-repository.ts'
+import type {
+  ExtraTrainingPrioritySource,
+} from './extra-training-priority-source.ts'
+import {
+  ProductionExtraTrainingEventSink,
+  type ExtraTrainingEngineUpdateListener,
+} from './production-extra-training-event-sink.ts'
+import { formatLocalDate } from './local-date.ts'
+
+export interface ProductionExtraTrainingCoordinatorOptions {
+  readonly activePlans: ActivePlanRepository
+  readonly engineStates: LearningEngineRepository
+  readonly priorities: ExtraTrainingPrioritySource
+  readonly now?: () => Date
+  readonly createId?: () => string
+}
+
+function defaultId(): string {
+  return globalThis.crypto.randomUUID()
+}
+
+function sameExtraTrainingState(
+  left: LearningEngineState['extraTraining'],
+  right: LearningEngineState['extraTraining'],
+): boolean {
+  return left === right
+}
+
+/**
+ * Application coordinator for R6 optional sessions.
+ *
+ * Its only durable source of truth is LearningEngineState.extraTraining.
+ * Daily PlanProgress is read solely as the 3/3 admission gate and is never
+ * written by this coordinator or its event sink.
+ */
+export class ProductionExtraTrainingCoordinator {
+  readonly #activePlans: ActivePlanRepository
+  readonly #engineStates: LearningEngineRepository
+  readonly #priorities: ExtraTrainingPrioritySource
+  readonly #now: () => Date
+  readonly #createId: () => string
+  readonly #listeners =
+    new Set<ExtraTrainingEngineUpdateListener>()
+  readonly #starts = new Map<
+    TrainingModuleId,
+    Promise<ExtraTrainingSession>
+  >()
+  readonly eventSink: ProductionExtraTrainingEventSink
+  #queue: Promise<void> = Promise.resolve()
+
+  constructor(options: ProductionExtraTrainingCoordinatorOptions) {
+    this.#activePlans = options.activePlans
+    this.#engineStates = options.engineStates
+    this.#priorities = options.priorities
+    this.#now = options.now ?? (() => new Date())
+    this.#createId = options.createId ?? defaultId
+    this.eventSink = new ProductionExtraTrainingEventSink(
+      this.#engineStates,
+    )
+    this.eventSink.subscribe((update) => {
+      this.#notify(update)
+    })
+  }
+
+  subscribe(
+    listener: ExtraTrainingEngineUpdateListener,
+  ): () => void {
+    this.#listeners.add(listener)
+    return () => {
+      this.#listeners.delete(listener)
+    }
+  }
+
+  restoreForCurrentDate(): Promise<LearningEngineState> {
+    return this.#enqueue(async () => {
+      const engineState = await this.#requireEngineState()
+      if (!engineState.extraTraining) {
+        return engineState
+      }
+      const now = this.#now()
+      const extraTraining = expireExtraTrainingSessions(
+        engineState.extraTraining,
+        formatLocalDate(now),
+        now.toISOString(),
+      )
+      if (
+        sameExtraTrainingState(
+          engineState.extraTraining,
+          extraTraining,
+        )
+      ) {
+        return engineState
+      }
+      const next = { ...engineState, extraTraining }
+      await this.#engineStates.save(next)
+      return next
+    })
+  }
+
+  start(
+    moduleId: TrainingModuleId,
+  ): Promise<ExtraTrainingSession> {
+    const current = this.#starts.get(moduleId)
+    if (current) {
+      return current
+    }
+    const operation = this.#enqueue(() =>
+      this.#start(moduleId),
+    )
+    this.#starts.set(moduleId, operation)
+    const clear = () => {
+      if (this.#starts.get(moduleId) === operation) {
+        this.#starts.delete(moduleId)
+      }
+    }
+    void operation.then(clear, clear)
+    return operation
+  }
+
+  async #start(
+    moduleId: TrainingModuleId,
+  ): Promise<ExtraTrainingSession> {
+    const now = this.#now()
+    const localDate = formatLocalDate(now)
+    const occurredAt = now.toISOString()
+    const runtime = await this.#activePlans.load()
+    if (!runtime) {
+      throw new TypeError(
+        'Extra training requires an active daily plan.',
+      )
+    }
+    const progress = runtime.activePlan
+    if (
+      progress.plan.localDate !== localDate ||
+      progress.status !== 'completed' ||
+      progress.tasks.length !== 3 ||
+      !progress.tasks.every(
+        (task) =>
+          task.status === 'completed' ||
+          task.status === 'skipped',
+      )
+    ) {
+      throw new TypeError(
+        'Extra training requires the current daily plan completed 3/3.',
+      )
+    }
+
+    let engineState = await this.#requireEngineState()
+    const expired = engineState.extraTraining
+      ? expireExtraTrainingSessions(
+          engineState.extraTraining,
+          localDate,
+          occurredAt,
+        )
+      : undefined
+    if (expired !== engineState.extraTraining) {
+      engineState = { ...engineState, extraTraining: expired }
+    }
+    const existing = Object.values(
+      engineState.extraTraining?.sessions ?? {},
+    )
+      .filter(
+        (session) =>
+          session.localDate === localDate &&
+          session.targetModuleId === moduleId &&
+          session.status !== 'completed' &&
+          session.status !== 'expired',
+      )
+      .sort((left, right) =>
+        right.startedAt.localeCompare(left.startedAt),
+      )[0]
+    if (existing) {
+      if (expired !== undefined) {
+        await this.#engineStates.save(engineState)
+      }
+      return existing
+    }
+
+    const priorityItemIds = await this.#priorities.load({
+      moduleId,
+      localDate,
+      asOf: occurredAt,
+      runtime,
+      engineState,
+    })
+    const sessionId =
+      `extra:${localDate}:${moduleId}:${this.#createId()}`
+    const extraTraining = createExtraTrainingSession(
+      engineState.extraTraining,
+      progress,
+      {
+        sessionId,
+        localDate,
+        domain: moduleId,
+        targetModuleId: moduleId,
+        targetDifficulty:
+          engineState.progress.domains[moduleId].currentLevel,
+        priorityItemIds,
+        startedAt: occurredAt,
+      },
+    )
+    const nextEngineState = {
+      ...engineState,
+      extraTraining,
+    }
+    await this.#engineStates.save(nextEngineState)
+    const session = extraTraining.sessions[sessionId]
+    if (!session) {
+      throw new TypeError(
+        'Created extra-training state lost its session.',
+      )
+    }
+    this.#notify({ engineState: nextEngineState, session })
+    return session
+  }
+
+  #enqueue<T>(operation: () => Promise<T>): Promise<T> {
+    const result = this.#queue.then(operation, operation)
+    this.#queue = result.then(
+      () => undefined,
+      () => undefined,
+    )
+    return result
+  }
+
+  async #requireEngineState(): Promise<LearningEngineState> {
+    const engineState = await this.#engineStates.load()
+    if (!engineState) {
+      throw new TypeError(
+        'Learning engine is not initialized for extra training.',
+      )
+    }
+    return engineState
+  }
+
+  #notify(update: Parameters<ExtraTrainingEngineUpdateListener>[0]) {
+    for (const listener of this.#listeners) {
+      listener(update)
+    }
+  }
+}
