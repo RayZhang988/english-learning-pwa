@@ -24,6 +24,9 @@ import type {
   SpeakingScreenViewModel,
   VocabularyScreenViewModel,
 } from '../../ui/index.ts'
+import {
+  trainingBlockDurationLabel,
+} from '../../config/training-test-mode.ts'
 
 const modulePresentation: Record<
   TrainingModuleId,
@@ -109,6 +112,7 @@ function toModuleViewModel(
   session: ExtraTrainingSession | undefined,
   busy: boolean,
 ): ExtraTrainingModuleViewModel {
+  const durationLabel = trainingBlockDurationLabel()
   const base = {
     moduleId,
     ...modulePresentation[moduleId],
@@ -118,7 +122,7 @@ function toModuleViewModel(
     return {
       ...base,
       status: 'available',
-      startAction: action('开始 15 分钟', busy),
+      startAction: action(`开始 ${durationLabel}`, busy),
     }
   }
   if (session.status === 'expired') {
@@ -142,7 +146,7 @@ function toModuleViewModel(
     return {
       ...progress,
       status: 'completed',
-      startAction: action('再练 15 分钟', busy),
+      startAction: action(`再练 ${durationLabel}`, busy),
     }
   }
   if (session.status === 'paused') {
@@ -275,6 +279,7 @@ export function toExtraTrainingCompletionViewModel(
       'Only a budget-completed extra-training session has a completion view.',
     )
   }
+  const chooseAgainLabel = `再练 ${trainingBlockDurationLabel()}`
   return {
     sessionId: session.sessionId,
     moduleId: session.targetModuleId,
@@ -290,8 +295,8 @@ export function toExtraTrainingCompletionViewModel(
       source: 'timing-segments',
     },
     chooseAgainAction: {
-      ...action('再练 15 分钟', busy),
-      label: '再练 15 分钟',
+      ...action(chooseAgainLabel, busy),
+      label: chooseAgainLabel,
     },
     returnAction: {
       ...action('返回今日完成', busy),

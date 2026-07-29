@@ -1,4 +1,5 @@
 import { useId } from 'react'
+import { trainingBlockDurationLabel } from '../config/training-test-mode.ts'
 import { Icon } from './icons.tsx'
 import { TrainingBudgetProgress } from './training-budget-surfaces.tsx'
 import {
@@ -174,7 +175,7 @@ export function TrainingCompletionDurationScreen({
             <span className="eyebrow">OPTIONAL PRACTICE</span>
             <h2>今日计划 3/3 已完成</h2>
             <p>
-              可继续选择词汇、听力或口语。每次为 15 分钟有效训练，
+              可继续选择词汇、听力或口语。每次为 {trainingBlockDurationLabel()}有效训练，
               额外练习不会改变今日完成状态。
             </p>
             {extraTrainingEntry.action.disabledReason ? (

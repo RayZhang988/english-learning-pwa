@@ -2,6 +2,7 @@ import type {
   TrainingBudgetProgressViewModel,
   TrainingBudgetTargetViewModel,
 } from './training-budget-view-models.ts'
+import { toTrainingDisplaySeconds } from '../config/training-test-mode.ts'
 import {
   formatTrainingBudgetClock,
   formatTrainingBudgetTarget,
@@ -14,8 +15,11 @@ export function TrainingBudgetTarget({
   readonly viewModel: TrainingBudgetTargetViewModel
   readonly appearance?: 'compact' | 'strip'
 }) {
-  const targetLabel = formatTrainingBudgetTarget(
+  const displayTargetSeconds = toTrainingDisplaySeconds(
     viewModel.targetEffectiveSeconds,
+  )
+  const targetLabel = formatTrainingBudgetTarget(
+    displayTargetSeconds,
   )
 
   return (
@@ -23,6 +27,7 @@ export function TrainingBudgetTarget({
       className={`training-budget-target training-budget-target--${appearance}`}
       data-training-duration-kind="training-budget"
       data-target-effective-seconds={viewModel.targetEffectiveSeconds}
+      data-display-target-seconds={displayTargetSeconds}
       aria-label={`训练目标：${targetLabel}。只累计前台有效练习`}
     >
       <span aria-hidden="true">
@@ -76,11 +81,17 @@ export function TrainingBudgetProgress({
   readonly onRetryContent?: () => void
 }) {
   const statusCopy = budgetStatusCopy(viewModel.status)
-  const targetLabel = formatTrainingBudgetClock(
+  const displayTargetSeconds = toTrainingDisplaySeconds(
     viewModel.targetEffectiveSeconds,
   )
-  const remainingLabel = formatTrainingBudgetClock(
+  const displayRemainingSeconds = toTrainingDisplaySeconds(
     viewModel.remainingEffectiveSeconds,
+  )
+  const targetLabel = formatTrainingBudgetClock(
+    displayTargetSeconds,
+  )
+  const remainingLabel = formatTrainingBudgetClock(
+    displayRemainingSeconds,
   )
   const isExhausted = viewModel.status === 'content-exhausted'
   const retryDisabled =
@@ -97,9 +108,11 @@ export function TrainingBudgetProgress({
       ].join(' ')}
       data-budget-status={viewModel.status}
       data-target-effective-seconds={viewModel.targetEffectiveSeconds}
+      data-display-target-seconds={displayTargetSeconds}
       data-remaining-effective-seconds={
         viewModel.remainingEffectiveSeconds
       }
+      data-display-remaining-seconds={displayRemainingSeconds}
       data-completed-item-count={viewModel.completedItemCount}
       aria-label={`${statusCopy.title}。目标 ${targetLabel}，剩余有效时间 ${remainingLabel}，累计完成 ${viewModel.completedItemCount} 题。${statusCopy.description}`}
     >

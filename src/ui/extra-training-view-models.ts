@@ -124,9 +124,7 @@ export interface ExtraTrainingCompletionViewModel {
   readonly description: string
   readonly completedItemCount: number
   readonly actualDuration: ActualEffectiveDurationViewModel
-  readonly chooseAgainAction: ExtraTrainingActionViewModel & {
-    readonly label: '再练 15 分钟'
-  }
+  readonly chooseAgainAction: ExtraTrainingActionViewModel
   readonly returnAction: ExtraTrainingActionViewModel & {
     readonly label: '返回今日完成'
   }

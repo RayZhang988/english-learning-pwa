@@ -1,5 +1,9 @@
 import { ActualEffectiveDuration } from './duration-surfaces.tsx'
 import {
+  toTrainingDisplaySeconds,
+  trainingBlockDurationLabel,
+} from '../config/training-test-mode.ts'
+import {
   ListeningTrainingScreen,
   SpeakingTrainingScreen,
   VocabularyTrainingScreen,
@@ -94,7 +98,7 @@ function statusCopy(module: ExtraTrainingModuleViewModel): {
     case 'available':
       return {
         label: '可开始新一轮',
-        description: '从新的 15 分钟有效训练块开始。',
+        description: `从新的 ${trainingBlockDurationLabel()}有效训练块开始。`,
       }
     case 'paused':
       return {
@@ -127,7 +131,7 @@ function statusCopy(module: ExtraTrainingModuleViewModel): {
     case 'expired':
       return {
         label: '上次训练已跨日结束',
-        description: '旧会话不会并入今天；可以开始新的 15 分钟。',
+        description: `旧会话不会并入今天；可以开始新的 ${trainingBlockDurationLabel()}。`,
       }
   }
 }
@@ -236,7 +240,7 @@ export function ExtraTrainingPickerScreen({
         <span className="eyebrow">OPTIONAL PRACTICE</span>
         <h1>继续训练</h1>
         <p>
-          每次选择一个 15 分钟有效训练块。它属于额外练习，
+          每次选择一个 {trainingBlockDurationLabel()}有效训练块。它属于额外练习，
           不会改变今日 3/3 完成状态。
         </p>
       </header>
@@ -256,7 +260,7 @@ export function ExtraTrainingPickerScreen({
             onRetryRequested,
           })
           const targetLabel = formatTrainingBudgetTarget(
-            module.targetEffectiveSeconds,
+            toTrainingDisplaySeconds(module.targetEffectiveSeconds),
           )
 
           return (
@@ -298,7 +302,9 @@ export function ExtraTrainingPickerScreen({
                         <dt>剩余有效时间</dt>
                         <dd>
                           {formatTrainingBudgetClock(
-                            module.remainingEffectiveSeconds,
+                            toTrainingDisplaySeconds(
+                              module.remainingEffectiveSeconds,
+                            ),
                           )}
                         </dd>
                       </div>

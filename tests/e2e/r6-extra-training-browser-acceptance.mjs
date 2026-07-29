@@ -678,6 +678,32 @@ async function verifyThirtySecondMode(page) {
 
   await clickDailyModule(page, 'vocabulary')
   await waitForDailyQuestion(page, 'vocabulary')
+  const displayedBudget = await page.evaluate(`(() => {
+    const progress = document.querySelector(
+      '.training-budget-progress'
+    )
+    const metrics = [
+      ...(progress?.querySelectorAll(
+        '.training-budget-progress__metrics > div'
+      ) ?? []),
+    ].map((metric) => ({
+      label: metric.querySelector('dt')?.textContent?.trim() ?? '',
+      value: metric.querySelector('dd')?.textContent?.trim() ?? '',
+    }))
+    return {
+      displayTargetSeconds:
+        progress?.getAttribute('data-display-target-seconds') ?? null,
+      target:
+        metrics.find((metric) => metric.label === '目标')?.value ?? null,
+      bodyText: document.body.innerText,
+    }
+  })()`)
+  assert.equal(displayedBudget.displayTargetSeconds, '30')
+  assert.equal(displayedBudget.target, '00:30')
+  assert.doesNotMatch(
+    displayedBudget.bodyText,
+    /目标\\s*15:00/u,
+  )
   const startedAt = Date.now()
   const deadline = startedAt + 35_000
   let execution

@@ -35,6 +35,23 @@ export const trainingTestMode = parseTrainingTestMode(
     : globalThis.location.search,
 )
 
+export function toTrainingDisplaySeconds(
+  effectiveSeconds: number,
+  mode: TrainingTestMode = trainingTestMode,
+): number {
+  if (!mode.enabled || !Number.isFinite(effectiveSeconds)) {
+    return effectiveSeconds
+  }
+
+  return Math.max(0, Math.ceil(effectiveSeconds / mode.timeScale))
+}
+
+export function trainingBlockDurationLabel(
+  mode: TrainingTestMode = trainingTestMode,
+): string {
+  return mode.enabled ? `${mode.wallSeconds} 秒` : '15 分钟'
+}
+
 export function createTrainingTimingClock(
   mode: TrainingTestMode = trainingTestMode,
 ): EffectiveTimingClock | undefined {
