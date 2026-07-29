@@ -158,3 +158,19 @@ QA_LISTENING_CROSS_UNIT_ONLY=1 \
 
 正式回归必须观察到任务与供应题来自不同 `learningUnitId`，同时会话进入
 `answering`、播放器存在且 `failure=null`。
+
+QA-016 使用已完成第一日口语的旧计划，要求升级后的第二日口语任务能够接收供应器
+返回的第一日提示，并直接进入可录音状态：
+
+```bash
+QA_BASE_URL=https://rayzhang988.github.io/english-learning-pwa/ \
+QA_EXPECTED_ASSET=index-CvUdEiaZ.js \
+QA_PAGES_RUN=30416667636 \
+QA_EXPECTED_HEAD_SHA=30e9728f5b29d56a6577b6287ecfa9e61c325cc9 \
+QA_SPEAKING_CROSS_UNIT_ONLY=1 \
+  node tests/e2e/qa-013-legacy-plan-portability.mjs
+```
+
+正式回归必须观察到任务与供应提示来自不同 `learningUnitId`，同时会话进入
+`practicing`、开始录音按钮可用且 `failure=null`。运行时测试另行覆盖没有真实
+耗尽事件的已保存错误会话通过重新加载直接重建。

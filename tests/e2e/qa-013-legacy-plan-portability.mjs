@@ -20,6 +20,8 @@ const sameDayUpgradeOnly =
   process.env.QA_SAME_DAY_UPGRADE_ONLY === '1'
 const listeningCrossUnitOnly =
   process.env.QA_LISTENING_CROSS_UNIT_ONLY === '1'
+const speakingCrossUnitOnly =
+  process.env.QA_SPEAKING_CROSS_UNIT_ONLY === '1'
 const modules = ['vocabulary', 'listening', 'speaking']
 const evidence = {
   baseUrl: baseUrl.href,
@@ -474,6 +476,34 @@ function completeLegacyListening(records) {
   ]
 }
 
+function completeLegacySpeaking(records) {
+  const activePlanRecord = records.find(
+    (record) =>
+      record.namespace === 'app.learning-runtime' &&
+      record.key === 'active-plan',
+  )
+  assert.ok(activePlanRecord)
+  const runtime = activePlanRecord.value
+  const speaking = executionFor(runtime, 'speaking')
+  Object.assign(speaking, {
+    status: 'completed',
+    completionKind: 'unscorable-practice',
+    spentSeconds: 5,
+    effectiveSeconds: 5,
+    timingSegmentCount: 1,
+    excludedSeconds: 0,
+    effectiveTimeSource: 'timing-segments',
+    startedAt: '2026-07-24T08:02:00.000Z',
+    updatedAt: '2026-07-24T08:02:05.000Z',
+  })
+  runtime.completedLearningUnitIds = [
+    ...new Set([
+      ...runtime.completedLearningUnitIds,
+      speaking.task.learningUnitId,
+    ]),
+  ]
+}
+
 async function seedLegacyRecords(page, records) {
   await page.navigate(new URL('#/', baseUrl).href)
   await page.waitFor(`document.readyState === 'complete'`)
@@ -901,9 +931,16 @@ async function runFormalLegacyPlan() {
   if (listeningCrossUnitOnly) {
     completeLegacyListening(records)
   }
+  if (speakingCrossUnitOnly) {
+    completeLegacySpeaking(records)
+  }
   const qa = await prepareBrowser()
   try {
-    if (sameDayUpgradeOnly || listeningCrossUnitOnly) {
+    if (
+      sameDayUpgradeOnly ||
+      listeningCrossUnitOnly ||
+      speakingCrossUnitOnly
+    ) {
       await qa.page.navigate(new URL('#/', baseUrl).href)
       await qa.page.waitFor(`document.readyState === 'complete'`)
       await putRecords(qa.page, records)
@@ -987,6 +1024,51 @@ async function runFormalLegacyPlan() {
         checkpoint('qa-015-formal-cross-unit-listening', {
           taskId,
           taskLearningUnitId: listeningTask.learningUnitId,
+          suppliedLearningUnitId:
+            session.stream.activeItem.learningUnitId,
+          activeItemId: session.stream.activeItem.itemId,
+          phase: session.phase,
+          failure: session.failure,
+        })
+      }
+      if (speakingCrossUnitOnly) {
+        const speakingTask = upgraded.activePlan.plan.tasks.find(
+          (task) => task.targetModuleId === 'speaking',
+        )
+        assert.ok(speakingTask)
+        const taskId = await clickModule(qa.page, 'speaking')
+        assert.equal(taskId, speakingTask.taskId)
+        await qa.page.waitFor(
+          `[...document.querySelectorAll('button')].some(
+            (button) =>
+              (button.innerText.trim() === '开始录音' ||
+                button.getAttribute('aria-label') === '开始录音') &&
+              !button.disabled
+          )`,
+          20_000,
+        )
+        const text = await qa.page.bodyText()
+        assert.doesNotMatch(
+          text,
+          /identities do not match|本次口语任务无法加载|no acknowledged exhaustion/u,
+        )
+        const record = allRecords(
+          await qa.page.dumpIndexedDb(),
+        ).find(
+          (candidate) =>
+            candidate.namespace === 'feature.speaking',
+        )
+        assert.ok(record)
+        const session = record.value
+        assert.ok(session.stream?.activeItem)
+        assert.notEqual(
+          session.stream.activeItem.learningUnitId,
+          speakingTask.learningUnitId,
+          'The formal fixture did not exercise a cross-unit speaking item.',
+        )
+        checkpoint('qa-016-formal-cross-unit-speaking', {
+          taskId,
+          taskLearningUnitId: speakingTask.learningUnitId,
           suppliedLearningUnitId:
             session.stream.activeItem.learningUnitId,
           activeItemId: session.stream.activeItem.itemId,
