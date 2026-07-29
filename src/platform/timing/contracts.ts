@@ -1,5 +1,7 @@
 import type { PlatformEvent } from '../../core/index.ts'
 import type {
+  ExtraTrainingEvent,
+  ExtraTrainingSession,
   LearningTaskMode,
   LearningTimingPhase,
   LearningTimingSegmentReason,
@@ -178,4 +180,32 @@ export interface EffectiveTimingSessionState {
   readonly segmentOpen: boolean
   readonly suspended: boolean
   readonly pendingEventCount: number
+}
+
+/**
+ * Isolated R6 event boundary. The distinct method name prevents a daily
+ * PlatformEventSink from satisfying this port by structural typing.
+ */
+export interface ExtraTrainingEventSink {
+  publishExtraTrainingEvent(event: ExtraTrainingEvent): Promise<void>
+}
+
+export interface ExtraTrainingEffectiveTimingSessionPort {
+  start(declaration: EffectiveTimingPhaseDeclaration): Promise<void>
+  transition(declaration: EffectiveTimingPhaseDeclaration): Promise<void>
+  activity(): Promise<void>
+  pause(): Promise<void>
+  resume(declaration: EffectiveTimingPhaseDeclaration): Promise<void>
+  finish(): Promise<void>
+  dispose(): Promise<void>
+}
+
+/**
+ * Public module-facing R6 factory. Modules pass a real engine session; the
+ * platform/app implementation owns clocks, lifecycle, snapshots and events.
+ */
+export interface ExtraTrainingEffectiveTimingSessionFactoryPort {
+  create(
+    session: ExtraTrainingSession,
+  ): Promise<ExtraTrainingEffectiveTimingSessionPort>
 }

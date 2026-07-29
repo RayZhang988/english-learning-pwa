@@ -11,6 +11,8 @@ import {
 import type {
   EffectiveTimingClock,
   EffectiveTimingScheduler,
+  ExtraTrainingEffectiveTimingSessionFactoryPort,
+  ExtraTrainingEventSink,
   TimingLifecycleEvent,
   TimingLifecyclePort,
   TimingLifecycleVisibility,
@@ -143,7 +145,9 @@ class MemorySnapshotStore
   }
 }
 
-class RecordingExtraTrainingEventSink {
+class RecordingExtraTrainingEventSink
+  implements ExtraTrainingEventSink
+{
   readonly calls: ExtraTrainingEvent[] = []
   readonly events: ExtraTrainingTimingSegmentRecordedEvent[] = []
   failNext = false
@@ -312,6 +316,16 @@ function totalActiveSeconds(
 }
 
 describe('ProductionExtraTrainingEffectiveTimingSessionFactory', () => {
+  it('implements the public platform factory and isolated event-sink ports', () => {
+    const { factory, sink } = createFactory()
+    const publicFactory: ExtraTrainingEffectiveTimingSessionFactoryPort =
+      factory
+    const publicSink: ExtraTrainingEventSink = sink
+
+    expect(publicFactory).toBe(factory)
+    expect(publicSink).toBe(sink)
+  })
+
   it('publishes a separately parsed event with only the extra-training identity', async () => {
     const { factory, sink, time } = createFactory()
     const session = await factory.create(extraTrainingSession())

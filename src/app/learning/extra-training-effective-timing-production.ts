@@ -1,7 +1,6 @@
 import {
   MAX_INTERACTION_IDLE_SECONDS,
   parseExtraTrainingEvent,
-  type ExtraTrainingEvent,
   type ExtraTrainingSession,
   type ExtraTrainingTimingSegmentRecordedEvent,
 } from '../../learning-engine/index.ts'
@@ -11,6 +10,8 @@ import {
   type EffectiveTimingClock,
   type EffectiveTimingEventSink,
   type EffectiveTimingScheduler,
+  type ExtraTrainingEffectiveTimingSessionFactoryPort,
+  type ExtraTrainingEventSink,
   type TimingLifecyclePort,
 } from '../../platform/index.ts'
 import { localStorageService } from '../../storage/index.ts'
@@ -21,15 +22,6 @@ import {
   type ExtraTrainingEffectiveTimingSnapshotStore,
 } from './extra-training-effective-timing-snapshot-repository.ts'
 import { assertLocalDateValue } from './local-date.ts'
-
-export interface ExtraTrainingEventSink {
-  /**
-   * This deliberately does not use PlatformEventSink.publish(). The separate
-   * method prevents the daily plan event sink from being supplied here by
-   * structural typing.
-   */
-  publishExtraTrainingEvent(event: ExtraTrainingEvent): Promise<void>
-}
 
 export interface ProductionExtraTrainingEffectiveTimingSessionFactoryOptions {
   readonly eventSink: ExtraTrainingEventSink
@@ -129,7 +121,9 @@ function identityKey(
  * timing core with daily tasks while keeping identity, snapshots, and event
  * delivery outside PlanProgress.
  */
-export class ProductionExtraTrainingEffectiveTimingSessionFactory {
+export class ProductionExtraTrainingEffectiveTimingSessionFactory
+  implements ExtraTrainingEffectiveTimingSessionFactoryPort
+{
   readonly #options: ProductionExtraTrainingEffectiveTimingSessionFactoryOptions
   readonly #snapshotStore: ExtraTrainingEffectiveTimingSnapshotStore
   readonly #lifecycle: TimingLifecyclePort

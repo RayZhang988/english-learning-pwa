@@ -105,6 +105,9 @@ where `session` is the real schema-1 `ExtraTrainingSession`. Construct the
 factory with an `ExtraTrainingEventSink` that implements the separate
 `publishExtraTrainingEvent()` port; a daily `PlatformEventSink` is
 intentionally not type-compatible with that port.
+Modules import `ExtraTrainingEffectiveTimingSessionFactoryPort` and
+`ExtraTrainingEventSink` from `src/platform/index.ts`; the app-owned
+production factory implements the former.
 
 The returned session has the same `start / transition / activity / pause /
 resume / finish / dispose` lifecycle and the same foreground, 45-second idle,
