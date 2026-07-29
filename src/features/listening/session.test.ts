@@ -4,6 +4,7 @@ import {
   canSubmitListeningAnswer,
   changeListeningDictation,
   createListeningSession,
+  createListeningStreamSession,
   getListeningSessionResult,
   selectListeningOption,
   submitListeningAnswer,
@@ -35,6 +36,34 @@ function markPrimaryPlayed(
 }
 
 describe('listening session state machine', () => {
+  it('allows only continuous streams to use a question from another published unit', () => {
+    const task = createListeningTask()
+    const suppliedUnit = {
+      ...createListeningUnit(),
+      learningUnitId: 'st4w-w1d2-listening',
+      contentRef:
+        'lesson://survival-travel-american-4w/1.0.0/w1d2/listening',
+    }
+
+    expect(() =>
+      createListeningSession(task, suppliedUnit, startedAt),
+    ).toThrow(
+      'Listening task and content unit identities do not match.',
+    )
+
+    const streamed = createListeningStreamSession(
+      task,
+      suppliedUnit,
+      suppliedUnit.questions[0],
+      startedAt,
+    )
+    expect(streamed.task).toEqual(task)
+    expect(streamed.questions).toEqual([
+      suppliedUnit.questions[0],
+    ])
+    expect(streamed.transcript).toEqual(suppliedUnit.transcript)
+  })
+
   it('requires audible evidence and an answer before submission', () => {
     let session = createListeningSession(
       createListeningTask(),

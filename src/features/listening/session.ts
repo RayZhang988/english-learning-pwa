@@ -125,16 +125,18 @@ function initialPlayback(
   }
 }
 
-export function createListeningSession(
+function createListeningSessionInternal(
   task: LearningTask,
   unit: ListeningTrainingUnit,
   now: string,
+  requireTaskUnitIdentity: boolean,
 ): ListeningSession {
   assertTask(task)
   assertTimestamp(now)
   if (
-    task.learningUnitId !== unit.learningUnitId ||
-    task.contentRef !== unit.contentRef
+    requireTaskUnitIdentity &&
+    (task.learningUnitId !== unit.learningUnitId ||
+      task.contentRef !== unit.contentRef)
   ) {
     throw new ListeningError(
       'task-incompatible',
@@ -170,6 +172,14 @@ export function createListeningSession(
     failure: null,
     stream: null,
   }
+}
+
+export function createListeningSession(
+  task: LearningTask,
+  unit: ListeningTrainingUnit,
+  now: string,
+): ListeningSession {
+  return createListeningSessionInternal(task, unit, now, true)
 }
 
 export function createFailedListeningSession(
@@ -215,7 +225,12 @@ export function createListeningStreamSession(
   question: ListeningQuestion,
   now: string,
 ): ListeningSession {
-  const base = createListeningSession(task, { ...unit, questions: [question] }, now)
+  const base = createListeningSessionInternal(
+    task,
+    { ...unit, questions: [question] },
+    now,
+    false,
+  )
   return base
 }
 

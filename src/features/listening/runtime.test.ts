@@ -292,6 +292,75 @@ function dialogueCatalog(): ListeningCatalog {
 }
 
 describe('listening training runtime', () => {
+  it('starts a continuous budget from a supplied unit different from the plan seed', async () => {
+    const task = createListeningTask({
+      trainingBudget: {
+        schemaVersion: 1,
+        targetEffectiveSeconds: 900,
+      },
+    })
+    const suppliedUnit = {
+      ...createListeningUnit([choiceQuestion]),
+      learningUnitId: 'st4w-w1d2-listening',
+      contentRef:
+        'lesson://survival-travel-american-4w/1.0.0/w1d2/listening',
+    }
+    const suppliedItem = {
+      itemId: 'cross-unit-listening-item',
+      learningUnitId: suppliedUnit.learningUnitId,
+      contentRef: suppliedUnit.contentRef,
+      difficultyLevel: 2,
+      tags: ['scene:airport'],
+      source: {
+        sourceType: 'listening-extension' as const,
+        sourceId: choiceQuestion.id,
+        variantId: 'word-discrimination',
+      },
+    }
+    const suppliedCatalog: ListeningCatalog = {
+      schemaVersion: 1,
+      packageVersion: '1.0.0',
+      extensionVersion: '1.0.0',
+      courseId: 'survival-travel-american-4w',
+      units: [suppliedUnit],
+      getUnit: (contentRef) =>
+        contentRef === suppliedUnit.contentRef
+          ? suppliedUnit
+          : undefined,
+    }
+    const runtime = new ListeningTrainingRuntime({
+      task,
+      localDate: '2026-07-29',
+      contentSource: { load: async () => suppliedCatalog },
+      eventSink: new InMemoryPlatformEventSink(),
+      repository: new ListeningSessionRepository(
+        new MemoryStore(),
+      ),
+      speech: new ImmediateSpeech(),
+      now: clock(),
+      createId: () => 'cross-unit-listening-event',
+      supplyProvider: {
+        async next(request) {
+          return {
+            schemaVersion: 1,
+            requestId: request.requestId,
+            status: 'item',
+            item: suppliedItem,
+            nextCursor: suppliedItem.itemId,
+          }
+        },
+      },
+      trainingBudgetStatus: () => 'running',
+    })
+
+    const session = await runtime.initialize()
+    expect(session.phase).toBe('answering')
+    expect(session.failure).toBeNull()
+    expect(session.task).toEqual(task)
+    expect(session.stream?.activeItem).toEqual(suppliedItem)
+    expect(session.questions[0].id).toBe(choiceQuestion.id)
+  })
+
   it('publishes one durable recovery before a refreshed item and budget completion', async () => {
     const secondQuestion: ListeningChoiceQuestion = {
       id: 'question-choice-recovered', type: 'word-discrimination', promptZh: '你听到了哪一句？',
