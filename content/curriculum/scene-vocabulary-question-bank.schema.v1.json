@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "R13-B Scene Vocabulary Question Bank v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "documentType", "contentVersion", "bankId", "baseCourseId", "targetLocale", "supportLocale", "interaction", "scenes"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "documentType": {"const": "scene-vocabulary-question-bank"},
+    "contentVersion": {"const": "1.0.0"},
+    "bankId": {"const": "r13b-travel-scene-vocabulary"},
+    "baseCourseId": {"const": "survival-travel-american-4w"},
+    "targetLocale": {"const": "en-US"},
+    "supportLocale": {"const": "zh-CN"},
+    "interaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["promptZh", "targetPlayback", "sentenceTranslationAllowed"],
+      "properties": {
+        "promptZh": {"const": "这个词是什么意思？"},
+        "targetPlayback": {"const": "tap-highlighted-target-only"},
+        "sentenceTranslationAllowed": {"const": false}
+      }
+    },
+    "scenes": {
+      "type": "array",
+      "minItems": 18,
+      "maxItems": 18,
+      "items": {"$ref": "#/$defs/scene"}
+    }
+  },
+  "$defs": {
+    "scene": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sceneId", "categoryId", "titleZh", "questions"],
+      "properties": {
+        "sceneId": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+        "categoryId": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+        "titleZh": {"type": "string", "minLength": 1},
+        "questions": {"type": "array", "minItems": 6, "items": {"$ref": "#/$defs/question"}}
+      }
+    },
+    "question": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["questionId", "sentenceEn", "targetText", "targetOccurrence", "correctMeaningZh", "distractorMeaningsZh", "source"],
+      "properties": {
+        "questionId": {"type": "string", "pattern": "^r13b-vocabulary-[a-z0-9-]+-q[0-9]{2}$"},
+        "sentenceEn": {"type": "string", "minLength": 1},
+        "targetText": {"type": "string", "minLength": 1},
+        "targetOccurrence": {"const": 1},
+        "correctMeaningZh": {"type": "string", "minLength": 1},
+        "distractorMeaningsZh": {"type": "array", "minItems": 3, "maxItems": 3, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "sourceId", "rights"],
+          "properties": {
+            "kind": {"const": "project-authored-controlled-text"},
+            "sourceId": {"type": "string", "pattern": "^r13b-source-[a-z0-9-]+-q[0-9]{2}$"},
+            "rights": {"const": "original-project-content"}
+          }
+        }
+      }
+    }
+  }
+}

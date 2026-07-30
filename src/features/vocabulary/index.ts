@@ -42,6 +42,24 @@ export {
   type VocabularyTrainingRuntimeOptions,
 } from './runtime.ts'
 export {
+  createSceneVocabularyQuestionBank,
+  SceneVocabularyPracticeRuntime,
+  StoredSceneVocabularyPracticeRepository,
+  SCENE_VOCABULARY_BANK_ID,
+  SCENE_VOCABULARY_CONTENT_VERSION,
+  SCENE_VOCABULARY_STORAGE_NAMESPACE,
+  type SceneVocabularyOptionState,
+  type SceneVocabularyPracticeAnswer,
+  type SceneVocabularyPracticeRepository,
+  type SceneVocabularyPracticeRuntimeOptions,
+  type SceneVocabularyPracticeSnapshot,
+  type SceneVocabularyPracticeView,
+  type SceneVocabularyQuestion,
+  type SceneVocabularyQuestionBank,
+  type SceneVocabularyQuestionSource,
+  type SceneVocabularyScene,
+} from './scene-vocabulary-practice.ts'
+export {
   VocabularyCatalogSupplyProvider,
   type ExtraVocabularySupplyProvider,
   type VocabularySupplyProvider,

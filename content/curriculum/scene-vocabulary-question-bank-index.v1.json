@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "documentType": "scene-vocabulary-question-bank-index",
+  "contentVersion": "1.0.0",
+  "bankId": "r13b-travel-scene-vocabulary",
+  "status": "released-content-candidate",
+  "baseCourseId": "survival-travel-american-4w",
+  "targetLocale": "en-US",
+  "supportLocale": "zh-CN",
+  "questionBankFile": "content/lessons/survival-travel-american-4w/scene-vocabulary-questions.v1.json",
+  "schemaFile": "content/curriculum/scene-vocabulary-question-bank.schema.v1.json",
+  "validationFile": "content/curriculum/validate-scene-vocabulary-question-bank.v1.mjs",
+  "documentationFile": "content/curriculum/scene-vocabulary-question-bank-handoff-v1.md",
+  "coverage": {
+    "sceneCount": 18,
+    "questionCount": 108,
+    "questionsPerScene": 6
+  }
+}
