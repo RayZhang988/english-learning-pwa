@@ -641,8 +641,11 @@ async function verifyR9ListeningChoiceFlow(page) {
         choice.classList.contains('choice-row--incorrect')
       ).length,
       hasExplanation:
-        document.body.innerText.includes('答案解析') ||
-        document.body.innerText.includes('音频'),
+        Boolean(
+          document.querySelector(
+            '.transcript-panel__rationale'
+          )?.textContent?.trim()
+        ),
     }
   })()`)
   assert.equal(afterSubmit.count, afterPlayback.count)
