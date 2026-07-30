@@ -74,6 +74,21 @@ function requireNonNegativeInteger(
   }
 }
 
+function assertOptionalTrainingScore(
+  value: unknown,
+  label: string,
+): void {
+  if (value === undefined) {
+    return
+  }
+  if (!isRecord(value) || value.schemaVersion !== 1) {
+    throw new TypeError(`${label} must be an R7 score object.`)
+  }
+  requireNonNegativeInteger(value.correctCount, `${label}.correctCount`)
+  requireNonNegativeInteger(value.incorrectCount, `${label}.incorrectCount`)
+  requireNonNegativeInteger(value.unscorableCount, `${label}.unscorableCount`)
+}
+
 function requireStringArray(
   value: unknown,
   label: string,
@@ -260,6 +275,7 @@ function assertTaskExecution(
   }
   requireFiniteNumber(value.spentSeconds, `${label}.spentSeconds`)
   requireFiniteNumber(value.effectiveSeconds, `${label}.effectiveSeconds`)
+  assertOptionalTrainingScore(value.score, `${label}.score`)
   if (value.timingSegmentCount !== undefined) {
     requireNonNegativeInteger(
       value.timingSegmentCount,

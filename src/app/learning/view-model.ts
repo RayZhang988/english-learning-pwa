@@ -8,6 +8,7 @@ import {
   type PlanTaskAvailability,
   type TaskExecutionState,
   type TrainingModuleId,
+  type TrainingUnitScore,
 } from '../../learning-engine/index.ts'
 import type {
   ActualEffectiveDurationViewModel,
@@ -20,7 +21,30 @@ import type {
   TaskDurationEstimateViewModel,
   TrainingBudgetProgressViewModel,
   TrainingCompletionDurationViewModel,
+  TrainingUnitScoreViewModel,
 } from '../../ui/index.ts'
+
+export function toTrainingUnitScoreViewModel(
+  score: TrainingUnitScore | undefined,
+): TrainingUnitScoreViewModel {
+  if (!score) {
+    return {
+      state: 'unavailable',
+      reason: 'legacy-score-missing',
+    }
+  }
+  const totalCount = score.correctCount + score.incorrectCount
+  return {
+    state: 'available',
+    correctCount: score.correctCount,
+    totalCount,
+    percentage:
+      totalCount === 0
+        ? null
+        : Math.round((score.correctCount / totalCount) * 100),
+    unscorableCount: score.unscorableCount,
+  }
+}
 
 const modulePresentation: Readonly<
   Record<
@@ -171,6 +195,7 @@ export function toTrainingCompletionDurationViewModel(
     moduleId,
     title: `${practiceModuleLabels[moduleId]}已完成`,
     description: '成绩与练习反馈已保存，下面只显示可信的实际有效练习时间。',
+    score: toTrainingUnitScoreViewModel(execution?.score),
     actualDuration: toActualEffectiveDurationViewModel(execution),
     trainingBudget:
       trainingBudget?.status === 'completed'

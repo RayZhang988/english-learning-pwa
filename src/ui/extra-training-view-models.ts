@@ -1,6 +1,7 @@
 import type {
   ActualEffectiveDurationViewModel,
   DurationTrainingModuleId,
+  TrainingUnitScoreViewModel,
 } from './duration-view-models.ts'
 import type { TrainingBudgetProgressViewModel } from './training-budget-view-models.ts'
 
@@ -123,6 +124,7 @@ export interface ExtraTrainingCompletionViewModel {
   readonly title: string
   readonly description: string
   readonly completedItemCount: number
+  readonly score: TrainingUnitScoreViewModel
   readonly actualDuration: ActualEffectiveDurationViewModel
   readonly chooseAgainAction: ExtraTrainingActionViewModel
   readonly returnAction: ExtraTrainingActionViewModel & {

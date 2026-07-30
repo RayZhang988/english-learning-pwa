@@ -1,4 +1,7 @@
-import { ActualEffectiveDuration } from './duration-surfaces.tsx'
+import {
+  ActualEffectiveDuration,
+  TrainingUnitScore,
+} from './duration-surfaces.tsx'
 import {
   toTrainingDisplaySeconds,
   trainingBlockDurationLabel,
@@ -588,6 +591,7 @@ export function ExtraTrainingCompletionScreen({
         <p className="extra-training-completion-screen__count">
           本轮累计完成 {viewModel.completedItemCount} 题
         </p>
+        <TrainingUnitScore score={viewModel.score} />
         <ActualEffectiveDuration
           duration={viewModel.actualDuration}
         />

@@ -266,6 +266,9 @@ export interface SpeakingSession {
 export interface SpeakingSessionResult {
   readonly promptCount: number
   readonly recognizedCount: number
+  /** Existing content-match rubric: match/close are correct. */
+  readonly correctCount: number
+  readonly incorrectCount: number
   readonly unscorableCount: number
   readonly performanceScore: number | null
   readonly evidenceQuality: number

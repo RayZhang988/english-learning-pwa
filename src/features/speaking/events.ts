@@ -128,6 +128,12 @@ export function createSpeakingCompletedEvent(
       errorTags: result.errorTags,
       contentTags: session.task.tags,
       failureCategory: null,
+      scoreDelta: {
+        schemaVersion: 1,
+        correctCount: result.correctCount,
+        incorrectCount: result.incorrectCount,
+        unscorableCount: result.unscorableCount,
+      },
     },
   }
 }
@@ -181,6 +187,12 @@ export function createSpeakingUnscorableEvent(
       errorTags: [],
       contentTags: session.task.tags,
       failureCategory,
+      scoreDelta: {
+        schemaVersion: 1,
+        correctCount: 0,
+        incorrectCount: 0,
+        unscorableCount: result.unscorableCount,
+      },
     },
   }
 }
@@ -208,6 +220,12 @@ export function createSpeakingStreamAttemptEvent(
       durationSeconds: Math.max(0, Math.floor(durationSeconds)), taskCompleted: false,
       errorTags: unscorable ? [] : result.errorTags, contentTags: session.task.tags,
       failureCategory: unscorable ? result.failureCategory : null,
+      scoreDelta: {
+        schemaVersion: 1,
+        correctCount: result.correctCount,
+        incorrectCount: result.incorrectCount,
+        unscorableCount: result.unscorableCount,
+      },
     },
   }
 }

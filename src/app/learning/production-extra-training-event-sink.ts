@@ -10,8 +10,6 @@ import {
 } from '../../learning-engine/index.ts'
 import type { ExtraTrainingEventSink } from '../../platform/index.ts'
 
-const MAX_PROCESSED_EVENT_IDS = 2_000
-
 export interface ExtraTrainingEngineUpdate {
   readonly engineState: LearningEngineState
   readonly session: ExtraTrainingSession
@@ -35,29 +33,6 @@ function assertSessionIdentity(
     throw new TypeError(
       'Extra-training event identity does not match its session.',
     )
-  }
-}
-
-function appendProcessedEvent(
-  state: LearningEngineState,
-  eventId: string,
-): LearningEngineState {
-  const extraTraining = state.extraTraining
-  if (!extraTraining) {
-    throw new TypeError('Extra-training state is not initialized.')
-  }
-  if (extraTraining.processedEventIds.includes(eventId)) {
-    return state
-  }
-  return {
-    ...state,
-    extraTraining: {
-      ...extraTraining,
-      processedEventIds: [
-        ...extraTraining.processedEventIds,
-        eventId,
-      ].slice(-MAX_PROCESSED_EVENT_IDS),
-    },
   }
 }
 
@@ -126,10 +101,17 @@ export class ProductionExtraTrainingEventSink
       event.type ===
       'learning.extra-training.attempt.completed.v1'
     ) {
-      nextEngineState = appendProcessedEvent(
-        applyExtraTrainingAttempt(engineState, event).state,
-        event.id,
-      )
+      const attempted = applyExtraTrainingAttempt(
+        engineState,
+        event,
+      ).state
+      nextEngineState = {
+        ...attempted,
+        extraTraining: applyExtraTrainingEvent(
+          engineState.extraTraining,
+          event,
+        ),
+      }
     } else {
       nextEngineState = {
         ...engineState,

@@ -5,6 +5,7 @@ import type {
   StandardErrorTag,
 } from './contracts.ts'
 import { classifyTimingSegment } from './timing.ts'
+import { assertTrainingUnitScore } from './training-score.ts'
 import {
   assertLocalDate,
   assertPositiveSeconds,
@@ -95,6 +96,41 @@ const ERROR_TAGS: readonly StandardErrorTag[] = [
   'timeout',
   'other',
 ]
+
+function validateOptionalScoreDelta(
+  payload: Record<string, unknown>,
+  result: 'scored' | 'unscorable',
+): void {
+  if (payload.scoreDelta === undefined) {
+    return
+  }
+  if (
+    typeof payload.scoreDelta !== 'object' ||
+    payload.scoreDelta === null ||
+    Array.isArray(payload.scoreDelta)
+  ) {
+    throw new TypeError('scoreDelta must be an object')
+  }
+  const score = payload.scoreDelta as {
+    schemaVersion: 1
+    correctCount: number
+    incorrectCount: number
+    unscorableCount: number
+  }
+  assertTrainingUnitScore(score, 'scoreDelta')
+  const scoredCount = score.correctCount + score.incorrectCount
+  if (result === 'scored' && scoredCount === 0) {
+    throw new TypeError('scored attempt scoreDelta requires a scored item')
+  }
+  if (
+    result === 'unscorable' &&
+    (scoredCount !== 0 || score.unscorableCount === 0)
+  ) {
+    throw new TypeError(
+      'unscorable attempt scoreDelta must contain only unscorable items',
+    )
+  }
+}
 const CONTENT_EXHAUSTION_REASONS = [
   'no-eligible-content',
   'all-eligible-content-recently-used',
@@ -273,6 +309,7 @@ export function parseLearningEvent(event: PlatformEvent): LearningEvent {
       'scored',
       'unscorable',
     ])
+    validateOptionalScoreDelta(payload, result)
     const performanceScore = payload.performanceScore
     if (result === 'scored') {
       if (typeof performanceScore !== 'number') {
@@ -429,6 +466,7 @@ export function parseExtraTrainingEvent(
     }
     assertPositiveSeconds(requireNumber(payload, 'estimatedSeconds'), 'estimatedSeconds')
     const result = requireEnum(payload, 'result', ['scored', 'unscorable'])
+    validateOptionalScoreDelta(payload, result)
     if (result === 'scored') {
       assertUnitInterval(requireNumber(payload, 'performanceScore'), 'performanceScore')
       if (payload.failureCategory !== null) {

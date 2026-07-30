@@ -116,6 +116,12 @@ export function createVocabularyCompletedEvent(
       errorTags: result.errorTags,
       contentTags: session.task.tags,
       failureCategory: null,
+      scoreDelta: {
+        schemaVersion: 1,
+        correctCount: result.correctCount,
+        incorrectCount: result.questionCount - result.correctCount,
+        unscorableCount: 0,
+      },
     },
   }
 }
@@ -158,7 +164,7 @@ export function createVocabularyStreamAttemptEvent(
   const result = getVocabularySessionResult(session)
   return {
     id: identity.eventId, type: 'learning.attempt.completed.v1', sourceModuleId: 'vocabulary', occurredAt: identity.occurredAt, schemaVersion: 1,
-    payload: { ...basePayload(session.task, identity.localDate), mode: session.task.mode, difficultyLevel: session.task.difficultyLevel, estimatedSeconds: session.task.estimatedSeconds, result: 'scored', performanceScore: result.performanceScore, evidenceQuality: 1, assistanceLevel: 0, durationSeconds: Math.max(0, Math.floor(durationSeconds)), taskCompleted: false, errorTags: result.errorTags, contentTags: session.task.tags, failureCategory: null },
+    payload: { ...basePayload(session.task, identity.localDate), mode: session.task.mode, difficultyLevel: session.task.difficultyLevel, estimatedSeconds: session.task.estimatedSeconds, result: 'scored', performanceScore: result.performanceScore, evidenceQuality: 1, assistanceLevel: 0, durationSeconds: Math.max(0, Math.floor(durationSeconds)), taskCompleted: false, errorTags: result.errorTags, contentTags: session.task.tags, failureCategory: null, scoreDelta: { schemaVersion: 1, correctCount: result.correctCount, incorrectCount: result.questionCount - result.correctCount, unscorableCount: 0 } },
   }
 }
 

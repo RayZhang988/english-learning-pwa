@@ -109,6 +109,7 @@ export type {
   TrainingTaskContentExhausted,
   TrainingTaskProgress,
   TrainingTaskProgressStatus,
+  TrainingUnitScore,
   TaskCompletionKind,
   TaskDurationBaseline,
   TaskDurationEstimate,
@@ -119,6 +120,13 @@ export type {
   TaskOrigin,
   TrainingModuleId,
 } from './contracts.ts'
+export {
+  assertTrainingUnitScore,
+  emptyTrainingUnitScore,
+  mergeTrainingUnitScore,
+  scoredTrainingItemCount,
+  trainingScorePercentage,
+} from './training-score.ts'
 export {
   applyExtraTrainingAttempt,
   applyLearningAttempt,

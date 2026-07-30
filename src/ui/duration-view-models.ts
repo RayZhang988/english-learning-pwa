@@ -51,11 +51,25 @@ export interface DailyEffectiveDurationSummaryViewModel {
   readonly total: DailyEffectiveDurationTotalViewModel
 }
 
+export type TrainingUnitScoreViewModel =
+  | {
+      readonly state: 'available'
+      readonly correctCount: number
+      readonly totalCount: number
+      readonly percentage: number | null
+      readonly unscorableCount: number
+    }
+  | {
+      readonly state: 'unavailable'
+      readonly reason: 'legacy-score-missing'
+    }
+
 export interface TrainingCompletionDurationViewModel {
   readonly moduleId: DurationTrainingModuleId
   readonly title: string
   readonly description: string
   readonly actualDuration: ActualEffectiveDurationViewModel
+  readonly score: TrainingUnitScoreViewModel
   /**
    * Optional completed budget snapshot. Required for new budget tasks and
    * absent for legacy tasks.

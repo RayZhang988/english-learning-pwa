@@ -23,6 +23,7 @@ import {
   initialTrainingTaskProgress,
   withBudgetAfterEffectiveTime,
 } from './training-budget.ts'
+import { emptyTrainingUnitScore, mergeTrainingUnitScore } from './training-score.ts'
 
 function withOptionalTraining(
   execution: TaskExecutionState,
@@ -55,6 +56,7 @@ export function createPlanProgress(
           excludedSeconds: 0,
           effectiveTimeSource: null,
           skipCount: 0,
+          score: emptyTrainingUnitScore(),
           startedAt: null,
           updatedAt: createdAt,
         },
@@ -408,6 +410,10 @@ export function applyPlanEvent(
     updated = withOptionalTraining(
       {
         ...execution,
+        score: mergeTrainingUnitScore(
+          execution.score,
+          event.payload.scoreDelta,
+        ),
         status:
           streamTask
             ? 'active'

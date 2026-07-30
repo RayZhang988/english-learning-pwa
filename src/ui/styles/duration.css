@@ -147,6 +147,42 @@
   overflow-wrap: anywhere;
 }
 
+.training-unit-score {
+  display: grid;
+  margin-top: 18px;
+  padding: 16px;
+  gap: 8px;
+  border: 1px solid color-mix(in srgb, var(--mint) 42%, var(--line));
+  border-radius: 18px;
+  text-align: left;
+  background: var(--mint-soft);
+}
+
+.training-unit-score__primary {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.training-unit-score__primary strong {
+  color: var(--ink);
+  font-family: var(--display-font);
+  font-size: 1.7rem;
+}
+
+.training-unit-score__primary span,
+.training-unit-score small {
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+
+.training-unit-score--unavailable {
+  border-color: var(--line);
+  background: var(--surface-muted);
+}
+
 .daily-duration-summary {
   margin-top: 28px;
   padding: 18px;

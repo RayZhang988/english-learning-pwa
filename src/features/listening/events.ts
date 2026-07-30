@@ -123,6 +123,12 @@ export function createListeningCompletedEvent(
       errorTags: result.errorTags,
       contentTags: session.task.tags,
       failureCategory: null,
+      scoreDelta: {
+        schemaVersion: 1,
+        correctCount: result.correctCount,
+        incorrectCount: result.questionCount - result.correctCount,
+        unscorableCount: 0,
+      },
     },
   }
 }
@@ -183,6 +189,12 @@ export function createListeningStreamAttemptEvent(
       errorTags: result.errorTags,
       contentTags: session.task.tags,
       failureCategory: null,
+      scoreDelta: {
+        schemaVersion: 1,
+        correctCount: result.correctCount,
+        incorrectCount: result.questionCount - result.correctCount,
+        unscorableCount: 0,
+      },
     },
   }
 }

@@ -27,6 +27,7 @@ import type {
 import {
   trainingBlockDurationLabel,
 } from '../../config/training-test-mode.ts'
+import { toTrainingUnitScoreViewModel } from './view-model.ts'
 
 const modulePresentation: Record<
   TrainingModuleId,
@@ -287,6 +288,7 @@ export function toExtraTrainingCompletionViewModel(
     description:
       '本轮额外练习已保存，不会改变今日计划 3/3 完成状态。',
     completedItemCount: session.completedItemCount,
+    score: toTrainingUnitScoreViewModel(session.score),
     actualDuration: {
       state: 'reliable',
       effectiveSeconds:

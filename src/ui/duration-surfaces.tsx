@@ -12,7 +12,47 @@ import type {
   DailyEffectiveDurationSummaryViewModel,
   TaskDurationEstimateViewModel,
   TrainingCompletionDurationViewModel,
+  TrainingUnitScoreViewModel,
 } from './duration-view-models.ts'
+
+export function TrainingUnitScore({
+  score,
+}: {
+  readonly score: TrainingUnitScoreViewModel
+}) {
+  if (score.state === 'unavailable') {
+    return (
+      <section className="training-unit-score training-unit-score--unavailable">
+        <span className="eyebrow">SCORE</span>
+        <strong>本次暂无可核验评分</strong>
+        <small>旧训练记录没有保存正确题数，系统不会用小数倒推。</small>
+      </section>
+    )
+  }
+  return (
+    <section
+      className="training-unit-score"
+      aria-label={`本次成绩：正确 ${score.correctCount} 题，共 ${score.totalCount} 道可评分题；正确率 ${
+        score.percentage === null ? '无法计算' : `${score.percentage}%`
+      }；无法评分 ${score.unscorableCount} 题。`}
+    >
+      <span className="eyebrow">SCORE</span>
+      <div className="training-unit-score__primary">
+        <strong>
+          {score.correctCount} / {score.totalCount}
+        </strong>
+        <span>
+          {score.percentage === null
+            ? '正确率无法计算'
+            : `正确率 ${score.percentage}%`}
+        </span>
+      </div>
+      {score.unscorableCount > 0 ? (
+        <small>另有 {score.unscorableCount} 题因设备或识别原因无法评分</small>
+      ) : null}
+    </section>
+  )
+}
 
 export function TaskDurationEstimate({
   estimate,
@@ -161,6 +201,7 @@ export function TrainingCompletionDurationScreen({
         <span className="eyebrow">SESSION COMPLETE</span>
         <h1>{viewModel.title}</h1>
         <p>{viewModel.description}</p>
+        <TrainingUnitScore score={viewModel.score} />
         {viewModel.trainingBudget ? (
           <TrainingBudgetProgress viewModel={viewModel.trainingBudget} />
         ) : null}

@@ -177,6 +177,7 @@ export {
   DailyEffectiveDurationSummary,
   TaskDurationEstimate,
   TrainingCompletionDurationScreen,
+  TrainingUnitScore,
 } from './duration-surfaces.tsx'
 export type {
   ActualEffectiveDurationViewModel,
@@ -186,6 +187,7 @@ export type {
   DurationTrainingModuleId,
   TaskDurationEstimateViewModel,
   TrainingCompletionDurationViewModel,
+  TrainingUnitScoreViewModel,
 } from './duration-view-models.ts'
 export type {
   AbilityDomainId,

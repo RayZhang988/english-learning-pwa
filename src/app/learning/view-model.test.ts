@@ -15,6 +15,7 @@ import {
   toTaskDurationEstimateViewModel,
   toTrainingBudgetProgressViewModel,
   toTrainingCompletionDurationViewModel,
+  toTrainingUnitScoreViewModel,
 } from './view-model.ts'
 
 function plan(): DailyPlan {
@@ -93,6 +94,25 @@ function engine() {
 }
 
 describe('learning app view-model integration', () => {
+  it('derives R7 correct/total and excludes unscorable items from percentage', () => {
+    expect(toTrainingUnitScoreViewModel({
+      schemaVersion: 1,
+      correctCount: 7,
+      incorrectCount: 3,
+      unscorableCount: 2,
+    })).toEqual({
+      state: 'available',
+      correctCount: 7,
+      totalCount: 10,
+      percentage: 70,
+      unscorableCount: 2,
+    })
+    expect(toTrainingUnitScoreViewModel(undefined)).toEqual({
+      state: 'unavailable',
+      reason: 'legacy-score-missing',
+    })
+  })
+
   it('maps all three Today tasks as startable with their own exact task ids', () => {
     const activePlan = progress()
     const taskAccess = getPlanTaskAccess(activePlan)

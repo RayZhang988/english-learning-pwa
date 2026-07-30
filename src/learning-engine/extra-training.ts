@@ -8,6 +8,7 @@ import type {
 } from './contracts.ts'
 import { EXTRA_TRAINING_EFFECTIVE_SECONDS } from './contracts.ts'
 import { classifyTimingSegment } from './timing.ts'
+import { emptyTrainingUnitScore, mergeTrainingUnitScore } from './training-score.ts'
 import { assertLocalDate, parseTimestamp } from './utils.ts'
 
 const MAX_PROCESSED_EVENT_IDS = 500
@@ -162,6 +163,7 @@ export function createExtraTrainingSession(
     excludeItemIds: [],
     priorityItemIds: normalizePriorityItemIds(input.priorityItemIds),
     completedItemCount: 0,
+    score: emptyTrainingUnitScore(),
     startedAt: input.startedAt,
     updatedAt: input.startedAt,
     endedAt: null,
@@ -209,9 +211,6 @@ export function applyExtraTrainingEvent(
   state: ExtraTrainingState,
   event: ExtraTrainingEvent,
 ): ExtraTrainingState {
-  if (event.type === 'learning.extra-training.attempt.completed.v1') {
-    throw new TypeError('Extra-training attempt evidence belongs to applyExtraTrainingAttempt')
-  }
   if (state.processedEventIds.includes(event.id)) {
     return state
   }
@@ -225,7 +224,13 @@ export function applyExtraTrainingEvent(
   }
 
   let updated: ExtraTrainingSession
-  if (event.type === 'learning.extra-training.started.v1') {
+  if (event.type === 'learning.extra-training.attempt.completed.v1') {
+    updated = {
+      ...session,
+      score: mergeTrainingUnitScore(session.score, event.payload.scoreDelta),
+      updatedAt: event.occurredAt,
+    }
+  } else if (event.type === 'learning.extra-training.started.v1') {
     if (session.status === 'finish-current-item') {
       throw new TypeError('Cannot resume after the effective budget has ended')
     }

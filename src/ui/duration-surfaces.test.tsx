@@ -129,6 +129,13 @@ describe('R3 actual effective duration honesty', () => {
         title: '这是一个用于验证动态字体换行的很长中文训练完成标题',
         description:
           '本次结果由口语模块提供，时长区域只展示可信的前台有效练习。',
+        score: {
+          state: 'available',
+          correctCount: 2,
+          totalCount: 3,
+          percentage: 67,
+          unscorableCount: 1,
+        },
         actualDuration: {
           state: 'reliable',
           effectiveSeconds: 52,

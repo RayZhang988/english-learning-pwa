@@ -94,6 +94,12 @@ describe('ProductionExtraTrainingEventSink', () => {
         errorTags: ['meaning-recall'],
         contentTags: ['day:1'],
         failureCategory: null,
+        scoreDelta: {
+          schemaVersion: 1,
+          correctCount: 0,
+          incorrectCount: 1,
+          unscorableCount: 0,
+        },
       },
     )
 
@@ -109,6 +115,14 @@ describe('ProductionExtraTrainingEventSink', () => {
         .remainingEffectiveSeconds,
     ).toBe(870)
     expect(saved?.progress.attempts).toHaveLength(1)
+    expect(
+      saved?.extraTraining?.sessions['extra-session'].score,
+    ).toEqual({
+      schemaVersion: 1,
+      correctCount: 0,
+      incorrectCount: 1,
+      unscorableCount: 0,
+    })
     expect(saved?.progress.attempts[0]).toMatchObject({
       planId: 'extra-training:2026-07-29',
       taskId: 'extra-session',

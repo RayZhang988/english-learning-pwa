@@ -797,6 +797,11 @@ export function getSpeakingSessionResult(
       answer.match?.level === 'partial' ||
       answer.match?.level === 'different',
   )
+  const correctCount = recognized.filter(
+    (answer) =>
+      answer.match?.level === 'match' ||
+      answer.match?.level === 'close',
+  ).length
   const retries = session.answers.reduce(
     (sum, answer) => sum + answer.retryCount,
     0,
@@ -804,6 +809,8 @@ export function getSpeakingSessionResult(
   return {
     promptCount: session.unit.prompts.length,
     recognizedCount: recognized.length,
+    correctCount,
+    incorrectCount: recognized.length - correctCount,
     unscorableCount: session.answers.length - recognized.length,
     performanceScore:
       performanceScore === null

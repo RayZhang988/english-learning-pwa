@@ -192,6 +192,7 @@ export function UiVisualFixture({ id }: { readonly id: UiVisualFixtureId }) {
           moduleId: 'listening',
           title: '听力训练完成',
           description: '本次练习结果已保存。这里显示的是前台有效练习，不包含后台、暂停和长时间无操作。',
+          score: { state: 'available', correctCount: 14, totalCount: 18, percentage: 78, unscorableCount: 0 },
           actualDuration: {
             state: 'reliable',
             effectiveSeconds: 247,
@@ -261,6 +262,7 @@ export function UiVisualFixture({ id }: { readonly id: UiVisualFixtureId }) {
           moduleId: 'speaking',
           title: '口语训练完成',
           description: '最后一个每日任务已经保存。',
+          score: { state: 'available', correctCount: 8, totalCount: 10, percentage: 80, unscorableCount: 1 },
           actualDuration: {
             state: 'reliable',
             effectiveSeconds: 2_734,
@@ -371,6 +373,7 @@ export function UiVisualFixture({ id }: { readonly id: UiVisualFixtureId }) {
           title: '额外听力训练完成',
           description: '这轮有效训练已经保存，不会改变今日 3/3。',
           completedItemCount: 21,
+          score: { state: 'available', correctCount: 17, totalCount: 20, percentage: 85, unscorableCount: 1 },
           actualDuration: {
             state: 'reliable',
             effectiveSeconds: 917,

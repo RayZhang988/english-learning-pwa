@@ -114,7 +114,7 @@ export class ExtraVocabularyTrainingRuntime {
     const base = this.base('learning.extra-training.item.completed.v1')
     const question = snapshot.question
     const correct = this.answerIsCorrect()
-    const attempt = { ...this.base('learning.extra-training.attempt.completed.v1'), payload: { ...base.payload, learningUnitId: snapshot.activeItem.learningUnitId, contentRef: snapshot.activeItem.contentRef, difficultyLevel: snapshot.activeItem.difficultyLevel, estimatedSeconds: 1, result: 'scored', performanceScore: correct ? 1 : 0, evidenceQuality: 1, assistanceLevel: 0, durationSeconds: 0, errorTags: correct ? [] : [question!.errorTag], contentTags: snapshot.activeItem.tags, failureCategory: null } } as ExtraTrainingEvent
+    const attempt = { ...this.base('learning.extra-training.attempt.completed.v1'), payload: { ...base.payload, learningUnitId: snapshot.activeItem.learningUnitId, contentRef: snapshot.activeItem.contentRef, difficultyLevel: snapshot.activeItem.difficultyLevel, estimatedSeconds: 1, result: 'scored', performanceScore: correct ? 1 : 0, evidenceQuality: 1, assistanceLevel: 0, durationSeconds: 0, errorTags: correct ? [] : [question!.errorTag], contentTags: snapshot.activeItem.tags, failureCategory: null, scoreDelta: { schemaVersion: 1, correctCount: correct ? 1 : 0, incorrectCount: correct ? 0 : 1, unscorableCount: 0 } } } as ExtraTrainingEvent
     const event = { ...base, payload: { ...base.payload, item: snapshot.activeItem, requestId: snapshot.activeRequestId ?? `${snapshot.session.sessionId}:supply`, nextSupplyCursor: snapshot.suppliedNextCursor ?? snapshot.activeItem.itemId } } as ExtraTrainingEvent
     const count = snapshot.session.completedItemCount + 1
     const budget = snapshot.session.status === 'finish-current-item'

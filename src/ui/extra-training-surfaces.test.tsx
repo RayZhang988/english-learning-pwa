@@ -201,6 +201,7 @@ describe('R6 completed daily plan entry', () => {
         moduleId: 'speaking',
         title: '口语训练完成',
         description: '最后一个每日必做任务已经保存。',
+        score: { state: 'available', correctCount: 8, totalCount: 10, percentage: 80, unscorableCount: 0 },
         actualDuration: {
           state: 'reliable',
           effectiveSeconds: 901,
@@ -240,6 +241,7 @@ describe('R6 completed daily plan entry', () => {
         moduleId: 'vocabulary',
         title: '词汇训练完成',
         description: '结果已保存。',
+        score: { state: 'available', correctCount: 9, totalCount: 10, percentage: 90, unscorableCount: 0 },
         actualDuration: {
           state: 'reliable',
           effectiveSeconds: 900,
@@ -648,7 +650,7 @@ describe('R6 dedicated extra-training page adapters', () => {
 })
 
 describe('R6 extra-training completion and UI guardrails', () => {
-  it('returns completion navigation intents with the original sessionId and no score UI', () => {
+  it('returns completion navigation intents with the original sessionId and exact score UI', () => {
     const onChooseAnotherRequested = vi.fn()
     const onReturnToCompletedPlan = vi.fn()
     const sessionId = 'extra:listening:complete'
@@ -659,6 +661,7 @@ describe('R6 extra-training completion and UI guardrails', () => {
         title: '额外听力训练完成',
         description: '本轮有效训练已经保存。',
         completedItemCount: 21,
+        score: { state: 'available', correctCount: 16, totalCount: 20, percentage: 80, unscorableCount: 1 },
         actualDuration: {
           state: 'reliable',
           effectiveSeconds: 917,
@@ -677,7 +680,10 @@ describe('R6 extra-training completion and UI guardrails', () => {
     expect(markup).toContain('本轮累计完成 21 题')
     expect(markup).toContain('再练 15 分钟')
     expect(markup).toContain('返回今日完成')
-    expect(markup).not.toMatch(/得分|正确率|等级/)
+    expect(markup).toContain('16 / 20')
+    expect(markup).toContain('正确率 80%')
+    expect(markup).toContain('另有 1 题')
+    expect(markup).not.toContain('等级')
 
     ;(
       buttons[0]!.props as { readonly onClick: () => void }

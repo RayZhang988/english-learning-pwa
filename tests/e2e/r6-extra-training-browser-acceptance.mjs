@@ -656,6 +656,51 @@ async function returnFromDailyModule(page, moduleId) {
       )}`,
     )
   }
+  const runtimeBeforeReturn = activeRuntime(
+    await page.dumpIndexedDb(),
+  )
+  const execution = executionFor(runtimeBeforeReturn, moduleId)
+  assert.ok(
+    execution.score,
+    `Daily ${moduleId} completion is missing the R7 score ledger.`,
+  )
+  const total =
+    execution.score.correctCount +
+    execution.score.incorrectCount
+  assert.ok(
+    total > 0 || execution.score.unscorableCount > 0,
+    `Daily ${moduleId} score contains no completed outcome.`,
+  )
+  const completionText = await page.bodyText()
+  assert.match(
+    completionText,
+    new RegExp(
+      `${execution.score.correctCount}\\s*/\\s*${total}`,
+      'u',
+    ),
+  )
+  if (total > 0) {
+    assert.match(
+      completionText,
+      new RegExp(
+        `正确率\\s*${Math.round(
+          execution.score.correctCount / total * 100,
+        )}%`,
+        'u',
+      ),
+    )
+  } else {
+    assert.match(completionText, /正确率无法计算/u)
+  }
+  if (execution.score.unscorableCount > 0) {
+    assert.match(
+      completionText,
+      new RegExp(
+        `另有\\s*${execution.score.unscorableCount}\\s*题`,
+        'u',
+      ),
+    )
+  }
   await page.clickByText('返回今日计划')
   await page.waitFor(
     `location.hash === '#/' &&
@@ -1008,6 +1053,38 @@ async function completeExtra(page, moduleId, sessionId) {
   assert.equal(completed.endReason, 'budget-reached')
   assert.equal(completed.remainingEffectiveSeconds, 0)
   assert.ok(completed.completedItemCount >= 1)
+  assert.ok(
+    completed.score,
+    `Extra ${moduleId} completion is missing the R7 score ledger.`,
+  )
+  const scoreTotal =
+    completed.score.correctCount +
+    completed.score.incorrectCount
+  assert.ok(
+    scoreTotal > 0 || completed.score.unscorableCount > 0,
+    `Extra ${moduleId} score contains no completed outcome.`,
+  )
+  const completionText = await page.bodyText()
+  assert.match(
+    completionText,
+    new RegExp(
+      `${completed.score.correctCount}\\s*/\\s*${scoreTotal}`,
+      'u',
+    ),
+  )
+  if (scoreTotal > 0) {
+    assert.match(
+      completionText,
+      new RegExp(
+        `正确率\\s*${Math.round(
+          completed.score.correctCount / scoreTotal * 100,
+        )}%`,
+        'u',
+      ),
+    )
+  } else {
+    assert.match(completionText, /正确率无法计算/u)
+  }
   return completed
 }
 

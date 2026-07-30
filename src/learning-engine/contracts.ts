@@ -233,6 +233,22 @@ export type ExtraTrainingEndReason =
   | 'device-failure'
   | 'cross-day-expired'
 
+/**
+ * Exact, additive scoring facts for one training unit.
+ *
+ * `correctCount + incorrectCount` is the only score denominator.
+ * Device, permission, network and other genuinely unscorable outcomes are
+ * retained separately and must never be presented as wrong answers.
+ * Percentage is deliberately derived instead of persisted.
+ */
+export interface TrainingUnitScore
+  extends Readonly<Record<string, PortableData>> {
+  readonly schemaVersion: 1
+  readonly correctCount: number
+  readonly incorrectCount: number
+  readonly unscorableCount: number
+}
+
 /** Independent from PlanProgress: extra sessions never become daily tasks. */
 export interface ExtraTrainingSession {
   readonly schemaVersion: 1
@@ -250,6 +266,8 @@ export interface ExtraTrainingSession {
   /** Published candidate item IDs supplied by 01/05; 04 never infers them. */
   readonly priorityItemIds?: ExtraTrainingPriorityItemIds
   readonly completedItemCount: number
+  /** Additive R7 state. Missing means a pre-R7 session. */
+  readonly score?: TrainingUnitScore
   readonly startedAt: string
   readonly updatedAt: string
   readonly endedAt: string | null
@@ -538,6 +556,8 @@ export interface TaskExecutionState {
     | 'legacy-event-duration'
     | null
   readonly skipCount: number
+  /** Additive R7 state. Missing means a pre-R7 active plan. */
+  readonly score?: TrainingUnitScore
   /** Additive state for a required continuous-training task. */
   readonly training?: TrainingTaskProgress
   readonly startedAt: string | null
@@ -729,6 +749,11 @@ export type LearningAttemptCompletedPayload = LearningEventBasePayload & {
   readonly errorTags: readonly StandardErrorTag[]
   readonly contentTags: readonly string[]
   readonly failureCategory: AttemptFailureCategory | null
+  /**
+   * Exact counts supplied by the owning training module. Optional only for
+   * pre-R7 event compatibility; new producers must publish it.
+   */
+  readonly scoreDelta?: TrainingUnitScore
 }
 
 export type LearningTimingSegmentRecordedPayload =
@@ -839,6 +864,8 @@ export type ExtraTrainingAttemptCompletedPayload =
     readonly errorTags: readonly StandardErrorTag[]
     readonly contentTags: readonly string[]
     readonly failureCategory: AttemptFailureCategory | null
+    /** Exact R7 counts; optional only for pre-R7 event compatibility. */
+    readonly scoreDelta?: TrainingUnitScore
   }
 
 type LearningPlatformEvent<

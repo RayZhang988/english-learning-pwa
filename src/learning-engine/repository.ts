@@ -5,6 +5,27 @@ export const LEARNING_ENGINE_STORAGE_NAMESPACE = 'learning.engine'
 export const LEARNING_ENGINE_STORAGE_SCHEMA_VERSION = 1
 export const LEARNING_ENGINE_STATE_KEY = 'current-state'
 
+function hasValidTrainingScore(value: unknown): boolean {
+  if (value === undefined) {
+    return true
+  }
+  if (
+    typeof value !== 'object' ||
+    value === null ||
+    Array.isArray(value)
+  ) {
+    return false
+  }
+  const score = value as Record<string, unknown>
+  return score.schemaVersion === 1 &&
+    ['correctCount', 'incorrectCount', 'unscorableCount'].every(
+      (key) =>
+        typeof score[key] === 'number' &&
+        Number.isInteger(score[key]) &&
+        (score[key] as number) >= 0,
+    )
+}
+
 function hasValidDurationSamples(progress: Record<string, unknown>): boolean {
   if (!('durationSamples' in progress)) {
     return true
@@ -110,6 +131,7 @@ function hasValidExtraTraining(value: Record<string, unknown>): boolean {
       (record.nextSupplyCursor === null || typeof record.nextSupplyCursor === 'string') &&
       Array.isArray(record.excludeItemIds) && record.excludeItemIds.every((id) => typeof id === 'string') &&
       typeof record.completedItemCount === 'number' && Number.isInteger(record.completedItemCount) && record.completedItemCount >= 0 &&
+      hasValidTrainingScore(record.score) &&
       typeof record.startedAt === 'string' && Number.isFinite(Date.parse(record.startedAt)) &&
       typeof record.updatedAt === 'string' && Number.isFinite(Date.parse(record.updatedAt)) &&
       (record.endedAt === null || (typeof record.endedAt === 'string' && Number.isFinite(Date.parse(record.endedAt))))
