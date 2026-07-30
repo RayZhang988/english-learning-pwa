@@ -46,7 +46,7 @@ describe('released scene vocabulary content source', () => {
     const installed = await source.install()
 
     expect(bank.scenes).toHaveLength(18)
-    expect(bank.scenes.flatMap((scene) => scene.questions)).toHaveLength(108)
+    expect(bank.scenes.flatMap((scene) => scene.questions)).toHaveLength(612)
     expect(installed).toMatchObject({
       packageId: SCENE_VOCABULARY_CONTENT_PACKAGE_ID,
       version: SCENE_VOCABULARY_CONTENT_PACKAGE_VERSION,

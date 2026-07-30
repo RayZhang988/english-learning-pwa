@@ -11,6 +11,8 @@ export interface SceneVocabularyPracticeScreenCallbacks {
   readonly onOptionSelected: (optionId: string) => void
   readonly onSubmit: () => void
   readonly onContinue: () => void
+  readonly onResumePrevious?: () => void
+  readonly onStartNewRound?: () => void
   /** Receives only 06's target-only playback intent; never a full sentence. */
   readonly onTargetPlayback: (
     intent: NonNullable<SceneVocabularyPracticeView['question']>['targetPlayback'],
@@ -41,14 +43,16 @@ function ProgressSummary({
   return (
     <dl className="scene-vocabulary-progress" aria-label="本场练习进度">
       <div>
-        <dt>已答</dt>
-        <dd>
-          {view.progress.answeredCount} / {view.progress.totalCount}
-        </dd>
+        <dt>已答题</dt>
+        <dd>{view.progress.answeredCount}</dd>
       </div>
       <div>
         <dt>答对</dt>
         <dd>{view.progress.correctCount}</dd>
+      </div>
+      <div>
+        <dt>正确率</dt>
+        <dd>{accuracyLabel(view.progress.accuracy)}</dd>
       </div>
     </dl>
   )
@@ -162,38 +166,6 @@ function Feedback({
   )
 }
 
-function Completion({
-  view,
-}: {
-  readonly view: SceneVocabularyPracticeView
-}) {
-  if (view.status !== 'completed') {
-    return null
-  }
-
-  return (
-    <section className="scene-vocabulary-completion" aria-live="polite">
-      <span className="scene-vocabulary-completion__mark" aria-hidden="true">
-        <Icon name="check" />
-      </span>
-      <span className="eyebrow">SCENE COMPLETE</span>
-      <h2>{view.completion?.title ?? '场景词汇练习完成'}</h2>
-      <dl>
-        <div>
-          <dt>正确数</dt>
-          <dd>
-            {view.progress.correctCount} / {view.progress.totalCount}
-          </dd>
-        </div>
-        <div>
-          <dt>正确率</dt>
-          <dd>{accuracyLabel(view.progress.accuracy)}</dd>
-        </div>
-      </dl>
-    </section>
-  )
-}
-
 export function SceneVocabularyPracticeScreen({
   presentation,
   sceneTitle = '场景词汇',
@@ -201,6 +173,8 @@ export function SceneVocabularyPracticeScreen({
   onOptionSelected,
   onSubmit,
   onContinue,
+  onResumePrevious,
+  onStartNewRound,
   onTargetPlayback,
   onRetry,
 }: SceneVocabularyPracticeScreenProps) {
@@ -229,6 +203,32 @@ export function SceneVocabularyPracticeScreen({
     )
   }
 
+  if (presentation.status === 'resume-choice') {
+    return (
+      <TrainingScreen
+        className="scene-vocabulary-screen"
+        header={header}
+        exitLabel="退出场景训练"
+        onExit={onExit}
+      >
+        <ProgressSummary view={presentation.view} />
+        <section className="scene-vocabulary-resume-choice" aria-labelledby="scene-vocabulary-resume-title">
+          <span className="eyebrow">SAVED PRACTICE</span>
+          <h2 id="scene-vocabulary-resume-title">继续上次训练？</h2>
+          <p>已保存当前题、选择和反馈状态。开始新一轮不会改动每日或额外训练记录。</p>
+          <div className="scene-vocabulary-resume-choice__actions">
+            <button className="primary-button" type="button" onClick={onResumePrevious}>
+              继续上次训练
+            </button>
+            <button className="secondary-button" type="button" onClick={onStartNewRound}>
+              开始新一轮
+            </button>
+          </div>
+        </section>
+      </TrainingScreen>
+    )
+  }
+
   const { view, recoveryNotice } = presentation
   const selected = view.question?.options.some(
     (option) => option.state === 'selected',
@@ -243,13 +243,9 @@ export function SceneVocabularyPracticeScreen({
       >
         提交答案
       </button>
-    ) : view.status === 'feedback' ? (
+    ) : (
       <button className="primary-button" type="button" onClick={onContinue}>
         继续
-      </button>
-    ) : (
-      <button className="secondary-button" type="button" onClick={onExit}>
-        返回场景训练
       </button>
     )
 
@@ -271,18 +267,12 @@ export function SceneVocabularyPracticeScreen({
         </aside>
       ) : null}
       <ProgressSummary view={view} />
-      {view.status === 'completed' ? (
-        <Completion view={view} />
-      ) : (
-        <>
-          <QuestionContent
-            view={view}
-            onOptionSelected={onOptionSelected}
-            onTargetPlayback={onTargetPlayback}
-          />
-          <Feedback view={view} />
-        </>
-      )}
+      <QuestionContent
+        view={view}
+        onOptionSelected={onOptionSelected}
+        onTargetPlayback={onTargetPlayback}
+      />
+      <Feedback view={view} />
     </TrainingScreen>
   )
 }

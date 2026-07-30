@@ -11,11 +11,11 @@ export type SceneVocabularyOptionState =
   | 'incorrect'
 
 export interface SceneVocabularyPracticeView {
-  readonly status: 'question' | 'feedback' | 'completed'
+  readonly status: 'question' | 'feedback'
   readonly progress: {
     readonly answeredCount: number
     readonly correctCount: number
-    readonly totalCount: number
+    readonly incorrectCount: number
     /** 06 owns scoring; UI only formats this already-derived ratio. */
     readonly accuracy: number | null
   }
@@ -43,9 +43,6 @@ export interface SceneVocabularyPracticeView {
     readonly correct: boolean
     readonly correctMeaningZh: string
   }
-  readonly completion?: {
-    readonly title: '场景词汇练习完成'
-  }
 }
 
 export type SceneVocabularyPracticePresentation =
@@ -66,4 +63,9 @@ export type SceneVocabularyPracticePresentation =
         readonly title: string
         readonly description: string
       }
+    }
+  | {
+      /** The route supplies this only when a durable scene session exists. */
+      readonly status: 'resume-choice'
+      readonly view: SceneVocabularyPracticeView
     }

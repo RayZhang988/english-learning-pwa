@@ -72,7 +72,7 @@ const questionView: SceneVocabularyPracticeView = {
   progress: {
     answeredCount: 2,
     correctCount: 1,
-    totalCount: 6,
+    incorrectCount: 1,
     accuracy: 0.5,
   },
   question: {
@@ -125,7 +125,9 @@ describe('SceneVocabularyPracticeScreen R13-B display contract', () => {
     expect(markup).toContain(', please?')
     expect(markup).toContain('passport 是什么意思？')
     expect(markup).toContain('护照')
-    expect(markup).toContain('已答</dt><dd>2 / 6')
+    expect(markup).toContain('已答题</dt><dd>2</dd>')
+    expect(markup).toContain('答对</dt><dd>1</dd>')
+    expect(markup).toContain('正确率</dt><dd>50%</dd>')
     expect(markup).toContain('data-target-playback="play-target-only"')
     expect(markup).not.toContain('audio-player')
     expect(markup).not.toContain('播放整句')
@@ -199,25 +201,45 @@ describe('SceneVocabularyPracticeScreen R13-B display contract', () => {
     expect(onContinue).toHaveBeenCalledTimes(1)
   })
 
-  it('renders the actual completed score and formatted accuracy, not a self-report', () => {
-    const completed: SceneVocabularyPracticeView = {
-      status: 'completed',
-      progress: {
-        answeredCount: 6,
-        correctCount: 4,
-        totalCount: 6,
-        accuracy: 4 / 6,
-      },
-      completion: { title: '场景词汇练习完成' },
-    }
+  it('renders ongoing cumulative accuracy without a pool-sized completion target', () => {
     const markup = renderToStaticMarkup(
-      SceneVocabularyPracticeScreen(props({ status: 'ready', view: completed })),
+      SceneVocabularyPracticeScreen(props({ status: 'ready', view: questionView })),
     )
 
-    expect(markup).toContain('场景词汇练习完成')
-    expect(markup).toContain('正确数</dt><dd>4 / 6')
-    expect(markup).toContain('正确率</dt><dd>67%</dd>')
+    expect(markup).not.toContain('/ 6')
+    expect(markup).not.toContain('场景词汇练习完成')
+    expect(markup).not.toContain('倒计时')
     expect(markup).not.toContain('你觉得自己答对了吗')
+  })
+
+  it('offers an explicit saved-session choice and formats zero answers as unavailable', () => {
+    const onResumePrevious = vi.fn()
+    const onStartNewRound = vi.fn()
+    const resumeView: SceneVocabularyPracticeView = {
+      ...questionView,
+      progress: {
+        answeredCount: 0,
+        correctCount: 0,
+        incorrectCount: 0,
+        accuracy: null,
+      },
+    }
+    const screen = SceneVocabularyPracticeScreen(props(
+      { status: 'resume-choice', view: resumeView },
+      { onResumePrevious, onStartNewRound },
+    ))
+    const markup = renderToStaticMarkup(screen)
+
+    expect(markup).toContain('继续上次训练？')
+    expect(markup).toContain('正确率</dt><dd>暂无</dd>')
+    expect(markup).not.toContain('/ 6')
+    const buttons = collectHostElements(screen, 'button')
+    const resume = buttons.find((element) => renderToStaticMarkup(element).includes('继续上次训练'))!
+    const newRound = buttons.find((element) => renderToStaticMarkup(element).includes('开始新一轮'))!
+    ;(resume.props as { readonly onClick: () => void }).onClick()
+    ;(newRound.props as { readonly onClick: () => void }).onClick()
+    expect(onResumePrevious).toHaveBeenCalledOnce()
+    expect(onStartNewRound).toHaveBeenCalledOnce()
   })
 
   it('shows loading, error, and restored-progress feedback supplied by the integration', () => {

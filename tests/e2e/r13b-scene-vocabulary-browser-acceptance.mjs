@@ -16,7 +16,7 @@ const routeFor = (scene) => new URL(`#/practice/scenes/${scene.categoryId}/${sce
 const speechProbe = `(() => {
   const probe = { utterances: [] }
   class Utterance { constructor(text) { this.text = String(text); this.lang = ''; this.rate = 1; this.pitch = 1 } }
-  Object.defineProperty(globalThis, '__r13bSpeechProbe', { configurable: true, value: probe })
+  Object.defineProperty(globalThis, '__r13cSpeechProbe', { configurable: true, value: probe })
   Object.defineProperty(globalThis, 'SpeechSynthesisUtterance', { configurable: true, writable: true, value: Utterance })
   Object.defineProperty(globalThis, 'speechSynthesis', { configurable: true, value: { cancel() {}, speak(utterance) { probe.utterances.push({ text: utterance.text, lang: utterance.lang, rate: utterance.rate, pitch: utterance.pitch }) }, getVoices() { return [] } } })
 })()`
@@ -30,15 +30,26 @@ async function selectMeaning(page, meaning) {
   assert.equal(selected, true, `Could not select ${meaning}`)
 }
 
-async function completeScene(page, scene) {
-  for (const question of scene.questions) {
-    await page.waitFor(`document.querySelector('.scene-vocabulary-target')?.textContent.trim() === ${JSON.stringify(question.targetText)}`)
-    await selectMeaning(page, question.correctMeaningZh)
-    await page.clickByText('提交答案')
-    await page.waitFor(`document.body.innerText.includes('回答正确')`)
-    await page.clickByText('继续')
+async function answerCurrentCorrect(page, scene) {
+  const target = await page.evaluate(`document.querySelector('.scene-vocabulary-target')?.textContent.trim()`)
+  const question = scene.questions.find((entry) => entry.targetText === target)
+  assert.ok(question, `No released question matches visible target ${target}`)
+  await selectMeaning(page, question.correctMeaningZh)
+  await page.clickByText('提交答案')
+  await page.waitFor(`document.body.innerText.includes('回答正确')`)
+  await page.clickByText('继续')
+}
+
+async function answerSeveral(page, scene, count) {
+  for (let index = 0; index < count; index += 1) {
+    await page.waitFor(`document.querySelector('.scene-vocabulary-target')`)
+    await answerCurrentCorrect(page, scene)
   }
-  await page.waitFor(`document.body.innerText.includes('正确数') && document.body.innerText.includes('6 / 6') && document.body.innerText.includes('100%')`)
+}
+
+async function resumeIfPrompted(page) {
+  const needsResume = await page.evaluate(`document.body.innerText.includes('继续上次训练？')`)
+  if (needsResume) await page.clickByText('继续上次训练')
 }
 
 const qa = await launchQaChrome({ fakeMedia: false })
@@ -59,7 +70,6 @@ try {
   for (const scene of bank.scenes) {
     await qa.page.navigate(routeFor(scene))
     await qa.page.waitFor(`document.querySelector('.scene-vocabulary-target') && !document.body.innerText.includes('内容准备中')`)
-    const first = scene.questions[0]
     const presentation = await qa.page.evaluate(`(() => ({
       sentence: document.querySelector('.scene-vocabulary-sentence')?.innerText.trim(),
       target: document.querySelector('.scene-vocabulary-target')?.innerText.trim(),
@@ -67,11 +77,12 @@ try {
       prompt: document.querySelector('#scene-vocabulary-question')?.innerText.trim(),
       optionTexts: [...document.querySelectorAll('[data-scene-vocabulary-option]')].map((node) => node.innerText.trim()),
     }))()`)
-    assert.equal(presentation.sentence, first.sentenceEn)
-    assert.equal(presentation.target, first.targetText)
+    const visible = scene.questions.find((question) => question.targetText === presentation.target)
+    assert.ok(visible, `${scene.sceneId} must show a released target`)
+    assert.equal(presentation.sentence, visible.sentenceEn)
     assert.equal(presentation.targets, 1, `${scene.sceneId} must have one highlighted target`)
-    assert.equal(presentation.prompt, `${first.targetText} 是什么意思？`)
-    assert.deepEqual([...presentation.optionTexts].sort(), [first.correctMeaningZh, ...first.distractorMeaningsZh].sort())
+    assert.equal(presentation.prompt, `${visible.targetText} 是什么意思？`)
+    assert.deepEqual([...presentation.optionTexts].sort(), [visible.correctMeaningZh, ...visible.distractorMeaningsZh].sort())
     routeResults.push(`${scene.categoryId}/${scene.sceneId}`)
   }
   assert.equal(routeResults.length, 18)
@@ -81,28 +92,48 @@ try {
   const completionScene = bank.scenes.find((scene) => scene.sceneId === 'restaurant')
   assert.ok(completionScene)
   await qa.page.navigate(routeFor(completionScene))
-  await completeScene(qa.page, completionScene)
-  checkpoint('chinese-answer-feedback-and-completion', { scene: completionScene.sceneId, progress: '6/6', accuracy: '100%' })
+  await answerSeveral(qa.page, completionScene, 6)
+  await qa.page.waitFor(`document.querySelector('.scene-vocabulary-target')`)
+  const continuousSummary = await qa.page.evaluate(`(() => ({ text: document.body.innerText, progress: document.querySelector('.scene-vocabulary-progress')?.innerText }))()`)
+  assert.match(continuousSummary.progress ?? '', /已答题\s*6/u)
+  assert.doesNotMatch(continuousSummary.text, /场景词汇练习完成|SCENE COMPLETE|倒计时|\/\s*48/u)
+  checkpoint('continuous-scene-training-after-six', { scene: completionScene.sceneId, answered: 6 })
 
   const recoveryScene = bank.scenes.find((scene) => scene.sceneId === 'taxi')
   assert.ok(recoveryScene)
   await qa.page.navigate(routeFor(recoveryScene))
-  await selectMeaning(qa.page, recoveryScene.questions[0].correctMeaningZh)
+  await qa.page.waitFor(`document.querySelector('.scene-vocabulary-target')`)
+  const recoveryTarget = await qa.page.evaluate(`document.querySelector('.scene-vocabulary-target')?.textContent.trim()`)
+  const recoveryQuestion = recoveryScene.questions.find((question) => question.targetText === recoveryTarget)
+  assert.ok(recoveryQuestion)
+  await selectMeaning(qa.page, recoveryQuestion.correctMeaningZh)
   await qa.page.reload()
-  await qa.page.waitFor(`document.querySelector('.scene-vocabulary-option--selected')?.innerText.trim() === ${JSON.stringify(recoveryScene.questions[0].correctMeaningZh)}`)
+  await qa.page.waitFor(`document.body.innerText.includes('继续上次训练？')`)
+  await resumeIfPrompted(qa.page)
+  await qa.page.waitFor(`document.querySelector('.scene-vocabulary-option--selected')?.innerText.trim() === ${JSON.stringify(recoveryQuestion.correctMeaningZh)}`)
   await qa.page.clickByText('提交答案')
   await qa.page.waitFor(`document.body.innerText.includes('回答正确')`)
   await qa.page.reload()
-  await qa.page.waitFor(`document.body.innerText.includes('回答正确') && document.body.innerText.includes(${JSON.stringify(recoveryScene.questions[0].correctMeaningZh)})`)
-  checkpoint('selection-and-feedback-recovery', { scene: recoveryScene.sceneId })
+  await qa.page.waitFor(`document.body.innerText.includes('继续上次训练？')`)
+  await resumeIfPrompted(qa.page)
+  await qa.page.waitFor(`document.body.innerText.includes('回答正确') && document.body.innerText.includes(${JSON.stringify(recoveryQuestion.correctMeaningZh)})`)
+  await qa.page.reload()
+  await qa.page.waitFor(`document.body.innerText.includes('继续上次训练？')`)
+  await qa.page.clickByText('开始新一轮')
+  await qa.page.waitFor(`document.querySelector('.scene-vocabulary-target')`)
+  const newRound = await qa.page.evaluate(`document.querySelector('.scene-vocabulary-progress')?.innerText`)
+  assert.match(newRound ?? '', /已答题\s*0/u)
+  checkpoint('selection-feedback-recovery-and-explicit-new-round', { scene: recoveryScene.sceneId })
 
   const pronunciationScene = bank.scenes.find((scene) => scene.sceneId === 'airport')
   assert.ok(pronunciationScene)
   await qa.page.navigate(routeFor(pronunciationScene))
-  const target = pronunciationScene.questions[0].targetText
+  await qa.page.waitFor(`document.querySelector('.scene-vocabulary-target')`)
+  const target = await qa.page.evaluate(`document.querySelector('.scene-vocabulary-target')?.textContent.trim()`)
+  assert.ok(pronunciationScene.questions.some((question) => question.targetText === target))
   await qa.page.evaluate(`document.querySelector('.scene-vocabulary-target')?.click()`)
-  await qa.page.waitFor(`globalThis.__r13bSpeechProbe.utterances.length === 1`)
-  const utterances = await qa.page.evaluate(`globalThis.__r13bSpeechProbe.utterances`)
+  await qa.page.waitFor(`globalThis.__r13cSpeechProbe.utterances.length === 1`)
+  const utterances = await qa.page.evaluate(`globalThis.__r13cSpeechProbe.utterances`)
   assert.deepEqual(utterances, [{ text: target, lang: 'en-US', rate: 1, pitch: 1 }])
   checkpoint('target-only-en-us-pronunciation', { target, utterances })
 
@@ -123,7 +154,7 @@ try {
 
   const serviceWorker = await qa.page.serviceWorkerSnapshot()
   assert.ok(serviceWorker.controller, 'The production Service Worker did not control the isolated page.')
-  assert.equal(serviceWorker.caches.some((cache) => cache.urls.some((url) => url.includes('scene-vocabulary-questions.v1-ChI8FAg7.json'))), true)
+  assert.equal(serviceWorker.caches.some((cache) => cache.urls.some((url) => /scene-vocabulary-questions\.v1-[A-Za-z0-9_-]+\.json/u.test(url))), true)
   await qa.page.setOffline(true)
   await qa.page.reload()
   await qa.page.waitFor(`document.querySelector('.scene-vocabulary-target') && !document.body.innerText.includes('内容准备中')`, 20_000)

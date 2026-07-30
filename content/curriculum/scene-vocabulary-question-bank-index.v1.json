@@ -13,7 +13,9 @@
   "documentationFile": "content/curriculum/scene-vocabulary-question-bank-handoff-v1.md",
   "coverage": {
     "sceneCount": 18,
-    "questionCount": 108,
-    "questionsPerScene": 6
+    "questionCount": 612,
+    "highFrequencySceneIds": ["airport", "public-transport", "hotel", "restaurant", "shopping", "medical-pharmacy"],
+    "highFrequencyQuestionsPerScene": 48,
+    "standardQuestionsPerScene": 27
   }
 }

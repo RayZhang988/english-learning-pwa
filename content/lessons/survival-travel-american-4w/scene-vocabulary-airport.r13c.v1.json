@@ -1,0 +1,733 @@
+{
+  "schemaVersion": 1,
+  "documentType": "scene-vocabulary-question-fragment",
+  "contentVersion": "1.0.0",
+  "bankId": "r13b-travel-scene-vocabulary",
+  "baseQuestionBankFile": "content/lessons/survival-travel-american-4w/scene-vocabulary-questions.v1.json",
+  "scene": {
+    "sceneId": "airport",
+    "categoryId": "airport-flight",
+    "titleZh": "机场",
+    "questions": [
+      {
+        "questionId": "r13b-vocabulary-airport-q01",
+        "sentenceEn": "Please show your passport at the check-in counter.",
+        "targetText": "passport",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "护照",
+        "distractorMeaningsZh": [
+          "登机口",
+          "行李",
+          "安检"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13b-source-airport-q01",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q02",
+        "sentenceEn": "The check-in counter opens three hours before departure.",
+        "targetText": "counter",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "柜台",
+        "distractorMeaningsZh": [
+          "护照",
+          "登机口",
+          "行李"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13b-source-airport-q02",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q03",
+        "sentenceEn": "Put your luggage on the scale, please.",
+        "targetText": "luggage",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "行李",
+        "distractorMeaningsZh": [
+          "护照",
+          "柜台",
+          "登机口"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13b-source-airport-q03",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q04",
+        "sentenceEn": "Boarding starts at Gate 24 in ten minutes.",
+        "targetText": "Boarding",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "登机",
+        "distractorMeaningsZh": [
+          "护照",
+          "柜台",
+          "行李"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13b-source-airport-q04",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q05",
+        "sentenceEn": "Your departure gate is now 18.",
+        "targetText": "gate",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "登机口",
+        "distractorMeaningsZh": [
+          "柜台",
+          "行李",
+          "安检"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13b-source-airport-q05",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q06",
+        "sentenceEn": "Remove your laptop before the security check.",
+        "targetText": "security",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "安检",
+        "distractorMeaningsZh": [
+          "护照",
+          "登机",
+          "登机口"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13b-source-airport-q06",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q07",
+        "sentenceEn": "Please show your boarding pass before you board.",
+        "targetText": "boarding pass",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "登机牌",
+        "distractorMeaningsZh": [
+          "出发",
+          "安检检查点",
+          "转机柜台"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q07",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q08",
+        "sentenceEn": "Which airline is operating this flight?",
+        "targetText": "airline",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "航空公司",
+        "distractorMeaningsZh": [
+          "到达大厅",
+          "安检检查",
+          "延误"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q08",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q09",
+        "sentenceEn": "Please check the flight number on the departure board.",
+        "targetText": "flight number",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "航班号",
+        "distractorMeaningsZh": [
+          "航站楼",
+          "随身行李",
+          "取消"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q09",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q10",
+        "sentenceEn": "What time is the departure for Chicago?",
+        "targetText": "departure",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "出发",
+        "distractorMeaningsZh": [
+          "办理登机手续",
+          "托运行李",
+          "行程单"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q10",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q11",
+        "sentenceEn": "My family is waiting in the arrival hall.",
+        "targetText": "arrival hall",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "到达大厅",
+        "distractorMeaningsZh": [
+          "自助服务机",
+          "行李牌",
+          "身份证明"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q11",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q12",
+        "sentenceEn": "Which terminal does this flight leave from?",
+        "targetText": "terminal",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "航站楼",
+        "distractorMeaningsZh": [
+          "队伍",
+          "秤",
+          "旅行证件"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q12",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q13",
+        "sentenceEn": "Online check-in is available twenty-four hours before departure.",
+        "targetText": "check-in",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "办理登机手续",
+        "distractorMeaningsZh": [
+          "出发航班显示屏",
+          "座位分配",
+          "签证"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q13",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q14",
+        "sentenceEn": "You can print your boarding pass at the kiosk.",
+        "targetText": "kiosk",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "自助服务机",
+        "distractorMeaningsZh": [
+          "到达航班显示屏",
+          "登机组别",
+          "海关"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q14",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q15",
+        "sentenceEn": "Please join the queue for security screening.",
+        "targetText": "queue",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "队伍",
+        "distractorMeaningsZh": [
+          "候机休息室",
+          "靠过道座位",
+          "入境检查"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q15",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q16",
+        "sentenceEn": "The departure board shows a gate change.",
+        "targetText": "departure board",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "出发航班显示屏",
+        "distractorMeaningsZh": [
+          "安检检查点",
+          "靠窗座位",
+          "接驳车"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q16",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q17",
+        "sentenceEn": "Check the arrival board for your friend’s flight.",
+        "targetText": "arrival board",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "到达航班显示屏",
+        "distractorMeaningsZh": [
+          "安检检查",
+          "头顶行李舱",
+          "轮椅"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q17",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q18",
+        "sentenceEn": "The lounge is open to passengers with this ticket.",
+        "targetText": "lounge",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "候机休息室",
+        "distractorMeaningsZh": [
+          "随身行李",
+          "转机航班",
+          "问讯处"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q18",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q19",
+        "sentenceEn": "The security checkpoint is straight ahead.",
+        "targetText": "security checkpoint",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "安检检查点",
+        "distractorMeaningsZh": [
+          "托运行李",
+          "转机柜台",
+          "护照"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q19",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q20",
+        "sentenceEn": "Screening may take longer during the morning rush.",
+        "targetText": "screening",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "安检检查",
+        "distractorMeaningsZh": [
+          "行李牌",
+          "延误",
+          "柜台"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q20",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q21",
+        "sentenceEn": "Is this carry-on small enough for the cabin?",
+        "targetText": "carry-on",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "随身行李",
+        "distractorMeaningsZh": [
+          "秤",
+          "取消",
+          "行李"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q21",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q22",
+        "sentenceEn": "Your checked bag will go to the final destination.",
+        "targetText": "checked bag",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "托运行李",
+        "distractorMeaningsZh": [
+          "座位分配",
+          "行程单",
+          "登机"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q22",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q23",
+        "sentenceEn": "Keep the baggage tag until you collect your suitcase.",
+        "targetText": "baggage tag",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "行李牌",
+        "distractorMeaningsZh": [
+          "登机组别",
+          "身份证明",
+          "登机口"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q23",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q24",
+        "sentenceEn": "Please place your suitcase on the scale.",
+        "targetText": "scale",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "秤",
+        "distractorMeaningsZh": [
+          "靠过道座位",
+          "旅行证件",
+          "安检"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q24",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q25",
+        "sentenceEn": "Your seat assignment is printed on the boarding pass.",
+        "targetText": "seat assignment",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "座位分配",
+        "distractorMeaningsZh": [
+          "靠窗座位",
+          "签证",
+          "登机牌"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q25",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q26",
+        "sentenceEn": "Your boarding group will be called soon.",
+        "targetText": "boarding group",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "登机组别",
+        "distractorMeaningsZh": [
+          "头顶行李舱",
+          "海关",
+          "航空公司"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q26",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q27",
+        "sentenceEn": "Could I change to an aisle seat?",
+        "targetText": "aisle seat",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "靠过道座位",
+        "distractorMeaningsZh": [
+          "转机航班",
+          "入境检查",
+          "航班号"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q27",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q28",
+        "sentenceEn": "My child would prefer a window seat.",
+        "targetText": "window seat",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "靠窗座位",
+        "distractorMeaningsZh": [
+          "转机柜台",
+          "接驳车",
+          "出发"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q28",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q29",
+        "sentenceEn": "Please put your backpack in the overhead bin.",
+        "targetText": "overhead bin",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "头顶行李舱",
+        "distractorMeaningsZh": [
+          "延误",
+          "轮椅",
+          "到达大厅"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q29",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q30",
+        "sentenceEn": "I have a short connection in Denver.",
+        "targetText": "connection",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "转机航班",
+        "distractorMeaningsZh": [
+          "取消",
+          "问讯处",
+          "航站楼"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q30",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q31",
+        "sentenceEn": "Ask the transfer desk about your next flight.",
+        "targetText": "transfer desk",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "转机柜台",
+        "distractorMeaningsZh": [
+          "行程单",
+          "护照",
+          "办理登机手续"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q31",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q32",
+        "sentenceEn": "The delay is expected to last thirty minutes.",
+        "targetText": "delay",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "延误",
+        "distractorMeaningsZh": [
+          "身份证明",
+          "柜台",
+          "自助服务机"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q32",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q33",
+        "sentenceEn": "The airline sent an email about the cancellation.",
+        "targetText": "cancellation",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "取消",
+        "distractorMeaningsZh": [
+          "旅行证件",
+          "行李",
+          "队伍"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q33",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q34",
+        "sentenceEn": "My itinerary includes two flights and a train.",
+        "targetText": "itinerary",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "行程单",
+        "distractorMeaningsZh": [
+          "签证",
+          "登机",
+          "出发航班显示屏"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q34",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q35",
+        "sentenceEn": "Please present identification at the counter.",
+        "targetText": "identification",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "身份证明",
+        "distractorMeaningsZh": [
+          "海关",
+          "登机口",
+          "到达航班显示屏"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q35",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q36",
+        "sentenceEn": "Keep your travel document with your passport.",
+        "targetText": "travel document",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "旅行证件",
+        "distractorMeaningsZh": [
+          "入境检查",
+          "安检",
+          "候机休息室"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q36",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q37",
+        "sentenceEn": "Do I need a visa for this destination?",
+        "targetText": "visa",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "签证",
+        "distractorMeaningsZh": [
+          "接驳车",
+          "登机牌",
+          "安检检查点"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q37",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q38",
+        "sentenceEn": "After baggage claim, follow the signs for customs.",
+        "targetText": "customs",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "海关",
+        "distractorMeaningsZh": [
+          "轮椅",
+          "航空公司",
+          "安检检查"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q38",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q39",
+        "sentenceEn": "Immigration is located after passport control.",
+        "targetText": "immigration",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "入境检查",
+        "distractorMeaningsZh": [
+          "问讯处",
+          "航班号",
+          "随身行李"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q39",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q40",
+        "sentenceEn": "The shuttle leaves every fifteen minutes.",
+        "targetText": "shuttle",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "接驳车",
+        "distractorMeaningsZh": [
+          "护照",
+          "出发",
+          "托运行李"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q40",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q41",
+        "sentenceEn": "Could I request a wheelchair at the gate?",
+        "targetText": "wheelchair",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "轮椅",
+        "distractorMeaningsZh": [
+          "柜台",
+          "到达大厅",
+          "行李牌"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q41",
+          "rights": "original-project-content"
+        }
+      },
+      {
+        "questionId": "r13b-vocabulary-airport-q42",
+        "sentenceEn": "The information desk can help you find your gate.",
+        "targetText": "information desk",
+        "targetOccurrence": 1,
+        "correctMeaningZh": "问讯处",
+        "distractorMeaningsZh": [
+          "行李",
+          "航站楼",
+          "秤"
+        ],
+        "source": {
+          "kind": "project-authored-controlled-text",
+          "sourceId": "r13c-source-airport-q42",
+          "rights": "original-project-content"
+        }
+      }
+    ]
+  },
+  "coverage": {
+    "targetCount": 42,
+    "minimumTargetCount": 42,
+    "source": "r13c-airport-authored-static"
+  }
+}

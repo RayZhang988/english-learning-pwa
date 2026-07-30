@@ -58,13 +58,13 @@ function runtimeFor(
   })
 }
 
-describe('R13-B scene vocabulary practice runtime', () => {
-  it('accepts the released 18-scene, 108-question bank and rejects a forbidden sentence translation contract', async () => {
+describe('R13-C scene vocabulary practice runtime', () => {
+  it('accepts the released 18-scene, 612-question bank and rejects a forbidden sentence translation contract', async () => {
     const bank = await loadReleasedSceneBank()
 
     expect(bank.scenes).toHaveLength(18)
-    expect(bank.scenes.flatMap((scene) => scene.questions)).toHaveLength(108)
-    expect(bank.getScene('health', 'medical-pharmacy')?.questions).toHaveLength(6)
+    expect(bank.scenes.flatMap((scene) => scene.questions)).toHaveLength(612)
+    expect(bank.getScene('health', 'medical-pharmacy')?.questions).toHaveLength(48)
     expect(bank.interaction.sentenceTranslationAllowed).toBe(false)
 
     const invalid = JSON.parse(await readFile(
@@ -88,23 +88,28 @@ describe('R13-B scene vocabulary practice runtime', () => {
 
     const view = runtime.toView()
     expect(view.status).toBe('question')
-    expect(view.progress).toEqual({
+    expect(view.progress).toMatchObject({
       answeredCount: 0,
       correctCount: 0,
-      totalCount: 6,
+      incorrectCount: 0,
+      totalCount: 48,
       accuracy: null,
     })
+    const question = bank.getScene('airport-flight', 'airport')!.questions.find(
+      (entry) => entry.questionId === view.question?.questionId,
+    )!
+    const targetIndex = question.sentenceEn.indexOf(question.targetText)
     expect(view.question).toMatchObject({
-      questionId: 'r13b-vocabulary-airport-q01',
+      questionId: question.questionId,
       promptZh: '这个词是什么意思？',
       sentenceEn: {
-        beforeTarget: 'Please show your ',
-        targetText: 'passport',
-        afterTarget: ' at the check-in counter.',
+        beforeTarget: question.sentenceEn.slice(0, targetIndex),
+        targetText: question.targetText,
+        afterTarget: question.sentenceEn.slice(targetIndex + question.targetText.length),
       },
       targetPlayback: {
         intent: 'play-target-only',
-        text: 'passport',
+        text: question.targetText,
         locale: 'en-US',
       },
     })
@@ -119,9 +124,9 @@ describe('R13-B scene vocabulary practice runtime', () => {
     await runtime.initialize()
     const scene = bank.getScene('airport-flight', 'airport')!
 
-    for (let index = 0; index < scene.questions.length; index += 1) {
+    for (let index = 0; index < 6; index += 1) {
       const before = runtime.toView()
-      const question = scene.questions[index]!
+      const question = scene.questions.find((entry) => entry.questionId === before.question!.questionId)!
       const selected = index === 1
         ? before.question!.options.find((option) => option.labelZh !== question.correctMeaningZh)!
         : before.question!.options.find((option) => option.labelZh === question.correctMeaningZh)!
@@ -135,20 +140,20 @@ describe('R13-B scene vocabulary practice runtime', () => {
       await runtime.advance()
     }
 
-    const completed = runtime.toView()
-    expect(completed).toEqual({
-      status: 'completed',
+    const continued = runtime.toView()
+    expect(continued).toMatchObject({
+      status: 'question',
       progress: {
         answeredCount: 6,
         correctCount: 5,
-        totalCount: 6,
+        incorrectCount: 1,
+        totalCount: 48,
         accuracy: 5 / 6,
       },
-      completion: { title: '场景词汇练习完成' },
     })
     const persisted = [...repository.records.values()][0]!
     expect(persisted.answers).toHaveLength(6)
-    expect('correctCount' in persisted).toBe(false)
+    expect(persisted.correctCount).toBe(5)
   })
 
   it('restores a selected answer and refuses tampered progress that does not match the released order or option ids', async () => {
@@ -184,5 +189,54 @@ describe('R13-B scene vocabulary practice runtime', () => {
     await expect(runtime.select('self-reported-correct')).rejects.toThrow(VocabularyError)
     await expect(runtime.submit()).rejects.toThrow(VocabularyError)
     await expect(runtime.advance()).rejects.toThrow(VocabularyError)
+  })
+
+  it('uses every released airport question once per round, restores the same cursor, and rotates without an immediate repeat', async () => {
+    const bank = await loadReleasedSceneBank()
+    const repository = new MemoryScenePracticeRepository()
+    const first = runtimeFor(bank, repository)
+    await first.initialize()
+    const firstRound: string[] = []
+    for (let index = 0; index < 48; index += 1) {
+      const view = first.toView()
+      firstRound.push(view.question!.questionId)
+      const question = bank.getScene('airport-flight', 'airport')!.questions.find((entry) => entry.questionId === view.question!.questionId)!
+      await first.select(view.question!.options.find((option) => option.labelZh === question.correctMeaningZh)!.id)
+      await first.submit(); await first.advance()
+    }
+    expect(new Set(firstRound).size).toBe(48)
+    const next = first.toView().question!.questionId
+    expect(firstRound.slice(-3)).not.toContain(next)
+    const restored = runtimeFor(bank, repository)
+    await restored.initialize()
+    expect(restored.toView().question!.questionId).toBe(next)
+    expect(restored.toView().progress).toMatchObject({ answeredCount: 48, correctCount: 48, incorrectCount: 0, accuracy: 1 })
+    await first.exit(); await first.exit()
+    expect(first.currentSnapshot?.answers).toHaveLength(48)
+    await first.startNewRound(); await first.startNewRound()
+    expect(first.toView().progress.answeredCount).toBe(0)
+    expect(first.currentSnapshot?.priorRounds).toContainEqual(
+      expect.objectContaining({ answeredCount: 48, correctCount: 48 }),
+    )
+  })
+
+  it('keeps corrupt or drifted scene snapshots isolated so a retry cannot mutate daily or extra-training state', async () => {
+    const bank = await loadReleasedSceneBank()
+    const repository = new MemoryScenePracticeRepository()
+    const first = runtimeFor(bank, repository)
+    await first.initialize()
+    const snapshot = first.currentSnapshot!
+    repository.records.set(snapshot.sessionId, {
+      ...snapshot,
+      currentQuestionId: 'removed-by-content-drift',
+    })
+
+    const retry = runtimeFor(bank, repository)
+    await expect(retry.initialize()).rejects.toThrowError(
+      expect.objectContaining({ code: 'session-recovery-invalid' }),
+    )
+    expect(repository.records.get(snapshot.sessionId)).toMatchObject({
+      currentQuestionId: 'removed-by-content-drift',
+    })
   })
 })

@@ -46,7 +46,7 @@
       "additionalProperties": false,
       "required": ["questionId", "sentenceEn", "targetText", "targetOccurrence", "correctMeaningZh", "distractorMeaningsZh", "source"],
       "properties": {
-        "questionId": {"type": "string", "pattern": "^r13b-vocabulary-[a-z0-9-]+-q[0-9]{2}$"},
+        "questionId": {"type": "string", "pattern": "^r13[bc]-vocabulary-[a-z0-9-]+-q[0-9]{2}$"},
         "sentenceEn": {"type": "string", "minLength": 1},
         "targetText": {"type": "string", "minLength": 1},
         "targetOccurrence": {"const": 1},
@@ -58,7 +58,7 @@
           "required": ["kind", "sourceId", "rights"],
           "properties": {
             "kind": {"const": "project-authored-controlled-text"},
-            "sourceId": {"type": "string", "pattern": "^r13b-source-[a-z0-9-]+-q[0-9]{2}$"},
+            "sourceId": {"type": "string", "pattern": "^r13(?:b-source-[a-z0-9-]+-q|c-[a-z0-9-]+(?:-q)?)[0-9]{2}$"},
             "rights": {"const": "original-project-content"}
           }
         }

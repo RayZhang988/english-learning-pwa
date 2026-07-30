@@ -34,6 +34,8 @@ interface SceneVocabularyRouteState {
   readonly snapshot?: SceneVocabularyPracticeSnapshot
   readonly error?: Error
   readonly restored: boolean
+  /** Deliberate entry choice for a durable scene-only session. */
+  readonly resumeChoice?: boolean
   /** Mirrors a durable select intent until 06 returns its persisted snapshot. */
   readonly pendingSelectedOptionId?: string
 }
@@ -67,6 +69,10 @@ function recoveryNotice(snapshot: SceneVocabularyPracticeSnapshot) {
     title: '已恢复上次练习',
     description: `已答 ${snapshot.answers.length} 题，继续完成本场练习。`,
   }
+}
+
+function hasResumableSceneProgress(snapshot: SceneVocabularyPracticeSnapshot): boolean {
+  return snapshot.answers.length > 0 || snapshot.selectedOptionId !== null
 }
 
 /**
@@ -127,7 +133,8 @@ export function SceneVocabularyPracticeRouteHost({
           identity,
           loading: false,
           snapshot,
-          restored: snapshot.answers.length > 0,
+          restored: hasResumableSceneProgress(snapshot),
+          resumeChoice: hasResumableSceneProgress(snapshot),
         })
       },
       (reason: unknown) => {
@@ -182,6 +189,7 @@ export function SceneVocabularyPracticeRouteHost({
                 ...current,
                 snapshot,
                 loading: false,
+                resumeChoice: false,
                 pendingSelectedOptionId: undefined,
               }
             : current,
@@ -219,7 +227,41 @@ export function SceneVocabularyPracticeRouteHost({
   const exitPath = categoryId
     ? `/practice/scenes/${encodeURIComponent(categoryId)}`
     : '/practice/scenes'
-  const onExit = () => navigate(exitPath)
+  const exitPendingRef = useRef(false)
+  const onExit = () => {
+    if (exitPendingRef.current) {
+      return
+    }
+    exitPendingRef.current = true
+    const token = identity
+      ? lifecycleRef.current.currentFor(identity)
+      : undefined
+    if (!token) {
+      exitPendingRef.current = false
+      navigate(exitPath)
+      return
+    }
+    void runtime?.exit().then(
+      () => {
+        if (lifecycleRef.current.isCurrent(token)) {
+          navigate(exitPath)
+        }
+      },
+      (reason: unknown) => {
+        exitPendingRef.current = false
+        if (lifecycleRef.current.isCurrent(token)) {
+          setRouteState((current) => current.identity === token.identity
+            ? {
+                ...current,
+                error: reason instanceof Error
+                  ? reason
+                  : new Error(errorMessage(reason)),
+              }
+            : current)
+        }
+      },
+    )
+  }
 
   if (!isKnownScene || !runtime || !categoryId || !sceneId) {
     return (
@@ -276,6 +318,23 @@ export function SceneVocabularyPracticeRouteHost({
           },
         }
       : view
+
+  if (routeState.resumeChoice) {
+    return <SceneVocabularyPracticeScreen
+      presentation={{ status: 'resume-choice', view: displayView }}
+      sceneTitle={routeScene.scene.title}
+      onExit={onExit}
+      onOptionSelected={() => undefined}
+      onSubmit={() => undefined}
+      onContinue={() => undefined}
+      onResumePrevious={() => setRouteState((current) =>
+        current.identity === identity
+          ? { ...current, resumeChoice: false }
+          : current)}
+      onStartNewRound={() => run(() => runtime.startNewRound())}
+      onTargetPlayback={() => undefined}
+    />
+  }
 
   return <SceneVocabularyPracticeScreen
     presentation={{
