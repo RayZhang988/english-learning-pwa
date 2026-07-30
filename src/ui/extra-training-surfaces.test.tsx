@@ -293,8 +293,8 @@ describe('R6 module picker intents and states', () => {
     expect(markup).toContain('data-module-id="vocabulary"')
     expect(markup).toContain('data-module-id="listening"')
     expect(markup).toContain('data-module-id="speaking"')
-    expect(markup).toContain('累计有效练习')
-    expect(markup).toContain('166 秒')
+    expect(markup).not.toContain('累计有效练习')
+    expect(markup).not.toContain('166 秒')
     expect(markup).toContain('累计完成')
     expect(markup).toContain('5 题')
 
@@ -340,7 +340,7 @@ describe('R6 module picker intents and states', () => {
         newRoundAction: { label: '开始新一轮' },
       },
       '正在进行',
-      '399 秒',
+      '8 题',
     ],
     [
       {
@@ -543,6 +543,8 @@ describe('R6 dedicated extra-training page adapters', () => {
       expect(markup).toContain('不会改变今日 3/3 完成状态')
       expect(markup).toContain('不限时额外训练')
       expect(markup).toContain('累计完成')
+      expect(markup).not.toContain('累计有效练习')
+      expect(markup).not.toContain('data-effective-seconds')
       expect(markup).not.toContain('完成每日任务')
     }
     expect(vocabularyMarkup).toContain(

@@ -291,16 +291,10 @@ export function ExtraTrainingPickerScreen({
                     <dd>主动退出</dd>
                   </div>
                   {hasProgress(module) ? (
-                    <>
-                      <div>
-                        <dt>累计有效练习</dt>
-                        <dd>{module.effectiveSeconds} 秒</dd>
-                      </div>
-                      <div>
-                        <dt>累计完成</dt>
-                        <dd>{module.completedItemCount} 题</dd>
-                      </div>
-                    </>
+                    <div>
+                      <dt>累计完成</dt>
+                      <dd>{module.completedItemCount} 题</dd>
+                    </div>
                   ) : module.status === 'expired' ? (
                     <div>
                       <dt>上次累计</dt>
