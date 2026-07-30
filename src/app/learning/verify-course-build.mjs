@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { readdir, readFile } from 'node:fs/promises'
 import '../../../content/curriculum/validate-listening-bilingual-options.v1.mjs'
+import '../../../content/curriculum/validate-scene-vocabulary-question-bank.v1.mjs'
 
 const distUrl = new URL('../../../dist/', import.meta.url)
 const expectedCourseAssets = [
@@ -24,6 +25,7 @@ const expectedCourseAssets = [
     directory: 'content/curriculum/',
     prefix: 'training-supply-index.v1-',
   },
+  { directory: 'assets/', prefix: 'scene-vocabulary-questions.v1-' },
   { directory: 'assets/', prefix: 'listening-exercises.v1-' },
   {
     directory: 'assets/',
