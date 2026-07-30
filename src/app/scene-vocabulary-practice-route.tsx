@@ -36,6 +36,8 @@ interface SceneVocabularyRouteState {
   readonly restored: boolean
   /** Deliberate entry choice for a durable scene-only session. */
   readonly resumeChoice?: boolean
+  readonly invalidSnapshotRecoveryConfirmation?: boolean
+  readonly invalidSnapshotRecoveryBusy?: boolean
   /** Mirrors a durable select intent until 06 returns its persisted snapshot. */
   readonly pendingSelectedOptionId?: string
 }
@@ -73,6 +75,11 @@ function recoveryNotice(snapshot: SceneVocabularyPracticeSnapshot) {
 
 function hasResumableSceneProgress(snapshot: SceneVocabularyPracticeSnapshot): boolean {
   return snapshot.answers.length > 0 || snapshot.selectedOptionId !== null
+}
+
+function isInvalidSnapshotError(error: Error | undefined): boolean {
+  return (error as { readonly code?: unknown } | undefined)?.code ===
+    'session-recovery-invalid'
 }
 
 /**
@@ -159,6 +166,7 @@ export function SceneVocabularyPracticeRouteHost({
     operation: () => Promise<SceneVocabularyPracticeSnapshot>,
     options: {
       readonly allowAfterSelection?: boolean
+      readonly preserveError?: boolean
       readonly onSettled?: () => void
     } = {},
   ): boolean => {
@@ -173,11 +181,13 @@ export function SceneVocabularyPracticeRouteHost({
       return false
     }
     operationCountsRef.current.set(token.generation, queued + 1)
-    setRouteState((current) =>
-      current.identity === token.identity
-        ? { ...current, error: undefined }
-        : current,
-    )
+    if (!options.preserveError) {
+      setRouteState((current) =>
+        current.identity === token.identity
+          ? { ...current, error: undefined }
+          : current,
+      )
+    }
     void operation().then(
       (snapshot) => {
         if (!lifecycleRef.current.isCurrent(token)) {
@@ -188,8 +198,11 @@ export function SceneVocabularyPracticeRouteHost({
             ? {
                 ...current,
                 snapshot,
+                error: undefined,
                 loading: false,
                 resumeChoice: false,
+                invalidSnapshotRecoveryConfirmation: false,
+                invalidSnapshotRecoveryBusy: false,
                 pendingSelectedOptionId: undefined,
               }
             : current,
@@ -206,6 +219,7 @@ export function SceneVocabularyPracticeRouteHost({
                 error: reason instanceof Error
                   ? reason
                   : new Error(errorMessage(reason)),
+                invalidSnapshotRecoveryBusy: false,
               }
             : current,
         )
@@ -287,10 +301,20 @@ export function SceneVocabularyPracticeRouteHost({
     />
   }
   if (routeState.error || !routeState.snapshot) {
+    const invalidSnapshot = isInvalidSnapshotError(routeState.error)
     return <SceneVocabularyPracticeScreen
       presentation={{
         status: 'error',
-        description: routeState.error?.message ?? '场景词汇练习暂时无法恢复。',
+        title: invalidSnapshot ? '无法恢复此场景训练' : undefined,
+        description: invalidSnapshot
+          ? '此场景保存的训练数据不完整或已与当前课程不匹配。不会自动删除它。'
+          : routeState.error?.message ?? '场景词汇练习暂时无法恢复。',
+        invalidSnapshotRecovery: invalidSnapshot
+          ? {
+              confirming: routeState.invalidSnapshotRecoveryConfirmation === true,
+              busy: routeState.invalidSnapshotRecoveryBusy === true,
+            }
+          : undefined,
       }}
       sceneTitle={routeScene.scene.title}
       onExit={onExit}
@@ -298,7 +322,33 @@ export function SceneVocabularyPracticeRouteHost({
       onSubmit={() => undefined}
       onContinue={() => undefined}
       onTargetPlayback={() => undefined}
-      onRetry={() => setRetryRevision((current) => current + 1)}
+      onRetry={invalidSnapshot
+        ? undefined
+        : () => setRetryRevision((current) => current + 1)}
+      onRequestInvalidSnapshotRestart={() => setRouteState((current) =>
+        current.identity === identity
+          ? { ...current, invalidSnapshotRecoveryConfirmation: true }
+          : current)}
+      onCancelInvalidSnapshotRestart={() => setRouteState((current) =>
+        current.identity === identity
+          ? { ...current, invalidSnapshotRecoveryConfirmation: false }
+          : current)}
+      onConfirmInvalidSnapshotRestart={() => {
+        if (!routeState.invalidSnapshotRecoveryConfirmation || routeState.invalidSnapshotRecoveryBusy) {
+          return
+        }
+        setRouteState((current) => current.identity === identity
+          ? { ...current, invalidSnapshotRecoveryBusy: true }
+          : current)
+        if (!run(
+          () => runtime.restartAfterInvalidSnapshot(),
+          { preserveError: true },
+        )) {
+          setRouteState((current) => current.identity === identity
+            ? { ...current, invalidSnapshotRecoveryBusy: false }
+            : current)
+        }
+      }}
     />
   }
 

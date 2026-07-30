@@ -3,10 +3,13 @@
 import { readFile } from 'node:fs/promises'
 import { describe, expect, it } from 'vitest'
 import { createStaticDataSource } from '../../core/testing/index.ts'
+import { localStorageService } from '../../storage/index.ts'
 import { VocabularyError } from './errors.ts'
 import {
   createSceneVocabularyQuestionBank,
   SceneVocabularyPracticeRuntime,
+  StoredSceneVocabularyPracticeRepository,
+  SCENE_VOCABULARY_STORAGE_NAMESPACE,
   type SceneVocabularyPracticeRepository,
   type SceneVocabularyPracticeSnapshot,
 } from './scene-vocabulary-practice.ts'
@@ -22,6 +25,8 @@ async function loadReleasedSceneBank() {
 
 class MemoryScenePracticeRepository implements SceneVocabularyPracticeRepository {
   readonly records = new Map<string, SceneVocabularyPracticeSnapshot>()
+  discardCount = 0
+  discardFailure: Error | undefined
 
   async load(sessionId: string): Promise<SceneVocabularyPracticeSnapshot | undefined> {
     return this.records.get(sessionId)
@@ -31,7 +36,11 @@ class MemoryScenePracticeRepository implements SceneVocabularyPracticeRepository
     this.records.set(snapshot.sessionId, structuredClone(snapshot))
   }
 
-  async delete(sessionId: string): Promise<void> {
+  async discardInvalidSnapshot(sessionId: string): Promise<void> {
+    this.discardCount += 1
+    if (this.discardFailure) {
+      throw this.discardFailure
+    }
     this.records.delete(sessionId)
   }
 }
@@ -58,7 +67,32 @@ function runtimeFor(
   })
 }
 
+function legacyOptionId(questionId: string, position: number): string {
+  return `${questionId}:meaning:${position + 1}`
+}
+
 describe('R13-C scene vocabulary practice runtime', () => {
+  it('stores and discards only the explicitly named corrupt scene record', async () => {
+    const store = localStorageService.namespace(SCENE_VOCABULARY_STORAGE_NAMESPACE)
+    const repository = new StoredSceneVocabularyPracticeRepository(store)
+    const currentId = 'r13b-scene-vocabulary:airport-flight:airport'
+    const otherId = 'r13b-scene-vocabulary:city-transport:taxi'
+    await store.clear()
+    await store.put(`session:${currentId}`, { incomplete: true }, 2)
+    await store.put(`session:${otherId}`, { preserved: true }, 2)
+
+    await expect(repository.load(currentId)).rejects.toThrowError(
+      expect.objectContaining({ code: 'session-recovery-invalid' }),
+    )
+    await Promise.all([
+      repository.discardInvalidSnapshot(currentId),
+      repository.discardInvalidSnapshot(currentId),
+    ])
+    expect(await store.get(`session:${currentId}`)).toBeUndefined()
+    expect((await store.get(`session:${otherId}`))?.value).toEqual({ preserved: true })
+    await store.clear()
+  })
+
   it('accepts the released 18-scene, 612-question bank and rejects a forbidden sentence translation contract', async () => {
     const bank = await loadReleasedSceneBank()
 
@@ -238,5 +272,136 @@ describe('R13-C scene vocabulary practice runtime', () => {
     expect(repository.records.get(snapshot.sessionId)).toMatchObject({
       currentQuestionId: 'removed-by-content-drift',
     })
+  })
+
+  it('only clears an explicitly confirmed invalid current-scene snapshot and starts from zero', async () => {
+    const bank = await loadReleasedSceneBank()
+    const repository = new MemoryScenePracticeRepository()
+    const first = runtimeFor(bank, repository)
+    await first.initialize()
+    const snapshot = first.currentSnapshot!
+    const otherSceneId = 'r13b-scene-vocabulary:city-transport:taxi'
+    const otherSnapshot = {
+      ...snapshot,
+      sessionId: otherSceneId,
+      categoryId: 'city-transport',
+      sceneId: 'taxi',
+      currentQuestionId: 'unrelated-scene-snapshot',
+    }
+    repository.records.set(otherSceneId, otherSnapshot)
+    repository.records.set(snapshot.sessionId, {
+      ...snapshot,
+      questionIds: ['question-removed-by-content-drift'],
+      currentQuestionId: 'question-removed-by-content-drift',
+    })
+
+    const recovered = runtimeFor(bank, repository)
+    await expect(recovered.initialize()).rejects.toThrowError(
+      expect.objectContaining({ code: 'session-recovery-invalid' }),
+    )
+    const [firstRecovery, repeatedRecovery] = await Promise.all([
+      recovered.restartAfterInvalidSnapshot(),
+      recovered.restartAfterInvalidSnapshot(),
+    ])
+
+    expect(firstRecovery).toEqual(repeatedRecovery)
+    expect(firstRecovery).toMatchObject({
+      categoryId: 'airport-flight',
+      sceneId: 'airport',
+      answers: [],
+      correctCount: 0,
+      incorrectCount: 0,
+      selectedOptionId: null,
+      phase: 'answering',
+    })
+    expect(recovered.toView().progress).toMatchObject({
+      answeredCount: 0,
+      correctCount: 0,
+      accuracy: null,
+    })
+    expect(repository.discardCount).toBe(1)
+    expect(repository.records.get(otherSceneId)).toEqual(otherSnapshot)
+  })
+
+  it('keeps the invalid record and remains retryable when clearing it fails', async () => {
+    const bank = await loadReleasedSceneBank()
+    const repository = new MemoryScenePracticeRepository()
+    const first = runtimeFor(bank, repository)
+    await first.initialize()
+    const snapshot = first.currentSnapshot!
+    const corrupted = {
+      ...snapshot,
+      currentQuestionId: 'missing-question',
+    }
+    repository.records.set(snapshot.sessionId, corrupted)
+    const recovery = runtimeFor(bank, repository)
+    await expect(recovery.initialize()).rejects.toThrowError(
+      expect.objectContaining({ code: 'session-recovery-invalid' }),
+    )
+    repository.discardFailure = new Error('storage is temporarily unavailable')
+    await expect(recovery.restartAfterInvalidSnapshot()).rejects.toThrow(
+      'storage is temporarily unavailable',
+    )
+    expect(repository.records.get(snapshot.sessionId)).toEqual(corrupted)
+    repository.discardFailure = undefined
+    await expect(recovery.restartAfterInvalidSnapshot()).resolves.toMatchObject({
+      answers: [],
+      correctCount: 0,
+    })
+  })
+
+  it('automatically migrates legitimate schema-1 selections and feedback without discarding them', async () => {
+    const bank = await loadReleasedSceneBank()
+    const repository = new MemoryScenePracticeRepository()
+    const scene = bank.getScene('airport-flight', 'airport')!
+    const questionIds = scene.questions.slice(0, 6).map((question) => question.questionId)
+    const selectionSessionId = 'legacy-selection'
+    const feedbackSessionId = 'legacy-feedback'
+    const answer = {
+      questionId: questionIds[0]!,
+      selectedOptionId: legacyOptionId(questionIds[0]!, 0),
+      submittedAt: '2026-07-30T00:00:00.000Z',
+    }
+    const base = {
+      schemaVersion: 1,
+      bankId: 'r13b-travel-scene-vocabulary',
+      contentVersion: '1.0.0',
+      categoryId: 'airport-flight',
+      sceneId: 'airport',
+      questionIds,
+      answers: [answer],
+      createdAt: '2026-07-30T00:00:00.000Z',
+      updatedAt: '2026-07-30T00:00:01.000Z',
+    } as const
+    repository.records.set(selectionSessionId, {
+      ...base,
+      sessionId: selectionSessionId,
+      selectedOptionId: legacyOptionId(questionIds[1]!, 1),
+      phase: 'answering',
+    } as unknown as SceneVocabularyPracticeSnapshot)
+    repository.records.set(feedbackSessionId, {
+      ...base,
+      sessionId: feedbackSessionId,
+      selectedOptionId: null,
+      phase: 'feedback',
+    } as unknown as SceneVocabularyPracticeSnapshot)
+
+    const selected = new SceneVocabularyPracticeRuntime({
+      categoryId: 'airport-flight', sceneId: 'airport', sessionId: selectionSessionId,
+      contentSource: createStaticDataSource(bank), repository, now: clock(),
+    })
+    await selected.initialize()
+    expect(selected.toView().question?.options.find((option) => option.state === 'selected')?.id)
+      .toBe(legacyOptionId(questionIds[1]!, 1))
+    expect(selected.toView().progress.answeredCount).toBe(1)
+
+    const feedback = new SceneVocabularyPracticeRuntime({
+      categoryId: 'airport-flight', sceneId: 'airport', sessionId: feedbackSessionId,
+      contentSource: createStaticDataSource(bank), repository, now: clock(),
+    })
+    await feedback.initialize()
+    expect(feedback.toView().status).toBe('feedback')
+    expect(feedback.toView().progress.answeredCount).toBe(1)
+    expect(repository.discardCount).toBe(0)
   })
 })

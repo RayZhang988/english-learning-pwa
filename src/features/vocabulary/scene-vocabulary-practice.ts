@@ -193,7 +193,8 @@ type StoredSceneVocabularyPracticeSnapshot = SceneVocabularyPracticeSnapshot | L
 export interface SceneVocabularyPracticeRepository {
   load(sessionId: string): Promise<StoredSceneVocabularyPracticeSnapshot | undefined>
   save(snapshot: SceneVocabularyPracticeSnapshot): Promise<void>
-  delete(sessionId: string): Promise<void>
+  /** Removes only the supplied scene-session key after explicit user confirmation. */
+  discardInvalidSnapshot(sessionId: string): Promise<void>
 }
 
 function isAnswer(value: unknown): value is SceneVocabularyPracticeAnswer {
@@ -229,7 +230,9 @@ export class StoredSceneVocabularyPracticeRepository implements SceneVocabularyP
     if (!isSnapshot(portable)) throw new VocabularyError('session-recovery-invalid', 'Scene vocabulary practice snapshot is not JSON-portable.')
     await this.store.put(this.key(snapshot.sessionId), portable, 2)
   }
-  delete(sessionId: string): Promise<void> { return this.store.delete(this.key(sessionId)) }
+  discardInvalidSnapshot(sessionId: string): Promise<void> {
+    return this.store.delete(this.key(sessionId))
+  }
 }
 
 export type SceneVocabularyOptionState = 'default' | 'selected' | 'correct' | 'incorrect'
@@ -336,6 +339,7 @@ export class SceneVocabularyPracticeRuntime {
   private readonly now: () => string
   private snapshot: SceneVocabularyPracticeSnapshot | null = null
   private scene: SceneVocabularyScene | null = null
+  private recoveryInvalidSnapshot = false
   private tail: Promise<void> = Promise.resolve()
   constructor(options: SceneVocabularyPracticeRuntimeOptions) { this.options = options; this.repository = options.repository ?? new StoredSceneVocabularyPracticeRepository(); this.now = options.now ?? (() => new Date().toISOString()) }
   get currentSnapshot(): SceneVocabularyPracticeSnapshot | null { return this.snapshot }
@@ -346,14 +350,43 @@ export class SceneVocabularyPracticeRuntime {
   private async save(snapshot: SceneVocabularyPracticeSnapshot): Promise<SceneVocabularyPracticeSnapshot> { await this.repository.save(snapshot); this.snapshot = snapshot; return snapshot }
   initialize(): Promise<SceneVocabularyPracticeSnapshot> {
     return this.queue(async () => {
+      try {
+        const bank = await this.options.contentSource.load()
+        const scene = bank.getScene(this.options.categoryId, this.options.sceneId)
+        if (!scene) throw new VocabularyError('content-reference-missing', `Scene vocabulary content is unavailable for ${this.options.categoryId}/${this.options.sceneId}.`)
+        this.scene = scene
+        const stored = await this.repository.load(this.sessionId)
+        if (stored && isSnapshot(stored)) { validateSnapshot(stored, scene, this.options.categoryId, this.options.sceneId, this.sessionId); this.snapshot = stored; this.recoveryInvalidSnapshot = false; return stored }
+        if (stored && isLegacySnapshot(stored)) { const migrated = await this.save(migrateLegacySnapshot(stored, scene, this.options.categoryId, this.options.sceneId, this.sessionId, this.now())); this.recoveryInvalidSnapshot = false; return migrated }
+        const fresh = await this.save(newSnapshot(scene, this.sessionId, this.now()))
+        this.recoveryInvalidSnapshot = false
+        return fresh
+      } catch (error) {
+        this.recoveryInvalidSnapshot = error instanceof VocabularyError && error.code === 'session-recovery-invalid'
+        throw error
+      }
+    })
+  }
+  /**
+   * An explicit, confirmed recovery action. It never runs from initialize and
+   * can only remove this runtime's exact scene-session key.
+   */
+  restartAfterInvalidSnapshot(): Promise<SceneVocabularyPracticeSnapshot> {
+    return this.queue(async () => {
+      if (!this.recoveryInvalidSnapshot) {
+        const snapshot = this.currentSnapshot
+        if (snapshot) return snapshot
+        throw new VocabularyError('session-transition-invalid', 'No invalid scene vocabulary snapshot is awaiting recovery.')
+      }
       const bank = await this.options.contentSource.load()
       const scene = bank.getScene(this.options.categoryId, this.options.sceneId)
       if (!scene) throw new VocabularyError('content-reference-missing', `Scene vocabulary content is unavailable for ${this.options.categoryId}/${this.options.sceneId}.`)
+      await this.repository.discardInvalidSnapshot(this.sessionId)
       this.scene = scene
-      const stored = await this.repository.load(this.sessionId)
-      if (stored && isSnapshot(stored)) { validateSnapshot(stored, scene, this.options.categoryId, this.options.sceneId, this.sessionId); this.snapshot = stored; return stored }
-      if (stored && isLegacySnapshot(stored)) return this.save(migrateLegacySnapshot(stored, scene, this.options.categoryId, this.options.sceneId, this.sessionId, this.now()))
-      return this.save(newSnapshot(scene, this.sessionId, this.now()))
+      this.snapshot = null
+      const fresh = await this.save(newSnapshot(scene, this.sessionId, this.now()))
+      this.recoveryInvalidSnapshot = false
+      return fresh
     })
   }
   select(optionIdValue: string): Promise<SceneVocabularyPracticeSnapshot> {

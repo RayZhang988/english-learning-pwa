@@ -13,6 +13,9 @@ export interface SceneVocabularyPracticeScreenCallbacks {
   readonly onContinue: () => void
   readonly onResumePrevious?: () => void
   readonly onStartNewRound?: () => void
+  readonly onRequestInvalidSnapshotRestart?: () => void
+  readonly onConfirmInvalidSnapshotRestart?: () => void
+  readonly onCancelInvalidSnapshotRestart?: () => void
   /** Receives only 06's target-only playback intent; never a full sentence. */
   readonly onTargetPlayback: (
     intent: NonNullable<SceneVocabularyPracticeView['question']>['targetPlayback'],
@@ -175,6 +178,9 @@ export function SceneVocabularyPracticeScreen({
   onContinue,
   onResumePrevious,
   onStartNewRound,
+  onRequestInvalidSnapshotRestart,
+  onConfirmInvalidSnapshotRestart,
+  onCancelInvalidSnapshotRestart,
   onTargetPlayback,
   onRetry,
 }: SceneVocabularyPracticeScreenProps) {
@@ -192,6 +198,35 @@ export function SceneVocabularyPracticeScreen({
   }
 
   if (presentation.status === 'error') {
+    if (presentation.invalidSnapshotRecovery) {
+      const recovery = presentation.invalidSnapshotRecovery
+      return (
+        <TrainingScreen header={header} exitLabel="返回场景训练" onExit={onExit}>
+          <section className="scene-vocabulary-recovery-error" role="alert">
+            <span className="feedback-icon feedback-icon--error" aria-hidden="true">!</span>
+            <h2>无法恢复此场景训练</h2>
+            <p>{presentation.description}</p>
+            {recovery.confirming ? (
+              <>
+                <p>重新开始将只移除此场景损坏的保存记录，当前场景的已答与答对将从 0 开始；不会影响其他场景、每日计划或额外训练。</p>
+                <div className="scene-vocabulary-resume-choice__actions">
+                  <button className="primary-button" type="button" disabled={recovery.busy} onClick={onConfirmInvalidSnapshotRestart}>
+                    确认重新开始此场景
+                  </button>
+                  <button className="secondary-button" type="button" disabled={recovery.busy} onClick={onCancelInvalidSnapshotRestart}>
+                    取消
+                  </button>
+                </div>
+              </>
+            ) : (
+              <button className="primary-button" type="button" disabled={recovery.busy} onClick={onRequestInvalidSnapshotRestart}>
+                重新开始此场景
+              </button>
+            )}
+          </section>
+        </TrainingScreen>
+      )
+    }
     return (
       <TrainingScreen header={header} exitLabel="退出场景训练" onExit={onExit}>
         <ErrorState

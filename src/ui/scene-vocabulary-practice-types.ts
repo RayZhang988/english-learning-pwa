@@ -54,6 +54,11 @@ export type SceneVocabularyPracticePresentation =
       readonly status: 'error'
       readonly title?: string
       readonly description: string
+      /** A destructive action is exposed only for a confirmed invalid scene snapshot. */
+      readonly invalidSnapshotRecovery?: {
+        readonly confirming: boolean
+        readonly busy?: boolean
+      }
     }
   | {
       readonly status: 'ready'

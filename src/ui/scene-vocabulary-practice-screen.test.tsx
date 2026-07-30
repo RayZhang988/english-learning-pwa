@@ -275,4 +275,50 @@ describe('SceneVocabularyPracticeScreen R13-B display contract', () => {
     expect(restored).toContain('已恢复上次练习')
     expect(restored).toContain('已答 2 题，继续完成本场练习。')
   })
+
+  it('distinguishes an invalid snapshot from an ordinary loading error and requires confirmation', () => {
+    const request = vi.fn()
+    const confirm = vi.fn()
+    const cancel = vi.fn()
+    const initial = SceneVocabularyPracticeScreen(props({
+      status: 'error',
+      description: '此场景保存的训练数据不完整或已与当前课程不匹配。不会自动删除它。',
+      invalidSnapshotRecovery: { confirming: false },
+    }, {
+      onRequestInvalidSnapshotRestart: request,
+      onConfirmInvalidSnapshotRestart: confirm,
+      onCancelInvalidSnapshotRestart: cancel,
+    }))
+    const initialMarkup = renderToStaticMarkup(initial)
+    expect(initialMarkup).toContain('无法恢复此场景训练')
+    expect(initialMarkup).toContain('重新开始此场景')
+    expect(initialMarkup).not.toContain('重新加载')
+    const requestButton = collectHostElements(initial, 'button').find(
+      (element) => renderToStaticMarkup(element).includes('重新开始此场景'),
+    )!
+    ;(requestButton.props as { readonly onClick: () => void }).onClick()
+    expect(request).toHaveBeenCalledOnce()
+
+    const confirming = SceneVocabularyPracticeScreen(props({
+      status: 'error',
+      description: '此场景保存的训练数据不完整或已与当前课程不匹配。不会自动删除它。',
+      invalidSnapshotRecovery: { confirming: true },
+    }, {
+      onRequestInvalidSnapshotRestart: request,
+      onConfirmInvalidSnapshotRestart: confirm,
+      onCancelInvalidSnapshotRestart: cancel,
+    }))
+    const confirmingMarkup = renderToStaticMarkup(confirming)
+    expect(confirmingMarkup).toContain('不会影响其他场景、每日计划或额外训练')
+    const confirmButton = collectHostElements(confirming, 'button').find(
+      (element) => renderToStaticMarkup(element).includes('确认重新开始此场景'),
+    )!
+    const cancelButton = collectHostElements(confirming, 'button').find(
+      (element) => renderToStaticMarkup(element).includes('取消'),
+    )!
+    ;(confirmButton.props as { readonly onClick: () => void }).onClick()
+    ;(cancelButton.props as { readonly onClick: () => void }).onClick()
+    expect(confirm).toHaveBeenCalledOnce()
+    expect(cancel).toHaveBeenCalledOnce()
+  })
 })
