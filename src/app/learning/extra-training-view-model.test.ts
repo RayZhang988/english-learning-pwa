@@ -170,6 +170,12 @@ describe('R6 app view models', () => {
       status: 'running',
       effectiveSeconds: 900,
       completedItemCount: 8,
+      score: {
+        schemaVersion: 1,
+        correctCount: 5,
+        incorrectCount: 2,
+        unscorableCount: 1,
+      },
     })
     expect(
       toExtraTrainingActiveViewModel(
@@ -182,8 +188,16 @@ describe('R6 app view models', () => {
         status: 'running',
         effectiveSeconds: 900,
         completedItemCount: 8,
+        accuracyPercentage: 71,
       },
     })
+
+    expect(
+      toExtraTrainingActiveViewModel(
+        session({ score: undefined }),
+        'vocabulary',
+      ).progress.accuracyPercentage,
+    ).toBeNull()
 
     const {
       completionMode: _completionMode,

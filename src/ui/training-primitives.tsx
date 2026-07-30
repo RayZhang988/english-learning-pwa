@@ -93,7 +93,12 @@ export function TrainingScreen({
           className="training-budget-progress training-budget-progress--running"
           data-training-duration-kind="open-ended"
           data-completed-item-count={header.openEndedTraining.completedItemCount}
-          aria-label={`开放式额外训练，累计完成 ${header.openEndedTraining.completedItemCount} 题。主动退出时保存。`}
+          data-accuracy-percentage={header.openEndedTraining.accuracyPercentage ?? undefined}
+          aria-label={`开放式额外训练，累计完成 ${header.openEndedTraining.completedItemCount} 题，正确率 ${
+            header.openEndedTraining.accuracyPercentage === null
+              ? '暂无'
+              : `${header.openEndedTraining.accuracyPercentage}%`
+          }。主动退出时保存。`}
         >
           <div className="training-budget-progress__status">
             <span className="eyebrow">OPEN PRACTICE</span>
@@ -108,6 +113,14 @@ export function TrainingScreen({
             <div>
               <dt>累计完成</dt>
               <dd>{header.openEndedTraining.completedItemCount} 题</dd>
+            </div>
+            <div>
+              <dt>正确率</dt>
+              <dd>
+                {header.openEndedTraining.accuracyPercentage === null
+                  ? '暂无'
+                  : `${header.openEndedTraining.accuracyPercentage}%`}
+              </dd>
             </div>
           </dl>
         </section>

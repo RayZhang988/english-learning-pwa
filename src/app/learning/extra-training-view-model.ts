@@ -233,6 +233,7 @@ export function toExtraTrainingActiveViewModel<
   const base = {
     effectiveSeconds: sessionEffectiveSeconds(session),
     completedItemCount: session.completedItemCount,
+    accuracyPercentage: sessionAccuracyPercentage(session),
   }
   const progress =
     session.status === 'failed' &&
@@ -323,6 +324,15 @@ function sessionEffectiveSeconds(
     (session.targetEffectiveSeconds ?? 900) -
       (session.remainingEffectiveSeconds ?? 900),
   )
+}
+
+function sessionAccuracyPercentage(
+  session: ExtraTrainingSession,
+): number | null {
+  const score = toTrainingUnitScoreViewModel(session.score)
+  return score.state === 'available'
+    ? score.percentage
+    : null
 }
 
 function choiceState(

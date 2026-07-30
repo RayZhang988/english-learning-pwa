@@ -25,6 +25,7 @@ export interface TrainingProgressViewModel {
 export interface OpenEndedTrainingProgressViewModel {
   readonly effectiveSeconds: number
   readonly completedItemCount: number
+  readonly accuracyPercentage: number | null
   readonly status: 'running' | 'content-exhausted'
 }
 

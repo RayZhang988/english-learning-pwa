@@ -111,6 +111,7 @@ function runningSession<
       status: 'running',
       effectiveSeconds: 288,
       completedItemCount: 6,
+      accuracyPercentage: 67,
     },
     exitAction: { label: '退出并保存' },
   }
@@ -510,6 +511,7 @@ describe('R6 dedicated extra-training page adapters', () => {
             status: 'running',
             effectiveSeconds: 900,
             completedItemCount: 14,
+            accuracyPercentage: 86,
           },
         }}
         onExitRequested={() => undefined}
@@ -543,10 +545,14 @@ describe('R6 dedicated extra-training page adapters', () => {
       expect(markup).toContain('不会改变今日 3/3 完成状态')
       expect(markup).toContain('不限时额外训练')
       expect(markup).toContain('累计完成')
+      expect(markup).toContain('正确率')
       expect(markup).not.toContain('累计有效练习')
       expect(markup).not.toContain('data-effective-seconds')
       expect(markup).not.toContain('完成每日任务')
     }
+    expect(vocabularyMarkup).toContain('67%')
+    expect(listeningMarkup).toContain('86%')
+    expect(speakingMarkup).toContain('67%')
     expect(vocabularyMarkup).toContain(
       'aria-label="退出并保存额外词汇训练"',
     )
@@ -572,6 +578,7 @@ describe('R6 dedicated extra-training page adapters', () => {
           status: 'content-exhausted',
           effectiveSeconds: 585,
           completedItemCount: 11,
+          accuracyPercentage: 73,
           contentExhausted: {
             reason: 'no-eligible-content',
             description: '近期题目暂时都已使用。',

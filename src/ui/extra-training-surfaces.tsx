@@ -369,6 +369,7 @@ function extraTrainingHeader(
     openEndedTraining: {
       effectiveSeconds: extraTraining.progress.effectiveSeconds,
       completedItemCount: extraTraining.progress.completedItemCount,
+      accuracyPercentage: extraTraining.progress.accuracyPercentage,
       status: extraTraining.progress.status,
     },
   }

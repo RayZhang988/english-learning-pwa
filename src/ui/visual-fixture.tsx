@@ -350,6 +350,7 @@ export function UiVisualFixture({ id }: { readonly id: UiVisualFixtureId }) {
             status: 'running',
             effectiveSeconds: 288,
             completedItemCount: 6,
+            accuracyPercentage: 67,
           },
           exitAction: { label: '退出并保存' },
         }}

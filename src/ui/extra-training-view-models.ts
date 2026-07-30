@@ -99,11 +99,13 @@ export type ExtraTrainingActiveProgressViewModel =
       readonly status: 'running'
       readonly effectiveSeconds: number
       readonly completedItemCount: number
+      readonly accuracyPercentage: number | null
     }
   | {
       readonly status: 'content-exhausted'
       readonly effectiveSeconds: number
       readonly completedItemCount: number
+      readonly accuracyPercentage: number | null
       readonly contentExhausted: {
         readonly reason: 'provider-failure' | 'no-eligible-content'
         readonly description: string
