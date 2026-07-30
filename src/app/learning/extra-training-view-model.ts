@@ -21,6 +21,7 @@ import type {
   ExtraTrainingPickerViewModel,
   FeedbackViewModel,
   ListeningScreenViewModel,
+  SpeakingContentMatchViewModel,
   SpeakingScreenViewModel,
   VocabularyScreenViewModel,
 } from '../../ui/index.ts'
@@ -646,6 +647,46 @@ function speakingFeedback(
   }
 }
 
+function speakingContentMatch(
+  snapshot: ExtraSpeakingTrainingSnapshot,
+): SpeakingContentMatchViewModel | undefined {
+  const answer = snapshot.answer
+  const prompt = snapshot.prompt
+  if (!answer || !prompt) {
+    return undefined
+  }
+  if (!answer.match) {
+    return {
+      state: 'unscorable',
+      targetText: prompt.modelAnswer,
+      recognizedText: null,
+      resultLabel: '本次无法判断内容是否说对',
+      guidance: answer.recorded
+        ? '录音已经保留，请回放并对照目标表达自查。'
+        : '本次没有取得录音或识别文本，因此不会记为答错。',
+    }
+  }
+
+  return {
+    state: 'recognized',
+    targetText: answer.match.closestAcceptedAnswer,
+    recognizedText: answer.match.transcript,
+    level: answer.match.level,
+    resultLabel: {
+      match: '内容一致',
+      close: '内容大致一致',
+      partial: '只匹配到部分内容',
+      different: '内容差异较大',
+    }[answer.match.level],
+    guidance: {
+      match: '识别文本包含完整目标表达，可以继续。',
+      close: '表达内容基本完整，存在少量文字差异。',
+      partial: '只识别到部分目标内容，建议对照目标表达再说一次。',
+      different: '识别文本与目标表达差异较大，建议重新检查表达内容。',
+    }[answer.match.level],
+  }
+}
+
 export function toExtraSpeakingScreenViewModel(
   snapshot: ExtraSpeakingTrainingSnapshot,
   busy = false,
@@ -676,6 +717,7 @@ export function toExtraSpeakingScreenViewModel(
     cueZh: prompt.cueZh,
     partnerLine: prompt.partnerLine,
     modelAnswer: prompt.modelAnswer,
+    contentMatch: speakingContentMatch(snapshot),
     recorder: {
       status: recorderStatus,
       statusLabel:

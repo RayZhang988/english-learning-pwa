@@ -266,11 +266,29 @@ export interface SpeakingScreenViewModel {
   readonly cueZh?: string
   readonly partnerLine?: string
   readonly modelAnswer?: string
+  readonly contentMatch?: SpeakingContentMatchViewModel
   readonly recorder: RecorderViewModel
   readonly feedback?: FeedbackViewModel
   readonly action: TrainingActionViewModel
   readonly secondaryActionLabel?: string
 }
+
+export type SpeakingContentMatchViewModel =
+  | {
+      readonly state: 'recognized'
+      readonly targetText: string
+      readonly recognizedText: string
+      readonly level: 'match' | 'close' | 'partial' | 'different'
+      readonly resultLabel: string
+      readonly guidance: string
+    }
+  | {
+      readonly state: 'unscorable'
+      readonly targetText: string
+      readonly recognizedText: null
+      readonly resultLabel: string
+      readonly guidance: string
+    }
 
 export interface SpeakingTrainingScreenCallbacks
   extends TrainingContentRetryCallbacks {
@@ -353,6 +371,44 @@ export function SpeakingTrainingScreen({
         onPrimaryAction={onRecorderAction}
         onPlayback={onPlayback}
       />
+      {viewModel.contentMatch ? (
+        <section
+          className="speaking-content-match"
+          data-content-match-state={viewModel.contentMatch.state}
+          data-content-match-level={
+            viewModel.contentMatch.state === 'recognized'
+              ? viewModel.contentMatch.level
+              : undefined
+          }
+          aria-label="口语内容匹配结果"
+        >
+          <header>
+            <span className="eyebrow">CONTENT CHECK</span>
+            <strong>{viewModel.contentMatch.resultLabel}</strong>
+          </header>
+          <dl>
+            <div>
+              <dt>目标表达</dt>
+              <dd lang="en-US">{viewModel.contentMatch.targetText}</dd>
+            </div>
+            <div>
+              <dt>实际识别</dt>
+              <dd
+                lang={
+                  viewModel.contentMatch.recognizedText
+                    ? 'en-US'
+                    : undefined
+                }
+              >
+                {viewModel.contentMatch.recognizedText ??
+                  '本次没有得到可用的识别文本'}
+              </dd>
+            </div>
+          </dl>
+          <p>{viewModel.contentMatch.guidance}</p>
+          <small>这里只比较表达内容，不是发音、口音或流利度评分。</small>
+        </section>
+      ) : null}
       {viewModel.feedback ? (
         <FeedbackPanel feedback={viewModel.feedback} />
       ) : null}

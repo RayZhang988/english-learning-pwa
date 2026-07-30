@@ -70,7 +70,85 @@ describe('speaking screen ViewModel', () => {
     expect(viewModel.modelAnswer).toBe("I'm from Shanghai.")
     expect(viewModel.feedback?.title).toContain('目标表达')
     expect(viewModel.feedback?.description).toContain('不是发音评分')
+    expect(viewModel.contentMatch).toEqual({
+      state: 'recognized',
+      targetText: "I'm from Shanghai.",
+      recognizedText: 'I am from Shanghai',
+      level: 'match',
+      resultLabel: '内容一致',
+      guidance: '识别文本包含完整目标表达，可以继续。',
+    })
     expect(viewModel.recorder.playbackAvailable).toBe(true)
+  })
+
+  it('separates a partial transcript from the target without claiming pronunciation scoring', () => {
+    let session = beginSpeakingRecording(
+      baseSession(),
+      'granted',
+      true,
+      '2026-07-24T12:00:01.000Z',
+    )
+    session = processSpeakingRecording(
+      session,
+      '2026-07-24T12:00:02.000Z',
+    )
+    session = submitSpeakingRecording(
+      session,
+      {
+        durationMs: 1_000,
+        match: matchSpeakingText(
+          'I am Shanghai',
+          speakingPrompt.acceptedAnswers,
+        ),
+        fallbackReason: null,
+        failureCategory: null,
+        recognitionErrorCode: null,
+        recognitionMessage: null,
+      },
+      '2026-07-24T12:00:03.000Z',
+    )
+
+    expect(toSpeakingScreenViewModel(session).contentMatch).toEqual({
+      state: 'recognized',
+      targetText: "I'm from Shanghai.",
+      recognizedText: 'I am Shanghai',
+      level: 'partial',
+      resultLabel: '只匹配到部分内容',
+      guidance: '只识别到部分目标内容，建议对照目标表达再说一次。',
+    })
+  })
+
+  it('shows the target but no invented transcript when recognition fails', () => {
+    let session = beginSpeakingRecording(
+      baseSession(),
+      'granted',
+      true,
+      '2026-07-24T12:00:01.000Z',
+    )
+    session = processSpeakingRecording(
+      session,
+      '2026-07-24T12:00:02.000Z',
+    )
+    session = submitSpeakingRecording(
+      session,
+      {
+        durationMs: 1_000,
+        match: null,
+        fallbackReason: 'recognition-no-speech',
+        failureCategory: 'device',
+        recognitionErrorCode: 'no-speech',
+        recognitionMessage: '没有识别到文本。',
+      },
+      '2026-07-24T12:00:03.000Z',
+    )
+
+    expect(toSpeakingScreenViewModel(session).contentMatch).toEqual({
+      state: 'unscorable',
+      targetText: "I'm from Shanghai.",
+      recognizedText: null,
+      resultLabel: '本次无法判断内容是否说对',
+      guidance: '录音已经保留，请回放并对照目标表达自查。',
+    })
   })
 
   it('maps permission failure to device feedback and unscored continuation', () => {

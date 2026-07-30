@@ -1038,6 +1038,79 @@
   line-height: 1.55;
 }
 
+.speaking-content-match {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface);
+}
+
+.speaking-content-match header {
+  display: grid;
+  gap: 5px;
+}
+
+.speaking-content-match header strong {
+  color: var(--ink);
+  font-size: 1rem;
+}
+
+.speaking-content-match[data-content-match-level='match'],
+.speaking-content-match[data-content-match-level='close'] {
+  border-color: color-mix(in srgb, var(--mint) 48%, var(--line));
+  background: color-mix(in srgb, var(--mint-soft) 58%, var(--surface));
+}
+
+.speaking-content-match[data-content-match-level='partial'],
+.speaking-content-match[data-content-match-level='different'] {
+  border-color: color-mix(in srgb, var(--coral) 38%, var(--line));
+  background: color-mix(in srgb, var(--coral-soft) 45%, var(--surface));
+}
+
+.speaking-content-match dl {
+  display: grid;
+  margin: 0;
+  gap: 10px;
+}
+
+.speaking-content-match dl div {
+  display: grid;
+  gap: 5px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--paper) 82%, transparent);
+}
+
+.speaking-content-match dt {
+  color: var(--ink-faint);
+  font-size: 0.72rem;
+}
+
+.speaking-content-match dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+  line-height: 1.55;
+}
+
+.speaking-content-match > p,
+.speaking-content-match > small {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.speaking-content-match > p {
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+}
+
+.speaking-content-match > small {
+  color: var(--ink-faint);
+  font-size: 0.74rem;
+}
+
 .progress-screen {
   padding:
     max(24px, env(safe-area-inset-top))

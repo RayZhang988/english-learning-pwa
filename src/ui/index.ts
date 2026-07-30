@@ -97,6 +97,7 @@ export {
   type ListeningScreenViewModel,
   type ListeningTrainingScreenCallbacks,
   type ListeningTrainingScreenProps,
+  type SpeakingContentMatchViewModel,
   type SpeakingScreenViewModel,
   type SpeakingTrainingScreenCallbacks,
   type SpeakingTrainingScreenProps,

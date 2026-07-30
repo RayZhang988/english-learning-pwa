@@ -1,5 +1,6 @@
 import type {
   FeedbackViewModel,
+  SpeakingContentMatchViewModel,
   SpeakingScreenViewModel,
 } from '../../ui/index.ts'
 import { SpeakingError } from './errors.ts'
@@ -54,8 +55,7 @@ function matchFeedback(
   const match = answer.match
   if (match) {
     const description =
-      `识别文本：“${match.transcript}”。` +
-      '这是与课程目标表达的文本接近度，不是发音评分。'
+      '请在下方对照目标表达和实际识别文本。本结果只比较课程目标内容，不是发音评分。'
     if (match.level === 'match') {
       return {
         tone: 'success',
@@ -96,6 +96,48 @@ function matchFeedback(
     title: '没有可评分的口语证据',
     description:
       '麦克风不可用时无法录音或回放。本题可以继续，但不会记为答错。',
+  }
+}
+
+function contentMatchViewModel(
+  answer: SpeakingAnswerRecord | undefined,
+  defaultTargetText: string,
+): SpeakingContentMatchViewModel | undefined {
+  if (!answer) {
+    return undefined
+  }
+  if (!answer.match) {
+    return {
+      state: 'unscorable',
+      targetText: defaultTargetText,
+      recognizedText: null,
+      resultLabel: '本次无法判断内容是否说对',
+      guidance: answer.recorded
+        ? '录音已经保留，请回放并对照目标表达自查。'
+        : '本次没有取得录音或识别文本，因此不会记为答错。',
+    }
+  }
+
+  const guidance = {
+    match: '识别文本包含完整目标表达，可以继续。',
+    close: '表达内容基本完整，存在少量文字差异。',
+    partial: '只识别到部分目标内容，建议对照目标表达再说一次。',
+    different: '识别文本与目标表达差异较大，建议重新检查表达内容。',
+  } as const
+  const resultLabel = {
+    match: '内容一致',
+    close: '内容大致一致',
+    partial: '只匹配到部分内容',
+    different: '内容差异较大',
+  } as const
+
+  return {
+    state: 'recognized',
+    targetText: answer.match.closestAcceptedAnswer,
+    recognizedText: answer.match.transcript,
+    level: answer.match.level,
+    resultLabel: resultLabel[answer.match.level],
+    guidance: guidance[answer.match.level],
   }
 }
 
@@ -162,6 +204,10 @@ export function toSpeakingScreenViewModel(
     cueZh: prompt.cueZh,
     partnerLine: prompt.partnerLine,
     modelAnswer: prompt.modelAnswer,
+    contentMatch: contentMatchViewModel(
+      currentAnswer,
+      prompt.modelAnswer,
+    ),
     recorder: {
       status: recorderStatus,
       statusLabel:

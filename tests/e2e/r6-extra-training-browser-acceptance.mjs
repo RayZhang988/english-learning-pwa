@@ -140,6 +140,50 @@ const disableRecognitionScript = `(() => {
   }
 })()`
 
+const controlledRecognitionScript = `(() => {
+  class QaSpeechRecognition {
+    lang = 'en-US'
+    continuous = false
+    interimResults = false
+    maxAlternatives = 3
+    onresult = null
+    onerror = null
+    onend = null
+    start() {}
+    stop() {
+      const alternative = {
+        transcript: "Hi Maya, I'm Lin.",
+        confidence: 0.99,
+      }
+      const result = {
+        0: alternative,
+        length: 1,
+        isFinal: true,
+      }
+      queueMicrotask(() => {
+        this.onresult?.({
+          resultIndex: 0,
+          results: {
+            0: result,
+            length: 1,
+          },
+        })
+        this.onend?.()
+      })
+    }
+    abort() {
+      queueMicrotask(() => this.onend?.())
+    }
+  }
+  for (const key of ['SpeechRecognition', 'webkitSpeechRecognition']) {
+    Object.defineProperty(globalThis, key, {
+      configurable: true,
+      value: QaSpeechRecognition,
+      writable: true,
+    })
+  }
+})()`
+
 function allRecords(databases) {
   return databases.flatMap(
     (database) => database.stores.records ?? [],
@@ -501,6 +545,46 @@ async function recordSpeaking(page) {
       document.body.innerText.includes('录音不可用')`,
     20_000,
   )
+  if (process.env.QA_VERIFY_R8_RECOGNITION === '1') {
+    await page.waitFor(
+      `document.querySelector(
+        '.speaking-content-match[data-content-match-state="recognized"]'
+      )`,
+      20_000,
+    )
+    const comparison = await page.evaluate(`(() => {
+      const panel = document.querySelector('.speaking-content-match')
+      const rows = [...(panel?.querySelectorAll('dl > div') ?? [])]
+        .map((row) => ({
+          label: row.querySelector('dt')?.textContent?.trim() ?? '',
+          value: row.querySelector('dd')?.textContent?.trim() ?? '',
+        }))
+      return {
+        state: panel?.getAttribute('data-content-match-state') ?? null,
+        level: panel?.getAttribute('data-content-match-level') ?? null,
+        target: rows.find((row) => row.label === '目标表达')?.value ?? '',
+        recognized:
+          rows.find((row) => row.label === '实际识别')?.value ?? '',
+        text: panel?.textContent ?? '',
+      }
+    })()`)
+    assert.equal(comparison.state, 'recognized')
+    assert.ok(comparison.level)
+    assert.ok(comparison.target)
+    assert.equal(comparison.recognized, "Hi Maya, I'm Lin.")
+    assert.match(comparison.text, /不是发音、口音或流利度评分/u)
+  } else {
+    await page.waitFor(
+      `document.querySelector(
+        '.speaking-content-match[data-content-match-state="unscorable"]'
+      )`,
+      20_000,
+    )
+    assert.match(
+      await page.bodyText(),
+      /本次没有得到可用的识别文本/u,
+    )
+  }
 }
 
 async function waitForDailyExecutionCompleted(
@@ -1249,7 +1333,11 @@ async function run() {
     await qa.page.initialize()
     await qa.page.addInitScript(fakeAssessmentClockScript)
     await qa.page.addInitScript(controlledSpeechSynthesisScript())
-    await qa.page.addInitScript(disableRecognitionScript)
+    await qa.page.addInitScript(
+      process.env.QA_VERIFY_R8_RECOGNITION === '1'
+        ? controlledRecognitionScript
+        : disableRecognitionScript,
+    )
     await qa.page.setViewport(390, 844)
 
     await prepareFirstDayPlan(qa.page)
