@@ -25,6 +25,16 @@ export {
   type TrainingAreaScreen,
 } from './training-area-surfaces.tsx'
 export {
+  SceneVocabularyPracticeScreen,
+  type SceneVocabularyPracticeScreenCallbacks,
+  type SceneVocabularyPracticeScreenProps,
+} from './scene-vocabulary-practice-screen.tsx'
+export type {
+  SceneVocabularyOptionState,
+  SceneVocabularyPracticePresentation,
+  SceneVocabularyPracticeView,
+} from './scene-vocabulary-practice-types.ts'
+export {
   getTravelScene,
   getTravelSceneCategory,
   trainingAreas,

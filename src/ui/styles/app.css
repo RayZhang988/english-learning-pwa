@@ -5,6 +5,7 @@
 @import "./system-states.css";
 @import "./travel-vocabulary-r1.css";
 @import "./training-areas.css";
+@import "./scene-vocabulary-practice.css";
 
 .training-test-mode-banner {
   position: sticky;
