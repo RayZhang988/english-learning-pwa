@@ -111,7 +111,7 @@ export type TrainingTaskAccessViewModel =
       readonly recommended: false
       readonly actionLabel: string
       readonly extraTrainingDescription: string
-      readonly trainingBudget: TrainingBudgetTargetViewModel
+      readonly openEnded: true
     })
 
 interface DailyTaskPresentation {
@@ -698,8 +698,7 @@ export function PracticeModuleGrid({
             ariaLabel = `${presentation.title}：${description}`
           } else if (module.availability === 'extra-training') {
             ariaLabel =
-              `${module.actionLabel}：${presentation.title}。${description}` +
-              `。训练目标${formatTrainingBudgetTargetAriaLabel(module.trainingBudget.targetEffectiveSeconds)}`
+              `${module.actionLabel}：${presentation.title}。${description}。不限时，主动退出时保存`
           } else {
             ariaLabel =
               `${actionLabel}：${presentation.title}` +
@@ -770,7 +769,15 @@ export function PracticeModuleGrid({
               {!isAssessment &&
               (module.availability === 'startable' ||
                 module.availability === 'extra-training') ? (
-                module.trainingBudget ? (
+                module.availability === 'extra-training' ? (
+                  <span className="training-budget-target training-budget-target--compact">
+                    <span>
+                      <small>额外训练</small>
+                      <strong>不限时</strong>
+                    </span>
+                    <em>主动退出</em>
+                  </span>
+                ) : module.trainingBudget ? (
                   <TrainingBudgetTarget
                     viewModel={module.trainingBudget}
                   />

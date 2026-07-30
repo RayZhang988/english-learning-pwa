@@ -3,10 +3,6 @@ import {
   TrainingUnitScore,
 } from './duration-surfaces.tsx'
 import {
-  toTrainingDisplaySeconds,
-  trainingBlockDurationLabel,
-} from '../config/training-test-mode.ts'
-import {
   ListeningTrainingScreen,
   SpeakingTrainingScreen,
   VocabularyTrainingScreen,
@@ -15,10 +11,6 @@ import {
   type VocabularyTrainingScreenProps,
 } from './practice-screens.tsx'
 import { Icon, type IconName } from './icons.tsx'
-import {
-  formatTrainingBudgetClock,
-  formatTrainingBudgetTarget,
-} from './training-budget-format.ts'
 import type {
   ExtraTrainingActionViewModel,
   ExtraTrainingActiveSessionViewModel,
@@ -101,7 +93,7 @@ function statusCopy(module: ExtraTrainingModuleViewModel): {
     case 'available':
       return {
         label: '可开始新一轮',
-        description: `从新的 ${trainingBlockDurationLabel()}有效训练块开始。`,
+        description: '不限时，练到你主动退出为止。',
       }
     case 'paused':
       return {
@@ -134,7 +126,7 @@ function statusCopy(module: ExtraTrainingModuleViewModel): {
     case 'expired':
       return {
         label: '上次训练已跨日结束',
-        description: `旧会话不会并入今天；可以开始新的 ${trainingBlockDurationLabel()}。`,
+        description: '旧会话不会并入今天；可以开始新的开放式训练。',
       }
   }
 }
@@ -161,6 +153,7 @@ function moduleIntent(
   callbacks: Pick<
     ExtraTrainingPickerScreenProps,
     | 'onStartRequested'
+    | 'onStartFreshRequested'
     | 'onResumeRequested'
     | 'onRetryRequested'
   >,
@@ -213,6 +206,7 @@ function hasProgress(
 export interface ExtraTrainingPickerScreenProps {
   readonly viewModel: ExtraTrainingPickerViewModel
   readonly onStartRequested: MaybeAsyncIntent<ExtraTrainingModuleId>
+  readonly onStartFreshRequested?: MaybeAsyncIntent<ExtraTrainingModuleId>
   readonly onResumeRequested: MaybeAsyncIntent<string>
   readonly onRetryRequested: MaybeAsyncIntent<string>
   readonly onReturnToCompletedPlan: () => void | Promise<void>
@@ -221,6 +215,7 @@ export interface ExtraTrainingPickerScreenProps {
 export function ExtraTrainingPickerScreen({
   viewModel,
   onStartRequested,
+  onStartFreshRequested = onStartRequested,
   onResumeRequested,
   onRetryRequested,
   onReturnToCompletedPlan,
@@ -243,8 +238,8 @@ export function ExtraTrainingPickerScreen({
         <span className="eyebrow">OPTIONAL PRACTICE</span>
         <h1>继续训练</h1>
         <p>
-          每次选择一个 {trainingBlockDurationLabel()}有效训练块。它属于额外练习，
-          不会改变今日 3/3 完成状态。
+          额外训练不设时长，练到你主动退出为止。退出会保存进度，
+          也不会改变今日 3/3 完成状态。
         </p>
       </header>
 
@@ -262,10 +257,6 @@ export function ExtraTrainingPickerScreen({
             onResumeRequested,
             onRetryRequested,
           })
-          const targetLabel = formatTrainingBudgetTarget(
-            toTrainingDisplaySeconds(module.targetEffectiveSeconds),
-          )
-
           return (
             <article
               className={[
@@ -296,20 +287,14 @@ export function ExtraTrainingPickerScreen({
                 </p>
                 <dl className="extra-training-module-card__metrics">
                   <div>
-                    <dt>本轮目标</dt>
-                    <dd>{targetLabel}</dd>
+                    <dt>完成方式</dt>
+                    <dd>主动退出</dd>
                   </div>
                   {hasProgress(module) ? (
                     <>
                       <div>
-                        <dt>剩余有效时间</dt>
-                        <dd>
-                          {formatTrainingBudgetClock(
-                            toTrainingDisplaySeconds(
-                              module.remainingEffectiveSeconds,
-                            ),
-                          )}
-                        </dd>
+                        <dt>累计有效练习</dt>
+                        <dd>{module.effectiveSeconds} 秒</dd>
                       </div>
                       <div>
                         <dt>累计完成</dt>
@@ -339,6 +324,25 @@ export function ExtraTrainingPickerScreen({
                   {action.loading ? '正在处理' : action.label}
                   <Icon name="arrow-right" />
                 </button>
+                {module.status === 'paused' ||
+                module.status === 'running' ? (
+                  <button
+                    className="text-button"
+                    type="button"
+                    disabled={actionDisabled(module.newRoundAction)}
+                    aria-label={`${module.newRoundAction.label}：${module.title}`}
+                    onClick={
+                      actionDisabled(module.newRoundAction)
+                        ? undefined
+                        : singleFlightIntent(
+                            onStartFreshRequested,
+                            module.moduleId,
+                          )
+                    }
+                  >
+                    {module.newRoundAction.label}
+                  </button>
+                ) : null}
               </div>
             </article>
           )
@@ -368,7 +372,11 @@ function extraTrainingHeader(
     eyebrow: header.eyebrow,
     title: header.title,
     progress: header.progress,
-    trainingBudget: extraTraining.budget,
+    openEndedTraining: {
+      effectiveSeconds: extraTraining.progress.effectiveSeconds,
+      completedItemCount: extraTraining.progress.completedItemCount,
+      status: extraTraining.progress.status,
+    },
   }
 }
 

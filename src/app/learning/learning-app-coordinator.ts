@@ -334,6 +334,12 @@ export class LearningAppCoordinator {
     return this.extraTraining.start(moduleId)
   }
 
+  startFreshExtraTraining(
+    moduleId: TrainingModuleId,
+  ): Promise<ExtraTrainingSession> {
+    return this.extraTraining.startFresh(moduleId)
+  }
+
   resolveExtraTrainingSession(
     sessionId: string,
     expectedModuleId?: TrainingModuleId,

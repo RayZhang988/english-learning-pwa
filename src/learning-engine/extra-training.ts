@@ -119,6 +119,84 @@ export function createExtraTrainingState(): ExtraTrainingState {
   return { schemaVersion: 1, sessions: {}, processedEventIds: [] }
 }
 
+export function isOpenEndedExtraTrainingSession(
+  session: ExtraTrainingSession,
+): boolean {
+  return session.completionMode === 'open-ended'
+}
+
+function withoutLegacyBudget(
+  session: ExtraTrainingSession,
+): ExtraTrainingSession {
+  const {
+    targetEffectiveSeconds: _targetEffectiveSeconds,
+    remainingEffectiveSeconds: _remainingEffectiveSeconds,
+    ...current
+  } = session
+  return current
+}
+
+/**
+ * Upgrades an unfinished pre-R6.1 optional session without losing practice
+ * time, score, content cursor or exclusions. Historical completed sessions
+ * stay unchanged so past records remain truthful.
+ */
+export function migrateExtraTrainingSessionsToOpenEnded(
+  state: ExtraTrainingState,
+  occurredAt: string,
+): ExtraTrainingState {
+  parseTimestamp(occurredAt, 'occurredAt')
+  let updated = state
+  for (const session of Object.values(state.sessions)) {
+    if (
+      isOpenEndedExtraTrainingSession(session) ||
+      session.status === 'completed' ||
+      session.status === 'expired'
+    ) {
+      continue
+    }
+    const migrated = migrateExtraTrainingSessionToOpenEnded(
+      session,
+      occurredAt,
+    )
+    updated = replaceSession(updated, migrated)
+  }
+  return updated
+}
+
+export function migrateExtraTrainingSessionToOpenEnded(
+  session: ExtraTrainingSession,
+  occurredAt: string,
+): ExtraTrainingSession {
+  parseTimestamp(occurredAt, 'occurredAt')
+  if (isOpenEndedExtraTrainingSession(session)) {
+    return session
+  }
+  const elapsed = Math.max(
+    0,
+    (session.targetEffectiveSeconds ?? EXTRA_TRAINING_EFFECTIVE_SECONDS) -
+      (session.remainingEffectiveSeconds ?? EXTRA_TRAINING_EFFECTIVE_SECONDS),
+  )
+  return withoutLegacyBudget({
+    ...session,
+    completionMode: 'open-ended',
+    effectiveSeconds: Math.max(session.effectiveSeconds ?? 0, elapsed),
+    status:
+      session.status === 'finish-current-item'
+        ? 'running'
+        : session.status,
+    endedAt:
+      session.status === 'finish-current-item'
+        ? null
+        : session.endedAt,
+    endReason:
+      session.status === 'finish-current-item'
+        ? null
+        : session.endReason,
+    updatedAt: occurredAt,
+  })
+}
+
 /** A session can start only after the same day's daily plan has reached 3/3. */
 export function createExtraTrainingSession(
   state: ExtraTrainingState | undefined,
@@ -156,8 +234,8 @@ export function createExtraTrainingSession(
     targetModuleId: input.targetModuleId,
     mode: 'learn',
     targetDifficulty: input.targetDifficulty,
-    targetEffectiveSeconds: EXTRA_TRAINING_EFFECTIVE_SECONDS,
-    remainingEffectiveSeconds: EXTRA_TRAINING_EFFECTIVE_SECONDS,
+    completionMode: 'open-ended',
+    effectiveSeconds: 0,
     status: 'running',
     nextSupplyCursor: null,
     excludeItemIds: [],
@@ -231,7 +309,10 @@ export function applyExtraTrainingEvent(
       updatedAt: event.occurredAt,
     }
   } else if (event.type === 'learning.extra-training.started.v1') {
-    if (session.status === 'finish-current-item') {
+    if (
+      !isOpenEndedExtraTrainingSession(session) &&
+      session.status === 'finish-current-item'
+    ) {
       throw new TypeError('Cannot resume after the effective budget has ended')
     }
     updated = {
@@ -242,18 +323,29 @@ export function applyExtraTrainingEvent(
     }
   } else if (event.type === 'learning.extra-training.timing.segment.recorded.v1') {
     const classification = classifyTimingSegment(event.payload)
-    const remaining = Math.max(
-      0,
-      session.remainingEffectiveSeconds - classification.effectiveSeconds,
-    )
-    updated = {
-      ...session,
-      remainingEffectiveSeconds: remaining,
-      status:
-        session.status === 'running' && remaining === 0
-          ? 'finish-current-item'
-          : session.status,
-      updatedAt: event.occurredAt,
+    if (isOpenEndedExtraTrainingSession(session)) {
+      updated = {
+        ...session,
+        effectiveSeconds:
+          (session.effectiveSeconds ?? 0) + classification.effectiveSeconds,
+        updatedAt: event.occurredAt,
+      }
+    } else {
+      const remaining = Math.max(
+        0,
+        (session.remainingEffectiveSeconds ??
+          EXTRA_TRAINING_EFFECTIVE_SECONDS) -
+          classification.effectiveSeconds,
+      )
+      updated = {
+        ...session,
+        remainingEffectiveSeconds: remaining,
+        status:
+          session.status === 'running' && remaining === 0
+            ? 'finish-current-item'
+            : session.status,
+        updatedAt: event.occurredAt,
+      }
     }
   } else if (event.type === 'learning.extra-training.item.completed.v1') {
     if (session.status !== 'running' && session.status !== 'finish-current-item') {
@@ -279,6 +371,11 @@ export function applyExtraTrainingEvent(
       updatedAt: event.occurredAt,
     }
   } else if (event.type === 'learning.extra-training.budget.completed.v1') {
+    if (isOpenEndedExtraTrainingSession(session)) {
+      throw new TypeError(
+        'Open-ended extra training cannot complete from a time budget',
+      )
+    }
     if (session.status !== 'finish-current-item') {
       throw new TypeError('Extra-training effective budget has not ended')
     }

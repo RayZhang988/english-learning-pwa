@@ -190,6 +190,9 @@ export {
   createExtraTrainingSession,
   createExtraTrainingState,
   expireExtraTrainingSessions,
+  isOpenEndedExtraTrainingSession,
+  migrateExtraTrainingSessionToOpenEnded,
+  migrateExtraTrainingSessionsToOpenEnded,
 } from './extra-training.ts'
 export type { CreateExtraTrainingSessionInput } from './extra-training.ts'
 export type {

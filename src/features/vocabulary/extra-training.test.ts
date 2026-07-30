@@ -10,24 +10,25 @@ import type { ExtraTrainingSession } from '../../learning-engine/index.ts'
 
 class Store implements NamespaceStore { records = new Map<string, StoredRecord<unknown>>(); async get<T>(key:string){ return this.records.get(key) as StoredRecord<T>|undefined }; async put<T>(key:string,value:T,schemaVersion=1){ this.records.set(key,{namespace:'test',key,value,schemaVersion,updatedAt:'2026-07-29T00:00:00.000Z'}) }; async delete(key:string){this.records.delete(key)}; async keys(){return [...this.records.keys()]}; async clear(){this.records.clear()} }
 
-const session = { schemaVersion: 1, sessionId: 'extra-vocabulary', localDate: '2026-07-29', domain: 'vocabulary', targetModuleId: 'vocabulary', mode: 'learn', targetDifficulty: 1, targetEffectiveSeconds: 900, remainingEffectiveSeconds: 900, status: 'running', nextSupplyCursor: null, excludeItemIds: [], completedItemCount: 0, startedAt: '2026-07-29T00:00:00.000Z', updatedAt: '2026-07-29T00:00:00.000Z', endedAt: null, endReason: null } as const
+const session = { schemaVersion: 1, sessionId: 'extra-vocabulary', localDate: '2026-07-29', domain: 'vocabulary', targetModuleId: 'vocabulary', mode: 'learn', targetDifficulty: 1, completionMode: 'open-ended', effectiveSeconds: 0, status: 'running', nextSupplyCursor: null, excludeItemIds: [], completedItemCount: 0, startedAt: '2026-07-29T00:00:00.000Z', updatedAt: '2026-07-29T00:00:00.000Z', endedAt: null, endReason: null } as const
 const item = { itemId: 'supply-vocabulary-1', learningUnitId: 'unit-1', contentRef: 'lesson://unit-1', difficultyLevel: 1, tags: [], source: { sourceType: 'vocabulary-item', sourceId: 'word', variantId: 'term-to-meaning-choice', distractorItemIds: [] } } as const
 
 describe('extra vocabulary commands', () => {
   const question = { id: 'question', type: 'term-to-meaning' as const, instructionZh: '选择', prompt: 'word', promptLocale: 'en-US' as const, partOfSpeech: null, options: [{ id: 'right', label: '对' }, { id: 'wrong', label: '错' }], correctOptionId: 'right', exampleEn: null, explanationZh: null, errorTag: 'meaning-recall' as const }
   function options() { return { session, repository: new ExtraVocabularyTrainingRepository(new Store()), supplyRequest: (current: ExtraTrainingSession) => ({ schemaVersion: 1 as const, requestId: 'supply', sessionId: current.sessionId, localDate: current.localDate, domain: 'vocabulary' as const, targetModuleId: 'vocabulary' as const, mode: 'learn' as const, targetDifficulty: current.targetDifficulty, cursor: current.nextSupplyCursor, excludeItemIds: current.excludeItemIds, priority: ['recent-error', 'due-review', 'same-day-variant', 'new-optional-content'] as const, priorityItemIds: { 'recent-error': [], 'due-review': [], 'same-day-variant': [], 'new-optional-content': [] }, reason: 'initial' as const }), supplyProvider: { next: async (request: { requestId: string }) => ({ schemaVersion: 1 as const, requestId: request.requestId, status: 'item' as const, item, nextCursor: item.itemId }) }, questionForItem: async () => question, timingSessionFactory: { create: async () => ({ start: async () => {}, transition: async () => {}, activity: async () => {}, pause: async () => {}, resume: async () => {}, finish: async () => {}, dispose: async () => {} }) }, eventSink: { publishExtraTrainingEvent: async () => {} } } }
-  it('marks 899→900 as finish-current-item without truncating answering', async () => {
+  it('continues after 900 effective seconds without truncating answering', async () => {
     const runtime = new ExtraVocabularyTrainingRuntime({ session, supplyRequest: () => null, supplyProvider: { next: async () => { throw new Error('unused') } }, questionForItem: async () => { throw new Error('unused') }, timingSessionFactory: { create: async () => ({ start: async () => {}, transition: async () => {}, activity: async () => {}, pause: async () => {}, resume: async () => {}, finish: async () => {}, dispose: async () => {} }) }, eventSink: { publishExtraTrainingEvent: async () => {} } })
     await runtime.initialize(); await runtime.recordEffectiveSeconds(899); const snapshot = await runtime.recordEffectiveSeconds(1)
-    expect(snapshot.session.status).toBe('finish-current-item')
+    expect(snapshot.session).toMatchObject({ status: 'running', effectiveSeconds: 900 })
     expect(snapshot.phase).toBe('answering')
   })
-  it('finishes the current feedback item once after budget expiry', async () => {
+  it('records the current feedback item once and keeps the session open', async () => {
     const runtime = new ExtraVocabularyTrainingRuntime(options())
     await runtime.initialize(); await runtime.next(); await runtime.select('right'); await runtime.submit(); await runtime.markBudgetReached()
     const completed = await runtime.completeCurrentItem()
-    expect(completed.session.status).toBe('completed')
-    expect(completed.pendingEvents.map((event) => event.type)).toEqual(expect.arrayContaining(['learning.extra-training.attempt.completed.v1', 'learning.extra-training.item.completed.v1', 'learning.extra-training.budget.completed.v1']))
+    expect(completed.session.status).toBe('running')
+    expect(completed.pendingEvents.map((event) => event.type)).toEqual(['learning.extra-training.started.v1', 'learning.extra-training.attempt.completed.v1', 'learning.extra-training.item.completed.v1'])
+    expect(completed.pendingEvents.map((event) => event.type)).not.toContain('learning.extra-training.budget.completed.v1')
     await expect(runtime.completeCurrentItem()).rejects.toThrow()
   })
   it('atomically advances ordinary feedback once without asking the host to alter a snapshot', async () => {

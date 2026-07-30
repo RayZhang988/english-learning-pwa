@@ -165,7 +165,7 @@ export type {
 export type {
   CompletedDailyPlanExtraTrainingEntryViewModel,
   ExtraTrainingActionViewModel,
-  ExtraTrainingActiveBudgetViewModel,
+  ExtraTrainingActiveProgressViewModel,
   ExtraTrainingActiveSessionViewModel,
   ExtraTrainingCompletionViewModel,
   ExtraTrainingFailureReason,

@@ -195,11 +195,12 @@ contentEstimate = clamp(raw, minimumSeconds, maximumSeconds)
 4. 再用 `recordTaskDurationSample()` 固化可靠片段样本；
 5. 保存引擎状态和 active plan。
 
-## 0.9 R6｜每日完成后的可选训练块
+## 0.9 R6.1｜每日完成后的开放式可选训练
 
 `ExtraTrainingSession` 是独立于 `PlanProgress` 的 schema-1 可恢复记录。它只可在同一
-`localDate` 的每日计划已经完成 3/3 后创建；字段包括稳定 `sessionId`、专项身份、900 秒
-有效预算、剩余秒数、供应 cursor、短期排除 item、完成题数、开始/更新时间及终止原因。
+`localDate` 的每日计划已经完成 3/3 后创建；字段包括稳定 `sessionId`、专项身份、
+`completionMode: open-ended`、累计有效秒数、供应 cursor、短期排除 item、完成题数、
+开始/更新时间及终止原因。
 它不会新增每日必做 `LearningTask`，也不会改写已完成计划的三个执行态。
 
 会话事件使用独立的 `learning.extra-training.*.v1` 命名空间，并由
@@ -210,12 +211,17 @@ contentEstimate = clamp(raw, minimumSeconds, maximumSeconds)
 `planId: extra-training:<localDate>` 与 `taskId: <sessionId>` 证据身份，绝不冒充第四项每日
 任务。不可评分尝试不更新掌握度。
 
-计时沿用 R3 的前台、暂停、后台与 45 秒空闲片段规则。累计有效时间达到 900 秒时，状态先
-成为 `finish-current-item`；模块必须完成当前题后发布 budget-completed，才进入
-`completed`。用户退出形成 `paused / user-exited` 并完整保留 cursor、排除集、题数与剩余
-时间；重新 started 后可恢复。内容耗尽、供应器和设备故障为 `failed`，不会回滚每日 3/3。
+计时沿用 R3 的前台、暂停、后台与 45 秒空闲片段规则，但累计时间只用于如实展示和记录，
+不再作为完成条件。开放式会话不得发布 budget-completed，也不会进入
+`finish-current-item`；完成一题后继续供应，直到用户主动退出。用户退出形成
+`paused / user-exited` 并完整保留 cursor、排除集、题数与累计有效时间；重新 started 后
+可恢复。内容耗尽、供应器和设备故障为 `failed`，不会回滚每日 3/3。
 跨日清理由 `expireExtraTrainingSessions()` 把未结束会话标为 `expired / cross-day-expired`，
 同样不触碰每日计划。
+
+旧的 900 秒未完成会话在恢复时原地迁移：保留已练时间、题目游标、排除记录和分数，
+删除目标/剩余倒计时，并把 `finish-current-item` 恢复为可继续的 `running`。历史上已经
+完成的旧会话保持原记录，不伪造或重写。
 
 `buildExtraTrainingSupplyRequest()` 把内容优先级明确交给 05/训练模块：
 `recent-error → due-review → same-day-variant → new-optional-content`。创建会话时，01 必须把

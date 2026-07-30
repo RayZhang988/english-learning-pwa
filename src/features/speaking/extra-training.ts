@@ -4,6 +4,7 @@ import type {
   ExtraTrainingSupplyRequest,
   LearningTaskSupplyResult,
 } from '../../learning-engine/index.ts'
+import { migrateExtraTrainingSessionToOpenEnded } from '../../learning-engine/index.ts'
 import type {
   ExtraTrainingEffectiveTimingSessionFactoryPort,
   ExtraTrainingEventSink,
@@ -105,7 +106,17 @@ export class ExtraSpeakingTrainingRuntime {
   async initialize() { return this.queue(async () => {
     this.timing ??= await this.options.timingSessionFactory.create(this.options.session)
     const restored = await this.repository.load(this.options.session.sessionId)
-    if (restored) { this.snapshot = { ...restored, recordingAvailable: false }; return this.snapshot }
+    if (restored) {
+      return this.save({
+        ...restored,
+        session: migrateExtraTrainingSessionToOpenEnded(
+          restored.session,
+          this.now(),
+        ),
+        recordingAvailable: false,
+        updatedAt: this.now(),
+      })
+    }
     const event = this.base('learning.extra-training.started.v1')
     return this.save({ schemaVersion: 1, session: this.options.session, unit: null, prompt: null, activeItem: null, activeRequestId: null, suppliedNextCursor: null, phase: 'practicing', recordingAvailable: false, answer: null, pendingEvents: [event], updatedAt: event.occurredAt })
   }) }
@@ -157,11 +168,11 @@ export class ExtraSpeakingTrainingRuntime {
     let resolved: { readonly unit: SpeakingTrainingUnit; readonly prompt: SpeakingPrompt }
     try { resolved = await this.options.promptForItem(item) } catch { return snapshot }
     const event = this.base('learning.extra-training.started.v1')
-    return this.save({ ...snapshot, unit: resolved.unit, prompt: resolved.prompt, activeItem: item, activeRequestId: result.requestId, suppliedNextCursor: result.nextCursor, phase: 'practicing', answer: null, recordingAvailable: false, pendingEvents: [...snapshot.pendingEvents, event], session: { ...snapshot.session, status: snapshot.session.remainingEffectiveSeconds === 0 ? 'finish-current-item' : 'running', endReason: null, endedAt: null, updatedAt: event.occurredAt }, updatedAt: event.occurredAt })
+    return this.save({ ...snapshot, unit: resolved.unit, prompt: resolved.prompt, activeItem: item, activeRequestId: result.requestId, suppliedNextCursor: result.nextCursor, phase: 'practicing', answer: null, recordingAvailable: false, pendingEvents: [...snapshot.pendingEvents, event], session: { ...snapshot.session, status: 'running', endReason: null, endedAt: null, updatedAt: event.occurredAt }, updatedAt: event.occurredAt })
   }) }
   /** @deprecated Use retryFailure so provider failures can recover through the same durable request. */
   retryContent() { return this.retryFailure() }
-  async recordEffectiveSeconds(seconds: number) { return this.queue(async () => { const s = this.require(); if (!Number.isFinite(seconds) || seconds < 0) throw new SpeakingError('session-transition-invalid', 'Effective seconds must be non-negative.'); const remaining = Math.max(0, s.session.remainingEffectiveSeconds - Math.floor(seconds)); return this.save({ ...s, session: { ...s.session, remainingEffectiveSeconds: remaining, status: s.session.status === 'running' && remaining === 0 ? 'finish-current-item' : s.session.status, updatedAt: this.now() }, updatedAt: this.now() }) }) }
+  async recordEffectiveSeconds(seconds: number) { return this.queue(async () => { const s = this.require(); if (!Number.isFinite(seconds) || seconds < 0) throw new SpeakingError('session-transition-invalid', 'Effective seconds must be non-negative.'); return this.save({ ...s, session: { ...s.session, effectiveSeconds: (s.session.effectiveSeconds ?? 0) + Math.floor(seconds), updatedAt: this.now() }, updatedAt: this.now() }) }) }
   async startRecording() { return this.queue(async () => {
     const s = this.require(); if (!s.prompt || s.phase !== 'practicing') throw new SpeakingError('session-transition-invalid', 'Extra speaking prompt is not ready to record.')
     await this.timing?.transition({ phase: 'permission-wait', reason: 'permission-wait' })
@@ -202,9 +213,7 @@ export class ExtraSpeakingTrainingRuntime {
     const attemptEvent = { ...attempt, payload: { ...attempt.payload, learningUnitId: s.activeItem.learningUnitId, contentRef: s.activeItem.contentRef, difficultyLevel: s.activeItem.difficultyLevel, estimatedSeconds: 1, result: s.answer.match ? 'scored' : 'unscorable', performanceScore: s.answer.match?.similarity ?? null, evidenceQuality: s.answer.match ? 1 : 0, assistanceLevel: 0, durationSeconds: 0, errorTags: [], contentTags: s.activeItem.tags, failureCategory: s.answer.failureCategory, scoreDelta: { schemaVersion: 1, correctCount: s.answer.match && correct ? 1 : 0, incorrectCount: s.answer.match && !correct ? 1 : 0, unscorableCount: s.answer.match ? 0 : 1 } } } as ExtraTrainingEvent
     const item = this.base('learning.extra-training.item.completed.v1')
     const itemEvent = { ...item, payload: { ...item.payload, item: s.activeItem, requestId: s.activeRequestId ?? `${s.session.sessionId}:supply`, nextSupplyCursor: s.suppliedNextCursor } } as ExtraTrainingEvent
-    const done = s.session.status === 'finish-current-item'
-    const budget = done ? { ...this.base('learning.extra-training.budget.completed.v1'), payload: { ...item.payload, completedItemCount: count } } as ExtraTrainingEvent : null
-    const saved = await this.save({ ...s, unit: done ? s.unit : null, prompt: done ? s.prompt : null, activeItem: null, activeRequestId: null, suppliedNextCursor: null, phase: done ? 'completed' : 'practicing', recordingAvailable: false, answer: null, pendingEvents: [...s.pendingEvents, attemptEvent, itemEvent, ...(budget ? [budget] : [])], session: { ...s.session, excludeItemIds: [...s.session.excludeItemIds, s.activeItem.itemId], completedItemCount: count, nextSupplyCursor: s.suppliedNextCursor, status: done ? 'completed' : s.session.status, endReason: done ? 'budget-reached' : null, endedAt: done ? item.occurredAt : null, updatedAt: item.occurredAt }, updatedAt: item.occurredAt })
+    const saved = await this.save({ ...s, unit: null, prompt: null, activeItem: null, activeRequestId: null, suppliedNextCursor: null, phase: 'practicing', recordingAvailable: false, answer: null, pendingEvents: [...s.pendingEvents, attemptEvent, itemEvent], session: { ...s.session, excludeItemIds: [...s.session.excludeItemIds, s.activeItem.itemId], completedItemCount: count, nextSupplyCursor: s.suppliedNextCursor, status: 'running', endReason: null, endedAt: null, updatedAt: item.occurredAt }, updatedAt: item.occurredAt })
     return this.flushFromQueued(saved)
   }) }
   private async flushFromQueued(snapshot: ExtraSpeakingTrainingSnapshot) {

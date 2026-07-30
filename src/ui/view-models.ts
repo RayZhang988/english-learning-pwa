@@ -22,6 +22,12 @@ export interface TrainingProgressViewModel {
   readonly value: number
 }
 
+export interface OpenEndedTrainingProgressViewModel {
+  readonly effectiveSeconds: number
+  readonly completedItemCount: number
+  readonly status: 'running' | 'content-exhausted'
+}
+
 interface TrainingHeaderBaseViewModel {
   readonly eyebrow: string
   readonly title: string
@@ -37,6 +43,7 @@ export type TrainingHeaderViewModel =
            */
           readonly durationEstimate?: TaskDurationEstimateViewModel
           readonly trainingBudget?: undefined
+          readonly openEndedTraining?: undefined
         }
       | {
           /**
@@ -44,6 +51,12 @@ export type TrainingHeaderViewModel =
            */
           readonly trainingBudget: TrainingBudgetProgressViewModel
           readonly durationEstimate?: never
+          readonly openEndedTraining?: never
+        }
+      | {
+          readonly openEndedTraining: OpenEndedTrainingProgressViewModel
+          readonly durationEstimate?: never
+          readonly trainingBudget?: never
         }
     )
 

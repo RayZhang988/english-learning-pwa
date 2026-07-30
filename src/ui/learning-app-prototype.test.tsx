@@ -409,7 +409,7 @@ describe('R2 practice task choices', () => {
           actionLabel: '继续训练',
           extraTrainingDescription:
             '今日任务已完成，可以开始额外训练。',
-          trainingBudget: { targetEffectiveSeconds: 900 },
+          openEnded: true as const,
           statusLabel: '已完成',
         }),
       ),

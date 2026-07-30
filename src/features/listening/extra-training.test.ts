@@ -17,7 +17,7 @@ class Store implements NamespaceStore {
 const session = {
   schemaVersion: 1, sessionId: 'extra-listening', localDate: '2026-07-29',
   domain: 'listening', targetModuleId: 'listening', mode: 'learn', targetDifficulty: 1,
-  targetEffectiveSeconds: 900, remainingEffectiveSeconds: 900, status: 'running',
+  completionMode: 'open-ended', effectiveSeconds: 0, status: 'running',
   nextSupplyCursor: null, excludeItemIds: [], completedItemCount: 0,
   startedAt: '2026-07-29T00:00:00.000Z', updatedAt: '2026-07-29T00:00:00.000Z',
   endedAt: null, endReason: null,
@@ -120,18 +120,19 @@ describe('extra listening commands', () => {
     unsubscribe()
   })
 
-  it('does not truncate active playback at 900 seconds and publishes completion in order after feedback', async () => {
+  it('does not truncate or finish active playback after 900 effective seconds', async () => {
     const configured = options(wordQuestion)
     const published: string[] = []
     const runtime = new ExtraListeningTrainingRuntime({ ...configured, eventSink: { publishExtraTrainingEvent: async (event) => { published.push(event.type) } } })
     await runtime.initialize(); await runtime.next(); await runtime.toggleAudio(); await runtime.recordEffectiveSeconds(900)
-    expect(runtime.currentSnapshot?.session.status).toBe('finish-current-item')
+    expect(runtime.currentSnapshot?.session).toMatchObject({ status: 'running', effectiveSeconds: 900 })
     expect(runtime.currentSnapshot?.playback?.status).toBe('playing')
     configured.speech.callbacks?.onEnd?.()
     await runtime.setPlaybackRate(1)
     await runtime.select('right'); await runtime.submit(); await runtime.completeCurrentItem()
-    expect(runtime.currentSnapshot?.session.status).toBe('completed')
-    expect(published.slice(-3)).toEqual(['learning.extra-training.attempt.completed.v1', 'learning.extra-training.item.completed.v1', 'learning.extra-training.budget.completed.v1'])
+    expect(runtime.currentSnapshot?.session.status).toBe('running')
+    expect(published.slice(-2)).toEqual(['learning.extra-training.attempt.completed.v1', 'learning.extra-training.item.completed.v1'])
+    expect(published).not.toContain('learning.extra-training.budget.completed.v1')
   })
 
   it('starts timing only from speech start and pauses it for pause, resume, and cancellation', async () => {

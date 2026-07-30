@@ -82,7 +82,7 @@ describe('R6 app view models', () => {
       targetModuleId: 'listening',
       status: 'paused',
       endReason: 'user-exited',
-      remainingEffectiveSeconds: 640,
+      effectiveSeconds: 260,
       completedItemCount: 4,
     })
     const failed = session({
@@ -91,7 +91,7 @@ describe('R6 app view models', () => {
       targetModuleId: 'speaking',
       status: 'failed',
       endReason: 'provider-failure',
-      remainingEffectiveSeconds: 700,
+      effectiveSeconds: 200,
       completedItemCount: 2,
     })
     const viewModel = toExtraTrainingPickerViewModel(
@@ -108,7 +108,7 @@ describe('R6 app view models', () => {
         moduleId: 'listening',
         status: 'paused',
         sessionId: 'paused-listening',
-        remainingEffectiveSeconds: 640,
+        effectiveSeconds: 260,
         completedItemCount: 4,
       },
       {
@@ -122,7 +122,7 @@ describe('R6 app view models', () => {
     const completed = session({
       status: 'completed',
       endReason: 'budget-reached',
-      remainingEffectiveSeconds: 0,
+      effectiveSeconds: 900,
       completedItemCount: 12,
     })
     expect(
@@ -132,7 +132,7 @@ describe('R6 app view models', () => {
       ).modules[0],
     ).toMatchObject({
       status: 'completed',
-      startAction: { label: '再练 15 分钟' },
+      startAction: { label: '开始新一轮' },
     })
 
     const exhausted = session({
@@ -165,10 +165,10 @@ describe('R6 app view models', () => {
     })
   })
 
-  it('uses only the independent timing budget for active and completion duration truth', () => {
+  it('uses accumulated effective time for active open-ended practice and preserves legacy completion truth', () => {
     const finishing = session({
-      status: 'finish-current-item',
-      remainingEffectiveSeconds: 0,
+      status: 'running',
+      effectiveSeconds: 900,
       completedItemCount: 8,
     })
     expect(
@@ -178,15 +178,22 @@ describe('R6 app view models', () => {
       ),
     ).toMatchObject({
       sessionId: 'extra-session',
-      budget: {
-        status: 'finish-current-item',
-        remainingEffectiveSeconds: 0,
+      progress: {
+        status: 'running',
+        effectiveSeconds: 900,
         completedItemCount: 8,
       },
     })
 
+    const {
+      completionMode: _completionMode,
+      effectiveSeconds: _effectiveSeconds,
+      ...legacyFinishing
+    } = finishing
     const completed = {
-      ...finishing,
+      ...legacyFinishing,
+      targetEffectiveSeconds: 900 as const,
+      remainingEffectiveSeconds: 0,
       status: 'completed' as const,
       endReason: 'budget-reached' as const,
       endedAt: '2026-07-29T09:20:00.000Z',

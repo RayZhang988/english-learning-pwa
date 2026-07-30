@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import type { PlanProgress } from './contracts.ts'
-import { EXTRA_TRAINING_EFFECTIVE_SECONDS } from './contracts.ts'
 import {
   applyExtraTrainingEvent,
   buildExtraTrainingSupplyRequest,
   createExtraTrainingSession,
   createExtraTrainingState,
   expireExtraTrainingSessions,
+  migrateExtraTrainingSessionsToOpenEnded,
 } from './extra-training.ts'
 import { applyExtraTrainingAttempt, createLearningEngineState } from './engine.ts'
 import { parseExtraTrainingEvent, parseLearningEvent } from './events.ts'
@@ -83,15 +83,15 @@ function event(
 }
 
 describe('R6 independent extra-training sessions', () => {
-  it('fixes the former gap: only a completed 3/3 daily plan can create a JSON-portable 900-second session', () => {
+  it('creates JSON-portable open-ended practice only after a completed 3/3 daily plan', () => {
     const state = create('listening')
     const session = state.sessions['listening-extra-1']
     expect(session).toMatchObject({
       schemaVersion: 1,
       localDate: '2026-07-29',
       domain: 'listening',
-      targetEffectiveSeconds: EXTRA_TRAINING_EFFECTIVE_SECONDS,
-      remainingEffectiveSeconds: 900,
+      completionMode: 'open-ended',
+      effectiveSeconds: 0,
       status: 'running',
       completedItemCount: 0,
     })
@@ -105,11 +105,11 @@ describe('R6 independent extra-training sessions', () => {
   })
 
   it.each(['vocabulary', 'listening', 'speaking'] as const)(
-    'creates a separate resumable 900-second block for %s',
+    'creates a separate resumable open-ended session for %s',
     (domain) => {
       const state = create(domain)
       const session = state.sessions[`${domain}-extra-1`]
-      expect(session).toMatchObject({ domain, targetModuleId: domain, status: 'running', remainingEffectiveSeconds: 900 })
+      expect(session).toMatchObject({ domain, targetModuleId: domain, status: 'running', completionMode: 'open-ended', effectiveSeconds: 0 })
     },
   )
 
@@ -155,17 +155,68 @@ describe('R6 independent extra-training sessions', () => {
     })
   })
 
-  it('counts only valid foreground time, reaches finish-current-item, and completes only after that item', () => {
+  it('counts valid foreground time without automatically ending open-ended practice', () => {
     let state = create()
     state = applyExtraTrainingEvent(state, event('learning.extra-training.timing.segment.recorded.v1', undefined, {
       phase: 'recording', reason: 'active-recording', visibility: 'foreground', startedAt: '2026-07-29T01:00:00.000Z', endedAt: '2026-07-29T01:15:00.000Z', elapsedSeconds: 900, idleThresholdSeconds: 45,
     }))
-    expect(state.sessions['vocabulary-extra-1'].status).toBe('finish-current-item')
+    expect(state.sessions['vocabulary-extra-1']).toMatchObject({
+      status: 'running',
+      effectiveSeconds: 900,
+    })
     state = applyExtraTrainingEvent(state, event('learning.extra-training.item.completed.v1', undefined, {
       id: 'last', requestId: 'request-last', nextSupplyCursor: null, item: { itemId: 'item-last', learningUnitId: 'unit-last', contentRef: 'lesson://unit-last', difficultyLevel: 3, tags: [] },
     }))
-    state = applyExtraTrainingEvent(state, event('learning.extra-training.budget.completed.v1', undefined, { id: 'done', completedItemCount: 1 }))
-    expect(state.sessions['vocabulary-extra-1']).toMatchObject({ status: 'completed', endReason: 'budget-reached', remainingEffectiveSeconds: 0 })
+    expect(state.sessions['vocabulary-extra-1']).toMatchObject({
+      status: 'running',
+      completedItemCount: 1,
+      effectiveSeconds: 900,
+    })
+    expect(() =>
+      applyExtraTrainingEvent(
+        state,
+        event('learning.extra-training.budget.completed.v1', undefined, {
+          id: 'done',
+          completedItemCount: 1,
+        }),
+      ),
+    ).toThrow('cannot complete from a time budget')
+  })
+
+  it('migrates an unfinished legacy 900-second session without losing progress', () => {
+    const current = create()
+    const open = current.sessions['vocabulary-extra-1']
+    const legacy = {
+      ...open,
+      completionMode: undefined,
+      effectiveSeconds: undefined,
+      targetEffectiveSeconds: 900 as const,
+      remainingEffectiveSeconds: 275,
+      status: 'finish-current-item' as const,
+      nextSupplyCursor: 'cursor-12',
+      excludeItemIds: ['item-11'],
+      completedItemCount: 11,
+    }
+    const migrated = migrateExtraTrainingSessionsToOpenEnded(
+      {
+        ...current,
+        sessions: { [legacy.sessionId]: legacy },
+      },
+      '2026-07-29T02:00:00.000Z',
+    ).sessions[legacy.sessionId]
+
+    expect(migrated).toMatchObject({
+      completionMode: 'open-ended',
+      effectiveSeconds: 625,
+      status: 'running',
+      nextSupplyCursor: 'cursor-12',
+      excludeItemIds: ['item-11'],
+      completedItemCount: 11,
+      endedAt: null,
+      endReason: null,
+    })
+    expect(migrated).not.toHaveProperty('targetEffectiveSeconds')
+    expect(migrated).not.toHaveProperty('remainingEffectiveSeconds')
   })
 
   it('is idempotent, rejects wrong session identity, and never becomes a daily-plan event', () => {

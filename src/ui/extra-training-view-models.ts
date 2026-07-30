@@ -3,7 +3,6 @@ import type {
   DurationTrainingModuleId,
   TrainingUnitScoreViewModel,
 } from './duration-view-models.ts'
-import type { TrainingBudgetProgressViewModel } from './training-budget-view-models.ts'
 
 export type ExtraTrainingModuleId = DurationTrainingModuleId
 
@@ -18,14 +17,13 @@ interface ExtraTrainingModuleBaseViewModel {
   readonly moduleId: ExtraTrainingModuleId
   readonly title: string
   readonly description: string
-  readonly targetEffectiveSeconds: number
 }
 
 interface ExtraTrainingProgressViewModel {
   /**
    * Exact upstream snapshot. UI formats but never decrements this value.
    */
-  readonly remainingEffectiveSeconds: number
+  readonly effectiveSeconds: number
   /**
    * Exact upstream count. UI does not derive it from rendered questions.
    */
@@ -46,12 +44,14 @@ export type ExtraTrainingModuleViewModel =
         readonly status: 'paused'
         readonly sessionId: string
         readonly resumeAction: ExtraTrainingActionViewModel
+        readonly newRoundAction: ExtraTrainingActionViewModel
       })
   | (ExtraTrainingModuleBaseViewModel &
       ExtraTrainingProgressViewModel & {
         readonly status: 'running'
         readonly sessionId: string
         readonly resumeAction: ExtraTrainingActionViewModel
+        readonly newRoundAction: ExtraTrainingActionViewModel
       })
   | (ExtraTrainingModuleBaseViewModel &
       ExtraTrainingProgressViewModel & {
@@ -94,15 +94,22 @@ export interface CompletedDailyPlanExtraTrainingEntryViewModel {
   }
 }
 
-export type ExtraTrainingActiveBudgetViewModel = Extract<
-  TrainingBudgetProgressViewModel,
-  {
-    readonly status:
-      | 'running'
-      | 'finish-current-item'
-      | 'content-exhausted'
-  }
->
+export type ExtraTrainingActiveProgressViewModel =
+  | {
+      readonly status: 'running'
+      readonly effectiveSeconds: number
+      readonly completedItemCount: number
+    }
+  | {
+      readonly status: 'content-exhausted'
+      readonly effectiveSeconds: number
+      readonly completedItemCount: number
+      readonly contentExhausted: {
+        readonly reason: 'provider-failure' | 'no-eligible-content'
+        readonly description: string
+      }
+      readonly retryAction: ExtraTrainingActionViewModel
+    }
 
 export interface ExtraTrainingActiveSessionViewModel<
   TModuleId extends ExtraTrainingModuleId = ExtraTrainingModuleId,
@@ -112,7 +119,7 @@ export interface ExtraTrainingActiveSessionViewModel<
    */
   readonly sessionId: string
   readonly moduleId: TModuleId
-  readonly budget: ExtraTrainingActiveBudgetViewModel
+  readonly progress: ExtraTrainingActiveProgressViewModel
   readonly exitAction: ExtraTrainingActionViewModel & {
     readonly label: '退出并保存'
   }

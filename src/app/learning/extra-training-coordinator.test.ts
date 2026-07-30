@@ -92,8 +92,8 @@ describe('ProductionExtraTrainingCoordinator', () => {
       targetModuleId: 'listening',
       targetDifficulty:
         engine.progress.domains.listening.currentLevel,
-      targetEffectiveSeconds: 900,
-      remainingEffectiveSeconds: 900,
+      completionMode: 'open-ended',
+      effectiveSeconds: 0,
       status: 'running',
       priorityItemIds: {
         'recent-error': ['released-error'],
@@ -137,7 +137,8 @@ describe('ProductionExtraTrainingCoordinator', () => {
         targetModuleId: moduleId,
         localDate: runtime.activePlan.plan.localDate,
         status: 'running',
-        targetEffectiveSeconds: 900,
+        completionMode: 'open-ended',
+        effectiveSeconds: 0,
       })
       expect(
         (await activePlans.load())?.activePlan.tasks,
@@ -191,7 +192,7 @@ describe('ProductionExtraTrainingCoordinator', () => {
     ).toEqual(currentRuntime.activePlan)
   })
 
-  it('resumes the same paused session and creates a new session only after completion', async () => {
+  it('resumes the same paused session or explicitly starts a fresh round', async () => {
     const planStore = new MemoryNamespaceStore('plans')
     const engineStore = new MemoryNamespaceStore('engine')
     const activePlans = new ActivePlanRepository(planStore)
@@ -237,35 +238,25 @@ describe('ProductionExtraTrainingCoordinator', () => {
     const resumed = await coordinator.start('speaking')
     expect(resumed.sessionId).toBe(first.sessionId)
 
-    const pausedState = await engineStates.load()
-    await engineStates.save({
-      ...pausedState!,
-      extraTraining: {
-        ...pausedState!.extraTraining!,
-        sessions: {
-          ...pausedState!.extraTraining!.sessions,
-          [first.sessionId]: {
-            ...pausedState!.extraTraining!.sessions[first.sessionId],
-            status: 'completed',
-            remainingEffectiveSeconds: 0,
-            endReason: 'budget-reached',
-            endedAt: '2026-07-29T09:20:00.000Z',
-          },
-        },
-      },
-    })
-
-    const second = await coordinator.start('speaking')
+    const second = await coordinator.startFresh('speaking')
     expect(second.sessionId).toBe(
       'extra:2026-07-29:speaking:second',
     )
     expect(second.sessionId).not.toBe(first.sessionId)
     expect(
+      (await engineStates.load())?.extraTraining?.sessions[
+        first.sessionId
+      ],
+    ).toMatchObject({
+      status: 'expired',
+      endReason: 'user-restarted',
+    })
+    expect(
       (await activePlans.load())?.activePlan.status,
     ).toBe('completed')
   })
 
-  it('persists exit, resume, budget completion, duplicate replay, and retraining as one isolated lifecycle', async () => {
+  it('persists exit, resume and open-ended timing as one isolated lifecycle', async () => {
     const planStore = new MemoryNamespaceStore('plans')
     const engineStore = new MemoryNamespaceStore('engine')
     const activePlans = new ActivePlanRepository(planStore)
@@ -352,31 +343,16 @@ describe('ProductionExtraTrainingCoordinator', () => {
         },
       }),
     )
-    const completed = event(
-      'learning.extra-training.budget.completed.v1',
-      { completedItemCount: 1 },
-    )
-    await coordinator.eventSink.publishExtraTrainingEvent(completed)
-    await coordinator.eventSink.publishExtraTrainingEvent(completed)
-
     const next = await coordinator.start('vocabulary')
     const saved = await engineStates.load()
     expect(
       saved?.extraTraining?.sessions[first.sessionId],
     ).toMatchObject({
-      status: 'completed',
-      endReason: 'budget-reached',
-      remainingEffectiveSeconds: 0,
+      status: 'running',
+      effectiveSeconds: 900,
       completedItemCount: 1,
     })
-    expect(next.sessionId).toBe(
-      'extra:2026-07-29:vocabulary:second',
-    )
-    expect(
-      saved?.extraTraining?.processedEventIds.filter(
-        (eventId) => eventId === completed.id,
-      ),
-    ).toHaveLength(1)
+    expect(next.sessionId).toBe(first.sessionId)
     expect((await activePlans.load())?.activePlan).toEqual(
       runtime.activePlan,
     )

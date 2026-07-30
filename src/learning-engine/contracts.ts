@@ -22,7 +22,11 @@ export const LEARNING_EVENT_SCHEMA_VERSION = 1 as const
 export const DEFAULT_DAILY_TARGET_SECONDS = 45 * 60
 /** Every required daily domain is an effective-practice stream of 15 minutes. */
 export const REQUIRED_TASK_EFFECTIVE_SECONDS = 15 * 60
-/** Every optional R6 training block has the same independent effective budget. */
+/**
+ * Legacy R6 optional-session budget. R6.1 replaced the optional completion
+ * rule with user-controlled, open-ended practice. Keep this value only for
+ * reading pre-R6.1 persisted sessions and events.
+ */
 export const EXTRA_TRAINING_EFFECTIVE_SECONDS = 15 * 60
 export const MINIMUM_DAILY_BUDGET_SECONDS = 5 * 60
 export const MAX_INTERACTION_IDLE_SECONDS = 45 as const
@@ -232,6 +236,7 @@ export type ExtraTrainingEndReason =
   | 'provider-failure'
   | 'device-failure'
   | 'cross-day-expired'
+  | 'user-restarted'
 
 /**
  * Exact, additive scoring facts for one training unit.
@@ -258,8 +263,18 @@ export interface ExtraTrainingSession {
   readonly targetModuleId: TrainingModuleId
   readonly mode: 'learn'
   readonly targetDifficulty: number
-  readonly targetEffectiveSeconds: typeof EXTRA_TRAINING_EFFECTIVE_SECONDS
-  readonly remainingEffectiveSeconds: number
+  /**
+   * R6.1 sessions are open-ended and finish only when the learner exits.
+   * Missing means a legacy 900-second session that must be migrated before
+   * it is resumed.
+   */
+  readonly completionMode?: 'open-ended'
+  /** Reliable foreground practice accumulated across pause/resume. */
+  readonly effectiveSeconds?: number
+  /** @deprecated Pre-R6.1 persistence compatibility only. */
+  readonly targetEffectiveSeconds?: typeof EXTRA_TRAINING_EFFECTIVE_SECONDS
+  /** @deprecated Pre-R6.1 persistence compatibility only. */
+  readonly remainingEffectiveSeconds?: number
   readonly status: ExtraTrainingStatus
   readonly nextSupplyCursor: string | null
   readonly excludeItemIds: readonly string[]

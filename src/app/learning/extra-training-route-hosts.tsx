@@ -272,6 +272,13 @@ export function ExtraTrainingPickerRouteHost() {
           openSession(session.sessionId)
         })
       }
+      onStartFreshRequested={(moduleId) =>
+        run(async () => {
+          const session =
+            await coordinator.startFreshExtraTraining(moduleId)
+          openSession(session.sessionId)
+        })
+      }
       onResumeRequested={(sessionId) =>
         run(async () => {
           coordinator.resolveExtraTrainingSession(sessionId)
@@ -409,14 +416,6 @@ function ExtraVocabularyRoute({
     return loading('正在获取额外词汇题目')
   }
 
-  const syncBudget = async () => {
-    if (
-      session.remainingEffectiveSeconds === 0 &&
-      runtime.currentSnapshot?.session.status === 'running'
-    ) {
-      await runtime.markBudgetReached()
-    }
-  }
   return (
     <ExtraVocabularyTrainingScreen
       viewModel={toExtraVocabularyScreenViewModel(
@@ -430,19 +429,14 @@ function ExtraVocabularyRoute({
       )}
       onSelect={(optionId) => {
         void controller.run(async () => {
-          await syncBudget()
           return runtime.select(optionId)
         })
       }}
       onAction={() => {
         void controller.run(async () => {
-          await syncBudget()
           const current = runtime.currentSnapshot
           if (current?.phase === 'feedback') {
             let next = await runtime.advanceAfterFeedback()
-            if (next.session.status === 'completed') {
-              next = await runtime.finishTiming()
-            }
             next = await runtime.flush()
             if (
               next.phase === 'answering' &&
@@ -565,14 +559,6 @@ function ExtraListeningRoute({
   if (!snapshot.question || !snapshot.playback) {
     return loading('正在获取额外听力题目')
   }
-  const syncBudget = async () => {
-    if (
-      session.remainingEffectiveSeconds === 0 &&
-      runtime.currentSnapshot?.session.status === 'running'
-    ) {
-      await runtime.markBudgetReached()
-    }
-  }
   const updateQuestion = (
     intent: ListeningQuestionInputIntent,
   ) =>
@@ -608,7 +594,6 @@ function ExtraListeningRoute({
       }}
       onAction={() => {
         void controller.run(async () => {
-          await syncBudget()
           const current = runtime.currentSnapshot
           if (current?.phase === 'feedback') {
             let next = await runtime.completeCurrentItem()
@@ -732,17 +717,6 @@ function ExtraSpeakingRoute({
   if (!snapshot.prompt) {
     return loading('正在获取额外口语题目')
   }
-  const syncBudget = async () => {
-    if (
-      session.remainingEffectiveSeconds === 0 &&
-      runtime.currentSnapshot?.session.status === 'running'
-    ) {
-      await runtime.recordEffectiveSeconds(
-        runtime.currentSnapshot.session.remainingEffectiveSeconds,
-      )
-    }
-  }
-
   return (
     <ExtraSpeakingTrainingScreen
       viewModel={toExtraSpeakingScreenViewModel(
@@ -756,7 +730,6 @@ function ExtraSpeakingRoute({
       )}
       onRecorderAction={() => {
         void controller.run(async () => {
-          await syncBudget()
           return runtime.currentSnapshot?.recordingAvailable
             ? runtime.stopRecording()
             : runtime.startRecording()
@@ -767,7 +740,6 @@ function ExtraSpeakingRoute({
       }}
       onAction={() => {
         void controller.run(async () => {
-          await syncBudget()
           const current = runtime.currentSnapshot
           if (current?.phase !== 'feedback') {
             return current ?? runtime.initialize()
@@ -782,7 +754,6 @@ function ExtraSpeakingRoute({
       }}
       onSecondaryAction={() => {
         void controller.run(async () => {
-          await syncBudget()
           return runtime.continueWithoutRecording()
         })
       }}
@@ -884,6 +855,15 @@ export function ExtraTrainingRouteHost() {
         onStartRequested={async (targetModuleId) => {
           const next =
             await coordinator.startExtraTraining(targetModuleId)
+          navigate(
+            coordinator.routeForExtraTrainingSession(
+              next.sessionId,
+            ),
+          )
+        }}
+        onStartFreshRequested={async (targetModuleId) => {
+          const next =
+            await coordinator.startFreshExtraTraining(targetModuleId)
           navigate(
             coordinator.routeForExtraTrainingSession(
               next.sessionId,

@@ -112,8 +112,8 @@ describe('ProductionExtraTrainingEventSink', () => {
     const saved = await repository.load()
     expect(
       saved?.extraTraining?.sessions['extra-session']
-        .remainingEffectiveSeconds,
-    ).toBe(870)
+        .effectiveSeconds,
+    ).toBe(30)
     expect(saved?.progress.attempts).toHaveLength(1)
     expect(
       saved?.extraTraining?.sessions['extra-session'].score,

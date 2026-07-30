@@ -115,23 +115,20 @@ function toModuleViewModel(
   session: ExtraTrainingSession | undefined,
   busy: boolean,
 ): ExtraTrainingModuleViewModel {
-  const durationLabel = trainingBlockDurationLabel()
   const base = {
     moduleId,
     ...modulePresentation[moduleId],
-    targetEffectiveSeconds: 900,
   }
   if (!session) {
     return {
       ...base,
       status: 'available',
-      startAction: action(`开始 ${durationLabel}`, busy),
+      startAction: action('开始训练', busy),
     }
   }
   if (session.status === 'expired') {
     return {
       ...base,
-      targetEffectiveSeconds: session.targetEffectiveSeconds,
       status: 'expired',
       sessionId: session.sessionId,
       completedItemCount: session.completedItemCount,
@@ -140,16 +137,15 @@ function toModuleViewModel(
   }
   const progress = {
     ...base,
-    targetEffectiveSeconds: session.targetEffectiveSeconds,
     sessionId: session.sessionId,
-    remainingEffectiveSeconds: session.remainingEffectiveSeconds,
+    effectiveSeconds: sessionEffectiveSeconds(session),
     completedItemCount: session.completedItemCount,
   }
   if (session.status === 'completed') {
     return {
       ...progress,
       status: 'completed',
-      startAction: action(`再练 ${durationLabel}`, busy),
+      startAction: action('开始新一轮', busy),
     }
   }
   if (session.status === 'paused') {
@@ -157,6 +153,7 @@ function toModuleViewModel(
       ...progress,
       status: 'paused',
       resumeAction: action('继续上次训练', busy),
+      newRoundAction: action('开始新一轮', busy),
     }
   }
   if (
@@ -167,6 +164,7 @@ function toModuleViewModel(
       ...progress,
       status: 'running',
       resumeAction: action('进入当前训练', busy),
+      newRoundAction: action('开始新一轮', busy),
     }
   }
   if (session.endReason === 'content-exhausted') {
@@ -174,7 +172,7 @@ function toModuleViewModel(
       ...progress,
       status: 'content-exhausted',
       failureDescription:
-        '当前没有可继续提供的合格题目；剩余时间和排除记录已保留。',
+        '当前没有可继续提供的合格题目；已练时间和排除记录已保留。',
       retryAction: action('重新获取题目', busy),
     }
   }
@@ -233,11 +231,10 @@ export function toExtraTrainingActiveViewModel<
     )
   }
   const base = {
-    targetEffectiveSeconds: session.targetEffectiveSeconds,
-    remainingEffectiveSeconds: session.remainingEffectiveSeconds,
+    effectiveSeconds: sessionEffectiveSeconds(session),
     completedItemCount: session.completedItemCount,
   }
-  const budget =
+  const progress =
     session.status === 'failed' &&
     session.endReason === 'content-exhausted'
       ? {
@@ -250,19 +247,14 @@ export function toExtraTrainingActiveViewModel<
           },
           retryAction: action('重新获取题目', busy),
         }
-      : session.status === 'finish-current-item'
-        ? {
-            ...base,
-            status: 'finish-current-item' as const,
-          }
-        : {
+      : {
             ...base,
             status: 'running' as const,
           }
   return {
     sessionId: session.sessionId,
     moduleId,
-    budget,
+    progress,
     exitAction: {
       ...action('退出并保存', busy),
       label: '退出并保存',
@@ -294,8 +286,7 @@ export function toExtraTrainingCompletionViewModel(
     actualDuration: {
       state: 'reliable',
       effectiveSeconds:
-        session.targetEffectiveSeconds -
-        session.remainingEffectiveSeconds,
+        sessionEffectiveSeconds(session),
       source: 'timing-segments',
     },
     chooseAgainAction: {
@@ -315,15 +306,23 @@ function progress(
   readonly label: string
   readonly value: number
 } {
-  const elapsed =
-    session.targetEffectiveSeconds -
-    session.remainingEffectiveSeconds
   return {
     label: `累计完成 ${session.completedItemCount} 题`,
-    value: Math.round(
-      (elapsed / Math.max(1, session.targetEffectiveSeconds)) * 100,
-    ),
+    value: 0,
   }
+}
+
+function sessionEffectiveSeconds(
+  session: ExtraTrainingSession,
+): number {
+  if (session.completionMode === 'open-ended') {
+    return session.effectiveSeconds ?? 0
+  }
+  return Math.max(
+    0,
+    (session.targetEffectiveSeconds ?? 900) -
+      (session.remainingEffectiveSeconds ?? 900),
+  )
 }
 
 function choiceState(

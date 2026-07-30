@@ -1,6 +1,7 @@
 import {
   createExtraTrainingSession,
   expireExtraTrainingSessions,
+  migrateExtraTrainingSessionsToOpenEnded,
   type ExtraTrainingSession,
   type LearningEngineRepository,
   type LearningEngineState,
@@ -51,7 +52,7 @@ export class ProductionExtraTrainingCoordinator {
   readonly #listeners =
     new Set<ExtraTrainingEngineUpdateListener>()
   readonly #starts = new Map<
-    TrainingModuleId,
+    string,
     Promise<ExtraTrainingSession>
   >()
   readonly eventSink: ProductionExtraTrainingEventSink
@@ -87,10 +88,14 @@ export class ProductionExtraTrainingCoordinator {
         return engineState
       }
       const now = this.#now()
-      const extraTraining = expireExtraTrainingSessions(
-        engineState.extraTraining,
-        formatLocalDate(now),
-        now.toISOString(),
+      const occurredAt = now.toISOString()
+      const extraTraining = migrateExtraTrainingSessionsToOpenEnded(
+        expireExtraTrainingSessions(
+          engineState.extraTraining,
+          formatLocalDate(now),
+          occurredAt,
+        ),
+        occurredAt,
       )
       if (
         sameExtraTrainingState(
@@ -109,17 +114,31 @@ export class ProductionExtraTrainingCoordinator {
   start(
     moduleId: TrainingModuleId,
   ): Promise<ExtraTrainingSession> {
-    const current = this.#starts.get(moduleId)
+    return this.#scheduleStart(moduleId, false)
+  }
+
+  startFresh(
+    moduleId: TrainingModuleId,
+  ): Promise<ExtraTrainingSession> {
+    return this.#scheduleStart(moduleId, true)
+  }
+
+  #scheduleStart(
+    moduleId: TrainingModuleId,
+    fresh: boolean,
+  ): Promise<ExtraTrainingSession> {
+    const operationKey = fresh ? `fresh:${moduleId}` : moduleId
+    const current = this.#starts.get(operationKey)
     if (current) {
       return current
     }
     const operation = this.#enqueue(() =>
-      this.#start(moduleId),
+      this.#start(moduleId, fresh),
     )
-    this.#starts.set(moduleId, operation)
+    this.#starts.set(operationKey, operation)
     const clear = () => {
-      if (this.#starts.get(moduleId) === operation) {
-        this.#starts.delete(moduleId)
+      if (this.#starts.get(operationKey) === operation) {
+        this.#starts.delete(operationKey)
       }
     }
     void operation.then(clear, clear)
@@ -128,6 +147,7 @@ export class ProductionExtraTrainingCoordinator {
 
   async #start(
     moduleId: TrainingModuleId,
+    fresh: boolean,
   ): Promise<ExtraTrainingSession> {
     const now = this.#now()
     const localDate = formatLocalDate(now)
@@ -156,14 +176,47 @@ export class ProductionExtraTrainingCoordinator {
 
     let engineState = await this.#requireEngineState()
     const expired = engineState.extraTraining
-      ? expireExtraTrainingSessions(
-          engineState.extraTraining,
-          localDate,
+      ? migrateExtraTrainingSessionsToOpenEnded(
+          expireExtraTrainingSessions(
+            engineState.extraTraining,
+            localDate,
+            occurredAt,
+          ),
           occurredAt,
         )
       : undefined
     if (expired !== engineState.extraTraining) {
       engineState = { ...engineState, extraTraining: expired }
+    }
+    if (fresh && engineState.extraTraining) {
+      const sessions = { ...engineState.extraTraining.sessions }
+      let changed = false
+      for (const [sessionId, session] of Object.entries(sessions)) {
+        if (
+          session.localDate === localDate &&
+          session.targetModuleId === moduleId &&
+          session.status !== 'completed' &&
+          session.status !== 'expired'
+        ) {
+          sessions[sessionId] = {
+            ...session,
+            status: 'expired',
+            endedAt: occurredAt,
+            endReason: 'user-restarted',
+            updatedAt: occurredAt,
+          }
+          changed = true
+        }
+      }
+      if (changed) {
+        engineState = {
+          ...engineState,
+          extraTraining: {
+            ...engineState.extraTraining,
+            sessions,
+          },
+        }
+      }
     }
     const existing = Object.values(
       engineState.extraTraining?.sessions ?? {},

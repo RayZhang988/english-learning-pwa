@@ -1288,7 +1288,7 @@ async function verifyThirtySecondMode(page) {
 async function waitForPicker(page) {
   await page.waitFor(
     `location.hash === '#/extra-training' &&
-      document.body.innerText.includes('每次选择一个 15 分钟有效训练块')`,
+      document.body.innerText.includes('额外训练不设时长')`,
     20_000,
   )
 }
@@ -1368,8 +1368,8 @@ function snapshotIdentity(snapshot) {
       snapshot.session.nextSupplyCursor ??
       null,
     completedItemCount: snapshot.session.completedItemCount,
-    remainingEffectiveSeconds:
-      snapshot.session.remainingEffectiveSeconds,
+    effectiveSeconds:
+      snapshot.session.effectiveSeconds ?? 0,
   }
 }
 
@@ -1410,10 +1410,8 @@ async function verifyExitRefreshResume(page, moduleId, rapid = false) {
     },
   )
   assert.ok(
-    after.remainingEffectiveSeconds <=
-      before.remainingEffectiveSeconds &&
-      after.remainingEffectiveSeconds >=
-        before.remainingEffectiveSeconds - 1,
+    after.effectiveSeconds >= before.effectiveSeconds &&
+      after.effectiveSeconds <= before.effectiveSeconds + 1,
     `${moduleId} charged offline/refresh time: ${JSON.stringify({
       before,
       after,
@@ -1421,6 +1419,50 @@ async function verifyExitRefreshResume(page, moduleId, rapid = false) {
   )
   await exitExtra(page, moduleId)
   return { sessionId, before, after }
+}
+
+async function verifyOpenEndedContinues(
+  page,
+  moduleId,
+  sessionId,
+) {
+  const opened = await startOrResumeExtra(page, moduleId)
+  assert.equal(opened, sessionId)
+  const before = extraSession(await page.dumpIndexedDb(), sessionId)
+  const body = await page.bodyText()
+  assert.match(body, /不限时额外训练/u)
+  assert.doesNotMatch(body, /剩余有效时间|完成本题并结束/u)
+
+  if (moduleId === 'vocabulary') {
+    await submitVocabularyAnswer(page)
+  } else if (moduleId === 'listening') {
+    await finishControlledSpeech(page)
+    await answerListening(page)
+  } else {
+    await recordSpeaking(page)
+  }
+  await page.waitFor(
+    `[...document.querySelectorAll('button')].some(
+      (button) =>
+        button.innerText.trim() === '下一题' &&
+        !button.disabled
+    )`,
+    20_000,
+  )
+  await page.clickByText('下一题')
+  await page.waitFor(
+    `!document.querySelector('.extra-training-completion-screen')`,
+    20_000,
+  )
+  await waitForExtraQuestion(page, moduleId)
+  const after = extraSession(await page.dumpIndexedDb(), sessionId)
+  assert.equal(after.status, 'running')
+  assert.ok(after.completedItemCount > before.completedItemCount)
+  assert.equal(after.completionMode, 'open-ended')
+  assert.equal('targetEffectiveSeconds' in after, false)
+  assert.equal('remainingEffectiveSeconds' in after, false)
+  await exitExtra(page, moduleId)
+  return after
 }
 
 async function forceExtraFinishCurrent(page, sessionId) {
@@ -1440,7 +1482,8 @@ async function forceExtraFinishCurrent(page, sessionId) {
   )
 }
 
-async function completeExtra(page, moduleId, sessionId) {
+/** Historical pre-R6.1 completion probe retained for deployed-version audits. */
+export async function completeExtra(page, moduleId, sessionId) {
   const opened = await startOrResumeExtra(page, moduleId)
   assert.equal(opened, sessionId)
   await forceExtraFinishCurrent(page, sessionId)
@@ -1848,7 +1891,7 @@ async function run() {
       practiceEntries.every(
         (entry) =>
           entry.text.includes('继续训练') &&
-          entry.text.includes('15 分钟有效训练'),
+          entry.text.includes('不限时'),
       ),
       true,
     )
@@ -1886,7 +1929,7 @@ async function run() {
     assert.equal(
       initialPicker.every(
         (module) =>
-          module.text.includes('15 分钟有效训练') &&
+          module.text.includes('主动退出') &&
           module.disabled === false,
       ),
       true,
@@ -1928,35 +1971,25 @@ async function run() {
       picker390,
     })
 
-    const completedExtras = {}
+    const openEndedExtras = {}
     for (const moduleId of MODULES) {
-      completedExtras[moduleId] = await completeExtra(
+      openEndedExtras[moduleId] = await verifyOpenEndedContinues(
         qa.page,
         moduleId,
         recovery[moduleId].sessionId,
       )
       await assertDailyThreeOfThree(qa.page, completedRuntime)
-      if (moduleId !== 'speaking') {
-        await qa.page.clickByText('返回今日完成')
-        await qa.page.waitFor(
-          `document.body.innerText.includes('今日计划 3/3 已完成')`,
-          20_000,
-        )
-        await qa.page.clickByText('继续训练')
-        await waitForPicker(qa.page)
-      }
     }
-    checkpoint('r6-finish-current-item-all-modules', {
+    checkpoint('r6-open-ended-all-modules', {
       modules: Object.fromEntries(
-        Object.entries(completedExtras).map(
+        Object.entries(openEndedExtras).map(
           ([moduleId, session]) => [
             moduleId,
             {
               sessionId: session.sessionId,
               status: session.status,
               completedItemCount: session.completedItemCount,
-              remainingEffectiveSeconds:
-                session.remainingEffectiveSeconds,
+              effectiveSeconds: session.effectiveSeconds,
             },
           ],
         ),
@@ -1964,22 +1997,44 @@ async function run() {
       speechProbe: await qa.page.speechSynthesisSnapshot(),
     })
 
-    await qa.page.clickByText('再练 15 分钟')
-    await waitForPicker(qa.page)
-    const secondSpeakingId = await startOrResumeExtra(
-      qa.page,
-      'speaking',
+    const freshSpeakingStarted = await qa.page.evaluate(`(() => {
+      const card = document.querySelector(
+        '.extra-training-module-card[data-module-id="speaking"]'
+      )
+      const button = [...(card?.querySelectorAll('button') ?? [])]
+        .find((candidate) =>
+          candidate.innerText.trim() === '开始新一轮'
+        )
+      if (!button || button.disabled) return false
+      button.click()
+      return true
+    })()`)
+    assert.equal(freshSpeakingStarted, true)
+    await qa.page.waitFor(
+      `location.hash.startsWith(
+        '#/extra-training/speaking?sessionId='
+      )`,
+      20_000,
     )
+    const freshSpeakingId = new URL(
+      await qa.page.url(),
+    ).hash.split('sessionId=')[1]?.split('&')[0]
+    assert.ok(freshSpeakingId)
     assert.notEqual(
-      secondSpeakingId,
+      decodeURIComponent(freshSpeakingId),
       recovery.speaking.sessionId,
-      'A completed optional block was reused instead of creating a new session.',
     )
+    const replacedSpeaking = extraSession(
+      await qa.page.dumpIndexedDb(),
+      recovery.speaking.sessionId,
+    )
+    assert.equal(replacedSpeaking.status, 'expired')
+    assert.equal(replacedSpeaking.endReason, 'user-restarted')
+    await waitForExtraQuestion(qa.page, 'speaking')
     await exitExtra(qa.page, 'speaking')
-    await assertDailyThreeOfThree(qa.page, completedRuntime)
-    checkpoint('r6-again-creates-new-session', {
+    checkpoint('r6-user-starts-fresh-round', {
       previousSessionId: recovery.speaking.sessionId,
-      newSessionId: secondSpeakingId,
+      newSessionId: decodeURIComponent(freshSpeakingId),
     })
 
     const pwa = await assertPwaCache(qa.page)

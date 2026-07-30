@@ -4,6 +4,7 @@ import type {
   ExtraTrainingSupplyRequest,
   LearningTaskSupplyResult,
 } from '../../learning-engine/index.ts'
+import { migrateExtraTrainingSessionToOpenEnded } from '../../learning-engine/index.ts'
 import type {
   ExtraTrainingEffectiveTimingSessionFactoryPort,
   ExtraTrainingEventSink,
@@ -69,8 +70,14 @@ export class ExtraVocabularyTrainingRuntime {
     this.timing ??= await this.options.timingSessionFactory.create(this.options.session)
     const restored = await this.repository.load(this.options.session.sessionId)
     if (restored) {
-      this.snapshot = restored
-      return restored
+      return this.save({
+        ...restored,
+        session: migrateExtraTrainingSessionToOpenEnded(
+          restored.session,
+          this.now(),
+        ),
+        updatedAt: this.now(),
+      })
     }
     const started = this.base('learning.extra-training.started.v1')
     const snapshot: ExtraVocabularyTrainingSnapshot = { schemaVersion: 1, session: this.options.session, question: null, activeItem: null, selectedOptionId: null, phase: 'answering', pendingEvents: [started], updatedAt: this.now() }
@@ -89,13 +96,14 @@ export class ExtraVocabularyTrainingRuntime {
   select(optionId: string) { return this.queue(async () => { const snapshot = this.require(); if (!snapshot.question || !snapshot.question.options.some((option) => option.id === optionId)) throw new VocabularyError('session-transition-invalid', 'Option does not belong to extra vocabulary question.'); return this.save({ ...snapshot, selectedOptionId: optionId, updatedAt: this.now() }) }) }
   submit() { return this.queue(async () => { const snapshot = this.require(); if (!snapshot.question || snapshot.selectedOptionId === null) throw new VocabularyError('session-transition-invalid', 'Select an answer before submitting.'); await this.timing?.transition({ phase: 'feedback', reason: 'active-feedback' }); return this.save({ ...snapshot, phase: 'feedback', updatedAt: this.now() }) }) }
   answerIsCorrect() { const snapshot = this.require(); return snapshot.question !== null && snapshot.selectedOptionId !== null && judgeVocabularyAnswer(snapshot.question, snapshot.selectedOptionId) }
-  markBudgetReached() { return this.queue(async () => { const snapshot = this.require(); if (snapshot.session.status !== 'running') return snapshot; return this.save({ ...snapshot, session: { ...snapshot.session, remainingEffectiveSeconds: 0, status: 'finish-current-item', updatedAt: this.now() }, updatedAt: this.now() }) }) }
-  recordEffectiveSeconds(seconds: number) { return this.queue(async () => { const snapshot = this.require(); if (!Number.isFinite(seconds) || seconds < 0) throw new VocabularyError('session-transition-invalid', 'Effective seconds must be non-negative.'); const remaining = Math.max(0, snapshot.session.remainingEffectiveSeconds - Math.floor(seconds)); return this.save({ ...snapshot, session: { ...snapshot.session, remainingEffectiveSeconds: remaining, status: snapshot.session.status === 'running' && remaining === 0 ? 'finish-current-item' : snapshot.session.status, updatedAt: this.now() }, updatedAt: this.now() }) }) }
+  /** @deprecated R6.1 extra practice has no time budget to reach. */
+  markBudgetReached() { return Promise.resolve(this.require()) }
+  recordEffectiveSeconds(seconds: number) { return this.queue(async () => { const snapshot = this.require(); if (!Number.isFinite(seconds) || seconds < 0) throw new VocabularyError('session-transition-invalid', 'Effective seconds must be non-negative.'); return this.save({ ...snapshot, session: { ...snapshot.session, effectiveSeconds: (snapshot.session.effectiveSeconds ?? 0) + Math.floor(seconds), updatedAt: this.now() }, updatedAt: this.now() }) }) }
   private async retryNow(snapshot: ExtraVocabularyTrainingSnapshot): Promise<ExtraVocabularyTrainingSnapshot> {
     if (snapshot.session.endReason !== 'content-exhausted' && snapshot.session.endReason !== 'provider-failure' && snapshot.session.endReason !== 'device-failure') {
       throw new VocabularyError('session-transition-invalid', 'Only a failed extra vocabulary session can retry.')
     }
-    const resumableSession: ExtraTrainingSession = { ...snapshot.session, status: snapshot.session.remainingEffectiveSeconds === 0 ? 'finish-current-item' : 'running', endReason: null, endedAt: null, updatedAt: this.now() }
+    const resumableSession: ExtraTrainingSession = { ...snapshot.session, status: 'running', endReason: null, endedAt: null, updatedAt: this.now() }
     const request = this.options.supplyRequest(resumableSession)
     if (!request) throw new VocabularyError('session-transition-invalid', 'Extra vocabulary session cannot retry content.')
     const result = await this.options.supplyProvider.next(request)
@@ -117,10 +125,7 @@ export class ExtraVocabularyTrainingRuntime {
     const attempt = { ...this.base('learning.extra-training.attempt.completed.v1'), payload: { ...base.payload, learningUnitId: snapshot.activeItem.learningUnitId, contentRef: snapshot.activeItem.contentRef, difficultyLevel: snapshot.activeItem.difficultyLevel, estimatedSeconds: 1, result: 'scored', performanceScore: correct ? 1 : 0, evidenceQuality: 1, assistanceLevel: 0, durationSeconds: 0, errorTags: correct ? [] : [question!.errorTag], contentTags: snapshot.activeItem.tags, failureCategory: null, scoreDelta: { schemaVersion: 1, correctCount: correct ? 1 : 0, incorrectCount: correct ? 0 : 1, unscorableCount: 0 } } } as ExtraTrainingEvent
     const event = { ...base, payload: { ...base.payload, item: snapshot.activeItem, requestId: snapshot.activeRequestId ?? `${snapshot.session.sessionId}:supply`, nextSupplyCursor: snapshot.suppliedNextCursor ?? snapshot.activeItem.itemId } } as ExtraTrainingEvent
     const count = snapshot.session.completedItemCount + 1
-    const budget = snapshot.session.status === 'finish-current-item'
-      ? { ...this.base('learning.extra-training.budget.completed.v1'), payload: { ...base.payload, completedItemCount: count } } as ExtraTrainingEvent
-      : null
-    return this.save({ ...snapshot, phase: budget ? 'completed' : 'answering', pendingEvents: [...snapshot.pendingEvents, attempt, event, ...(budget ? [budget] : [])], session: { ...snapshot.session, excludeItemIds: [...snapshot.session.excludeItemIds, snapshot.activeItem.itemId], completedItemCount: count, nextSupplyCursor: snapshot.suppliedNextCursor ?? snapshot.activeItem.itemId, status: budget ? 'completed' : snapshot.session.status, endReason: budget ? 'budget-reached' : null, endedAt: budget ? event.occurredAt : null, updatedAt: event.occurredAt }, updatedAt: event.occurredAt })
+    return this.save({ ...snapshot, phase: 'answering', pendingEvents: [...snapshot.pendingEvents, attempt, event], session: { ...snapshot.session, excludeItemIds: [...snapshot.session.excludeItemIds, snapshot.activeItem.itemId], completedItemCount: count, nextSupplyCursor: snapshot.suppliedNextCursor ?? snapshot.activeItem.itemId, status: 'running', endReason: null, endedAt: null, updatedAt: event.occurredAt }, updatedAt: event.occurredAt })
   }
   completeCurrentItem() { return this.queue(async () => this.completeCurrentItemNow(this.require())) }
   private async nextNow(snapshot: ExtraVocabularyTrainingSnapshot): Promise<ExtraVocabularyTrainingSnapshot> {

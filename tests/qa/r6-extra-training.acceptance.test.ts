@@ -347,8 +347,8 @@ describe('R6 optional extra-training external acceptance', () => {
     expect(duplicate.sessionId).toBe(first.sessionId)
     expect(first).toMatchObject({
       targetModuleId: 'vocabulary',
-      targetEffectiveSeconds: 900,
-      remainingEffectiveSeconds: 900,
+      completionMode: 'open-ended',
+      effectiveSeconds: 0,
       status: 'running',
       completedItemCount: 0,
     })
@@ -498,7 +498,7 @@ describe('R6 optional extra-training external acceptance', () => {
     },
   )
 
-  it('counts only active foreground time at 899/900 and completes only after the current released item', async () => {
+  it('counts only active foreground time and stays open after 900 seconds and another released item', async () => {
     const { extra, session } = createSession()
     let state = extra
     for (const event of [
@@ -531,8 +531,8 @@ describe('R6 optional extra-training external acceptance', () => {
     }
     expect(
       state.sessions[session.sessionId]
-        ?.remainingEffectiveSeconds,
-    ).toBe(900)
+        ?.effectiveSeconds,
+    ).toBe(0)
 
     let remainingTo899 = 899
     let offsetSeconds = 360
@@ -555,7 +555,7 @@ describe('R6 optional extra-training external acceptance', () => {
     }
     expect(state.sessions[session.sessionId]).toMatchObject({
       status: 'running',
-      remainingEffectiveSeconds: 1,
+      effectiveSeconds: 899,
       completedItemCount: 0,
     })
     state = applyExtraTrainingEvent(
@@ -570,8 +570,8 @@ describe('R6 optional extra-training external acceptance', () => {
       }),
     )
     expect(state.sessions[session.sessionId]).toMatchObject({
-      status: 'finish-current-item',
-      remainingEffectiveSeconds: 0,
+      status: 'running',
+      effectiveSeconds: 900,
       completedItemCount: 0,
     })
 
@@ -603,23 +603,20 @@ describe('R6 optional extra-training external acceptance', () => {
       }),
     )
     expect(state.sessions[session.sessionId]).toMatchObject({
-      status: 'finish-current-item',
+      status: 'running',
       completedItemCount: 1,
     })
-    state = applyExtraTrainingEvent(
-      state,
-      extraEvent(session, {
-        id: 'qa-r6-budget',
-        type:
-          'learning.extra-training.budget.completed.v1',
-        payload: { completedItemCount: 1 },
-      }),
-    )
-    expect(state.sessions[session.sessionId]).toMatchObject({
-      status: 'completed',
-      endReason: 'budget-reached',
-      remainingEffectiveSeconds: 0,
-    })
+    expect(() =>
+      applyExtraTrainingEvent(
+        state,
+        extraEvent(session, {
+          id: 'qa-r6-budget',
+          type:
+            'learning.extra-training.budget.completed.v1',
+          payload: { completedItemCount: 1 },
+        }),
+      ),
+    ).toThrow('cannot complete from a time budget')
   })
 
   it.each([
@@ -646,7 +643,7 @@ describe('R6 optional extra-training external acceptance', () => {
         sessionId: session.sessionId,
         status: 'failed',
         endReason: reason,
-        remainingEffectiveSeconds: 900,
+        effectiveSeconds: 0,
       })
       expect(
         applyExtraTrainingEvent(failed, failedEvent),
@@ -660,7 +657,7 @@ describe('R6 optional extra-training external acceptance', () => {
       expect(recovered.sessions[session.sessionId]).toMatchObject({
         sessionId: session.sessionId,
         status: 'running',
-        remainingEffectiveSeconds: 900,
+        effectiveSeconds: 0,
         completedItemCount: 0,
       })
       expect(
@@ -737,7 +734,8 @@ describe('R6 optional extra-training external acceptance', () => {
     expect(
       stored?.extraTraining?.sessions[session.sessionId],
     ).toMatchObject({
-      targetEffectiveSeconds: 900,
+      completionMode: 'open-ended',
+      effectiveSeconds: 0,
       completedItemCount: 0,
     })
     expect(completedPlan()).toMatchObject({
@@ -774,7 +772,7 @@ describe('R6 optional extra-training external acceptance', () => {
     expect(expired.sessions[session.sessionId]).toMatchObject({
       status: 'expired',
       endReason: 'cross-day-expired',
-      remainingEffectiveSeconds: 900,
+      effectiveSeconds: 0,
     })
     expect(completedPlan().status).toBe('completed')
 

@@ -13,7 +13,7 @@ class Store implements NamespaceStore {
   async clear() { this.records.clear() }
 }
 
-const session = { schemaVersion: 1 as const, sessionId: 'extra-speaking', localDate: '2026-07-29', domain: 'speaking' as const, targetModuleId: 'speaking' as const, mode: 'learn' as const, targetDifficulty: 1, targetEffectiveSeconds: 900, remainingEffectiveSeconds: 900, status: 'running' as const, nextSupplyCursor: null, excludeItemIds: [], completedItemCount: 0, startedAt: '2026-07-29T00:00:00.000Z', updatedAt: '2026-07-29T00:00:00.000Z', endedAt: null, endReason: null }
+const session = { schemaVersion: 1 as const, sessionId: 'extra-speaking', localDate: '2026-07-29', domain: 'speaking' as const, targetModuleId: 'speaking' as const, mode: 'learn' as const, targetDifficulty: 1, completionMode: 'open-ended' as const, effectiveSeconds: 0, status: 'running' as const, nextSupplyCursor: null, excludeItemIds: [], completedItemCount: 0, startedAt: '2026-07-29T00:00:00.000Z', updatedAt: '2026-07-29T00:00:00.000Z', endedAt: null, endReason: null }
 const item = { itemId: 'speaking-supply-1', learningUnitId: 'unit-1', contentRef: 'lesson://unit-1', difficultyLevel: 1, tags: ['travel'], source: { sourceType: 'speaking-prompt' as const, sourceId: 'prompt', variantId: 'activity-prompt' as const } }
 const sceneItem = { ...item, itemId: 'scene-supply-1', source: { sourceType: 'speaking-scene-quiz' as const, sourceId: 'scene', variantId: 'scene-fixed-response' as const } }
 const prompt = { id: 'prompt', cueZh: '说你好', partnerLine: 'Hello.', modelAnswer: 'Hello.', acceptedAnswers: ['hello'], requiredConcepts: ['hello'] }
@@ -54,17 +54,18 @@ describe('extra speaking training', () => {
     }
   })
 
-  it('keeps recording through budget expiry, then publishes attempt, item, budget after feedback', async () => {
+  it('keeps recording and the session open after 900 effective seconds', async () => {
     const configured = options()
     const published: string[] = []
     const runtime = new ExtraSpeakingTrainingRuntime({ ...configured, eventSink: { publishExtraTrainingEvent: async (event) => { published.push(event.type) } } })
     await runtime.initialize(); await runtime.next(); await runtime.startRecording(); await runtime.recordEffectiveSeconds(900)
-    expect(runtime.currentSnapshot?.session.status).toBe('finish-current-item')
+    expect(runtime.currentSnapshot?.session).toMatchObject({ status: 'running', effectiveSeconds: 900 })
     await runtime.stopRecording(); await runtime.playRecording(); await runtime.completeCurrentItem(); await runtime.flush()
-    expect(runtime.currentSnapshot?.session.status).toBe('completed')
-    expect(published.slice(-3)).toEqual(['learning.extra-training.attempt.completed.v1', 'learning.extra-training.item.completed.v1', 'learning.extra-training.budget.completed.v1'])
+    expect(runtime.currentSnapshot?.session.status).toBe('running')
+    expect(published.slice(-2)).toEqual(['learning.extra-training.attempt.completed.v1', 'learning.extra-training.item.completed.v1'])
+    expect(published).not.toContain('learning.extra-training.budget.completed.v1')
     expect(configured.timing).toContain('start:recording')
-    expect(configured.timing).toContain('finish')
+    expect(configured.timing).not.toContain('finish')
   })
 
   it('records an unscorable network fallback without inventing a score and can exit then restore', async () => {

@@ -120,14 +120,32 @@ function hasValidExtraTraining(value: Record<string, unknown>): boolean {
           ),
         )
       )
+    const openEnded =
+      record.completionMode === 'open-ended' &&
+      typeof record.effectiveSeconds === 'number' &&
+      Number.isFinite(record.effectiveSeconds) &&
+      record.effectiveSeconds >= 0 &&
+      record.targetEffectiveSeconds === undefined &&
+      record.remainingEffectiveSeconds === undefined &&
+      ['running', 'paused', 'failed', 'expired'].includes(
+        record.status as string,
+      )
+    const legacyBudget =
+      record.completionMode === undefined &&
+      record.targetEffectiveSeconds === 900 &&
+      typeof record.remainingEffectiveSeconds === 'number' &&
+      Number.isFinite(record.remainingEffectiveSeconds) &&
+      record.remainingEffectiveSeconds >= 0 &&
+      record.remainingEffectiveSeconds <= 900 &&
+      ['running', 'finish-current-item', 'paused', 'completed', 'failed', 'expired'].includes(
+        record.status as string,
+      )
     return validPriorityItemIds && (
       record.schemaVersion === 1 && record.sessionId === sessionId &&
       typeof record.localDate === 'string' && Number.isFinite(Date.parse(`${record.localDate}T00:00:00Z`)) &&
       (record.domain === 'vocabulary' || record.domain === 'listening' || record.domain === 'speaking') &&
       record.targetModuleId === record.domain && record.mode === 'learn' &&
-      record.targetEffectiveSeconds === 900 &&
-      typeof record.remainingEffectiveSeconds === 'number' && Number.isFinite(record.remainingEffectiveSeconds) && record.remainingEffectiveSeconds >= 0 && record.remainingEffectiveSeconds <= 900 &&
-      ['running', 'finish-current-item', 'paused', 'completed', 'failed', 'expired'].includes(record.status as string) &&
+      (openEnded || legacyBudget) &&
       (record.nextSupplyCursor === null || typeof record.nextSupplyCursor === 'string') &&
       Array.isArray(record.excludeItemIds) && record.excludeItemIds.every((id) => typeof id === 'string') &&
       typeof record.completedItemCount === 'number' && Number.isInteger(record.completedItemCount) && record.completedItemCount >= 0 &&

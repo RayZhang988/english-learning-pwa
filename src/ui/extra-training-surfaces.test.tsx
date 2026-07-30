@@ -69,29 +69,27 @@ const pickerViewModel: ExtraTrainingPickerViewModel = {
       moduleId: 'vocabulary',
       title: '词汇额外训练',
       description: '在旅游场景词汇中继续练习。',
-      targetEffectiveSeconds: 900,
       status: 'available',
-      startAction: { label: '开始 15 分钟' },
+      startAction: { label: '开始训练' },
     },
     {
       moduleId: 'listening',
       title: '听力额外训练',
       description: '从保存的听力题继续。',
-      targetEffectiveSeconds: 900,
       status: 'paused',
       sessionId: 'extra:listening:paused',
-      remainingEffectiveSeconds: 734,
+      effectiveSeconds: 166,
       completedItemCount: 5,
       resumeAction: { label: '继续上次训练' },
+      newRoundAction: { label: '开始新一轮' },
     },
     {
       moduleId: 'speaking',
       title: '口语额外训练',
       description: '继续练习旅行表达。',
-      targetEffectiveSeconds: 900,
       status: 'failed',
       sessionId: 'extra:speaking:failed',
-      remainingEffectiveSeconds: 612,
+      effectiveSeconds: 288,
       completedItemCount: 4,
       failureReason: 'device-failure',
       failureDescription: '麦克风暂时不可用，进度已经保存。',
@@ -109,10 +107,9 @@ function runningSession<
   return {
     sessionId: `extra:${moduleId}:running`,
     moduleId,
-    budget: {
+    progress: {
       status: 'running',
-      targetEffectiveSeconds: 900,
-      remainingEffectiveSeconds: 612,
+      effectiveSeconds: 288,
       completedItemCount: 6,
     },
     exitAction: { label: '退出并保存' },
@@ -296,15 +293,15 @@ describe('R6 module picker intents and states', () => {
     expect(markup).toContain('data-module-id="vocabulary"')
     expect(markup).toContain('data-module-id="listening"')
     expect(markup).toContain('data-module-id="speaking"')
-    expect(markup).toContain('剩余有效时间')
-    expect(markup).toContain('12:14')
+    expect(markup).toContain('累计有效练习')
+    expect(markup).toContain('166 秒')
     expect(markup).toContain('累计完成')
     expect(markup).toContain('5 题')
 
     ;(
       buttonByAccessibleLabel(
         screen,
-        '开始 15 分钟：词汇额外训练',
+        '开始训练：词汇额外训练',
       ).props as { readonly onClick: () => void }
     ).onClick()
     ;(
@@ -335,25 +332,24 @@ describe('R6 module picker intents and states', () => {
         moduleId: 'vocabulary',
         title: '词汇额外训练',
         description: '继续练习。',
-        targetEffectiveSeconds: 900,
         status: 'running',
         sessionId: 'extra:vocabulary:running',
-        remainingEffectiveSeconds: 501,
+        effectiveSeconds: 399,
         completedItemCount: 8,
         resumeAction: { label: '返回进行中的训练' },
+        newRoundAction: { label: '开始新一轮' },
       },
       '正在进行',
-      '08:21',
+      '399 秒',
     ],
     [
       {
         moduleId: 'listening',
         title: '听力额外训练',
         description: '继续练习。',
-        targetEffectiveSeconds: 900,
         status: 'completed',
         sessionId: 'extra:listening:completed',
-        remainingEffectiveSeconds: 0,
+        effectiveSeconds: 900,
         completedItemCount: 19,
         startAction: { label: '再练 15 分钟' },
       },
@@ -365,10 +361,9 @@ describe('R6 module picker intents and states', () => {
         moduleId: 'speaking',
         title: '口语额外训练',
         description: '继续练习。',
-        targetEffectiveSeconds: 900,
         status: 'content-exhausted',
         sessionId: 'extra:speaking:exhausted',
-        remainingEffectiveSeconds: 420,
+        effectiveSeconds: 480,
         completedItemCount: 9,
         failureDescription:
           '当前范围内没有可继续提供的合格题目，进度已保存。',
@@ -382,7 +377,6 @@ describe('R6 module picker intents and states', () => {
         moduleId: 'vocabulary',
         title: '词汇额外训练',
         description: '继续练习。',
-        targetEffectiveSeconds: 900,
         status: 'expired',
         sessionId: 'extra:vocabulary:expired',
         completedItemCount: 3,
@@ -433,7 +427,7 @@ describe('R6 module picker intents and states', () => {
     })
     const button = buttonByAccessibleLabel(
       screen,
-      '开始 15 分钟：词汇额外训练',
+      '开始训练：词汇额外训练',
     )
     const onClick = (
       button.props as { readonly onClick: () => void }
@@ -512,10 +506,9 @@ describe('R6 dedicated extra-training page adapters', () => {
         viewModel={listeningViewModel}
         extraTraining={{
           ...runningSession('listening'),
-          budget: {
-            status: 'finish-current-item',
-            targetEffectiveSeconds: 900,
-            remainingEffectiveSeconds: 0,
+          progress: {
+            status: 'running',
+            effectiveSeconds: 900,
             completedItemCount: 14,
           },
         }}
@@ -548,8 +541,8 @@ describe('R6 dedicated extra-training page adapters', () => {
       expect(markup).toContain('额外训练')
       expect(markup).toContain('退出并保存当前进度')
       expect(markup).toContain('不会改变今日 3/3 完成状态')
-      expect(markup).toContain('剩余有效时间')
-      expect(markup).toContain('累计完成题数')
+      expect(markup).toContain('不限时额外训练')
+      expect(markup).toContain('累计完成')
       expect(markup).not.toContain('完成每日任务')
     }
     expect(vocabularyMarkup).toContain(
@@ -561,9 +554,7 @@ describe('R6 dedicated extra-training page adapters', () => {
     expect(speakingMarkup).toContain(
       'aria-label="退出并保存额外口语训练"',
     )
-    expect(listeningMarkup).toContain(
-      '时间已到，完成本题后结束',
-    )
+    expect(listeningMarkup).toContain('没有倒计时')
   })
 
   it('returns the untouched sessionId for exit and exhausted-content retry', () => {
@@ -575,13 +566,12 @@ describe('R6 dedicated extra-training page adapters', () => {
       extraTraining: {
         sessionId,
         moduleId: 'vocabulary',
-        budget: {
+        progress: {
           status: 'content-exhausted',
-          targetEffectiveSeconds: 900,
-          remainingEffectiveSeconds: 315,
+          effectiveSeconds: 585,
           completedItemCount: 11,
           contentExhausted: {
-            reason: 'all-eligible-content-recently-used',
+            reason: 'no-eligible-content',
             description: '近期题目暂时都已使用。',
           },
           retryAction: { label: '重新获取题目' },

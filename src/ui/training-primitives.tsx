@@ -88,6 +88,34 @@ export function TrainingScreen({
           viewModel={header.trainingBudget}
           onRetryContent={onRetryTrainingContent}
         />
+      ) : header.openEndedTraining ? (
+        <section
+          className="training-budget-progress training-budget-progress--running"
+          data-training-duration-kind="open-ended"
+          data-effective-seconds={header.openEndedTraining.effectiveSeconds}
+          data-completed-item-count={header.openEndedTraining.completedItemCount}
+          aria-label={`开放式额外训练，已有效练习 ${header.openEndedTraining.effectiveSeconds} 秒，累计完成 ${header.openEndedTraining.completedItemCount} 题。主动退出时保存。`}
+        >
+          <div className="training-budget-progress__status">
+            <span className="eyebrow">OPEN PRACTICE</span>
+            <h2>不限时额外训练</h2>
+            <p>没有倒计时；继续练习直到你主动退出，退出时保存当前位置。</p>
+          </div>
+          <dl className="training-budget-progress__metrics">
+            <div>
+              <dt>完成方式</dt>
+              <dd>主动退出</dd>
+            </div>
+            <div>
+              <dt>累计有效练习</dt>
+              <dd>{header.openEndedTraining.effectiveSeconds} 秒</dd>
+            </div>
+            <div>
+              <dt>累计完成</dt>
+              <dd>{header.openEndedTraining.completedItemCount} 题</dd>
+            </div>
+          </dl>
+        </section>
       ) : header.durationEstimate ? (
         <div className="training-duration-strip">
           <TaskDurationEstimate

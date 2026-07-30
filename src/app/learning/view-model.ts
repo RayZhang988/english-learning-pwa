@@ -463,10 +463,8 @@ export function toPracticeModulesViewModel(
           recommended: false as const,
           actionLabel: '继续训练',
           extraTrainingDescription:
-            '今日任务已完成，可以开始一轮不影响今日 3/3 状态的额外训练。',
-          trainingBudget: {
-            targetEffectiveSeconds: 900,
-          },
+            '今日任务已完成，可以开始不限时且不影响今日 3/3 状态的额外训练。',
+          openEnded: true as const,
           statusLabel: module.statusLabel,
         }
       }

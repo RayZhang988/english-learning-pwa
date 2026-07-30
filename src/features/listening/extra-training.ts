@@ -7,6 +7,7 @@ import type {
   ExtraTrainingSupplyRequest,
   LearningTaskSupplyResult,
 } from '../../learning-engine/index.ts'
+import { migrateExtraTrainingSessionToOpenEnded } from '../../learning-engine/index.ts'
 import type {
   ExtraTrainingEffectiveTimingSessionFactoryPort,
   ExtraTrainingEventSink,
@@ -174,11 +175,22 @@ export class ExtraListeningTrainingRuntime {
     const restored = await this.repository.load(this.options.session.sessionId)
     if (restored) {
       // Browser synthesis cannot honestly resume a previous process after refresh.
-      const recovered = restored.playback?.status === 'playing'
-        ? { ...restored, playback: { ...restored.playback, status: 'paused' as const }, updatedAt: this.now() }
-        : restored
-      if (recovered !== restored) await this.save(recovered)
-      else this.snapshot = recovered
+      const recovered = {
+        ...restored,
+        session: migrateExtraTrainingSessionToOpenEnded(
+          restored.session,
+          this.now(),
+        ),
+        playback:
+          restored.playback?.status === 'playing'
+            ? {
+                ...restored.playback,
+                status: 'paused' as const,
+              }
+            : restored.playback,
+        updatedAt: this.now(),
+      }
+      await this.save(recovered)
       this.attachController(recovered)
       return recovered
     }
@@ -244,7 +256,7 @@ export class ExtraListeningTrainingRuntime {
         pendingEvents: [...snapshot.pendingEvents, started],
         session: {
           ...snapshot.session,
-          status: snapshot.session.remainingEffectiveSeconds === 0 ? 'finish-current-item' : 'running',
+          status: 'running',
           endReason: null,
           endedAt: null,
           updatedAt: started.occurredAt,
@@ -268,7 +280,7 @@ export class ExtraListeningTrainingRuntime {
     if (result.status !== 'item') return snapshot
     const resolved = await this.options.questionForItem(result.item as ListeningSupplyItem)
     const started = this.base('learning.extra-training.started.v1')
-    const next = await this.save({ ...snapshot, unit: resolved.unit, question: resolved.question, activeItem: result.item as ListeningSupplyItem, activeRequestId: result.requestId, suppliedNextCursor: result.nextCursor, selectedOptionId: null, dictationInput: '', answer: null, playback: initialPlayback(resolved.question), phase: 'answering', pendingEvents: [...snapshot.pendingEvents, started], session: { ...snapshot.session, status: snapshot.session.remainingEffectiveSeconds === 0 ? 'finish-current-item' : 'running', endReason: null, endedAt: null, updatedAt: started.occurredAt }, updatedAt: started.occurredAt })
+    const next = await this.save({ ...snapshot, unit: resolved.unit, question: resolved.question, activeItem: result.item as ListeningSupplyItem, activeRequestId: result.requestId, suppliedNextCursor: result.nextCursor, selectedOptionId: null, dictationInput: '', answer: null, playback: initialPlayback(resolved.question), phase: 'answering', pendingEvents: [...snapshot.pendingEvents, started], session: { ...snapshot.session, status: 'running', endReason: null, endedAt: null, updatedAt: started.occurredAt }, updatedAt: started.occurredAt })
     this.attachController(next)
     return next
   }) }
@@ -291,8 +303,9 @@ export class ExtraListeningTrainingRuntime {
     return this.save({ ...this.require(), answer, phase: 'feedback', playback: this.controller?.snapshot ?? s.playback, updatedAt: answer.submittedAt })
   }) }
   answerIsCorrect() { const s = this.require(); return Boolean(s.answer?.correct) }
-  markBudgetReached() { return this.queue(async () => { const s = this.require(); if (s.session.status !== 'running') return s; return this.save({ ...s, session: { ...s.session, remainingEffectiveSeconds: 0, status: 'finish-current-item', updatedAt: this.now() }, updatedAt: this.now() }) }) }
-  recordEffectiveSeconds(seconds: number) { return this.queue(async () => { const s = this.require(); if (!Number.isFinite(seconds) || seconds < 0) throw new ListeningError('session-transition-invalid', 'Effective seconds must be non-negative.'); const remaining = Math.max(0, s.session.remainingEffectiveSeconds - Math.floor(seconds)); return this.save({ ...s, session: { ...s.session, remainingEffectiveSeconds: remaining, status: s.session.status === 'running' && remaining === 0 ? 'finish-current-item' : s.session.status, updatedAt: this.now() }, updatedAt: this.now() }) }) }
+  /** @deprecated R6.1 extra practice has no time budget to reach. */
+  markBudgetReached() { return Promise.resolve(this.require()) }
+  recordEffectiveSeconds(seconds: number) { return this.queue(async () => { const s = this.require(); if (!Number.isFinite(seconds) || seconds < 0) throw new ListeningError('session-transition-invalid', 'Effective seconds must be non-negative.'); return this.save({ ...s, session: { ...s.session, effectiveSeconds: (s.session.effectiveSeconds ?? 0) + Math.floor(seconds), updatedAt: this.now() }, updatedAt: this.now() }) }) }
   async completeCurrentItem() { return this.queue(async () => {
     const s = this.require(); if (s.phase !== 'feedback' || !s.activeItem || !s.answer || !s.question) throw new ListeningError('session-transition-invalid', 'Extra listening item must be in feedback before completion.')
     this.controller?.dispose(); this.controller = null
@@ -300,8 +313,7 @@ export class ExtraListeningTrainingRuntime {
     const attempt = { ...this.base('learning.extra-training.attempt.completed.v1'), payload: { ...base.payload, learningUnitId: s.activeItem.learningUnitId, contentRef: s.activeItem.contentRef, difficultyLevel: s.activeItem.difficultyLevel, estimatedSeconds: s.unit?.estimatedSeconds ?? 1, result: 'scored', performanceScore: s.answer.correct ? 1 : 0, evidenceQuality: 1, assistanceLevel: 0, durationSeconds: 0, errorTags: s.answer.correct ? [] : [s.question.type === 'keyword-dictation' ? 'detail-missed' : s.question.type === 'word-discrimination' ? 'sound-discrimination' : 'detail-missed'], contentTags: s.activeItem.tags, failureCategory: null, scoreDelta: { schemaVersion: 1, correctCount: s.answer.correct ? 1 : 0, incorrectCount: s.answer.correct ? 0 : 1, unscorableCount: 0 } } } as ExtraTrainingEvent
     const item = { ...base, payload: { ...base.payload, item: s.activeItem, requestId: s.activeRequestId ?? `${s.session.sessionId}:supply`, nextSupplyCursor: s.suppliedNextCursor ?? s.activeItem.itemId } } as ExtraTrainingEvent
     const count = s.session.completedItemCount + 1
-    const budget = s.session.status === 'finish-current-item' ? { ...this.base('learning.extra-training.budget.completed.v1'), payload: { ...base.payload, completedItemCount: count } } as ExtraTrainingEvent : null
-    const saved = await this.save({ ...s, unit: budget ? s.unit : null, question: budget ? s.question : null, activeItem: null, activeRequestId: null, suppliedNextCursor: budget ? s.suppliedNextCursor : null, selectedOptionId: null, dictationInput: '', answer: null, playback: null, phase: budget ? 'completed' : 'answering', pendingEvents: [...s.pendingEvents, attempt, item, ...(budget ? [budget] : [])], session: { ...s.session, excludeItemIds: [...s.session.excludeItemIds, s.activeItem.itemId], completedItemCount: count, nextSupplyCursor: s.suppliedNextCursor ?? s.activeItem.itemId, status: budget ? 'completed' : s.session.status, endReason: budget ? 'budget-reached' : null, endedAt: budget ? item.occurredAt : null, updatedAt: item.occurredAt }, updatedAt: item.occurredAt })
+    const saved = await this.save({ ...s, unit: null, question: null, activeItem: null, activeRequestId: null, suppliedNextCursor: null, selectedOptionId: null, dictationInput: '', answer: null, playback: null, phase: 'answering', pendingEvents: [...s.pendingEvents, attempt, item], session: { ...s.session, excludeItemIds: [...s.session.excludeItemIds, s.activeItem.itemId], completedItemCount: count, nextSupplyCursor: s.suppliedNextCursor ?? s.activeItem.itemId, status: 'running', endReason: null, endedAt: null, updatedAt: item.occurredAt }, updatedAt: item.occurredAt })
     return this.flushFromQueued(saved)
   }) }
   private async flushFromQueued(snapshot: ExtraListeningTrainingSnapshot) {
