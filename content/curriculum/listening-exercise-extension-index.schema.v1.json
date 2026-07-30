@@ -15,6 +15,7 @@
     "targetLocale",
     "supportLocale",
     "exerciseBundleFiles",
+    "bilingualChoiceOptionsFile",
     "schemaFiles",
     "documentationFiles",
     "compatibility",
@@ -47,6 +48,9 @@
         "type": "string",
         "pattern": "^content/lessons/.+\\.json$"
       }
+    },
+    "bilingualChoiceOptionsFile": {
+      "const": "content/lessons/survival-travel-american-4w/listening-choice-bilingual-options.v1.json"
     },
     "schemaFiles": {
       "type": "array",

@@ -54,6 +54,11 @@ const CURRENT_ASSET_URLS: Readonly<Record<string, string>> = {
       '../../../content/lessons/survival-travel-american-4w/listening-exercises.v1.json',
       import.meta.url,
     ).href,
+  'content/lessons/survival-travel-american-4w/listening-choice-bilingual-options.v1.json':
+    new URL(
+      '../../../content/lessons/survival-travel-american-4w/listening-choice-bilingual-options.v1.json',
+      import.meta.url,
+    ).href,
   [TRAINING_SUPPLY_INDEX_PATH]: new URL(
     '../../../content/curriculum/training-supply-index.v1.json',
     import.meta.url,
@@ -68,6 +73,7 @@ interface CoreIndexShape {
 
 interface ExtensionIndexShape {
   readonly exerciseBundleFiles: readonly string[]
+  readonly bilingualChoiceOptionsFile: string
 }
 
 function stringFileList(
@@ -119,6 +125,7 @@ function readCoreIndex(value: unknown): CoreIndexShape {
 }
 
 function readExtensionIndex(value: unknown): ExtensionIndexShape {
+  const index = value as Record<string, unknown>
   return {
     exerciseBundleFiles: stringFileList(
       value,
@@ -126,6 +133,15 @@ function readExtensionIndex(value: unknown): ExtensionIndexShape {
       'exerciseBundleFiles',
       'Listening exercise extension index',
     ).list,
+    bilingualChoiceOptionsFile:
+      typeof index.bilingualChoiceOptionsFile === 'string'
+        ? index.bilingualChoiceOptionsFile
+        : (() => {
+            throw new ListeningError(
+              'content-invalid',
+              'Listening exercise extension index omits bilingual choice options.',
+            )
+          })(),
   }
 }
 
@@ -209,6 +225,10 @@ export class CurrentListeningContentSource
     for (const path of extensionFiles.exerciseBundleFiles) {
       exerciseBundlesByPath[path] = await this.readJson(path, signal)
     }
+    const bilingualChoiceOptions = await this.readJson(
+      extensionFiles.bilingualChoiceOptionsFile,
+      signal,
+    )
     const trainingSupplyIndex = coreFiles.trainingSupplyIndexFile
       ? await this.readJson(coreFiles.trainingSupplyIndexFile, signal)
       : undefined
@@ -219,6 +239,7 @@ export class CurrentListeningContentSource
       lessonsByPath,
       extensionIndex,
       exerciseBundlesByPath,
+      bilingualChoiceOptions,
       trainingSupplyIndex,
     }
     return createListeningCatalog(documents)

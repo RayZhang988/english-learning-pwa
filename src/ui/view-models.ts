@@ -117,6 +117,8 @@ export interface ListeningPlaybackControlsViewModel {
 export interface ListeningSingleChoiceQuestionViewModel {
   readonly kind: 'single-choice'
   readonly prompt: string
+  readonly available: boolean
+  readonly waitingLabel?: string
   readonly choices: readonly ChoiceViewModel[]
 }
 

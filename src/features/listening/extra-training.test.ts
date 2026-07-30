@@ -67,11 +67,20 @@ function options(question: ListeningQuestion = wordQuestion) {
   }
 }
 
+async function completePlayback(
+  runtime: ExtraListeningTrainingRuntime,
+  speech: Speech,
+) {
+  await runtime.toggleAudio()
+  speech.callbacks?.onEnd?.()
+  await runtime.setPlaybackRate(1)
+}
+
 describe('extra listening commands', () => {
   it.each([wordQuestion, sentenceQuestion])('answers choice exercise %s without a daily task identity', async (question) => {
     const configured = options(question)
     const runtime = new ExtraListeningTrainingRuntime(configured)
-    await runtime.initialize(); await runtime.next(); await runtime.select('right'); await runtime.submit(); await runtime.completeCurrentItem()
+    await runtime.initialize(); await runtime.next(); await completePlayback(runtime, configured.speech); await runtime.select('right'); await runtime.submit(); await runtime.completeCurrentItem()
     expect(runtime.currentSnapshot?.session.completedItemCount).toBe(1)
     expect(JSON.stringify(runtime.currentSnapshot)).not.toMatch(/planId|taskId/)
   })
@@ -81,7 +90,7 @@ describe('extra listening commands', () => {
     const first = new ExtraListeningTrainingRuntime(configured)
     await first.initialize(); await first.next(); await first.changeDictation('a'); await first.changeDictation('ab'); await first.changeDictation('hello')
     const restored = new ExtraListeningTrainingRuntime({ ...configured, repository: configured.repository })
-    await restored.initialize(); expect(restored.currentSnapshot?.dictationInput).toBe('hello')
+    await restored.initialize(); expect(restored.currentSnapshot?.dictationInput).toBe('hello'); await completePlayback(restored, configured.speech)
     await restored.submit(); expect(restored.currentSnapshot?.answer?.response).toBe('hello')
   })
 
@@ -118,6 +127,8 @@ describe('extra listening commands', () => {
     await runtime.initialize(); await runtime.next(); await runtime.toggleAudio(); await runtime.recordEffectiveSeconds(900)
     expect(runtime.currentSnapshot?.session.status).toBe('finish-current-item')
     expect(runtime.currentSnapshot?.playback?.status).toBe('playing')
+    configured.speech.callbacks?.onEnd?.()
+    await runtime.setPlaybackRate(1)
     await runtime.select('right'); await runtime.submit(); await runtime.completeCurrentItem()
     expect(runtime.currentSnapshot?.session.status).toBe('completed')
     expect(published.slice(-3)).toEqual(['learning.extra-training.attempt.completed.v1', 'learning.extra-training.item.completed.v1', 'learning.extra-training.budget.completed.v1'])
@@ -202,8 +213,9 @@ describe('extra listening commands', () => {
     const daily = { planId: 'daily', completedUnitIds: ['vocabulary', 'listening', 'speaking'], status: 'completed' }
     const before = structuredClone(daily)
     const events: unknown[] = []
-    const runtime = new ExtraListeningTrainingRuntime({ ...options(), eventSink: { publishExtraTrainingEvent: async (event) => { events.push(event) } } })
-    await runtime.initialize(); await runtime.next(); await runtime.select('right'); await runtime.submit(); await runtime.completeCurrentItem()
+    const configured = options()
+    const runtime = new ExtraListeningTrainingRuntime({ ...configured, eventSink: { publishExtraTrainingEvent: async (event) => { events.push(event) } } })
+    await runtime.initialize(); await runtime.next(); await completePlayback(runtime, configured.speech); await runtime.select('right'); await runtime.submit(); await runtime.completeCurrentItem()
     expect(daily).toEqual(before)
     expect(JSON.stringify(runtime.currentSnapshot)).not.toMatch(/planId|taskId/)
     expect(JSON.stringify(events)).not.toMatch(/planId|taskId/)

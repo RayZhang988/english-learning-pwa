@@ -180,6 +180,26 @@ class ImmediateSpeech implements ListeningSpeechPort {
   }
 }
 
+async function completeRuntimePlayback(
+  runtime: ListeningTrainingRuntime,
+  speech: ImmediateSpeech,
+) {
+  await runtime.togglePlayback()
+  speech.callbacks?.onEnd?.()
+  await vi.waitFor(() => {
+    const session = runtime.currentSession
+    const question = session?.questions[session.questionIndex]
+    expect(
+      question
+        ? session?.playback.completedPlayCounts?.[
+            question.primarySegmentId
+          ]
+        : 0,
+    ).toBeGreaterThan(0)
+  })
+  await runtime.setRate(1)
+}
+
 class FailRecoveredOnceEventSink implements PlatformEventSink {
   readonly events: PlatformEvent[] = []
   private failed = false
@@ -382,9 +402,10 @@ describe('listening training runtime', () => {
     const sink = new InMemoryPlatformEventSink()
     const store = new MemoryStore()
     const task = createListeningTask({ trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } })
-    const runtime = new ListeningTrainingRuntime({ task, localDate: '2026-07-28', contentSource: { load: async () => currentCatalog }, eventSink: sink, repository: new ListeningSessionRepository(store), speech: new ImmediateSpeech(), now: clock(), createId: (() => { let id = 0; return () => `recovery-${id++}` })(), supplyProvider, trainingBudgetStatus: () => budget })
+    const speech = new ImmediateSpeech()
+    const runtime = new ListeningTrainingRuntime({ task, localDate: '2026-07-28', contentSource: { load: async () => currentCatalog }, eventSink: sink, repository: new ListeningSessionRepository(store), speech, now: clock(), createId: (() => { let id = 0; return () => `recovery-${id++}` })(), supplyProvider, trainingBudgetStatus: () => budget })
     await runtime.initialize()
-    await runtime.togglePlayback()
+    await completeRuntimePlayback(runtime, speech)
     await runtime.select('a')
     await runtime.submit()
     const exhausted = await runtime.advance()
@@ -392,7 +413,8 @@ describe('listening training runtime', () => {
     const exhaustion = sink.events.find((event) => event.type === 'learning.training.content.exhausted.v1')
     expect(exhaustion).toBeDefined()
 
-    const refreshed = new ListeningTrainingRuntime({ task, localDate: '2026-07-28', contentSource: { load: async () => currentCatalog }, eventSink: sink, repository: new ListeningSessionRepository(store), speech: new ImmediateSpeech(), now: clock(), createId: (() => { let id = 0; return () => `recovered-${id++}` })(), supplyProvider, trainingBudgetStatus: () => budget })
+    const refreshedSpeech = new ImmediateSpeech()
+    const refreshed = new ListeningTrainingRuntime({ task, localDate: '2026-07-28', contentSource: { load: async () => currentCatalog }, eventSink: sink, repository: new ListeningSessionRepository(store), speech: refreshedSpeech, now: clock(), createId: (() => { let id = 0; return () => `recovered-${id++}` })(), supplyProvider, trainingBudgetStatus: () => budget })
     await refreshed.initialize()
     let session = await refreshed.retrySupply()
     expect(session.phase).toBe('answering')
@@ -405,7 +427,7 @@ describe('listening training runtime', () => {
     expect(recoveredPayload.exhaustionRequestId).toBe(exhaustedPayload.requestId)
 
     budget = 'finish-current-item'
-    await refreshed.togglePlayback()
+    await completeRuntimePlayback(refreshed, refreshedSpeech)
     await refreshed.select('yes')
     await refreshed.submit()
     session = await refreshed.advance()
@@ -433,9 +455,10 @@ describe('listening training runtime', () => {
       return { schemaVersion: 1 as const, requestId: request.requestId, status: 'item' as const, item: second, nextCursor: second.itemId }
     } }
     const sink = new FailRecoveredOnceEventSink()
-    const runtime = new ListeningTrainingRuntime({ task: createListeningTask({ trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } }), localDate: '2026-07-28', contentSource: { load: async () => currentCatalog }, eventSink: sink, repository: new ListeningSessionRepository(new MemoryStore()), speech: new ImmediateSpeech(), now: clock(), createId: (() => { let id = 0; return () => `retry-${id++}` })(), supplyProvider, trainingBudgetStatus: () => 'running' })
+    const speech = new ImmediateSpeech()
+    const runtime = new ListeningTrainingRuntime({ task: createListeningTask({ trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } }), localDate: '2026-07-28', contentSource: { load: async () => currentCatalog }, eventSink: sink, repository: new ListeningSessionRepository(new MemoryStore()), speech, now: clock(), createId: (() => { let id = 0; return () => `retry-${id++}` })(), supplyProvider, trainingBudgetStatus: () => 'running' })
     await runtime.initialize()
-    await runtime.togglePlayback()
+    await completeRuntimePlayback(runtime, speech)
     await runtime.select('a')
     await runtime.submit()
     await runtime.advance()
@@ -485,15 +508,16 @@ describe('listening training runtime', () => {
     let budget: 'running' | 'finish-current-item' = 'running'
     const store = new MemoryStore()
     const sink = new InMemoryPlatformEventSink()
+    const speech = new ImmediateSpeech()
     const runtime = new ListeningTrainingRuntime({
       task: createListeningTask({ trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } }),
       localDate: '2026-07-28', contentSource: { load: async () => currentCatalog }, eventSink: sink,
-      repository: new ListeningSessionRepository(store), speech: new ImmediateSpeech(), now: clock(), createId: (() => { let id = 0; return () => `event-${id++}` })(),
+      repository: new ListeningSessionRepository(store), speech, now: clock(), createId: (() => { let id = 0; return () => `event-${id++}` })(),
       supplyProvider, trainingBudgetStatus: () => budget,
     })
     let session = await runtime.initialize()
     expect(session.stream?.activeItem.itemId).toBe('supply-1')
-    await runtime.togglePlayback()
+    await completeRuntimePlayback(runtime, speech)
     session = await runtime.select('a')
     session = await runtime.submit()
     session = await runtime.advance()
@@ -501,16 +525,17 @@ describe('listening training runtime', () => {
     expect(session.stream?.completedItemIds).toEqual(['supply-1'])
     expect(session.stream?.activeItem.itemId).toBe('supply-2')
 
+    const restoredSpeech = new ImmediateSpeech()
     const restored = new ListeningTrainingRuntime({
       task: createListeningTask({ trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } }),
       localDate: '2026-07-28', contentSource: { load: async () => currentCatalog }, eventSink: sink,
-      repository: new ListeningSessionRepository(store), speech: new ImmediateSpeech(), now: clock(), createId: (() => { let id = 0; return () => `restored-event-${id++}` })(),
+      repository: new ListeningSessionRepository(store), speech: restoredSpeech, now: clock(), createId: (() => { let id = 0; return () => `restored-event-${id++}` })(),
       supplyProvider, trainingBudgetStatus: () => budget,
     })
     session = await restored.initialize()
     expect(session.stream?.completedItemIds).toEqual(['supply-1'])
     budget = 'finish-current-item'
-    await restored.togglePlayback()
+    await completeRuntimePlayback(restored, restoredSpeech)
     session = await restored.select('yes')
     session = await restored.submit()
     session = await restored.advance()
@@ -539,14 +564,15 @@ describe('listening training runtime', () => {
       },
     }
     const sink = new InMemoryPlatformEventSink()
+    const speech = new ImmediateSpeech()
     const runtime = new ListeningTrainingRuntime({
       task: createListeningTask({ trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } }),
       localDate: '2026-07-28', contentSource: { load: async () => currentCatalog }, eventSink: sink,
-      repository: new ListeningSessionRepository(new MemoryStore()), speech: new ImmediateSpeech(), now: clock(), createId: (() => { let id = 0; return () => `event-${id++}` })(),
+      repository: new ListeningSessionRepository(new MemoryStore()), speech, now: clock(), createId: (() => { let id = 0; return () => `event-${id++}` })(),
       supplyProvider, trainingBudgetStatus: () => 'running',
     })
     await runtime.initialize()
-    await runtime.togglePlayback()
+    await completeRuntimePlayback(runtime, speech)
     await runtime.select('a')
     await runtime.submit()
     const exhausted = await runtime.advance()
@@ -613,6 +639,7 @@ describe('listening training runtime', () => {
     const store = new ControlledWriteStore()
     const repository = new ListeningSessionRepository(store)
     const task = createListeningTask()
+    const speech = new ImmediateSpeech()
     const runtime = new ListeningTrainingRuntime({
       task,
       localDate: '2026-07-24',
@@ -622,12 +649,12 @@ describe('listening training runtime', () => {
       eventSink: new InMemoryPlatformEventSink(),
       repository,
       networkStatus: online,
-      speech: new ImmediateSpeech(),
+      speech,
       now: clock(),
       createId: () => 'submit-dictation-id',
     })
     await runtime.initialize()
-    await runtime.togglePlayback()
+    await completeRuntimePlayback(runtime, speech)
     const notifications: ListeningSession[] = []
     runtime.subscribe((session) => {
       notifications.push(session)
@@ -641,7 +668,7 @@ describe('listening training runtime', () => {
     ]
     const submission = runtime.submit()
 
-    await commitControlledWrites(store, 4)
+    await commitControlledWrites(store, 3)
     await vi.waitFor(() => {
       expect(store.pendingWrites.length).toBeGreaterThan(0)
     })
@@ -895,6 +922,7 @@ describe('listening training runtime', () => {
     const repository = new ListeningSessionRepository(store)
     const task = createListeningTask()
     const sink = new InMemoryPlatformEventSink()
+    const speech = new ImmediateSpeech()
     const runtime = new ListeningTrainingRuntime({
       task,
       localDate: '2026-07-24',
@@ -904,12 +932,12 @@ describe('listening training runtime', () => {
       eventSink: sink,
       repository,
       networkStatus: online,
-      speech: new ImmediateSpeech(),
+      speech,
       now: clock(),
       createId: () => 'advance-dictation-id',
     })
     await runtime.initialize()
-    await runtime.togglePlayback()
+    await completeRuntimePlayback(runtime, speech)
     await runtime.changeDictation('abc')
     await runtime.submit()
 
@@ -955,6 +983,7 @@ describe('listening training runtime', () => {
 
   it('publishes start and scored completion through the durable outbox', async () => {
     const sink = new InMemoryPlatformEventSink()
+    const speech = new ImmediateSpeech()
     const runtime = new ListeningTrainingRuntime({
       task: createListeningTask(),
       localDate: '2026-07-24',
@@ -962,7 +991,7 @@ describe('listening training runtime', () => {
       eventSink: sink,
       repository: new ListeningSessionRepository(new MemoryStore()),
       networkStatus: online,
-      speech: new ImmediateSpeech(),
+      speech,
       now: clock(),
       createId: (() => {
         let id = 0
@@ -971,7 +1000,7 @@ describe('listening training runtime', () => {
     })
 
     await runtime.initialize()
-    await runtime.togglePlayback()
+    await completeRuntimePlayback(runtime, speech)
     await runtime.select('a')
     await runtime.submit()
     const completed = await runtime.advance()

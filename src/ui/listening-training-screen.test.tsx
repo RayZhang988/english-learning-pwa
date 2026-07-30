@@ -83,11 +83,81 @@ function screenChildren(viewModel: ListeningScreenViewModel) {
 }
 
 describe('ListeningTrainingScreen UI contract', () => {
+  it('hides every choice until one full playback has completed', () => {
+    const viewModel: ListeningScreenViewModel = {
+      ...commonViewModel,
+      question: {
+        kind: 'single-choice',
+        available: false,
+        waitingLabel: '请先完整播放一次，播放结束后显示英文选项。',
+        prompt: '选择你听到的信息',
+        choices: [
+          {
+            id: 'choice-a',
+            label: 'The taxi is outside.',
+            supportingText: '出租车在外面。',
+            state: 'default',
+          },
+        ],
+      },
+    }
+
+    const markup = renderToStaticMarkup(
+      <ListeningTrainingScreen
+        viewModel={viewModel}
+        {...createCallbacks()}
+      />,
+    )
+
+    expect(markup).toContain('请先完整播放一次')
+    expect(markup).not.toContain('role="radiogroup"')
+    expect(markup).not.toContain('The taxi is outside.')
+    expect(markup).not.toContain('出租车在外面。')
+  })
+
+  it('renders English and submitted Chinese translations as separate lines', () => {
+    const viewModel: ListeningScreenViewModel = {
+      ...commonViewModel,
+      question: {
+        kind: 'single-choice',
+        available: true,
+        prompt: '选择你听到的信息',
+        choices: [
+          {
+            id: 'choice-a',
+            label: 'The taxi is outside.',
+            supportingText: '出租车在外面。',
+            state: 'correct',
+          },
+          {
+            id: 'choice-b',
+            label: 'The bus is delayed.',
+            supportingText: '公交车晚点了。',
+            state: 'incorrect',
+          },
+        ],
+      },
+    }
+
+    const markup = renderToStaticMarkup(
+      <ListeningTrainingScreen
+        viewModel={viewModel}
+        {...createCallbacks()}
+      />,
+    )
+
+    expect(markup).toContain('The taxi is outside.')
+    expect(markup).toContain('出租车在外面。')
+    expect(markup).toContain('The bus is delayed.')
+    expect(markup).toContain('公交车晚点了。')
+  })
+
   it('renders accessible speed, segment and repeat controls', () => {
     const viewModel: ListeningScreenViewModel = {
       ...commonViewModel,
       question: {
         kind: 'single-choice',
+        available: true,
         prompt: '对话中的客人想做什么？',
         choices: [
           { id: 'check-in', label: '办理入住', state: 'selected' },
@@ -117,6 +187,7 @@ describe('ListeningTrainingScreen UI contract', () => {
       ...commonViewModel,
       question: {
         kind: 'single-choice',
+        available: true,
         prompt: '选择你听到的信息',
         choices: [
           { id: 'choice-a', label: 'A', state: 'default' },
@@ -256,6 +327,7 @@ describe('ListeningTrainingScreen UI contract', () => {
       ...commonViewModel,
       question: {
         kind: 'single-choice',
+        available: true,
         prompt: '选择答案',
         choices: [{ id: 'a', label: 'A', state: 'default' }],
       },

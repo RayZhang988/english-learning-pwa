@@ -369,6 +369,7 @@ const listeningViewModel: ListeningScreenViewModel = {
   },
   question: {
     kind: 'single-choice',
+    available: true,
     prompt: '对话发生在哪里？',
     choices: [{ id: 'hotel', label: '酒店', state: 'default' }],
   },

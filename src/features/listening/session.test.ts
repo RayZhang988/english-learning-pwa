@@ -30,6 +30,10 @@ function markPrimaryPlayed(
         ...session.playback.playCounts,
         [session.playback.currentSegmentId]: 1,
       },
+      completedPlayCounts: {
+        ...session.playback.completedPlayCounts,
+        [session.playback.currentSegmentId]: 1,
+      },
     },
     now,
   )
@@ -70,13 +74,19 @@ describe('listening session state machine', () => {
       createListeningUnit(),
       startedAt,
     )
+    expect(() =>
+      selectListeningOption(
+        session,
+        'a',
+        '2026-07-24T12:00:01.000Z',
+      ),
+    ).toThrow(/choice/i)
+    session = markPrimaryPlayed(session)
     session = selectListeningOption(
       session,
       'a',
-      '2026-07-24T12:00:01.000Z',
+      '2026-07-24T12:00:02.000Z',
     )
-    expect(canSubmitListeningAnswer(session)).toBe(false)
-    session = markPrimaryPlayed(session)
     expect(canSubmitListeningAnswer(session)).toBe(true)
   })
 
@@ -150,6 +160,7 @@ describe('listening session state machine', () => {
         rate: 0.75,
         repeatMode: 'segment',
         playCounts: { 'seg-word': 3 },
+        completedPlayCounts: { 'seg-word': 3 },
       },
       '2026-07-24T12:00:01.000Z',
     )

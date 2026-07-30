@@ -76,7 +76,16 @@ export class ListeningPlaybackController {
   constructor(options: ListeningPlaybackControllerOptions) {
     validateState(options.question, options.initialState)
     this.question = options.question
-    this.state = options.initialState
+    this.state =
+      options.initialState.completedPlayCounts === undefined
+        ? {
+            ...options.initialState,
+            completedPlayCounts:
+              options.initialState.status === 'ended'
+                ? options.initialState.playCounts
+                : {},
+          }
+        : options.initialState
     this.speech = options.speech
     this.selectedSegmentOnly =
       options.question.playbackPolicy.sequenceMode !== 'all-segments' ||
@@ -222,6 +231,16 @@ export class ListeningPlaybackController {
             this.activeUtteranceStarted = false
             this.activeUtterancePaused = false
             this.onPlaybackEvent?.('ended')
+            this.update((current) => ({
+              ...current,
+              completedPlayCounts: segments.reduce(
+                (counts, segment) => ({
+                  ...counts,
+                  [segment.id]: (counts[segment.id] ?? 0) + 1,
+                }),
+                current.completedPlayCounts ?? {},
+              ),
+            }))
             if (
               this.state.repeatMode === 'segment' ||
               this.state.repeatMode === 'all'

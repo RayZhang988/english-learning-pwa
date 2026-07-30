@@ -1,0 +1,3559 @@
+{
+  "schemaVersion": 1,
+  "documentType": "listening-choice-bilingual-options",
+  "contentVersion": "1.0.0",
+  "courseId": "survival-travel-american-4w",
+  "targetLocale": "en-US",
+  "supportLocale": "zh-CN",
+  "questions": [
+    {
+      "questionId": "st4w-w1d1-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "visit",
+          "translationZh": "访问"
+        },
+        {
+          "optionId": "b",
+          "textEn": "visa",
+          "translationZh": "签证"
+        },
+        {
+          "optionId": "c",
+          "textEn": "village",
+          "translationZh": "村庄"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d1-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "From Shanghai, traveling to Boston this week",
+          "translationZh": "来自上海，这周在波士顿旅行"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Originally from Boston, traveling to Shanghai this week",
+          "translationZh": "来自波士顿，这周在上海旅行"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Live in Shanghai, going to Boston next week",
+          "translationZh": "住在上海，下周去波士顿"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d2-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "first name",
+          "translationZh": "名"
+        },
+        {
+          "optionId": "b",
+          "textEn": "last name",
+          "translationZh": "姓"
+        },
+        {
+          "optionId": "c",
+          "textEn": "phone number",
+          "translationZh": "电话号码"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d2-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Spell the message just now",
+          "translationZh": "拼写刚才的信息"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Say the phone number again",
+          "translationZh": "再说一次电话号码"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Fill in your email address",
+          "translationZh": "填写电子邮箱地址"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d3-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "fifteen",
+          "translationZh": "十五"
+        },
+        {
+          "optionId": "b",
+          "textEn": "fifty",
+          "translationZh": "五十"
+        },
+        {
+          "optionId": "c",
+          "textEn": "five",
+          "translationZh": "五"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d3-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "1 dollar 15 cents",
+          "translationZh": "1 美元 15 美分"
+        },
+        {
+          "optionId": "b",
+          "textEn": "1 dollar 50 cents",
+          "translationZh": "1 美元 50 美分"
+        },
+        {
+          "optionId": "c",
+          "textEn": "$15",
+          "translationZh": "15 美元"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d4-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "nine thirteen",
+          "translationZh": "九点十三分"
+        },
+        {
+          "optionId": "b",
+          "textEn": "nine thirty",
+          "translationZh": "九点三十分"
+        },
+        {
+          "optionId": "c",
+          "textEn": "nine o'clock",
+          "translationZh": "九点钟"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d4-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Meet at 9:30 and have coffee first",
+          "translationZh": "9:30 见面，先喝咖啡"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Meet at 10:00 and visit the museum first",
+          "translationZh": "10:00 见面，先参观博物馆"
+        },
+        {
+          "optionId": "c",
+          "textEn": "9:13 Go directly to the hotel",
+          "translationZh": "9:13 直接去酒店"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d5-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "repeat",
+          "translationZh": "重复"
+        },
+        {
+          "optionId": "b",
+          "textEn": "receipt",
+          "translationZh": "收据"
+        },
+        {
+          "optionId": "c",
+          "textEn": "restroom",
+          "translationZh": "卫生间"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d5-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Ask the other person to repeat and speak slower",
+          "translationZh": "请对方重复并说慢一点"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Ask the person to lead the way to the front desk",
+          "translationZh": "请对方带路去前台"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Ask the other person to wait by the elevator",
+          "translationZh": "请对方等在电梯旁"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d6-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "takeout",
+          "translationZh": "外带"
+        },
+        {
+          "optionId": "b",
+          "textEn": "checkout",
+          "translationZh": "结账"
+        },
+        {
+          "optionId": "c",
+          "textEn": "table",
+          "translationZh": "桌子"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d6-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Dine in or take out?",
+          "translationZh": "堂食还是外带"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Whether to add milk",
+          "translationZh": "是否加牛奶"
+        },
+        {
+          "optionId": "c",
+          "textEn": "sandwich size",
+          "translationZh": "三明治的大小"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d7-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "nine thirteen",
+          "translationZh": "九点十三分"
+        },
+        {
+          "optionId": "b",
+          "textEn": "nine thirty",
+          "translationZh": "九点三十分"
+        },
+        {
+          "optionId": "c",
+          "textEn": "nine forty",
+          "translationZh": "九点四十"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d7-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Check if it's 9:13 or 9:30",
+          "translationZh": "要确认是 9:13 还是 9:30"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Want to cancel plans for tomorrow",
+          "translationZh": "要取消明天的计划"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Change the meeting place to a hotel",
+          "translationZh": "要把见面地点改到酒店"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d8-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "reservation",
+          "translationZh": "预订"
+        },
+        {
+          "optionId": "b",
+          "textEn": "recommendation",
+          "translationZh": "推荐"
+        },
+        {
+          "optionId": "c",
+          "textEn": "restaurant",
+          "translationZh": "餐厅"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d8-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "about 5 minutes",
+          "translationZh": "大约 5 分钟"
+        },
+        {
+          "optionId": "b",
+          "textEn": "about 10 minutes",
+          "translationZh": "大约 10 分钟"
+        },
+        {
+          "optionId": "c",
+          "textEn": "about 30 minutes",
+          "translationZh": "大约 30 分钟"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d9-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "allergic",
+          "translationZh": "过敏的"
+        },
+        {
+          "optionId": "b",
+          "textEn": "allergy",
+          "translationZh": "过敏"
+        },
+        {
+          "optionId": "c",
+          "textEn": "appetizer",
+          "translationZh": "开胃菜"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d9-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "allergic to peanuts",
+          "translationZh": "对花生过敏"
+        },
+        {
+          "optionId": "b",
+          "textEn": "don't like onions",
+          "translationZh": "不喜欢洋葱"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Want to change it to French fries",
+          "translationZh": "想换成薯条"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d10-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "check",
+          "translationZh": "账单"
+        },
+        {
+          "optionId": "b",
+          "textEn": "cash",
+          "translationZh": "现金"
+        },
+        {
+          "optionId": "c",
+          "textEn": "charge",
+          "translationZh": "收费"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d10-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "One more drink was added to the bill",
+          "translationZh": "账单多算了一杯饮料"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Credit card cannot be used",
+          "translationZh": "信用卡无法使用"
+        },
+        {
+          "optionId": "c",
+          "textEn": "The tip amount is not enough",
+          "translationZh": "小费金额不够"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d11-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "left",
+          "translationZh": "左边"
+        },
+        {
+          "optionId": "b",
+          "textEn": "right",
+          "translationZh": "右边"
+        },
+        {
+          "optionId": "c",
+          "textEn": "straight",
+          "translationZh": "直行"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Go straight two blocks and turn right on Pine Street",
+          "translationZh": "直走两个街区，在 Pine Street 右转"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Go straight one block and turn left on Pine Street",
+          "translationZh": "直走一个街区，在 Pine Street 左转"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Turn right directly opposite the park",
+          "translationZh": "在公园对面直接右转"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d12-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "platform",
+          "translationZh": "站台"
+        },
+        {
+          "optionId": "b",
+          "textEn": "transfer",
+          "translationZh": "换乘"
+        },
+        {
+          "optionId": "c",
+          "textEn": "station",
+          "translationZh": "车站"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d12-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Platform 4",
+          "translationZh": "站台 4"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Platform 6",
+          "translationZh": "站台 6"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Platform 7",
+          "translationZh": "站台 7"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d13-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "pickup",
+          "translationZh": "上车点"
+        },
+        {
+          "optionId": "b",
+          "textEn": "drop-off",
+          "translationZh": "下车点"
+        },
+        {
+          "optionId": "c",
+          "textEn": "round trip",
+          "translationZh": "往返"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d13-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Boarding area B",
+          "translationZh": "上车区 B"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Beside the taxi sign at the North Gate",
+          "translationZh": "北门出租车标志旁"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Parking building entrance",
+          "translationZh": "停车楼入口"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d14-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Green Line",
+          "translationZh": "绿线"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Red Line",
+          "translationZh": "红线"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Blue Line",
+          "translationZh": "蓝线"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d14-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Take the Green Line for three stops, no transfers",
+          "translationZh": "乘 Green Line 三站，不换乘"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Take the Blue Line and transfer after two stops",
+          "translationZh": "乘 Blue Line 两站后换乘"
+        },
+        {
+          "optionId": "c",
+          "textEn": "walk three blocks",
+          "translationZh": "步行三个街区"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d15-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "small",
+          "translationZh": "小码"
+        },
+        {
+          "optionId": "b",
+          "textEn": "medium",
+          "translationZh": "中码"
+        },
+        {
+          "optionId": "c",
+          "textEn": "large",
+          "translationZh": "大码"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d15-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "small",
+          "translationZh": "小码"
+        },
+        {
+          "optionId": "b",
+          "textEn": "medium",
+          "translationZh": "中码"
+        },
+        {
+          "optionId": "c",
+          "textEn": "large",
+          "translationZh": "大码"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d16-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "receipt",
+          "translationZh": "收据"
+        },
+        {
+          "optionId": "b",
+          "textEn": "refund",
+          "translationZh": "退款"
+        },
+        {
+          "optionId": "c",
+          "textEn": "return",
+          "translationZh": "退货"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d16-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Black small size",
+          "translationZh": "黑色小码"
+        },
+        {
+          "optionId": "b",
+          "textEn": "large size",
+          "translationZh": "大码"
+        },
+        {
+          "optionId": "c",
+          "textEn": "direct refund",
+          "translationZh": "直接退款"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d17-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "check in",
+          "translationZh": "办理入住"
+        },
+        {
+          "optionId": "b",
+          "textEn": "check out",
+          "translationZh": "退房"
+        },
+        {
+          "optionId": "c",
+          "textEn": "key card",
+          "translationZh": "房卡"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d17-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Check out at 11 o'clock, the room is on the fifth floor",
+          "translationZh": "11 点退房，房间在五楼"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Check out at 10 o'clock, the room is on the eighth floor",
+          "translationZh": "10 点退房，房间在八楼"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Breakfast at 11 o'clock, room on the first floor",
+          "translationZh": "11 点早餐，房间在一楼"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d18-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "towel",
+          "translationZh": "毛巾"
+        },
+        {
+          "optionId": "b",
+          "textEn": "tower",
+          "translationZh": "塔"
+        },
+        {
+          "optionId": "c",
+          "textEn": "blanket",
+          "translationZh": "毯子"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d18-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "air conditioner not working",
+          "translationZh": "空调不工作"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Wi-Fi is too slow",
+          "translationZh": "Wi-Fi 太慢"
+        },
+        {
+          "optionId": "c",
+          "textEn": "The room is too noisy",
+          "translationZh": "房间太吵"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d19-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "carry-on",
+          "translationZh": "随身行李"
+        },
+        {
+          "optionId": "b",
+          "textEn": "checked bag",
+          "translationZh": "托运行李"
+        },
+        {
+          "optionId": "c",
+          "textEn": "boarding pass",
+          "translationZh": "登机牌"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d19-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Window or aisle seat?",
+          "translationZh": "靠窗还是靠过道座位"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Check it or carry it with you?",
+          "translationZh": "托运还是随身携带"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Paper or electronic boarding pass?",
+          "translationZh": "纸质还是电子登机牌"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d20-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "C14",
+          "translationZh": "C14 登机口"
+        },
+        {
+          "optionId": "b",
+          "textEn": "C18",
+          "translationZh": "C18 登机口"
+        },
+        {
+          "optionId": "c",
+          "textEn": "B18",
+          "translationZh": "B18 登机口"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d20-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Changed from C14 to C18",
+          "translationZh": "从 C14 改到 C18"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Changed from C18 to C14",
+          "translationZh": "从 C18 改到 C14"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Changed from B18 to C18",
+          "translationZh": "从 B18 改到 C18"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d21-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "D4",
+          "translationZh": "D4 登机口"
+        },
+        {
+          "optionId": "b",
+          "textEn": "D9",
+          "translationZh": "D9 登机口"
+        },
+        {
+          "optionId": "c",
+          "textEn": "B9",
+          "translationZh": "B9 登机口"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d21-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "D4",
+          "translationZh": "D4 登机口"
+        },
+        {
+          "optionId": "b",
+          "textEn": "D9",
+          "translationZh": "D9 登机口"
+        },
+        {
+          "optionId": "c",
+          "textEn": "D5",
+          "translationZh": "D5 登机口"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d22-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "baggage claim",
+          "translationZh": "行李提取处"
+        },
+        {
+          "optionId": "b",
+          "textEn": "baggage tag",
+          "translationZh": "行李牌"
+        },
+        {
+          "optionId": "c",
+          "textEn": "boarding pass",
+          "translationZh": "登机牌"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d22-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Medium black with red label",
+          "translationZh": "中号黑色，带红色标签"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Large red with black label",
+          "translationZh": "大号红色，带黑色标签"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Small blue, no label",
+          "translationZh": "小号蓝色，没有标签"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d23-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "dizzy",
+          "translationZh": "晕眩的"
+        },
+        {
+          "optionId": "b",
+          "textEn": "sick",
+          "translationZh": "生病的"
+        },
+        {
+          "optionId": "c",
+          "textEn": "lost",
+          "translationZh": "丢失的"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d23-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Next to the information desk at the north entrance",
+          "translationZh": "北入口信息台旁"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Next to the pharmacy at the south entrance",
+          "translationZh": "南入口药店旁"
+        },
+        {
+          "optionId": "c",
+          "textEn": "In the hospital emergency room",
+          "translationZh": "医院急诊室里"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d24-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "recommend",
+          "translationZh": "推荐"
+        },
+        {
+          "optionId": "b",
+          "textEn": "remember",
+          "translationZh": "记住"
+        },
+        {
+          "optionId": "c",
+          "textEn": "reservation",
+          "translationZh": "预订"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d24-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "First go to the Science Museum and then take a walk along the river",
+          "translationZh": "先去科学博物馆，再沿河散步"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Go to the riverside market first, then attend the meeting",
+          "translationZh": "先去河边市场，再参加会议"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Take a walk first, then go to the art museum",
+          "translationZh": "先散步，再去艺术博物馆"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d25-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "terminal two",
+          "translationZh": "二号航站楼"
+        },
+        {
+          "optionId": "b",
+          "textEn": "terminal three",
+          "translationZh": "三号航站楼"
+        },
+        {
+          "optionId": "c",
+          "textEn": "door two",
+          "translationZh": "二号门"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d25-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Outside Gate 7, every 30 minutes",
+          "translationZh": "7 号门外，每 30 分钟一班"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Inside Gate 2, every 15 minutes",
+          "translationZh": "2 号门内，每 15 分钟一班"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Next to the parking lot, every hour",
+          "translationZh": "停车楼旁，每小时一班"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d26-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "first stop",
+          "translationZh": "第一站"
+        },
+        {
+          "optionId": "b",
+          "textEn": "fourth stop",
+          "translationZh": "第四站"
+        },
+        {
+          "optionId": "c",
+          "textEn": "fifth stop",
+          "translationZh": "第五站"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d26-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Get off at the fourth stop and walk one block east",
+          "translationZh": "第四站下车，向东走一个街区"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Get off at the fifth stop and walk two blocks west",
+          "translationZh": "第五站下车，向西走两个街区"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Transfer to Green Line at the first stop",
+          "translationZh": "第一站换乘 Green Line"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d27-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "canceled",
+          "translationZh": "取消"
+        },
+        {
+          "optionId": "b",
+          "textEn": "delayed",
+          "translationZh": "延迟"
+        },
+        {
+          "optionId": "c",
+          "textEn": "rescheduled",
+          "translationZh": "重新安排"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d27-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Gate A12, boarding starts at 4:30 and takes off at 5:10",
+          "translationZh": "A12 登机口，4:30 开始登机，5:10 起飞"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Gate A10, boarding starts at 4:12",
+          "translationZh": "A10 登机口，4:12 开始登机"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Boarding starts at 5:10 and takes off at 5:30",
+          "translationZh": "5:10 开始登机，5:30 起飞"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d28-wd-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "B16",
+          "translationZh": "B16 登机口"
+        },
+        {
+          "optionId": "b",
+          "textEn": "B12",
+          "translationZh": "B12 登机口"
+        },
+        {
+          "optionId": "c",
+          "textEn": "C16",
+          "translationZh": "C16 登机口"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d28-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Gate B16, boarding starts at 5:00",
+          "translationZh": "B16 登机口，5:00 开始登机"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Gate B12, boarding starts at 5:40",
+          "translationZh": "B12 登机口，5:40 开始登机"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Gate C16, boarding starts at 4:30",
+          "translationZh": "C16 登机口，4:30 开始登机"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d1-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w1d1-l1:option:0",
+          "textEn": "Meeting and introducing each other for the first time",
+          "translationZh": "第一次见面并互相介绍"
+        },
+        {
+          "optionId": "w1d1-l1:option:1",
+          "textEn": "Order food at a restaurant",
+          "translationZh": "在餐厅点餐"
+        },
+        {
+          "optionId": "w1d1-l1:option:2",
+          "textEn": "Discuss flights",
+          "translationZh": "讨论航班"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d1-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w1d1-l2:option:0",
+          "textEn": "Boston",
+          "translationZh": "波士顿"
+        },
+        {
+          "optionId": "w1d1-l2:option:1",
+          "textEn": "Shanghai",
+          "translationZh": "上海"
+        },
+        {
+          "optionId": "w1d1-l2:option:2",
+          "textEn": "Chicago",
+          "translationZh": "芝加哥"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d1-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w1d1-l3:option:0",
+          "textEn": "Boston",
+          "translationZh": "波士顿"
+        },
+        {
+          "optionId": "w1d1-l3:option:1",
+          "textEn": "Shanghai",
+          "translationZh": "上海"
+        },
+        {
+          "optionId": "w1d1-l3:option:2",
+          "textEn": "Seattle",
+          "translationZh": "西雅图"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d1-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w1d1-q2:option:0",
+          "textEn": "Chicago",
+          "translationZh": "芝加哥"
+        },
+        {
+          "optionId": "w1d1-q2:option:1",
+          "textEn": "Boston",
+          "translationZh": "波士顿"
+        },
+        {
+          "optionId": "w1d1-q2:option:2",
+          "textEn": "New York",
+          "translationZh": "纽约"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d2-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w1d2-l1:option:0",
+          "textEn": "G-I-A",
+          "translationZh": "拼写 G-I-A"
+        },
+        {
+          "optionId": "w1d2-l1:option:1",
+          "textEn": "J-I-A",
+          "translationZh": "拼写 J-I-A"
+        },
+        {
+          "optionId": "w1d2-l1:option:2",
+          "textEn": "J-A-I",
+          "translationZh": "拼写 J-A-I"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d2-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w1d2-l2:option:0",
+          "textEn": "Sun",
+          "translationZh": "姓氏 Sun"
+        },
+        {
+          "optionId": "w1d2-l2:option:1",
+          "textEn": "Song",
+          "translationZh": "姓氏 Song"
+        },
+        {
+          "optionId": "w1d2-l2:option:2",
+          "textEn": "Sung",
+          "translationZh": "姓氏 Sung"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d2-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w1d2-l3:option:0",
+          "textEn": "48",
+          "translationZh": "四十八"
+        },
+        {
+          "optionId": "w1d2-l3:option:1",
+          "textEn": "84",
+          "translationZh": "八十四"
+        },
+        {
+          "optionId": "w1d2-l3:option:2",
+          "textEn": "18",
+          "translationZh": "十八"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d2-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w1d2-q2:option:0",
+          "textEn": "B-E-A",
+          "translationZh": "拼写 B-E-A"
+        },
+        {
+          "optionId": "w1d2-q2:option:1",
+          "textEn": "B-I-A",
+          "translationZh": "拼写 B-I-A"
+        },
+        {
+          "optionId": "w1d2-q2:option:2",
+          "textEn": "P-E-A",
+          "translationZh": "拼写 P-E-A"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d3-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w1d3-l1:option:0",
+          "textEn": "$1.15",
+          "translationZh": "1.15 美元"
+        },
+        {
+          "optionId": "w1d3-l1:option:1",
+          "textEn": "$1.50",
+          "translationZh": "1.50 美元"
+        },
+        {
+          "optionId": "w1d3-l1:option:2",
+          "textEn": "$15.00",
+          "translationZh": "15 美元"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d3-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w1d3-l2:option:0",
+          "textEn": "$15",
+          "translationZh": "15 美元"
+        },
+        {
+          "optionId": "w1d3-l2:option:1",
+          "textEn": "$50",
+          "translationZh": "50 美元"
+        },
+        {
+          "optionId": "w1d3-l2:option:2",
+          "textEn": "$51",
+          "translationZh": "51 美元"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d3-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w1d3-l3:option:0",
+          "textEn": "hat",
+          "translationZh": "帽子"
+        },
+        {
+          "optionId": "w1d3-l3:option:1",
+          "textEn": "postcard",
+          "translationZh": "明信片"
+        },
+        {
+          "optionId": "w1d3-l3:option:2",
+          "textEn": "hat and postcard",
+          "translationZh": "帽子和明信片"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d3-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w1d3-q2:option:0",
+          "textEn": "$13.30",
+          "translationZh": "13.30 美元"
+        },
+        {
+          "optionId": "w1d3-q2:option:1",
+          "textEn": "$30.13",
+          "translationZh": "30.13 美元"
+        },
+        {
+          "optionId": "w1d3-q2:option:2",
+          "textEn": "$30.30",
+          "translationZh": "30.30 美元"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d4-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w1d4-l1:option:0",
+          "textEn": "9:00",
+          "translationZh": "九点整"
+        },
+        {
+          "optionId": "w1d4-l1:option:1",
+          "textEn": "9:30",
+          "translationZh": "九点半"
+        },
+        {
+          "optionId": "w1d4-l1:option:2",
+          "textEn": "10:00",
+          "translationZh": "十点整"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d4-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w1d4-l2:option:0",
+          "textEn": "9:30",
+          "translationZh": "九点半"
+        },
+        {
+          "optionId": "w1d4-l2:option:1",
+          "textEn": "10:00",
+          "translationZh": "十点整"
+        },
+        {
+          "optionId": "w1d4-l2:option:2",
+          "textEn": "10:30",
+          "translationZh": "十点半"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d4-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w1d4-l3:option:0",
+          "textEn": "Museum entrance",
+          "translationZh": "博物馆门口"
+        },
+        {
+          "optionId": "w1d4-l3:option:1",
+          "textEn": "hotel lobby",
+          "translationZh": "酒店大堂"
+        },
+        {
+          "optionId": "w1d4-l3:option:2",
+          "textEn": "coffee shop",
+          "translationZh": "咖啡店"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d4-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w1d4-q2:option:0",
+          "textEn": "2:15 p.m.",
+          "translationZh": "下午 2:15"
+        },
+        {
+          "optionId": "w1d4-q2:option:1",
+          "textEn": "2:30 p.m.",
+          "translationZh": "下午 2:30"
+        },
+        {
+          "optionId": "w1d4-q2:option:2",
+          "textEn": "1:45 p.m.",
+          "translationZh": "下午 1:45"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d5-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w1d5-l1:option:0",
+          "textEn": "Find the restroom",
+          "translationZh": "寻找洗手间"
+        },
+        {
+          "optionId": "w1d5-l1:option:1",
+          "textEn": "buy tickets",
+          "translationZh": "购买门票"
+        },
+        {
+          "optionId": "w1d5-l1:option:2",
+          "textEn": "charge mobile phone",
+          "translationZh": "给手机充电"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d5-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w1d5-l2:option:0",
+          "textEn": "elevator",
+          "translationZh": "电梯"
+        },
+        {
+          "optionId": "w1d5-l2:option:1",
+          "textEn": "Entrance",
+          "translationZh": "入口"
+        },
+        {
+          "optionId": "w1d5-l2:option:2",
+          "textEn": "coffee shop",
+          "translationZh": "咖啡店"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d5-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w1d5-l3:option:0",
+          "textEn": "The visitor didn't hear clearly",
+          "translationZh": "访客没听清"
+        },
+        {
+          "optionId": "w1d5-l3:option:1",
+          "textEn": "route changed",
+          "translationZh": "路线改变了"
+        },
+        {
+          "optionId": "w1d5-l3:option:2",
+          "textEn": "The staff made a mistake",
+          "translationZh": "工作人员说错了"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d5-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w1d5-q2:option:0",
+          "textEn": "Inside the front desk",
+          "translationZh": "前台里面"
+        },
+        {
+          "optionId": "w1d5-q2:option:1",
+          "textEn": "Opposite the front desk",
+          "translationZh": "前台对面"
+        },
+        {
+          "optionId": "w1d5-q2:option:2",
+          "textEn": "behind the front desk",
+          "translationZh": "前台后面"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d6-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w1d6-l1:option:0",
+          "textEn": "small cup",
+          "translationZh": "小杯"
+        },
+        {
+          "optionId": "w1d6-l1:option:1",
+          "textEn": "medium cup",
+          "translationZh": "中杯"
+        },
+        {
+          "optionId": "w1d6-l1:option:2",
+          "textEn": "Large cup",
+          "translationZh": "大杯"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d6-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w1d6-l2:option:0",
+          "textEn": "egg",
+          "translationZh": "鸡蛋"
+        },
+        {
+          "optionId": "w1d6-l2:option:1",
+          "textEn": "cheese",
+          "translationZh": "奶酪"
+        },
+        {
+          "optionId": "w1d6-l2:option:2",
+          "textEn": "bread",
+          "translationZh": "面包"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d6-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w1d6-l3:option:0",
+          "textEn": "Dine-in",
+          "translationZh": "堂食"
+        },
+        {
+          "optionId": "w1d6-l3:option:1",
+          "textEn": "Takeaway",
+          "translationZh": "外带"
+        },
+        {
+          "optionId": "w1d6-l3:option:2",
+          "textEn": "No description",
+          "translationZh": "没有说明"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d6-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w1d6-q2:option:0",
+          "textEn": "Large cup of sugar-free ice tea, dine-in",
+          "translationZh": "大杯无糖冰茶，堂食"
+        },
+        {
+          "optionId": "w1d6-q2:option:1",
+          "textEn": "Small cup of sweet iced tea, take away",
+          "translationZh": "小杯甜冰茶，外带"
+        },
+        {
+          "optionId": "w1d6-q2:option:2",
+          "textEn": "Large cup of hot tea, take away",
+          "translationZh": "大杯热茶，外带"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d7-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w1d7-l1:option:0",
+          "textEn": "Dinner tonight",
+          "translationZh": "今晚吃饭"
+        },
+        {
+          "optionId": "w1d7-l1:option:1",
+          "textEn": "Drink coffee tomorrow morning",
+          "translationZh": "明早喝咖啡"
+        },
+        {
+          "optionId": "w1d7-l1:option:2",
+          "textEn": "Visit the museum tomorrow afternoon",
+          "translationZh": "明天下午参观博物馆"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d7-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w1d7-l2:option:0",
+          "textEn": "9:30",
+          "translationZh": "九点半"
+        },
+        {
+          "optionId": "w1d7-l2:option:1",
+          "textEn": "10:00",
+          "translationZh": "十点整"
+        },
+        {
+          "optionId": "w1d7-l2:option:2",
+          "textEn": "11:00",
+          "translationZh": "十一点整"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d7-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w1d7-l3:option:0",
+          "textEn": "9:13",
+          "translationZh": "九点十三分"
+        },
+        {
+          "optionId": "w1d7-l3:option:1",
+          "textEn": "9:30",
+          "translationZh": "九点半"
+        },
+        {
+          "optionId": "w1d7-l3:option:2",
+          "textEn": "11:30",
+          "translationZh": "十一点半"
+        }
+      ]
+    },
+    {
+      "questionId": "w1d7-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w1d7-q2:option:0",
+          "textEn": "Tomorrow at 10:00, in the coffee shop",
+          "translationZh": "明天 10:00，在咖啡店"
+        },
+        {
+          "optionId": "w1d7-q2:option:1",
+          "textEn": "Tomorrow at 10:15 in the lobby",
+          "translationZh": "明天 10:15，在大堂"
+        },
+        {
+          "optionId": "w1d7-q2:option:2",
+          "textEn": "Today at 10:15 in the lobby",
+          "translationZh": "今天 10:15，在大堂"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d8-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w2d8-l1:option:0",
+          "textEn": "two people",
+          "translationZh": "两人"
+        },
+        {
+          "optionId": "w2d8-l1:option:1",
+          "textEn": "three people",
+          "translationZh": "三人"
+        },
+        {
+          "optionId": "w2d8-l1:option:2",
+          "textEn": "four people",
+          "translationZh": "四人"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d8-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w2d8-l2:option:0",
+          "textEn": "about five minutes",
+          "translationZh": "约五分钟"
+        },
+        {
+          "optionId": "w2d8-l2:option:1",
+          "textEn": "about ten minutes",
+          "translationZh": "约十分钟"
+        },
+        {
+          "optionId": "w2d8-l2:option:2",
+          "textEn": "about twenty minutes",
+          "translationZh": "约二十分钟"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d8-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w2d8-l3:option:0",
+          "textEn": "Look at the menu first",
+          "translationZh": "先看菜单"
+        },
+        {
+          "optionId": "w2d8-l3:option:1",
+          "textEn": "Order drinks first",
+          "translationZh": "先点饮料"
+        },
+        {
+          "optionId": "w2d8-l3:option:2",
+          "textEn": "Leave first",
+          "translationZh": "先离开"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d8-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w2d8-q2:option:0",
+          "textEn": "Four people, under Park, at 6:30",
+          "translationZh": "Park 名下，四人，6:30"
+        },
+        {
+          "optionId": "w2d8-q2:option:1",
+          "textEn": "Six people, under Park, at 4:30",
+          "translationZh": "Park 名下，六人，4:30"
+        },
+        {
+          "optionId": "w2d8-q2:option:2",
+          "textEn": "Four people, under Park, at 6:00",
+          "translationZh": "Park 名下，四人，6:00"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d9-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w2d9-l1:option:0",
+          "textEn": "onion",
+          "translationZh": "洋葱"
+        },
+        {
+          "optionId": "w2d9-l1:option:1",
+          "textEn": "cheese",
+          "translationZh": "奶酪"
+        },
+        {
+          "optionId": "w2d9-l1:option:2",
+          "textEn": "tomato",
+          "translationZh": "西红柿"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d9-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w2d9-l2:option:0",
+          "textEn": "Soup",
+          "translationZh": "汤"
+        },
+        {
+          "optionId": "w2d9-l2:option:1",
+          "textEn": "salad",
+          "translationZh": "沙拉"
+        },
+        {
+          "optionId": "w2d9-l2:option:2",
+          "textEn": "rice",
+          "translationZh": "米饭"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d9-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w2d9-l3:option:0",
+          "textEn": "Guests are in a hurry",
+          "translationZh": "客人赶时间"
+        },
+        {
+          "optionId": "w2d9-l3:option:1",
+          "textEn": "Guest is allergic to peanuts",
+          "translationZh": "客人对花生过敏"
+        },
+        {
+          "optionId": "w2d9-l3:option:2",
+          "textEn": "Guests don’t want side dishes",
+          "translationZh": "客人不要配菜"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d9-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w2d9-q2:option:0",
+          "textEn": "Soup",
+          "translationZh": "汤"
+        },
+        {
+          "optionId": "w2d9-q2:option:1",
+          "textEn": "salad",
+          "translationZh": "沙拉"
+        },
+        {
+          "optionId": "w2d9-q2:option:2",
+          "textEn": "Contains neither",
+          "translationZh": "两者都不含"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d10-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w2d10-l1:option:0",
+          "textEn": "One dish is missing",
+          "translationZh": "少算了一道菜"
+        },
+        {
+          "optionId": "w2d10-l1:option:1",
+          "textEn": "Forgot an extra drink",
+          "translationZh": "多算了一杯饮料"
+        },
+        {
+          "optionId": "w2d10-l1:option:2",
+          "textEn": "The tip is counted twice",
+          "translationZh": "小费算了两次"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d10-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w2d10-l2:option:0",
+          "textEn": "Reject modification",
+          "translationZh": "拒绝修改"
+        },
+        {
+          "optionId": "w2d10-l2:option:1",
+          "textEn": "Send dessert",
+          "translationZh": "送甜点"
+        },
+        {
+          "optionId": "w2d10-l2:option:2",
+          "textEn": "Correct bill",
+          "translationZh": "更正账单"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d10-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w2d10-l3:option:0",
+          "textEn": "cash",
+          "translationZh": "现金"
+        },
+        {
+          "optionId": "w2d10-l3:option:1",
+          "textEn": "bank card",
+          "translationZh": "银行卡"
+        },
+        {
+          "optionId": "w2d10-l3:option:2",
+          "textEn": "gift card",
+          "translationZh": "礼品卡"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d10-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w2d10-q2:option:0",
+          "textEn": "Total includes tip",
+          "translationZh": "总额含小费"
+        },
+        {
+          "optionId": "w2d10-q2:option:1",
+          "textEn": "Total is $24",
+          "translationZh": "总额是 $24"
+        },
+        {
+          "optionId": "w2d10-q2:option:2",
+          "textEn": "Total was $42, not including tip",
+          "translationZh": "总额是 $42，未含小费"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d11-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w2d11-l1:option:0",
+          "textEn": "Turn left on Pine Street",
+          "translationZh": "在 Pine Street 左转"
+        },
+        {
+          "optionId": "w2d11-l1:option:1",
+          "textEn": "Go straight two blocks",
+          "translationZh": "直走两个街区"
+        },
+        {
+          "optionId": "w2d11-l1:option:2",
+          "textEn": "walk through the park",
+          "translationZh": "穿过公园"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d11-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w2d11-l2:option:0",
+          "textEn": "left",
+          "translationZh": "左边"
+        },
+        {
+          "optionId": "w2d11-l2:option:1",
+          "textEn": "right",
+          "translationZh": "右边"
+        },
+        {
+          "optionId": "w2d11-l2:option:2",
+          "textEn": "middle",
+          "translationZh": "中间"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d11-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w2d11-l3:option:0",
+          "textEn": "station",
+          "translationZh": "车站"
+        },
+        {
+          "optionId": "w2d11-l3:option:1",
+          "textEn": "small park",
+          "translationZh": "小公园"
+        },
+        {
+          "optionId": "w2d11-l3:option:2",
+          "textEn": "bank",
+          "translationZh": "银行"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d11-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w2d11-q2:option:0",
+          "textEn": "left",
+          "translationZh": "左边"
+        },
+        {
+          "optionId": "w2d11-q2:option:1",
+          "textEn": "right",
+          "translationZh": "右边"
+        },
+        {
+          "optionId": "w2d11-q2:option:2",
+          "textEn": "opposite",
+          "translationZh": "对面"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d12-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w2d12-l1:option:0",
+          "textEn": "yes",
+          "translationZh": "是"
+        },
+        {
+          "optionId": "w2d12-l1:option:1",
+          "textEn": "no",
+          "translationZh": "否"
+        },
+        {
+          "optionId": "w2d12-l1:option:2",
+          "textEn": "Direct service only on weekends",
+          "translationZh": "只在周末直达"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d12-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w2d12-l2:option:0",
+          "textEn": "Central Station",
+          "translationZh": "中央车站"
+        },
+        {
+          "optionId": "w2d12-l2:option:1",
+          "textEn": "Airport Station",
+          "translationZh": "机场站"
+        },
+        {
+          "optionId": "w2d12-l2:option:2",
+          "textEn": "Park Street",
+          "translationZh": "公园街"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d12-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w2d12-l3:option:0",
+          "textEn": "Platform 3",
+          "translationZh": "三号站台"
+        },
+        {
+          "optionId": "w2d12-l3:option:1",
+          "textEn": "Platform 4",
+          "translationZh": "四号站台"
+        },
+        {
+          "optionId": "w2d12-l3:option:2",
+          "textEn": "Platform 6",
+          "translationZh": "六号站台"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d12-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w2d12-q2:option:0",
+          "textEn": "Departs from platform 12 in 8 minutes",
+          "translationZh": "8 分钟后从 12 号站台出发"
+        },
+        {
+          "optionId": "w2d12-q2:option:1",
+          "textEn": "Departs from platform 8 in 12 minutes",
+          "translationZh": "12 分钟后从 8 号站台出发"
+        },
+        {
+          "optionId": "w2d12-q2:option:2",
+          "textEn": "Depart from the platform at 8:12",
+          "translationZh": "8:12 从站台出发"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d13-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w2d13-l1:option:0",
+          "textEn": "north gate",
+          "translationZh": "北门"
+        },
+        {
+          "optionId": "w2d13-l1:option:1",
+          "textEn": "Next to the taxi sign at the main entrance",
+          "translationZh": "正门出租车标志旁"
+        },
+        {
+          "optionId": "w2d13-l1:option:2",
+          "textEn": "B boarding area",
+          "translationZh": "B 上车区"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d13-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w2d13-l2:option:0",
+          "textEn": "pickup zone B",
+          "translationZh": "拾取区B"
+        },
+        {
+          "optionId": "w2d13-l2:option:1",
+          "textEn": "inside parking garage",
+          "translationZh": "parking garage 内"
+        },
+        {
+          "optionId": "w2d13-l2:option:2",
+          "textEn": "River Hotel",
+          "translationZh": "河畔酒店"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d13-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w2d13-l3:option:0",
+          "textEn": "Airport",
+          "translationZh": "机场"
+        },
+        {
+          "optionId": "w2d13-l3:option:1",
+          "textEn": "River Hotel",
+          "translationZh": "河畔酒店"
+        },
+        {
+          "optionId": "w2d13-l3:option:2",
+          "textEn": "Central Station",
+          "translationZh": "中央车站"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d13-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w2d13-q2:option:0",
+          "textEn": "Area C inside Gate 5",
+          "translationZh": "五号门内的 C 区"
+        },
+        {
+          "optionId": "w2d13-q2:option:1",
+          "textEn": "Pick-up area C outside Gate 5",
+          "translationZh": "五号门外的 C 上车区"
+        },
+        {
+          "optionId": "w2d13-q2:option:2",
+          "textEn": "Outside door three",
+          "translationZh": "三号门外"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d14-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w2d14-l1:option:0",
+          "textEn": "7:15",
+          "translationZh": "七点十五分"
+        },
+        {
+          "optionId": "w2d14-l1:option:1",
+          "textEn": "7:45",
+          "translationZh": "七点四十五分"
+        },
+        {
+          "optionId": "w2d14-l1:option:2",
+          "textEn": "8:00",
+          "translationZh": "八点整"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d14-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w2d14-l2:option:0",
+          "textEn": "Turn left",
+          "translationZh": "左转"
+        },
+        {
+          "optionId": "w2d14-l2:option:1",
+          "textEn": "Turn right",
+          "translationZh": "右转"
+        },
+        {
+          "optionId": "w2d14-l2:option:2",
+          "textEn": "Take the Green Line",
+          "translationZh": "乘绿线"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d14-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w2d14-l3:option:0",
+          "textEn": "One transfer is needed",
+          "translationZh": "需要换乘一次"
+        },
+        {
+          "optionId": "w2d14-l3:option:1",
+          "textEn": "Two transfers are needed",
+          "translationZh": "需要换乘两次"
+        },
+        {
+          "optionId": "w2d14-l3:option:2",
+          "textEn": "No transfer is needed",
+          "translationZh": "不需要换乘"
+        }
+      ]
+    },
+    {
+      "questionId": "w2d14-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w2d14-q2:option:0",
+          "textEn": "Ride - walk - pay",
+          "translationZh": "乘车—步行—付款"
+        },
+        {
+          "optionId": "w2d14-q2:option:1",
+          "textEn": "Pay—Walk—Ride",
+          "translationZh": "付款—步行—乘车"
+        },
+        {
+          "optionId": "w2d14-q2:option:2",
+          "textEn": "Walk - pay - ride",
+          "translationZh": "步行—付款—乘车"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d15-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w3d15-l1:option:0",
+          "textEn": "blue and gray",
+          "translationZh": "蓝色和灰色"
+        },
+        {
+          "optionId": "w3d15-l1:option:1",
+          "textEn": "black and gray",
+          "translationZh": "黑色和灰色"
+        },
+        {
+          "optionId": "w3d15-l1:option:2",
+          "textEn": "only blue",
+          "translationZh": "只有蓝色"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d15-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w3d15-l2:option:0",
+          "textEn": "too small",
+          "translationZh": "太小"
+        },
+        {
+          "optionId": "w3d15-l2:option:1",
+          "textEn": "a bit too big",
+          "translationZh": "有点太大"
+        },
+        {
+          "optionId": "w3d15-l2:option:2",
+          "textEn": "wrong color",
+          "translationZh": "颜色不对"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d15-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w3d15-l3:option:0",
+          "textEn": "blue",
+          "translationZh": "蓝色"
+        },
+        {
+          "optionId": "w3d15-l3:option:1",
+          "textEn": "grey",
+          "translationZh": "灰色"
+        },
+        {
+          "optionId": "w3d15-l3:option:2",
+          "textEn": "White",
+          "translationZh": "白色"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d15-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w3d15-q2:option:0",
+          "textEn": "black",
+          "translationZh": "黑色"
+        },
+        {
+          "optionId": "w3d15-q2:option:1",
+          "textEn": "brown",
+          "translationZh": "棕色"
+        },
+        {
+          "optionId": "w3d15-q2:option:2",
+          "textEn": "black and brown",
+          "translationZh": "黑色和棕色"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d16-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w3d16-l1:option:0",
+          "textEn": "sweater too small",
+          "translationZh": "毛衣太小"
+        },
+        {
+          "optionId": "w3d16-l1:option:1",
+          "textEn": "The sweater is damaged",
+          "translationZh": "毛衣有破损"
+        },
+        {
+          "optionId": "w3d16-l1:option:2",
+          "textEn": "The price is wrong",
+          "translationZh": "价格错了"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d16-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w3d16-l2:option:0",
+          "textEn": "black",
+          "translationZh": "黑色"
+        },
+        {
+          "optionId": "w3d16-l2:option:1",
+          "textEn": "green",
+          "translationZh": "绿色"
+        },
+        {
+          "optionId": "w3d16-l2:option:2",
+          "textEn": "green and black",
+          "translationZh": "绿色和黑色"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d16-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w3d16-l3:option:0",
+          "textEn": "need",
+          "translationZh": "需要"
+        },
+        {
+          "optionId": "w3d16-l3:option:1",
+          "textEn": "unnecessary",
+          "translationZh": "不需要"
+        },
+        {
+          "optionId": "w3d16-l3:option:2",
+          "textEn": "No description",
+          "translationZh": "没有说明"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d16-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w3d16-q2:option:0",
+          "textEn": "$25.00",
+          "translationZh": "25 美元"
+        },
+        {
+          "optionId": "w3d16-q2:option:1",
+          "textEn": "$27.15",
+          "translationZh": "27.15 美元"
+        },
+        {
+          "optionId": "w3d16-q2:option:2",
+          "textEn": "$27.50",
+          "translationZh": "27.50 美元"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d17-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w3d17-l1:option:0",
+          "textEn": "Li",
+          "translationZh": "李"
+        },
+        {
+          "optionId": "w3d17-l1:option:1",
+          "textEn": "River",
+          "translationZh": "河"
+        },
+        {
+          "optionId": "w3d17-l1:option:2",
+          "textEn": "Chen",
+          "translationZh": "陈"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d17-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w3d17-l2:option:0",
+          "textEn": "6:30",
+          "translationZh": "六点半"
+        },
+        {
+          "optionId": "w3d17-l2:option:1",
+          "textEn": "10:00",
+          "translationZh": "十点整"
+        },
+        {
+          "optionId": "w3d17-l2:option:2",
+          "textEn": "11:00",
+          "translationZh": "十一点整"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d17-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w3d17-l3:option:0",
+          "textEn": "518, fifth floor",
+          "translationZh": "518，五楼"
+        },
+        {
+          "optionId": "w3d17-l3:option:1",
+          "textEn": "518, 11th floor",
+          "translationZh": "518，十一楼"
+        },
+        {
+          "optionId": "w3d17-l3:option:2",
+          "textEn": "510, fifth floor",
+          "translationZh": "510，五楼"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d17-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w3d17-q2:option:0",
+          "textEn": "704, seventh floor",
+          "translationZh": "704，七楼"
+        },
+        {
+          "optionId": "w3d17-q2:option:1",
+          "textEn": "740, fourth floor",
+          "translationZh": "740，四楼"
+        },
+        {
+          "optionId": "w3d17-q2:option:2",
+          "textEn": "704, lobby level",
+          "translationZh": "704，大堂层"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d18-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w3d18-l1:option:0",
+          "textEn": "Wi-Fi is down",
+          "translationZh": "Wi-Fi 断了"
+        },
+        {
+          "optionId": "w3d18-l1:option:1",
+          "textEn": "air conditioner not working",
+          "translationZh": "空调不工作"
+        },
+        {
+          "optionId": "w3d18-l1:option:2",
+          "textEn": "The room is too noisy",
+          "translationZh": "房间太吵"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d18-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w3d18-l2:option:0",
+          "textEn": "about 5 minutes",
+          "translationZh": "约 5 分钟"
+        },
+        {
+          "optionId": "w3d18-l2:option:1",
+          "textEn": "about 15 minutes",
+          "translationZh": "约 15 分钟"
+        },
+        {
+          "optionId": "w3d18-l2:option:2",
+          "textEn": "about 50 minutes",
+          "translationZh": "约 50 分钟"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d18-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w3d18-l3:option:0",
+          "textEn": "extra towels",
+          "translationZh": "额外毛巾"
+        },
+        {
+          "optionId": "w3d18-l3:option:1",
+          "textEn": "Extra key card",
+          "translationZh": "额外房卡"
+        },
+        {
+          "optionId": "w3d18-l3:option:2",
+          "textEn": "late check out",
+          "translationZh": "延迟退房"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d18-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w3d18-q2:option:0",
+          "textEn": "The next door is too noisy",
+          "translationZh": "隔壁太吵"
+        },
+        {
+          "optionId": "w3d18-q2:option:1",
+          "textEn": "The door card is invalid",
+          "translationZh": "门卡失效"
+        },
+        {
+          "optionId": "w3d18-q2:option:2",
+          "textEn": "The room is too cold",
+          "translationZh": "房间太冷"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d19-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w3d19-l1:option:0",
+          "textEn": "Flight 284",
+          "translationZh": "航班号 284"
+        },
+        {
+          "optionId": "w3d19-l1:option:1",
+          "textEn": "Flight 428",
+          "translationZh": "航班号 428"
+        },
+        {
+          "optionId": "w3d19-l1:option:2",
+          "textEn": "Flight 482",
+          "translationZh": "航班号 482"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d19-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w3d19-l2:option:0",
+          "textEn": "No checked bags",
+          "translationZh": "没有托运行李"
+        },
+        {
+          "optionId": "w3d19-l2:option:1",
+          "textEn": "One checked bag",
+          "translationZh": "一件托运行李"
+        },
+        {
+          "optionId": "w3d19-l2:option:2",
+          "textEn": "Two checked bags",
+          "translationZh": "两件托运行李"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d19-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w3d19-l3:option:0",
+          "textEn": "By the window",
+          "translationZh": "靠窗"
+        },
+        {
+          "optionId": "w3d19-l3:option:1",
+          "textEn": "Aisle",
+          "translationZh": "靠过道"
+        },
+        {
+          "optionId": "w3d19-l3:option:2",
+          "textEn": "middle",
+          "translationZh": "中间"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d19-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w3d19-q2:option:0",
+          "textEn": "Flight delayed, A5",
+          "translationZh": "航班延误，A5"
+        },
+        {
+          "optionId": "w3d19-q2:option:1",
+          "textEn": "Flight is on time, A9, boarding at 5:40",
+          "translationZh": "航班准时，A9，5:40 登机"
+        },
+        {
+          "optionId": "w3d19-q2:option:2",
+          "textEn": "The flight is on time, boarding at 9:05",
+          "translationZh": "航班准时，9:05 登机"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d20-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w3d20-l1:option:0",
+          "textEn": "Gate C14",
+          "translationZh": "C14 登机口"
+        },
+        {
+          "optionId": "w3d20-l1:option:1",
+          "textEn": "Gate C18",
+          "translationZh": "C18 登机口"
+        },
+        {
+          "optionId": "w3d20-l1:option:2",
+          "textEn": "Gate B18",
+          "translationZh": "B18 登机口"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d20-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w3d20-l2:option:0",
+          "textEn": "13 minutes",
+          "translationZh": "13 分钟"
+        },
+        {
+          "optionId": "w3d20-l2:option:1",
+          "textEn": "30 minutes",
+          "translationZh": "30 分钟"
+        },
+        {
+          "optionId": "w3d20-l2:option:2",
+          "textEn": "1 hour",
+          "translationZh": "1 小时"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d20-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w3d20-l3:option:0",
+          "textEn": "6:40",
+          "translationZh": "六点四十分"
+        },
+        {
+          "optionId": "w3d20-l3:option:1",
+          "textEn": "7:10",
+          "translationZh": "七点十分"
+        },
+        {
+          "optionId": "w3d20-l3:option:2",
+          "textEn": "7:30",
+          "translationZh": "七点半"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d20-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w3d20-q2:option:0",
+          "textEn": "Departure time",
+          "translationZh": "出发时间"
+        },
+        {
+          "optionId": "w3d20-q2:option:1",
+          "textEn": "boarding gate",
+          "translationZh": "登机口"
+        },
+        {
+          "optionId": "w3d20-q2:option:2",
+          "textEn": "flight number",
+          "translationZh": "航班号"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d21-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w3d21-l1:option:0",
+          "textEn": "Change from medium to small size",
+          "translationZh": "中码换小码"
+        },
+        {
+          "optionId": "w3d21-l1:option:1",
+          "textEn": "Small size to medium size",
+          "translationZh": "小码换中码"
+        },
+        {
+          "optionId": "w3d21-l1:option:2",
+          "textEn": "Large size to medium size",
+          "translationZh": "大码换中码"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d21-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w3d21-l2:option:0",
+          "textEn": "11:00",
+          "translationZh": "十一点整"
+        },
+        {
+          "optionId": "w3d21-l2:option:1",
+          "textEn": "12:00",
+          "translationZh": "十二点整"
+        },
+        {
+          "optionId": "w3d21-l2:option:2",
+          "textEn": "1:00",
+          "translationZh": "一点整"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d21-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w3d21-l3:option:0",
+          "textEn": "Gate D4",
+          "translationZh": "D4 登机口"
+        },
+        {
+          "optionId": "w3d21-l3:option:1",
+          "textEn": "Gate D5",
+          "translationZh": "D5 登机口"
+        },
+        {
+          "optionId": "w3d21-l3:option:2",
+          "textEn": "Gate D9",
+          "translationZh": "D9 登机口"
+        }
+      ]
+    },
+    {
+      "questionId": "w3d21-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w3d21-q2:option:0",
+          "textEn": "Returns before noon – Check out at 1:00 – Arrive at the boarding gate at 4:30",
+          "translationZh": "中午前退货—1:00 退房—4:30 到登机口"
+        },
+        {
+          "optionId": "w3d21-q2:option:1",
+          "textEn": "1:00 Return - 4:30 Check-out - Noon boarding",
+          "translationZh": "1:00 退货—4:30 退房—中午登机"
+        },
+        {
+          "optionId": "w3d21-q2:option:2",
+          "textEn": "Return at 4:30 – check out at noon – board at 1:00",
+          "translationZh": "4:30 退货—中午退房—1:00 登机"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d22-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w4d22-l1:option:0",
+          "textEn": "Carousel 4",
+          "translationZh": "四号行李转盘"
+        },
+        {
+          "optionId": "w4d22-l1:option:1",
+          "textEn": "Carousel 6",
+          "translationZh": "六号行李转盘"
+        },
+        {
+          "optionId": "w4d22-l1:option:2",
+          "textEn": "Carousel 9",
+          "translationZh": "九号行李转盘"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d22-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w4d22-l2:option:0",
+          "textEn": "Small red box",
+          "translationZh": "小号红色箱子"
+        },
+        {
+          "optionId": "w4d22-l2:option:1",
+          "textEn": "Medium black box with red label",
+          "translationZh": "中号黑色箱子，红色标签"
+        },
+        {
+          "optionId": "w4d22-l2:option:2",
+          "textEn": "Large black box with blue label",
+          "translationZh": "大号黑色箱子，蓝色标签"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d22-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w4d22-l3:option:0",
+          "textEn": "6:00",
+          "translationZh": "六点整"
+        },
+        {
+          "optionId": "w4d22-l3:option:1",
+          "textEn": "8:20",
+          "translationZh": "八点二十分"
+        },
+        {
+          "optionId": "w4d22-l3:option:2",
+          "textEn": "9:00",
+          "translationZh": "九点整"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d22-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w4d22-q2:option:0",
+          "textEn": "Turntable No. 3",
+          "translationZh": "三号转盘"
+        },
+        {
+          "optionId": "w4d22-q2:option:1",
+          "textEn": "Turntable No. 7",
+          "translationZh": "七号转盘"
+        },
+        {
+          "optionId": "w4d22-q2:option:2",
+          "textEn": "Turntable No. 15",
+          "translationZh": "十五号转盘"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d23-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w4d23-l1:option:0",
+          "textEn": "Dizziness",
+          "translationZh": "头晕"
+        },
+        {
+          "optionId": "w4d23-l1:option:1",
+          "textEn": "ankle pain",
+          "translationZh": "脚踝疼"
+        },
+        {
+          "optionId": "w4d23-l1:option:2",
+          "textEn": "allergy",
+          "translationZh": "过敏"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d23-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w4d23-l2:option:0",
+          "textEn": "Next to Nanmen Coffee Shop",
+          "translationZh": "南门咖啡店旁"
+        },
+        {
+          "optionId": "w4d23-l2:option:1",
+          "textEn": "Next to the information desk at the north gate",
+          "translationZh": "北门问讯台旁"
+        },
+        {
+          "optionId": "w4d23-l2:option:2",
+          "textEn": "Next to the elevator on the second floor",
+          "translationZh": "二楼电梯旁"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d23-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w4d23-l3:option:0",
+          "textEn": "restaurant waiter",
+          "translationZh": "餐厅服务员"
+        },
+        {
+          "optionId": "w4d23-l3:option:1",
+          "textEn": "first responder",
+          "translationZh": "急救人员"
+        },
+        {
+          "optionId": "w4d23-l3:option:2",
+          "textEn": "taxi driver",
+          "translationZh": "出租车司机"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d23-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w4d23-q2:option:0",
+          "textEn": "Passport lost",
+          "translationZh": "护照丢失"
+        },
+        {
+          "optionId": "w4d23-q2:option:1",
+          "textEn": "missed flight",
+          "translationZh": "错过航班"
+        },
+        {
+          "optionId": "w4d23-q2:option:2",
+          "textEn": "feeling unwell",
+          "translationZh": "身体不适"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d24-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w4d24-l1:option:0",
+          "textEn": "room problem",
+          "translationZh": "房间问题"
+        },
+        {
+          "optionId": "w4d24-l1:option:1",
+          "textEn": "Weather and plans for the day",
+          "translationZh": "天气和当天计划"
+        },
+        {
+          "optionId": "w4d24-l1:option:2",
+          "textEn": "flight delay",
+          "translationZh": "航班延误"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d24-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w4d24-l2:option:0",
+          "textEn": "Science Museum and Riverside",
+          "translationZh": "科学博物馆和河边"
+        },
+        {
+          "optionId": "w4d24-l2:option:1",
+          "textEn": "Airports and markets",
+          "translationZh": "机场和市场"
+        },
+        {
+          "optionId": "w4d24-l2:option:2",
+          "textEn": "Hotel gym",
+          "translationZh": "酒店健身房"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d24-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w4d24-l3:option:0",
+          "textEn": "this morning",
+          "translationZh": "今天上午"
+        },
+        {
+          "optionId": "w4d24-l3:option:1",
+          "textEn": "this afternoon",
+          "translationZh": "今天下午"
+        },
+        {
+          "optionId": "w4d24-l3:option:2",
+          "textEn": "tonight",
+          "translationZh": "今天晚上"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d24-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w4d24-q2:option:0",
+          "textEn": "morning",
+          "translationZh": "上午"
+        },
+        {
+          "optionId": "w4d24-q2:option:1",
+          "textEn": "afternoon",
+          "translationZh": "下午"
+        },
+        {
+          "optionId": "w4d24-q2:option:2",
+          "textEn": "night",
+          "translationZh": "晚上"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d25-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w4d25-l1:option:0",
+          "textEn": "Inside Door 2",
+          "translationZh": "二号门内"
+        },
+        {
+          "optionId": "w4d25-l1:option:1",
+          "textEn": "Outside Door 7",
+          "translationZh": "七号门外"
+        },
+        {
+          "optionId": "w4d25-l1:option:2",
+          "textEn": "Beside baggage carousel 7",
+          "translationZh": "七号行李转盘旁"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d25-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w4d25-l2:option:0",
+          "textEn": "free",
+          "translationZh": "免费"
+        },
+        {
+          "optionId": "w4d25-l2:option:1",
+          "textEn": "$7",
+          "translationZh": "7 美元"
+        },
+        {
+          "optionId": "w4d25-l2:option:2",
+          "textEn": "$30",
+          "translationZh": "30 美元"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d25-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w4d25-l3:option:0",
+          "textEn": "air conditioner not working",
+          "translationZh": "空调不工作"
+        },
+        {
+          "optionId": "w4d25-l3:option:1",
+          "textEn": "Wi-Fi cannot connect",
+          "translationZh": "Wi-Fi 连不上"
+        },
+        {
+          "optionId": "w4d25-l3:option:2",
+          "textEn": "Lost room card",
+          "translationZh": "房卡丢失"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d25-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w4d25-q2:option:0",
+          "textEn": "Get on the bus outside Gate 4, every twenty minutes, and get off at the north gate of the hotel",
+          "translationZh": "四号门外上车，每二十分钟一班，酒店北门下车"
+        },
+        {
+          "optionId": "w4d25-q2:option:1",
+          "textEn": "Get on the bus at the north gate and get off at gate 4. The fee is 20 US dollars.",
+          "translationZh": "北门上车，四号门下车，收费二十美元"
+        },
+        {
+          "optionId": "w4d25-q2:option:2",
+          "textEn": "Get on the bus outside Gate 20 and only go to the main entrance of the hotel",
+          "translationZh": "二十号门外上车，只到酒店正门"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d26-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w4d26-l1:option:0",
+          "textEn": "too expensive",
+          "translationZh": "太贵"
+        },
+        {
+          "optionId": "w4d26-l1:option:1",
+          "textEn": "Out of service today",
+          "translationZh": "今天停运"
+        },
+        {
+          "optionId": "w4d26-l1:option:2",
+          "textEn": "Need to transfer",
+          "translationZh": "需要换乘"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d26-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w4d26-l2:option:0",
+          "textEn": "Guest thinks it's too spicy",
+          "translationZh": "客人觉得太辣"
+        },
+        {
+          "optionId": "w4d26-l2:option:1",
+          "textEn": "Original salad dressing contains peanuts",
+          "translationZh": "原沙拉酱含花生"
+        },
+        {
+          "optionId": "w4d26-l2:option:2",
+          "textEn": "No cheese in the restaurant",
+          "translationZh": "餐厅没有奶酪"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d26-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w4d26-l3:option:0",
+          "textEn": "Black, size 9",
+          "translationZh": "黑色九码"
+        },
+        {
+          "optionId": "w4d26-l3:option:1",
+          "textEn": "Blue, size 8",
+          "translationZh": "蓝色八码"
+        },
+        {
+          "optionId": "w4d26-l3:option:2",
+          "textEn": "Black, size 8",
+          "translationZh": "黑色八码"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d26-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w4d26-q2:option:0",
+          "textEn": "Take Route 5 for 8 stops, the shop is at the end",
+          "translationZh": "坐 5 路 8 站，商店在终点"
+        },
+        {
+          "optionId": "w4d26-q2:option:1",
+          "textEn": "Take bus 8 for 5 stops, the coffee shop is opposite the terminal",
+          "translationZh": "坐 8 路 5 站，咖啡店在终点对面"
+        },
+        {
+          "optionId": "w4d26-q2:option:2",
+          "textEn": "Take bus 8 for 1 stop, the coffee shop is opposite the store",
+          "translationZh": "坐 8 路 1 站，咖啡店在商店对面"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d27-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w4d27-l1:option:0",
+          "textEn": "The shuttle bus is canceled and the next one is too late",
+          "translationZh": "接驳车取消且下一班太晚"
+        },
+        {
+          "optionId": "w4d27-l1:option:1",
+          "textEn": "Taxis are free",
+          "translationZh": "出租车免费"
+        },
+        {
+          "optionId": "w4d27-l1:option:2",
+          "textEn": "flight has been cancelled",
+          "translationZh": "航班已经取消"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d27-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w4d27-l2:option:0",
+          "textEn": "Airport security",
+          "translationZh": "机场安检"
+        },
+        {
+          "optionId": "w4d27-l2:option:1",
+          "textEn": "Hotel front desk",
+          "translationZh": "酒店前台"
+        },
+        {
+          "optionId": "w4d27-l2:option:2",
+          "textEn": "In a taxi",
+          "translationZh": "出租车上"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d27-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w4d27-l3:option:0",
+          "textEn": "A12, boarding at 4:30, departure at 5:10",
+          "translationZh": "A12，4:30 登机，5:10 出发"
+        },
+        {
+          "optionId": "w4d27-l3:option:1",
+          "textEn": "A10, boarding at 4:12, departure at 5:30",
+          "translationZh": "A10，4:12 登机，5:30 出发"
+        },
+        {
+          "optionId": "w4d27-l3:option:2",
+          "textEn": "A12, boarding at 5:10, departure at 4:30",
+          "translationZh": "A12，5:10 登机，4:30 出发"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d27-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w4d27-q2:option:0",
+          "textEn": "2:00 Take the train",
+          "translationZh": "2:00 坐火车"
+        },
+        {
+          "optionId": "w4d27-q2:option:1",
+          "textEn": "2:20 Take the bus at stop 6",
+          "translationZh": "2:20 在 6 号站坐公交"
+        },
+        {
+          "optionId": "w4d27-q2:option:2",
+          "textEn": "6:20 Take the bus",
+          "translationZh": "6:20 坐公交"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d28-l1",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w4d28-l1:option:0",
+          "textEn": "Check out – Lunch – Pick up luggage – Airport",
+          "translationZh": "退房—午餐—取行李—机场"
+        },
+        {
+          "optionId": "w4d28-l1:option:1",
+          "textEn": "Lunch—check out—airport—pick up luggage",
+          "translationZh": "午餐—退房—机场—取行李"
+        },
+        {
+          "optionId": "w4d28-l1:option:2",
+          "textEn": "Check out-airport-lunch-pick up luggage",
+          "translationZh": "退房—机场—午餐—取行李"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d28-l2",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w4d28-l2:option:0",
+          "textEn": "fruit free",
+          "translationZh": "水果免费"
+        },
+        {
+          "optionId": "w4d28-l2:option:1",
+          "textEn": "Cookies contain peanuts",
+          "translationZh": "饼干含花生"
+        },
+        {
+          "optionId": "w4d28-l2:option:2",
+          "textEn": "Sandwich without cheese",
+          "translationZh": "三明治没有奶酪"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d28-l3",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w4d28-l3:option:0",
+          "textEn": "B12, boarding at 5:40",
+          "translationZh": "B12，5:40 登机"
+        },
+        {
+          "optionId": "w4d28-l3:option:1",
+          "textEn": "B16, boarding at 5:00",
+          "translationZh": "B16，5:00 登机"
+        },
+        {
+          "optionId": "w4d28-l3:option:2",
+          "textEn": "B16, boarding at 5:40",
+          "translationZh": "B16，5:40 登机"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d28-l4",
+      "sourceKind": "listening-core-check",
+      "options": [
+        {
+          "optionId": "w4d28-l4:option:0",
+          "textEn": "dizzy but awake",
+          "translationZh": "头晕但清醒"
+        },
+        {
+          "optionId": "w4d28-l4:option:1",
+          "textEn": "lose consciousness",
+          "translationZh": "失去意识"
+        },
+        {
+          "optionId": "w4d28-l4:option:2",
+          "textEn": "ankle injury",
+          "translationZh": "脚踝受伤"
+        }
+      ]
+    },
+    {
+      "questionId": "w4d28-q2",
+      "sourceKind": "listening-scene-quiz",
+      "options": [
+        {
+          "optionId": "w4d28-q2:option:0",
+          "textEn": "Check out at noon—taxi to Terminal 3—C8—board at 4:15",
+          "translationZh": "中午退房—出租车去三号航站楼—C8—4:15 登机"
+        },
+        {
+          "optionId": "w4d28-q2:option:1",
+          "textEn": "Check out at noon—shuttle bus to C8—board at 3:00",
+          "translationZh": "中午退房—接驳车去 C8—3:00 登机"
+        },
+        {
+          "optionId": "w4d28-q2:option:2",
+          "textEn": "Check out in the afternoon - take a taxi to Terminal 4 - C15",
+          "translationZh": "下午退房—出租车去四号航站楼—C15"
+        }
+      ]
+    }
+  ]
+}

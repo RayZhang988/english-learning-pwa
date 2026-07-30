@@ -13,6 +13,8 @@ const dailyFirstOnly =
   process.env.QA_R6_DAILY_FIRST_ONLY === '1'
 const verifyThirtySecondTestMode =
   process.env.QA_VERIFY_30_SECOND_TEST_MODE === '1'
+const verifyR9Bilingual =
+  process.env.QA_VERIFY_R9_BILINGUAL === '1'
 const appDatabaseName = verifyThirtySecondTestMode
   ? 'english-learning-pwa-training-test-30s'
   : 'english-learning-pwa'
@@ -570,6 +572,95 @@ async function answerListening(page) {
     assert.equal(review.standard, 'nine thirty')
     assert.deepEqual(review.targets, ['nine', 'thirty'])
     assert.match(review.text, /回答正确/u)
+  }
+}
+
+async function verifyR9ListeningChoiceFlow(page) {
+  await clickDailyModule(page, 'listening')
+  await waitForDailyQuestion(page, 'listening')
+
+  const beforePlayback = await page.evaluate(`(() => ({
+    waiting: document.body.innerText.includes(
+      '请先完整播放一次，播放结束后显示英文选项。'
+    ),
+    choiceCount:
+      document.querySelectorAll('.choice-list .choice-row').length,
+  }))()`)
+  assert.equal(beforePlayback.waiting, true)
+  assert.equal(beforePlayback.choiceCount, 0)
+
+  await finishControlledSpeech(page)
+  const afterPlayback = await page.evaluate(`(() => {
+    const choices = [
+      ...document.querySelectorAll('.choice-list .choice-row')
+    ]
+    return {
+      count: choices.length,
+      labels: choices.map((choice) =>
+        choice.querySelector('strong')?.textContent?.trim() ?? ''
+      ),
+      translations: choices.map((choice) =>
+        choice.querySelector('small')?.textContent?.trim() ?? ''
+      ),
+    }
+  })()`)
+  assert.ok(afterPlayback.count > 0)
+  assert.equal(
+    afterPlayback.labels.every(
+      (label) =>
+        label.length > 0 &&
+        !/[\u3400-\u9fff]/u.test(label)
+    ),
+    true,
+  )
+  assert.deepEqual(
+    afterPlayback.translations,
+    Array(afterPlayback.count).fill(''),
+  )
+
+  await answerListening(page)
+  await page.waitFor(
+    `[...document.querySelectorAll(
+      '.choice-list .choice-row'
+    )].every((choice) =>
+      Boolean(choice.querySelector('small')?.textContent?.trim())
+    )`,
+    20_000,
+  )
+  const afterSubmit = await page.evaluate(`(() => {
+    const choices = [
+      ...document.querySelectorAll('.choice-list .choice-row')
+    ]
+    return {
+      count: choices.length,
+      translations: choices.map((choice) =>
+        choice.querySelector('small')?.textContent?.trim() ?? ''
+      ),
+      markedAnswerCount: choices.filter((choice) =>
+        choice.classList.contains('choice-row--correct') ||
+        choice.classList.contains('choice-row--incorrect')
+      ).length,
+      hasExplanation:
+        document.body.innerText.includes('答案解析') ||
+        document.body.innerText.includes('音频'),
+    }
+  })()`)
+  assert.equal(afterSubmit.count, afterPlayback.count)
+  assert.equal(
+    afterSubmit.translations.every(
+      (translation) =>
+        translation.length > 0 &&
+        /[\u3400-\u9fff]/u.test(translation)
+    ),
+    true,
+  )
+  assert.ok(afterSubmit.markedAnswerCount > 0)
+  assert.equal(afterSubmit.hasExplanation, true)
+
+  return {
+    beforePlayback,
+    afterPlayback,
+    afterSubmit,
   }
 }
 
@@ -1311,14 +1402,14 @@ async function assertPwaCache(page) {
   )
   const courseAssets = urls.filter(
     (url) =>
-      /package-index|survival-travel-american|week-[1-4]|listening-exercise-extension-index|training-supply-index|listening-exercises/u.test(
+      /package-index|survival-travel-american|week-[1-4]|listening-exercise-extension-index|training-supply-index|listening-exercises|listening-choice-bilingual-options/u.test(
         url,
       ),
   )
   assert.equal(
     new Set(courseAssets).size,
-    9,
-    `PWA cache must contain all nine released course/supply resources.`,
+    10,
+    `PWA cache must contain all ten released course/supply resources.`,
   )
   assert.ok(
     courseAssets.some((url) =>
@@ -1441,6 +1532,14 @@ async function run() {
         ]),
       ),
     })
+
+    if (verifyR9Bilingual) {
+      const result = await verifyR9ListeningChoiceFlow(qa.page)
+      checkpoint('r9-listening-choice-bilingual-gate', result)
+      evidence.status = 'passed'
+      console.log(JSON.stringify(evidence, null, 2))
+      return
+    }
 
     if (dailyFirstOnly) {
       const vocabularyRuntime = await finishDailyModule(

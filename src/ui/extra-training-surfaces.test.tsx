@@ -170,6 +170,7 @@ const listeningViewModel: ListeningScreenViewModel = {
   },
   question: {
     kind: 'single-choice',
+    available: true,
     prompt: '旅客要去哪里？',
     choices: [
       { id: 'airport', label: '机场', state: 'default' },

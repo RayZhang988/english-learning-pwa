@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Listening Choice Bilingual Options v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "documentType",
+    "contentVersion",
+    "courseId",
+    "targetLocale",
+    "supportLocale",
+    "questions"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "documentType": {"const": "listening-choice-bilingual-options"},
+    "contentVersion": {"const": "1.0.0"},
+    "courseId": {"const": "survival-travel-american-4w"},
+    "targetLocale": {"const": "en-US"},
+    "supportLocale": {"const": "zh-CN"},
+    "questions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["questionId", "sourceKind", "options"],
+        "properties": {
+          "questionId": {"type": "string", "minLength": 1},
+          "sourceKind": {
+            "enum": [
+              "listening-extension",
+              "listening-core-check",
+              "listening-scene-quiz"
+            ]
+          },
+          "options": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["optionId", "textEn", "translationZh"],
+              "properties": {
+                "optionId": {"type": "string", "minLength": 1},
+                "textEn": {"type": "string", "minLength": 1},
+                "translationZh": {"type": "string", "minLength": 1}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

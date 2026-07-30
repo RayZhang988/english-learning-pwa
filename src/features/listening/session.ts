@@ -121,8 +121,26 @@ function initialPlayback(
     rate,
     repeatMode: 'none',
     playCounts: {},
+    completedPlayCounts: {},
     errorMessage: null,
   }
+}
+
+export function hasCompletedListeningPlayback(
+  playback: ListeningPlaybackState,
+  question: ListeningQuestion,
+): boolean {
+  if (
+    (playback.completedPlayCounts?.[question.primarySegmentId] ?? 0) >
+    0
+  ) {
+    return true
+  }
+  return (
+    playback.completedPlayCounts === undefined &&
+    playback.status === 'ended' &&
+    (playback.playCounts[question.primarySegmentId] ?? 0) > 0
+  )
 }
 
 function createListeningSessionInternal(
@@ -291,7 +309,8 @@ export function selectListeningOption(
   if (
     session.phase !== 'answering' ||
     !question ||
-    question.type === 'keyword-dictation'
+    question.type === 'keyword-dictation' ||
+    !hasCompletedListeningPlayback(session.playback, question)
   ) {
     throw new ListeningError(
       'session-transition-invalid',
@@ -392,7 +411,7 @@ export function canSubmitListeningAnswer(
   const response = currentResponse(session, question)
   return (
     response.trim().length > 0 &&
-    (session.playback.playCounts[question.primarySegmentId] ?? 0) > 0
+    hasCompletedListeningPlayback(session.playback, question)
   )
 }
 

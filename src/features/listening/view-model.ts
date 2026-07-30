@@ -7,6 +7,7 @@ import {
   canSubmitListeningAnswer,
   getCurrentListeningQuestion,
   getListeningAnswerFeedback,
+  hasCompletedListeningPlayback,
 } from './session.ts'
 import type {
   ListeningChoiceQuestion,
@@ -111,6 +112,10 @@ export function toListeningScreenViewModel(
   const totalPlayCount = Object.values(
     session.playback.playCounts,
   ).reduce((sum, count) => sum + count, 0)
+  const playbackCompleted = hasCompletedListeningPlayback(
+    session.playback,
+    question,
+  )
   const isLastQuestion =
     session.questionIndex + 1 === session.questions.length
   const action =
@@ -237,9 +242,17 @@ export function toListeningScreenViewModel(
         : {
             kind: 'single-choice',
             prompt: question.promptZh,
+            available: playbackCompleted,
+            waitingLabel: playbackCompleted
+              ? undefined
+              : '请先完整播放一次，播放结束后显示英文选项。',
             choices: question.options.map((option) => ({
               id: option.id,
               label: option.label,
+              supportingText:
+                session.phase === 'feedback'
+                  ? option.translationZh
+                  : undefined,
               state: choiceState(session, question, option.id),
             })),
           },

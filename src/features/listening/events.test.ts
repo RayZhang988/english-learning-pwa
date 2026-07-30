@@ -54,6 +54,7 @@ describe('listening learning events', () => {
         status: 'ended',
         rate: 0.75,
         playCounts: { 'seg-word': 2 },
+        completedPlayCounts: { 'seg-word': 2 },
       },
       '2026-07-24T12:00:01.000Z',
     )

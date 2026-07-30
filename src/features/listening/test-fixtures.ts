@@ -60,9 +60,9 @@ export const choiceQuestion: ListeningQuestion = {
     sequenceMode: 'current-segment',
   },
   options: [
-    { id: 'a', label: 'Maya' },
-    { id: 'b', label: 'Mia' },
-    { id: 'c', label: 'Myra' },
+    { id: 'a', label: 'Maya', translationZh: '玛雅' },
+    { id: 'b', label: 'Mia', translationZh: '米娅' },
+    { id: 'c', label: 'Myra', translationZh: '迈拉' },
   ],
   correctOptionId: 'a',
   rationaleZh: '音频读的是 Maya。',

@@ -219,13 +219,19 @@ export function ListeningTrainingScreen({
         onRepeatModeChange={onRepeatModeChange}
       />
       {viewModel.question.kind === 'single-choice' ? (
-        <ChoiceList
-          label={viewModel.question.prompt}
-          choices={viewModel.question.choices}
-          onSelect={(choiceId) =>
-            onQuestionInput({ type: 'select-choice', choiceId })
-          }
-        />
+        viewModel.question.available ? (
+          <ChoiceList
+            label={viewModel.question.prompt}
+            choices={viewModel.question.choices}
+            onSelect={(choiceId) =>
+              onQuestionInput({ type: 'select-choice', choiceId })
+            }
+          />
+        ) : (
+          <p className="listening-choice-waiting" role="status">
+            {viewModel.question.waitingLabel}
+          </p>
+        )
       ) : (
         <KeywordDictationField
           question={viewModel.question}

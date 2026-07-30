@@ -27,7 +27,8 @@
   ],
   "validationFiles": [
     "content/curriculum/validate-duration-baselines.v1.mjs",
-    "content/curriculum/validate-training-supply.v1.mjs"
+    "content/curriculum/validate-training-supply.v1.mjs",
+    "content/curriculum/validate-listening-bilingual-options.v1.mjs"
   ],
   "mediaAssets": [],
   "totals": {

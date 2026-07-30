@@ -1,6 +1,7 @@
 import type {
   ExtraListeningTrainingSnapshot,
 } from '../../features/listening/index.ts'
+import { hasCompletedListeningPlayback } from '../../features/listening/session.ts'
 import type {
   ExtraSpeakingTrainingSnapshot,
 } from '../../features/speaking/index.ts'
@@ -461,6 +462,10 @@ export function toExtraListeningScreenViewModel(
     snapshot.phase === 'paused' ||
     playback.status === 'unavailable' ||
     playback.status === 'error'
+  const playbackCompleted = hasCompletedListeningPlayback(
+    playback,
+    question,
+  )
   const playCount = Object.values(playback.playCounts).reduce(
     (total, count) => total + count,
     0,
@@ -585,9 +590,17 @@ export function toExtraListeningScreenViewModel(
         : {
             kind: 'single-choice',
             prompt: question.promptZh,
+            available: playbackCompleted,
+            waitingLabel: playbackCompleted
+              ? undefined
+              : '请先完整播放一次，播放结束后显示英文选项。',
             choices: question.options.map((option) => ({
               id: option.id,
               label: option.label,
+              supportingText:
+                snapshot.phase === 'feedback'
+                  ? option.translationZh
+                  : undefined,
               state: busy
                 ? 'disabled'
                 : choiceState(

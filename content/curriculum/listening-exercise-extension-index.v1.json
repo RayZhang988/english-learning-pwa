@@ -12,9 +12,11 @@
   "exerciseBundleFiles": [
     "content/lessons/survival-travel-american-4w/listening-exercises.v1.json"
   ],
+  "bilingualChoiceOptionsFile": "content/lessons/survival-travel-american-4w/listening-choice-bilingual-options.v1.json",
   "schemaFiles": [
     "content/curriculum/listening-exercise-extension-index.schema.v1.json",
-    "content/curriculum/listening-exercise-bundle.schema.v1.json"
+    "content/curriculum/listening-exercise-bundle.schema.v1.json",
+    "content/curriculum/listening-choice-bilingual-options.schema.v1.json"
   ],
   "documentationFiles": [
     "content/curriculum/content-package-contract.v1.md",

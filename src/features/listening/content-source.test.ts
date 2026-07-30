@@ -58,7 +58,7 @@ describe('current listening content source', () => {
     expect(catalog.units[0].questions).toHaveLength(7)
   })
 
-  it('installs the nine runtime JSON assets needed for offline continuous training', async () => {
+  it('installs the ten runtime JSON assets needed for offline bilingual continuous training', async () => {
     const store = new FileBackedOfflineStore()
     const source = new CurrentListeningContentSource(store)
 
@@ -66,7 +66,7 @@ describe('current listening content source', () => {
 
     expect(installed.packageId).toBe(LISTENING_CONTENT_PACKAGE_ID)
     expect(installed.version).toBe(LISTENING_CONTENT_PACKAGE_VERSION)
-    expect(installed.assets).toHaveLength(9)
-    expect(new Set(installed.assets.map((asset) => asset.url)).size).toBe(9)
+    expect(installed.assets).toHaveLength(10)
+    expect(new Set(installed.assets.map((asset) => asset.url)).size).toBe(10)
   })
 })

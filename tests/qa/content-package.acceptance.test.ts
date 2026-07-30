@@ -319,7 +319,7 @@ describe('05 released content package acceptance', () => {
       (lesson) => lesson.exercises,
     )
 
-    expect(extensionIndex.schemaFiles).toHaveLength(2)
+    expect(extensionIndex.schemaFiles).toHaveLength(3)
     for (const schemaFile of extensionIndex.schemaFiles) {
       expect(() => readJson<unknown>(schemaFile), schemaFile).not.toThrow()
     }

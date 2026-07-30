@@ -500,6 +500,17 @@
   line-height: 1.5;
 }
 
+.listening-choice-waiting {
+  margin: 24px 0 0;
+  padding: 16px 18px;
+  border: 1px dashed var(--line);
+  border-radius: 16px;
+  color: var(--ink-soft);
+  background: var(--surface);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
 .listening-segmented-control {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(82px, 1fr));

@@ -374,6 +374,100 @@ function parseOptions(
   return options
 }
 
+function parseBilingualChoiceOptions(
+  value: unknown,
+): ReadonlyMap<string, readonly ListeningChoiceOption[]> {
+  const document = record(value, 'bilingual listening choice options')
+  assertDocument(
+    document,
+    'listening-choice-bilingual-options',
+    'bilingual listening choice options',
+  )
+  if (
+    document.contentVersion !== '1.0.0' ||
+    document.courseId !== 'survival-travel-american-4w' ||
+    document.targetLocale !== 'en-US' ||
+    document.supportLocale !== 'zh-CN'
+  ) {
+    throw new ListeningError(
+      'content-version-unsupported',
+      'The bilingual listening choice options are incompatible.',
+    )
+  }
+  const result = new Map<string, readonly ListeningChoiceOption[]>()
+  for (const [questionIndex, questionValue] of arrayValue(
+    document,
+    'questions',
+    'bilingual listening choice options',
+  ).entries()) {
+    const label = `bilingual question[${questionIndex}]`
+    const question = record(questionValue, label)
+    const questionId = stringValue(question, 'questionId', label)
+    if (result.has(questionId)) {
+      throw new ListeningError(
+        'content-invalid',
+        `Duplicate bilingual listening question ${questionId}.`,
+      )
+    }
+    const options = arrayValue(question, 'options', label).map(
+      (optionValue, optionIndex) => {
+        const optionLabel = `${label}.options[${optionIndex}]`
+        const option = record(optionValue, optionLabel)
+        return {
+          id: stringValue(option, 'optionId', optionLabel),
+          label: stringValue(option, 'textEn', optionLabel),
+          translationZh: stringValue(
+            option,
+            'translationZh',
+            optionLabel,
+          ),
+        }
+      },
+    )
+    if (options.length < 2) {
+      throw new ListeningError(
+        'content-invalid',
+        `${questionId} has too few bilingual choices.`,
+      )
+    }
+    uniqueStrings(
+      options.map((option) => option.id),
+      `${questionId}.bilingualOptions`,
+    )
+    result.set(questionId, options)
+  }
+  return result
+}
+
+function applyBilingualChoiceOptions(
+  question: ListeningQuestion,
+  bilingualByQuestionId: ReadonlyMap<
+    string,
+    readonly ListeningChoiceOption[]
+  >,
+): ListeningQuestion {
+  if (question.type === 'keyword-dictation') {
+    return question
+  }
+  const bilingual = bilingualByQuestionId.get(question.id)
+  if (
+    !bilingual ||
+    bilingual.length !== question.options.length ||
+    bilingual.some(
+      (option, index) => option.id !== question.options[index]?.id,
+    )
+  ) {
+    throw new ListeningError(
+      'content-reference-missing',
+      `Listening question ${question.id} has no exact bilingual option set.`,
+    )
+  }
+  return {
+    ...question,
+    options: bilingual,
+  }
+}
+
 function resolveExtensionSegment(
   sourceValue: unknown,
   coreByRef: ReadonlyMap<string, CoreListeningData>,
@@ -789,6 +883,10 @@ export function createListeningCatalog(
     )
   }
   const coreByRef = parseCoreLessons(documents, lessonFiles)
+  const bilingualByQuestionId = parseBilingualChoiceOptions(
+    documents.bilingualChoiceOptions,
+  )
+  const usedBilingualQuestionIds = new Set<string>()
 
   const extensionIndex = record(
     documents.extensionIndex,
@@ -870,7 +968,16 @@ export function createListeningCatalog(
         extensionQuestion(exercise, allSegments),
       ),
       ...coreCheckQuestions(core),
-    ]
+    ].map((question) => {
+      const bilingual = applyBilingualChoiceOptions(
+        question,
+        bilingualByQuestionId,
+      )
+      if (bilingual.type !== 'keyword-dictation') {
+        usedBilingualQuestionIds.add(bilingual.id)
+      }
+      return bilingual
+    })
     for (const question of questions) {
       if (questionIds.has(question.id)) {
         throw new ListeningError(
@@ -896,6 +1003,15 @@ export function createListeningCatalog(
     throw new ListeningError(
       'content-reference-missing',
       'Core lessons and listening extension lessons are not one-to-one.',
+    )
+  }
+  if (usedBilingualQuestionIds.size !== bilingualByQuestionId.size) {
+    const unused = [...bilingualByQuestionId.keys()].find(
+      (questionId) => !usedBilingualQuestionIds.has(questionId),
+    )
+    throw new ListeningError(
+      'content-invalid',
+      `Bilingual listening choices contain an unused question: ${unused ?? 'unknown'}.`,
     )
   }
   const byContentRef = new Map(

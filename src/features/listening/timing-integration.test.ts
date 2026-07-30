@@ -690,6 +690,8 @@ describe('listening effective timing integration', () => {
     await runtime.initialize()
     await runtime.togglePlayback()
     speech.start()
+    speech.end()
+    await runtime.setRate(1)
     await runtime.select(choiceCorrectOptionId())
     await runtime.submit()
     await expect(runtime.advance()).rejects.toThrow(
@@ -756,6 +758,7 @@ describe('listening effective timing integration', () => {
     await runtime.initialize()
     await runtime.togglePlayback()
     speech.start()
+    speech.end()
     await (await timing.session()).flush()
     await runtime.setRepeatMode('none')
     listeningStore.controlled = true
@@ -767,9 +770,9 @@ describe('listening effective timing integration', () => {
     ]
     const submission = runtime.submit()
 
-    // Canceling the still-active utterance persists its paused playback
-    // snapshot before the three drafts and the feedback transition.
-    for (let write = 0; write < 5; write += 1) {
+    // The completed prompt is already durable; the controlled queue now
+    // contains the three drafts followed by the feedback transition.
+    for (let write = 0; write < 4; write += 1) {
       for (
         let turn = 0;
         turn < 1_000 &&
@@ -840,6 +843,7 @@ describe('listening effective timing integration', () => {
     await runtime.initialize()
     await runtime.togglePlayback()
     speech.start()
+    speech.end()
     await (await timing.session()).flush()
     await runtime.setRepeatMode('none')
     listeningStore.controlled = true

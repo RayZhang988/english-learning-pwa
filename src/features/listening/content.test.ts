@@ -3,6 +3,7 @@ import packageIndex from '../../../content/curriculum/package-index.v1.json'
 import manifest from '../../../content/curriculum/survival-travel-american-4w.v1.json'
 import extensionIndex from '../../../content/curriculum/listening-exercise-extension-index.v1.json'
 import exercises from '../../../content/lessons/survival-travel-american-4w/listening-exercises.v1.json'
+import bilingualChoiceOptions from '../../../content/lessons/survival-travel-american-4w/listening-choice-bilingual-options.v1.json'
 import week1 from '../../../content/lessons/survival-travel-american-4w/week-1.v1.json'
 import week2 from '../../../content/lessons/survival-travel-american-4w/week-2.v1.json'
 import week3 from '../../../content/lessons/survival-travel-american-4w/week-3.v1.json'
@@ -33,6 +34,7 @@ function documents(
     exerciseBundlesByPath: {
       [bundlePath]: exerciseBundle,
     },
+    bilingualChoiceOptions,
   }
 }
 
@@ -60,6 +62,19 @@ describe('listening content catalog', () => {
         (question) => question.type === 'scene-comprehension',
       ),
     ).toHaveLength(28)
+    const choiceQuestions = questions.filter(
+      (question) => question.type !== 'keyword-dictation',
+    )
+    const options = choiceQuestions.flatMap((question) => question.options)
+    expect(choiceQuestions).toHaveLength(169)
+    expect(options).toHaveLength(507)
+    expect(options.every(
+      (option) =>
+        option.label.trim().length > 0 &&
+        option.translationZh?.trim().length,
+    )).toBe(true)
+    expect(options.some((option) => /[\u3400-\u9fff]/u.test(option.label)))
+      .toBe(false)
   })
 
   it('resolves only matching listening tasks', () => {

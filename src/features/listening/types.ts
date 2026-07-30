@@ -42,6 +42,11 @@ export interface ListeningPlaybackPolicy {
 export interface ListeningChoiceOption {
   readonly id: string
   readonly label: string
+  /**
+   * Released R9 content always provides this field. It stays optional only so
+   * schema-1 checkpoints and isolated legacy fixtures remain readable.
+   */
+  readonly translationZh?: string
 }
 
 interface ListeningQuestionBase {
@@ -120,6 +125,7 @@ export interface ListeningContentDocuments {
   readonly lessonsByPath: Readonly<Record<string, unknown>>
   readonly extensionIndex: unknown
   readonly exerciseBundlesByPath: Readonly<Record<string, unknown>>
+  readonly bilingualChoiceOptions: unknown
   /** Optional for released packages created before QA-011. */
   readonly trainingSupplyIndex?: unknown
 }
@@ -155,6 +161,11 @@ export interface ListeningPlaybackState {
   readonly rate: ListeningPlaybackRate
   readonly repeatMode: ListeningRepeatMode
   readonly playCounts: Readonly<Record<string, number>>
+  /**
+   * Counts only utterances that reached their real onEnd callback. Missing on
+   * an old schema-1 checkpoint is handled by the legacy ended-state fallback.
+   */
+  readonly completedPlayCounts?: Readonly<Record<string, number>>
   readonly errorMessage: string | null
 }
 

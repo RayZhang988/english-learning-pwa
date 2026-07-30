@@ -4,6 +4,7 @@ import manifest from '../../../content/curriculum/survival-travel-american-4w.v1
 import extensionIndex from '../../../content/curriculum/listening-exercise-extension-index.v1.json'
 import trainingSupplyIndex from '../../../content/curriculum/training-supply-index.v1.json'
 import exercises from '../../../content/lessons/survival-travel-american-4w/listening-exercises.v1.json'
+import bilingualChoiceOptions from '../../../content/lessons/survival-travel-american-4w/listening-choice-bilingual-options.v1.json'
 import week1 from '../../../content/lessons/survival-travel-american-4w/week-1.v1.json'
 import week2 from '../../../content/lessons/survival-travel-american-4w/week-2.v1.json'
 import week3 from '../../../content/lessons/survival-travel-american-4w/week-3.v1.json'
@@ -19,6 +20,7 @@ function provider() {
       [packageIndex.lessonFiles[2]]: week3, [packageIndex.lessonFiles[3]]: week4,
     },
     exerciseBundlesByPath: { [extensionIndex.exerciseBundleFiles[0]]: exercises },
+    bilingualChoiceOptions,
   })
   return new ListeningCatalogSupplyProvider(catalog.trainingSupplyIndex, catalog)
 }

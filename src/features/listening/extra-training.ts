@@ -1,3 +1,6 @@
+import {
+  hasCompletedListeningPlayback,
+} from './session.ts'
 import type {
   ExtraTrainingEvent,
   ExtraTrainingSession,
@@ -66,7 +69,7 @@ function initialPlayback(question: ListeningQuestion): ListeningPlaybackState {
   return {
     status: 'idle', currentSegmentId: question.primarySegmentId,
     rate: question.playbackPolicy.allowedRates.includes(1) ? 1 : question.playbackPolicy.allowedRates[0]!,
-    repeatMode: 'none', playCounts: {}, errorMessage: null,
+    repeatMode: 'none', playCounts: {}, completedPlayCounts: {}, errorMessage: null,
   }
 }
 
@@ -275,12 +278,12 @@ export class ExtraListeningTrainingRuntime {
   setPlaybackRate(rate: number) { return this.queue(async () => { if (!this.controller) return this.require(); this.controller.setRate(rate); await this.playbackWrites; return this.require() }) }
   selectSegment(segmentId: string) { return this.queue(async () => { if (!this.controller) return this.require(); this.controller.selectSegment(segmentId); await this.playbackWrites; return this.require() }) }
   setRepeatMode(mode: ListeningRepeatMode) { return this.queue(async () => { if (!this.controller) return this.require(); this.controller.setRepeatMode(mode); await this.playbackWrites; return this.require() }) }
-  select(optionId: string) { return this.queue(async () => { const s = this.require(); if (!s.question || s.question.type === 'keyword-dictation' || !s.question.options.some((o) => o.id === optionId)) throw new ListeningError('session-transition-invalid', 'Option does not belong to extra listening question.'); await this.timing?.activity(); return this.save({ ...s, selectedOptionId: optionId, updatedAt: this.now() }) }) }
+  select(optionId: string) { return this.queue(async () => { const s = this.require(); if (!s.question || s.question.type === 'keyword-dictation' || !s.playback || !hasCompletedListeningPlayback(s.playback, s.question) || !s.question.options.some((o) => o.id === optionId)) throw new ListeningError('session-transition-invalid', 'Complete playback before selecting an extra listening option.'); await this.timing?.activity(); return this.save({ ...s, selectedOptionId: optionId, updatedAt: this.now() }) }) }
   changeDictation(value: string) { return this.queue(async () => { const s = this.require(); if (!s.question || s.question.type !== 'keyword-dictation') throw new ListeningError('session-transition-invalid', 'Current extra listening question is not dictation.'); await this.timing?.activity(); return this.save({ ...s, dictationInput: value, updatedAt: this.now() }) }) }
   submit() { return this.queue(async () => {
     const s = this.require(); if (!s.question || s.phase !== 'answering') throw new ListeningError('session-transition-invalid', 'Extra listening answer cannot be submitted.')
     const response = s.question.type === 'keyword-dictation' ? s.dictationInput : s.selectedOptionId
-    if (!response) throw new ListeningError('session-transition-invalid', 'Enter an answer before submitting.')
+    if (!response || !s.playback || !hasCompletedListeningPlayback(s.playback, s.question)) throw new ListeningError('session-transition-invalid', 'Complete playback and enter an answer before submitting.')
     this.controller?.interrupt(); await this.playbackWrites; await this.timingWork
     const correct = judgeListeningAnswer(s.question, response)
     await this.timing?.transition({ phase: 'feedback', reason: 'active-feedback' }); await this.timing?.activity()

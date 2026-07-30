@@ -763,6 +763,7 @@ export function UiVisualFixture({ id }: { readonly id: UiVisualFixtureId }) {
           },
           question: {
             kind: 'single-choice',
+            available: true,
             prompt: '对话中的客人想做什么？',
             choices: [
               { id: '1', label: '办理入住', state: 'correct' },

@@ -29,9 +29,19 @@ describe('listening UI adapter', () => {
     expect(viewModel.playbackControls.segment.disabled).toBe(true)
     expect(viewModel.transcript).toBeUndefined()
     expect(viewModel.action.disabled).toBe(true)
+    expect(viewModel.question).toMatchObject({
+      kind: 'single-choice',
+      available: false,
+      waitingLabel: '请先完整播放一次，播放结束后显示英文选项。',
+    })
+    if (viewModel.question.kind === 'single-choice') {
+      expect(viewModel.question.choices.every(
+        (choice) => choice.supportingText === undefined,
+      )).toBe(true)
+    }
   })
 
-  it('reveals content explanations only after a scored answer', () => {
+  it('shows English choices after playback and Chinese translations only after submission', () => {
     let session = createListeningSession(
       createListeningTask(),
       createListeningUnit(),
@@ -43,9 +53,22 @@ describe('listening UI adapter', () => {
         ...session.playback,
         status: 'ended',
         playCounts: { 'seg-word': 1 },
+        completedPlayCounts: { 'seg-word': 1 },
       },
       '2026-07-24T12:00:01.000Z',
     )
+    const answering = toListeningScreenViewModel(session)
+    expect(answering.question).toMatchObject({
+      kind: 'single-choice',
+      available: true,
+      choices: [
+        { label: 'Maya', supportingText: undefined },
+        { label: 'Mia', supportingText: undefined },
+        { label: 'Myra', supportingText: undefined },
+      ],
+    })
+    expect(answering.transcript).toBeUndefined()
+
     session = selectListeningOption(
       session,
       'b',
@@ -59,6 +82,14 @@ describe('listening UI adapter', () => {
     expect(viewModel.feedback?.tone).toBe('correction')
     expect(viewModel.transcript).toHaveLength(1)
     expect(viewModel.rationaleZh).toBe('音频读的是 Maya。')
+    expect(viewModel.question).toMatchObject({
+      kind: 'single-choice',
+      choices: [
+        { label: 'Maya', supportingText: '玛雅' },
+        { label: 'Mia', supportingText: '米娅' },
+        { label: 'Myra', supportingText: '迈拉' },
+      ],
+    })
   })
 
   it('states dictation count, order and format before answering, then shows the complete comparison', () => {
@@ -94,6 +125,7 @@ describe('listening UI adapter', () => {
         ...session.playback,
         status: 'ended',
         playCounts: { 'seg-sentence': 1 },
+        completedPlayCounts: { 'seg-sentence': 1 },
       },
       '2026-07-24T12:00:01.000Z',
     )
