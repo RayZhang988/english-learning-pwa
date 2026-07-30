@@ -39,6 +39,15 @@ async function sourceFiles(directory: string): Promise<string[]> {
   return nested.flat()
 }
 
+function userFacingStrings(value: unknown): string[] {
+  if (typeof value === 'string') return [value]
+  if (Array.isArray(value)) return value.flatMap(userFacingStrings)
+  if (typeof value === 'object' && value !== null) {
+    return Object.values(value).flatMap(userFacingStrings)
+  }
+  return []
+}
+
 describe('09 released content acceptance', () => {
   it('contains 28 days and 84 unique units with truthful structured baselines', () => {
     const lessonDocuments = Object.values(lessonsByPath)
@@ -76,18 +85,18 @@ describe('09 released content acceptance', () => {
     ).toBe(true)
     expect(firstDaySeconds).toEqual({
       vocabulary: 123,
-      listening: 211,
+      listening: 252,
       speaking: 181,
     })
     expect(baselineSeconds.reduce((sum, value) => sum + value, 0)).toBe(
-      17_566,
+      18_844,
     )
     expect(packageIndex.durationBaselineTotals).toEqual({
       learningUnits: 84,
       vocabularySeconds: 4_740,
-      listeningSeconds: 7_238,
+      listeningSeconds: 8_516,
       speakingSeconds: 5_588,
-      allUnitsSeconds: 17_566,
+      allUnitsSeconds: 18_844,
     })
     expect(
       lessons.every(
@@ -102,7 +111,7 @@ describe('09 released content acceptance', () => {
           ) !== 2_700,
       ),
     ).toBe(true)
-    expect(17_566 / 28 / 60).toBeCloseTo(10.5, 1)
+    expect(18_844 / 28 / 60).toBeCloseTo(11.2, 1)
     expect(new Set(units.map((unit) => unit.learningUnitId)).size).toBe(
       84,
     )
@@ -159,24 +168,22 @@ describe('09 released content acceptance', () => {
       listeningQuestions.filter(
         (question) => question.type === 'short-sentence-choice',
       ),
-    ).toHaveLength(28)
+    ).toHaveLength(84)
     expect(
       listeningQuestions.filter(
         (question) => question.type === 'keyword-dictation',
       ),
     ).toHaveLength(28)
-    expect(extensionIndex.totals.exercises).toBe(84)
+    expect(extensionIndex.totals.exercises).toBe(140)
     expect(exercises.lessons).toHaveLength(28)
   })
 
   it('contains no placeholders and keeps urgent-help content non-diagnostic', () => {
-    const contentText = JSON.stringify({
-      packageIndex,
+    const contentText = userFacingStrings({
       manifest,
       lessonsByPath,
-      extensionIndex,
       exercises,
-    })
+    }).join('\n')
     expect(contentText).not.toMatch(
       /\b(?:TODO|TBD|PLACEHOLDER)\b|待补|占位/i,
     )

@@ -21,7 +21,7 @@ const isLocalPreview = ['127.0.0.1', 'localhost'].includes(
 )
 const expectedFirstDaySeconds = {
   vocabulary: 123,
-  listening: 211,
+  listening: 252,
   speaking: 181,
 }
 const evidence = {
@@ -259,7 +259,7 @@ async function createFirstDayPlan(observedAsset) {
       runtime.activePlan.plan.plannedSeconds,
       estimates.reduce((total, seconds) => total + seconds, 0),
     )
-    assert.equal(runtime.activePlan.plan.plannedSeconds, 515)
+    assert.equal(runtime.activePlan.plan.plannedSeconds, 556)
     assert.equal(
       tasks.every(
         (task) =>
@@ -619,7 +619,7 @@ async function createFirstDayPlan(observedAsset) {
     assert.deepEqual(offlineSupply, {
       ok: true,
       status: 200,
-      allCandidates: 808,
+      allCandidates: 864,
       speakingCandidates: 122,
       speakingSceneCandidates: 28,
     })

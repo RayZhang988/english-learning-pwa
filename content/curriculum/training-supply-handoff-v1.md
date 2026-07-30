@@ -27,9 +27,12 @@
    `no-eligible-content`，不得偷偷改用远低于目标的题。
 3. `allowedModes` 必须包含 request 的 `mode`。04 负责把错题、到期复习和重试需求放入
    请求/任务策略；05 不伪造这类优先级。
-4. 从符合条件且不在 `excludeItemIds` 的候选中，按 `supplyOrder` 选择 cursor 之后的
-   第一项；末尾只允许回绕一次。cursor 为 `null` 时从第一项开始。
-5. `excludeItemIds` 覆盖当前 900 秒流已经完成的全部 item ID。所有合格项均被排除时，
+4. 从符合条件且不在 `excludeItemIds` 的候选中，使用计划/任务或额外训练会话身份
+   形成稳定随机种子。相同恢复状态必须得到相同下一题，不同训练会话应得到不同顺序。
+5. 最近 10 题用于题型平衡；最近 4 题的 `variantFamilyId` 进入同一对话冷却区，
+   有其他合格内容时不得再次选择。同一题型不得连续出现，除非没有更合适的合格项。
+6. `cursor` 继续验证恢复身份，但不再表示固定文件顺序中的下一项。
+7. `excludeItemIds` 覆盖当前 900 秒流已经完成的全部 item ID。所有合格项均被排除时，
    返回 `all-eligible-content-recently-used`；绝不以另一个 ID 循环完全相同的题。
 
 ## R6 额外训练优先级接口

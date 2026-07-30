@@ -16,7 +16,7 @@ QA_BASE_URL=https://rayzhang988.github.io/english-learning-pwa/ \
   node tests/e2e/release-smoke.mjs
 ```
 
-本脚本验证首页引用、Manifest、安装图标、Service Worker 及六个课程 JSON
+本脚本验证首页引用、Manifest、安装图标、Service Worker 及七个课程 JSON
 预缓存关系。它不能替代真实浏览器的 Service Worker 生命周期、离线重载或 iPhone
 主屏幕安装。
 

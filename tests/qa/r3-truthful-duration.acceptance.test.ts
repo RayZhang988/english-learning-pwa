@@ -167,7 +167,7 @@ describe('R3 truthful training duration acceptance', () => {
         0,
       ),
     )
-    expect(plan.plannedSeconds).toBe(515)
+    expect(plan.plannedSeconds).toBe(556)
     expect(
       Object.fromEntries(
         plan.tasks.map((task) => [
@@ -177,7 +177,7 @@ describe('R3 truthful training duration acceptance', () => {
       ),
     ).toEqual({
       vocabulary: 123,
-      listening: 211,
+      listening: 252,
       speaking: 181,
     })
     expect(

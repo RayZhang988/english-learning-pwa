@@ -324,7 +324,7 @@ describe('05 released content package acceptance', () => {
       expect(() => readJson<unknown>(schemaFile), schemaFile).not.toThrow()
     }
     expect(extension.lessons).toHaveLength(28)
-    expect(extensionExercises).toHaveLength(84)
+    expect(extensionExercises).toHaveLength(140)
     expectUnique(
       extensionExercises.map((exercise) => exercise.exerciseId),
       'extension exercise IDs',
@@ -364,7 +364,7 @@ describe('05 released content package acceptance', () => {
 
     expect(Object.fromEntries(typeCounts)).toEqual({
       'word-discrimination': 28,
-      'short-sentence-choice': 28,
+      'short-sentence-choice': 84,
       'keyword-dictation': 28,
     })
 

@@ -112,7 +112,7 @@ export interface ListeningTrainingUnit {
 export interface ListeningCatalog {
   readonly schemaVersion: 1
   readonly packageVersion: '1.0.0'
-  readonly extensionVersion: '1.0.0'
+  readonly extensionVersion: '1.1.0'
   readonly courseId: string
   readonly units: readonly ListeningTrainingUnit[]
   readonly trainingSupplyIndex?: unknown

@@ -21,6 +21,7 @@ function strings(value: unknown): readonly string[] | null {
 type IndexedListeningSupplyItem = ListeningSupplyItem & {
   readonly supplyOrder: number
   readonly allowedModes: readonly string[]
+  readonly variantFamilyId: string
 }
 
 function parseItem(value: unknown): IndexedListeningSupplyItem {
@@ -34,7 +35,9 @@ function parseItem(value: unknown): IndexedListeningSupplyItem {
     typeof value.itemId !== 'string' || typeof value.learningUnitId !== 'string' ||
     typeof value.contentRef !== 'string' || typeof value.difficultyLevel !== 'number' ||
     !Number.isFinite(value.difficultyLevel) || typeof value.supplyOrder !== 'number' ||
-    !Number.isInteger(value.supplyOrder) || !tags || !modes ||
+    !Number.isInteger(value.supplyOrder) ||
+    typeof value.variantFamilyId !== 'string' ||
+    value.variantFamilyId.length === 0 || !tags || !modes ||
     !sourceTypes.includes(String(value.source.sourceType)) ||
     typeof value.source.sourceId !== 'string' || typeof value.source.variantId !== 'string'
   ) {
@@ -48,6 +51,7 @@ function parseItem(value: unknown): IndexedListeningSupplyItem {
     tags,
     supplyOrder: value.supplyOrder,
     allowedModes: modes,
+    variantFamilyId: value.variantFamilyId,
     source: {
       sourceType: value.source.sourceType as ListeningSupplyItem['source']['sourceType'],
       sourceId: value.source.sourceId,
@@ -68,9 +72,83 @@ function isExtraTrainingRequest(
   return 'priority' in request
 }
 
-/** Strict, local implementation of the 05 training-supply handoff v1 selection. */
+const FAMILY_COOLDOWN_ITEMS = 4
+const DIVERSITY_WINDOW_ITEMS = 10
+
+function stableHash(value: string): number {
+  let hash = 0x811c9dc5
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index)
+    hash = Math.imul(hash, 0x01000193)
+  }
+  return hash >>> 0
+}
+
+function streamSeed(
+  request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
+): string {
+  return isExtraTrainingRequest(request)
+    ? `extra:${request.sessionId}`
+    : `daily:${request.planId}:${request.taskId}`
+}
+
+function selectDiverseItem(
+  candidates: readonly IndexedListeningSupplyItem[],
+  request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
+  allItemsById: ReadonlyMap<string, IndexedListeningSupplyItem>,
+): IndexedListeningSupplyItem | undefined {
+  const recent = request.excludeItemIds
+    .slice(-DIVERSITY_WINDOW_ITEMS)
+    .map((itemId) => allItemsById.get(itemId))
+    .filter(
+      (item): item is IndexedListeningSupplyItem => item !== undefined,
+    )
+  const recentFamilies = new Set(
+    recent
+      .slice(-FAMILY_COOLDOWN_ITEMS)
+      .map((item) => item.variantFamilyId),
+  )
+  const last = recent.at(-1)
+  const recentTypeCounts = new Map<string, number>()
+  for (const item of recent) {
+    recentTypeCounts.set(
+      item.source.variantId,
+      (recentTypeCounts.get(item.source.variantId) ?? 0) + 1,
+    )
+  }
+  const seed = streamSeed(request)
+  return [...candidates].sort((left, right) => {
+    const score = (item: IndexedListeningSupplyItem) => {
+      const familyPenalty = recentFamilies.has(item.variantFamilyId)
+        ? 10_000
+        : 0
+      const consecutiveTypePenalty =
+        item.source.variantId === last?.source.variantId ? 2_000 : 0
+      const typeBalancePenalty =
+        (recentTypeCounts.get(item.source.variantId) ?? 0) * 100
+      const randomRank =
+        stableHash(`${seed}:${item.itemId}`) / 0x1_0000_0000
+      return (
+        familyPenalty +
+        consecutiveTypePenalty +
+        typeBalancePenalty +
+        randomRank
+      )
+    }
+    return (
+      score(left) - score(right) ||
+      left.supplyOrder - right.supplyOrder
+    )
+  })[0]
+}
+
+/** Deterministic per-session shuffle with durable item and dialogue cooldowns. */
 export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
   private readonly items: readonly IndexedListeningSupplyItem[]
+  private readonly itemsById: ReadonlyMap<
+    string,
+    IndexedListeningSupplyItem
+  >
 
   constructor(index: unknown, catalog: ListeningCatalog) {
     if (!isRecord(index) || index.schemaVersion !== 1 || !Array.isArray(index.candidates)) {
@@ -92,6 +170,7 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
       }
       ids.add(item.itemId)
     }
+    this.itemsById = new Map(this.items.map((item) => [item.itemId, item]))
   }
 
   async next(
@@ -122,9 +201,23 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
         return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
       }
       for (const priority of request.priority) {
-        const selected = request.priorityItemIds[priority]
+        const declaredCandidates = request.priorityItemIds[priority]
           .map((itemId) => this.items.find((item) => item.itemId === itemId)!)
-          .find((item) => available.includes(item))
+        const priorityCandidates = (
+          priority === 'same-day-variant'
+            ? available.filter((item) =>
+                declaredCandidates.some(
+                  (declared) =>
+                    declared.variantFamilyId === item.variantFamilyId,
+                ),
+              )
+            : declaredCandidates.filter((item) => available.includes(item))
+        )
+        const selected = selectDiverseItem(
+          priorityCandidates,
+          request,
+          this.itemsById,
+        )
         if (selected) {
           return { schemaVersion: 1, requestId: request.requestId, status: 'item', item: selected, nextCursor: selected.itemId }
         }
@@ -134,10 +227,7 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
     if (request.cursor !== null && cursorIndex < 0) {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
     }
-    const ordered = request.cursor === null
-      ? eligible
-      : [...eligible.slice(cursorIndex + 1), ...eligible.slice(0, cursorIndex + 1)]
-    const item = ordered.find((candidate) => !excluded.has(candidate.itemId))
+    const item = selectDiverseItem(available, request, this.itemsById)
     if (!item) {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'all-eligible-content-recently-used' }
     }

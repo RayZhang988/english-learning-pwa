@@ -265,7 +265,7 @@ function expectedIndex() {
   return {
     schemaVersion: 1,
     documentType: 'continuous-training-supply-index',
-    supplyVersion: '1.1.0',
+    supplyVersion: '1.2.0',
     baseCourseId: packageIndex.courseId,
     basePackageVersion: packageIndex.packageVersion,
     basePackageIndex: packageIndexPath,
@@ -279,12 +279,21 @@ function expectedIndex() {
       },
       cursor: {
         meaning: 'last-supplied-item-id',
-        selection: 'first-eligible-after-cursor-with-single-wrap',
+        selection: 'stable-session-shuffle-with-durable-cursor-validation',
       },
       deduplication: {
         input: 'request.excludeItemIds',
         scope: 'all-current-stream-completed-item-ids',
         whenAllEligibleExcluded: 'all-eligible-content-recently-used',
+      },
+      diversity: {
+        dailySeed: 'request.planId+request.taskId',
+        extraTrainingSeed: 'request.sessionId',
+        recentWindowItems: 10,
+        variantFamilyCooldownItems: 4,
+        avoidImmediateSameQuestionType: true,
+        fallback:
+          'relax-diversity-penalties-only-when-no-better-eligible-item',
       },
       contentExhaustion: {
         noEligible: 'no-eligible-content',
@@ -559,6 +568,8 @@ function assertExtraTrainingPriorityContract(index) {
 const expected = expectedIndex()
 if (writeMode) {
   writeJson(supplyIndexPath, expected)
+  packageIndex.trainingSupplyTotals = expected.totals
+  writeJson(packageIndexPath, packageIndex)
   console.log(JSON.stringify({ mode: 'write', supplyIndexPath, totals: expected.totals }, null, 2))
   process.exit(0)
 }

@@ -111,7 +111,7 @@ function listeningCatalog(): {
     catalog: {
       schemaVersion: 1,
       packageVersion: '1.0.0',
-      extensionVersion: '1.0.0',
+      extensionVersion: '1.1.0',
       courseId: 'test',
       units: [unit],
       getUnit(contentRef) {

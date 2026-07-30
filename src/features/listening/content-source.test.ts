@@ -55,7 +55,7 @@ describe('current listening content source', () => {
     const catalog = await source.load()
 
     expect(catalog.units).toHaveLength(28)
-    expect(catalog.units[0].questions).toHaveLength(7)
+    expect(catalog.units[0].questions).toHaveLength(9)
   })
 
   it('installs the ten runtime JSON assets needed for offline bilingual continuous training', async () => {

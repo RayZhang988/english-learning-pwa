@@ -233,7 +233,7 @@ for (const lesson of lessons) {
   const exercises = extensionLesson.exercises
   const exerciseTypes = new Set(exercises.map((exercise) => exercise.type))
   assert(
-    exercises.length === 3 &&
+    exercises.length >= 3 &&
       exerciseTypes.has('word-discrimination') &&
       exerciseTypes.has('short-sentence-choice') &&
       exerciseTypes.has('keyword-dictation'),
@@ -315,14 +315,11 @@ function formatBaselineField(baseline, indent) {
   ].join('\n') + ','
 }
 
-function insertMissingBaselines(relativePath, document) {
+function writeCurrentBaselines(relativePath, document) {
   let source = fs.readFileSync(absolute(relativePath), 'utf8')
-  let inserted = 0
+  let written = 0
   for (const lesson of document.lessons) {
     for (const unit of lesson.learningUnits) {
-      if (unit.durationBaseline !== undefined) {
-        continue
-      }
       const expected = expectedByUnitId.get(unit.learningUnitId)
       assert(
         expected !== undefined,
@@ -341,6 +338,36 @@ function insertMissingBaselines(relativePath, document) {
       const unitEnd =
         nextIdentityIndex >= 0 ? nextIdentityIndex : source.length
       const unitSource = source.slice(identityIndex, unitEnd)
+      const baselineMatch =
+        /^(\s*)"durationBaseline":\s*\{/m.exec(unitSource)
+      if (baselineMatch) {
+        const baselineStart = identityIndex + baselineMatch.index
+        const objectStart = source.indexOf('{', baselineStart)
+        let depth = 0
+        let objectEnd = -1
+        for (let index = objectStart; index < source.length; index += 1) {
+          if (source[index] === '{') depth += 1
+          if (source[index] === '}') depth -= 1
+          if (depth === 0) {
+            objectEnd = index + 1
+            break
+          }
+        }
+        assert(
+          objectEnd > objectStart,
+          `Cannot locate durationBaseline end for ${unit.learningUnitId}.`,
+        )
+        const replacement = formatBaselineField(
+          expected,
+          baselineMatch[1],
+        ).slice(0, -1)
+        source =
+          source.slice(0, baselineStart) +
+          replacement +
+          source.slice(objectEnd)
+        written += 1
+        continue
+      }
       const estimatedMatch =
         /^(\s*)"estimatedSeconds":\s*\d+,$/m.exec(unitSource)
       assert(
@@ -360,26 +387,50 @@ function insertMissingBaselines(relativePath, document) {
         source.slice(0, lineEnd) +
         insertion +
         source.slice(lineEnd)
-      inserted += 1
+      written += 1
     }
   }
-  if (inserted > 0) {
+  if (written > 0) {
     fs.writeFileSync(absolute(relativePath), source)
   }
-  return inserted
+  return written
 }
 
 if (writeMode) {
-  const inserted = lessonDocuments.reduce(
+  const written = lessonDocuments.reduce(
     (total, { relativePath, document }) =>
-      total + insertMissingBaselines(relativePath, document),
+      total + writeCurrentBaselines(relativePath, document),
     0,
+  )
+  const totals = {
+    vocabulary: 0,
+    listening: 0,
+    speaking: 0,
+  }
+  for (const lesson of lessons) {
+    for (const unit of lesson.learningUnits) {
+      totals[unit.domain] += calculateContentBaselineSeconds(
+        expectedByUnitId.get(unit.learningUnitId),
+      )
+    }
+  }
+  packageIndex.durationBaselineTotals = {
+    learningUnits: 84,
+    vocabularySeconds: totals.vocabulary,
+    listeningSeconds: totals.listening,
+    speakingSeconds: totals.speaking,
+    allUnitsSeconds:
+      totals.vocabulary + totals.listening + totals.speaking,
+  }
+  fs.writeFileSync(
+    absolute(packageIndexPath),
+    `${JSON.stringify(packageIndex, null, 2)}\n`,
   )
   console.log(
     JSON.stringify(
       {
         mode: 'write',
-        inserted,
+        written,
         lessonFiles: lessonDocuments.length,
       },
       null,

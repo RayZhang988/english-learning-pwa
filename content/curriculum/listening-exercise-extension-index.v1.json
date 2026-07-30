@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "documentType": "listening-exercise-extension-index",
   "extensionId": "survival-travel-american-listening-exercises",
-  "extensionVersion": "1.0.0",
+  "extensionVersion": "1.1.0",
   "status": "released",
   "baseCourseId": "survival-travel-american-4w",
   "basePackageVersion": "1.0.0",
@@ -34,10 +34,10 @@
   },
   "totals": {
     "lessons": 28,
-    "segments": 84,
-    "exercises": 84,
+    "segments": 140,
+    "exercises": 140,
     "wordDiscrimination": 28,
-    "shortSentenceChoice": 28,
+    "shortSentenceChoice": 84,
     "keywordDictation": 28
   }
 }

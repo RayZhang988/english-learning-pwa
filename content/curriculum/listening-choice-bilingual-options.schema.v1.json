@@ -15,7 +15,7 @@
   "properties": {
     "schemaVersion": {"const": 1},
     "documentType": {"const": "listening-choice-bilingual-options"},
-    "contentVersion": {"const": "1.0.0"},
+    "contentVersion": {"const": "1.1.0"},
     "courseId": {"const": "survival-travel-american-4w"},
     "targetLocale": {"const": "en-US"},
     "supportLocale": {"const": "zh-CN"},

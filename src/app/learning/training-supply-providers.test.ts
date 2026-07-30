@@ -56,7 +56,7 @@ function listeningCatalog(
   return {
     schemaVersion: 1,
     packageVersion: '1.0.0',
-    extensionVersion: '1.0.0',
+    extensionVersion: '1.1.0',
     courseId: 'course',
     units: [],
     trainingSupplyIndex,

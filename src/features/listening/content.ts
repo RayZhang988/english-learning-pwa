@@ -384,7 +384,7 @@ function parseBilingualChoiceOptions(
     'bilingual listening choice options',
   )
   if (
-    document.contentVersion !== '1.0.0' ||
+    document.contentVersion !== '1.1.0' ||
     document.courseId !== 'survival-travel-american-4w' ||
     document.targetLocale !== 'en-US' ||
     document.supportLocale !== 'zh-CN'
@@ -900,7 +900,7 @@ export function createListeningCatalog(
   if (
     extensionIndex.extensionId !==
       'survival-travel-american-listening-exercises' ||
-    extensionIndex.extensionVersion !== '1.0.0' ||
+    extensionIndex.extensionVersion !== '1.1.0' ||
     extensionIndex.basePackageVersion !== '1.0.0' ||
     extensionIndex.baseCourseId !== packageIndex.courseId
   ) {
@@ -929,7 +929,7 @@ export function createListeningCatalog(
       path,
     )
     if (
-      bundle.extensionVersion !== '1.0.0' ||
+      bundle.extensionVersion !== '1.1.0' ||
       bundle.basePackageVersion !== '1.0.0'
     ) {
       throw new ListeningError(
@@ -1020,7 +1020,7 @@ export function createListeningCatalog(
   return {
     schemaVersion: 1,
     packageVersion: '1.0.0',
-    extensionVersion: '1.0.0',
+    extensionVersion: '1.1.0',
     courseId: packageIndex.courseId as string,
     units,
     trainingSupplyIndex: documents.trainingSupplyIndex,

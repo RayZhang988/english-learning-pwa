@@ -329,7 +329,7 @@ describe('09 first-use production acceptance', () => {
         0,
       ),
     )
-    expect(originalPlan.plannedSeconds).toBe(515)
+    expect(originalPlan.plannedSeconds).toBe(556)
     expect(
       Object.fromEntries(
         originalPlan.tasks.map((task) => [
@@ -339,7 +339,7 @@ describe('09 first-use production acceptance', () => {
       ),
     ).toEqual({
       vocabulary: 123,
-      listening: 211,
+      listening: 252,
       speaking: 181,
     })
     expect(

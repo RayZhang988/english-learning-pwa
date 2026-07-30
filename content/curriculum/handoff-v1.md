@@ -213,7 +213,7 @@ lint、TypeScript、Vite build、课程发布资源校验、PWA 20 项预缓存�
 ```
 
 当前全量并非全绿：`tests/qa/first-use-production.acceptance.test.ts` 仍断言
-`plannedSeconds === 2700`，生产首日计划按结构化内容事实得到 515 秒，因此全量结果为
+`plannedSeconds === 2700`，R11 扩充听力题库后，生产首日计划按结构化内容事实得到 556 秒，因此全量结果为
 1 个测试文件 / 1 项失败。该断言属于 09 所有权，05 不得把内容重新膨胀为 2700 秒来
 换取通过。`tests/e2e/r3-duration-baseline-regression.mjs` 在当前受限环境中又因本地
 socket `EPERM` 未能启动；需由 00/09 在允许浏览器连接的环境中复验。

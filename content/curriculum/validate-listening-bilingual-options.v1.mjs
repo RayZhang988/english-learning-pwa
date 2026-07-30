@@ -74,7 +74,7 @@ assert.equal(
   bilingual.documentType,
   'listening-choice-bilingual-options',
 )
-assert.equal(bilingual.contentVersion, '1.0.0')
+assert.equal(bilingual.contentVersion, '1.1.0')
 assert.equal(bilingual.courseId, 'survival-travel-american-4w')
 assert.equal(bilingual.targetLocale, 'en-US')
 assert.equal(bilingual.supportLocale, 'zh-CN')
@@ -120,8 +120,8 @@ for (const question of bilingual.questions) {
 }
 
 assert.equal(seenQuestions.size, expected.size)
-assert.equal(seenQuestions.size, 169)
-assert.equal(optionCount, 507)
+assert.equal(seenQuestions.size, 225)
+assert.equal(optionCount, 675)
 
 console.log(
   JSON.stringify(

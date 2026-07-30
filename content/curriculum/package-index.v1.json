@@ -45,17 +45,17 @@
   "durationBaselineTotals": {
     "learningUnits": 84,
     "vocabularySeconds": 4740,
-    "listeningSeconds": 7238,
+    "listeningSeconds": 8516,
     "speakingSeconds": 5588,
-    "allUnitsSeconds": 17566
+    "allUnitsSeconds": 18844
   },
   "trainingSupplyIndexFile": "content/curriculum/training-supply-index.v1.json",
   "trainingSupplyIndexSchemaFile": "content/curriculum/training-supply-index.schema.v1.json",
   "trainingSupplyTotals": {
     "vocabularyCandidates": 489,
-    "listeningCandidates": 197,
+    "listeningCandidates": 253,
     "speakingCandidates": 122,
-    "allCandidates": 808
+    "allCandidates": 864
   },
   "learningCandidateProjection": {
     "staticFields": [

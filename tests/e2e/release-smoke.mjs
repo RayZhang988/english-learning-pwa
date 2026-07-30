@@ -80,8 +80,8 @@ async function verifyLocalBuild() {
   const jsonAssets = entries.filter((entry) => entry.endsWith('.json'))
   assert.equal(
     jsonAssets.length,
-    6,
-    'Expected the manifest, four weeks, and listening exercise JSON.',
+    7,
+    'Expected the manifest, four weeks, listening exercises, and bilingual option JSON.',
   )
   for (const asset of jsonAssets) {
     assert.ok(

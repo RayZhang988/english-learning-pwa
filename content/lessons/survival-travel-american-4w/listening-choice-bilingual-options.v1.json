@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "documentType": "listening-choice-bilingual-options",
-  "contentVersion": "1.0.0",
+  "contentVersion": "1.1.0",
   "courseId": "survival-travel-american-4w",
   "targetLocale": "en-US",
   "supportLocale": "zh-CN",
@@ -3552,6 +3552,1182 @@
           "optionId": "w4d28-q2:option:2",
           "textEn": "Check out in the afternoon - take a taxi to Terminal 4 - C15",
           "translationZh": "下午退房—出租车去四号航站楼—C15"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d1-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Hi, Maya. I'm Leo. Nice to meet you.",
+          "translationZh": "你好，Maya。我是 Leo。很高兴认识你。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Nice to meet you, too. Where are you from?",
+          "translationZh": "我也很高兴认识你。你来自哪里？"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Hi, I'm Maya.",
+          "translationZh": "你好，我是 Maya。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d1-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Welcome to Boston!",
+          "translationZh": "欢迎来到波士顿！"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Hi, I'm Maya.",
+          "translationZh": "你好，我是 Maya。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Hi, Maya. I'm Leo. Nice to meet you.",
+          "translationZh": "你好，Maya。我是 Leo。很高兴认识你。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d2-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "What's your first name?",
+          "translationZh": "你的名是什么？"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Jia.",
+          "translationZh": "Jia。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Could you spell that, please?",
+          "translationZh": "可以拼一下吗？"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d2-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "What's your first name?",
+          "translationZh": "你的名是什么？"
+        },
+        {
+          "optionId": "b",
+          "textEn": "It's 555-0184.",
+          "translationZh": "是 555-0184。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Jia.",
+          "translationZh": "Jia。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d3-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "It's one dollar and fifty cents.",
+          "translationZh": "一美元五十美分。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "How much is this postcard?",
+          "translationZh": "这张明信片多少钱？"
+        },
+        {
+          "optionId": "c",
+          "textEn": "And the blue hat?",
+          "translationZh": "那顶蓝帽子呢？"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d3-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "How much is this postcard?",
+          "translationZh": "这张明信片多少钱？"
+        },
+        {
+          "optionId": "b",
+          "textEn": "It's one dollar and fifty cents.",
+          "translationZh": "一美元五十美分。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Got it. I'll take the postcard.",
+          "translationZh": "明白了。我要明信片。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d4-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Yes. What are you planning?",
+          "translationZh": "有。你有什么计划？"
+        },
+        {
+          "optionId": "b",
+          "textEn": "The art museum opens at ten.",
+          "translationZh": "艺术博物馆十点开门。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Are you free tomorrow morning?",
+          "translationZh": "你明天上午有空吗？"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d4-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Great. See you tomorrow at nine thirty.",
+          "translationZh": "好。明天九点半见。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Are you free tomorrow morning?",
+          "translationZh": "你明天上午有空吗？"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Yes. What are you planning?",
+          "translationZh": "有。你有什么计划？"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d5-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Excuse me, where is the restroom?",
+          "translationZh": "打扰一下，洗手间在哪里？"
+        },
+        {
+          "optionId": "b",
+          "textEn": "It's past the front desk, next to the elevator.",
+          "translationZh": "经过前台，在电梯旁边。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Sorry, could you say that again, more slowly?",
+          "translationZh": "抱歉，可以慢一点再说一次吗？"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d5-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Excuse me, where is the restroom?",
+          "translationZh": "打扰一下，洗手间在哪里？"
+        },
+        {
+          "optionId": "b",
+          "textEn": "You're welcome.",
+          "translationZh": "不客气。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "It's past the front desk, next to the elevator.",
+          "translationZh": "经过前台，在电梯旁边。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d6-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "I'd like a medium coffee and a breakfast sandwich, please.",
+          "translationZh": "我想要一杯中杯咖啡和一个早餐三明治。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Good morning. What can I get for you?",
+          "translationZh": "早上好。您想要什么？"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Would you like milk in the coffee?",
+          "translationZh": "咖啡里要加牛奶吗？"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d6-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Good morning. What can I get for you?",
+          "translationZh": "早上好。您想要什么？"
+        },
+        {
+          "optionId": "b",
+          "textEn": "I'd like a medium coffee and a breakfast sandwich, please.",
+          "translationZh": "我想要一杯中杯咖啡和一个早餐三明治。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Your total is eight dollars and twenty-five cents.",
+          "translationZh": "总共八美元二十五美分。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d7-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Hi, Nina. I'm Bo. I'm visiting from Chengdu.",
+          "translationZh": "你好，Nina。我是 Bo。我从成都来旅行。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Nice to meet you. Are you free tomorrow morning?",
+          "translationZh": "很高兴认识你。你明天上午有空吗？"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Hi, I don't think we've met. I'm Nina.",
+          "translationZh": "你好，我想我们还没见过。我是 Nina。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w1d7-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Got it. See you tomorrow.",
+          "translationZh": "明白了。明天见。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Hi, I don't think we've met. I'm Nina.",
+          "translationZh": "你好，我想我们还没见过。我是 Nina。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Hi, Nina. I'm Bo. I'm visiting from Chengdu.",
+          "translationZh": "你好，Nina。我是 Bo。我从成都来旅行。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d8-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Good evening. Do you have a reservation?",
+          "translationZh": "晚上好。您有预订吗？"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Yes, a table for three under Wu at seven.",
+          "translationZh": "有，Wu 名下七点的三人桌。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "I found it. Your table will be ready in about ten minutes.",
+          "translationZh": "找到了。您的桌位大约十分钟后准备好。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d8-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Good evening. Do you have a reservation?",
+          "translationZh": "晚上好。您有预订吗？"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Thank you.",
+          "translationZh": "谢谢。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Yes, a table for three under Wu at seven.",
+          "translationZh": "有，Wu 名下七点的三人桌。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d9-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Yes. I'd like the turkey burger without onions.",
+          "translationZh": "可以。我想要火鸡汉堡，不加洋葱。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Are you ready to order?",
+          "translationZh": "可以点餐了吗？"
+        },
+        {
+          "optionId": "c",
+          "textEn": "That comes with fries. Would you like a different side?",
+          "translationZh": "它配薯条。你想换别的配菜吗？"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d9-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Are you ready to order?",
+          "translationZh": "可以点餐了吗？"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Yes. I'd like the turkey burger without onions.",
+          "translationZh": "可以。我想要火鸡汉堡，不加洋葱。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Thanks for telling me. I'll note that for the kitchen.",
+          "translationZh": "谢谢告知。我会给厨房备注。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d10-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Of course. I'll be right back.",
+          "translationZh": "当然。我马上回来。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Excuse me, I think there's an extra drink on the check.",
+          "translationZh": "打扰一下，我想账单上多了一杯饮料。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Could we get the check, please?",
+          "translationZh": "可以给我们账单吗？"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d10-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Thanks. I'll pay by card.",
+          "translationZh": "谢谢。我刷卡付款。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Could we get the check, please?",
+          "translationZh": "可以给我们账单吗？"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Of course. I'll be right back.",
+          "translationZh": "当然。我马上回来。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d11-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Excuse me, how do I get to the city library?",
+          "translationZh": "打扰一下，怎么去市图书馆？"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Go straight for two blocks and turn right at Pine Street.",
+          "translationZh": "直走两个街区，在 Pine Street 右转。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Turn right at Pine Street?",
+          "translationZh": "在 Pine Street 右转？"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d11-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Excuse me, how do I get to the city library?",
+          "translationZh": "打扰一下，怎么去市图书馆？"
+        },
+        {
+          "optionId": "b",
+          "textEn": "No, it's about a five-minute walk.",
+          "translationZh": "不远，大约走五分钟。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Go straight for two blocks and turn right at Pine Street.",
+          "translationZh": "直走两个街区，在 Pine Street 右转。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d12-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Not directly. Take the Blue Line downtown, then transfer to the Airport Line.",
+          "translationZh": "不直达。先坐蓝线到市中心，再换乘机场线。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Does the Blue Line go to the airport?",
+          "translationZh": "蓝线去机场吗？"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Where do I transfer?",
+          "translationZh": "在哪里换乘？"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d12-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Does the Blue Line go to the airport?",
+          "translationZh": "蓝线去机场吗？"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Not directly. Take the Blue Line downtown, then transfer to the Airport Line.",
+          "translationZh": "不直达。先坐蓝线到市中心，再换乘机场线。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Four stops to Central, then three more to the airport.",
+          "translationZh": "到中央车站四站，然后再三站到机场。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d13-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "I'm outside the main entrance, next to the taxi sign.",
+          "translationZh": "我在正门外，出租车标志旁边。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "I can't stop there. Could you walk to pickup zone B?",
+          "translationZh": "我不能在那里停车。你可以走到 B 上车区吗？"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Hi, this is Alex, your driver. Are you at the north entrance?",
+          "translationZh": "你好，我是你的司机 Alex。你在北门吗？"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d13-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Great. Please drop me off at the River Hotel.",
+          "translationZh": "好。请把我送到 River Hotel。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Hi, this is Alex, your driver. Are you at the north entrance?",
+          "translationZh": "你好，我是你的司机 Alex。你在北门吗？"
+        },
+        {
+          "optionId": "c",
+          "textEn": "I'm outside the main entrance, next to the taxi sign.",
+          "translationZh": "我在正门外，出租车标志旁边。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d14-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "The show starts at eight, and it's already seven fifteen.",
+          "translationZh": "演出八点开始，现在已经七点十五。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Let's get the check now. I can pay by card.",
+          "translationZh": "我们现在结账吧。我可以刷卡。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Here you go. The total is thirty-six dollars.",
+          "translationZh": "给您。总共三十六美元。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w2d14-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "The show starts at eight, and it's already seven fifteen.",
+          "translationZh": "演出八点开始，现在已经七点十五。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Good. Let's buy two one-way tickets.",
+          "translationZh": "好。我们买两张单程票。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Let's get the check now. I can pay by card.",
+          "translationZh": "我们现在结账吧。我可以刷卡。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d15-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "We have a medium in blue or gray.",
+          "translationZh": "中码有蓝色或灰色。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Excuse me, do you have this jacket in a medium?",
+          "translationZh": "打扰一下，这件夹克有中码吗？"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Could I try the gray one on?",
+          "translationZh": "我可以试穿灰色的吗？"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d15-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Excuse me, do you have this jacket in a medium?",
+          "translationZh": "打扰一下，这件夹克有中码吗？"
+        },
+        {
+          "optionId": "b",
+          "textEn": "We have a medium in blue or gray.",
+          "translationZh": "中码有蓝色或灰色。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "That's fine. I'll try it.",
+          "translationZh": "没问题。我试试。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d16-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "I'd like to exchange this sweater. It's too small.",
+          "translationZh": "我想换这件毛衣。它太小了。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Do you have the receipt?",
+          "translationZh": "你有收据吗？"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Hi. How can I help you?",
+          "translationZh": "你好。有什么可以帮你？"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d16-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Great. The price is the same, so there's no extra charge.",
+          "translationZh": "好。价格一样，所以不用补钱。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Hi. How can I help you?",
+          "translationZh": "你好。有什么可以帮你？"
+        },
+        {
+          "optionId": "c",
+          "textEn": "I'd like to exchange this sweater. It's too small.",
+          "translationZh": "我想换这件毛衣。它太小了。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d17-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Welcome to the River Hotel. How can I help you?",
+          "translationZh": "欢迎来到 River Hotel。有什么可以帮您？"
+        },
+        {
+          "optionId": "b",
+          "textEn": "I'd like to check in. I have a reservation under Li.",
+          "translationZh": "我想办理入住。我在 Li 名下有预订。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "I found it. May I see your ID and a credit card?",
+          "translationZh": "找到了。可以看一下您的证件和信用卡吗？"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d17-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Checkout is at eleven. Your room is 518, on the fifth floor.",
+          "translationZh": "十一点退房。您的房间是 518，在五楼。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Great. What time is checkout?",
+          "translationZh": "好。几点退房？"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Welcome to the River Hotel. How can I help you?",
+          "translationZh": "欢迎来到 River Hotel。有什么可以帮您？"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d18-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Hi, this is room 518. The air conditioner isn't working.",
+          "translationZh": "你好，这里是 518 房。空调不工作。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Front desk. How can I help you?",
+          "translationZh": "前台。有什么可以帮您？"
+        },
+        {
+          "optionId": "c",
+          "textEn": "I'm sorry about that. Is the control panel on?",
+          "translationZh": "很抱歉。控制面板开着吗？"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d18-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Front desk. How can I help you?",
+          "translationZh": "前台。有什么可以帮您？"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Hi, this is room 518. The air conditioner isn't working.",
+          "translationZh": "你好，这里是 518 房。空调不工作。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Of course. We'll bring one with us.",
+          "translationZh": "当然。我们一起带过去。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d19-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "I'm checking in for flight 482 to Seattle.",
+          "translationZh": "我办理飞往西雅图的 482 航班值机。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "May I see your passport? Are you checking any bags?",
+          "translationZh": "可以看一下您的护照吗？您有托运行李吗？"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Good morning. Where are you flying today?",
+          "translationZh": "早上好。您今天飞往哪里？"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d19-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "I have one available. Here's your boarding pass. Gate C14.",
+          "translationZh": "有一个空位。这是您的登机牌。登机口 C14。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Good morning. Where are you flying today?",
+          "translationZh": "早上好。您今天飞往哪里？"
+        },
+        {
+          "optionId": "c",
+          "textEn": "I'm checking in for flight 482 to Seattle.",
+          "translationZh": "我办理飞往西雅图的 482 航班值机。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d20-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Attention, passengers on Northstar flight 482 to Seattle.",
+          "translationZh": "请注意，乘坐 Northstar 482 航班前往西雅图的旅客。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "The departure gate has changed from C14 to C18.",
+          "translationZh": "登机口已从 C14 改为 C18。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "The flight is delayed by thirty minutes because of weather.",
+          "translationZh": "由于天气原因，航班延误三十分钟。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d20-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Attention, passengers on Northstar flight 482 to Seattle.",
+          "translationZh": "请注意，乘坐 Northstar 482 航班前往西雅图的旅客。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Please be at gate C18 with your boarding pass and ID.",
+          "translationZh": "请携带登机牌和证件到 C18 登机口。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "The departure gate has changed from C14 to C18.",
+          "translationZh": "登机口已从 C14 改为 C18。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d21-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "The store opens at nine. Do you have the receipt?",
+          "translationZh": "商店九点开门。你有收据吗？"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Before I leave, I need to exchange this shirt, check out, and get to the airport.",
+          "translationZh": "离开前，我需要换这件衬衫、退房并去机场。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Yes. I need a medium instead of a small.",
+          "translationZh": "有。我需要把小码换成中码。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w3d21-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Before I leave, I need to exchange this shirt, check out, and get to the airport.",
+          "translationZh": "离开前，我需要换这件衬衫、退房并去机场。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "The store opens at nine. Do you have the receipt?",
+          "translationZh": "商店九点开门。你有收据吗？"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Thanks. I'll leave for the airport at two.",
+          "translationZh": "谢谢。我两点出发去机场。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d22-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "I'm sorry. May I see your baggage tag and boarding pass?",
+          "translationZh": "很抱歉。可以看一下您的行李牌和登机牌吗？"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Here they are. I arrived on flight 482 from Seattle.",
+          "translationZh": "给您。我乘坐从西雅图来的 482 航班抵达。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Excuse me, my suitcase didn't arrive on carousel six.",
+          "translationZh": "打扰一下，我的行李箱没有出现在六号转盘上。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d22-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Yes. Please write the hotel name and address here.",
+          "translationZh": "可以。请在这里写下酒店名称和地址。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Excuse me, my suitcase didn't arrive on carousel six.",
+          "translationZh": "打扰一下，我的行李箱没有出现在六号转盘上。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "I'm sorry. May I see your baggage tag and boarding pass?",
+          "translationZh": "很抱歉。可以看一下您的行李牌和登机牌吗？"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d23-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Excuse me, I need help. My friend feels dizzy.",
+          "translationZh": "打扰一下，我需要帮助。我的朋友头晕。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Is your friend awake and able to sit down?",
+          "translationZh": "你的朋友清醒并且可以坐下吗？"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Yes. We're by the north entrance, next to the information desk.",
+          "translationZh": "可以。我们在北门，问讯台旁边。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d23-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Excuse me, I need help. My friend feels dizzy.",
+          "translationZh": "打扰一下，我需要帮助。我的朋友头晕。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Not yet. If the situation becomes an emergency, call local emergency services immediately.",
+          "translationZh": "暂时不需要。如果情况变成紧急状况，请立即联系当地紧急服务。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Is your friend awake and able to sit down?",
+          "translationZh": "你的朋友清醒并且可以坐下吗？"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d24-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "It does. I'm glad the rain stopped.",
+          "translationZh": "是的。很高兴雨停了。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Good morning. It looks like a beautiful day.",
+          "translationZh": "早上好。看起来今天会是个好天气。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Do you have any plans for today?",
+          "translationZh": "你今天有什么计划吗？"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d24-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Good morning. It looks like a beautiful day.",
+          "translationZh": "早上好。看起来今天会是个好天气。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "It does. I'm glad the rain stopped.",
+          "translationZh": "是的。很高兴雨停了。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "You, too.",
+          "translationZh": "你也是。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d25-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Excuse me, where is the hotel shuttle pickup?",
+          "translationZh": "打扰一下，酒店接驳车上车点在哪里？"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Outside door seven. The River Hotel shuttle comes every thirty minutes.",
+          "translationZh": "在七号门外。River Hotel 接驳车每三十分钟一班。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Min arrives on flight 305 at terminal two and follows the signs to baggage claim.",
+          "translationZh": "Min 乘 305 航班抵达二号航站楼，并跟随标志前往行李提取处。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d25-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Hi, this is room 624. I can't connect to the Wi-Fi.",
+          "translationZh": "你好，这里是 624 房。我连不上 Wi-Fi。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Min arrives on flight 305 at terminal two and follows the signs to baggage claim.",
+          "translationZh": "Min 乘 305 航班抵达二号航站楼，并跟随标志前往行李提取处。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Excuse me, where is the hotel shuttle pickup?",
+          "translationZh": "打扰一下，酒店接驳车上车点在哪里？"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d26-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "The museum is across from Central Park, but the Green Line is closed today.",
+          "translationZh": "博物馆在中央公园对面，但绿线今天停运。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Could we take the number twelve bus instead?",
+          "translationZh": "我们可以改坐 12 路公交吗？"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Yes. Get off at the fourth stop and walk one block east.",
+          "translationZh": "可以。在第四站下车，然后向东走一个街区。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d26-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "The museum is across from Central Park, but the Green Line is closed today.",
+          "translationZh": "博物馆在中央公园对面，但绿线今天停运。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Yes. We have size nine in black, and the price is the same.",
+          "translationZh": "可以。黑色有九码，价格一样。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Could we take the number twelve bus instead?",
+          "translationZh": "我们可以改坐 12 路公交吗？"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d27-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "The noon shuttle was canceled. The next one leaves at one thirty.",
+          "translationZh": "中午的接驳车取消了。下一班一点半出发。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "At eleven, Ana checks out and asks for the airport shuttle.",
+          "translationZh": "十一点，Ana 退房并询问机场接驳车。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "My flight is at four. Could you call a taxi instead?",
+          "translationZh": "我的航班四点。你可以改为帮我叫出租车吗？"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d27-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "At eleven, Ana checks out and asks for the airport shuttle.",
+          "translationZh": "十一点，Ana 退房并询问机场接驳车。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "The noon shuttle was canceled. The next one leaves at one thirty.",
+          "translationZh": "中午的接驳车取消了。下一班一点半出发。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Let me confirm: gate A12, boarding at four thirty, departure at five ten.",
+          "translationZh": "让我确认：A12 登机口，四点半登机，五点十分出发。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d28-r11-ss-01",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Could you recommend a nearby lunch place before I leave?",
+          "translationZh": "离开前，你可以推荐附近吃午饭的地方吗？"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Try Pine Café across from the library. Take bus six for three stops.",
+          "translationZh": "试试图书馆对面的 Pine Café。坐 6 路公交三站。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Sam checks out of room 407 at eleven and asks the front desk to store one suitcase until two.",
+          "translationZh": "Sam 十一点从 407 房退房，请前台保管一个行李箱到两点。"
+        }
+      ]
+    },
+    {
+      "questionId": "st4w-w4d28-r11-ss-02",
+      "sourceKind": "listening-extension",
+      "options": [
+        {
+          "optionId": "a",
+          "textEn": "Stay with the traveler. Medical staff are on the way.",
+          "translationZh": "请陪着这名旅客。医疗人员正在赶来。"
+        },
+        {
+          "optionId": "b",
+          "textEn": "Sam checks out of room 407 at eleven and asks the front desk to store one suitcase until two.",
+          "translationZh": "Sam 十一点从 407 房退房，请前台保管一个行李箱到两点。"
+        },
+        {
+          "optionId": "c",
+          "textEn": "Could you recommend a nearby lunch place before I leave?",
+          "translationZh": "离开前，你可以推荐附近吃午饭的地方吗？"
         }
       ]
     }

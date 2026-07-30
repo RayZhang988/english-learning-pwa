@@ -26,7 +26,7 @@
 | 稳定音频片段 | 84 |
 | 结构化练习 | 84 |
 | `word-discrimination` | 28 |
-| `short-sentence-choice` | 28 |
+| `short-sentence-choice` | 84 |
 | `keyword-dictation` | 28 |
 
 每个内容块恰好包含上述三种题型各一题。

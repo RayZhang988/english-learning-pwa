@@ -19,7 +19,7 @@
   "properties": {
     "schemaVersion": {"const": 1},
     "documentType": {"const": "continuous-training-supply-index"},
-    "supplyVersion": {"const": "1.1.0"},
+    "supplyVersion": {"const": "1.2.0"},
     "baseCourseId": {"const": "survival-travel-american-4w"},
     "basePackageVersion": {"const": "1.0.0"},
     "basePackageIndex": {"const": "content/curriculum/package-index.v1.json"},
@@ -27,7 +27,7 @@
     "supplyPolicy": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["supportedTargetDifficulty", "cursor", "deduplication", "contentExhaustion", "extraTrainingPriority"],
+      "required": ["supportedTargetDifficulty", "cursor", "deduplication", "diversity", "contentExhaustion", "extraTrainingPriority"],
       "properties": {
         "supportedTargetDifficulty": {
           "type": "object",
@@ -46,7 +46,7 @@
           "required": ["meaning", "selection"],
           "properties": {
             "meaning": {"const": "last-supplied-item-id"},
-            "selection": {"const": "first-eligible-after-cursor-with-single-wrap"}
+            "selection": {"const": "stable-session-shuffle-with-durable-cursor-validation"}
           }
         },
         "deduplication": {
@@ -57,6 +57,28 @@
             "input": {"const": "request.excludeItemIds"},
             "scope": {"const": "all-current-stream-completed-item-ids"},
             "whenAllEligibleExcluded": {"const": "all-eligible-content-recently-used"}
+          }
+        },
+        "diversity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "dailySeed",
+            "extraTrainingSeed",
+            "recentWindowItems",
+            "variantFamilyCooldownItems",
+            "avoidImmediateSameQuestionType",
+            "fallback"
+          ],
+          "properties": {
+            "dailySeed": {"const": "request.planId+request.taskId"},
+            "extraTrainingSeed": {"const": "request.sessionId"},
+            "recentWindowItems": {"const": 10},
+            "variantFamilyCooldownItems": {"const": 4},
+            "avoidImmediateSameQuestionType": {"const": true},
+            "fallback": {
+              "const": "relax-diversity-penalties-only-when-no-better-eligible-item"
+            }
           }
         },
         "contentExhaustion": {

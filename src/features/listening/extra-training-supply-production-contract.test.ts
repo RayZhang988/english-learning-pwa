@@ -27,6 +27,7 @@ function provider() {
 
 const candidates = (trainingSupplyIndex.candidates as readonly {
   readonly itemId: string; readonly difficultyLevel: number; readonly allowedModes: readonly string[]
+  readonly variantFamilyId: string
 }[]).filter((candidate) => candidate.itemId.includes('-listening-') && candidate.allowedModes.includes('learn') && candidate.difficultyLevel === 1)
 
 function extra(priorityItemIds: Record<'recent-error' | 'due-review' | 'same-day-variant' | 'new-optional-content', readonly string[]>, patch: Partial<{ cursor: string | null; excludeItemIds: readonly string[] }> = {}) {
@@ -49,7 +50,16 @@ describe('extra listening supply production contract', () => {
     const supply = provider()
     await expect(supply.next(extra(priority))).resolves.toMatchObject({ status: 'item', item: { itemId: recent!.itemId } })
     await expect(supply.next(extra(priority, { excludeItemIds: [recent!.itemId] }))).resolves.toMatchObject({ status: 'item', item: { itemId: due!.itemId } })
-    await expect(supply.next(extra(priority, { excludeItemIds: [recent!.itemId, due!.itemId] }))).resolves.toMatchObject({ status: 'item', item: { itemId: sameDay!.itemId } })
+    const sameDayResult = await supply.next(extra(priority, {
+      excludeItemIds: [recent!.itemId, due!.itemId],
+    }))
+    expect(sameDayResult).toMatchObject({
+      status: 'item',
+      item: { variantFamilyId: sameDay!.variantFamilyId },
+    })
+    if (sameDayResult.status === 'item') {
+      expect(sameDayResult.item.itemId).not.toBe(sameDay!.itemId)
+    }
   })
 
   it('rejects unknown published-priority identities instead of silently selecting ordinary content', async () => {
@@ -66,8 +76,15 @@ describe('extra listening supply production contract', () => {
     if (restored.status === 'item') expect(restored.item.itemId).not.toBe(first.item.itemId)
   })
 
-  it('keeps the daily LearningTaskSupplyRequest path unchanged', async () => {
-    const result = await provider().next({ schemaVersion: 1, requestId: 'daily-listening', planId: 'plan', taskId: 'task', domain: 'listening', targetModuleId: 'listening', mode: 'learn', targetDifficulty: 1, cursor: null, excludeItemIds: [], reason: 'initial' })
-    expect(result).toMatchObject({ status: 'item', item: { itemId: candidates[0]!.itemId } })
+  it('keeps the daily LearningTaskSupplyRequest path stable without reverting to file order', async () => {
+    const request = { schemaVersion: 1 as const, requestId: 'daily-listening', planId: 'plan', taskId: 'task', domain: 'listening' as const, targetModuleId: 'listening' as const, mode: 'learn' as const, targetDifficulty: 1, cursor: null, excludeItemIds: [], reason: 'initial' as const }
+    const result = await provider().next(request)
+    const retry = await provider().next({ ...request, requestId: 'daily-listening-retry' })
+    expect(result).toMatchObject({ status: 'item' })
+    expect(retry.status === 'item' && result.status === 'item'
+      ? retry.item.itemId
+      : null).toBe(result.status === 'item' ? result.item.itemId : null)
+    expect(result.status === 'item' ? result.item.itemId : null)
+      .not.toBe(candidates[0]!.itemId)
   })
 })

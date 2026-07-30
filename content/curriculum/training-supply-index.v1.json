@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "documentType": "continuous-training-supply-index",
-  "supplyVersion": "1.1.0",
+  "supplyVersion": "1.2.0",
   "baseCourseId": "survival-travel-american-4w",
   "basePackageVersion": "1.0.0",
   "basePackageIndex": "content/curriculum/package-index.v1.json",
@@ -15,12 +15,20 @@
     },
     "cursor": {
       "meaning": "last-supplied-item-id",
-      "selection": "first-eligible-after-cursor-with-single-wrap"
+      "selection": "stable-session-shuffle-with-durable-cursor-validation"
     },
     "deduplication": {
       "input": "request.excludeItemIds",
       "scope": "all-current-stream-completed-item-ids",
       "whenAllEligibleExcluded": "all-eligible-content-recently-used"
+    },
+    "diversity": {
+      "dailySeed": "request.planId+request.taskId",
+      "extraTrainingSeed": "request.sessionId",
+      "recentWindowItems": 10,
+      "variantFamilyCooldownItems": 4,
+      "avoidImmediateSameQuestionType": true,
+      "fallback": "relax-diversity-penalties-only-when-no-better-eligible-item"
     },
     "contentExhaustion": {
       "noEligible": "no-eligible-content",
@@ -60,8 +68,8 @@
             "coversTarget": true
           },
           "listening": {
-            "candidateCount": 77,
-            "nominalEffectiveSeconds": 2302,
+            "candidateCount": 99,
+            "nominalEffectiveSeconds": 2784,
             "coversTarget": true
           },
           "speaking": {
@@ -80,8 +88,8 @@
             "coversTarget": true
           },
           "listening": {
-            "candidateCount": 49,
-            "nominalEffectiveSeconds": 1436,
+            "candidateCount": 63,
+            "nominalEffectiveSeconds": 1739,
             "coversTarget": true
           },
           "speaking": {
@@ -100,8 +108,8 @@
             "coversTarget": true
           },
           "listening": {
-            "candidateCount": 77,
-            "nominalEffectiveSeconds": 2302,
+            "candidateCount": 99,
+            "nominalEffectiveSeconds": 2784,
             "coversTarget": true
           },
           "speaking": {
@@ -120,8 +128,8 @@
             "coversTarget": true
           },
           "listening": {
-            "candidateCount": 119,
-            "nominalEffectiveSeconds": 3668,
+            "candidateCount": 153,
+            "nominalEffectiveSeconds": 4427,
             "coversTarget": true
           },
           "speaking": {
@@ -140,8 +148,8 @@
             "coversTarget": true
           },
           "listening": {
-            "candidateCount": 161,
-            "nominalEffectiveSeconds": 5069,
+            "candidateCount": 207,
+            "nominalEffectiveSeconds": 6108,
             "coversTarget": true
           },
           "speaking": {
@@ -160,8 +168,8 @@
             "coversTarget": true
           },
           "listening": {
-            "candidateCount": 168,
-            "nominalEffectiveSeconds": 5308,
+            "candidateCount": 216,
+            "nominalEffectiveSeconds": 6390,
             "coversTarget": true
           },
           "speaking": {
@@ -180,8 +188,8 @@
             "coversTarget": true
           },
           "listening": {
-            "candidateCount": 168,
-            "nominalEffectiveSeconds": 5403,
+            "candidateCount": 216,
+            "nominalEffectiveSeconds": 6493,
             "coversTarget": true
           },
           "speaking": {
@@ -200,8 +208,8 @@
             "coversTarget": true
           },
           "listening": {
-            "candidateCount": 161,
-            "nominalEffectiveSeconds": 5309,
+            "candidateCount": 207,
+            "nominalEffectiveSeconds": 6364,
             "coversTarget": true
           },
           "speaking": {
@@ -220,8 +228,8 @@
             "coversTarget": true
           },
           "listening": {
-            "candidateCount": 148,
-            "nominalEffectiveSeconds": 5242,
+            "candidateCount": 190,
+            "nominalEffectiveSeconds": 6221,
             "coversTarget": true
           },
           "speaking": {
@@ -240,8 +248,8 @@
             "coversTarget": true
           },
           "listening": {
-            "candidateCount": 120,
-            "nominalEffectiveSeconds": 4376,
+            "candidateCount": 154,
+            "nominalEffectiveSeconds": 5176,
             "coversTarget": true
           },
           "speaking": {
@@ -260,8 +268,8 @@
             "coversTarget": true
           },
           "listening": {
-            "candidateCount": 78,
-            "nominalEffectiveSeconds": 3010,
+            "candidateCount": 100,
+            "nominalEffectiveSeconds": 3533,
             "coversTarget": true
           },
           "speaking": {
@@ -280,8 +288,8 @@
             "coversTarget": true
           },
           "listening": {
-            "candidateCount": 36,
-            "nominalEffectiveSeconds": 1609,
+            "candidateCount": 46,
+            "nominalEffectiveSeconds": 1852,
             "coversTarget": true
           },
           "speaking": {
@@ -295,9 +303,9 @@
   },
   "totals": {
     "vocabularyCandidates": 489,
-    "listeningCandidates": 197,
+    "listeningCandidates": 253,
     "speakingCandidates": 122,
-    "allCandidates": 808
+    "allCandidates": 864
   },
   "candidates": [
     {
@@ -17257,9 +17265,69 @@
       }
     },
     {
-      "itemId": "supply-v1-listening-w1d1-l1",
+      "itemId": "supply-v1-listening-st4w-w1d1-r11-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d1-listening",
       "supplyOrder": 4,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w1d1-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/listening",
+      "difficultyLevel": 1,
+      "tags": [
+        "scene:introductions",
+        "week:1",
+        "day:1",
+        "skill:gist",
+        "skill:detail",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 21,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w1d1-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w1d1-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w1d1-listening",
+      "supplyOrder": 5,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w1d1-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/listening",
+      "difficultyLevel": 1,
+      "tags": [
+        "scene:introductions",
+        "week:1",
+        "day:1",
+        "skill:gist",
+        "skill:detail",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 21,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w1d1-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-w1d1-l1",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w1d1-listening",
+      "supplyOrder": 6,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d1-listening",
@@ -17289,7 +17357,7 @@
     {
       "itemId": "supply-v1-listening-w1d1-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d1-listening",
-      "supplyOrder": 5,
+      "supplyOrder": 7,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d1-listening",
@@ -17319,7 +17387,7 @@
     {
       "itemId": "supply-v1-listening-w1d1-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d1-listening",
-      "supplyOrder": 6,
+      "supplyOrder": 8,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d1-listening",
@@ -17349,7 +17417,7 @@
     {
       "itemId": "supply-v1-listening-w1d1-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d1-listening",
-      "supplyOrder": 7,
+      "supplyOrder": 9,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d1-listening",
@@ -17379,7 +17447,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w1d2-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d2-listening",
-      "supplyOrder": 8,
+      "supplyOrder": 10,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d2-listening",
@@ -17409,7 +17477,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w1d2-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d2-listening",
-      "supplyOrder": 9,
+      "supplyOrder": 11,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d2-listening",
@@ -17439,7 +17507,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w1d2-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d2-listening",
-      "supplyOrder": 10,
+      "supplyOrder": 12,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d2-listening",
@@ -17467,9 +17535,69 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w1d2-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w1d2-listening",
+      "supplyOrder": 13,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w1d2-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d2/listening",
+      "difficultyLevel": 1.5,
+      "tags": [
+        "scene:introductions",
+        "week:1",
+        "day:2",
+        "skill:detail",
+        "focus:spelling",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 21,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w1d2-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w1d2-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w1d2-listening",
+      "supplyOrder": 14,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w1d2-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d2/listening",
+      "difficultyLevel": 1.5,
+      "tags": [
+        "scene:introductions",
+        "week:1",
+        "day:2",
+        "skill:detail",
+        "focus:spelling",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 21,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w1d2-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w1d2-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d2-listening",
-      "supplyOrder": 11,
+      "supplyOrder": 15,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d2-listening",
@@ -17499,7 +17627,7 @@
     {
       "itemId": "supply-v1-listening-w1d2-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d2-listening",
-      "supplyOrder": 12,
+      "supplyOrder": 16,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d2-listening",
@@ -17529,7 +17657,7 @@
     {
       "itemId": "supply-v1-listening-w1d2-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d2-listening",
-      "supplyOrder": 13,
+      "supplyOrder": 17,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d2-listening",
@@ -17559,7 +17687,7 @@
     {
       "itemId": "supply-v1-listening-w1d2-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d2-listening",
-      "supplyOrder": 14,
+      "supplyOrder": 18,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d2-listening",
@@ -17589,7 +17717,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w1d3-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d3-listening",
-      "supplyOrder": 15,
+      "supplyOrder": 19,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d3-listening",
@@ -17619,7 +17747,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w1d3-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d3-listening",
-      "supplyOrder": 16,
+      "supplyOrder": 20,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d3-listening",
@@ -17649,7 +17777,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w1d3-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d3-listening",
-      "supplyOrder": 17,
+      "supplyOrder": 21,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d3-listening",
@@ -17677,9 +17805,69 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w1d3-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w1d3-listening",
+      "supplyOrder": 22,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w1d3-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d3/listening",
+      "difficultyLevel": 1.5,
+      "tags": [
+        "scene:numbers-and-time",
+        "week:1",
+        "day:3",
+        "skill:detail",
+        "focus:prices",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 21,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w1d3-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w1d3-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w1d3-listening",
+      "supplyOrder": 23,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w1d3-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d3/listening",
+      "difficultyLevel": 1.5,
+      "tags": [
+        "scene:numbers-and-time",
+        "week:1",
+        "day:3",
+        "skill:detail",
+        "focus:prices",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 22,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w1d3-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w1d3-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d3-listening",
-      "supplyOrder": 18,
+      "supplyOrder": 24,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d3-listening",
@@ -17709,7 +17897,7 @@
     {
       "itemId": "supply-v1-listening-w1d3-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d3-listening",
-      "supplyOrder": 19,
+      "supplyOrder": 25,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d3-listening",
@@ -17739,7 +17927,7 @@
     {
       "itemId": "supply-v1-listening-w1d3-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d3-listening",
-      "supplyOrder": 20,
+      "supplyOrder": 26,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d3-listening",
@@ -17769,7 +17957,7 @@
     {
       "itemId": "supply-v1-listening-w1d3-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d3-listening",
-      "supplyOrder": 21,
+      "supplyOrder": 27,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d3-listening",
@@ -17799,7 +17987,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w1d4-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d4-listening",
-      "supplyOrder": 22,
+      "supplyOrder": 28,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d4-listening",
@@ -17829,7 +18017,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w1d4-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d4-listening",
-      "supplyOrder": 23,
+      "supplyOrder": 29,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d4-listening",
@@ -17859,7 +18047,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w1d4-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d4-listening",
-      "supplyOrder": 24,
+      "supplyOrder": 30,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d4-listening",
@@ -17887,9 +18075,69 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w1d4-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w1d4-listening",
+      "supplyOrder": 31,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w1d4-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d4/listening",
+      "difficultyLevel": 2,
+      "tags": [
+        "scene:numbers-and-time",
+        "week:1",
+        "day:4",
+        "skill:detail",
+        "focus:schedule",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 21,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w1d4-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w1d4-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w1d4-listening",
+      "supplyOrder": 32,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w1d4-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d4/listening",
+      "difficultyLevel": 2,
+      "tags": [
+        "scene:numbers-and-time",
+        "week:1",
+        "day:4",
+        "skill:detail",
+        "focus:schedule",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 22,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w1d4-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w1d4-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d4-listening",
-      "supplyOrder": 25,
+      "supplyOrder": 33,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d4-listening",
@@ -17919,7 +18167,7 @@
     {
       "itemId": "supply-v1-listening-w1d4-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d4-listening",
-      "supplyOrder": 26,
+      "supplyOrder": 34,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d4-listening",
@@ -17949,7 +18197,7 @@
     {
       "itemId": "supply-v1-listening-w1d4-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d4-listening",
-      "supplyOrder": 27,
+      "supplyOrder": 35,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d4-listening",
@@ -17979,7 +18227,7 @@
     {
       "itemId": "supply-v1-listening-w1d4-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d4-listening",
-      "supplyOrder": 28,
+      "supplyOrder": 36,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d4-listening",
@@ -18009,7 +18257,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w1d5-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d5-listening",
-      "supplyOrder": 29,
+      "supplyOrder": 37,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d5-listening",
@@ -18039,7 +18287,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w1d5-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d5-listening",
-      "supplyOrder": 30,
+      "supplyOrder": 38,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d5-listening",
@@ -18069,7 +18317,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w1d5-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d5-listening",
-      "supplyOrder": 31,
+      "supplyOrder": 39,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d5-listening",
@@ -18097,9 +18345,69 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w1d5-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w1d5-listening",
+      "supplyOrder": 40,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w1d5-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d5/listening",
+      "difficultyLevel": 2,
+      "tags": [
+        "scene:basic-needs",
+        "week:1",
+        "day:5",
+        "skill:detail",
+        "focus:directions",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 22,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w1d5-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w1d5-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w1d5-listening",
+      "supplyOrder": 41,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w1d5-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d5/listening",
+      "difficultyLevel": 2,
+      "tags": [
+        "scene:basic-needs",
+        "week:1",
+        "day:5",
+        "skill:detail",
+        "focus:directions",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 20,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w1d5-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w1d5-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d5-listening",
-      "supplyOrder": 32,
+      "supplyOrder": 42,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d5-listening",
@@ -18129,7 +18437,7 @@
     {
       "itemId": "supply-v1-listening-w1d5-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d5-listening",
-      "supplyOrder": 33,
+      "supplyOrder": 43,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d5-listening",
@@ -18159,7 +18467,7 @@
     {
       "itemId": "supply-v1-listening-w1d5-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d5-listening",
-      "supplyOrder": 34,
+      "supplyOrder": 44,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d5-listening",
@@ -18189,7 +18497,7 @@
     {
       "itemId": "supply-v1-listening-w1d5-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d5-listening",
-      "supplyOrder": 35,
+      "supplyOrder": 45,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d5-listening",
@@ -18219,7 +18527,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w1d6-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d6-listening",
-      "supplyOrder": 36,
+      "supplyOrder": 46,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d6-listening",
@@ -18249,7 +18557,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w1d6-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d6-listening",
-      "supplyOrder": 37,
+      "supplyOrder": 47,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d6-listening",
@@ -18279,7 +18587,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w1d6-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d6-listening",
-      "supplyOrder": 38,
+      "supplyOrder": 48,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d6-listening",
@@ -18307,9 +18615,69 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w1d6-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w1d6-listening",
+      "supplyOrder": 49,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w1d6-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d6/listening",
+      "difficultyLevel": 2,
+      "tags": [
+        "scene:restaurant",
+        "week:1",
+        "day:6",
+        "skill:detail",
+        "focus:counter-order",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 23,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w1d6-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w1d6-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w1d6-listening",
+      "supplyOrder": 50,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w1d6-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d6/listening",
+      "difficultyLevel": 2,
+      "tags": [
+        "scene:restaurant",
+        "week:1",
+        "day:6",
+        "skill:detail",
+        "focus:counter-order",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 23,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w1d6-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w1d6-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d6-listening",
-      "supplyOrder": 39,
+      "supplyOrder": 51,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d6-listening",
@@ -18339,7 +18707,7 @@
     {
       "itemId": "supply-v1-listening-w1d6-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d6-listening",
-      "supplyOrder": 40,
+      "supplyOrder": 52,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d6-listening",
@@ -18369,7 +18737,7 @@
     {
       "itemId": "supply-v1-listening-w1d6-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d6-listening",
-      "supplyOrder": 41,
+      "supplyOrder": 53,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d6-listening",
@@ -18399,7 +18767,7 @@
     {
       "itemId": "supply-v1-listening-w1d6-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d6-listening",
-      "supplyOrder": 42,
+      "supplyOrder": 54,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d6-listening",
@@ -18429,7 +18797,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w1d7-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d7-listening",
-      "supplyOrder": 43,
+      "supplyOrder": 55,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d7-listening",
@@ -18460,7 +18828,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w1d7-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d7-listening",
-      "supplyOrder": 44,
+      "supplyOrder": 56,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d7-listening",
@@ -18491,7 +18859,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w1d7-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d7-listening",
-      "supplyOrder": 45,
+      "supplyOrder": 57,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d7-listening",
@@ -18520,9 +18888,71 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w1d7-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w1d7-listening",
+      "supplyOrder": 58,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w1d7-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d7/listening",
+      "difficultyLevel": 2,
+      "tags": [
+        "scene:integrated-travel",
+        "week:1",
+        "day:7",
+        "skill:gist",
+        "skill:detail",
+        "checkpoint:week-1",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 23,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w1d7-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w1d7-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w1d7-listening",
+      "supplyOrder": 59,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w1d7-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d7/listening",
+      "difficultyLevel": 2,
+      "tags": [
+        "scene:integrated-travel",
+        "week:1",
+        "day:7",
+        "skill:gist",
+        "skill:detail",
+        "checkpoint:week-1",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 22,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w1d7-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w1d7-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d7-listening",
-      "supplyOrder": 46,
+      "supplyOrder": 60,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d7-listening",
@@ -18553,7 +18983,7 @@
     {
       "itemId": "supply-v1-listening-w1d7-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d7-listening",
-      "supplyOrder": 47,
+      "supplyOrder": 61,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d7-listening",
@@ -18584,7 +19014,7 @@
     {
       "itemId": "supply-v1-listening-w1d7-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d7-listening",
-      "supplyOrder": 48,
+      "supplyOrder": 62,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d7-listening",
@@ -18615,7 +19045,7 @@
     {
       "itemId": "supply-v1-listening-w1d7-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w1d7-listening",
-      "supplyOrder": 49,
+      "supplyOrder": 63,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w1d7-listening",
@@ -18646,7 +19076,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w2d8-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d8-listening",
-      "supplyOrder": 50,
+      "supplyOrder": 64,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d8-listening",
@@ -18676,7 +19106,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w2d8-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d8-listening",
-      "supplyOrder": 51,
+      "supplyOrder": 65,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d8-listening",
@@ -18706,7 +19136,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w2d8-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d8-listening",
-      "supplyOrder": 52,
+      "supplyOrder": 66,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d8-listening",
@@ -18734,9 +19164,69 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w2d8-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w2d8-listening",
+      "supplyOrder": 67,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w2d8-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d8/listening",
+      "difficultyLevel": 2.5,
+      "tags": [
+        "scene:restaurant",
+        "week:2",
+        "day:8",
+        "skill:detail",
+        "focus:seating",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 22,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w2d8-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w2d8-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w2d8-listening",
+      "supplyOrder": 68,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w2d8-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d8/listening",
+      "difficultyLevel": 2.5,
+      "tags": [
+        "scene:restaurant",
+        "week:2",
+        "day:8",
+        "skill:detail",
+        "focus:seating",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 20,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w2d8-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w2d8-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d8-listening",
-      "supplyOrder": 53,
+      "supplyOrder": 69,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d8-listening",
@@ -18766,7 +19256,7 @@
     {
       "itemId": "supply-v1-listening-w2d8-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d8-listening",
-      "supplyOrder": 54,
+      "supplyOrder": 70,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d8-listening",
@@ -18796,7 +19286,7 @@
     {
       "itemId": "supply-v1-listening-w2d8-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d8-listening",
-      "supplyOrder": 55,
+      "supplyOrder": 71,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d8-listening",
@@ -18826,7 +19316,7 @@
     {
       "itemId": "supply-v1-listening-w2d8-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d8-listening",
-      "supplyOrder": 56,
+      "supplyOrder": 72,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d8-listening",
@@ -18856,7 +19346,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w2d9-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d9-listening",
-      "supplyOrder": 57,
+      "supplyOrder": 73,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d9-listening",
@@ -18887,7 +19377,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w2d9-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d9-listening",
-      "supplyOrder": 58,
+      "supplyOrder": 74,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d9-listening",
@@ -18918,7 +19408,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w2d9-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d9-listening",
-      "supplyOrder": 59,
+      "supplyOrder": 75,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d9-listening",
@@ -18947,9 +19437,71 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w2d9-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w2d9-listening",
+      "supplyOrder": 76,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w2d9-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d9/listening",
+      "difficultyLevel": 2.5,
+      "tags": [
+        "scene:restaurant",
+        "week:2",
+        "day:9",
+        "skill:detail",
+        "skill:inference",
+        "focus:food-order",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 21,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w2d9-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w2d9-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w2d9-listening",
+      "supplyOrder": 77,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w2d9-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d9/listening",
+      "difficultyLevel": 2.5,
+      "tags": [
+        "scene:restaurant",
+        "week:2",
+        "day:9",
+        "skill:detail",
+        "skill:inference",
+        "focus:food-order",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 24,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w2d9-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w2d9-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d9-listening",
-      "supplyOrder": 60,
+      "supplyOrder": 78,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d9-listening",
@@ -18980,7 +19532,7 @@
     {
       "itemId": "supply-v1-listening-w2d9-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d9-listening",
-      "supplyOrder": 61,
+      "supplyOrder": 79,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d9-listening",
@@ -19011,7 +19563,7 @@
     {
       "itemId": "supply-v1-listening-w2d9-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d9-listening",
-      "supplyOrder": 62,
+      "supplyOrder": 80,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d9-listening",
@@ -19042,7 +19594,7 @@
     {
       "itemId": "supply-v1-listening-w2d9-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d9-listening",
-      "supplyOrder": 63,
+      "supplyOrder": 81,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d9-listening",
@@ -19073,7 +19625,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w2d10-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d10-listening",
-      "supplyOrder": 64,
+      "supplyOrder": 82,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d10-listening",
@@ -19104,7 +19656,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w2d10-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d10-listening",
-      "supplyOrder": 65,
+      "supplyOrder": 83,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d10-listening",
@@ -19135,7 +19687,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w2d10-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d10-listening",
-      "supplyOrder": 66,
+      "supplyOrder": 84,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d10-listening",
@@ -19164,9 +19716,71 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w2d10-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w2d10-listening",
+      "supplyOrder": 85,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w2d10-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d10/listening",
+      "difficultyLevel": 3,
+      "tags": [
+        "scene:restaurant",
+        "week:2",
+        "day:10",
+        "skill:detail",
+        "skill:inference",
+        "focus:check-error",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 22,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w2d10-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w2d10-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w2d10-listening",
+      "supplyOrder": 86,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w2d10-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d10/listening",
+      "difficultyLevel": 3,
+      "tags": [
+        "scene:restaurant",
+        "week:2",
+        "day:10",
+        "skill:detail",
+        "skill:inference",
+        "focus:check-error",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 22,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w2d10-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w2d10-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d10-listening",
-      "supplyOrder": 67,
+      "supplyOrder": 87,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d10-listening",
@@ -19197,7 +19811,7 @@
     {
       "itemId": "supply-v1-listening-w2d10-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d10-listening",
-      "supplyOrder": 68,
+      "supplyOrder": 88,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d10-listening",
@@ -19228,7 +19842,7 @@
     {
       "itemId": "supply-v1-listening-w2d10-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d10-listening",
-      "supplyOrder": 69,
+      "supplyOrder": 89,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d10-listening",
@@ -19259,7 +19873,7 @@
     {
       "itemId": "supply-v1-listening-w2d10-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d10-listening",
-      "supplyOrder": 70,
+      "supplyOrder": 90,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d10-listening",
@@ -19290,7 +19904,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w2d11-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d11-listening",
-      "supplyOrder": 71,
+      "supplyOrder": 91,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d11-listening",
@@ -19320,7 +19934,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w2d11-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d11-listening",
-      "supplyOrder": 72,
+      "supplyOrder": 92,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d11-listening",
@@ -19350,7 +19964,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w2d11-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d11-listening",
-      "supplyOrder": 73,
+      "supplyOrder": 93,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d11-listening",
@@ -19378,9 +19992,69 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w2d11-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w2d11-listening",
+      "supplyOrder": 94,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w2d11-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d11/listening",
+      "difficultyLevel": 2.5,
+      "tags": [
+        "scene:directions-and-transport",
+        "week:2",
+        "day:11",
+        "skill:sequence",
+        "skill:detail",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 24,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w2d11-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w2d11-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w2d11-listening",
+      "supplyOrder": 95,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w2d11-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d11/listening",
+      "difficultyLevel": 2.5,
+      "tags": [
+        "scene:directions-and-transport",
+        "week:2",
+        "day:11",
+        "skill:sequence",
+        "skill:detail",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 22,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w2d11-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w2d11-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d11-listening",
-      "supplyOrder": 74,
+      "supplyOrder": 96,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d11-listening",
@@ -19410,7 +20084,7 @@
     {
       "itemId": "supply-v1-listening-w2d11-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d11-listening",
-      "supplyOrder": 75,
+      "supplyOrder": 97,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d11-listening",
@@ -19440,7 +20114,7 @@
     {
       "itemId": "supply-v1-listening-w2d11-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d11-listening",
-      "supplyOrder": 76,
+      "supplyOrder": 98,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d11-listening",
@@ -19470,7 +20144,7 @@
     {
       "itemId": "supply-v1-listening-w2d11-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d11-listening",
-      "supplyOrder": 77,
+      "supplyOrder": 99,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d11-listening",
@@ -19500,7 +20174,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w2d12-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d12-listening",
-      "supplyOrder": 78,
+      "supplyOrder": 100,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d12-listening",
@@ -19531,7 +20205,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w2d12-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d12-listening",
-      "supplyOrder": 79,
+      "supplyOrder": 101,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d12-listening",
@@ -19562,7 +20236,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w2d12-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d12-listening",
-      "supplyOrder": 80,
+      "supplyOrder": 102,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d12-listening",
@@ -19591,9 +20265,71 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w2d12-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w2d12-listening",
+      "supplyOrder": 103,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w2d12-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d12/listening",
+      "difficultyLevel": 3,
+      "tags": [
+        "scene:directions-and-transport",
+        "week:2",
+        "day:12",
+        "skill:sequence",
+        "skill:detail",
+        "focus:transfer",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 23,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w2d12-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w2d12-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w2d12-listening",
+      "supplyOrder": 104,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w2d12-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d12/listening",
+      "difficultyLevel": 3,
+      "tags": [
+        "scene:directions-and-transport",
+        "week:2",
+        "day:12",
+        "skill:sequence",
+        "skill:detail",
+        "focus:transfer",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 24,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w2d12-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w2d12-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d12-listening",
-      "supplyOrder": 81,
+      "supplyOrder": 105,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d12-listening",
@@ -19624,7 +20360,7 @@
     {
       "itemId": "supply-v1-listening-w2d12-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d12-listening",
-      "supplyOrder": 82,
+      "supplyOrder": 106,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d12-listening",
@@ -19655,7 +20391,7 @@
     {
       "itemId": "supply-v1-listening-w2d12-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d12-listening",
-      "supplyOrder": 83,
+      "supplyOrder": 107,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d12-listening",
@@ -19686,7 +20422,7 @@
     {
       "itemId": "supply-v1-listening-w2d12-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d12-listening",
-      "supplyOrder": 84,
+      "supplyOrder": 108,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d12-listening",
@@ -19717,7 +20453,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w2d13-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d13-listening",
-      "supplyOrder": 85,
+      "supplyOrder": 109,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d13-listening",
@@ -19747,7 +20483,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w2d13-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d13-listening",
-      "supplyOrder": 86,
+      "supplyOrder": 110,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d13-listening",
@@ -19777,7 +20513,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w2d13-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d13-listening",
-      "supplyOrder": 87,
+      "supplyOrder": 111,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d13-listening",
@@ -19805,9 +20541,69 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w2d13-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w2d13-listening",
+      "supplyOrder": 112,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w2d13-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d13/listening",
+      "difficultyLevel": 3,
+      "tags": [
+        "scene:directions-and-transport",
+        "week:2",
+        "day:13",
+        "skill:detail",
+        "focus:ride-pickup",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 25,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w2d13-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w2d13-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w2d13-listening",
+      "supplyOrder": 113,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w2d13-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d13/listening",
+      "difficultyLevel": 3,
+      "tags": [
+        "scene:directions-and-transport",
+        "week:2",
+        "day:13",
+        "skill:detail",
+        "focus:ride-pickup",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 23,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w2d13-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w2d13-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d13-listening",
-      "supplyOrder": 88,
+      "supplyOrder": 114,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d13-listening",
@@ -19837,7 +20633,7 @@
     {
       "itemId": "supply-v1-listening-w2d13-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d13-listening",
-      "supplyOrder": 89,
+      "supplyOrder": 115,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d13-listening",
@@ -19867,7 +20663,7 @@
     {
       "itemId": "supply-v1-listening-w2d13-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d13-listening",
-      "supplyOrder": 90,
+      "supplyOrder": 116,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d13-listening",
@@ -19897,7 +20693,7 @@
     {
       "itemId": "supply-v1-listening-w2d13-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d13-listening",
-      "supplyOrder": 91,
+      "supplyOrder": 117,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d13-listening",
@@ -19927,7 +20723,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w2d14-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d14-listening",
-      "supplyOrder": 92,
+      "supplyOrder": 118,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d14-listening",
@@ -19958,7 +20754,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w2d14-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d14-listening",
-      "supplyOrder": 93,
+      "supplyOrder": 119,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d14-listening",
@@ -19989,7 +20785,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w2d14-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d14-listening",
-      "supplyOrder": 94,
+      "supplyOrder": 120,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d14-listening",
@@ -20018,9 +20814,71 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w2d14-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w2d14-listening",
+      "supplyOrder": 121,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w2d14-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d14/listening",
+      "difficultyLevel": 3,
+      "tags": [
+        "scene:integrated-travel",
+        "week:2",
+        "day:14",
+        "skill:sequence",
+        "skill:detail",
+        "checkpoint:week-2",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 24,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w2d14-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w2d14-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w2d14-listening",
+      "supplyOrder": 122,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w2d14-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w2d14/listening",
+      "difficultyLevel": 3,
+      "tags": [
+        "scene:integrated-travel",
+        "week:2",
+        "day:14",
+        "skill:sequence",
+        "skill:detail",
+        "checkpoint:week-2",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 22,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w2d14-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w2d14-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d14-listening",
-      "supplyOrder": 95,
+      "supplyOrder": 123,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d14-listening",
@@ -20051,7 +20909,7 @@
     {
       "itemId": "supply-v1-listening-w2d14-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d14-listening",
-      "supplyOrder": 96,
+      "supplyOrder": 124,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d14-listening",
@@ -20082,7 +20940,7 @@
     {
       "itemId": "supply-v1-listening-w2d14-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d14-listening",
-      "supplyOrder": 97,
+      "supplyOrder": 125,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d14-listening",
@@ -20113,7 +20971,7 @@
     {
       "itemId": "supply-v1-listening-w2d14-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w2d14-listening",
-      "supplyOrder": 98,
+      "supplyOrder": 126,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w2d14-listening",
@@ -20144,7 +21002,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w3d15-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d15-listening",
-      "supplyOrder": 99,
+      "supplyOrder": 127,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d15-listening",
@@ -20174,7 +21032,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w3d15-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d15-listening",
-      "supplyOrder": 100,
+      "supplyOrder": 128,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d15-listening",
@@ -20204,7 +21062,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w3d15-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d15-listening",
-      "supplyOrder": 101,
+      "supplyOrder": 129,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d15-listening",
@@ -20232,9 +21090,69 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w3d15-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w3d15-listening",
+      "supplyOrder": 130,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w3d15-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d15/listening",
+      "difficultyLevel": 2.5,
+      "tags": [
+        "scene:shopping-and-payment",
+        "week:3",
+        "day:15",
+        "skill:detail",
+        "focus:size-and-fit",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 24,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w3d15-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w3d15-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w3d15-listening",
+      "supplyOrder": 131,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w3d15-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d15/listening",
+      "difficultyLevel": 2.5,
+      "tags": [
+        "scene:shopping-and-payment",
+        "week:3",
+        "day:15",
+        "skill:detail",
+        "focus:size-and-fit",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 22,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w3d15-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w3d15-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d15-listening",
-      "supplyOrder": 102,
+      "supplyOrder": 132,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d15-listening",
@@ -20264,7 +21182,7 @@
     {
       "itemId": "supply-v1-listening-w3d15-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d15-listening",
-      "supplyOrder": 103,
+      "supplyOrder": 133,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d15-listening",
@@ -20294,7 +21212,7 @@
     {
       "itemId": "supply-v1-listening-w3d15-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d15-listening",
-      "supplyOrder": 104,
+      "supplyOrder": 134,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d15-listening",
@@ -20324,7 +21242,7 @@
     {
       "itemId": "supply-v1-listening-w3d15-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d15-listening",
-      "supplyOrder": 105,
+      "supplyOrder": 135,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d15-listening",
@@ -20354,7 +21272,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w3d16-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d16-listening",
-      "supplyOrder": 106,
+      "supplyOrder": 136,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d16-listening",
@@ -20384,7 +21302,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w3d16-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d16-listening",
-      "supplyOrder": 107,
+      "supplyOrder": 137,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d16-listening",
@@ -20414,7 +21332,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w3d16-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d16-listening",
-      "supplyOrder": 108,
+      "supplyOrder": 138,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d16-listening",
@@ -20442,9 +21360,69 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w3d16-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w3d16-listening",
+      "supplyOrder": 139,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w3d16-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d16/listening",
+      "difficultyLevel": 3,
+      "tags": [
+        "scene:shopping-and-payment",
+        "week:3",
+        "day:16",
+        "skill:detail",
+        "focus:exchange",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 22,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w3d16-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w3d16-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w3d16-listening",
+      "supplyOrder": 140,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w3d16-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d16/listening",
+      "difficultyLevel": 3,
+      "tags": [
+        "scene:shopping-and-payment",
+        "week:3",
+        "day:16",
+        "skill:detail",
+        "focus:exchange",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 24,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w3d16-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w3d16-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d16-listening",
-      "supplyOrder": 109,
+      "supplyOrder": 141,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d16-listening",
@@ -20474,7 +21452,7 @@
     {
       "itemId": "supply-v1-listening-w3d16-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d16-listening",
-      "supplyOrder": 110,
+      "supplyOrder": 142,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d16-listening",
@@ -20504,7 +21482,7 @@
     {
       "itemId": "supply-v1-listening-w3d16-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d16-listening",
-      "supplyOrder": 111,
+      "supplyOrder": 143,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d16-listening",
@@ -20534,7 +21512,7 @@
     {
       "itemId": "supply-v1-listening-w3d16-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d16-listening",
-      "supplyOrder": 112,
+      "supplyOrder": 144,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d16-listening",
@@ -20564,7 +21542,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w3d17-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d17-listening",
-      "supplyOrder": 113,
+      "supplyOrder": 145,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d17-listening",
@@ -20594,7 +21572,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w3d17-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d17-listening",
-      "supplyOrder": 114,
+      "supplyOrder": 146,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d17-listening",
@@ -20624,7 +21602,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w3d17-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d17-listening",
-      "supplyOrder": 115,
+      "supplyOrder": 147,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d17-listening",
@@ -20652,9 +21630,69 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w3d17-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w3d17-listening",
+      "supplyOrder": 148,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w3d17-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d17/listening",
+      "difficultyLevel": 3,
+      "tags": [
+        "scene:hotel",
+        "week:3",
+        "day:17",
+        "skill:detail",
+        "focus:check-in",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 24,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w3d17-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w3d17-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w3d17-listening",
+      "supplyOrder": 149,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w3d17-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d17/listening",
+      "difficultyLevel": 3,
+      "tags": [
+        "scene:hotel",
+        "week:3",
+        "day:17",
+        "skill:detail",
+        "focus:check-in",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 22,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w3d17-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w3d17-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d17-listening",
-      "supplyOrder": 116,
+      "supplyOrder": 150,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d17-listening",
@@ -20684,7 +21722,7 @@
     {
       "itemId": "supply-v1-listening-w3d17-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d17-listening",
-      "supplyOrder": 117,
+      "supplyOrder": 151,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d17-listening",
@@ -20714,7 +21752,7 @@
     {
       "itemId": "supply-v1-listening-w3d17-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d17-listening",
-      "supplyOrder": 118,
+      "supplyOrder": 152,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d17-listening",
@@ -20744,7 +21782,7 @@
     {
       "itemId": "supply-v1-listening-w3d17-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d17-listening",
-      "supplyOrder": 119,
+      "supplyOrder": 153,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d17-listening",
@@ -20774,7 +21812,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w3d18-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d18-listening",
-      "supplyOrder": 120,
+      "supplyOrder": 154,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d18-listening",
@@ -20805,7 +21843,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w3d18-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d18-listening",
-      "supplyOrder": 121,
+      "supplyOrder": 155,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d18-listening",
@@ -20836,7 +21874,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w3d18-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d18-listening",
-      "supplyOrder": 122,
+      "supplyOrder": 156,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d18-listening",
@@ -20865,9 +21903,71 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w3d18-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w3d18-listening",
+      "supplyOrder": 157,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w3d18-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d18/listening",
+      "difficultyLevel": 3.5,
+      "tags": [
+        "scene:hotel",
+        "week:3",
+        "day:18",
+        "skill:detail",
+        "skill:inference",
+        "focus:room-problems",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 22,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w3d18-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w3d18-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w3d18-listening",
+      "supplyOrder": 158,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w3d18-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d18/listening",
+      "difficultyLevel": 3.5,
+      "tags": [
+        "scene:hotel",
+        "week:3",
+        "day:18",
+        "skill:detail",
+        "skill:inference",
+        "focus:room-problems",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 22,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w3d18-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w3d18-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d18-listening",
-      "supplyOrder": 123,
+      "supplyOrder": 159,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d18-listening",
@@ -20898,7 +21998,7 @@
     {
       "itemId": "supply-v1-listening-w3d18-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d18-listening",
-      "supplyOrder": 124,
+      "supplyOrder": 160,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d18-listening",
@@ -20929,7 +22029,7 @@
     {
       "itemId": "supply-v1-listening-w3d18-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d18-listening",
-      "supplyOrder": 125,
+      "supplyOrder": 161,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d18-listening",
@@ -20960,7 +22060,7 @@
     {
       "itemId": "supply-v1-listening-w3d18-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d18-listening",
-      "supplyOrder": 126,
+      "supplyOrder": 162,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d18-listening",
@@ -20991,7 +22091,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w3d19-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d19-listening",
-      "supplyOrder": 127,
+      "supplyOrder": 163,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d19-listening",
@@ -21021,7 +22121,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w3d19-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d19-listening",
-      "supplyOrder": 128,
+      "supplyOrder": 164,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d19-listening",
@@ -21051,7 +22151,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w3d19-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d19-listening",
-      "supplyOrder": 129,
+      "supplyOrder": 165,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d19-listening",
@@ -21079,9 +22179,69 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w3d19-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w3d19-listening",
+      "supplyOrder": 166,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w3d19-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d19/listening",
+      "difficultyLevel": 3.5,
+      "tags": [
+        "scene:airport",
+        "week:3",
+        "day:19",
+        "skill:detail",
+        "focus:check-in",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 22,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w3d19-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w3d19-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w3d19-listening",
+      "supplyOrder": 167,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w3d19-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d19/listening",
+      "difficultyLevel": 3.5,
+      "tags": [
+        "scene:airport",
+        "week:3",
+        "day:19",
+        "skill:detail",
+        "focus:check-in",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 24,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w3d19-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w3d19-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d19-listening",
-      "supplyOrder": 130,
+      "supplyOrder": 168,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d19-listening",
@@ -21111,7 +22271,7 @@
     {
       "itemId": "supply-v1-listening-w3d19-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d19-listening",
-      "supplyOrder": 131,
+      "supplyOrder": 169,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d19-listening",
@@ -21141,7 +22301,7 @@
     {
       "itemId": "supply-v1-listening-w3d19-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d19-listening",
-      "supplyOrder": 132,
+      "supplyOrder": 170,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d19-listening",
@@ -21171,7 +22331,7 @@
     {
       "itemId": "supply-v1-listening-w3d19-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d19-listening",
-      "supplyOrder": 133,
+      "supplyOrder": 171,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d19-listening",
@@ -21201,7 +22361,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w3d20-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d20-listening",
-      "supplyOrder": 134,
+      "supplyOrder": 172,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d20-listening",
@@ -21232,7 +22392,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w3d20-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d20-listening",
-      "supplyOrder": 135,
+      "supplyOrder": 173,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d20-listening",
@@ -21263,7 +22423,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w3d20-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d20-listening",
-      "supplyOrder": 136,
+      "supplyOrder": 174,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d20-listening",
@@ -21292,9 +22452,71 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w3d20-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w3d20-listening",
+      "supplyOrder": 175,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w3d20-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d20/listening",
+      "difficultyLevel": 3.5,
+      "tags": [
+        "scene:airport",
+        "week:3",
+        "day:20",
+        "skill:detail",
+        "skill:inference",
+        "focus:gate-change",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 23,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w3d20-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w3d20-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w3d20-listening",
+      "supplyOrder": 176,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w3d20-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d20/listening",
+      "difficultyLevel": 3.5,
+      "tags": [
+        "scene:airport",
+        "week:3",
+        "day:20",
+        "skill:detail",
+        "skill:inference",
+        "focus:gate-change",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 24,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w3d20-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w3d20-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d20-listening",
-      "supplyOrder": 137,
+      "supplyOrder": 177,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d20-listening",
@@ -21325,7 +22547,7 @@
     {
       "itemId": "supply-v1-listening-w3d20-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d20-listening",
-      "supplyOrder": 138,
+      "supplyOrder": 178,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d20-listening",
@@ -21356,7 +22578,7 @@
     {
       "itemId": "supply-v1-listening-w3d20-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d20-listening",
-      "supplyOrder": 139,
+      "supplyOrder": 179,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d20-listening",
@@ -21387,7 +22609,7 @@
     {
       "itemId": "supply-v1-listening-w3d20-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d20-listening",
-      "supplyOrder": 140,
+      "supplyOrder": 180,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d20-listening",
@@ -21418,7 +22640,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w3d21-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d21-listening",
-      "supplyOrder": 141,
+      "supplyOrder": 181,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d21-listening",
@@ -21449,7 +22671,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w3d21-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d21-listening",
-      "supplyOrder": 142,
+      "supplyOrder": 182,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d21-listening",
@@ -21480,7 +22702,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w3d21-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d21-listening",
-      "supplyOrder": 143,
+      "supplyOrder": 183,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d21-listening",
@@ -21509,9 +22731,71 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w3d21-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w3d21-listening",
+      "supplyOrder": 184,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w3d21-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d21/listening",
+      "difficultyLevel": 3.5,
+      "tags": [
+        "scene:integrated-travel",
+        "week:3",
+        "day:21",
+        "skill:sequence",
+        "skill:detail",
+        "checkpoint:week-3",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 26,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w3d21-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w3d21-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w3d21-listening",
+      "supplyOrder": 185,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w3d21-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w3d21/listening",
+      "difficultyLevel": 3.5,
+      "tags": [
+        "scene:integrated-travel",
+        "week:3",
+        "day:21",
+        "skill:sequence",
+        "skill:detail",
+        "checkpoint:week-3",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 23,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w3d21-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w3d21-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d21-listening",
-      "supplyOrder": 144,
+      "supplyOrder": 186,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d21-listening",
@@ -21542,7 +22826,7 @@
     {
       "itemId": "supply-v1-listening-w3d21-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d21-listening",
-      "supplyOrder": 145,
+      "supplyOrder": 187,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d21-listening",
@@ -21573,7 +22857,7 @@
     {
       "itemId": "supply-v1-listening-w3d21-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d21-listening",
-      "supplyOrder": 146,
+      "supplyOrder": 188,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d21-listening",
@@ -21604,7 +22888,7 @@
     {
       "itemId": "supply-v1-listening-w3d21-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w3d21-listening",
-      "supplyOrder": 147,
+      "supplyOrder": 189,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w3d21-listening",
@@ -21635,7 +22919,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w4d22-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d22-listening",
-      "supplyOrder": 148,
+      "supplyOrder": 190,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d22-listening",
@@ -21666,7 +22950,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w4d22-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d22-listening",
-      "supplyOrder": 149,
+      "supplyOrder": 191,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d22-listening",
@@ -21697,7 +22981,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w4d22-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d22-listening",
-      "supplyOrder": 150,
+      "supplyOrder": 192,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d22-listening",
@@ -21726,9 +23010,71 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w4d22-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w4d22-listening",
+      "supplyOrder": 193,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w4d22-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w4d22/listening",
+      "difficultyLevel": 3.5,
+      "tags": [
+        "scene:airport",
+        "week:4",
+        "day:22",
+        "skill:detail",
+        "skill:inference",
+        "focus:missing-bag",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 23,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w4d22-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w4d22-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w4d22-listening",
+      "supplyOrder": 194,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w4d22-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w4d22/listening",
+      "difficultyLevel": 3.5,
+      "tags": [
+        "scene:airport",
+        "week:4",
+        "day:22",
+        "skill:detail",
+        "skill:inference",
+        "focus:missing-bag",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 23,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w4d22-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w4d22-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d22-listening",
-      "supplyOrder": 151,
+      "supplyOrder": 195,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d22-listening",
@@ -21759,7 +23105,7 @@
     {
       "itemId": "supply-v1-listening-w4d22-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d22-listening",
-      "supplyOrder": 152,
+      "supplyOrder": 196,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d22-listening",
@@ -21790,7 +23136,7 @@
     {
       "itemId": "supply-v1-listening-w4d22-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d22-listening",
-      "supplyOrder": 153,
+      "supplyOrder": 197,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d22-listening",
@@ -21821,7 +23167,7 @@
     {
       "itemId": "supply-v1-listening-w4d22-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d22-listening",
-      "supplyOrder": 154,
+      "supplyOrder": 198,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d22-listening",
@@ -21852,7 +23198,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w4d23-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d23-listening",
-      "supplyOrder": 155,
+      "supplyOrder": 199,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d23-listening",
@@ -21883,7 +23229,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w4d23-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d23-listening",
-      "supplyOrder": 156,
+      "supplyOrder": 200,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d23-listening",
@@ -21914,7 +23260,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w4d23-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d23-listening",
-      "supplyOrder": 157,
+      "supplyOrder": 201,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d23-listening",
@@ -21943,9 +23289,71 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w4d23-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w4d23-listening",
+      "supplyOrder": 202,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w4d23-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w4d23/listening",
+      "difficultyLevel": 3.5,
+      "tags": [
+        "scene:simple-help",
+        "week:4",
+        "day:23",
+        "skill:detail",
+        "focus:location",
+        "safety:urgent-communication",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 23,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w4d23-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w4d23-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w4d23-listening",
+      "supplyOrder": 203,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w4d23-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w4d23/listening",
+      "difficultyLevel": 3.5,
+      "tags": [
+        "scene:simple-help",
+        "week:4",
+        "day:23",
+        "skill:detail",
+        "focus:location",
+        "safety:urgent-communication",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 25,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w4d23-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w4d23-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d23-listening",
-      "supplyOrder": 158,
+      "supplyOrder": 204,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d23-listening",
@@ -21976,7 +23384,7 @@
     {
       "itemId": "supply-v1-listening-w4d23-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d23-listening",
-      "supplyOrder": 159,
+      "supplyOrder": 205,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d23-listening",
@@ -22007,7 +23415,7 @@
     {
       "itemId": "supply-v1-listening-w4d23-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d23-listening",
-      "supplyOrder": 160,
+      "supplyOrder": 206,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d23-listening",
@@ -22038,7 +23446,7 @@
     {
       "itemId": "supply-v1-listening-w4d23-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d23-listening",
-      "supplyOrder": 161,
+      "supplyOrder": 207,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d23-listening",
@@ -22069,7 +23477,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w4d24-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d24-listening",
-      "supplyOrder": 162,
+      "supplyOrder": 208,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d24-listening",
@@ -22101,7 +23509,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w4d24-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d24-listening",
-      "supplyOrder": 163,
+      "supplyOrder": 209,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d24-listening",
@@ -22133,7 +23541,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w4d24-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d24-listening",
-      "supplyOrder": 164,
+      "supplyOrder": 210,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d24-listening",
@@ -22163,9 +23571,73 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w4d24-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w4d24-listening",
+      "supplyOrder": 211,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w4d24-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w4d24/listening",
+      "difficultyLevel": 4,
+      "tags": [
+        "scene:integrated-travel",
+        "week:4",
+        "day:24",
+        "skill:gist",
+        "skill:detail",
+        "skill:inference",
+        "focus:small-talk",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 23,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w4d24-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w4d24-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w4d24-listening",
+      "supplyOrder": 212,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w4d24-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w4d24/listening",
+      "difficultyLevel": 4,
+      "tags": [
+        "scene:integrated-travel",
+        "week:4",
+        "day:24",
+        "skill:gist",
+        "skill:detail",
+        "skill:inference",
+        "focus:small-talk",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 20,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w4d24-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w4d24-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d24-listening",
-      "supplyOrder": 165,
+      "supplyOrder": 213,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d24-listening",
@@ -22197,7 +23669,7 @@
     {
       "itemId": "supply-v1-listening-w4d24-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d24-listening",
-      "supplyOrder": 166,
+      "supplyOrder": 214,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d24-listening",
@@ -22229,7 +23701,7 @@
     {
       "itemId": "supply-v1-listening-w4d24-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d24-listening",
-      "supplyOrder": 167,
+      "supplyOrder": 215,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d24-listening",
@@ -22261,7 +23733,7 @@
     {
       "itemId": "supply-v1-listening-w4d24-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d24-listening",
-      "supplyOrder": 168,
+      "supplyOrder": 216,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d24-listening",
@@ -22293,7 +23765,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w4d25-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d25-listening",
-      "supplyOrder": 169,
+      "supplyOrder": 217,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d25-listening",
@@ -22325,7 +23797,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w4d25-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d25-listening",
-      "supplyOrder": 170,
+      "supplyOrder": 218,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d25-listening",
@@ -22357,7 +23829,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w4d25-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d25-listening",
-      "supplyOrder": 171,
+      "supplyOrder": 219,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d25-listening",
@@ -22387,9 +23859,73 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w4d25-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w4d25-listening",
+      "supplyOrder": 220,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w4d25-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w4d25/listening",
+      "difficultyLevel": 4.5,
+      "tags": [
+        "scene:integrated-travel",
+        "week:4",
+        "day:25",
+        "skill:sequence",
+        "skill:detail",
+        "skill:inference",
+        "capstone:part-1",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 25,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w4d25-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w4d25-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w4d25-listening",
+      "supplyOrder": 221,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w4d25-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w4d25/listening",
+      "difficultyLevel": 4.5,
+      "tags": [
+        "scene:integrated-travel",
+        "week:4",
+        "day:25",
+        "skill:sequence",
+        "skill:detail",
+        "skill:inference",
+        "capstone:part-1",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 25,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w4d25-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w4d25-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d25-listening",
-      "supplyOrder": 172,
+      "supplyOrder": 222,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d25-listening",
@@ -22421,7 +23957,7 @@
     {
       "itemId": "supply-v1-listening-w4d25-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d25-listening",
-      "supplyOrder": 173,
+      "supplyOrder": 223,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d25-listening",
@@ -22453,7 +23989,7 @@
     {
       "itemId": "supply-v1-listening-w4d25-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d25-listening",
-      "supplyOrder": 174,
+      "supplyOrder": 224,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d25-listening",
@@ -22485,7 +24021,7 @@
     {
       "itemId": "supply-v1-listening-w4d25-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d25-listening",
-      "supplyOrder": 175,
+      "supplyOrder": 225,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d25-listening",
@@ -22517,7 +24053,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w4d26-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d26-listening",
-      "supplyOrder": 176,
+      "supplyOrder": 226,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d26-listening",
@@ -22549,7 +24085,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w4d26-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d26-listening",
-      "supplyOrder": 177,
+      "supplyOrder": 227,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d26-listening",
@@ -22581,7 +24117,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w4d26-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d26-listening",
-      "supplyOrder": 178,
+      "supplyOrder": 228,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d26-listening",
@@ -22611,9 +24147,73 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w4d26-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w4d26-listening",
+      "supplyOrder": 229,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w4d26-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w4d26/listening",
+      "difficultyLevel": 5,
+      "tags": [
+        "scene:integrated-travel",
+        "week:4",
+        "day:26",
+        "skill:sequence",
+        "skill:detail",
+        "skill:inference",
+        "capstone:part-2",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 25,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w4d26-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w4d26-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w4d26-listening",
+      "supplyOrder": 230,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w4d26-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w4d26/listening",
+      "difficultyLevel": 5,
+      "tags": [
+        "scene:integrated-travel",
+        "week:4",
+        "day:26",
+        "skill:sequence",
+        "skill:detail",
+        "skill:inference",
+        "capstone:part-2",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 25,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w4d26-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w4d26-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d26-listening",
-      "supplyOrder": 179,
+      "supplyOrder": 231,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d26-listening",
@@ -22645,7 +24245,7 @@
     {
       "itemId": "supply-v1-listening-w4d26-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d26-listening",
-      "supplyOrder": 180,
+      "supplyOrder": 232,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d26-listening",
@@ -22677,7 +24277,7 @@
     {
       "itemId": "supply-v1-listening-w4d26-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d26-listening",
-      "supplyOrder": 181,
+      "supplyOrder": 233,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d26-listening",
@@ -22709,7 +24309,7 @@
     {
       "itemId": "supply-v1-listening-w4d26-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d26-listening",
-      "supplyOrder": 182,
+      "supplyOrder": 234,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d26-listening",
@@ -22741,7 +24341,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w4d27-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d27-listening",
-      "supplyOrder": 183,
+      "supplyOrder": 235,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d27-listening",
@@ -22773,7 +24373,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w4d27-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d27-listening",
-      "supplyOrder": 184,
+      "supplyOrder": 236,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d27-listening",
@@ -22805,7 +24405,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w4d27-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d27-listening",
-      "supplyOrder": 185,
+      "supplyOrder": 237,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d27-listening",
@@ -22835,9 +24435,73 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w4d27-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w4d27-listening",
+      "supplyOrder": 238,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w4d27-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w4d27/listening",
+      "difficultyLevel": 5.5,
+      "tags": [
+        "scene:integrated-travel",
+        "week:4",
+        "day:27",
+        "skill:sequence",
+        "skill:detail",
+        "skill:inference",
+        "capstone:part-3",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 24,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w4d27-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w4d27-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w4d27-listening",
+      "supplyOrder": 239,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w4d27-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w4d27/listening",
+      "difficultyLevel": 5.5,
+      "tags": [
+        "scene:integrated-travel",
+        "week:4",
+        "day:27",
+        "skill:sequence",
+        "skill:detail",
+        "skill:inference",
+        "capstone:part-3",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 25,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w4d27-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w4d27-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d27-listening",
-      "supplyOrder": 186,
+      "supplyOrder": 240,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d27-listening",
@@ -22869,7 +24533,7 @@
     {
       "itemId": "supply-v1-listening-w4d27-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d27-listening",
-      "supplyOrder": 187,
+      "supplyOrder": 241,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d27-listening",
@@ -22901,7 +24565,7 @@
     {
       "itemId": "supply-v1-listening-w4d27-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d27-listening",
-      "supplyOrder": 188,
+      "supplyOrder": 242,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d27-listening",
@@ -22933,7 +24597,7 @@
     {
       "itemId": "supply-v1-listening-w4d27-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d27-listening",
-      "supplyOrder": 189,
+      "supplyOrder": 243,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d27-listening",
@@ -22965,7 +24629,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w4d28-wd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d28-listening",
-      "supplyOrder": 190,
+      "supplyOrder": 244,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d28-listening",
@@ -22998,7 +24662,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w4d28-ss-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d28-listening",
-      "supplyOrder": 191,
+      "supplyOrder": 245,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d28-listening",
@@ -23031,7 +24695,7 @@
     {
       "itemId": "supply-v1-listening-st4w-w4d28-kd-01",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d28-listening",
-      "supplyOrder": 192,
+      "supplyOrder": 246,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d28-listening",
@@ -23062,9 +24726,75 @@
       }
     },
     {
+      "itemId": "supply-v1-listening-st4w-w4d28-r11-ss-01",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w4d28-listening",
+      "supplyOrder": 247,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w4d28-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w4d28/listening",
+      "difficultyLevel": 5.5,
+      "tags": [
+        "scene:integrated-travel",
+        "week:4",
+        "day:28",
+        "skill:gist",
+        "skill:sequence",
+        "skill:detail",
+        "skill:inference",
+        "checkpoint:course",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 27,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w4d28-r11-ss-01",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
+      "itemId": "supply-v1-listening-st4w-w4d28-r11-ss-02",
+      "variantFamilyId": "supply-family-v1-listening-st4w-w4d28-listening",
+      "supplyOrder": 248,
+      "domain": "listening",
+      "targetModuleId": "listening",
+      "learningUnitId": "st4w-w4d28-listening",
+      "contentRef": "lesson://survival-travel-american-4w/1.0.0/w4d28/listening",
+      "difficultyLevel": 5.5,
+      "tags": [
+        "scene:integrated-travel",
+        "week:4",
+        "day:28",
+        "skill:gist",
+        "skill:sequence",
+        "skill:detail",
+        "skill:inference",
+        "checkpoint:course",
+        "supply-domain:listening"
+      ],
+      "allowedModes": [
+        "learn",
+        "calibration",
+        "review",
+        "retry"
+      ],
+      "nominalEffectiveSeconds": 24,
+      "source": {
+        "sourceType": "listening-extension",
+        "sourceId": "st4w-w4d28-r11-ss-02",
+        "variantId": "short-sentence-choice"
+      }
+    },
+    {
       "itemId": "supply-v1-listening-w4d28-l1",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d28-listening",
-      "supplyOrder": 193,
+      "supplyOrder": 249,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d28-listening",
@@ -23097,7 +24827,7 @@
     {
       "itemId": "supply-v1-listening-w4d28-l2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d28-listening",
-      "supplyOrder": 194,
+      "supplyOrder": 250,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d28-listening",
@@ -23130,7 +24860,7 @@
     {
       "itemId": "supply-v1-listening-w4d28-l3",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d28-listening",
-      "supplyOrder": 195,
+      "supplyOrder": 251,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d28-listening",
@@ -23163,7 +24893,7 @@
     {
       "itemId": "supply-v1-listening-w4d28-l4",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d28-listening",
-      "supplyOrder": 196,
+      "supplyOrder": 252,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d28-listening",
@@ -23196,7 +24926,7 @@
     {
       "itemId": "supply-v1-listening-w4d28-q2",
       "variantFamilyId": "supply-family-v1-listening-st4w-w4d28-listening",
-      "supplyOrder": 197,
+      "supplyOrder": 253,
       "domain": "listening",
       "targetModuleId": "listening",
       "learningUnitId": "st4w-w4d28-listening",

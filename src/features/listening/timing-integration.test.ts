@@ -350,7 +350,7 @@ function catalog(
   return {
     schemaVersion: 1,
     packageVersion: '1.0.0',
-    extensionVersion: '1.0.0',
+    extensionVersion: '1.1.0',
     courseId: 'survival-travel-american-4w',
     units: [unit],
     getUnit: (contentRef) =>

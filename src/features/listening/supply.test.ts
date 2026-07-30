@@ -11,6 +11,7 @@ import week3 from '../../../content/lessons/survival-travel-american-4w/week-3.v
 import week4 from '../../../content/lessons/survival-travel-american-4w/week-4.v1.json'
 import { createListeningCatalog } from './content.ts'
 import { resolveListeningSupplyQuestion, ListeningCatalogSupplyProvider } from './supply.ts'
+import type { ListeningSupplyItem } from './types.ts'
 
 function catalog() {
   return createListeningCatalog({
@@ -56,5 +57,107 @@ describe('listening training supply', () => {
       .map((item) => item.itemId)
     const result = await provider.next({ schemaVersion: 1, requestId: 'request', planId: 'plan', taskId: 'task', domain: 'listening', targetModuleId: 'listening', mode: 'learn', targetDifficulty: 1, cursor: null, excludeItemIds: all, reason: 'continue-after-item' })
     expect(result).toMatchObject({ status: 'content-exhausted', reason: 'all-eligible-content-recently-used' })
+  })
+
+  it.each([0, 0.5, 1, 2.5, 4, 5.5])(
+    'shuffles target %s without repeating an item, dialogue family, or adjacent question type',
+    async (targetDifficulty) => {
+      const current = catalog()
+      const provider = new ListeningCatalogSupplyProvider(
+        current.trainingSupplyIndex,
+        current,
+      )
+      const supplied: Array<{
+        itemId: string
+        variantFamilyId: string
+        variantId: string
+      }> = []
+      let cursor: string | null = null
+      for (let index = 0; index < 24; index += 1) {
+        const result = await provider.next({
+          schemaVersion: 1,
+          requestId: `diversity-${targetDifficulty}-${index}`,
+          planId: `plan-${targetDifficulty}`,
+          taskId: `task-${targetDifficulty}`,
+          domain: 'listening',
+          targetModuleId: 'listening',
+          mode: 'learn',
+          targetDifficulty,
+          cursor,
+          excludeItemIds: supplied.map((item) => item.itemId),
+          reason: index === 0 ? 'initial' : 'continue-after-item',
+        })
+        expect(result.status).toBe('item')
+        if (result.status !== 'item') return
+        const item = result.item as ListeningSupplyItem & {
+          readonly variantFamilyId: string
+        }
+        supplied.push({
+          itemId: item.itemId,
+          variantFamilyId: item.variantFamilyId,
+          variantId: item.source.variantId,
+        })
+        cursor = result.nextCursor
+      }
+
+      expect(new Set(supplied.map((item) => item.itemId))).toHaveLength(24)
+      for (const [index, item] of supplied.entries()) {
+        const recent = supplied.slice(Math.max(0, index - 4), index)
+        expect(recent.map((entry) => entry.variantFamilyId))
+          .not.toContain(item.variantFamilyId)
+        if (index > 0) {
+          expect(item.variantId).not.toBe(supplied[index - 1].variantId)
+        }
+      }
+    },
+  )
+
+  it('keeps a restored next item stable while different plans receive different shuffled orders', async () => {
+    const current = catalog()
+    const provider = new ListeningCatalogSupplyProvider(
+      current.trainingSupplyIndex,
+      current,
+    )
+    async function sequence(planId: string) {
+      const ids: string[] = []
+      let cursor: string | null = null
+      for (let index = 0; index < 20; index += 1) {
+        const request = {
+          schemaVersion: 1 as const,
+          requestId: `${planId}:${index}`,
+          planId,
+          taskId: `${planId}:listening`,
+          domain: 'listening' as const,
+          targetModuleId: 'listening' as const,
+          mode: 'learn' as const,
+          targetDifficulty: 1,
+          cursor,
+          excludeItemIds: ids,
+          reason: index === 0
+            ? 'initial' as const
+            : 'continue-after-item' as const,
+        }
+        const first = await provider.next(request)
+        const restored = await provider.next({
+          ...request,
+          requestId: `${request.requestId}:retry`,
+        })
+        expect(restored.status).toBe(first.status)
+        expect(
+          restored.status === 'item' ? restored.item.itemId : null,
+        ).toBe(first.status === 'item' ? first.item.itemId : null)
+        expect(first.status).toBe('item')
+        if (first.status !== 'item') return ids
+        ids.push(first.item.itemId)
+        cursor = first.nextCursor
+      }
+      return ids
+    }
+
+    const first = await sequence('shuffle-a')
+    const second = await sequence('shuffle-b')
+    expect(
+      first.filter((itemId, index) => itemId !== second[index]).length,
+    ).toBeGreaterThanOrEqual(14)
   })
 })

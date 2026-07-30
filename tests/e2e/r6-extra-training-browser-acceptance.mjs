@@ -1415,7 +1415,7 @@ async function assertPwaCache(page) {
     courseAssets.some((url) =>
       /training-supply-index/u.test(url),
     ),
-    'The 808-candidate supply index is not precached.',
+    'The 864-candidate supply index is not precached.',
   )
   if (expectedAsset) {
     assert.ok(
