@@ -20,6 +20,7 @@ import {
   ErrorState,
   LoadingState,
   OfflineNotice,
+  TrainingUnitScore,
 } from '../../ui/index.ts'
 import {
   currentListeningContentSource,
@@ -28,6 +29,7 @@ import { ListeningSessionScreen } from './ListeningSessionScreen.tsx'
 import { ListeningSessionRepository } from './repository.ts'
 import { ListeningRuntimeMountLifecycle } from './route-lifecycle.ts'
 import { ListeningTrainingRuntime } from './runtime.ts'
+import { getListeningSessionResult } from './session.ts'
 import type { ListeningSupplyProvider } from './supply.ts'
 import type { ListeningSpeechPort } from './speech-synthesis.ts'
 import type {
@@ -274,10 +276,28 @@ export function ListeningTrainingRoute(
     )
   }
   if (session.phase === 'completed') {
+    const result = getListeningSessionResult(session)
+    const totalCount = result.questionCount
     return (
       <EmptyState
         title="听力任务已完成"
-        description={`已完成 ${session.questions.length} 道题，学习结果已上报。`}
+        description={`已完成 ${totalCount} 道题，学习结果已上报。`}
+        details={(
+          <TrainingUnitScore
+            score={{
+              state: 'available',
+              correctCount: result.correctCount,
+              totalCount,
+              percentage:
+                totalCount === 0
+                  ? null
+                  : Math.round(
+                      result.correctCount / totalCount * 100,
+                    ),
+              unscorableCount: 0,
+            }}
+          />
+        )}
         action={(
           <button
             className="primary-button"

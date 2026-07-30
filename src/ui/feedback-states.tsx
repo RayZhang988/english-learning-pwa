@@ -4,6 +4,7 @@ import { Icon } from './icons.tsx'
 interface EmptyStateProps {
   readonly title: string
   readonly description: string
+  readonly details?: ReactNode
   readonly action?: ReactNode
 }
 
@@ -23,6 +24,7 @@ export function LoadingState({ label = '正在加载' }: { readonly label?: stri
 export function EmptyState({
   title,
   description,
+  details,
   action,
 }: EmptyStateProps) {
   return (
@@ -32,6 +34,7 @@ export function EmptyState({
       </span>
       <h2>{title}</h2>
       <p>{description}</p>
+      {details}
       {action}
     </section>
   )

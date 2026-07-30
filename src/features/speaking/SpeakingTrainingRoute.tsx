@@ -21,6 +21,7 @@ import {
   ErrorState,
   LoadingState,
   OfflineNotice,
+  TrainingUnitScore,
 } from '../../ui/index.ts'
 import {
   currentSpeakingContentSource,
@@ -281,6 +282,8 @@ export function SpeakingTrainingRoute(
   }
   if (session.phase === 'completed') {
     const result = getSpeakingSessionResult(session)
+    const totalCount =
+      result.correctCount + result.incorrectCount
     return (
       <EmptyState
         title="口语练习已结束"
@@ -289,6 +292,22 @@ export function SpeakingTrainingRoute(
             ? '录音练习已走完，但识别不可用，本次没有评分。'
             : `已完成 ${result.promptCount} 个固定口语提示，结果已上报。`
         }
+        details={(
+          <TrainingUnitScore
+            score={{
+              state: 'available',
+              correctCount: result.correctCount,
+              totalCount,
+              percentage:
+                totalCount === 0
+                  ? null
+                  : Math.round(
+                      result.correctCount / totalCount * 100,
+                    ),
+              unscorableCount: result.unscorableCount,
+            }}
+          />
+        )}
         action={(
           <button
             className="primary-button"

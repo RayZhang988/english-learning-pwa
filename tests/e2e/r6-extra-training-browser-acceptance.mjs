@@ -573,7 +573,40 @@ async function finishDailyModule(page, moduleId) {
       )`,
     20_000,
   )
-  return waitForDailyExecutionCompleted(page, moduleId)
+  const runtime = await waitForDailyExecutionCompleted(
+    page,
+    moduleId,
+  )
+  const execution = executionFor(runtime, moduleId)
+  assert.ok(
+    execution.score,
+    `Daily ${moduleId} first completion page is missing the R7 score ledger.`,
+  )
+  const total =
+    execution.score.correctCount +
+    execution.score.incorrectCount
+  const firstCompletionText = await page.bodyText()
+  assert.match(
+    firstCompletionText,
+    new RegExp(
+      `${execution.score.correctCount}\\s*/\\s*${total}`,
+      'u',
+    ),
+  )
+  if (total > 0) {
+    assert.match(
+      firstCompletionText,
+      new RegExp(
+        `正确率\\s*${Math.round(
+          execution.score.correctCount / total * 100,
+        )}%`,
+        'u',
+      ),
+    )
+  } else {
+    assert.match(firstCompletionText, /正确率无法计算/u)
+  }
+  return runtime
 }
 
 async function completionTransitionDiagnostic(page, moduleId) {

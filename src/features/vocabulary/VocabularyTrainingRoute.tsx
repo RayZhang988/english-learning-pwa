@@ -20,6 +20,7 @@ import {
   ErrorState,
   LoadingState,
   OfflineNotice,
+  TrainingUnitScore,
 } from '../../ui/index.ts'
 import {
   currentVocabularyContentSource,
@@ -30,6 +31,7 @@ import { VocabularyRuntimeMountLifecycle } from './route-lifecycle.ts'
 import {
   VocabularyTrainingRuntime,
 } from './runtime.ts'
+import { getVocabularySessionResult } from './session.ts'
 import type { VocabularySupplyProvider } from './supply.ts'
 import type {
   VocabularyEffectiveTimingSessionFactoryPort,
@@ -299,10 +301,28 @@ export function VocabularyTrainingRoute(
     )
   }
   if (session.phase === 'completed') {
+    const result = getVocabularySessionResult(session)
+    const totalCount = result.questionCount
     return (
       <EmptyState
         title="词汇任务已完成"
-        description={`已完成 ${session.questions.length} 道题，学习结果已上报。`}
+        description={`已完成 ${totalCount} 道题，学习结果已上报。`}
+        details={(
+          <TrainingUnitScore
+            score={{
+              state: 'available',
+              correctCount: result.correctCount,
+              totalCount,
+              percentage:
+                totalCount === 0
+                  ? null
+                  : Math.round(
+                      result.correctCount / totalCount * 100,
+                    ),
+              unscorableCount: 0,
+            }}
+          />
+        )}
         action={(
           <button
             className="primary-button"
