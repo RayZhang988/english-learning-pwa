@@ -64,6 +64,26 @@ schema 3 档案和首日保守计划。脚本不会清理日常浏览器中的�
 这些 Chrome 结果不能替代真实 iPhone Safari、主屏幕安装、系统权限、VoiceOver、
 后台回收和连续 14 天使用。
 
+## R13-C 场景词汇 IndexedDB 恢复门禁
+
+正式 URL 用一个命令运行原有 R13-C 场景黑盒及两个全新 Chrome Profile 的 IndexedDB
+恢复验收：
+
+```bash
+QA_BASE_URL=https://rayzhang988.github.io/english-learning-pwa/ \
+QA_EXPECTED_ASSET=index-pFiN7mRr.js \
+QA_PAGES_RUN=30529368908 \
+  node tests/e2e/r13c-formal-browser-acceptance.mjs
+```
+
+第二个脚本只通过页面上下文向生产 IndexedDB 写入仓储一致的 `records` 条目，绝不读取、
+清除或接触用户浏览器数据。Profile A 注入合法 schema-1 的选择态和反馈态，要求迁移为
+schema-2 后保留已答、答对、当前题、选择/反馈，连续答到第 7 题并刷新恢复。Profile B
+分别注入 JSON 可读的结构损坏记录与已发布题序/ID 漂移记录，要求显示
+`session-recovery-invalid` 专用恢复界面；取消后坏记录原样保留，确认后仅当前场景替换为
+0 已答、0 答对、正确率“暂无”的新会话。两个 Profile 都逐字节比较预置的其他场景、
+daily-plan 和 R6.1 extra-training 记录。
+
 ## R2 正式黑盒
 
 当前活动需求 R2 使用独立隔离脚本：

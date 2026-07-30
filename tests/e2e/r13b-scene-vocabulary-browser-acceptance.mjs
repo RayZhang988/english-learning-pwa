@@ -51,6 +51,9 @@ async function answerCurrentCorrect(page, scene) {
   await page.clickByText('提交答案')
   await page.waitFor(`document.body.innerText.includes('回答正确')`)
   await page.clickByText('继续')
+  // The target remains mounted in feedback. Wait for the persisted advance to
+  // render the next question before the caller reads another target.
+  await page.waitFor(`!document.body.innerText.includes('回答正确')`)
 }
 
 async function answerSeveral(page, scene, count) {
@@ -216,7 +219,17 @@ try {
   assert.equal(serviceWorker.caches.some((cache) => cache.urls.some((url) => /scene-vocabulary-questions\.v1-[A-Za-z0-9_-]+\.json/u.test(url))), true)
   await qa.page.setOffline(true)
   await qa.page.reload()
-  await qa.page.waitFor(`document.querySelector('.scene-vocabulary-target') && !document.body.innerText.includes('内容准备中')`, 20_000)
+  await resumeIfPrompted(qa.page)
+  try {
+    await qa.page.waitFor(`document.querySelector('.scene-vocabulary-target') && !document.body.innerText.includes('内容准备中')`, 20_000)
+  } catch (error) {
+    throw new Error(`Offline scene reopen failed. ${JSON.stringify({
+      body: await qa.page.bodyText(),
+      url: await qa.page.url(),
+      serviceWorker: await qa.page.serviceWorkerSnapshot(),
+      requests: qa.page.requests.filter((request) => request.includes('scene-vocabulary')),
+    })}`, { cause: error })
+  }
   await qa.page.setOffline(false)
   checkpoint('pwa-offline-reopen', { controller: serviceWorker.controller, sceneAssetPrecaches: true })
 
