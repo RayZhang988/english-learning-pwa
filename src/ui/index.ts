@@ -5,6 +5,7 @@ export {
   type DailyPlanViewModel,
   type DailyTaskViewModel,
   type DailyTrainingTaskAccessViewModel,
+  type AppSection,
   type LearningAppPrototypeProps,
   type PracticeModuleId,
   type PracticeModuleViewModel,
@@ -15,6 +16,25 @@ export {
   type TrainingTaskStatus,
   type TrainingTaskUnavailableReason,
 } from './learning-app-prototype.tsx'
+export {
+  AiConversationPlaceholder,
+  TrainingAreaHub,
+  TravelSceneCategoryGrid,
+  TravelSceneList,
+  TravelScenePlaceholder,
+  type TrainingAreaScreen,
+} from './training-area-surfaces.tsx'
+export {
+  getTravelScene,
+  getTravelSceneCategory,
+  trainingAreas,
+  travelSceneCategories,
+  travelScenes,
+  type TrainingAreaDefinition,
+  type TrainingAreaId,
+  type TravelSceneCategoryDefinition,
+  type TravelSceneDefinition,
+} from './training-area-model.ts'
 export { PlatformPrototype } from './platform-prototype.tsx'
 export {
   EmptyState,

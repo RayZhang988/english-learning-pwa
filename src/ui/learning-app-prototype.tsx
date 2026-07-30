@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 import {
   formatDurationEstimateBasis,
   formatEstimatedDuration,
@@ -16,8 +16,20 @@ import type {
 import type { TrainingBudgetTargetViewModel } from './training-budget-view-models.ts'
 import { OfflineNotice } from './feedback-states.tsx'
 import { Icon, type IconName } from './icons.tsx'
+import {
+  AiConversationPlaceholder,
+  TrainingAreaHub,
+  TravelSceneCategoryGrid,
+  TravelSceneList,
+  TravelScenePlaceholder,
+  type TrainingAreaScreen,
+} from './training-area-surfaces.tsx'
+import {
+  getTravelScene,
+  type TrainingAreaId,
+} from './training-area-model.ts'
 
-type AppSection = 'today' | 'practice' | 'progress'
+export type AppSection = 'today' | 'practice' | 'progress'
 export type PracticeModuleId =
   | 'assessment'
   | 'vocabulary'
@@ -174,6 +186,12 @@ interface LearningAppPrototypeBaseProps {
   readonly onExtraTrainingRequested?: (
     moduleId: TrainingPracticeModuleId,
   ) => void
+  readonly initialSection?: AppSection
+  readonly initialTrainingAreaScreen?: TrainingAreaScreen
+  readonly onSectionChanged?: (section: AppSection) => void
+  readonly onTrainingAreaScreenChanged?: (
+    screen: TrainingAreaScreen,
+  ) => void
 }
 
 export type LearningAppPrototypeProps =
@@ -287,8 +305,37 @@ export function LearningAppPrototype({
   onExtraTrainingRequested,
   practiceModules,
   onAssessmentRequested,
+  initialSection = 'today',
+  initialTrainingAreaScreen = { kind: 'hub' },
+  onSectionChanged,
+  onTrainingAreaScreenChanged,
 }: LearningAppPrototypeProps) {
-  const [section, setSection] = useState<AppSection>('today')
+  const [section, setSection] = useState<AppSection>(initialSection)
+  const [trainingAreaScreen, setTrainingAreaScreen] =
+    useState<TrainingAreaScreen>(initialTrainingAreaScreen)
+
+  useEffect(() => {
+    setSection(initialSection)
+  }, [initialSection])
+
+  useEffect(() => {
+    setTrainingAreaScreen(initialTrainingAreaScreen)
+  }, [initialTrainingAreaScreen])
+
+  const showTrainingAreaScreen = (screen: TrainingAreaScreen) => {
+    setTrainingAreaScreen(screen)
+    onTrainingAreaScreenChanged?.(screen)
+  }
+
+  const openTrainingArea = (areaId: TrainingAreaId) => {
+    showTrainingAreaScreen(
+      areaId === 'daily'
+        ? { kind: 'daily' }
+        : areaId === 'scenes'
+          ? { kind: 'scenes' }
+          : { kind: 'ai' },
+    )
+  }
 
   return (
     <div className="learning-app">
@@ -301,14 +348,60 @@ export function LearningAppPrototype({
           />
         ) : null}
         {section === 'practice' ? (
-          <PracticeModuleGrid
-            modules={practiceModules ?? disconnectedPracticeModules}
-            onAssessmentRequested={
-              onAssessmentRequested ?? (() => undefined)
-            }
-            onTaskRequested={onTaskRequested}
-            onExtraTrainingRequested={onExtraTrainingRequested}
-          />
+          trainingAreaScreen.kind === 'hub' ? (
+            <TrainingAreaHub onSelect={openTrainingArea} />
+          ) : trainingAreaScreen.kind === 'daily' ? (
+            <PracticeModuleGrid
+              modules={practiceModules ?? disconnectedPracticeModules}
+              onBack={() =>
+                showTrainingAreaScreen({ kind: 'hub' })
+              }
+              onAssessmentRequested={
+                onAssessmentRequested ?? (() => undefined)
+              }
+              onTaskRequested={onTaskRequested}
+              onExtraTrainingRequested={onExtraTrainingRequested}
+            />
+          ) : trainingAreaScreen.kind === 'scenes' ? (
+            <TravelSceneCategoryGrid
+              onBack={() =>
+                showTrainingAreaScreen({ kind: 'hub' })
+              }
+              onCategoryRequested={(categoryId) =>
+                showTrainingAreaScreen({ kind: 'category', categoryId })
+              }
+            />
+          ) : trainingAreaScreen.kind === 'category' ? (
+            <TravelSceneList
+              categoryId={trainingAreaScreen.categoryId}
+              onBack={() =>
+                showTrainingAreaScreen({ kind: 'scenes' })
+              }
+              onSceneRequested={(sceneId) =>
+                showTrainingAreaScreen({ kind: 'scene', sceneId })
+              }
+            />
+          ) : trainingAreaScreen.kind === 'scene' ? (
+            <TravelScenePlaceholder
+              sceneId={trainingAreaScreen.sceneId}
+              onBack={() => {
+                const category = getTravelScene(
+                  trainingAreaScreen.sceneId,
+                )?.category.id
+                showTrainingAreaScreen(
+                  category
+                    ? { kind: 'category', categoryId: category }
+                    : { kind: 'scenes' },
+                )
+              }}
+            />
+          ) : (
+            <AiConversationPlaceholder
+              onBack={() =>
+                showTrainingAreaScreen({ kind: 'hub' })
+              }
+            />
+          )
         ) : null}
         {section === 'progress' ? <ProgressPage progress={progress} /> : null}
       </div>
@@ -320,7 +413,13 @@ export function LearningAppPrototype({
             type="button"
             key={item.id}
             aria-current={section === item.id ? 'page' : undefined}
-            onClick={() => setSection(item.id)}
+            onClick={() => {
+              setSection(item.id)
+              onSectionChanged?.(item.id)
+              if (item.id === 'practice') {
+                showTrainingAreaScreen({ kind: 'hub' })
+              }
+            }}
           >
             <Icon name={item.icon} />
             <span>{item.label}</span>
@@ -530,11 +629,13 @@ export function TodayTaskList({
 
 export function PracticeModuleGrid({
   modules,
+  onBack,
   onAssessmentRequested,
   onTaskRequested,
   onExtraTrainingRequested,
 }: {
   readonly modules: readonly PracticeModuleViewModel[]
+  readonly onBack?: () => void
   readonly onAssessmentRequested: () => void
   readonly onTaskRequested: (taskId: string) => void
   readonly onExtraTrainingRequested?: (
@@ -543,9 +644,21 @@ export function PracticeModuleGrid({
 }) {
   return (
     <>
-      <PageHeader eyebrow="PRACTICE" title="选择训练" />
+      {onBack ? (
+        <header className="detail-header training-framework-header">
+          <button type="button" aria-label="返回训练方式" onClick={onBack}>
+            <Icon name="arrow-left" />
+          </button>
+          <div>
+            <span className="eyebrow">DAILY PRACTICE</span>
+            <h1>日常训练</h1>
+          </div>
+        </header>
+      ) : (
+        <PageHeader eyebrow="PRACTICE" title="选择训练" />
+      )}
       <p className="page-intro">
-        今日任务可自由选择；“建议先做”只是推荐，不影响其他可用任务。
+        水平测试和每日词汇、听力、口语都在这里；今日任务仍可自由选择。
       </p>
       <section className="module-grid" aria-label="训练模块">
         {modules.map((module) => {

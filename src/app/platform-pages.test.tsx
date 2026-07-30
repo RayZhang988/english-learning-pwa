@@ -14,7 +14,13 @@ import type {
   LearningAppCoordinator,
   LearningAppState,
 } from './learning/learning-app-coordinator.ts'
-import { PlatformReadyPage } from './platform-pages.tsx'
+import {
+  PlatformReadyPage,
+} from './platform-pages.tsx'
+import {
+  pathForTrainingAreaScreen,
+  trainingAreaScreenFromPath,
+} from './training-area-routing.ts'
 
 afterEach(() => {
   vi.unstubAllGlobals()
@@ -55,5 +61,42 @@ describe('PlatformReadyPage R6 entry', () => {
     expect(markup).toContain('查看今日计划')
     expect(markup).not.toContain('技术底座已运行')
     expect(markup).not.toContain('占位')
+  })
+})
+
+describe('R12 training framework route integration', () => {
+  it.each([
+    ['/practice', { kind: 'hub' }],
+    ['/practice/daily', { kind: 'daily' }],
+    ['/practice/scenes', { kind: 'scenes' }],
+    [
+      '/practice/scenes/airport-flight',
+      { kind: 'category', categoryId: 'airport-flight' },
+    ],
+    [
+      '/practice/scenes/airport-flight/baggage-claim',
+      { kind: 'scene', sceneId: 'baggage-claim' },
+    ],
+    ['/practice/ai', { kind: 'ai' }],
+  ] as const)('restores %s to its exact framework screen', (path, screen) => {
+    expect(trainingAreaScreenFromPath(path)).toEqual(screen)
+  })
+
+  it('creates refreshable canonical paths and rejects unknown scene identities', () => {
+    expect(
+      pathForTrainingAreaScreen({
+        kind: 'scene',
+        sceneId: 'baggage-claim',
+      }),
+    ).toBe('/practice/scenes/airport-flight/baggage-claim')
+    expect(
+      pathForTrainingAreaScreen({
+        kind: 'scene',
+        sceneId: 'unknown-scene',
+      }),
+    ).toBe('/practice/scenes')
+    expect(trainingAreaScreenFromPath('/practice/%E0%A4%A')).toEqual({
+      kind: 'hub',
+    })
   })
 })

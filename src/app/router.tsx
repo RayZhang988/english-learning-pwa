@@ -22,6 +22,10 @@ export const appRouter = createHashRouter([
         element: <PlatformReadyPage />,
       },
       {
+        path: 'practice/*',
+        element: <PlatformReadyPage />,
+      },
+      {
         path: 'extra-training',
         element: <ExtraTrainingPickerRouteHost />,
       },

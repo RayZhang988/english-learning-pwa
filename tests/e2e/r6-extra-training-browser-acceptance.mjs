@@ -15,6 +15,8 @@ const verifyThirtySecondTestMode =
   process.env.QA_VERIFY_30_SECOND_TEST_MODE === '1'
 const verifyR9Bilingual =
   process.env.QA_VERIFY_R9_BILINGUAL === '1'
+const verifyR12Framework =
+  process.env.QA_VERIFY_R12_FRAMEWORK === '1'
 const appDatabaseName = verifyThirtySecondTestMode
   ? 'english-learning-pwa-training-test-30s'
   : 'english-learning-pwa'
@@ -332,6 +334,197 @@ async function prepareFirstDayPlan(page) {
       document.body.innerText.includes('任选一项开始')`,
     20_000,
   )
+}
+
+async function clickSelector(page, selector) {
+  const clicked = await page.evaluate(`(() => {
+    const element = document.querySelector(${JSON.stringify(selector)})
+    if (!(element instanceof HTMLButtonElement) || element.disabled) {
+      return false
+    }
+    element.click()
+    return true
+  })()`)
+  assert.equal(clicked, true, `Cannot click ${selector}.`)
+}
+
+async function verifyR12TrainingFramework(page) {
+  await page.clickByText('训练')
+  await page.waitFor(
+    `document.querySelectorAll('[data-training-area]').length === 3`,
+    20_000,
+  )
+  const hub = await page.evaluate(`(() => ({
+    hash: location.hash,
+    areas: [...document.querySelectorAll('[data-training-area]')]
+      .map((card) => ({
+        id: card.dataset.trainingArea,
+        text: card.innerText.trim(),
+      })),
+  }))()`)
+  assert.equal(hub.hash, '#/practice')
+  assert.deepEqual(
+    hub.areas.map((area) => area.id),
+    ['daily', 'scenes', 'ai'],
+  )
+  assert.match(
+    hub.areas.find((area) => area.id === 'ai')?.text ?? '',
+    /暂未开放/u,
+  )
+  const hub320 = await assertResponsive(page, 320, 'R12 hub')
+  const hub390 = await assertResponsive(page, 390, 'R12 hub')
+
+  await clickSelector(page, '[data-training-area="daily"]')
+  await page.waitFor(
+    `location.hash === '#/practice/daily' &&
+      document.querySelectorAll('[data-module-id]').length === 4`,
+    20_000,
+  )
+  await page.reload()
+  await page.waitFor(
+    `location.hash === '#/practice/daily' &&
+      document.querySelectorAll('[data-module-id]').length === 4`,
+    20_000,
+  )
+  const dailyModules = await page.evaluate(
+    `[...document.querySelectorAll('[data-module-id]')]
+      .map((card) => card.dataset.moduleId)`,
+  )
+  assert.deepEqual(dailyModules, [
+    'assessment',
+    'vocabulary',
+    'listening',
+    'speaking',
+  ])
+
+  await clickSelector(page, 'button[aria-label="返回训练方式"]')
+  await page.waitFor(
+    `document.querySelectorAll('[data-training-area]').length === 3`,
+    20_000,
+  )
+  await clickSelector(page, '[data-training-area="scenes"]')
+  await page.waitFor(
+    `location.hash === '#/practice/scenes' &&
+      document.querySelectorAll('[data-scene-category]').length === 6`,
+    20_000,
+  )
+  const categoryIds = await page.evaluate(
+    `[...document.querySelectorAll('[data-scene-category]')]
+      .map((card) => card.dataset.sceneCategory)`,
+  )
+  assert.deepEqual(categoryIds, [
+    'airport-flight',
+    'city-transport',
+    'stay-dining',
+    'shopping-sightseeing',
+    'help-connectivity',
+    'health',
+  ])
+  const categories320 = await assertResponsive(
+    page,
+    320,
+    'R13-A category grid',
+  )
+  await assertResponsive(page, 390, 'R13-A category grid')
+
+  const sceneCounts = []
+  for (const categoryId of categoryIds) {
+    await clickSelector(
+      page,
+      `[data-scene-category="${categoryId}"]`,
+    )
+    await page.waitFor(
+      `location.hash.includes(
+        '/practice/scenes/${categoryId}'
+      ) && document.querySelectorAll('[data-travel-scene]').length > 0`,
+      20_000,
+    )
+    sceneCounts.push(
+      await page.evaluate(
+        `document.querySelectorAll('[data-travel-scene]').length`,
+      ),
+    )
+    await clickSelector(page, 'button[aria-label="返回上一级"]')
+    await page.waitFor(
+      `location.hash === '#/practice/scenes' &&
+        document.querySelectorAll('[data-scene-category]').length === 6`,
+      20_000,
+    )
+  }
+  assert.deepEqual(sceneCounts, [7, 3, 2, 2, 3, 1])
+  assert.equal(
+    sceneCounts.reduce((sum, count) => sum + count, 0),
+    18,
+  )
+
+  await clickSelector(
+    page,
+    '[data-scene-category="airport-flight"]',
+  )
+  await clickSelector(page, '[data-travel-scene="baggage-claim"]')
+  await page.waitFor(
+    `location.hash ===
+      '#/practice/scenes/airport-flight/baggage-claim' &&
+      document.body.innerText.includes('场景框架已建立')`,
+    20_000,
+  )
+  await page.reload()
+  await page.waitFor(
+    `location.hash ===
+      '#/practice/scenes/airport-flight/baggage-claim' &&
+      document.body.innerText.includes('场景框架已建立')`,
+    20_000,
+  )
+  const scene = await page.evaluate(`(() => ({
+    pendingCount:
+      (document.body.innerText.match(/内容准备中/g) ?? []).length,
+    hasFakeStart:
+      [...document.querySelectorAll('button')].some((button) =>
+        /开始.*训练/u.test(button.innerText)
+      ),
+  }))()`)
+  assert.equal(scene.pendingCount, 3)
+  assert.equal(scene.hasFakeStart, false)
+  const scene320 = await assertResponsive(
+    page,
+    320,
+    'R13-A scene placeholder',
+  )
+  await assertResponsive(page, 390, 'R13-A scene placeholder')
+  await page.evaluate('history.back()')
+  await page.waitFor(
+    `location.hash === '#/practice/scenes/airport-flight' &&
+      document.querySelectorAll('[data-travel-scene]').length === 7`,
+    20_000,
+  )
+  await page.evaluate('history.forward()')
+  await page.waitFor(
+    `location.hash ===
+      '#/practice/scenes/airport-flight/baggage-claim' &&
+      document.body.innerText.includes('场景框架已建立')`,
+    20_000,
+  )
+
+  await page.navigate(new URL('#/practice/ai', baseUrl).href)
+  await page.waitFor(
+    `document.body.innerText.includes('AI 对话训练') &&
+      document.body.innerText.includes('暂未开放')`,
+    20_000,
+  )
+  const aiText = await page.bodyText()
+  assert.match(aiText, /不接入开放式AI/u)
+  assert.doesNotMatch(aiText, /开始对话/u)
+
+  return {
+    hub,
+    dailyModules,
+    categoryIds,
+    sceneCounts,
+    scene,
+    responsive: { hub320, hub390, categories320, scene320 },
+    browserHistory: true,
+    aiBoundary: true,
+  }
 }
 
 async function clickDailyModule(page, moduleId) {
@@ -1536,6 +1729,14 @@ async function run() {
       ),
     })
 
+    if (verifyR12Framework) {
+      const result = await verifyR12TrainingFramework(qa.page)
+      checkpoint('r12-r13a-training-framework', result)
+      evidence.status = 'passed'
+      console.log(JSON.stringify(evidence, null, 2))
+      return
+    }
+
     if (verifyR9Bilingual) {
       const result = await verifyR9ListeningChoiceFlow(qa.page)
       checkpoint('r9-listening-choice-bilingual-gate', result)
@@ -1610,6 +1811,14 @@ async function run() {
       20_000,
     )
     await qa.page.clickByText('训练')
+    await qa.page.waitFor(
+      `document.querySelectorAll('[data-training-area]').length === 3`,
+      20_000,
+    )
+    await clickSelector(
+      qa.page,
+      '[data-training-area="daily"]',
+    )
     await qa.page.waitFor(
       `document.querySelectorAll(
         '.module-card[data-availability="extra-training"]'

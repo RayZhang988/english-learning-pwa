@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Outlet, useNavigate } from 'react-router'
+import { Outlet, useLocation, useNavigate } from 'react-router'
 import {
   browserNetworkStatus,
   type NetworkStatus,
@@ -11,6 +11,7 @@ import {
   LoadingState,
   PlatformPrototype,
   TrainingCompletionDurationScreen,
+  type AppSection,
 } from '../ui/index.ts'
 import {
   ASSESSMENT_ROUTE,
@@ -30,6 +31,10 @@ import {
   toProgressViewModel,
   toTrainingCompletionDurationViewModel,
 } from './learning/view-model.ts'
+import {
+  pathForTrainingAreaScreen,
+  trainingAreaScreenFromPath,
+} from './training-area-routing.ts'
 
 export function PlatformShell() {
   return (
@@ -41,6 +46,7 @@ export function PlatformShell() {
 
 export function PlatformReadyPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { coordinator, state } = useLearningApp()
   const [network, setNetwork] = useState<NetworkStatus>(() =>
     browserNetworkStatus.current(),
@@ -164,8 +170,18 @@ export function PlatformReadyPage() {
   }
 
   const now = new Date().toISOString()
+  const initialSection: AppSection = location.pathname.startsWith(
+    '/practice',
+  )
+    ? 'practice'
+    : 'today'
+  const initialTrainingAreaScreen = trainingAreaScreenFromPath(
+    location.pathname,
+  )
   return (
     <LearningAppPrototype
+      initialSection={initialSection}
+      initialTrainingAreaScreen={initialTrainingAreaScreen}
       plan={toDailyPlanViewModel(
         state.runtime.activePlan,
         state.engineState,
@@ -183,6 +199,16 @@ export function PlatformReadyPage() {
         ),
       )}
       offline={network === 'offline'}
+      onSectionChanged={(section) => {
+        if (section === 'today') {
+          navigate('/')
+        } else if (section === 'practice') {
+          navigate('/practice')
+        }
+      }}
+      onTrainingAreaScreenChanged={(screen) => {
+        navigate(pathForTrainingAreaScreen(screen))
+      }}
       onAssessmentRequested={() => {
         navigate(
           state.assessmentProfileSchemaVersion === 3
