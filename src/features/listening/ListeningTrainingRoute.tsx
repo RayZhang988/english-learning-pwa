@@ -9,7 +9,10 @@ import type {
   PlatformEventSink,
   ReadonlyDataSource,
 } from '../../core/index.ts'
-import type { LearningTask } from '../../learning-engine/index.ts'
+import type {
+  LearningTask,
+  TrainingUnitScore as TrainingUnitScoreLedger,
+} from '../../learning-engine/index.ts'
 import {
   browserNetworkStatus,
   type NetworkStatus,
@@ -45,6 +48,8 @@ export interface ListeningTrainingRouteProps {
   readonly task: LearningTask
   readonly localDate: string
   readonly eventSink: PlatformEventSink
+  /** 01 supplies the persisted whole-task R7 ledger. */
+  readonly score?: TrainingUnitScoreLedger
   readonly onExit: () => void
   readonly onCompleted?: (session: ListeningSession) => void
   readonly contentSource?: ReadonlyDataSource<ListeningCatalog>
@@ -277,7 +282,14 @@ export function ListeningTrainingRoute(
   }
   if (session.phase === 'completed') {
     const result = getListeningSessionResult(session)
-    const totalCount = result.questionCount
+    const score = props.score ?? {
+      schemaVersion: 1,
+      correctCount: result.correctCount,
+      incorrectCount: result.questionCount - result.correctCount,
+      unscorableCount: 0,
+    }
+    const totalCount =
+      score.correctCount + score.incorrectCount
     return (
       <EmptyState
         title="听力任务已完成"
@@ -286,15 +298,15 @@ export function ListeningTrainingRoute(
           <TrainingUnitScore
             score={{
               state: 'available',
-              correctCount: result.correctCount,
+              correctCount: score.correctCount,
               totalCount,
               percentage:
                 totalCount === 0
                   ? null
                   : Math.round(
-                      result.correctCount / totalCount * 100,
+                      score.correctCount / totalCount * 100,
                     ),
-              unscorableCount: 0,
+              unscorableCount: score.unscorableCount,
             }}
           />
         )}

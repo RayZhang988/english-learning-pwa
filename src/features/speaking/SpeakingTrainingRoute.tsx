@@ -9,7 +9,10 @@ import type {
   PlatformEventSink,
   ReadonlyDataSource,
 } from '../../core/index.ts'
-import type { LearningTask } from '../../learning-engine/index.ts'
+import type {
+  LearningTask,
+  TrainingUnitScore as TrainingUnitScoreLedger,
+} from '../../learning-engine/index.ts'
 import {
   browserNetworkStatus,
   type MicrophonePermissionService,
@@ -46,6 +49,8 @@ export interface SpeakingTrainingRouteProps {
   readonly task: LearningTask
   readonly localDate: string
   readonly eventSink: PlatformEventSink
+  /** 01 supplies the persisted whole-task R7 ledger. */
+  readonly score?: TrainingUnitScoreLedger
   readonly onExit: () => void
   readonly onCompleted?: (session: SpeakingSession) => void
   readonly contentSource?: ReadonlyDataSource<SpeakingCatalog>
@@ -282,8 +287,14 @@ export function SpeakingTrainingRoute(
   }
   if (session.phase === 'completed') {
     const result = getSpeakingSessionResult(session)
+    const score = props.score ?? {
+      schemaVersion: 1,
+      correctCount: result.correctCount,
+      incorrectCount: result.incorrectCount,
+      unscorableCount: result.unscorableCount,
+    }
     const totalCount =
-      result.correctCount + result.incorrectCount
+      score.correctCount + score.incorrectCount
     return (
       <EmptyState
         title="口语练习已结束"
@@ -296,15 +307,15 @@ export function SpeakingTrainingRoute(
           <TrainingUnitScore
             score={{
               state: 'available',
-              correctCount: result.correctCount,
+              correctCount: score.correctCount,
               totalCount,
               percentage:
                 totalCount === 0
                   ? null
                   : Math.round(
-                      result.correctCount / totalCount * 100,
+                      score.correctCount / totalCount * 100,
                     ),
-              unscorableCount: result.unscorableCount,
+              unscorableCount: score.unscorableCount,
             }}
           />
         )}

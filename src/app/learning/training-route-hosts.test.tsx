@@ -8,6 +8,7 @@ import {
   type DailyPlan,
   type LearningTask,
   type PlanProgress,
+  type TrainingUnitScore,
   type TrainingModuleId,
 } from '../../learning-engine/index.ts'
 import { abilityProfile } from '../../learning-engine/test-fixtures.ts'
@@ -23,6 +24,7 @@ import type {
 
 interface CapturedRouteProps {
   readonly task: LearningTask
+  readonly score?: TrainingUnitScore
   readonly timingSessionFactory: unknown
   readonly supplyProvider?: {
     next(request: unknown): Promise<unknown>
@@ -322,6 +324,31 @@ function activeBudgetStateFor(
   }
 }
 
+function activeScoredStateFor(
+  moduleId: TrainingModuleId,
+): Extract<LearningAppState, { readonly status: 'ready' }> {
+  const current = stateFor(moduleId, false)
+  const progress: PlanProgress = {
+    ...current.runtime.activePlan,
+    status: 'in-progress',
+    tasks: current.runtime.activePlan.tasks.map((execution) => ({
+      ...execution,
+      status: 'active',
+      score: {
+        schemaVersion: 1,
+        correctCount: 6,
+        incorrectCount: 3,
+        unscorableCount: 0,
+      },
+    })),
+  }
+  return {
+    ...current,
+    runtime: createActiveLearningRuntime(progress),
+    taskAccess: getPlanTaskAccess(progress),
+  }
+}
+
 function appContext(state: LearningAppState): LearningAppContextValue {
   const coordinator = {
     state,
@@ -429,6 +456,21 @@ describe('TrainingRouteHost R3 production integration', () => {
         'data-target-effective-seconds="900"',
       )
       expect(markup).not.toContain('data-estimate-seconds')
+    },
+  )
+
+  it.each(trainingModules)(
+    'injects the persisted whole-task score into the active %s completion screen',
+    (moduleId) => {
+      routeCaptures.clear()
+      renderHost(moduleId, activeScoredStateFor(moduleId))
+
+      expect(routeCaptures.get(moduleId)?.score).toEqual({
+        schemaVersion: 1,
+        correctCount: 6,
+        incorrectCount: 3,
+        unscorableCount: 0,
+      })
     },
   )
 

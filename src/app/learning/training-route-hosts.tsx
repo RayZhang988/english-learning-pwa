@@ -179,6 +179,7 @@ export function TrainingRouteHost({
     task,
     localDate: state.localDate,
     eventSink: coordinator.eventSink,
+    score: currentExecution?.score,
     timingSessionFactory: productionEffectiveTimingSessions,
     onCompleted,
     onExit,
