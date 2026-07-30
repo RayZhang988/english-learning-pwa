@@ -150,6 +150,11 @@ describe('ListeningTrainingScreen UI contract', () => {
       question: {
         kind: 'keyword-dictation',
         prompt: '输入你听到的关键词',
+        requirements: {
+          countLabel: '需要填写 2 项关键信息。',
+          orderLabel: '必须按照音频中出现的顺序填写。',
+          formatLabel: '输入一条英文短语，用空格连接。',
+        },
         textInput: {
           label: '关键词',
           value: 'reservation',
@@ -158,6 +163,12 @@ describe('ListeningTrainingScreen UI contract', () => {
           state: 'submitting',
           description: '只填写题目要求的关键词。',
           statusLabel: '正在提交听写内容',
+        },
+        review: {
+          response: 'three Wu',
+          standardAnswer: 'three under Wu',
+          targetKeywords: ['three', 'Wu'],
+          resultLabel: '回答正确',
         },
       },
     }
@@ -174,6 +185,15 @@ describe('ListeningTrainingScreen UI contract', () => {
     expect(markup).toContain('value="reservation"')
     expect(markup).toContain('placeholder="输入英文关键词"')
     expect(markup).toContain('disabled=""')
+    expect(markup).toContain('听写填写规则')
+    expect(markup).toContain('需要填写 2 项关键信息')
+    expect(markup).toContain('必须按照音频中出现的顺序填写')
+    expect(markup).toContain('关键词听写答案对照')
+    expect(markup).toContain('你的输入')
+    expect(markup).toContain('three Wu')
+    expect(markup).toContain('参考答案')
+    expect(markup).toContain('three under Wu')
+    expect(markup).toContain('目标关键词（按顺序）')
     expect(markup).toContain('training-screen--input-action')
     expect(markup).not.toContain('role="radiogroup"')
   })
@@ -185,6 +205,11 @@ describe('ListeningTrainingScreen UI contract', () => {
       question: {
         kind: 'keyword-dictation',
         prompt: '输入你听到的关键词',
+        requirements: {
+          countLabel: '需要填写 1 项关键信息。',
+          orderLabel: '只有 1 项，不涉及先后顺序。',
+          formatLabel: '输入一条英文短语。',
+        },
         textInput: {
           label: '关键词',
           value: '',
@@ -236,6 +261,11 @@ describe('ListeningTrainingScreen UI contract', () => {
       question: {
         kind: 'keyword-dictation',
         prompt: '填写关键词',
+        requirements: {
+          countLabel: '需要填写 1 项关键信息。',
+          orderLabel: '只有 1 项，不涉及先后顺序。',
+          formatLabel: '输入一条英文短语。',
+        },
         textInput: {
           label: '关键词',
           value: '',

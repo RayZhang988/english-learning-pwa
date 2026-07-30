@@ -487,6 +487,22 @@ async function answerListening(page) {
   if (hasChoice) {
     await page.clickFirstEnabledChoice()
   } else {
+    if (process.env.QA_VERIFY_R10_DICTATION === '1') {
+      const rules = await page.evaluate(`(() => {
+        const field = document.querySelector('.keyword-dictation')
+        return {
+          text: field?.textContent ?? '',
+          items:
+            field?.querySelectorAll(
+              '.keyword-dictation__requirements li'
+            ).length ?? 0,
+        }
+      })()`)
+      assert.equal(rules.items, 3)
+      assert.match(rules.text, /需要填写 2 项关键信息/u)
+      assert.match(rules.text, /必须按照音频中出现的顺序填写/u)
+      assert.match(rules.text, /用空格连接/u)
+    }
     const filled = await page.evaluate(`(() => {
       const input = document.querySelector('input[type="text"], textarea')
       if (!input || input.disabled) return false
@@ -494,7 +510,14 @@ async function answerListening(page) {
         Object.getPrototypeOf(input),
         'value',
       )?.set
-      setter?.call(input, 'hello')
+      setter?.call(
+        input,
+        ${JSON.stringify(
+          process.env.QA_VERIFY_R10_DICTATION === '1'
+            ? 'nine thirty'
+            : 'hello',
+        )}
+      )
       input.dispatchEvent(new Event('input', { bubbles: true }))
       return true
     })()`)
@@ -507,6 +530,39 @@ async function answerListening(page) {
     20_000,
   )
   await page.clickByText('提交答案')
+  if (
+    !hasChoice &&
+    process.env.QA_VERIFY_R10_DICTATION === '1'
+  ) {
+    await page.waitFor(
+      `document.querySelector('.keyword-dictation__review')`,
+      20_000,
+    )
+    const review = await page.evaluate(`(() => {
+      const panel = document.querySelector(
+        '.keyword-dictation__review'
+      )
+      const rows = [...(panel?.querySelectorAll('dl > div') ?? [])]
+        .map((row) => ({
+          label: row.querySelector('dt')?.textContent?.trim() ?? '',
+          value: row.querySelector('dd')?.textContent?.trim() ?? '',
+        }))
+      return {
+        text: panel?.textContent ?? '',
+        response:
+          rows.find((row) => row.label === '你的输入')?.value ?? '',
+        standard:
+          rows.find((row) => row.label === '参考答案')?.value ?? '',
+        targets: [
+          ...(panel?.querySelectorAll('ol > li') ?? []),
+        ].map((item) => item.textContent?.trim() ?? ''),
+      }
+    })()`)
+    assert.equal(review.response, 'nine thirty')
+    assert.equal(review.standard, 'nine thirty')
+    assert.deepEqual(review.targets, ['nine', 'thirty'])
+    assert.match(review.text, /回答正确/u)
+  }
 }
 
 async function submitVocabularyAnswer(page) {
@@ -1341,6 +1397,25 @@ async function run() {
     await qa.page.setViewport(390, 844)
 
     await prepareFirstDayPlan(qa.page)
+    if (process.env.QA_VERIFY_R10_DICTATION === '1') {
+      await updateStoredRecord(
+        qa.page,
+        'app.learning-runtime',
+        'active-plan',
+        (runtime) => {
+          const execution = executionFor(runtime, 'listening')
+          assert.ok(execution.training)
+          execution.training.nextSupplyCursor =
+            'supply-v1-listening-st4w-w1d4-ss-01'
+        },
+      )
+      await qa.page.reload()
+      await qa.page.waitFor(
+        `location.hash === '#/' &&
+          document.body.innerText.includes('任选一项开始')`,
+        20_000,
+      )
+    }
     const generated = activeRuntime(await qa.page.dumpIndexedDb())
     assert.equal(generated.activePlan.plan.tasks.length, 3)
     assert.deepEqual(

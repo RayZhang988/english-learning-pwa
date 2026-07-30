@@ -338,12 +338,13 @@ export function ListeningPlaybackControls({
 }
 
 export function KeywordDictationField({
-  textInput,
+  question,
   onChange,
 }: {
-  readonly textInput: ListeningKeywordDictationQuestionViewModel['textInput']
+  readonly question: ListeningKeywordDictationQuestionViewModel
   readonly onChange: (value: string) => void
 }) {
+  const textInput = question.textInput
   const inputId = useId()
   const descriptionId = textInput.description
     ? `${inputId}-description`
@@ -358,6 +359,14 @@ export function KeywordDictationField({
       aria-busy={textInput.state === 'submitting'}
     >
       <label htmlFor={inputId}>{textInput.label}</label>
+      <ul
+        className="keyword-dictation__requirements"
+        aria-label="听写填写规则"
+      >
+        <li>{question.requirements.countLabel}</li>
+        <li>{question.requirements.orderLabel}</li>
+        <li>{question.requirements.formatLabel}</li>
+      </ul>
       {textInput.description ? (
         <p id={descriptionId}>{textInput.description}</p>
       ) : null}
@@ -386,6 +395,32 @@ export function KeywordDictationField({
         >
           {textInput.statusLabel}
         </span>
+      ) : null}
+      {question.review ? (
+        <section
+          className="keyword-dictation__review"
+          aria-label="关键词听写答案对照"
+        >
+          <strong>{question.review.resultLabel}</strong>
+          <dl>
+            <div>
+              <dt>你的输入</dt>
+              <dd lang="en-US">{question.review.response}</dd>
+            </div>
+            <div>
+              <dt>参考答案</dt>
+              <dd lang="en-US">{question.review.standardAnswer}</dd>
+            </div>
+          </dl>
+          <div>
+            <span>目标关键词（按顺序）</span>
+            <ol>
+              {question.review.targetKeywords.map((keyword, index) => (
+                <li key={`${index}:${keyword}`} lang="en-US">{keyword}</li>
+              ))}
+            </ol>
+          </div>
+        </section>
       ) : null}
     </div>
   )

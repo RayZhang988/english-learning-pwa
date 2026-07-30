@@ -228,7 +228,7 @@ export function ListeningTrainingScreen({
         />
       ) : (
         <KeywordDictationField
-          textInput={viewModel.question.textInput}
+          question={viewModel.question}
           onChange={(value) =>
             onQuestionInput({ type: 'change-keyword-dictation', value })
           }

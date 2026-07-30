@@ -101,6 +101,9 @@ export function toListeningScreenViewModel(
     )
   }
   const feedback = getListeningAnswerFeedback(session)
+  const currentAnswer = session.answers.find(
+    (answer) => answer.questionId === question.id,
+  )
   const controlsDisabled =
     session.phase === 'paused' ||
     session.playback.status === 'unavailable' ||
@@ -193,6 +196,15 @@ export function toListeningScreenViewModel(
         ? {
             kind: 'keyword-dictation',
             prompt: question.promptZh,
+            requirements: {
+              countLabel: `需要填写 ${question.targetKeywords.length} 项关键信息。`,
+              orderLabel:
+                question.targetKeywords.length === 1
+                  ? '只有 1 项，不涉及先后顺序。'
+                  : '必须按照音频中出现的顺序填写。',
+              formatLabel:
+                '输入一条英文短语，用空格连接；连接词可以省略，大小写和句末标点不影响判定。',
+            },
             textInput: {
               label: '听写答案',
               value: session.dictationInput,
@@ -205,10 +217,21 @@ export function toListeningScreenViewModel(
                   : session.dictationInput.trim().length > 0
                     ? 'ready'
                     : 'empty',
-              description: `目标关键词 ${question.targetKeywords.length} 个`,
+              description: '提交后会显示你的输入、参考答案和目标关键词。',
               statusLabel:
                 session.phase === 'feedback' ? '已提交' : undefined,
             },
+            review:
+              session.phase === 'feedback' && currentAnswer
+                ? {
+                    response: currentAnswer.response,
+                    standardAnswer: question.standardAnswer,
+                    targetKeywords: question.targetKeywords,
+                    resultLabel: currentAnswer.correct
+                      ? '回答正确'
+                      : '回答不正确，请逐项对照',
+                  }
+                : undefined,
           }
         : {
             kind: 'single-choice',

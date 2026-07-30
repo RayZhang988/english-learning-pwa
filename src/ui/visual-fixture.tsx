@@ -860,6 +860,11 @@ export function UiVisualFixture({ id }: { readonly id: UiVisualFixtureId }) {
           question: {
             kind: 'keyword-dictation',
             prompt: '输入你听到的地点关键词',
+            requirements: {
+              countLabel: '需要填写 1 项关键信息。',
+              orderLabel: '只有 1 项，不涉及先后顺序。',
+              formatLabel: '输入一条英文短语。',
+            },
             textInput: {
               label: '英文关键词',
               value: dictationValue,

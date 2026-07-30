@@ -129,6 +129,11 @@ export type ListeningTextInputVisualState =
 export interface ListeningKeywordDictationQuestionViewModel {
   readonly kind: 'keyword-dictation'
   readonly prompt: string
+  readonly requirements: {
+    readonly countLabel: string
+    readonly orderLabel: string
+    readonly formatLabel: string
+  }
   readonly textInput: {
     readonly label: string
     readonly value: string
@@ -137,6 +142,12 @@ export interface ListeningKeywordDictationQuestionViewModel {
     readonly state: ListeningTextInputVisualState
     readonly description?: string
     readonly statusLabel?: string
+  }
+  readonly review?: {
+    readonly response: string
+    readonly standardAnswer: string
+    readonly targetKeywords: readonly string[]
+    readonly resultLabel: string
   }
 }
 

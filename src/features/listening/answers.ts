@@ -36,13 +36,59 @@ export function judgeKeywordDictation(
     response,
     question.normalizationHints,
   )
-  return question.acceptedAnswers.some(
+  const accepted = question.acceptedAnswers.some(
     (answer) =>
       normalizeListeningDictation(
         answer,
         question.normalizationHints,
       ) === normalizedResponse,
   )
+  if (accepted) {
+    return true
+  }
+
+  const tokens = (value: string) =>
+    normalizeListeningDictation(
+      value,
+      question.normalizationHints,
+    )
+      .replace(/[^\p{L}\p{N}']+/gu, ' ')
+      .split(/\s+/u)
+      .filter(Boolean)
+  const responseTokens = tokens(response)
+  const allowedTokens = new Set(
+    [
+      ...question.acceptedAnswers,
+      ...question.targetKeywords,
+    ].flatMap(tokens),
+  )
+  if (responseTokens.some((token) => !allowedTokens.has(token))) {
+    return false
+  }
+  let cursor = 0
+  for (const targetKeyword of question.targetKeywords) {
+    const targetTokens = tokens(targetKeyword)
+    let foundAt = -1
+    for (
+      let index = cursor;
+      index <= responseTokens.length - targetTokens.length;
+      index += 1
+    ) {
+      if (
+        targetTokens.every(
+          (token, offset) => responseTokens[index + offset] === token,
+        )
+      ) {
+        foundAt = index
+        break
+      }
+    }
+    if (foundAt < 0) {
+      return false
+    }
+    cursor = foundAt + targetTokens.length
+  }
+  return true
 }
 
 export function judgeListeningAnswer(
