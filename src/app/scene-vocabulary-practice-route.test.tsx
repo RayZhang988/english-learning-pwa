@@ -10,6 +10,7 @@ import {
 import { localStorageService } from '../storage/index.ts'
 import { appRoutes } from './route-definitions.tsx'
 import { SceneVocabularyPracticeRouteHost } from './scene-vocabulary-practice-route.tsx'
+import { SceneVocabularyRouteLifecycle } from './scene-vocabulary-route-lifecycle.ts'
 import { playSceneVocabularyTarget } from './scene-vocabulary-target-playback.ts'
 
 const projectRoot = new URL('../../', import.meta.url)
@@ -30,6 +31,25 @@ afterEach(async () => {
 })
 
 describe('R13-B production route integration', () => {
+  it('invalidates an old scene initializer before the next hash route accepts a snapshot', () => {
+    const lifecycle = new SceneVocabularyRouteLifecycle()
+    const airport = lifecycle.begin('airport-flight:airport')
+    const taxi = lifecycle.begin('city-transport:taxi')
+    const accepted: string[] = []
+    const publish = (token: typeof airport) => {
+      if (lifecycle.isCurrent(token)) {
+        accepted.push(token.identity)
+      }
+    }
+
+    publish(airport)
+    publish(taxi)
+    lifecycle.invalidate(taxi)
+    publish(taxi)
+
+    expect(accepted).toEqual(['city-transport:taxi'])
+  })
+
   it('routes every concrete scene URL to the real practice host before the framework wildcard', () => {
     const matched = matchRoutes(
       appRoutes,

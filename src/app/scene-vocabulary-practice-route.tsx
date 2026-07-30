@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import type { ReadonlyDataSource } from '../core/index.ts'
 import {
@@ -20,6 +20,29 @@ import {
   playSceneVocabularyTarget,
   type SceneVocabularySpeechPort,
 } from './scene-vocabulary-target-playback.ts'
+import {
+  SceneVocabularyRouteLifecycle,
+} from './scene-vocabulary-route-lifecycle.ts'
+
+const createProductionSceneVocabularyRuntime = (
+  options: SceneVocabularyPracticeRuntimeOptions,
+) => new SceneVocabularyPracticeRuntime(options)
+
+interface SceneVocabularyRouteState {
+  readonly identity: string | null
+  readonly loading: boolean
+  readonly snapshot?: SceneVocabularyPracticeSnapshot
+  readonly error?: Error
+  readonly restored: boolean
+  /** Mirrors a durable select intent until 06 returns its persisted snapshot. */
+  readonly pendingSelectedOptionId?: string
+}
+
+const initialRouteState: SceneVocabularyRouteState = {
+  identity: null,
+  loading: false,
+  restored: false,
+}
 
 export interface SceneVocabularyPracticeRouteHostProps {
   /** Test-only seams; production always uses the released source and browser speech. */
@@ -53,20 +76,18 @@ function recoveryNotice(snapshot: SceneVocabularyPracticeSnapshot) {
 export function SceneVocabularyPracticeRouteHost({
   contentSource = sceneVocabularyContentSource,
   speech = browserListeningSpeech,
-  createRuntime = (options) => new SceneVocabularyPracticeRuntime(options),
+  createRuntime = createProductionSceneVocabularyRuntime,
 }: SceneVocabularyPracticeRouteHostProps) {
   const navigate = useNavigate()
   const { category: categoryId, scene: sceneId } = useParams()
   const identity = categoryId && sceneId ? `${categoryId}:${sceneId}` : null
-  const runtimeRef = useRef<{
-    readonly identity: string
-    readonly runtime: SceneVocabularyPracticeRuntime
-  } | null>(null)
-  const busyRef = useRef(false)
-  const [snapshot, setSnapshot] = useState<SceneVocabularyPracticeSnapshot>()
-  const [error, setError] = useState<Error>()
-  const [loading, setLoading] = useState(true)
-  const [restored, setRestored] = useState(false)
+  const lifecycleRef = useRef(new SceneVocabularyRouteLifecycle())
+  const operationCountsRef = useRef(new Map<number, number>())
+  const selectionPendingRef = useRef<string | undefined>(undefined)
+  const submitPendingRef = useRef(false)
+  const [routeState, setRouteState] =
+    useState<SceneVocabularyRouteState>(initialRouteState)
+  const [retryRevision, setRetryRevision] = useState(0)
 
   const routeScene = sceneId ? getTravelScene(sceneId) : undefined
   const isKnownScene =
@@ -74,59 +95,125 @@ export function SceneVocabularyPracticeRouteHost({
     routeScene !== undefined &&
     routeScene.category.id === categoryId
 
-  if (identity && runtimeRef.current?.identity !== identity) {
-    runtimeRef.current = {
-      identity,
-      runtime: createRuntime({ categoryId: categoryId!, sceneId: sceneId!, contentSource }),
-    }
-  }
-
-  const runtime = runtimeRef.current?.runtime
-
-  const initialize = () => {
-    if (!runtime) {
-      return
-    }
-    busyRef.current = true
-    setLoading(true)
-    setError(undefined)
-    void runtime.initialize().then(
-      (next) => {
-        setSnapshot(next)
-        setRestored(next.answers.length > 0)
-      },
-      (reason: unknown) => setError(
-        reason instanceof Error ? reason : new Error(errorMessage(reason)),
-      ),
-    ).finally(() => {
-      busyRef.current = false
-      setLoading(false)
-    })
-  }
+  const runtime = useMemo(
+    () =>
+      isKnownScene && categoryId && sceneId && identity
+        ? createRuntime({ categoryId, sceneId, contentSource })
+        : undefined,
+    [categoryId, contentSource, createRuntime, identity, isKnownScene, sceneId],
+  )
 
   useEffect(() => {
-    setSnapshot(undefined)
-    setRestored(false)
-    initialize()
-    // The route identity is the session identity. Dependencies are injected only
-    // once per mounted host, including in the test harness.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [identity])
-
-  const run = (operation: () => Promise<SceneVocabularyPracticeSnapshot>) => {
-    if (busyRef.current) {
-      return
+    if (!identity || !runtime) {
+      setRouteState({
+        identity,
+        loading: false,
+        restored: false,
+      })
+      return undefined
     }
-    busyRef.current = true
-    setError(undefined)
-    void operation().then(
-      (next) => setSnapshot(next),
-      (reason: unknown) => setError(
-        reason instanceof Error ? reason : new Error(errorMessage(reason)),
-      ),
+    const lifecycle = lifecycleRef.current
+    const token = lifecycle.begin(identity)
+    selectionPendingRef.current = undefined
+    submitPendingRef.current = false
+    setRouteState({ identity, loading: true, restored: false })
+
+    void runtime.initialize().then(
+      (snapshot) => {
+        if (!lifecycle.isCurrent(token)) {
+          return
+        }
+        setRouteState({
+          identity,
+          loading: false,
+          snapshot,
+          restored: snapshot.answers.length > 0,
+        })
+      },
+      (reason: unknown) => {
+        if (!lifecycle.isCurrent(token)) {
+          return
+        }
+        setRouteState({
+          identity,
+          loading: false,
+          restored: false,
+          error: reason instanceof Error ? reason : new Error(errorMessage(reason)),
+        })
+      },
     ).finally(() => {
-      busyRef.current = false
+      operationCountsRef.current.delete(token.generation)
     })
+
+    return () => lifecycle.invalidate(token)
+  }, [identity, retryRevision, runtime])
+
+  const run = (
+    operation: () => Promise<SceneVocabularyPracticeSnapshot>,
+    options: {
+      readonly allowAfterSelection?: boolean
+      readonly onSettled?: () => void
+    } = {},
+  ): boolean => {
+    const token = identity
+      ? lifecycleRef.current.currentFor(identity)
+      : undefined
+    if (!token) {
+      return false
+    }
+    const queued = operationCountsRef.current.get(token.generation) ?? 0
+    if (queued > 0 && !options.allowAfterSelection) {
+      return false
+    }
+    operationCountsRef.current.set(token.generation, queued + 1)
+    setRouteState((current) =>
+      current.identity === token.identity
+        ? { ...current, error: undefined }
+        : current,
+    )
+    void operation().then(
+      (snapshot) => {
+        if (!lifecycleRef.current.isCurrent(token)) {
+          return
+        }
+        setRouteState((current) =>
+          current.identity === token.identity
+            ? {
+                ...current,
+                snapshot,
+                loading: false,
+                pendingSelectedOptionId: undefined,
+              }
+            : current,
+        )
+      },
+      (reason: unknown) => {
+        if (!lifecycleRef.current.isCurrent(token)) {
+          return
+        }
+        setRouteState((current) =>
+          current.identity === token.identity
+            ? {
+                ...current,
+                error: reason instanceof Error
+                  ? reason
+                  : new Error(errorMessage(reason)),
+              }
+            : current,
+        )
+      },
+    ).finally(() => {
+      const pending = operationCountsRef.current.get(token.generation) ?? 0
+      if (pending <= 1) {
+        operationCountsRef.current.delete(token.generation)
+      } else {
+        operationCountsRef.current.set(token.generation, pending - 1)
+      }
+      if (lifecycleRef.current.isCurrent(token)) {
+        options.onSettled?.()
+      }
+    })
+    return true
   }
 
   const exitPath = categoryId
@@ -145,7 +232,8 @@ export function SceneVocabularyPracticeRouteHost({
       </main>
     )
   }
-  if (loading && !snapshot && !error) {
+  const stateMatchesRoute = routeState.identity === identity
+  if (!stateMatchesRoute || routeState.loading) {
     return <SceneVocabularyPracticeScreen
       presentation={{ status: 'loading', label: '正在准备场景词汇练习' }}
       sceneTitle={routeScene.scene.title}
@@ -156,11 +244,11 @@ export function SceneVocabularyPracticeRouteHost({
       onTargetPlayback={() => undefined}
     />
   }
-  if (error || !snapshot) {
+  if (routeState.error || !routeState.snapshot) {
     return <SceneVocabularyPracticeScreen
       presentation={{
         status: 'error',
-        description: error?.message ?? '场景词汇练习暂时无法恢复。',
+        description: routeState.error?.message ?? '场景词汇练习暂时无法恢复。',
       }}
       sceneTitle={routeScene.scene.title}
       onExit={onExit}
@@ -168,20 +256,75 @@ export function SceneVocabularyPracticeRouteHost({
       onSubmit={() => undefined}
       onContinue={() => undefined}
       onTargetPlayback={() => undefined}
-      onRetry={initialize}
+      onRetry={() => setRetryRevision((current) => current + 1)}
     />
   }
+
+  const view = runtime.toView()
+  const displayView =
+    routeState.pendingSelectedOptionId && view.status === 'question' && view.question
+      ? {
+          ...view,
+          question: {
+            ...view.question,
+            options: view.question.options.map((option) => ({
+              ...option,
+              state: option.id === routeState.pendingSelectedOptionId
+                ? 'selected' as const
+                : 'default' as const,
+            })),
+          },
+        }
+      : view
 
   return <SceneVocabularyPracticeScreen
     presentation={{
       status: 'ready',
-      view: runtime.toView(),
-      recoveryNotice: restored ? recoveryNotice(snapshot) : undefined,
+      view: displayView,
+      recoveryNotice: routeState.restored
+        ? recoveryNotice(routeState.snapshot)
+        : undefined,
     }}
     sceneTitle={routeScene.scene.title}
     onExit={onExit}
-    onOptionSelected={(optionId) => run(() => runtime.select(optionId))}
-    onSubmit={() => run(() => runtime.submit())}
+    onOptionSelected={(optionId) => {
+      if (selectionPendingRef.current) {
+        return
+      }
+      if (run(
+        () => runtime.select(optionId),
+        {
+          onSettled: () => {
+            selectionPendingRef.current = undefined
+          },
+        },
+      )) {
+        selectionPendingRef.current = optionId
+        setRouteState((current) =>
+          current.identity === identity
+            ? { ...current, pendingSelectedOptionId: optionId }
+            : current,
+        )
+      }
+    }}
+    onSubmit={() => {
+      if (submitPendingRef.current) {
+        return
+      }
+      const queuedAfterSelection = selectionPendingRef.current !== undefined
+      if (run(
+        () => runtime.submit(),
+        {
+          allowAfterSelection: queuedAfterSelection,
+          onSettled: () => {
+            submitPendingRef.current = false
+            selectionPendingRef.current = undefined
+          },
+        },
+      )) {
+        submitPendingRef.current = true
+      }
+    }}
     onContinue={() => run(() => runtime.advance())}
     onTargetPlayback={(intent) => {
       try {
