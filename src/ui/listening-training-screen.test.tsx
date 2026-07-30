@@ -151,6 +151,7 @@ describe('ListeningTrainingScreen UI contract', () => {
         kind: 'keyword-dictation',
         prompt: '输入你听到的关键词',
         requirements: {
+          targetLabel: '写出预订人数和预订姓氏。',
           countLabel: '需要填写 2 项关键信息。',
           orderLabel: '必须按照音频中出现的顺序填写。',
           formatLabel: '输入一条英文短语，用空格连接。',
@@ -185,6 +186,8 @@ describe('ListeningTrainingScreen UI contract', () => {
     expect(markup).toContain('value="reservation"')
     expect(markup).toContain('placeholder="输入英文关键词"')
     expect(markup).toContain('disabled=""')
+    expect(markup).toContain('本题填写目标')
+    expect(markup).toContain('写出预订人数和预订姓氏')
     expect(markup).toContain('听写填写规则')
     expect(markup).toContain('需要填写 2 项关键信息')
     expect(markup).toContain('必须按照音频中出现的顺序填写')
@@ -206,6 +209,7 @@ describe('ListeningTrainingScreen UI contract', () => {
         kind: 'keyword-dictation',
         prompt: '输入你听到的关键词',
         requirements: {
+          targetLabel: '写出听到的姓。',
           countLabel: '需要填写 1 项关键信息。',
           orderLabel: '只有 1 项，不涉及先后顺序。',
           formatLabel: '输入一条英文短语。',
@@ -262,6 +266,7 @@ describe('ListeningTrainingScreen UI contract', () => {
         kind: 'keyword-dictation',
         prompt: '填写关键词',
         requirements: {
+          targetLabel: '写出听到的姓。',
           countLabel: '需要填写 1 项关键信息。',
           orderLabel: '只有 1 项，不涉及先后顺序。',
           formatLabel: '输入一条英文短语。',

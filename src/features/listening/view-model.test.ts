@@ -81,6 +81,7 @@ describe('listening UI adapter', () => {
     expect(answering.question).toMatchObject({
       kind: 'keyword-dictation',
       requirements: {
+        targetLabel: '写出预订人数和预订姓氏。',
         countLabel: '需要填写 2 项关键信息。',
         orderLabel: '必须按照音频中出现的顺序填写。',
       },

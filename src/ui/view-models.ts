@@ -130,6 +130,7 @@ export interface ListeningKeywordDictationQuestionViewModel {
   readonly kind: 'keyword-dictation'
   readonly prompt: string
   readonly requirements: {
+    readonly targetLabel: string
     readonly countLabel: string
     readonly orderLabel: string
     readonly formatLabel: string

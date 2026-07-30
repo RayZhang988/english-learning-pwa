@@ -492,12 +492,20 @@ async function answerListening(page) {
         const field = document.querySelector('.keyword-dictation')
         return {
           text: field?.textContent ?? '',
+          target:
+            field?.querySelector(
+              '.keyword-dictation__target strong'
+            )?.textContent?.trim() ?? '',
           items:
             field?.querySelectorAll(
               '.keyword-dictation__requirements li'
             ).length ?? 0,
         }
       })()`)
+      assert.equal(
+        rules.target,
+        '写出听到的见面时间。',
+      )
       assert.equal(rules.items, 3)
       assert.match(rules.text, /需要填写 2 项关键信息/u)
       assert.match(rules.text, /必须按照音频中出现的顺序填写/u)

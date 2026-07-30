@@ -197,6 +197,7 @@ export function toListeningScreenViewModel(
             kind: 'keyword-dictation',
             prompt: question.promptZh,
             requirements: {
+              targetLabel: question.promptZh,
               countLabel: `需要填写 ${question.targetKeywords.length} 项关键信息。`,
               orderLabel:
                 question.targetKeywords.length === 1

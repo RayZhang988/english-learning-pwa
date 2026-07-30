@@ -359,6 +359,13 @@ export function KeywordDictationField({
       aria-busy={textInput.state === 'submitting'}
     >
       <label htmlFor={inputId}>{textInput.label}</label>
+      <div
+        className="keyword-dictation__target"
+        aria-label="本题填写目标"
+      >
+        <span>本题需要填写</span>
+        <strong>{question.requirements.targetLabel}</strong>
+      </div>
       <ul
         className="keyword-dictation__requirements"
         aria-label="听写填写规则"
