@@ -11,6 +11,7 @@ import week3 from '../../../content/lessons/survival-travel-american-4w/week-3.v
 import week4 from '../../../content/lessons/survival-travel-american-4w/week-4.v1.json'
 import { createListeningCatalog } from './content.ts'
 import { ListeningCatalogSupplyProvider } from './supply.ts'
+import type { ListeningSupplyItem } from './types.ts'
 
 function provider() {
   const catalog = createListeningCatalog({
@@ -74,6 +75,38 @@ describe('extra listening supply production contract', () => {
     const restored = await supply.next(extra({ 'recent-error': [], 'due-review': [], 'same-day-variant': [], 'new-optional-content': [] }, { cursor: first.nextCursor, excludeItemIds: [first.item.itemId] }))
     expect(restored).toMatchObject({ status: 'item' })
     if (restored.status === 'item') expect(restored.item.itemId).not.toBe(first.item.itemId)
+  })
+
+  it('hard-cools ordinary extra-training families for 30 items and restores from durable IDs', async () => {
+    const supply = provider()
+    const priority = { 'recent-error': [], 'due-review': [], 'same-day-variant': [], 'new-optional-content': [] }
+    const completed: string[] = []
+    const families: string[] = []
+    let cursor: string | null = null
+    for (let index = 0; index < 30; index += 1) {
+      const request = extra(priority, {
+        cursor, excludeItemIds: completed,
+      })
+      const result = await supply.next({
+        ...request,
+        requestId: `ordinary-extra-${index}`,
+        reason: index === 0 ? 'initial' : 'continue-after-item',
+      })
+      expect(result.status).toBe('item')
+      if (result.status !== 'item') return
+      const item = result.item as ListeningSupplyItem & { readonly variantFamilyId: string }
+      expect(families.slice(-4)).not.toContain(item.variantFamilyId)
+      completed.push(item.itemId)
+      families.push(item.variantFamilyId)
+      cursor = result.nextCursor
+    }
+    const restored = await supply.next(extra(priority, {
+      cursor, excludeItemIds: completed,
+    }))
+    expect(restored.status).toBe('item')
+    if (restored.status === 'item') {
+      expect(families.slice(-4)).not.toContain((restored.item as ListeningSupplyItem & { readonly variantFamilyId: string }).variantFamilyId)
+    }
   })
 
   it('keeps the daily LearningTaskSupplyRequest path stable without reverting to file order', async () => {

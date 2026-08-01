@@ -106,6 +106,7 @@ function selectDiverseItem(
   request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
   allItemsById: ReadonlyMap<string, IndexedListeningSupplyItem>,
   allowPlaybackRepeat: boolean,
+  enforceFamilyCooldown: boolean,
 ): IndexedListeningSupplyItem | undefined {
   const recent = request.excludeItemIds
     .slice(-DIVERSITY_WINDOW_ITEMS)
@@ -128,9 +129,17 @@ function selectDiverseItem(
     )
   }
   const seed = streamSeed(request)
-  return [...candidates].sort((left, right) => {
+  // A penalty is not a cooldown: stable shuffle ranks can still make a
+  // recently-used family win. Ordinary supply must instead exclude it while
+  // another family remains. Explicit R6 review priorities intentionally pass
+  // false and may override this normal-stream diversity guard.
+  const cooledCandidates = enforceFamilyCooldown
+    ? candidates.filter((item) => !recentFamilies.has(item.variantFamilyId))
+    : candidates
+  const selectable = cooledCandidates.length > 0 ? cooledCandidates : candidates
+  return [...selectable].sort((left, right) => {
     const score = (item: IndexedListeningSupplyItem) => {
-      const familyPenalty = recentFamilies.has(item.variantFamilyId)
+      const familyPenalty = !enforceFamilyCooldown && recentFamilies.has(item.variantFamilyId)
         ? 10_000
         : 0
       const playbackPenalty = !allowPlaybackRepeat && recentPlaybackContent.has(item.playbackContentId)
@@ -245,6 +254,7 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
             request,
             this.itemsById,
             priority === 'recent-error' || priority === 'due-review',
+            false,
         )
         if (selected) {
           return { schemaVersion: 1, requestId: request.requestId, status: 'item', item: selected, nextCursor: selected.itemId }
@@ -258,7 +268,7 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
     if (request.cursor !== null && cursorIndex < 0) {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
     }
-    const item = selectDiverseItem(available, request, this.itemsById, false)
+    const item = selectDiverseItem(available, request, this.itemsById, false, true)
     if (!item) {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'all-eligible-content-recently-used' }
     }

@@ -149,6 +149,33 @@ describe('listening training supply', () => {
     }
   })
 
+  it('honestly relaxes the family cooldown only when the eligible pool has no other family', async () => {
+    const current = catalog()
+    const all = trainingSupplyIndex.candidates as readonly Record<string, unknown>[]
+    const family = all.find((candidate) => candidate.domain === 'listening')?.variantFamilyId
+    const familyOnlyIndex = {
+      schemaVersion: 1,
+      candidates: all.filter((candidate) => candidate.variantFamilyId === family),
+    }
+    const provider = new ListeningCatalogSupplyProvider(familyOnlyIndex, current)
+    const first = await provider.next({
+      schemaVersion: 1, requestId: 'family-only-first', planId: 'family-only', taskId: 'family-only',
+      domain: 'listening', targetModuleId: 'listening', mode: 'learn', targetDifficulty: 1,
+      cursor: null, excludeItemIds: [], reason: 'initial',
+    })
+    expect(first.status).toBe('item')
+    if (first.status !== 'item') return
+    const second = await provider.next({
+      schemaVersion: 1, requestId: 'family-only-second', planId: 'family-only', taskId: 'family-only',
+      domain: 'listening', targetModuleId: 'listening', mode: 'learn', targetDifficulty: 1,
+      cursor: first.nextCursor, excludeItemIds: [first.item.itemId], reason: 'continue-after-item',
+    })
+    expect(second).toMatchObject({ status: 'item' })
+    if (second.status === 'item') {
+      expect(second.item.variantFamilyId).toBe(first.item.variantFamilyId)
+    }
+  })
+
   it('keeps a restored next item stable while different plans receive different shuffled orders', async () => {
     const current = catalog()
     const provider = new ListeningCatalogSupplyProvider(
