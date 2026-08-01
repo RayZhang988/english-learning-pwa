@@ -304,7 +304,7 @@ function requestFor(
 }
 
 describe('R6 optional extra-training external acceptance', () => {
-  it('admits only a real completed 3/3 plan, deduplicates rapid starts, and never changes the daily plan', async () => {
+  it('admits only a module with a real completed daily task, deduplicates rapid starts, and never changes the daily plan', async () => {
     const activeStore = new PortableMemoryStore(
       'qa.r6.active-plan',
     )
@@ -339,7 +339,7 @@ describe('R6 optional extra-training external acceptance', () => {
 
     await expect(
       coordinator.start('vocabulary'),
-    ).rejects.toThrow(/completed 3\/3/u)
+    ).rejects.toThrow(/vocabulary daily task completed/u)
     const completed = completedPlan()
     await activePlans.save(createActiveLearningRuntime(completed))
     const before = await activePlans.load()

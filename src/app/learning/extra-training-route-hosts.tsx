@@ -28,7 +28,9 @@ import {
 } from '../../features/vocabulary/index.ts'
 import {
   buildExtraTrainingSupplyRequest,
+  getExtraTrainingEligibility,
   type ExtraTrainingSession,
+  type PlanProgress,
   type TrainingModuleId,
 } from '../../learning-engine/index.ts'
 import {
@@ -48,7 +50,6 @@ import {
 } from '../../ui/index.ts'
 import { useLearningApp } from './learning-app-context.ts'
 import {
-  isDailyPlanCompleted3Of3,
   toExtraListeningScreenViewModel,
   toExtraSpeakingScreenViewModel,
   toExtraTrainingActiveViewModel,
@@ -64,6 +65,17 @@ import {
 } from './training-production-resources.ts'
 
 export const EXTRA_TRAINING_ROUTE = '/extra-training'
+
+function eligibleExtraTrainingModules(
+  progress: PlanProgress,
+  localDate: string,
+): readonly TrainingModuleId[] {
+  return (['vocabulary', 'listening', 'speaking'] as const).filter(
+    (moduleId) =>
+      getExtraTrainingEligibility(progress, moduleId, localDate)
+        .eligible,
+  )
+}
 
 function useDurableRuntime<
   TSnapshot,
@@ -204,22 +216,7 @@ export function ExtraTrainingPickerRouteHost() {
       <main className="full-page-feedback">
         <EmptyState
           title="暂时不能继续训练"
-          description="请先恢复并完成今天的三个必做训练任务。"
-        />
-      </main>
-    )
-  }
-  if (
-    !isDailyPlanCompleted3Of3(
-      state.runtime.activePlan,
-      state.localDate,
-    )
-  ) {
-    return (
-      <main className="full-page-feedback">
-        <EmptyState
-          title="完成今日 3/3 后再继续训练"
-          description="额外训练不会替代今天尚未完成的必做任务。"
+          description="请先恢复今天的学习计划。"
         />
       </main>
     )
@@ -264,6 +261,10 @@ export function ExtraTrainingPickerRouteHost() {
         state.engineState,
         state.localDate,
         busy,
+        eligibleExtraTrainingModules(
+          state.runtime.activePlan,
+          state.localDate,
+        ),
       )}
       onStartRequested={(moduleId) =>
         run(async () => {
@@ -851,6 +852,11 @@ export function ExtraTrainingRouteHost() {
         viewModel={toExtraTrainingPickerViewModel(
           state.engineState,
           state.localDate,
+          false,
+          eligibleExtraTrainingModules(
+            state.runtime.activePlan,
+            state.localDate,
+          ),
         )}
         onStartRequested={async (targetModuleId) => {
           const next =

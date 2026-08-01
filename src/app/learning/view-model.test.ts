@@ -677,7 +677,7 @@ describe('learning app view-model integration', () => {
     })
   })
 
-  it('turns all three finished practice cards into extra-training entries after 3/3', () => {
+  it('turns each completed practice card into an extra-training entry', () => {
     const initial = progress()
     const completed: PlanProgress = {
       ...initial,
@@ -693,7 +693,7 @@ describe('learning app view-model integration', () => {
       completed,
       getPlanTaskAccess(completed),
       3,
-      true,
+      ['vocabulary', 'listening', 'speaking'],
     )
 
     expect(modules.slice(1)).toEqual(

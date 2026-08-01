@@ -56,7 +56,7 @@ describe('PlatformReadyPage R6 entry', () => {
       </LearningAppContext.Provider>,
     )
 
-    expect(markup).toContain('今日计划 3/3 已完成')
+    expect(markup).toContain('今日三项训练已完成')
     expect(markup).toContain('继续训练')
     expect(markup).toContain('查看今日计划')
     expect(markup).not.toContain('技术底座已运行')

@@ -46,7 +46,7 @@ function setup() {
 }
 
 describe('ProductionExtraTrainingCoordinator', () => {
-  it('rejects optional training until the persisted current plan is completed 3/3', async () => {
+  it('rejects optional training until its own persisted daily task is completed', async () => {
     const { activePlans, engineStates, coordinator } = setup()
     await activePlans.save({
       schemaVersion: 1,
@@ -62,7 +62,7 @@ describe('ProductionExtraTrainingCoordinator', () => {
 
     await expect(
       coordinator.start('vocabulary'),
-    ).rejects.toThrow('completed 3/3')
+    ).rejects.toThrow('vocabulary daily task completed')
     expect(
       (await engineStates.load())?.extraTraining,
     ).toBeUndefined()

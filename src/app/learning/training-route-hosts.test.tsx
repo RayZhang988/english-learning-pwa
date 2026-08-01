@@ -554,13 +554,13 @@ describe('TrainingRouteHost R3 production integration', () => {
     expect(markup).not.toContain('10 分钟')
   })
 
-  it('offers the real extra-training entry only after the daily plan is completed 3/3', () => {
+  it('offers the real extra-training entry when this module daily task is completed', () => {
     const markup = renderHost(
       'vocabulary',
       completedDailyPlanState(),
     )
 
-    expect(markup).toContain('今日计划 3/3 已完成')
+    expect(markup).toContain('今日 15 分钟已完成')
     expect(markup).toContain('继续训练')
   })
 })

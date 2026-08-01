@@ -1,6 +1,7 @@
 import {
   buildProgressSnapshot,
   DEFAULT_DAILY_TARGET_SECONDS,
+  getExtraTrainingEligibility,
   type LearningEngineState,
   type LearningTask,
   type PlanProgress,
@@ -428,7 +429,7 @@ export function toPracticeModulesViewModel(
   progress: PlanProgress,
   taskAccess: PlanTaskAccess,
   assessmentProfileSchemaVersion: 1 | 2 | 3 = 3,
-  extraTrainingAvailable = false,
+  extraTrainingEligibleModules: readonly TrainingModuleId[] = [],
 ): readonly PracticeModuleViewModel[] {
   return [
     {
@@ -448,7 +449,12 @@ export function toPracticeModulesViewModel(
         taskAccess,
       )
       if (
-        extraTrainingAvailable &&
+        getExtraTrainingEligibility(
+          progress,
+          moduleId,
+          progress.plan.localDate,
+        ).eligible &&
+        extraTrainingEligibleModules.includes(moduleId) &&
         module.moduleId !== 'assessment' &&
         module.availability === 'unavailable' &&
         module.unavailableReason === 'task-finished' &&
@@ -463,7 +469,7 @@ export function toPracticeModulesViewModel(
           recommended: false as const,
           actionLabel: '继续训练',
           extraTrainingDescription:
-            '今日任务已完成，可以开始不限时且不影响今日 3/3 状态的额外训练。',
+            '本模块今日任务已完成，可以开始不限时且不影响今日完成状态的额外训练。',
           openEnded: true as const,
           statusLabel: module.statusLabel,
         }

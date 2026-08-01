@@ -194,9 +194,12 @@ export function toExtraTrainingPickerViewModel(
   engineState: LearningEngineState,
   localDate: string,
   busy = false,
+  eligibleModuleIds: readonly TrainingModuleId[] = moduleIds,
 ): ExtraTrainingPickerViewModel {
   return {
-    modules: moduleIds.map((moduleId) =>
+    modules: moduleIds.filter((moduleId) =>
+      eligibleModuleIds.includes(moduleId),
+    ).map((moduleId) =>
       toModuleViewModel(
         moduleId,
         latestSession(engineState, moduleId, localDate),
@@ -281,7 +284,7 @@ export function toExtraTrainingCompletionViewModel(
     moduleId: session.targetModuleId,
     title: `${modulePresentation[session.targetModuleId].title}已完成`,
     description:
-      '本轮额外练习已保存，不会改变今日计划 3/3 完成状态。',
+      '本轮额外练习已保存，不会改变今日每日任务完成状态。',
     completedItemCount: session.completedItemCount,
     score: toTrainingUnitScoreViewModel(session.score),
     actualDuration: {

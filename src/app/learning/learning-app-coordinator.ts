@@ -8,6 +8,7 @@ import {
   createPlanProgress,
   evaluatePlanTaskStart,
   generateDailyPlan,
+  getExtraTrainingEligibility,
   getPlanTaskAccess,
   getResumeDecision,
   LEARNING_ENGINE_STORAGE_NAMESPACE,
@@ -351,20 +352,6 @@ export class LearningAppCoordinator {
       )
     }
     const progress = state.runtime.activePlan
-    if (
-      progress.plan.localDate !== state.localDate ||
-      progress.status !== 'completed' ||
-      progress.tasks.length !== 3 ||
-      !progress.tasks.every(
-        (task) =>
-          task.status === 'completed' ||
-          task.status === 'skipped',
-      )
-    ) {
-      throw new TypeError(
-        'Extra training requires the current daily plan completed 3/3.',
-      )
-    }
     const session =
       state.engineState.extraTraining?.sessions[sessionId]
     if (!session) {
@@ -383,6 +370,16 @@ export class LearningAppCoordinator {
     ) {
       throw new TypeError(
         'Extra-training session does not belong to the requested module.',
+      )
+    }
+    const eligibility = getExtraTrainingEligibility(
+      progress,
+      session.targetModuleId,
+      state.localDate,
+    )
+    if (!eligibility.eligible) {
+      throw new TypeError(
+        `Extra training requires the current ${session.targetModuleId} daily task completed.`,
       )
     }
     return session

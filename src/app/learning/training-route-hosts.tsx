@@ -22,7 +22,6 @@ import {
   toTaskDurationEstimateViewModel,
   toTrainingCompletionDurationViewModel,
 } from './view-model.ts'
-import { isDailyPlanCompleted3Of3 } from './extra-training-view-model.ts'
 import {
   listeningContentSource,
   speakingContentSource,
@@ -198,10 +197,6 @@ export function TrainingRouteHost({
     (restoredCompletionTaskIdRef.current === task.taskId &&
       currentExecution?.status === 'completed')
   ) {
-    const dailyCompleted = isDailyPlanCompleted3Of3(
-      state.runtime.activePlan,
-      state.localDate,
-    )
     return (
       <TrainingCompletionDurationScreen
         viewModel={{
@@ -209,22 +204,16 @@ export function TrainingRouteHost({
             moduleId,
             currentExecution,
           ),
-          extraTrainingEntry: dailyCompleted
-            ? {
-                action: {
-                  label: '继续训练',
-                  disabled: false,
-                  loading: false,
-                },
-              }
-            : undefined,
+          extraTrainingEntry: {
+            action: {
+              label: '继续训练',
+              disabled: false,
+              loading: false,
+            },
+          },
         }}
         onAction={onReturnToPlan}
-        onContinueTraining={
-          dailyCompleted
-            ? () => navigate('/extra-training')
-            : undefined
-        }
+        onContinueTraining={() => navigate('/extra-training')}
       />
     )
   }

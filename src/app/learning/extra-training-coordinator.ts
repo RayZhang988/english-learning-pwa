@@ -1,6 +1,7 @@
 import {
   createExtraTrainingSession,
   expireExtraTrainingSessions,
+  getExtraTrainingEligibility,
   migrateExtraTrainingSessionsToOpenEnded,
   type ExtraTrainingSession,
   type LearningEngineRepository,
@@ -40,7 +41,7 @@ function sameExtraTrainingState(
  * Application coordinator for R6 optional sessions.
  *
  * Its only durable source of truth is LearningEngineState.extraTraining.
- * Daily PlanProgress is read solely as the 3/3 admission gate and is never
+ * Daily PlanProgress is read solely as a per-module admission gate and is never
  * written by this coordinator or its event sink.
  */
 export class ProductionExtraTrainingCoordinator {
@@ -159,18 +160,14 @@ export class ProductionExtraTrainingCoordinator {
       )
     }
     const progress = runtime.activePlan
-    if (
-      progress.plan.localDate !== localDate ||
-      progress.status !== 'completed' ||
-      progress.tasks.length !== 3 ||
-      !progress.tasks.every(
-        (task) =>
-          task.status === 'completed' ||
-          task.status === 'skipped',
-      )
-    ) {
+    const eligibility = getExtraTrainingEligibility(
+      progress,
+      moduleId,
+      localDate,
+    )
+    if (!eligibility.eligible) {
       throw new TypeError(
-        'Extra training requires the current daily plan completed 3/3.',
+        `Extra training requires the current ${moduleId} daily task completed.`,
       )
     }
 

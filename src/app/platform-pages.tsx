@@ -5,6 +5,10 @@ import {
   type NetworkStatus,
 } from '../platform/index.ts'
 import {
+  getExtraTrainingEligibility,
+  type TrainingModuleId,
+} from '../learning-engine/index.ts'
+import {
   EmptyState,
   ErrorState,
   LearningAppPrototype,
@@ -148,9 +152,9 @@ export function PlatformReadyPage() {
               completedExecution.task.targetModuleId,
               completedExecution,
             ),
-            title: '今日计划 3/3 已完成',
+            title: '今日三项训练已完成',
             description:
-              '三个必做训练都已保存；可以查看今日计划，或开始一轮不影响完成状态的额外练习。',
+              '今日三个模块都已完成；可以查看今日计划，或开始一轮不影响完成状态的额外练习。',
             extraTrainingEntry: {
               action: {
                 label: '继续训练',
@@ -193,10 +197,13 @@ export function PlatformReadyPage() {
         state.runtime.activePlan,
         state.taskAccess,
         state.assessmentProfileSchemaVersion,
-        isDailyPlanCompleted3Of3(
-          state.runtime.activePlan,
-          state.localDate,
-        ),
+        ['vocabulary', 'listening', 'speaking'].filter((moduleId) =>
+          getExtraTrainingEligibility(
+            state.runtime.activePlan,
+            moduleId as TrainingModuleId,
+            state.localDate,
+          ).eligible,
+        ) as readonly TrainingModuleId[],
       )}
       offline={network === 'offline'}
       onSectionChanged={(section) => {
@@ -237,6 +244,14 @@ export function PlatformReadyPage() {
             const module = toExtraTrainingPickerViewModel(
               state.engineState,
               state.localDate,
+              false,
+              ['vocabulary', 'listening', 'speaking'].filter((candidate) =>
+                getExtraTrainingEligibility(
+                  state.runtime.activePlan,
+                  candidate as TrainingModuleId,
+                  state.localDate,
+                ).eligible,
+              ) as readonly TrainingModuleId[],
             ).modules.find(
               (candidate) => candidate.moduleId === moduleId,
             )
