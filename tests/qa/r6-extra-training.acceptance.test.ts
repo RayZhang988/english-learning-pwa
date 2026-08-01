@@ -387,13 +387,15 @@ describe('R6 optional extra-training external acceptance', () => {
       const candidates = candidatesFor(moduleId)
       expect(candidates.length).toBeGreaterThan(2)
       const recent = candidates[0]!
-      const due = candidates.find(
-        (candidate) =>
-          candidate.itemId !== recent.itemId &&
-          Math.abs(
-            candidate.difficultyLevel -
-              recent.difficultyLevel,
-          ) <= 1.5,
+      const due = candidates.find((candidate) =>
+        candidate.itemId !== recent.itemId &&
+        Math.abs(
+          candidate.difficultyLevel - recent.difficultyLevel,
+        ) <= 1.5 &&
+        (moduleId !== 'listening' || (
+          candidate.variantFamilyId !== recent.variantFamilyId &&
+          candidate.source.variantId !== recent.source.variantId
+        )),
       )
       expect(due).toBeDefined()
 
@@ -426,6 +428,56 @@ describe('R6 optional extra-training external acceptance', () => {
         status: 'item',
         item: { itemId: due!.itemId },
       })
+
+      if (moduleId === 'listening') {
+        const conflictingDue = candidates.find((candidate) =>
+          candidate.itemId !== recent.itemId &&
+          Math.abs(
+            candidate.difficultyLevel - recent.difficultyLevel,
+          ) <= 1.5 &&
+          (candidate.variantFamilyId === recent.variantFamilyId ||
+            candidate.source.variantId === recent.source.variantId),
+        )
+        const eligibleAlternative = candidates.find((candidate) =>
+          candidate.itemId !== recent.itemId &&
+          candidate.itemId !== conflictingDue?.itemId &&
+          Math.abs(
+            candidate.difficultyLevel - recent.difficultyLevel,
+          ) <= 1.5 &&
+          candidate.variantFamilyId !== recent.variantFamilyId &&
+          candidate.source.variantId !== recent.source.variantId,
+        )
+        expect(conflictingDue).toBeDefined()
+        expect(eligibleAlternative).toBeDefined()
+        const conflictingPriority = {
+          ...emptyPriorities(),
+          'recent-error': [recent.itemId],
+          'due-review': [conflictingDue!.itemId],
+        }
+        expect(conflictingPriority['due-review']).toContain(
+          conflictingDue!.itemId,
+        )
+        const deferredDueResult = await providers.listening.next(
+          requestFor('listening', {
+            targetDifficulty: recent.difficultyLevel,
+            excludeItemIds: [recent.itemId],
+            priorityItemIds: conflictingPriority,
+          }),
+        )
+        expect(deferredDueResult.status).toBe('item')
+        if (deferredDueResult.status === 'item') {
+          const deferred = releasedCandidates.find(
+            (candidate) => candidate.itemId === deferredDueResult.item.itemId,
+          )
+          expect(deferred?.itemId).not.toBe(conflictingDue!.itemId)
+          expect(deferred?.variantFamilyId).not.toBe(
+            recent.variantFamilyId,
+          )
+          expect(deferred?.source.variantId).not.toBe(
+            recent.source.variantId,
+          )
+        }
+      }
 
       const family = candidates.find((candidate) =>
         candidates.some(
