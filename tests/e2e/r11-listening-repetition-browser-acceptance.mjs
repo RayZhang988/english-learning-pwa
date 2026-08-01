@@ -84,6 +84,14 @@ async function answerAndAdvance(page) {
 
 function validateSequence(label, items) {
  assert.equal(new Set(items.map((item) => item.itemId)).size, items.length, `${label}: repeated itemId before exhaustion`)
+ const normalizedAudio = items.map((item) =>
+   String(item.audioText ?? '').toLowerCase().replace(/[\s\p{P}]+/gu, ' ').trim(),
+ )
+ assert.equal(
+   new Set(normalizedAudio).size,
+   normalizedAudio.length,
+   `${label}: distinct item IDs replayed identical normalized audio.`,
+ )
  for (let i = 1; i < items.length; i += 1) {
    assert.notEqual(items[i].source.variantId, items[i - 1].source.variantId, `${label}: adjacent type repeated at ${i}`)
    assert.equal(items.slice(Math.max(0, i - 4), i).some((old) => old.variantFamilyId === items[i].variantFamilyId), false, `${label}: family cooldown violated at ${i}`)
@@ -101,9 +109,14 @@ async function runDailySession(label, refreshAt = 5) {
      `R11 daily listening must start a continuous stream: ${JSON.stringify({ execution: listeningExecution(startedDatabases), snapshot: listeningSnapshot(startedDatabases) })}`,
    )
    const items = []
-   for (let index = 0; index < 12; index += 1) {
-     const before = itemFromSnapshot(listeningSnapshot(await qa.page.dumpIndexedDb()))
-     items.push(before)
+   for (let index = 0; index < 30; index += 1) {
+     const currentSnapshot = listeningSnapshot(await qa.page.dumpIndexedDb())
+     const before = itemFromSnapshot(currentSnapshot)
+     items.push({
+       ...before,
+       audioText: currentSnapshot?.questions?.[currentSnapshot.questionIndex]
+         ?.segments?.find((segment) => segment.id === currentSnapshot.playback?.currentSegmentId)?.text ?? null,
+     })
      if (index === refreshAt) {
        await qa.page.reload()
        await qa.page.waitFor(`[...document.querySelectorAll('button')].some((x) => (x.innerText.trim() === '播放音频' || x.getAttribute('aria-label') === '播放音频') && !x.disabled)`, 20_000)
@@ -113,7 +126,7 @@ async function runDailySession(label, refreshAt = 5) {
      await answerAndAdvance(qa.page)
    }
    validateSequence(label, items)
-   const summary = { label, planId: activePlan(await qa.page.dumpIndexedDb()).activePlan.plan.planId, itemIds: items.map((x) => x.itemId), families: items.map((x) => x.variantFamilyId), types: items.map((x) => x.source.variantId) }
+   const summary = { label, planId: activePlan(await qa.page.dumpIndexedDb()).activePlan.plan.planId, items: items.map((x) => ({ itemId: x.itemId, audioText: x.audioText, family: x.variantFamilyId, type: x.source.variantId })), itemIds: items.map((x) => x.itemId), families: items.map((x) => x.variantFamilyId), types: items.map((x) => x.source.variantId) }
    evidence.sessions.push(summary)
    return summary
  } finally { await qa.close() }
