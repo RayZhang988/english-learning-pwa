@@ -37,6 +37,9 @@ function parseItem(value: unknown): IndexedListeningSupplyItem {
     !Number.isFinite(value.difficultyLevel) || typeof value.supplyOrder !== 'number' ||
     !Number.isInteger(value.supplyOrder) ||
     typeof value.variantFamilyId !== 'string' ||
+    (value.playbackContentId !== undefined &&
+      (typeof value.playbackContentId !== 'string' ||
+        !/^listening-playback-v1-[a-f0-9]{8}$/u.test(value.playbackContentId))) ||
     value.variantFamilyId.length === 0 || !tags || !modes ||
     !sourceTypes.includes(String(value.source.sourceType)) ||
     typeof value.source.sourceId !== 'string' || typeof value.source.variantId !== 'string'
@@ -52,6 +55,12 @@ function parseItem(value: unknown): IndexedListeningSupplyItem {
     supplyOrder: value.supplyOrder,
     allowedModes: modes,
     variantFamilyId: value.variantFamilyId,
+    // Old isolated fixtures/indexes predate R11. Production accepts only the
+    // published identity above; this compatibility marker merely preserves
+    // their historical item-id behavior and is never emitted by 05 content.
+    playbackContentId: typeof value.playbackContentId === 'string'
+      ? value.playbackContentId
+      : `legacy-listening-playback-${value.source.sourceId}`,
     source: {
       sourceType: value.source.sourceType as ListeningSupplyItem['source']['sourceType'],
       sourceId: value.source.sourceId,
@@ -96,6 +105,7 @@ function selectDiverseItem(
   candidates: readonly IndexedListeningSupplyItem[],
   request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
   allItemsById: ReadonlyMap<string, IndexedListeningSupplyItem>,
+  allowPlaybackRepeat: boolean,
 ): IndexedListeningSupplyItem | undefined {
   const recent = request.excludeItemIds
     .slice(-DIVERSITY_WINDOW_ITEMS)
@@ -108,6 +118,7 @@ function selectDiverseItem(
       .slice(-FAMILY_COOLDOWN_ITEMS)
       .map((item) => item.variantFamilyId),
   )
+  const recentPlaybackContent = new Set(recent.map((item) => item.playbackContentId))
   const last = recent.at(-1)
   const recentTypeCounts = new Map<string, number>()
   for (const item of recent) {
@@ -122,6 +133,9 @@ function selectDiverseItem(
       const familyPenalty = recentFamilies.has(item.variantFamilyId)
         ? 10_000
         : 0
+      const playbackPenalty = !allowPlaybackRepeat && recentPlaybackContent.has(item.playbackContentId)
+        ? 100_000
+        : 0
       const consecutiveTypePenalty =
         item.source.variantId === last?.source.variantId ? 2_000 : 0
       const typeBalancePenalty =
@@ -129,6 +143,7 @@ function selectDiverseItem(
       const randomRank =
         stableHash(`${seed}:${item.itemId}`) / 0x1_0000_0000
       return (
+        playbackPenalty +
         familyPenalty +
         consecutiveTypePenalty +
         typeBalancePenalty +
@@ -189,8 +204,16 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'no-eligible-content' }
     }
     const excluded = new Set(request.excludeItemIds)
-    const available = eligible.filter((item) => !excluded.has(item.itemId))
-    if (available.length === 0) {
+    const completedPlaybackContent = new Set(
+      request.excludeItemIds
+        .map((itemId) => this.itemsById.get(itemId)?.playbackContentId)
+        .filter((identity): identity is string => identity !== undefined),
+    )
+    const availableByItem = eligible.filter((item) => !excluded.has(item.itemId))
+    const available = availableByItem.filter((item) =>
+      !completedPlaybackContent.has(item.playbackContentId),
+    )
+    if (available.length === 0 && !isExtraTrainingRequest(request)) {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'all-eligible-content-recently-used' }
     }
     if (isExtraTrainingRequest(request)) {
@@ -211,23 +234,31 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
                     declared.variantFamilyId === item.variantFamilyId,
                 ),
               )
-            : declaredCandidates.filter((item) => available.includes(item))
+            : declaredCandidates.filter((item) =>
+                (priority === 'recent-error' || priority === 'due-review'
+                  ? availableByItem
+                  : available).includes(item),
+              )
         )
-        const selected = selectDiverseItem(
-          priorityCandidates,
-          request,
-          this.itemsById,
+          const selected = selectDiverseItem(
+            priorityCandidates,
+            request,
+            this.itemsById,
+            priority === 'recent-error' || priority === 'due-review',
         )
         if (selected) {
           return { schemaVersion: 1, requestId: request.requestId, status: 'item', item: selected, nextCursor: selected.itemId }
         }
       }
     }
+    if (available.length === 0) {
+      return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'all-eligible-content-recently-used' }
+    }
     const cursorIndex = request.cursor === null ? -1 : eligible.findIndex((item) => item.itemId === request.cursor)
     if (request.cursor !== null && cursorIndex < 0) {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
     }
-    const item = selectDiverseItem(available, request, this.itemsById)
+    const item = selectDiverseItem(available, request, this.itemsById, false)
     if (!item) {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'all-eligible-content-recently-used' }
     }

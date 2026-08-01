@@ -20,7 +20,8 @@
     "deduplication": {
       "input": "request.excludeItemIds",
       "scope": "all-current-stream-completed-item-ids",
-      "whenAllEligibleExcluded": "all-eligible-content-recently-used"
+      "whenAllEligibleExcluded": "all-eligible-content-recently-used",
+      "listeningPlaybackIdentity": "candidate.playbackContentId derived from normalized published audio text"
     },
     "diversity": {
       "dailySeed": "request.planId+request.taskId",
@@ -330,6 +331,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -364,6 +366,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -398,6 +401,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -432,6 +436,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -466,6 +471,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -500,6 +506,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -534,6 +541,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -568,6 +576,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -602,6 +611,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -636,6 +646,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -670,6 +681,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -704,6 +716,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -738,6 +751,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -772,6 +786,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -806,6 +821,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -840,6 +856,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -874,6 +891,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -908,6 +926,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -942,6 +961,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -976,6 +996,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1010,6 +1031,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1044,6 +1066,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1078,6 +1101,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1112,6 +1136,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1146,6 +1171,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1180,6 +1206,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1214,6 +1241,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1248,6 +1276,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1282,6 +1311,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1316,6 +1346,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1350,6 +1381,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1384,6 +1416,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1418,6 +1451,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1453,6 +1487,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1488,6 +1523,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1523,6 +1559,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1558,6 +1595,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1593,6 +1631,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1628,6 +1667,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1663,6 +1703,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1698,6 +1739,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1733,6 +1775,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1768,6 +1811,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1803,6 +1847,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1838,6 +1883,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1873,6 +1919,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1908,6 +1955,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1943,6 +1991,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -1978,6 +2027,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2013,6 +2063,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2048,6 +2099,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2083,6 +2135,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2118,6 +2171,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2153,6 +2207,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2187,6 +2242,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2221,6 +2277,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2255,6 +2312,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2289,6 +2347,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2323,6 +2382,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2357,6 +2417,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2391,6 +2452,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2425,6 +2487,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2459,6 +2522,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2493,6 +2557,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2527,6 +2592,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2561,6 +2627,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2595,6 +2662,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2629,6 +2697,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2663,6 +2732,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2697,6 +2767,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2731,6 +2802,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2765,6 +2837,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2799,6 +2872,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2833,6 +2907,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2867,6 +2942,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2902,6 +2978,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2937,6 +3014,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -2972,6 +3050,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3007,6 +3086,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3042,6 +3122,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3077,6 +3158,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3112,6 +3194,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3147,6 +3230,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3182,6 +3266,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3217,6 +3302,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3252,6 +3338,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3287,6 +3374,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3322,6 +3410,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3357,6 +3446,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3392,6 +3482,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3427,6 +3518,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3462,6 +3554,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3497,6 +3590,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3532,6 +3626,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3567,6 +3662,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3602,6 +3698,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3636,6 +3733,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3670,6 +3768,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3704,6 +3803,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3738,6 +3838,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3772,6 +3873,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3806,6 +3908,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3840,6 +3943,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3874,6 +3978,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3908,6 +4013,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3942,6 +4048,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -3976,6 +4083,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4010,6 +4118,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4044,6 +4153,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4078,6 +4188,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4112,6 +4223,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4146,6 +4258,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4180,6 +4293,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4214,6 +4328,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4248,6 +4363,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4282,6 +4398,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4316,6 +4433,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4351,6 +4469,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4386,6 +4505,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4421,6 +4541,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4456,6 +4577,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4491,6 +4613,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4526,6 +4649,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4561,6 +4685,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4596,6 +4721,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4631,6 +4757,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4665,6 +4792,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4699,6 +4827,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4733,6 +4862,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4767,6 +4897,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4801,6 +4932,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4835,6 +4967,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4869,6 +5002,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4903,6 +5037,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4937,6 +5072,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -4971,6 +5107,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5005,6 +5142,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5039,6 +5177,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5073,6 +5212,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5107,6 +5247,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5141,6 +5282,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5175,6 +5317,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5209,6 +5352,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5243,6 +5387,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5277,6 +5422,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5311,6 +5457,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5345,6 +5492,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5379,6 +5527,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5413,6 +5562,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5447,6 +5597,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5481,6 +5632,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5515,6 +5667,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5549,6 +5702,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5583,6 +5737,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5617,6 +5772,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5651,6 +5807,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5685,6 +5842,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5719,6 +5877,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5753,6 +5912,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5787,6 +5947,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5821,6 +5982,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5855,6 +6017,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5890,6 +6053,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5925,6 +6089,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5960,6 +6125,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -5995,6 +6161,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6030,6 +6197,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6065,6 +6233,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6100,6 +6269,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6135,6 +6305,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6170,6 +6341,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6205,6 +6377,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6240,6 +6413,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6275,6 +6449,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6310,6 +6485,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6345,6 +6521,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6380,6 +6557,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6415,6 +6593,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6450,6 +6629,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6485,6 +6665,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6519,6 +6700,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6553,6 +6735,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6587,6 +6770,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6621,6 +6805,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6655,6 +6840,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6689,6 +6875,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6723,6 +6910,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6757,6 +6945,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6791,6 +6980,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6825,6 +7015,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6859,6 +7050,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6893,6 +7085,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6927,6 +7120,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6961,6 +7155,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -6995,6 +7190,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7029,6 +7225,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7063,6 +7260,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7097,6 +7295,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7131,6 +7330,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7165,6 +7365,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7199,6 +7400,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7233,6 +7435,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7267,6 +7470,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7301,6 +7505,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7335,6 +7540,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7369,6 +7575,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7403,6 +7610,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7437,6 +7645,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7471,6 +7680,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7505,6 +7715,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7539,6 +7750,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7573,6 +7785,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7607,6 +7820,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7641,6 +7855,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7675,6 +7890,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7709,6 +7925,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7744,6 +7961,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7779,6 +7997,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7814,6 +8033,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7849,6 +8069,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7884,6 +8105,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7919,6 +8141,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7954,6 +8177,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -7989,6 +8213,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8024,6 +8249,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8059,6 +8285,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8094,6 +8321,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8129,6 +8357,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8164,6 +8393,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8199,6 +8429,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8234,6 +8465,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8269,6 +8501,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8304,6 +8537,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8339,6 +8573,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8374,6 +8609,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8409,6 +8645,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8444,6 +8681,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8479,6 +8717,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8514,6 +8753,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8549,6 +8789,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8584,6 +8825,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8619,6 +8861,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8654,6 +8897,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8688,6 +8932,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8722,6 +8967,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8756,6 +9002,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8790,6 +9037,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8824,6 +9072,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8858,6 +9107,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8892,6 +9142,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8926,6 +9177,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8960,6 +9212,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -8994,6 +9247,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9028,6 +9282,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9062,6 +9317,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9096,6 +9352,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9130,6 +9387,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9164,6 +9422,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9198,6 +9457,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9232,6 +9492,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9266,6 +9527,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9300,6 +9562,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9334,6 +9597,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9368,6 +9632,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9403,6 +9668,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9438,6 +9704,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9473,6 +9740,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9508,6 +9776,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9543,6 +9812,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9578,6 +9848,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9613,6 +9884,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9648,6 +9920,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9683,6 +9956,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9718,6 +9992,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9753,6 +10028,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9788,6 +10064,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9823,6 +10100,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9858,6 +10136,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9893,6 +10172,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9928,6 +10208,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9963,6 +10244,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -9998,6 +10280,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10033,6 +10316,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10068,6 +10352,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10103,6 +10388,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10137,6 +10423,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10171,6 +10458,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10205,6 +10493,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10239,6 +10528,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10273,6 +10563,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10307,6 +10598,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10341,6 +10633,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10375,6 +10668,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10409,6 +10703,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10443,6 +10738,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10477,6 +10773,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10511,6 +10808,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10545,6 +10843,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10579,6 +10878,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10613,6 +10913,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10647,6 +10948,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10681,6 +10983,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10715,6 +11018,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10749,6 +11053,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10783,6 +11088,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10817,6 +11123,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10851,6 +11158,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10885,6 +11193,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10919,6 +11228,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10953,6 +11263,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -10987,6 +11298,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11021,6 +11333,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11055,6 +11368,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11089,6 +11403,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11123,6 +11438,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11157,6 +11473,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11191,6 +11508,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11225,6 +11543,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11259,6 +11578,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11293,6 +11613,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11327,6 +11648,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11361,6 +11683,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11395,6 +11718,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11429,6 +11753,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11463,6 +11788,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11497,6 +11823,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11531,6 +11858,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11565,6 +11893,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11599,6 +11928,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11633,6 +11963,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11667,6 +11998,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11701,6 +12033,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11735,6 +12068,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11769,6 +12103,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11803,6 +12138,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11837,6 +12173,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11871,6 +12208,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11905,6 +12243,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11939,6 +12278,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -11973,6 +12313,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12007,6 +12348,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12041,6 +12383,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12075,6 +12418,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12109,6 +12453,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12143,6 +12488,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12178,6 +12524,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12213,6 +12560,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12248,6 +12596,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12283,6 +12632,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12318,6 +12668,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12353,6 +12704,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12388,6 +12740,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12423,6 +12776,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12458,6 +12812,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12493,6 +12848,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12528,6 +12884,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12563,6 +12920,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12598,6 +12956,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12633,6 +12992,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12668,6 +13028,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12703,6 +13064,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12738,6 +13100,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12773,6 +13136,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12808,6 +13172,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12843,6 +13208,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12878,6 +13244,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12913,6 +13280,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12948,6 +13316,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -12983,6 +13352,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13018,6 +13388,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13053,6 +13424,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13088,6 +13460,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13123,6 +13496,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13158,6 +13532,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13193,6 +13568,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13228,6 +13604,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13263,6 +13640,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13298,6 +13676,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13333,6 +13712,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13368,6 +13748,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13403,6 +13784,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13438,6 +13820,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13473,6 +13856,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13508,6 +13892,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13543,6 +13928,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13578,6 +13964,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13613,6 +14000,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13648,6 +14036,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13683,6 +14072,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13718,6 +14108,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13753,6 +14144,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13788,6 +14180,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13823,6 +14216,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13858,6 +14252,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13893,6 +14288,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13928,6 +14324,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13963,6 +14360,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -13998,6 +14396,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14033,6 +14432,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14068,6 +14468,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14103,6 +14504,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14138,6 +14540,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14173,6 +14576,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14208,6 +14612,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14243,6 +14648,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14278,6 +14684,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14313,6 +14720,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14348,6 +14756,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14383,6 +14792,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14418,6 +14828,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14453,6 +14864,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14488,6 +14900,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14523,6 +14936,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14558,6 +14972,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14593,6 +15008,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14628,6 +15044,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14663,6 +15080,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14697,6 +15115,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14731,6 +15150,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14765,6 +15185,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14799,6 +15220,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14833,6 +15255,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14867,6 +15290,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14901,6 +15325,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14935,6 +15360,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -14969,6 +15395,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15003,6 +15430,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15037,6 +15465,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15071,6 +15500,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15105,6 +15535,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15139,6 +15570,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15173,6 +15605,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15207,6 +15640,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15241,6 +15675,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15275,6 +15710,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15309,6 +15745,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15343,6 +15780,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15377,6 +15815,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15412,6 +15851,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15447,6 +15887,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15482,6 +15923,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15517,6 +15959,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15552,6 +15995,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15587,6 +16031,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15622,6 +16067,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15657,6 +16103,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15692,6 +16139,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15727,6 +16175,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15762,6 +16211,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15797,6 +16247,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15832,6 +16283,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15867,6 +16319,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15902,6 +16355,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15937,6 +16391,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -15972,6 +16427,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16007,6 +16463,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16042,6 +16499,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16077,6 +16535,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16112,6 +16571,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16147,6 +16607,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16182,6 +16643,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16217,6 +16679,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16252,6 +16715,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16287,6 +16751,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16322,6 +16787,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16357,6 +16823,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16392,6 +16859,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16427,6 +16895,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16462,6 +16931,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16497,6 +16967,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16532,6 +17003,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16567,6 +17039,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16602,6 +17075,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16637,6 +17111,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16672,6 +17147,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16707,6 +17183,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16742,6 +17219,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16777,6 +17255,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16812,6 +17291,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16847,6 +17327,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16882,6 +17363,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16917,6 +17399,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16952,6 +17435,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -16987,6 +17471,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -17022,6 +17507,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -17057,6 +17543,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -17092,6 +17579,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -17127,6 +17615,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -17162,6 +17651,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 18,
       "source": {
         "sourceType": "vocabulary-item",
@@ -17197,6 +17687,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-34d03e9c",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -17227,6 +17718,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-fa931470",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-extension",
@@ -17257,6 +17749,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-202ec89d",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -17287,6 +17780,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-ec4b3de2",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -17317,6 +17811,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-e13bf4f5",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -17347,6 +17842,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-ec4b3de2",
       "nominalEffectiveSeconds": 35,
       "source": {
         "sourceType": "listening-core-check",
@@ -17377,6 +17873,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-ec4b3de2",
       "nominalEffectiveSeconds": 35,
       "source": {
         "sourceType": "listening-core-check",
@@ -17407,6 +17904,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-ec4b3de2",
       "nominalEffectiveSeconds": 35,
       "source": {
         "sourceType": "listening-core-check",
@@ -17437,6 +17935,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-4f93eb19",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -17467,6 +17966,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-0bfb0620",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -17497,6 +17997,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-f1b4b796",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -17527,6 +18028,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-1c19b2c2",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -17557,6 +18059,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-3bc4b63e",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -17587,6 +18090,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-7c201007",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -17617,6 +18121,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-3bc4b63e",
       "nominalEffectiveSeconds": 34,
       "source": {
         "sourceType": "listening-core-check",
@@ -17647,6 +18152,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-3bc4b63e",
       "nominalEffectiveSeconds": 34,
       "source": {
         "sourceType": "listening-core-check",
@@ -17677,6 +18183,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-3bc4b63e",
       "nominalEffectiveSeconds": 34,
       "source": {
         "sourceType": "listening-core-check",
@@ -17707,6 +18214,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-360714d4",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -17737,6 +18245,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-07cc2b2a",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -17767,6 +18276,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-ab596049",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -17797,6 +18307,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-34f18b6d",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -17827,6 +18338,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-90d5ec42",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -17857,6 +18369,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-4c844807",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -17887,6 +18400,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-90d5ec42",
       "nominalEffectiveSeconds": 34,
       "source": {
         "sourceType": "listening-core-check",
@@ -17917,6 +18431,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-90d5ec42",
       "nominalEffectiveSeconds": 34,
       "source": {
         "sourceType": "listening-core-check",
@@ -17947,6 +18462,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-90d5ec42",
       "nominalEffectiveSeconds": 34,
       "source": {
         "sourceType": "listening-core-check",
@@ -17977,6 +18493,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-5f45c9aa",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -18007,6 +18524,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-affd7313",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -18037,6 +18555,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-6e0aaebc",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-extension",
@@ -18067,6 +18586,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-066fb483",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -18097,6 +18617,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-eeed6d57",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -18127,6 +18648,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-a5614f5a",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -18157,6 +18679,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-eeed6d57",
       "nominalEffectiveSeconds": 38,
       "source": {
         "sourceType": "listening-core-check",
@@ -18187,6 +18710,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-eeed6d57",
       "nominalEffectiveSeconds": 38,
       "source": {
         "sourceType": "listening-core-check",
@@ -18217,6 +18741,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-eeed6d57",
       "nominalEffectiveSeconds": 38,
       "source": {
         "sourceType": "listening-core-check",
@@ -18247,6 +18772,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-ca1db73d",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -18277,6 +18803,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-d99ba82a",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -18307,6 +18834,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-ca8941d1",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-extension",
@@ -18337,6 +18865,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-239cf1c0",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -18367,6 +18896,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-4acaa3f1",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -18397,6 +18927,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-4eb1fbd5",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -18427,6 +18958,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-4acaa3f1",
       "nominalEffectiveSeconds": 39,
       "source": {
         "sourceType": "listening-core-check",
@@ -18457,6 +18989,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-4acaa3f1",
       "nominalEffectiveSeconds": 39,
       "source": {
         "sourceType": "listening-core-check",
@@ -18487,6 +19020,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-4acaa3f1",
       "nominalEffectiveSeconds": 39,
       "source": {
         "sourceType": "listening-core-check",
@@ -18517,6 +19051,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-74a75dd9",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -18547,6 +19082,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-32581e9a",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -18577,6 +19113,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-bb14c8b8",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-extension",
@@ -18607,6 +19144,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-40232911",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -18637,6 +19175,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-16069a6b",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-extension",
@@ -18667,6 +19206,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-d051fe4d",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-extension",
@@ -18697,6 +19237,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-16069a6b",
       "nominalEffectiveSeconds": 45,
       "source": {
         "sourceType": "listening-core-check",
@@ -18727,6 +19268,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-16069a6b",
       "nominalEffectiveSeconds": 45,
       "source": {
         "sourceType": "listening-core-check",
@@ -18757,6 +19299,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-16069a6b",
       "nominalEffectiveSeconds": 45,
       "source": {
         "sourceType": "listening-core-check",
@@ -18787,6 +19330,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-a2ca8302",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -18818,6 +19362,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-affd7313",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -18849,6 +19394,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-fcaeb7d9",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-extension",
@@ -18880,6 +19426,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-86756781",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -18911,6 +19458,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-8d8563e5",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-extension",
@@ -18942,6 +19490,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-937ca465",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -18973,6 +19522,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-8d8563e5",
       "nominalEffectiveSeconds": 51,
       "source": {
         "sourceType": "listening-core-check",
@@ -19004,6 +19554,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-8d8563e5",
       "nominalEffectiveSeconds": 51,
       "source": {
         "sourceType": "listening-core-check",
@@ -19035,6 +19586,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-8d8563e5",
       "nominalEffectiveSeconds": 51,
       "source": {
         "sourceType": "listening-core-check",
@@ -19066,6 +19618,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-2e2d0d7d",
       "nominalEffectiveSeconds": 25,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -19096,6 +19649,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-be35d2b9",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -19126,6 +19680,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-ae5626a2",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -19156,6 +19711,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-4b2ef5b3",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -19186,6 +19742,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-bb480c01",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -19216,6 +19773,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-3c694558",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -19246,6 +19804,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-bb480c01",
       "nominalEffectiveSeconds": 42,
       "source": {
         "sourceType": "listening-core-check",
@@ -19276,6 +19835,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-bb480c01",
       "nominalEffectiveSeconds": 42,
       "source": {
         "sourceType": "listening-core-check",
@@ -19306,6 +19866,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-bb480c01",
       "nominalEffectiveSeconds": 42,
       "source": {
         "sourceType": "listening-core-check",
@@ -19336,6 +19897,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-ee6890e9",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -19367,6 +19929,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-befbd8a4",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -19398,6 +19961,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-6ec58048",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -19429,6 +19993,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-9cb99993",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -19460,6 +20025,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-e21c6c12",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -19491,6 +20057,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-15ee103c",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -19522,6 +20089,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-e21c6c12",
       "nominalEffectiveSeconds": 42,
       "source": {
         "sourceType": "listening-core-check",
@@ -19553,6 +20121,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-e21c6c12",
       "nominalEffectiveSeconds": 42,
       "source": {
         "sourceType": "listening-core-check",
@@ -19584,6 +20153,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-e21c6c12",
       "nominalEffectiveSeconds": 42,
       "source": {
         "sourceType": "listening-core-check",
@@ -19615,6 +20185,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-473a50b3",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -19646,6 +20217,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-b3711c47",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -19677,6 +20249,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-5f66b84d",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -19708,6 +20281,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-666563f7",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -19739,6 +20313,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-70de6269",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -19770,6 +20345,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-66894756",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -19801,6 +20377,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-70de6269",
       "nominalEffectiveSeconds": 43,
       "source": {
         "sourceType": "listening-core-check",
@@ -19832,6 +20409,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-70de6269",
       "nominalEffectiveSeconds": 43,
       "source": {
         "sourceType": "listening-core-check",
@@ -19863,6 +20441,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-70de6269",
       "nominalEffectiveSeconds": 43,
       "source": {
         "sourceType": "listening-core-check",
@@ -19894,6 +20473,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-a0d6d862",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -19924,6 +20504,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-78e32de5",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -19954,6 +20535,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-ec805d4a",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -19984,6 +20566,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-bf0dc8dc",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -20014,6 +20597,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-b183c848",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -20044,6 +20628,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-924895c1",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -20074,6 +20659,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-b183c848",
       "nominalEffectiveSeconds": 42,
       "source": {
         "sourceType": "listening-core-check",
@@ -20104,6 +20690,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-b183c848",
       "nominalEffectiveSeconds": 42,
       "source": {
         "sourceType": "listening-core-check",
@@ -20134,6 +20721,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-b183c848",
       "nominalEffectiveSeconds": 42,
       "source": {
         "sourceType": "listening-core-check",
@@ -20164,6 +20752,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-8e10bc71",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -20195,6 +20784,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-2a4a32b2",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -20226,6 +20816,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-fd16209b",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-extension",
@@ -20257,6 +20848,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-ce6f8d3b",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -20288,6 +20880,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-1bad3836",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-extension",
@@ -20319,6 +20912,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-dbfd7ab1",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -20350,6 +20944,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-1bad3836",
       "nominalEffectiveSeconds": 42,
       "source": {
         "sourceType": "listening-core-check",
@@ -20381,6 +20976,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-1bad3836",
       "nominalEffectiveSeconds": 42,
       "source": {
         "sourceType": "listening-core-check",
@@ -20412,6 +21008,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-1bad3836",
       "nominalEffectiveSeconds": 42,
       "source": {
         "sourceType": "listening-core-check",
@@ -20443,6 +21040,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-c75b2af4",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -20473,6 +21071,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-6958f085",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -20503,6 +21102,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-4fdea188",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -20533,6 +21133,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-7d2a1d97",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-extension",
@@ -20563,6 +21164,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-97cfaef1",
       "nominalEffectiveSeconds": 25,
       "source": {
         "sourceType": "listening-extension",
@@ -20593,6 +21195,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-d0d5e23e",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-extension",
@@ -20623,6 +21226,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-97cfaef1",
       "nominalEffectiveSeconds": 46,
       "source": {
         "sourceType": "listening-core-check",
@@ -20653,6 +21257,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-97cfaef1",
       "nominalEffectiveSeconds": 46,
       "source": {
         "sourceType": "listening-core-check",
@@ -20683,6 +21288,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-97cfaef1",
       "nominalEffectiveSeconds": 46,
       "source": {
         "sourceType": "listening-core-check",
@@ -20713,6 +21319,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-427396aa",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -20744,6 +21351,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-c2ab7386",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -20775,6 +21383,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-d1def821",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -20806,6 +21415,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-3b80fe2f",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -20837,6 +21447,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-1b902e7b",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -20868,6 +21479,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-cc044454",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -20899,6 +21511,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-1b902e7b",
       "nominalEffectiveSeconds": 49,
       "source": {
         "sourceType": "listening-core-check",
@@ -20930,6 +21543,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-1b902e7b",
       "nominalEffectiveSeconds": 49,
       "source": {
         "sourceType": "listening-core-check",
@@ -20961,6 +21575,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-1b902e7b",
       "nominalEffectiveSeconds": 49,
       "source": {
         "sourceType": "listening-core-check",
@@ -20992,6 +21607,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-6b6c5fc0",
       "nominalEffectiveSeconds": 27,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -21022,6 +21638,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-35afd776",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -21052,6 +21669,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-d8c944f8",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -21082,6 +21700,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-64da0bc6",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -21112,6 +21731,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-3ade0ecb",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -21142,6 +21762,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-68bccb32",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -21172,6 +21793,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-3ade0ecb",
       "nominalEffectiveSeconds": 44,
       "source": {
         "sourceType": "listening-core-check",
@@ -21202,6 +21824,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-3ade0ecb",
       "nominalEffectiveSeconds": 44,
       "source": {
         "sourceType": "listening-core-check",
@@ -21232,6 +21855,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-3ade0ecb",
       "nominalEffectiveSeconds": 44,
       "source": {
         "sourceType": "listening-core-check",
@@ -21262,6 +21886,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-1bf049e5",
       "nominalEffectiveSeconds": 25,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -21292,6 +21917,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-eae6b243",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -21322,6 +21948,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-03c8e52d",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -21352,6 +21979,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-4af6b1bb",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -21382,6 +22010,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-6b90181f",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -21412,6 +22041,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-1192d213",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -21442,6 +22072,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-6b90181f",
       "nominalEffectiveSeconds": 45,
       "source": {
         "sourceType": "listening-core-check",
@@ -21472,6 +22103,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-6b90181f",
       "nominalEffectiveSeconds": 45,
       "source": {
         "sourceType": "listening-core-check",
@@ -21502,6 +22134,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-6b90181f",
       "nominalEffectiveSeconds": 45,
       "source": {
         "sourceType": "listening-core-check",
@@ -21532,6 +22165,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-e8f066cb",
       "nominalEffectiveSeconds": 25,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -21562,6 +22196,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-0fea38fe",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -21592,6 +22227,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-59bf5490",
       "nominalEffectiveSeconds": 25,
       "source": {
         "sourceType": "listening-extension",
@@ -21622,6 +22258,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-064a0535",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -21652,6 +22289,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-fffb7f68",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -21682,6 +22320,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-41781971",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -21712,6 +22351,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-fffb7f68",
       "nominalEffectiveSeconds": 50,
       "source": {
         "sourceType": "listening-core-check",
@@ -21742,6 +22382,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-fffb7f68",
       "nominalEffectiveSeconds": 50,
       "source": {
         "sourceType": "listening-core-check",
@@ -21772,6 +22413,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-fffb7f68",
       "nominalEffectiveSeconds": 50,
       "source": {
         "sourceType": "listening-core-check",
@@ -21802,6 +22444,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-2c2ed3c0",
       "nominalEffectiveSeconds": 25,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -21833,6 +22476,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-46c72e58",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -21864,6 +22508,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-dd4f3d5b",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -21895,6 +22540,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-dc3cdb67",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -21926,6 +22572,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-bc40997a",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -21957,6 +22604,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-66dde1bd",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -21988,6 +22636,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-bc40997a",
       "nominalEffectiveSeconds": 46,
       "source": {
         "sourceType": "listening-core-check",
@@ -22019,6 +22668,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-bc40997a",
       "nominalEffectiveSeconds": 46,
       "source": {
         "sourceType": "listening-core-check",
@@ -22050,6 +22700,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-bc40997a",
       "nominalEffectiveSeconds": 46,
       "source": {
         "sourceType": "listening-core-check",
@@ -22081,6 +22732,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-2ee8318f",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -22111,6 +22763,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-3751e759",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -22141,6 +22794,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-b8db7b2f",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-extension",
@@ -22171,6 +22825,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-0f4d3b2a",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -22201,6 +22856,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-315d93e4",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -22231,6 +22887,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-0d392245",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -22261,6 +22918,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-315d93e4",
       "nominalEffectiveSeconds": 48,
       "source": {
         "sourceType": "listening-core-check",
@@ -22291,6 +22949,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-315d93e4",
       "nominalEffectiveSeconds": 48,
       "source": {
         "sourceType": "listening-core-check",
@@ -22321,6 +22980,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-315d93e4",
       "nominalEffectiveSeconds": 48,
       "source": {
         "sourceType": "listening-core-check",
@@ -22351,6 +23011,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-54ecf2ec",
       "nominalEffectiveSeconds": 25,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -22382,6 +23043,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-3aeb6f33",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -22413,6 +23075,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-666f1702",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-extension",
@@ -22444,6 +23107,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-18197ef5",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -22475,6 +23139,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-52580549",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-extension",
@@ -22506,6 +23171,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-d9129e50",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -22537,6 +23203,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-52580549",
       "nominalEffectiveSeconds": 39,
       "source": {
         "sourceType": "listening-core-check",
@@ -22568,6 +23235,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-52580549",
       "nominalEffectiveSeconds": 39,
       "source": {
         "sourceType": "listening-core-check",
@@ -22599,6 +23267,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-52580549",
       "nominalEffectiveSeconds": 39,
       "source": {
         "sourceType": "listening-core-check",
@@ -22630,6 +23299,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-af832438",
       "nominalEffectiveSeconds": 25,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -22661,6 +23331,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-901d207e",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -22692,6 +23363,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-256143b5",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -22723,6 +23395,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-1bb1b676",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -22754,6 +23427,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-881ed923",
       "nominalEffectiveSeconds": 26,
       "source": {
         "sourceType": "listening-extension",
@@ -22785,6 +23459,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-c9867eb0",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-extension",
@@ -22816,6 +23491,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-881ed923",
       "nominalEffectiveSeconds": 56,
       "source": {
         "sourceType": "listening-core-check",
@@ -22847,6 +23523,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-881ed923",
       "nominalEffectiveSeconds": 56,
       "source": {
         "sourceType": "listening-core-check",
@@ -22878,6 +23555,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-881ed923",
       "nominalEffectiveSeconds": 56,
       "source": {
         "sourceType": "listening-core-check",
@@ -22909,6 +23587,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-e7a135c5",
       "nominalEffectiveSeconds": 26,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -22940,6 +23619,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-269699dd",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -22971,6 +23651,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-f078f491",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-extension",
@@ -23002,6 +23683,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-2b65dce7",
       "nominalEffectiveSeconds": 22,
       "source": {
         "sourceType": "listening-extension",
@@ -23033,6 +23715,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-ef7e8af0",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-extension",
@@ -23064,6 +23747,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-5fa46f04",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-extension",
@@ -23095,6 +23779,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-ef7e8af0",
       "nominalEffectiveSeconds": 53,
       "source": {
         "sourceType": "listening-core-check",
@@ -23126,6 +23811,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-ef7e8af0",
       "nominalEffectiveSeconds": 53,
       "source": {
         "sourceType": "listening-core-check",
@@ -23157,6 +23843,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-ef7e8af0",
       "nominalEffectiveSeconds": 53,
       "source": {
         "sourceType": "listening-core-check",
@@ -23188,6 +23875,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-128803e9",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -23219,6 +23907,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-39e8b4d1",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -23250,6 +23939,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-851a4234",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -23281,6 +23971,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-ffb608c3",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -23312,6 +24003,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-16d0a137",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-extension",
@@ -23343,6 +24035,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-e944fc58",
       "nominalEffectiveSeconds": 25,
       "source": {
         "sourceType": "listening-extension",
@@ -23374,6 +24067,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-16d0a137",
       "nominalEffectiveSeconds": 46,
       "source": {
         "sourceType": "listening-core-check",
@@ -23405,6 +24099,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-16d0a137",
       "nominalEffectiveSeconds": 46,
       "source": {
         "sourceType": "listening-core-check",
@@ -23436,6 +24131,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-16d0a137",
       "nominalEffectiveSeconds": 46,
       "source": {
         "sourceType": "listening-core-check",
@@ -23467,6 +24163,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-5cca5126",
       "nominalEffectiveSeconds": 25,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -23499,6 +24196,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-ddd200a5",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -23531,6 +24229,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-fc07331b",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -23563,6 +24262,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-9e462fd9",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -23595,6 +24295,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-4eb5fb26",
       "nominalEffectiveSeconds": 23,
       "source": {
         "sourceType": "listening-extension",
@@ -23627,6 +24328,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-877e1716",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -23659,6 +24361,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-4eb5fb26",
       "nominalEffectiveSeconds": 50,
       "source": {
         "sourceType": "listening-core-check",
@@ -23691,6 +24394,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-4eb5fb26",
       "nominalEffectiveSeconds": 50,
       "source": {
         "sourceType": "listening-core-check",
@@ -23723,6 +24427,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-4eb5fb26",
       "nominalEffectiveSeconds": 50,
       "source": {
         "sourceType": "listening-core-check",
@@ -23755,6 +24460,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-048230f0",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -23787,6 +24493,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-c7a89f0b",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -23819,6 +24526,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-a5ac7f36",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -23851,6 +24559,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-ff55434e",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -23883,6 +24592,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-1bfaf7ae",
       "nominalEffectiveSeconds": 25,
       "source": {
         "sourceType": "listening-extension",
@@ -23915,6 +24625,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-54cb2e45",
       "nominalEffectiveSeconds": 25,
       "source": {
         "sourceType": "listening-extension",
@@ -23947,6 +24658,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-1bfaf7ae",
       "nominalEffectiveSeconds": 65,
       "source": {
         "sourceType": "listening-core-check",
@@ -23979,6 +24691,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-1bfaf7ae",
       "nominalEffectiveSeconds": 65,
       "source": {
         "sourceType": "listening-core-check",
@@ -24011,6 +24724,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-1bfaf7ae",
       "nominalEffectiveSeconds": 65,
       "source": {
         "sourceType": "listening-core-check",
@@ -24043,6 +24757,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-e6a4c435",
       "nominalEffectiveSeconds": 27,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -24075,6 +24790,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-9f0c3d2b",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -24107,6 +24823,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-bc1233fd",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -24139,6 +24856,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-fd7a02b8",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -24171,6 +24889,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-341a4afc",
       "nominalEffectiveSeconds": 25,
       "source": {
         "sourceType": "listening-extension",
@@ -24203,6 +24922,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-514144f7",
       "nominalEffectiveSeconds": 25,
       "source": {
         "sourceType": "listening-extension",
@@ -24235,6 +24955,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-341a4afc",
       "nominalEffectiveSeconds": 63,
       "source": {
         "sourceType": "listening-core-check",
@@ -24267,6 +24988,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-341a4afc",
       "nominalEffectiveSeconds": 63,
       "source": {
         "sourceType": "listening-core-check",
@@ -24299,6 +25021,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-341a4afc",
       "nominalEffectiveSeconds": 63,
       "source": {
         "sourceType": "listening-core-check",
@@ -24331,6 +25054,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-925b4b7f",
       "nominalEffectiveSeconds": 28,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -24363,6 +25087,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-2aee0f9a",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -24395,6 +25120,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-f26e6464",
       "nominalEffectiveSeconds": 26,
       "source": {
         "sourceType": "listening-extension",
@@ -24427,6 +25153,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-f26ec7ef",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -24459,6 +25186,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-bfc0327b",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -24491,6 +25219,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-48601626",
       "nominalEffectiveSeconds": 25,
       "source": {
         "sourceType": "listening-extension",
@@ -24523,6 +25252,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-bfc0327b",
       "nominalEffectiveSeconds": 69,
       "source": {
         "sourceType": "listening-core-check",
@@ -24555,6 +25285,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-bfc0327b",
       "nominalEffectiveSeconds": 69,
       "source": {
         "sourceType": "listening-core-check",
@@ -24587,6 +25318,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-bfc0327b",
       "nominalEffectiveSeconds": 69,
       "source": {
         "sourceType": "listening-core-check",
@@ -24619,6 +25351,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-fa3c6dab",
       "nominalEffectiveSeconds": 26,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -24652,6 +25385,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-337d853e",
       "nominalEffectiveSeconds": 20,
       "source": {
         "sourceType": "listening-extension",
@@ -24685,6 +25419,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-2dcdf8d7",
       "nominalEffectiveSeconds": 26,
       "source": {
         "sourceType": "listening-extension",
@@ -24718,6 +25453,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-e5cdf2da",
       "nominalEffectiveSeconds": 21,
       "source": {
         "sourceType": "listening-extension",
@@ -24751,6 +25487,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-c5989c53",
       "nominalEffectiveSeconds": 27,
       "source": {
         "sourceType": "listening-extension",
@@ -24784,6 +25521,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-4a26463e",
       "nominalEffectiveSeconds": 24,
       "source": {
         "sourceType": "listening-extension",
@@ -24817,6 +25555,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-c5989c53",
       "nominalEffectiveSeconds": 101,
       "source": {
         "sourceType": "listening-core-check",
@@ -24850,6 +25589,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-c5989c53",
       "nominalEffectiveSeconds": 101,
       "source": {
         "sourceType": "listening-core-check",
@@ -24883,6 +25623,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-c5989c53",
       "nominalEffectiveSeconds": 101,
       "source": {
         "sourceType": "listening-core-check",
@@ -24916,6 +25657,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-c5989c53",
       "nominalEffectiveSeconds": 101,
       "source": {
         "sourceType": "listening-core-check",
@@ -24949,6 +25691,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": "listening-playback-v1-9770b82e",
       "nominalEffectiveSeconds": 31,
       "source": {
         "sourceType": "listening-scene-quiz",
@@ -24978,6 +25721,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25007,6 +25751,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25036,6 +25781,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25065,6 +25811,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -25095,6 +25842,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25125,6 +25873,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25155,6 +25904,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25185,6 +25935,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -25215,6 +25966,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25245,6 +25997,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25275,6 +26028,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25305,6 +26059,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -25335,6 +26090,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25365,6 +26121,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25395,6 +26152,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25425,6 +26183,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -25455,6 +26214,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25485,6 +26245,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25515,6 +26276,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25545,6 +26307,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -25575,6 +26338,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25605,6 +26369,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25635,6 +26400,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25665,6 +26431,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -25695,6 +26462,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25725,6 +26493,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25755,6 +26524,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25785,6 +26555,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25815,6 +26586,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -25845,6 +26617,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25875,6 +26648,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25905,6 +26679,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25935,6 +26710,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -25965,6 +26741,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -25995,6 +26772,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26025,6 +26803,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26055,6 +26834,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -26085,6 +26865,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26115,6 +26896,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26145,6 +26927,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26175,6 +26958,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -26205,6 +26989,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26235,6 +27020,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26265,6 +27051,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26295,6 +27082,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -26325,6 +27113,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26355,6 +27144,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26385,6 +27175,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26415,6 +27206,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -26446,6 +27238,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26477,6 +27270,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26508,6 +27302,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26539,6 +27334,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -26569,6 +27365,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26599,6 +27396,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26629,6 +27427,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26659,6 +27458,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26689,6 +27489,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -26719,6 +27520,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26749,6 +27551,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26779,6 +27582,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26809,6 +27613,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -26839,6 +27644,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26869,6 +27675,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26899,6 +27706,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26929,6 +27737,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -26959,6 +27768,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -26989,6 +27799,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27019,6 +27830,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27049,6 +27861,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -27079,6 +27892,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27109,6 +27923,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27139,6 +27954,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27169,6 +27985,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -27199,6 +28016,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27229,6 +28047,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27259,6 +28078,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27289,6 +28109,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -27319,6 +28140,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27349,6 +28171,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27379,6 +28202,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27409,6 +28233,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -27439,6 +28264,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27469,6 +28295,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27499,6 +28326,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27529,6 +28357,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27559,6 +28388,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -27589,6 +28419,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27619,6 +28450,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27649,6 +28481,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27679,6 +28512,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -27709,6 +28543,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27739,6 +28574,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27769,6 +28605,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27799,6 +28636,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27829,6 +28667,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -27859,6 +28698,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27889,6 +28729,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27919,6 +28760,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27949,6 +28791,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -27979,6 +28822,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -28009,6 +28853,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -28039,6 +28884,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -28069,6 +28915,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -28099,6 +28946,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -28129,6 +28977,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -28159,6 +29008,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -28189,6 +29039,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -28219,6 +29070,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -28249,6 +29101,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -28279,6 +29132,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -28309,6 +29163,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -28339,6 +29194,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -28369,6 +29225,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -28399,6 +29256,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -28429,6 +29287,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",
@@ -28459,6 +29318,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -28489,6 +29349,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -28519,6 +29380,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -28549,6 +29411,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -28579,6 +29442,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-prompt",
@@ -28609,6 +29473,7 @@
         "review",
         "retry"
       ],
+      "playbackContentId": null,
       "nominalEffectiveSeconds": 52,
       "source": {
         "sourceType": "speaking-scene-quiz",

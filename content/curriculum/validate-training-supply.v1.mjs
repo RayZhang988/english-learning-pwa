@@ -66,6 +66,26 @@ function nominalUtteranceSeconds(text) {
   )
 }
 
+/**
+ * Published playback identity deliberately follows the actual spoken text,
+ * rather than the question or candidate id.  Keep this small deterministic
+ * fingerprint here (instead of in the UI) so a content edit is caught when
+ * the generated index drifts.
+ */
+function normalizedPlaybackText(text) {
+  return text.toLocaleLowerCase('en-US').replace(/[\s\p{P}]+/gu, ' ').trim()
+}
+
+function playbackContentId(text) {
+  const normalized = normalizedPlaybackText(text)
+  let hash = 0x811c9dc5
+  for (let index = 0; index < normalized.length; index += 1) {
+    hash ^= normalized.charCodeAt(index)
+    hash = Math.imul(hash, 0x01000193)
+  }
+  return `listening-playback-v1-${(hash >>> 0).toString(16).padStart(8, '0')}`
+}
+
 function extensionAudioText(exercise, listeningUnit) {
   const source = exercise.audioSource
   if (source.sourceType === 'tts-text') {
@@ -97,6 +117,9 @@ function candidateBase(unit, domain, order) {
     difficultyLevel: unit.difficultyLevel,
     tags: [...unit.tags, `supply-domain:${domain}`],
     allowedModes: modes,
+    // Present on every generated candidate to keep the published JSON shape
+    // stable; only listening has a spoken-audio identity.
+    playbackContentId: null,
   }
 }
 
@@ -150,12 +173,14 @@ function expectedCandidates() {
     const extension = extensionsByContentRef.get(unit.contentRef)
     assert(extension?.listeningUnitId === unit.learningUnitId, `${unit.learningUnitId} lacks a matching extension bundle.`)
     for (const exercise of extension.exercises) {
-      const audioSeconds = nominalUtteranceSeconds(extensionAudioText(exercise, unit))
+      const audioText = extensionAudioText(exercise, unit)
+      const audioSeconds = nominalUtteranceSeconds(audioText)
       candidates.push({
         itemId: `supply-v1-listening-${exercise.exerciseId}`,
         variantFamilyId: `supply-family-v1-listening-${unit.learningUnitId}`,
         ...candidateBase(unit, 'listening', nextOrder('listening')),
         nominalEffectiveSeconds: Math.round(audioSeconds + 19),
+        playbackContentId: playbackContentId(audioText),
         source: {
           sourceType: 'listening-extension',
           sourceId: exercise.exerciseId,
@@ -164,6 +189,12 @@ function expectedCandidates() {
       })
     }
     const transcriptText = unit.activity.transcript.map((line) => line.text).join(durationRules.nominalTts.transcriptJoiner)
+    // The player checkpoints/observes its primary segment before playing the
+    // complete dialogue.  Identity therefore keys the first actually-played
+    // segment for core checks; this is stricter than treating two dialogues
+    // with the same opening line as distinct merely because later lines vary.
+    const corePlaybackText = unit.activity.transcript[0]?.text
+    assert(typeof corePlaybackText === 'string' && corePlaybackText.length > 0, `${unit.learningUnitId} has no primary playback text.`)
     const coreSeconds = Math.round(nominalUtteranceSeconds(transcriptText) + 19)
     for (const check of unit.activity.checks) {
       candidates.push({
@@ -171,6 +202,7 @@ function expectedCandidates() {
         variantFamilyId: `supply-family-v1-listening-${unit.learningUnitId}`,
         ...candidateBase(unit, 'listening', nextOrder('listening')),
         nominalEffectiveSeconds: coreSeconds,
+        playbackContentId: playbackContentId(corePlaybackText),
         source: {
           sourceType: 'listening-core-check',
           sourceId: check.id,
@@ -185,6 +217,7 @@ function expectedCandidates() {
       variantFamilyId: `supply-family-v1-listening-${unit.learningUnitId}`,
       ...candidateBase(unit, 'listening', nextOrder('listening')),
       nominalEffectiveSeconds: Math.round(nominalUtteranceSeconds(sceneQuiz.audioText) + 19),
+      playbackContentId: playbackContentId(sceneQuiz.audioText),
       source: {
         sourceType: 'listening-scene-quiz',
         sourceId: sceneQuiz.id,
@@ -285,6 +318,7 @@ function expectedIndex() {
         input: 'request.excludeItemIds',
         scope: 'all-current-stream-completed-item-ids',
         whenAllEligibleExcluded: 'all-eligible-content-recently-used',
+        listeningPlaybackIdentity: 'candidate.playbackContentId derived from normalized published audio text',
       },
       diversity: {
         dailySeed: 'request.planId+request.taskId',
@@ -350,6 +384,16 @@ function assertSelectionContract(index) {
       family.length >= 2,
       `${candidate.itemId} has no published same-day variant.`,
     )
+  }
+  const listening = index.candidates.filter((candidate) => candidate.domain === 'listening')
+  assert(listening.every((candidate) => typeof candidate.playbackContentId === 'string' && candidate.playbackContentId.length > 0), 'Listening candidates lack a published playback content identity.')
+  // The index intentionally permits same audio for distinct question formats,
+  // but exact candidate facts must never be duplicated under another item id.
+  const exactFacts = new Set()
+  for (const candidate of listening) {
+    const fact = JSON.stringify([candidate.playbackContentId, candidate.source.sourceId, candidate.source.variantId])
+    assert(!exactFacts.has(fact), `${candidate.itemId} duplicates an identical listening candidate fact.`)
+    exactFacts.add(fact)
   }
 }
 

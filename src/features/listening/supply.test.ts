@@ -112,6 +112,43 @@ describe('listening training supply', () => {
     },
   )
 
+  it('durably excludes published playback identities for the first 30 ordinary items', async () => {
+    const current = catalog()
+    const provider = new ListeningCatalogSupplyProvider(current.trainingSupplyIndex, current)
+    const completed: string[] = []
+    const playbackIdentities: string[] = []
+    let cursor: string | null = null
+    for (let index = 0; index < 30; index += 1) {
+      const result = await provider.next({
+        schemaVersion: 1, requestId: `playback-identity-${index}`,
+        planId: 'playback-identity-plan', taskId: 'playback-identity-task',
+        domain: 'listening', targetModuleId: 'listening', mode: 'learn',
+        targetDifficulty: 1, cursor, excludeItemIds: completed,
+        reason: index === 0 ? 'initial' : 'continue-after-item',
+      })
+      expect(result.status).toBe('item')
+      if (result.status !== 'item') return
+      const item = result.item as ListeningSupplyItem
+      completed.push(item.itemId)
+      playbackIdentities.push(item.playbackContentId)
+      cursor = result.nextCursor
+    }
+    expect(new Set(playbackIdentities)).toHaveLength(30)
+    // The same request reconstructed from persisted item IDs produces the
+    // same next item; no separate volatile content-exclusion state exists.
+    const restored = await provider.next({
+      schemaVersion: 1, requestId: 'playback-identity-restored',
+      planId: 'playback-identity-plan', taskId: 'playback-identity-task',
+      domain: 'listening', targetModuleId: 'listening', mode: 'learn',
+      targetDifficulty: 1, cursor, excludeItemIds: completed,
+      reason: 'continue-after-item',
+    })
+    expect(restored.status).toBe('item')
+    if (restored.status === 'item') {
+      expect(playbackIdentities).not.toContain((restored.item as ListeningSupplyItem).playbackContentId)
+    }
+  })
+
   it('keeps a restored next item stable while different plans receive different shuffled orders', async () => {
     const current = catalog()
     const provider = new ListeningCatalogSupplyProvider(

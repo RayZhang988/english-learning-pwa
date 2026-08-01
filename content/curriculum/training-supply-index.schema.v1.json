@@ -184,7 +184,7 @@
     "candidate": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["itemId", "variantFamilyId", "supplyOrder", "domain", "targetModuleId", "learningUnitId", "contentRef", "difficultyLevel", "tags", "allowedModes", "nominalEffectiveSeconds", "source"],
+        "required": ["itemId", "variantFamilyId", "supplyOrder", "domain", "targetModuleId", "learningUnitId", "contentRef", "difficultyLevel", "tags", "allowedModes", "nominalEffectiveSeconds", "source"],
       "properties": {
         "itemId": {"type": "string", "pattern": "^supply-v1-(vocabulary|listening|speaking)-[a-z0-9-]+$"},
         "variantFamilyId": {"type": "string", "pattern": "^supply-family-v1-(vocabulary|listening|speaking)-[a-z0-9-]+$"},
@@ -197,6 +197,7 @@
         "tags": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
         "allowedModes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["learn", "calibration", "review", "retry"]}},
         "nominalEffectiveSeconds": {"type": "integer", "minimum": 1},
+        "playbackContentId": {"oneOf": [{"type": "null"}, {"type": "string", "pattern": "^listening-playback-v1-[a-f0-9]{8}$"}]},
         "source": {"$ref": "#/$defs/source"}
       }
     },

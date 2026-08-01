@@ -131,6 +131,8 @@ export interface ListeningContentDocuments {
 }
 
 export interface ListeningSupplyItem extends LearningTaskSupplyItem {
+  /** Published 05 identity for normalized spoken audio; not a UI-derived value. */
+  readonly playbackContentId: string
   readonly source: {
     readonly sourceType:
       | 'listening-extension'
