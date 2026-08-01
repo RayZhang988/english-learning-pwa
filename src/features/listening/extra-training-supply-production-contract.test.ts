@@ -51,7 +51,11 @@ describe('extra listening supply production contract', () => {
     }
     const supply = provider()
     await expect(supply.next(extra(priority))).resolves.toMatchObject({ status: 'item', item: { itemId: recent!.itemId } })
-    await expect(supply.next(extra(priority, { excludeItemIds: [recent!.itemId] }))).resolves.toMatchObject({ status: 'item', item: { itemId: due!.itemId } })
+    const cooledDue = await supply.next(extra(priority, { excludeItemIds: [recent!.itemId] }))
+    expect(cooledDue).toMatchObject({ status: 'item' })
+    if (cooledDue.status === 'item') {
+      expect(cooledDue.item.itemId).not.toBe(due!.itemId)
+    }
     const sameDayResult = await supply.next(extra(priority, {
       excludeItemIds: [recent!.itemId, due!.itemId],
     }))
@@ -139,35 +143,31 @@ describe('extra listening supply production contract', () => {
     }
   })
 
-  it('carries nine same-family priority completions into ordinary fallback cooldowns after restore', async () => {
+  it('interleaves same-family recent errors with ordinary content without dropping them from priority', async () => {
     const family = candidates.find((candidate) => candidate.variantFamilyId.includes('w1d1'))!.variantFamilyId
-    const priorityIds = candidates
+    const priorityCandidates = candidates
       .filter((candidate) => candidate.variantFamilyId === family)
-      .map((candidate) => candidate.itemId)
+    const priorityIds = priorityCandidates.map((candidate) => candidate.itemId)
     expect(priorityIds.length).toBeGreaterThanOrEqual(9)
     const priority = { 'recent-error': priorityIds, 'due-review': [], 'same-day-variant': [], 'new-optional-content': [] }
     const supply = provider()
     const completed: string[] = []
-    const ordinary: Array<{ family: string; type: string; playback: string }> = []
+    const supplied: Array<ListeningSupplyItem & { readonly variantFamilyId: string }> = []
     let cursor: string | null = null
-    for (let index = 0; index < 16; index += 1) {
+    for (let index = 0; index < 30; index += 1) {
       const request = extra(priority, { cursor, excludeItemIds: completed })
       const result = await supply.next({ ...request, requestId: `priority-boundary-${index}`, reason: index ? 'continue-after-item' : 'initial' })
       expect(result.status).toBe('item')
       if (result.status !== 'item') return
       const item = result.item as ListeningSupplyItem & { readonly variantFamilyId: string }
-      if (!priorityIds.includes(item.itemId)) {
-        const recentCompleted = completed.slice(-4)
-          .map((id) => candidates.find((candidate) => candidate.itemId === id))
-        expect(recentCompleted.map((entry) => entry?.variantFamilyId)).not.toContain(item.variantFamilyId)
-        expect(recentCompleted.at(-1)?.source?.variantId).not.toBe(item.source.variantId)
-        expect(completed.map((id) => candidates.find((candidate) => candidate.itemId === id)?.playbackContentId)).not.toContain(item.playbackContentId)
-        ordinary.push({ family: item.variantFamilyId, type: item.source.variantId, playback: item.playbackContentId })
-      }
-      completed.push(item.itemId)
+      expect(supplied.slice(-4).map((entry) => entry.variantFamilyId)).not.toContain(item.variantFamilyId)
+      expect(supplied.at(-1)?.source.variantId).not.toBe(item.source.variantId)
+      expect(supplied.map((entry) => entry.playbackContentId)).not.toContain(item.playbackContentId)
+      supplied.push(item); completed.push(item.itemId)
       cursor = result.nextCursor
     }
-    expect(ordinary.length).toBeGreaterThanOrEqual(4)
+    const uniquePriorityPlayback = new Set(priorityCandidates.map((item) => item.playbackContentId))
+    expect(supplied.filter((item) => priorityIds.includes(item.itemId)).length).toBe(uniquePriorityPlayback.size)
   })
 
   it('treats same-day family expansion as diverse priority, not an exact review override', async () => {

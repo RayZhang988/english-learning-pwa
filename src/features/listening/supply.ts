@@ -259,15 +259,14 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
               )
             : declaredCandidates.filter((item) => available.includes(item))
         )
-        const exactReviewItem = priority === 'recent-error' || priority === 'due-review'
         const selected = selectDiverseItem(
             priorityCandidates,
             request,
             this.itemsById,
-            exactReviewItem,
-            !exactReviewItem,
-            !exactReviewItem,
-            exactReviewItem,
+            false,
+            true,
+            true,
+            false,
         )
         if (selected) {
           return { schemaVersion: 1, requestId: request.requestId, status: 'item', item: selected, nextCursor: selected.itemId }
