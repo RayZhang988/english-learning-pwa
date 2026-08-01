@@ -170,10 +170,15 @@ describe('extra listening supply production contract', () => {
     expect(supplied.filter((item) => priorityIds.includes(item.itemId)).length).toBe(uniquePriorityPlayback.size)
   })
 
-  it('treats same-day family expansion as diverse priority, not an exact review override', async () => {
+  it('treats a same-day declaration as a completed seed, never its replayable variant', async () => {
     const declared = candidates.find((candidate) => candidate.variantFamilyId.includes('w1d1'))!
     const priority = { 'recent-error': [], 'due-review': [], 'same-day-variant': [declared.itemId], 'new-optional-content': [] }
     const supply = provider()
+    const initial = extra(priority)
+    const first = await supply.next(initial)
+    const restoredFirst = await supply.next({ ...initial, requestId: 'same-day-seed-restored' })
+    expect(restoredFirst.status === 'item' ? restoredFirst.item.itemId : null)
+      .toBe(first.status === 'item' ? first.item.itemId : null)
     const completed: string[] = []
     const items: Array<ListeningSupplyItem & { readonly variantFamilyId: string }> = []
     let cursor: string | null = null
@@ -183,12 +188,15 @@ describe('extra listening supply production contract', () => {
       expect(result.status).toBe('item')
       if (result.status !== 'item') return
       const item = result.item as ListeningSupplyItem & { readonly variantFamilyId: string }
+      expect(item.itemId).not.toBe(declared.itemId)
+      expect(item.playbackContentId).not.toBe(declared.playbackContentId)
       expect(items.slice(-4).map((entry) => entry.variantFamilyId)).not.toContain(item.variantFamilyId)
       expect(items.at(-1)?.source.variantId).not.toBe(item.source.variantId)
       expect(items.map((entry) => entry.playbackContentId)).not.toContain(item.playbackContentId)
       items.push(item); completed.push(item.itemId); cursor = result.nextCursor
     }
-    expect(items.some((item) => item.variantFamilyId === declared.variantFamilyId)).toBe(true)
+    // A distinct-audio family variant is permitted but never required by
+    // shuffle; the seed itself must remain excluded through the whole stream.
   })
 
   it('keeps the daily LearningTaskSupplyRequest path stable without reverting to file order', async () => {

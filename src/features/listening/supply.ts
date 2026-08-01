@@ -227,6 +227,24 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'no-eligible-content' }
     }
     const excluded = new Set(request.excludeItemIds)
+    // A same-day declaration is a completed seed from the daily plan, not a
+    // candidate for replay.  Its genuine family variants remain eligible, but
+    // the seed and all aliases of its spoken audio are excluded from this
+    // extra session unless a higher review tier explicitly owns that exact ID.
+    const higherPriorityIds = isExtraTrainingRequest(request)
+      ? new Set([
+          ...request.priorityItemIds['recent-error'],
+          ...request.priorityItemIds['due-review'],
+        ])
+      : new Set<string>()
+    const sameDaySeedIds = isExtraTrainingRequest(request)
+      ? new Set(request.priorityItemIds['same-day-variant'].filter((itemId) => !higherPriorityIds.has(itemId)))
+      : new Set<string>()
+    const sameDaySeedPlaybackContent = new Set(
+      [...sameDaySeedIds]
+        .map((itemId) => this.itemsById.get(itemId)?.playbackContentId)
+        .filter((identity): identity is string => identity !== undefined),
+    )
     const completedPlaybackContent = new Set(
       request.excludeItemIds
         .map((itemId) => this.itemsById.get(itemId)?.playbackContentId)
@@ -234,7 +252,9 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
     )
     const availableByItem = eligible.filter((item) => !excluded.has(item.itemId))
     const available = availableByItem.filter((item) =>
-      !completedPlaybackContent.has(item.playbackContentId),
+      !sameDaySeedIds.has(item.itemId) &&
+      !completedPlaybackContent.has(item.playbackContentId) &&
+      !sameDaySeedPlaybackContent.has(item.playbackContentId),
     )
     if (available.length === 0 && !isExtraTrainingRequest(request)) {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'all-eligible-content-recently-used' }
