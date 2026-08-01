@@ -3,7 +3,6 @@ import { launchQaChrome, fakeAssessmentClockScript } from './lib/cdp-browser.mjs
 
 const baseUrl = new URL(process.env.QA_BASE_URL ?? 'http://127.0.0.1:4173/')
 const expectedAsset = process.env.QA_EXPECTED_ASSET ?? null
-const appDatabaseName = 'english-learning-pwa'
 const evidence = { status: 'running', baseUrl: baseUrl.href, isolatedProfile: true, userDeviceDataTouched: false, sessions: [] }
 
 // Real route playback is made deterministic; the app still receives its normal onstart/onend events.
@@ -68,11 +67,19 @@ async function answerAndAdvance(page) {
  }
  await page.waitFor(`[...document.querySelectorAll('button')].some((x) => x.innerText.trim() === '提交答案' && !x.disabled)`, 10_000)
  await page.clickByText('提交答案')
+ const before = listeningSnapshot(await page.dumpIndexedDb())
+ const previousItem = itemFromSnapshot(before)
  try {
-   await page.waitFor(`[...document.querySelectorAll('button')].some((x) => x.innerText.trim() === '下一题' && !x.disabled)`, 20_000)
+   await page.waitFor(`[...document.querySelectorAll('button')].some((x) => ['下一题', '完成训练'].includes(x.innerText.trim()) && !x.disabled)`, 20_000)
  } catch (error) { throw new Error(`${error.message}\n${await page.bodyText()}`) }
- await page.clickByText('下一题')
- await page.waitFor(`[...document.querySelectorAll('button')].some((x) => (x.innerText.trim() === '播放音频' || x.getAttribute('aria-label') === '播放音频') && !x.disabled)`, 20_000)
+ const advanced = await page.evaluate(`(() => { const button = [...document.querySelectorAll('button')].find((x) => ['下一题', '完成训练'].includes(x.innerText.trim()) && !x.disabled); if (!button) return false; button.click(); return true })()`)
+ assert.equal(advanced, true)
+ await page.waitFor(`[...document.querySelectorAll('button')].some((x) => x.innerText.trim() === '提交答案')`, 20_000)
+ const after = listeningSnapshot(await page.dumpIndexedDb())
+ assert.equal(after.phase, 'answering', 'Daily listening advance must return to answering.')
+ assert.notEqual(itemFromSnapshot(after).itemId, previousItem.itemId, 'Daily listening advance must supply a new item.')
+ assert.ok((after.stream?.completedItemIds?.length ?? 0) > (before.stream?.completedItemIds?.length ?? 0), 'Daily listening advance must grow its durable completed-item set.')
+ assert.equal(after.stream?.completedItemIds?.includes(previousItem.itemId), true, 'Daily listening advance must durably record the completed item.')
 }
 
 function validateSequence(label, items) {
@@ -88,6 +95,11 @@ async function runDailySession(label, refreshAt = 5) {
  try {
    await qa.page.initialize(); await qa.page.addInitScript(fakeAssessmentClockScript); await qa.page.addInitScript(speechScript); await qa.page.setViewport(390, 844)
    await createPlan(qa.page); await startListening(qa.page)
+   const startedDatabases = await qa.page.dumpIndexedDb()
+   assert.ok(
+     listeningSnapshot(startedDatabases)?.stream,
+     `R11 daily listening must start a continuous stream: ${JSON.stringify({ execution: listeningExecution(startedDatabases), snapshot: listeningSnapshot(startedDatabases) })}`,
+   )
    const items = []
    for (let index = 0; index < 12; index += 1) {
      const before = itemFromSnapshot(listeningSnapshot(await qa.page.dumpIndexedDb()))
