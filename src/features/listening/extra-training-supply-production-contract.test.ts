@@ -55,12 +55,12 @@ describe('extra listening supply production contract', () => {
     const sameDayResult = await supply.next(extra(priority, {
       excludeItemIds: [recent!.itemId, due!.itemId],
     }))
-    expect(sameDayResult).toMatchObject({
-      status: 'item',
-      item: { variantFamilyId: sameDay!.variantFamilyId },
-    })
+    expect(sameDayResult).toMatchObject({ status: 'item' })
     if (sameDayResult.status === 'item') {
-      expect(sameDayResult.item.itemId).not.toBe(sameDay!.itemId)
+      // same-day expansion is not an exact review override: its family is
+      // still in the recent cooldown, so normal fallback must take over.
+      expect((sameDayResult.item as ListeningSupplyItem & { readonly variantFamilyId: string }).variantFamilyId)
+        .not.toBe(sameDay!.variantFamilyId)
     }
   })
 
@@ -168,6 +168,27 @@ describe('extra listening supply production contract', () => {
       cursor = result.nextCursor
     }
     expect(ordinary.length).toBeGreaterThanOrEqual(4)
+  })
+
+  it('treats same-day family expansion as diverse priority, not an exact review override', async () => {
+    const declared = candidates.find((candidate) => candidate.variantFamilyId.includes('w1d1'))!
+    const priority = { 'recent-error': [], 'due-review': [], 'same-day-variant': [declared.itemId], 'new-optional-content': [] }
+    const supply = provider()
+    const completed: string[] = []
+    const items: Array<ListeningSupplyItem & { readonly variantFamilyId: string }> = []
+    let cursor: string | null = null
+    for (let index = 0; index < 30; index += 1) {
+      const request = extra(priority, { cursor, excludeItemIds: completed })
+      const result = await supply.next({ ...request, requestId: `same-day-family-${index}`, reason: index ? 'continue-after-item' : 'initial' })
+      expect(result.status).toBe('item')
+      if (result.status !== 'item') return
+      const item = result.item as ListeningSupplyItem & { readonly variantFamilyId: string }
+      expect(items.slice(-4).map((entry) => entry.variantFamilyId)).not.toContain(item.variantFamilyId)
+      expect(items.at(-1)?.source.variantId).not.toBe(item.source.variantId)
+      expect(items.map((entry) => entry.playbackContentId)).not.toContain(item.playbackContentId)
+      items.push(item); completed.push(item.itemId); cursor = result.nextCursor
+    }
+    expect(items.some((item) => item.variantFamilyId === declared.variantFamilyId)).toBe(true)
   })
 
   it('keeps the daily LearningTaskSupplyRequest path stable without reverting to file order', async () => {

@@ -108,6 +108,7 @@ function selectDiverseItem(
   allowPlaybackRepeat: boolean,
   enforceFamilyCooldown: boolean,
   enforceAdjacentType: boolean,
+  allowTierDiversityRelaxation: boolean,
 ): IndexedListeningSupplyItem | undefined {
   const recent = request.excludeItemIds
     .slice(-DIVERSITY_WINDOW_ITEMS)
@@ -137,10 +138,16 @@ function selectDiverseItem(
   const cooledCandidates = enforceFamilyCooldown
     ? candidates.filter((item) => !recentFamilies.has(item.variantFamilyId))
     : candidates
+  if (enforceFamilyCooldown && cooledCandidates.length === 0 && !allowTierDiversityRelaxation) {
+    return undefined
+  }
   const familySelectable = cooledCandidates.length > 0 ? cooledCandidates : candidates
   const alternateTypeCandidates = enforceAdjacentType && last
     ? familySelectable.filter((item) => item.source.variantId !== last.source.variantId)
     : []
+  if (enforceAdjacentType && last && alternateTypeCandidates.length === 0 && !allowTierDiversityRelaxation) {
+    return undefined
+  }
   const selectable = alternateTypeCandidates.length > 0
     ? alternateTypeCandidates
     : familySelectable
@@ -252,13 +259,15 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
               )
             : declaredCandidates.filter((item) => available.includes(item))
         )
-          const selected = selectDiverseItem(
+        const exactReviewItem = priority === 'recent-error' || priority === 'due-review'
+        const selected = selectDiverseItem(
             priorityCandidates,
             request,
             this.itemsById,
-            priority === 'recent-error' || priority === 'due-review',
-            false,
-            false,
+            exactReviewItem,
+            !exactReviewItem,
+            !exactReviewItem,
+            exactReviewItem,
         )
         if (selected) {
           return { schemaVersion: 1, requestId: request.requestId, status: 'item', item: selected, nextCursor: selected.itemId }
@@ -278,6 +287,7 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
           true,
           true,
           true,
+          true,
         )
         if (item) {
           return { schemaVersion: 1, requestId: request.requestId, status: 'item', item, nextCursor: item.itemId }
@@ -289,7 +299,7 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
     if (request.cursor !== null && cursorIndex < 0) {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
     }
-    const item = selectDiverseItem(available, request, this.itemsById, false, true, true)
+    const item = selectDiverseItem(available, request, this.itemsById, false, true, true, true)
     if (!item) {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'all-eligible-content-recently-used' }
     }
