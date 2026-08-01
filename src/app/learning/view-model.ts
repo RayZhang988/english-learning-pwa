@@ -1,7 +1,6 @@
 import {
   buildProgressSnapshot,
   DEFAULT_DAILY_TARGET_SECONDS,
-  getExtraTrainingEligibility,
   type LearningEngineState,
   type LearningTask,
   type PlanProgress,
@@ -448,41 +447,52 @@ export function toPracticeModulesViewModel(
         progress,
         taskAccess,
       )
-      if (
-        getExtraTrainingEligibility(
-          progress,
-          moduleId,
-          progress.plan.localDate,
-        ).eligible &&
-        extraTrainingEligibleModules.includes(moduleId) &&
-        module.moduleId !== 'assessment' &&
-        module.availability === 'unavailable' &&
-        module.unavailableReason === 'task-finished' &&
-        (module.status === 'completed' ||
-          module.status === 'skipped')
-      ) {
-        return {
-          moduleId,
-          availability: 'extra-training' as const,
-          taskId: null,
-          status: module.status,
-          recommended: false as const,
-          actionLabel: '继续训练',
-          extraTrainingDescription:
-            '本模块今日任务已完成，可以开始不限时且不影响今日完成状态的额外训练。',
-          openEnded: true as const,
-          statusLabel: module.statusLabel,
-        }
+      if (module.moduleId === 'assessment') {
+        return module
       }
-      return module
+      return withEligibleExtraTraining(
+        module,
+        extraTrainingEligibleModules.includes(moduleId),
+      )
     }),
   ]
+}
+
+function withEligibleExtraTraining<
+  TModule extends DailyTrainingTaskAccessViewModel,
+>(
+  module: TModule,
+  eligible: boolean,
+): TModule | Extract<DailyTrainingTaskAccessViewModel, {
+  readonly availability: 'extra-training'
+}> {
+  if (
+    eligible &&
+    module.availability === 'unavailable' &&
+    module.unavailableReason === 'task-finished' &&
+    (module.status === 'completed' || module.status === 'skipped')
+  ) {
+    return {
+      moduleId: module.moduleId,
+      availability: 'extra-training',
+      taskId: null,
+      status: module.status,
+      recommended: false,
+      actionLabel: '继续训练',
+      extraTrainingDescription:
+        '本模块今日任务已完成，可以开始不限时且不影响今日完成状态的额外训练。',
+      openEnded: true,
+      statusLabel: module.statusLabel,
+    }
+  }
+  return module
 }
 
 function taskViewModel(
   progress: PlanProgress,
   taskAccess: PlanTaskAccess,
   taskId: string,
+  extraTrainingEligibleModules: readonly TrainingModuleId[],
 ): DailyTaskViewModel {
   const execution = progress.tasks.find(
     (candidate) => candidate.task.taskId === taskId,
@@ -501,10 +511,9 @@ function taskViewModel(
     )
   }
   const presentation = modulePresentation[moduleId]
-  const taskState = trainingTaskAccessViewModel(
-    moduleId,
-    access,
-    task,
+  const taskState = withEligibleExtraTraining(
+    trainingTaskAccessViewModel(moduleId, access, task),
+    extraTrainingEligibleModules.includes(moduleId),
   )
 
   return {
@@ -528,9 +537,15 @@ export function toDailyPlanViewModel(
   engineState: LearningEngineState,
   taskAccess: PlanTaskAccess,
   asOf: string,
+  extraTrainingEligibleModules: readonly TrainingModuleId[] = [],
 ): DailyPlanViewModel {
   const tasks = progress.plan.tasks.map((task) =>
-    taskViewModel(progress, taskAccess, task.taskId),
+    taskViewModel(
+      progress,
+      taskAccess,
+      task.taskId,
+      extraTrainingEligibleModules,
+    ),
   )
   const completedCount = progress.tasks.filter(
     (task) => task.status === 'completed',

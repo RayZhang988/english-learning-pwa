@@ -27,6 +27,36 @@ afterEach(() => {
 })
 
 describe('PlatformReadyPage R6 entry', () => {
+  it('keeps a completed module as a direct Today entry before 3/3', () => {
+    vi.stubGlobal('navigator', { onLine: true })
+    vi.stubGlobal('window', { location: { search: '' } })
+    const runtime = completedExtraTrainingRuntime()
+    const activePlan = {
+      ...runtime.activePlan,
+      status: 'in-progress' as const,
+      tasks: runtime.activePlan.tasks.map((task) =>
+        task.task.targetModuleId === 'vocabulary'
+          ? task
+          : { ...task, status: 'pending' as const, completionKind: null },
+      ),
+    }
+    const state: LearningAppState = {
+      status: 'ready', localDate: '2026-07-29',
+      runtime: { ...runtime, activePlan }, engineState: extraTrainingEngineState(),
+      assessmentProfileSchemaVersion: 3, taskAccess: getPlanTaskAccess(activePlan),
+    }
+    const markup = renderToStaticMarkup(
+      <LearningAppContext.Provider value={{ state, coordinator: { state } as unknown as LearningAppCoordinator }}>
+        <MemoryRouter><PlatformReadyPage /></MemoryRouter>
+      </LearningAppContext.Provider>,
+    )
+    expect(markup).toContain('data-module-id="vocabulary"')
+    expect(markup).toContain('data-availability="extra-training"')
+    expect(markup).toContain('继续训练')
+    expect(markup).toContain('data-module-id="listening"')
+    expect(markup).toContain('data-task-id=')
+  })
+
   it('keeps a real continue-training entry on the restored 3/3 home route', () => {
     vi.stubGlobal('navigator', { onLine: true })
     vi.stubGlobal('window', {

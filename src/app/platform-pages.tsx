@@ -182,6 +182,17 @@ export function PlatformReadyPage() {
   const initialTrainingAreaScreen = trainingAreaScreenFromPath(
     location.pathname,
   )
+  const extraTrainingEligibleModules = [
+    'vocabulary',
+    'listening',
+    'speaking',
+  ].filter((moduleId) =>
+    getExtraTrainingEligibility(
+      state.runtime.activePlan,
+      moduleId as TrainingModuleId,
+      state.localDate,
+    ).eligible,
+  ) as readonly TrainingModuleId[]
   return (
     <LearningAppPrototype
       initialSection={initialSection}
@@ -191,19 +202,14 @@ export function PlatformReadyPage() {
         state.engineState,
         state.taskAccess,
         now,
+        extraTrainingEligibleModules,
       )}
       progress={toProgressViewModel(state.engineState)}
       practiceModules={toPracticeModulesViewModel(
         state.runtime.activePlan,
         state.taskAccess,
         state.assessmentProfileSchemaVersion,
-        ['vocabulary', 'listening', 'speaking'].filter((moduleId) =>
-          getExtraTrainingEligibility(
-            state.runtime.activePlan,
-            moduleId as TrainingModuleId,
-            state.localDate,
-          ).eligible,
-        ) as readonly TrainingModuleId[],
+        extraTrainingEligibleModules,
       )}
       offline={network === 'offline'}
       onSectionChanged={(section) => {

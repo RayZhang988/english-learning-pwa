@@ -722,4 +722,50 @@ describe('learning app view-model integration', () => {
       ]),
     )
   })
+
+  it.each([
+    ['vocabulary', 'listening', 'speaking'],
+    ['vocabulary', 'speaking', 'listening'],
+    ['listening', 'vocabulary', 'speaking'],
+    ['listening', 'speaking', 'vocabulary'],
+    ['speaking', 'vocabulary', 'listening'],
+    ['speaking', 'listening', 'vocabulary'],
+  ] as const)(
+    'maps every partial completion step for the %s → %s → %s order without a 3/3 gate',
+    (...order) => {
+      const initial = progress()
+      for (let count = 1; count <= order.length; count += 1) {
+        const completedModules = order.slice(0, count)
+        const partial: PlanProgress = {
+          ...initial,
+          status: count === 3 ? 'completed' : 'in-progress',
+          tasks: initial.tasks.map((execution) =>
+            completedModules.includes(execution.task.targetModuleId)
+              ? { ...execution, status: 'completed', completionKind: 'scored' }
+              : execution,
+          ),
+        }
+        const access = getPlanTaskAccess(partial)
+        const today = toDailyPlanViewModel(
+          partial, engine(), access, '2026-07-24T08:00:00.000Z', completedModules,
+        )
+        const training = toPracticeModulesViewModel(
+          partial, access, 3, completedModules,
+        ).filter((module) => module.moduleId !== 'assessment')
+
+        for (const moduleId of ['vocabulary', 'listening', 'speaking'] as const) {
+          const todayTask = today.tasks.find((task) => task.moduleId === moduleId)
+          const trainingTask = training.find((task) => task.moduleId === moduleId)
+          if (completedModules.includes(moduleId)) {
+            expect(todayTask).toMatchObject({ availability: 'extra-training', taskId: null, actionLabel: '继续训练' })
+            expect(trainingTask).toMatchObject({ availability: 'extra-training', taskId: null, actionLabel: '继续训练' })
+          } else {
+            const expectedId = partial.tasks.find((task) => task.task.targetModuleId === moduleId)?.task.taskId
+            expect(todayTask).toMatchObject({ availability: 'startable', taskId: expectedId })
+            expect(trainingTask).toMatchObject({ availability: 'startable', taskId: expectedId })
+          }
+        }
+      }
+    },
+  )
 })

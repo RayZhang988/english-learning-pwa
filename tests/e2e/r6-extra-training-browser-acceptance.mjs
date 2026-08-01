@@ -1306,7 +1306,7 @@ async function verifyR62ModuleFirstCompletion(page, moduleId) {
   await page.clickByText('完成训练', '完成本题并结束')
   const completed = await waitForDailyExecutionCompleted(page, moduleId)
   const completionText = await page.bodyText()
-  assert.match(completionText, /本模块今日任务已完成/u)
+  assert.match(completionText, /今日\s*15 分钟已完成/u)
   assert.match(completionText, /继续训练/u)
   assert.doesNotMatch(completionText, /完成今日\s*3\/3\s*后再继续训练/u)
 
@@ -1325,17 +1325,28 @@ async function verifyR62ModuleFirstCompletion(page, moduleId) {
 
   // Today and Training show only the independently qualified module as extra.
   await page.navigate(new URL('#/', baseUrl).href)
-  await page.waitFor(`document.body.innerText.includes('今日安排')`, 20_000)
+  await page.waitFor(
+    `location.hash === '#/' && document.querySelectorAll('button.task-row[data-module-id][data-task-id]').length === 3`,
+    20_000,
+  )
   const today = await page.evaluate(`(() => [...document.querySelectorAll('button.task-row')].map((b) => ({ moduleId: b.dataset.moduleId, taskId: b.dataset.taskId, text: b.innerText })))()`)
   assert.equal(executionFor(completed, moduleId).status, 'completed')
-  const after = activeRuntime(await page.dumpIndexedDb()).activePlan
+  const afterRuntime = activeRuntime(await page.dumpIndexedDb())
+  const after = afterRuntime.activePlan
   for (const other of MODULES.filter((id) => id !== moduleId)) {
-    assert.equal(executionFor(after, other).status, 'pending')
+    assert.equal(executionFor(afterRuntime, other).status, 'pending')
   }
   assert.deepEqual(
     after.tasks.map((x) => x.task.taskId),
     before.tasks.map((x) => x.task.taskId),
   )
+  const todayCompleted = today.find((item) => item.moduleId === moduleId)
+  assert.ok(todayCompleted?.text.includes('继续训练'))
+  for (const other of MODULES.filter((id) => id !== moduleId)) {
+    const card = today.find((item) => item.moduleId === other)
+    assert.ok(card?.taskId)
+    assert.equal(card?.text.includes('继续训练'), false)
+  }
   await page.clickByText('训练')
   await page.waitFor(`document.querySelectorAll('[data-training-area]').length === 3`, 20_000)
   await clickSelector(page, '[data-training-area="daily"]')
