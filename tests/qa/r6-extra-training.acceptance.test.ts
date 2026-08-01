@@ -246,6 +246,7 @@ function timingEvent(
 
 interface ReleasedCandidate {
   readonly itemId: string
+  readonly playbackContentId: string
   readonly supplyOrder: number
   readonly variantFamilyId: string
   readonly domain: TrainingModuleId
@@ -255,6 +256,9 @@ interface ReleasedCandidate {
   readonly difficultyLevel: number
   readonly tags: readonly string[]
   readonly allowedModes: readonly string[]
+  readonly source: {
+    readonly variantId: string
+  }
 }
 
 const releasedCandidates = (
@@ -436,6 +440,17 @@ describe('R6 optional extra-training external acceptance', () => {
         ),
       )
       expect(family).toBeDefined()
+      const otherEligibleFamily = candidates.find(
+        (candidate) =>
+          candidate.variantFamilyId !== family!.variantFamilyId &&
+          candidate.source.variantId !== family!.source.variantId &&
+          Math.abs(
+            candidate.difficultyLevel - family!.difficultyLevel,
+          ) <= 1.5,
+      )
+      if (moduleId === 'listening') {
+        expect(otherEligibleFamily).toBeDefined()
+      }
       const variantResult = await providers[moduleId].next(
         requestFor(moduleId, {
           targetDifficulty: family!.difficultyLevel,
@@ -454,10 +469,25 @@ describe('R6 optional extra-training external acceptance', () => {
         (candidate) =>
           candidate.itemId === variantResult.item.itemId,
       )
-      expect(variant?.variantFamilyId).toBe(
-        family!.variantFamilyId,
-      )
       expect(variant?.itemId).not.toBe(family!.itemId)
+      if (moduleId === 'listening') {
+        // The completed same-day item is in the four-item listening cooldown.
+        // A same-day declaration may not force its family back into the stream
+        // when the published index has another eligible family to select.
+        expect(variant?.variantFamilyId).not.toBe(
+          family!.variantFamilyId,
+        )
+        expect(variant?.source.variantId).not.toBe(
+          family!.source.variantId,
+        )
+        expect(variant?.playbackContentId).not.toBe(
+          family!.playbackContentId,
+        )
+      } else {
+        expect(variant?.variantFamilyId).toBe(
+          family!.variantFamilyId,
+        )
+      }
 
       const fallback = await providers[moduleId].next(
         requestFor(moduleId, {
