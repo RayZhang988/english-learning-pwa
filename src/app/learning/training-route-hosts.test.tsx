@@ -34,6 +34,9 @@ interface CapturedRouteProps {
     | 'finish-current-item'
   readonly onCompleted?: () => void
   readonly onExit: () => void
+  readonly completedExtraTrainingEntry?: {
+    readonly onContinueTraining: () => Promise<void>
+  }
 }
 
 const routeCaptures = vi.hoisted(
@@ -519,48 +522,49 @@ describe('TrainingRouteHost R3 production integration', () => {
   )
 
   it.each([
-    ['vocabulary', '词汇训练已完成'],
-    ['listening', '听力训练已完成'],
-    ['speaking', '口语训练已完成'],
+    'vocabulary',
+    'listening',
+    'speaking',
   ] as const)(
-    'restores the trusted completion duration for %s without restarting the feature',
-    (moduleId, title) => {
+    'restores %s into its real completed route with the direct continuation entry',
+    (moduleId) => {
       routeCaptures.clear()
-      const markup = renderHost(
+      renderHost(
         moduleId,
         stateFor(moduleId, true, 'timing-segments'),
       )
+      const captured = routeCaptures.get(moduleId)
 
-      expect(routeCaptures.has(moduleId)).toBe(false)
-      expect(markup).toContain(title)
-      expect(markup).toContain('data-duration-state="reliable"')
-      expect(markup).toContain('实际有效练习')
-      expect(markup).toContain('data-budget-status="completed"')
-      expect(markup).toContain(
-        'data-remaining-effective-seconds="0"',
-      )
-      expect(markup).toContain('返回今日计划')
+      expect(captured).toBeDefined()
+      expect(captured?.completedExtraTrainingEntry).toEqual({
+        onContinueTraining: expect.any(Function),
+      })
     },
   )
 
-  it('shows old completion data as unavailable instead of using attempt duration', () => {
-    const markup = renderHost(
+  it('restores legacy completion data into the real route without inventing a duration', () => {
+    routeCaptures.clear()
+    renderHost(
       'vocabulary',
       stateFor('vocabulary', true, 'legacy-event-duration'),
     )
+    const captured = routeCaptures.get('vocabulary')
 
-    expect(markup).toContain('data-duration-state="unavailable"')
-    expect(markup).toContain('本次暂无可靠用时')
-    expect(markup).not.toContain('10 分钟')
+    expect(captured?.completedExtraTrainingEntry).toEqual({
+      onContinueTraining: expect.any(Function),
+    })
   })
 
   it('offers the real extra-training entry when this module daily task is completed', () => {
-    const markup = renderHost(
+    routeCaptures.clear()
+    renderHost(
       'vocabulary',
       completedDailyPlanState(),
     )
+    const captured = routeCaptures.get('vocabulary')
 
-    expect(markup).toContain('今日 15 分钟已完成')
-    expect(markup).toContain('继续训练')
+    expect(captured?.completedExtraTrainingEntry).toEqual({
+      onContinueTraining: expect.any(Function),
+    })
   })
 })

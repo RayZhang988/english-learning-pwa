@@ -207,6 +207,7 @@ export {
 export {
   ActualEffectiveDuration,
   DailyEffectiveDurationSummary,
+  ModuleCompletedExtraTrainingEntry,
   TaskDurationEstimate,
   TrainingCompletionDurationScreen,
   TrainingUnitScore,

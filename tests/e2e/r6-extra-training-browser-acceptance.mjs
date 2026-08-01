@@ -1285,6 +1285,68 @@ async function verifyThirtySecondMode(page) {
   return { databaseNames, elapsedWallSeconds }
 }
 
+async function verifyR62ModuleFirstCompletion(page, moduleId) {
+  const before = activeRuntime(await page.dumpIndexedDb()).activePlan
+  await clickDailyModule(page, moduleId)
+  await waitForDailyQuestion(page, moduleId)
+  const deadline = Date.now() + 35_000
+  let budgetRuntime
+  while (Date.now() < deadline) {
+    budgetRuntime = activeRuntime(await page.dumpIndexedDb())
+    if (executionFor(budgetRuntime, moduleId).training?.status === 'finish-current-item') break
+    await new Promise((resolve) => setTimeout(resolve, 250))
+  }
+  assert.equal(executionFor(budgetRuntime, moduleId).training?.status, 'finish-current-item')
+  if (moduleId === 'vocabulary') await submitVocabularyAnswer(page)
+  else if (moduleId === 'listening') {
+    await finishControlledSpeech(page)
+    await answerListening(page)
+  } else await recordSpeaking(page)
+  await page.waitFor(`Array.from(document.querySelectorAll('button')).some((button) => ['完成训练', '完成本题并结束'].includes(button.innerText.trim()) && !button.disabled)`, 20_000)
+  await page.clickByText('完成训练', '完成本题并结束')
+  const completed = await waitForDailyExecutionCompleted(page, moduleId)
+  const completionText = await page.bodyText()
+  assert.match(completionText, /本模块今日任务已完成/u)
+  assert.match(completionText, /继续训练/u)
+  assert.doesNotMatch(completionText, /完成今日\s*3\/3\s*后再继续训练/u)
+
+  // The real completion surface must route directly to this module's extra session.
+  await page.clickByText('继续训练')
+  await page.waitFor(
+    `location.hash.startsWith(${JSON.stringify(`#/extra-training/${moduleId}?sessionId=`)})`,
+    20_000,
+  )
+  await waitForExtraQuestion(page, moduleId)
+  const directSessionId = new URLSearchParams(
+    new URL(await page.url()).hash.split('?')[1] ?? '',
+  ).get('sessionId')
+  assert.ok(directSessionId)
+  await exitExtra(page, moduleId)
+
+  // Today and Training show only the independently qualified module as extra.
+  await page.navigate(new URL('#/', baseUrl).href)
+  await page.waitFor(`document.body.innerText.includes('今日安排')`, 20_000)
+  const today = await page.evaluate(`(() => [...document.querySelectorAll('button.task-row')].map((b) => ({ moduleId: b.dataset.moduleId, taskId: b.dataset.taskId, text: b.innerText })))()`)
+  assert.equal(executionFor(completed, moduleId).status, 'completed')
+  const after = activeRuntime(await page.dumpIndexedDb()).activePlan
+  for (const other of MODULES.filter((id) => id !== moduleId)) {
+    assert.equal(executionFor(after, other).status, 'pending')
+  }
+  assert.deepEqual(
+    after.tasks.map((x) => x.task.taskId),
+    before.tasks.map((x) => x.task.taskId),
+  )
+  await page.clickByText('训练')
+  await page.waitFor(`document.querySelectorAll('[data-training-area]').length === 3`, 20_000)
+  await clickSelector(page, '[data-training-area="daily"]')
+  await page.waitFor(`document.querySelectorAll('.module-card').length === 3`, 20_000)
+  const cards = await page.evaluate(`(() => [...document.querySelectorAll('.module-card')].map((c) => ({moduleId:c.dataset.moduleId, availability:c.dataset.availability, text:c.innerText})))()`)
+  assert.equal(cards.filter((c) => c.availability === 'extra-training').length, 1)
+  assert.equal(cards.find((c) => c.moduleId === moduleId)?.availability, 'extra-training')
+  assert.equal(cards.filter((c) => c.moduleId !== moduleId).every((c) => c.availability !== 'extra-training'), true)
+  return { moduleId, directSessionId, cards, today }
+}
+
 async function waitForPicker(page) {
   await page.waitFor(
     `location.hash === '#/extra-training' &&
@@ -1771,6 +1833,19 @@ async function run() {
         ]),
       ),
     })
+
+    const r62FirstModule = process.env.QA_R62_FIRST_MODULE
+    if (r62FirstModule) {
+      assert.ok(MODULES.includes(r62FirstModule))
+      const result = await verifyR62ModuleFirstCompletion(
+        qa.page,
+        r62FirstModule,
+      )
+      checkpoint('r62-module-first-completion', result)
+      evidence.status = 'passed'
+      console.log(JSON.stringify(evidence, null, 2))
+      return
+    }
 
     if (verifyR12Framework) {
       const result = await verifyR12TrainingFramework(qa.page)

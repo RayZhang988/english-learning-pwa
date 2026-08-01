@@ -42,7 +42,6 @@ export function TrainingRouteHost({
     readonly task: LearningTask
   } | null>(null)
   const completedTaskIdRef = useRef<string | null>(null)
-  const restoredCompletionTaskIdRef = useRef<string | null>(null)
   const returnPendingTaskIdRef = useRef<string | null>(null)
   const budgetPortRef = useRef<{
     readonly key: string
@@ -123,7 +122,6 @@ export function TrainingRouteHost({
         taskId,
         task: completedExecution.task,
       }
-      restoredCompletionTaskIdRef.current = taskId
     }
   }
 
@@ -190,13 +188,20 @@ export function TrainingRouteHost({
       task.trainingBudget === undefined
         ? undefined
         : budgetPortRef.current.status,
+    completedExtraTrainingEntry:
+      currentExecution?.status === 'completed'
+        ? {
+            onContinueTraining: async () => {
+              const session = await coordinator.startExtraTraining(moduleId)
+              navigate(
+                coordinator.routeForExtraTrainingSession(session.sessionId),
+              )
+            },
+          }
+        : undefined,
   }
 
-  if (
-    completionDurationTaskId === task.taskId ||
-    (restoredCompletionTaskIdRef.current === task.taskId &&
-      currentExecution?.status === 'completed')
-  ) {
+  if (completionDurationTaskId === task.taskId) {
     return (
       <TrainingCompletionDurationScreen
         viewModel={{
@@ -213,7 +218,10 @@ export function TrainingRouteHost({
           },
         }}
         onAction={onReturnToPlan}
-        onContinueTraining={() => navigate('/extra-training')}
+        onContinueTraining={async () => {
+          const session = await coordinator.startExtraTraining(moduleId)
+          navigate(coordinator.routeForExtraTrainingSession(session.sessionId))
+        }}
       />
     )
   }

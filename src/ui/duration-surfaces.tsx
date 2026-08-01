@@ -1,4 +1,4 @@
-import { useId } from 'react'
+import { useId, useState } from 'react'
 import { trainingBlockDurationLabel } from '../config/training-test-mode.ts'
 import { Icon } from './icons.tsx'
 import { TrainingBudgetProgress } from './training-budget-surfaces.tsx'
@@ -14,6 +14,60 @@ import type {
   TrainingCompletionDurationViewModel,
   TrainingUnitScoreViewModel,
 } from './duration-view-models.ts'
+import type { ModuleCompletedExtraTrainingEntryViewModel } from './extra-training-view-models.ts'
+
+/**
+ * The one public completion entry shared by all three real training routes.
+ * Eligibility is determined by 01/04; this surface only serializes the intent
+ * and leaves a failed start visible and retryable on the completed screen.
+ */
+export function ModuleCompletedExtraTrainingEntry({
+  entry,
+  onContinueTraining,
+}: {
+  readonly entry: ModuleCompletedExtraTrainingEntryViewModel
+  readonly onContinueTraining: () => Promise<void>
+}) {
+  const [starting, setStarting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const disabled = Boolean(entry.action.disabled || entry.action.loading || starting)
+
+  return (
+    <section
+      className="daily-completion-extra-entry"
+      aria-label="本模块完成后的继续训练"
+    >
+      <span className="eyebrow">OPTIONAL PRACTICE</span>
+      <h2>今日 15 分钟已完成</h2>
+      <p>
+        可继续进行不限时练习，随时退出并保存进度。本次训练区块为
+        {trainingBlockDurationLabel()}有效训练；额外练习不会改变今日完成状态。
+      </p>
+      {entry.action.disabledReason ? (
+        <small>{entry.action.disabledReason}</small>
+      ) : null}
+      {error ? <small role="alert">{error}</small> : null}
+      <button
+        className="primary-button"
+        type="button"
+        disabled={disabled}
+        aria-busy={starting || entry.action.loading || undefined}
+        onClick={() => {
+          if (disabled) return
+          setStarting(true)
+          setError(null)
+          void onContinueTraining().catch((reason: unknown) => {
+            setError(reason instanceof Error ? reason.message : '暂时无法打开继续训练，请重试。')
+          }).finally(() => {
+            setStarting(false)
+          })
+        }}
+      >
+        {starting || entry.action.loading ? '正在打开' : entry.action.label}
+      </button>
+    </section>
+  )
+}
 
 export function TrainingUnitScore({
   score,
@@ -220,20 +274,14 @@ export function TrainingCompletionDurationScreen({
               {trainingBlockDurationLabel()}有效训练；额外练习不会改变今日完成状态。
             </p>
             {extraTrainingEntry.action.disabledReason ? (
-              <small>
-                {extraTrainingEntry.action.disabledReason}
-              </small>
+              <small>{extraTrainingEntry.action.disabledReason}</small>
             ) : null}
             <button
               className="primary-button"
               type="button"
               disabled={continueDisabled}
-              aria-busy={
-                extraTrainingEntry.action.loading || undefined
-              }
-              onClick={
-                continueDisabled ? undefined : onContinueTraining
-              }
+              aria-busy={extraTrainingEntry.action.loading || undefined}
+              onClick={continueDisabled ? undefined : onContinueTraining}
             >
               {extraTrainingEntry.action.loading
                 ? '正在打开'

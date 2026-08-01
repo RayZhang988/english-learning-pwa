@@ -24,6 +24,7 @@ import {
   ErrorState,
   LoadingState,
   OfflineNotice,
+  ModuleCompletedExtraTrainingEntry,
   TrainingUnitScore,
 } from '../../ui/index.ts'
 import {
@@ -53,6 +54,9 @@ export interface SpeakingTrainingRouteProps {
   readonly score?: TrainingUnitScoreLedger
   readonly onExit: () => void
   readonly onCompleted?: (session: SpeakingSession) => void
+  readonly completedExtraTrainingEntry?: {
+    readonly onContinueTraining: () => Promise<void>
+  }
   readonly contentSource?: ReadonlyDataSource<SpeakingCatalog>
   readonly repository?: SpeakingSessionRepository
   readonly networkStatus?: NetworkStatusService
@@ -319,15 +323,12 @@ export function SpeakingTrainingRoute(
             }}
           />
         )}
-        action={(
-          <button
-            className="primary-button"
-            type="button"
-            onClick={props.onExit}
-          >
-            返回今日计划
-          </button>
-        )}
+        action={<>
+          {props.completedExtraTrainingEntry ? (
+            <ModuleCompletedExtraTrainingEntry entry={{ action: { label: '继续训练', disabled: false, loading: false } }} onContinueTraining={props.completedExtraTrainingEntry.onContinueTraining} />
+          ) : null}
+          <button className={props.completedExtraTrainingEntry ? 'secondary-button' : 'primary-button'} type="button" onClick={props.onExit}>返回今日计划</button>
+        </>}
       />
     )
   }
