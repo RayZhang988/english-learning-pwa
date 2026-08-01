@@ -239,7 +239,7 @@ export function ExtraTrainingPickerScreen({
         <h1>继续训练</h1>
         <p>
           额外训练不设时长，练到你主动退出为止。退出会保存进度，
-          也不会改变今日 3/3 完成状态。
+          也不会改变今日模块完成状态。
         </p>
       </header>
 
@@ -383,7 +383,7 @@ function contextNotice(
     eyebrow: 'EXTRA PRACTICE',
     title: `额外训练 · ${moduleLabel}`,
     description: [
-      '退出并保存当前进度；本轮属于额外练习，不会改变今日 3/3 完成状态。',
+      '退出并保存当前进度；本轮属于额外练习，不会改变今日模块完成状态。',
       exitAction.disabledReason,
     ]
       .filter(Boolean)

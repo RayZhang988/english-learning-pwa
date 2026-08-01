@@ -78,9 +78,9 @@ export interface TrainingCompletionDurationViewModel {
     readonly status: 'completed'
   }
   /**
-   * Supplied only after the application has confirmed the daily plan is 3/3.
-   * Its presence never changes PlanProgress inside UI.
+   * Supplied when this module's own daily 15-minute target is complete.
+   * Its presence never changes daily-plan progress inside UI.
    */
-  readonly extraTrainingEntry?: import('./extra-training-view-models.ts').CompletedDailyPlanExtraTrainingEntryViewModel
+  readonly extraTrainingEntry?: import('./extra-training-view-models.ts').ModuleCompletedExtraTrainingEntryViewModel
   readonly actionLabel: string
 }

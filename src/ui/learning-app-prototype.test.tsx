@@ -388,59 +388,77 @@ describe('R2 today task choices', () => {
   })
 })
 
-describe('R2 practice task choices', () => {
-  it('opens the selected extra-training module from the 3/3 practice grid', () => {
+describe('R6.2 module-level continuation choices', () => {
+  it('opens only the completed module from today while other modules keep their daily task actions', () => {
     const onExtraTrainingRequested = vi.fn()
-    const modules = [
-      {
-        moduleId: 'assessment' as const,
-        request: {
-          state: 'enabled' as const,
-          label: '查看测试结果',
-        },
-      },
-      ...(['vocabulary', 'listening', 'speaking'] as const).map(
-        (moduleId) => ({
-          moduleId,
-          availability: 'extra-training' as const,
+    const onTaskRequested = vi.fn()
+    const screen = TodayTaskList({
+      tasks: [
+        {
+          ...taskPresentation.vocabulary,
+          moduleId: 'vocabulary',
+          availability: 'extra-training',
           taskId: null,
-          status: 'completed' as const,
-          recommended: false as const,
+          status: 'completed',
+          recommended: false,
           actionLabel: '继续训练',
-          extraTrainingDescription:
-            '今日任务已完成，可以开始额外训练。',
-          openEnded: true as const,
-          statusLabel: '已完成',
-        }),
-      ),
-    ]
-    const screen = PracticeModuleGrid({
-      modules,
-      onAssessmentRequested: () => undefined,
-      onTaskRequested: () => undefined,
+          extraTrainingDescription: '词汇今日 15 分钟已完成，可以不限时继续训练。',
+          openEnded: true,
+          statusLabel: '今日 15 分钟已完成',
+        },
+        startableTask('listening', true),
+        startableTask('speaking'),
+      ],
+      onTaskRequested,
       onExtraTrainingRequested,
     })
 
-    for (const moduleId of [
-      'vocabulary',
-      'listening',
-      'speaking',
-    ] as const) {
-      const button = taskButton(screen, moduleId)
-      expect(button.props.disabled).toBe(false)
-      expect(button.props['data-availability']).toBe(
-        'extra-training',
-      )
-      expect(button.props['data-task-id']).toBeUndefined()
-      expect(button.props['aria-label']).toContain('继续训练')
-      button.props.onClick?.()
-    }
+    const vocabulary = taskButton(screen, 'vocabulary')
+    expect(vocabulary.props.disabled).toBe(false)
+    expect(vocabulary.props['data-availability']).toBe('extra-training')
+    expect(vocabulary.props['data-task-id']).toBeUndefined()
+    expect(vocabulary.props['aria-label']).toContain('今日 15 分钟已完成')
+    expect(vocabulary.props['aria-label']).toContain('不限时继续训练')
+    vocabulary.props.onClick?.()
 
-    expect(onExtraTrainingRequested.mock.calls).toEqual([
-      ['vocabulary'],
-      ['listening'],
-      ['speaking'],
+    taskButton(screen, 'listening').props.onClick?.()
+    taskButton(screen, 'speaking').props.onClick?.()
+
+    expect(onExtraTrainingRequested).toHaveBeenCalledExactlyOnceWith('vocabulary')
+    expect(onTaskRequested.mock.calls).toEqual([
+      [taskIds.listening],
+      [taskIds.speaking],
     ])
+  })
+
+  it.each([
+    ['0/3', [], 0],
+    ['1/3', ['vocabulary'], 1],
+    ['2/3', ['vocabulary', 'listening'], 2],
+    ['3/3', ['vocabulary', 'listening', 'speaking'], 3],
+  ] as const)('renders %s completed modules independently without an aggregate gate', (
+    _progress,
+    completedModules,
+    expectedExtraEntries,
+  ) => {
+    const onExtraTrainingRequested = vi.fn()
+    const completed = completedModules as readonly TrainingPracticeModuleId[]
+    const tasks = (['vocabulary', 'listening', 'speaking'] as const).map((moduleId) =>
+      completed.includes(moduleId)
+        ? {
+            ...taskPresentation[moduleId], moduleId, availability: 'extra-training' as const,
+            taskId: null, status: 'completed' as const, recommended: false as const,
+            actionLabel: '继续训练', extraTrainingDescription: '本模块今日 15 分钟已完成。',
+            openEnded: true as const, statusLabel: '今日 15 分钟已完成',
+          }
+        : startableTask(moduleId),
+    )
+    const screen = TodayTaskList({ tasks, onTaskRequested: () => undefined, onExtraTrainingRequested })
+
+    expect(collectHostElements(screen, 'button').filter((button) =>
+      (button.props as TaskButtonProps)['data-availability'] === 'extra-training',
+    )).toHaveLength(expectedExtraEntries)
+    expect(renderToStaticMarkup(screen)).not.toContain('完成今日 3/3 后再继续训练')
   })
 
   it('keeps all three specialty cards clickable and does not swap or duplicate task ids', () => {

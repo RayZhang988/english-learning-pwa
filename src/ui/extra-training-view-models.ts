@@ -88,11 +88,19 @@ export interface ExtraTrainingPickerViewModel {
   }
 }
 
-export interface CompletedDailyPlanExtraTrainingEntryViewModel {
+/**
+ * Eligibility is decided per completed daily module by 04/01.  It is never
+ * derived from the aggregate daily-plan progress in UI.
+ */
+export interface ModuleCompletedExtraTrainingEntryViewModel {
   readonly action: ExtraTrainingActionViewModel & {
     readonly label: '继续训练'
   }
 }
+
+/** @deprecated Use ModuleCompletedExtraTrainingEntryViewModel. */
+export type CompletedDailyPlanExtraTrainingEntryViewModel =
+  ModuleCompletedExtraTrainingEntryViewModel
 
 export type ExtraTrainingActiveProgressViewModel =
   | {

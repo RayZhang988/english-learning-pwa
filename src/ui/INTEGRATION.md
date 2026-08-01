@@ -805,7 +805,7 @@ duration、页面墙钟和 `legacy-event-duration` 都不能回退成实际有�
 读写 timing segment。上述数据采集、恢复、可靠性判定、历史样本保存和生产路由全部属于
 01 / 04 / 06 / 07 / 08。
 
-## R6｜每日 3/3 完成后的额外训练
+## R6.2｜模块完成后的继续训练
 
 01 只从 `src/ui/index.ts` 导入：
 
@@ -817,7 +817,7 @@ import {
   ExtraTrainingPickerScreen,
   ExtraVocabularyTrainingScreen,
   TrainingCompletionDurationScreen,
-  type CompletedDailyPlanExtraTrainingEntryViewModel,
+  type ModuleCompletedExtraTrainingEntryViewModel,
   type ExtraListeningTrainingScreenProps,
   type ExtraSpeakingTrainingScreenProps,
   type ExtraTrainingActiveSessionViewModel,
@@ -828,14 +828,15 @@ import {
 } from '../../ui/index.ts'
 ```
 
-### 3/3 完成入口
+### 模块完成入口
 
-只有 01 已从 04 确认同一本地日期的每日计划为 3/3 时，才给现有
+01 只要从 04 收到某一模块自己的每日 15 分钟训练已完成，就必须让该模块在“今天”和
+“日常训练”两处使用 `availability: 'extra-training'`，并给该模块的
 `TrainingCompletionDurationScreen` 增加：
 
 ```ts
 const extraTrainingEntry:
-  CompletedDailyPlanExtraTrainingEntryViewModel = {
+  ModuleCompletedExtraTrainingEntryViewModel = {
     action: {
       label: '继续训练',
       disabled: false,
@@ -844,9 +845,13 @@ const extraTrainingEntry:
   }
 ```
 
-并传入 `onContinueTraining()`。该回调只打开模块选择页，不创建额外训练会话。UI 固定说明
-每轮为 15 分钟有效训练、属于额外练习且不会改变今日 3/3；它不读取或改写
-`PlanProgress`。没有 `extraTrainingEntry` 时，原有每日任务/单模块完成页保持原样。
+并传入 `onContinueTraining()`。该回调只打开模块选择页或该模块的恢复/新一轮选择，不创建
+额外训练会话。UI 固定说明“今日 15 分钟已完成”和“不限时继续训练”；`?trainingTest=30`
+下时长标签必须由 `trainingBlockDurationLabel()` 显示为“30 秒”，普通入口显示“15 分钟”。
+它不读取、汇总或改写 `PlanProgress`。未完成模块继续使用自己的 `availability: 'startable'` 与真实 taskId。
+
+三项都完成时，01 可以额外提供“今日三项训练已完成”的摘要，但该摘要绝不能决定任一卡
+是否可继续训练，也不得出现“完成今日 3/3 后再继续训练”的文案。
 
 ### 模块选择状态
 
@@ -905,7 +910,7 @@ const extraTraining:
 | `ExtraSpeakingTrainingScreen` | 原 `SpeakingScreenViewModel` | 08 `ExtraSpeakingTrainingSnapshot` |
 
 三个适配页都会用 `extraTraining.budget` 替换普通页面头部时长展示，并固定显示“额外训练”、
-“退出并保存当前进度”和“不改变今日 3/3”。`running`、`finish-current-item`、
+“退出并保存当前进度”和“不改变今日模块完成状态”。`running`、`finish-current-item`、
 `content-exhausted` 文案继续复用 QA-011 的统一预算组件；尤其到时状态必须显示
 “时间已到，完成本题后结束”。
 
@@ -933,7 +938,7 @@ onRetryRequested(sessionId)
     // 01 返回模块选择页；这里不直接启动同一模块。
   }}
   onReturnToCompletedPlan={(sessionId) => {
-    // 01 返回仍然保持 3/3 的今日完成页。
+    // 01 返回今天页；额外会话不会改变任何模块的每日完成状态。
   }}
 />
 ```

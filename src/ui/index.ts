@@ -182,6 +182,7 @@ export type {
   ExtraTrainingModuleId,
   ExtraTrainingModuleViewModel,
   ExtraTrainingPickerViewModel,
+  ModuleCompletedExtraTrainingEntryViewModel,
 } from './extra-training-view-models.ts'
 export {
   TrainingBudgetProgress,

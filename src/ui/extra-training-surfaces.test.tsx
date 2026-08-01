@@ -191,7 +191,7 @@ const speakingViewModel: SpeakingScreenViewModel = {
   action: { label: '下一题' },
 }
 
-describe('R6 completed daily plan entry', () => {
+describe('R6.2 module-completed extra-training entry', () => {
   it('replaces the return-only dead end with an explicit optional-practice entry', () => {
     const onContinueTraining = vi.fn()
     const onReturn = vi.fn()
@@ -199,7 +199,7 @@ describe('R6 completed daily plan entry', () => {
       viewModel: {
         moduleId: 'speaking',
         title: '口语训练完成',
-        description: '最后一个每日必做任务已经保存。',
+        description: '本模块今日训练已经保存。',
         score: { state: 'available', correctCount: 8, totalCount: 10, percentage: 80, unscorableCount: 0 },
         actualDuration: {
           state: 'reliable',
@@ -217,7 +217,7 @@ describe('R6 completed daily plan entry', () => {
     const markup = renderToStaticMarkup(screen)
     const buttons = collectHostElements(screen, 'button')
 
-    expect(markup).toContain('今日计划 3/3 已完成')
+    expect(markup).toContain('今日 15 分钟已完成')
     expect(markup).toContain('继续训练')
     expect(markup).toContain('15 分钟有效训练')
     expect(markup).toContain('额外练习不会改变今日完成状态')
@@ -290,7 +290,7 @@ describe('R6 module picker intents and states', () => {
     const markup = renderToStaticMarkup(screen)
 
     expect(markup).toContain('继续训练')
-    expect(markup).toContain('不会改变今日 3/3 完成状态')
+    expect(markup).toContain('不会改变今日模块完成状态')
     expect(markup).toContain('data-module-id="vocabulary"')
     expect(markup).toContain('data-module-id="listening"')
     expect(markup).toContain('data-module-id="speaking"')
@@ -542,7 +542,7 @@ describe('R6 dedicated extra-training page adapters', () => {
     ]) {
       expect(markup).toContain('额外训练')
       expect(markup).toContain('退出并保存当前进度')
-      expect(markup).toContain('不会改变今日 3/3 完成状态')
+      expect(markup).toContain('不会改变今日模块完成状态')
       expect(markup).toContain('不限时额外训练')
       expect(markup).toContain('累计完成')
       expect(markup).toContain('正确率')

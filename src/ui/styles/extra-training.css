@@ -40,6 +40,16 @@
   margin-top: 10px;
 }
 
+.task-row__extra-training-note {
+  display: block;
+  margin-top: 5px;
+  color: var(--mint);
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
 .extra-training-picker {
   width: min(100%, 480px);
   min-height: 100dvh;

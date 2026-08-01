@@ -126,10 +126,7 @@ interface DailyTaskPresentation {
   readonly accent: 'indigo' | 'coral' | 'mint'
 }
 
-export type DailyTrainingTaskAccessViewModel = Exclude<
-  TrainingTaskAccessViewModel,
-  { readonly availability: 'extra-training' }
->
+export type DailyTrainingTaskAccessViewModel = TrainingTaskAccessViewModel
 
 export type DailyTaskViewModel =
   DailyTrainingTaskAccessViewModel & DailyTaskPresentation
@@ -345,6 +342,7 @@ export function LearningAppPrototype({
           <TodayPage
             plan={plan}
             onTaskRequested={onTaskRequested}
+            onExtraTrainingRequested={onExtraTrainingRequested}
           />
         ) : null}
         {section === 'practice' ? (
@@ -433,9 +431,13 @@ export function LearningAppPrototype({
 function TodayPage({
   plan,
   onTaskRequested,
+  onExtraTrainingRequested,
 }: {
   readonly plan: DailyPlanViewModel
   readonly onTaskRequested: (taskId: string) => void
+  readonly onExtraTrainingRequested?: (
+    moduleId: TrainingPracticeModuleId,
+  ) => void
 }) {
   return (
     <>
@@ -492,6 +494,7 @@ function TodayPage({
         <TodayTaskList
           tasks={plan.tasks}
           onTaskRequested={onTaskRequested}
+          onExtraTrainingRequested={onExtraTrainingRequested}
         />
       </section>
       {plan.effectiveTimeSummary ? (
@@ -537,14 +540,19 @@ function formatTrainingBudgetTargetAriaLabel(seconds: number): string {
 export function TodayTaskList({
   tasks,
   onTaskRequested,
+  onExtraTrainingRequested,
 }: {
   readonly tasks: readonly DailyTaskViewModel[]
   readonly onTaskRequested: (taskId: string) => void
+  readonly onExtraTrainingRequested?: (
+    moduleId: TrainingPracticeModuleId,
+  ) => void
 }) {
   return (
     <ul className="task-choice-list">
       {tasks.map((task) => {
         const isStartable = task.availability === 'startable'
+        const isExtraTraining = task.availability === 'extra-training'
         const stateClass =
           task.availability === 'unavailable' &&
           task.unavailableReason === 'invalid-task-data'
@@ -553,14 +561,20 @@ export function TodayTaskList({
         const detail =
           task.availability === 'unavailable'
             ? task.unavailableDescription
+            : isExtraTraining
+              ? task.extraTrainingDescription
             : task.contentSummary
         const actionLabel =
           task.availability === 'startable'
             ? task.actionLabel
+            : isExtraTraining
+              ? task.actionLabel
             : task.statusLabel
         const ariaLabel =
           task.availability === 'startable'
             ? `${task.actionLabel}：${task.title}${trainingTaskDurationAriaDescription(task)}${recommendedAriaDescription(task.recommended)}`
+            : isExtraTraining
+              ? `${task.actionLabel}：${task.title}。${task.extraTrainingDescription}。今日 15 分钟已完成；不限时继续训练，主动退出时保存。`
             : `${task.statusLabel}：${task.title}。${task.unavailableDescription}`
 
         return (
@@ -577,7 +591,7 @@ export function TodayTaskList({
                 .filter(Boolean)
                 .join(' ')}
               type="button"
-              disabled={!isStartable}
+              disabled={!isStartable && (!isExtraTraining || !onExtraTrainingRequested)}
               data-module-id={task.moduleId}
               data-task-id={task.taskId ?? undefined}
               data-availability={task.availability}
@@ -586,7 +600,9 @@ export function TodayTaskList({
               onClick={
                 task.availability === 'startable'
                   ? () => onTaskRequested(task.taskId)
-                  : undefined
+                  : isExtraTraining && onExtraTrainingRequested
+                    ? () => onExtraTrainingRequested(task.moduleId)
+                    : undefined
               }
             >
               <span className={`task-icon task-icon--${task.accent}`}>
@@ -612,6 +628,10 @@ export function TodayTaskList({
                       estimate={task.durationEstimate}
                     />
                   )
+                ) : isExtraTraining ? (
+                  <small className="task-row__extra-training-note">
+                    今日 15 分钟已完成 · 不限时继续训练
+                  </small>
                 ) : null}
               </span>
               <span

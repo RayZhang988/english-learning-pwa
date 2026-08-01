@@ -211,13 +211,13 @@ export function TrainingCompletionDurationScreen({
         {extraTrainingEntry ? (
           <section
             className="daily-completion-extra-entry"
-            aria-label="今日计划 3/3 已完成后的额外练习"
+            aria-label={`${viewModel.title}后的继续训练`}
           >
             <span className="eyebrow">OPTIONAL PRACTICE</span>
-            <h2>今日计划 3/3 已完成</h2>
+            <h2>今日 15 分钟已完成</h2>
             <p>
-              可继续选择词汇、听力或口语。每次为 {trainingBlockDurationLabel()}有效训练，
-              额外练习不会改变今日完成状态。
+              可继续进行不限时练习，随时退出并保存进度。本次训练区块为
+              {trainingBlockDurationLabel()}有效训练；额外练习不会改变今日完成状态。
             </p>
             {extraTrainingEntry.action.disabledReason ? (
               <small>
