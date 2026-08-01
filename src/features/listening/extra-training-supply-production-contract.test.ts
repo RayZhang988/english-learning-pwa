@@ -28,7 +28,7 @@ function provider() {
 
 const candidates = (trainingSupplyIndex.candidates as readonly {
   readonly itemId: string; readonly difficultyLevel: number; readonly allowedModes: readonly string[]
-  readonly variantFamilyId: string
+  readonly variantFamilyId: string; readonly playbackContentId: string | null
 }[]).filter((candidate) => candidate.itemId.includes('-listening-') && candidate.allowedModes.includes('learn') && candidate.difficultyLevel === 1)
 
 function extra(priorityItemIds: Record<'recent-error' | 'due-review' | 'same-day-variant' | 'new-optional-content', readonly string[]>, patch: Partial<{ cursor: string | null; excludeItemIds: readonly string[] }> = {}) {
@@ -106,6 +106,35 @@ describe('extra listening supply production contract', () => {
     expect(restored.status).toBe('item')
     if (restored.status === 'item') {
       expect(families.slice(-4)).not.toContain((restored.item as ListeningSupplyItem & { readonly variantFamilyId: string }).variantFamilyId)
+    }
+  })
+
+  it('takes only one same-audio priority variant, then falls through to a different playback identity', async () => {
+    const duplicateGroup = [...new Map(
+      candidates
+        .filter((candidate) => candidate.playbackContentId !== null)
+        .map((candidate) => [candidate.playbackContentId!, candidates.filter((other) => other.playbackContentId === candidate.playbackContentId)]),
+    ).values()].find((group) => group.length >= 3)
+    expect(duplicateGroup).toBeDefined()
+    if (!duplicateGroup) return
+    const priority = {
+      'recent-error': duplicateGroup.map((candidate) => candidate.itemId),
+      'due-review': [], 'same-day-variant': [], 'new-optional-content': [],
+    }
+    const supply = provider()
+    const first = await supply.next(extra(priority))
+    expect(first.status).toBe('item')
+    if (first.status !== 'item') return
+    const firstItem = first.item as ListeningSupplyItem
+    expect(priority['recent-error']).toContain(firstItem.itemId)
+    const nextRequest = extra(priority, { cursor: first.nextCursor, excludeItemIds: [firstItem.itemId] })
+    const next = await supply.next({ ...nextRequest, requestId: 'same-audio-priority-next', reason: 'continue-after-item' })
+    const restored = await supply.next({ ...nextRequest, requestId: 'same-audio-priority-restored', reason: 'continue-after-item' })
+    expect(next.status).toBe('item')
+    expect(restored.status === 'item' ? restored.item.itemId : null)
+      .toBe(next.status === 'item' ? next.item.itemId : null)
+    if (next.status === 'item') {
+      expect((next.item as ListeningSupplyItem).playbackContentId).not.toBe(firstItem.playbackContentId)
     }
   })
 

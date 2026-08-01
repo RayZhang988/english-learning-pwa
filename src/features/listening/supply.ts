@@ -243,11 +243,7 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
                     declared.variantFamilyId === item.variantFamilyId,
                 ),
               )
-            : declaredCandidates.filter((item) =>
-                (priority === 'recent-error' || priority === 'due-review'
-                  ? availableByItem
-                  : available).includes(item),
-              )
+            : declaredCandidates.filter((item) => available.includes(item))
         )
           const selected = selectDiverseItem(
             priorityCandidates,
@@ -262,6 +258,22 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
       }
     }
     if (available.length === 0) {
+      // A priority tier never gets to replay identical audio under another
+      // item ID.  Only when this entire eligible pool has exhausted distinct
+      // published playback identities may an extra session honestly relax
+      // that rule; daily sessions retain their explicit exhausted result.
+      if (isExtraTrainingRequest(request) && availableByItem.length > 0) {
+        const item = selectDiverseItem(
+          availableByItem,
+          request,
+          this.itemsById,
+          true,
+          true,
+        )
+        if (item) {
+          return { schemaVersion: 1, requestId: request.requestId, status: 'item', item, nextCursor: item.itemId }
+        }
+      }
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'all-eligible-content-recently-used' }
     }
     const cursorIndex = request.cursor === null ? -1 : eligible.findIndex((item) => item.itemId === request.cursor)
