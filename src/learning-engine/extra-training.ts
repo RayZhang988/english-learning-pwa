@@ -1,10 +1,12 @@
 import type {
   ExtraTrainingEvent,
+  ExtraTrainingEligibility,
   ExtraTrainingPriorityItemIds,
   ExtraTrainingSession,
   ExtraTrainingState,
   ExtraTrainingSupplyRequest,
   PlanProgress,
+  TrainingModuleId,
 } from './contracts.ts'
 import { EXTRA_TRAINING_EFFECTIVE_SECONDS } from './contracts.ts'
 import { classifyTimingSegment } from './timing.ts'
@@ -82,6 +84,70 @@ export interface CreateExtraTrainingSessionInput {
   readonly targetDifficulty: number
   readonly priorityItemIds: ExtraTrainingPriorityItemIds
   readonly startedAt: string
+}
+
+/**
+ * Resolves continuation eligibility from the daily task for exactly one
+ * module. Aggregate plan completion is informational only and must not be
+ * used as an admission gate.
+ */
+export function getExtraTrainingEligibility(
+  progress: PlanProgress,
+  moduleId: TrainingModuleId,
+  localDate: string,
+): ExtraTrainingEligibility {
+  assertLocalDate(localDate)
+  if (progress.plan.localDate !== localDate) {
+    return {
+      schemaVersion: 1,
+      localDate,
+      moduleId,
+      eligible: false,
+      reason: 'daily-plan-date-mismatch',
+      taskId: null,
+    }
+  }
+  const matching = progress.tasks.filter(
+    (execution) => execution.task.targetModuleId === moduleId,
+  )
+  if (matching.length !== 1) {
+    return {
+      schemaVersion: 1,
+      localDate,
+      moduleId,
+      eligible: false,
+      reason: 'daily-task-missing-or-invalid',
+      taskId: null,
+    }
+  }
+  const [execution] = matching
+  const taskId = execution.task.taskId
+  if (
+    typeof taskId !== 'string' ||
+    taskId.trim().length === 0 ||
+    execution.task.domain !== moduleId ||
+    execution.task.targetModuleId !== moduleId
+  ) {
+    return {
+      schemaVersion: 1,
+      localDate,
+      moduleId,
+      eligible: false,
+      reason: 'daily-task-missing-or-invalid',
+      taskId: null,
+    }
+  }
+  return {
+    schemaVersion: 1,
+    localDate,
+    moduleId,
+    eligible: execution.status === 'completed',
+    reason:
+      execution.status === 'completed'
+        ? 'daily-task-completed'
+        : 'daily-task-incomplete',
+    taskId,
+  }
 }
 
 function assertSessionIdentity(
@@ -197,7 +263,7 @@ export function migrateExtraTrainingSessionToOpenEnded(
   })
 }
 
-/** A session can start only after the same day's daily plan has reached 3/3. */
+/** A session can start only after its own same-day daily task has completed. */
 export function createExtraTrainingSession(
   state: ExtraTrainingState | undefined,
   completedPlan: PlanProgress,
@@ -214,17 +280,19 @@ export function createExtraTrainingSession(
   if (!Number.isFinite(input.targetDifficulty) || input.targetDifficulty < 0 || input.targetDifficulty > 12) {
     throw new RangeError('targetDifficulty must be between 0 and 12')
   }
-  if (
-    completedPlan.status !== 'completed' ||
-    completedPlan.plan.localDate !== input.localDate ||
-    completedPlan.tasks.length !== 3 ||
-    !completedPlan.tasks.every((task) => task.status === 'completed' || task.status === 'skipped')
-  ) {
-    throw new TypeError('Extra training requires the completed daily plan for its localDate')
-  }
   const current = state ?? createExtraTrainingState()
   if (current.sessions[input.sessionId] !== undefined) {
     return current
+  }
+  const eligibility = getExtraTrainingEligibility(
+    completedPlan,
+    input.targetModuleId,
+    input.localDate,
+  )
+  if (!eligibility.eligible) {
+    throw new TypeError(
+      `Extra training requires the completed ${input.targetModuleId} daily task for its localDate (${eligibility.reason})`,
+    )
   }
   return replaceSession(current, {
     schemaVersion: 1,

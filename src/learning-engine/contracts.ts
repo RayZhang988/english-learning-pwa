@@ -295,6 +295,26 @@ export interface ExtraTrainingState {
   readonly processedEventIds: readonly string[]
 }
 
+/**
+ * Module-scoped admission for an optional extra-training session.
+ *
+ * The daily plan may still retain its aggregate 3/3 status, but that status
+ * is deliberately not an admission condition: a module earns continuation
+ * as soon as its own daily task is completed.
+ */
+export interface ExtraTrainingEligibility {
+  readonly schemaVersion: 1
+  readonly localDate: string
+  readonly moduleId: TrainingModuleId
+  readonly eligible: boolean
+  readonly reason:
+    | 'daily-task-completed'
+    | 'daily-task-incomplete'
+    | 'daily-plan-date-mismatch'
+    | 'daily-task-missing-or-invalid'
+  readonly taskId: string | null
+}
+
 export interface ExtraTrainingSupplyRequest {
   readonly schemaVersion: 1
   readonly requestId: string

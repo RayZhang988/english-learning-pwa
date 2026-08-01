@@ -6,6 +6,7 @@ import {
   createExtraTrainingSession,
   createExtraTrainingState,
   expireExtraTrainingSessions,
+  getExtraTrainingEligibility,
   migrateExtraTrainingSessionsToOpenEnded,
 } from './extra-training.ts'
 import { applyExtraTrainingAttempt, createLearningEngineState } from './engine.ts'
@@ -33,6 +34,22 @@ function completedDailyPlan(): PlanProgress {
     ...progress,
     status: 'completed',
     tasks: progress.tasks.map((task) => ({ ...task, status: 'completed' as const })),
+  }
+}
+
+function withCompletedModules(
+  completed: readonly ('vocabulary' | 'listening' | 'speaking')[],
+): PlanProgress {
+  const progress = completedDailyPlan()
+  return {
+    ...progress,
+    status: completed.length === 3 ? 'completed' : 'in-progress',
+    tasks: progress.tasks.map((task) => ({
+      ...task,
+      status: completed.includes(task.task.targetModuleId)
+        ? ('completed' as const)
+        : ('pending' as const),
+    })),
   }
 }
 
@@ -82,8 +99,8 @@ function event(
   })
 }
 
-describe('R6 independent extra-training sessions', () => {
-  it('creates JSON-portable open-ended practice only after a completed 3/3 daily plan', () => {
+describe('R6.2 module-scoped independent extra-training sessions', () => {
+  it('creates JSON-portable open-ended practice after its own daily task, not 3/3', () => {
     const state = create('listening')
     const session = state.sessions['listening-extra-1']
     expect(session).toMatchObject({
@@ -95,13 +112,71 @@ describe('R6 independent extra-training sessions', () => {
       status: 'running',
       completedItemCount: 0,
     })
-    expect(() => createExtraTrainingSession(createExtraTrainingState(), {
-      ...completedDailyPlan(), status: 'in-progress',
-    }, {
+    expect(() => createExtraTrainingSession(createExtraTrainingState(), withCompletedModules(['listening']), {
       sessionId: 'blocked', localDate: '2026-07-29', domain: 'vocabulary', targetModuleId: 'vocabulary', targetDifficulty: 2, startedAt: '2026-07-29T01:00:00.000Z',
       priorityItemIds: { 'recent-error': [], 'due-review': [], 'same-day-variant': [], 'new-optional-content': [] },
-    })).toThrow('completed daily plan')
+    })).toThrow('completed vocabulary daily task')
     expect(JSON.parse(JSON.stringify(state))).toEqual(state)
+  })
+
+  it.each([
+    ['vocabulary', ['vocabulary']],
+    ['listening', ['listening']],
+    ['speaking', ['speaking']],
+    ['speaking', ['vocabulary', 'speaking']],
+    ['listening', ['vocabulary', 'listening', 'speaking']],
+  ] as const)(
+    'admits %s exactly when that module is completed (%s)',
+    (moduleId, completed) => {
+      const progress = withCompletedModules(completed)
+      expect(getExtraTrainingEligibility(progress, moduleId, '2026-07-29')).toMatchObject({
+        eligible: true,
+        reason: 'daily-task-completed',
+        moduleId,
+      })
+      const state = createExtraTrainingSession(createExtraTrainingState(), progress, {
+        sessionId: `${moduleId}-partial-session`, localDate: '2026-07-29', domain: moduleId, targetModuleId: moduleId, targetDifficulty: 2, startedAt: '2026-07-29T01:00:00.000Z',
+        priorityItemIds: { 'recent-error': [], 'due-review': [], 'same-day-variant': [], 'new-optional-content': [] },
+      })
+      expect(state.sessions[`${moduleId}-partial-session`]).toMatchObject({
+        targetModuleId: moduleId, status: 'running',
+      })
+    },
+  )
+
+  it('publishes stable module-level errors for incomplete, wrong-date, missing and corrupt daily tasks', () => {
+    const partial = withCompletedModules(['vocabulary'])
+    expect(getExtraTrainingEligibility(partial, 'listening', '2026-07-29')).toMatchObject({
+      eligible: false, reason: 'daily-task-incomplete', taskId: expect.any(String),
+    })
+    expect(getExtraTrainingEligibility(partial, 'vocabulary', '2026-07-30')).toMatchObject({
+      eligible: false, reason: 'daily-plan-date-mismatch', taskId: null,
+    })
+    const missing = { ...partial, tasks: partial.tasks.filter((task) => task.task.targetModuleId !== 'speaking') }
+    expect(getExtraTrainingEligibility(missing, 'speaking', '2026-07-29')).toMatchObject({
+      eligible: false, reason: 'daily-task-missing-or-invalid', taskId: null,
+    })
+    const corrupt = {
+      ...partial,
+      tasks: partial.tasks.map((task) => task.task.targetModuleId === 'vocabulary'
+        ? { ...task, task: { ...task.task, taskId: '' } }
+        : task),
+    }
+    expect(getExtraTrainingEligibility(corrupt, 'vocabulary', '2026-07-29')).toMatchObject({
+      eligible: false, reason: 'daily-task-missing-or-invalid', taskId: null,
+    })
+  })
+
+  it('keeps a same-module session stable through repeated starts and other-module completion', () => {
+    const initial = createExtraTrainingSession(createExtraTrainingState(), withCompletedModules(['vocabulary']), {
+      sessionId: 'vocabulary-stable', localDate: '2026-07-29', domain: 'vocabulary', targetModuleId: 'vocabulary', targetDifficulty: 2, startedAt: '2026-07-29T01:00:00.000Z',
+      priorityItemIds: { 'recent-error': [], 'due-review': [], 'same-day-variant': [], 'new-optional-content': [] },
+    })
+    const restarted = createExtraTrainingSession(initial, withCompletedModules(['vocabulary', 'listening']), {
+      sessionId: 'vocabulary-stable', localDate: '2026-07-29', domain: 'vocabulary', targetModuleId: 'vocabulary', targetDifficulty: 2, startedAt: '2026-07-29T01:01:00.000Z',
+      priorityItemIds: { 'recent-error': [], 'due-review': [], 'same-day-variant': [], 'new-optional-content': [] },
+    })
+    expect(restarted).toBe(initial)
   })
 
   it.each(['vocabulary', 'listening', 'speaking'] as const)(
