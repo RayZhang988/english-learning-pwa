@@ -107,6 +107,7 @@ function selectDiverseItem(
   allItemsById: ReadonlyMap<string, IndexedListeningSupplyItem>,
   allowPlaybackRepeat: boolean,
   enforceFamilyCooldown: boolean,
+  enforceAdjacentType: boolean,
 ): IndexedListeningSupplyItem | undefined {
   const recent = request.excludeItemIds
     .slice(-DIVERSITY_WINDOW_ITEMS)
@@ -136,7 +137,13 @@ function selectDiverseItem(
   const cooledCandidates = enforceFamilyCooldown
     ? candidates.filter((item) => !recentFamilies.has(item.variantFamilyId))
     : candidates
-  const selectable = cooledCandidates.length > 0 ? cooledCandidates : candidates
+  const familySelectable = cooledCandidates.length > 0 ? cooledCandidates : candidates
+  const alternateTypeCandidates = enforceAdjacentType && last
+    ? familySelectable.filter((item) => item.source.variantId !== last.source.variantId)
+    : []
+  const selectable = alternateTypeCandidates.length > 0
+    ? alternateTypeCandidates
+    : familySelectable
   return [...selectable].sort((left, right) => {
     const score = (item: IndexedListeningSupplyItem) => {
       const familyPenalty = !enforceFamilyCooldown && recentFamilies.has(item.variantFamilyId)
@@ -145,7 +152,7 @@ function selectDiverseItem(
       const playbackPenalty = !allowPlaybackRepeat && recentPlaybackContent.has(item.playbackContentId)
         ? 100_000
         : 0
-      const consecutiveTypePenalty =
+      const consecutiveTypePenalty = !enforceAdjacentType &&
         item.source.variantId === last?.source.variantId ? 2_000 : 0
       const typeBalancePenalty =
         (recentTypeCounts.get(item.source.variantId) ?? 0) * 100
@@ -251,6 +258,7 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
             this.itemsById,
             priority === 'recent-error' || priority === 'due-review',
             false,
+            false,
         )
         if (selected) {
           return { schemaVersion: 1, requestId: request.requestId, status: 'item', item: selected, nextCursor: selected.itemId }
@@ -269,6 +277,7 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
           this.itemsById,
           true,
           true,
+          true,
         )
         if (item) {
           return { schemaVersion: 1, requestId: request.requestId, status: 'item', item, nextCursor: item.itemId }
@@ -280,7 +289,7 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
     if (request.cursor !== null && cursorIndex < 0) {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
     }
-    const item = selectDiverseItem(available, request, this.itemsById, false, true)
+    const item = selectDiverseItem(available, request, this.itemsById, false, true, true)
     if (!item) {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'all-eligible-content-recently-used' }
     }

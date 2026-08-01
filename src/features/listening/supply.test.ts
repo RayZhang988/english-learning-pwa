@@ -176,6 +176,26 @@ describe('listening training supply', () => {
     }
   })
 
+  it('honestly relaxes adjacent-type avoidance only when the eligible pool has no other type', async () => {
+    const current = catalog()
+    const all = trainingSupplyIndex.candidates as readonly Record<string, unknown>[]
+    const type = (all.find((candidate) => candidate.domain === 'listening')?.source as { variantId?: string })?.variantId
+    const sameTypeIndex = {
+      schemaVersion: 1,
+      candidates: all.filter((candidate) => (candidate.source as { variantId?: string })?.variantId === type),
+    }
+    const provider = new ListeningCatalogSupplyProvider(sameTypeIndex, current)
+    const first = await provider.next({ schemaVersion: 1, requestId: 'type-only-first', planId: 'type-only', taskId: 'type-only', domain: 'listening', targetModuleId: 'listening', mode: 'learn', targetDifficulty: 1, cursor: null, excludeItemIds: [], reason: 'initial' })
+    expect(first.status).toBe('item')
+    if (first.status !== 'item') return
+    const second = await provider.next({ schemaVersion: 1, requestId: 'type-only-second', planId: 'type-only', taskId: 'type-only', domain: 'listening', targetModuleId: 'listening', mode: 'learn', targetDifficulty: 1, cursor: first.nextCursor, excludeItemIds: [first.item.itemId], reason: 'continue-after-item' })
+    expect(second).toMatchObject({ status: 'item' })
+    if (second.status === 'item') {
+      expect((second.item as ListeningSupplyItem).source.variantId)
+        .toBe((first.item as ListeningSupplyItem).source.variantId)
+    }
+  })
+
   it('keeps a restored next item stable while different plans receive different shuffled orders', async () => {
     const current = catalog()
     const provider = new ListeningCatalogSupplyProvider(

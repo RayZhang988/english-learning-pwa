@@ -29,6 +29,7 @@ function provider() {
 const candidates = (trainingSupplyIndex.candidates as readonly {
   readonly itemId: string; readonly difficultyLevel: number; readonly allowedModes: readonly string[]
   readonly variantFamilyId: string; readonly playbackContentId: string | null
+  readonly source: { readonly variantId: string }
 }[]).filter((candidate) => candidate.itemId.includes('-listening-') && candidate.allowedModes.includes('learn') && candidate.difficultyLevel === 1)
 
 function extra(priorityItemIds: Record<'recent-error' | 'due-review' | 'same-day-variant' | 'new-optional-content', readonly string[]>, patch: Partial<{ cursor: string | null; excludeItemIds: readonly string[] }> = {}) {
@@ -136,6 +137,37 @@ describe('extra listening supply production contract', () => {
     if (next.status === 'item') {
       expect((next.item as ListeningSupplyItem).playbackContentId).not.toBe(firstItem.playbackContentId)
     }
+  })
+
+  it('carries nine same-family priority completions into ordinary fallback cooldowns after restore', async () => {
+    const family = candidates.find((candidate) => candidate.variantFamilyId.includes('w1d1'))!.variantFamilyId
+    const priorityIds = candidates
+      .filter((candidate) => candidate.variantFamilyId === family)
+      .map((candidate) => candidate.itemId)
+    expect(priorityIds.length).toBeGreaterThanOrEqual(9)
+    const priority = { 'recent-error': priorityIds, 'due-review': [], 'same-day-variant': [], 'new-optional-content': [] }
+    const supply = provider()
+    const completed: string[] = []
+    const ordinary: Array<{ family: string; type: string; playback: string }> = []
+    let cursor: string | null = null
+    for (let index = 0; index < 16; index += 1) {
+      const request = extra(priority, { cursor, excludeItemIds: completed })
+      const result = await supply.next({ ...request, requestId: `priority-boundary-${index}`, reason: index ? 'continue-after-item' : 'initial' })
+      expect(result.status).toBe('item')
+      if (result.status !== 'item') return
+      const item = result.item as ListeningSupplyItem & { readonly variantFamilyId: string }
+      if (!priorityIds.includes(item.itemId)) {
+        const recentCompleted = completed.slice(-4)
+          .map((id) => candidates.find((candidate) => candidate.itemId === id))
+        expect(recentCompleted.map((entry) => entry?.variantFamilyId)).not.toContain(item.variantFamilyId)
+        expect(recentCompleted.at(-1)?.source?.variantId).not.toBe(item.source.variantId)
+        expect(completed.map((id) => candidates.find((candidate) => candidate.itemId === id)?.playbackContentId)).not.toContain(item.playbackContentId)
+        ordinary.push({ family: item.variantFamilyId, type: item.source.variantId, playback: item.playbackContentId })
+      }
+      completed.push(item.itemId)
+      cursor = result.nextCursor
+    }
+    expect(ordinary.length).toBeGreaterThanOrEqual(4)
   })
 
   it('keeps the daily LearningTaskSupplyRequest path stable without reverting to file order', async () => {
