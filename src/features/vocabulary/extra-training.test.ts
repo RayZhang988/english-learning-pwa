@@ -7,6 +7,8 @@ import {
 } from './index.ts'
 import type { NamespaceStore, StoredRecord } from '../../storage/index.ts'
 import type { ExtraTrainingSession } from '../../learning-engine/index.ts'
+import { applyWrongAnswerEvidence, createWrongAnswerLibraryState, type WrongAnswerEvidence } from '../../learning-engine/index.ts'
+import type { WrongAnswerEvidenceSink } from './wrong-answer-review.ts'
 
 class Store implements NamespaceStore { records = new Map<string, StoredRecord<unknown>>(); async get<T>(key:string){ return this.records.get(key) as StoredRecord<T>|undefined }; async put<T>(key:string,value:T,schemaVersion=1){ this.records.set(key,{namespace:'test',key,value,schemaVersion,updatedAt:'2026-07-29T00:00:00.000Z'}) }; async delete(key:string){this.records.delete(key)}; async keys(){return [...this.records.keys()]}; async clear(){this.records.clear()} }
 
@@ -129,5 +131,12 @@ describe('extra vocabulary commands', () => {
     await runtime.initialize(); await runtime.next(); await runtime.select('right'); await runtime.submit(); await runtime.completeCurrentItem(); await runtime.flush()
     expect(completedPlan).toEqual(before)
     expect(JSON.stringify(events)).not.toMatch(/planId|taskId/)
+  })
+  it('persists and replays one failed extra wrong-answer evidence without changing ordinary feedback', async () => {
+    const repository = new ExtraVocabularyTrainingRepository(new Store()); let state = createWrongAnswerLibraryState(); let failed = true; const ids: string[] = []
+    const sink: WrongAnswerEvidenceSink = { async publish(evidence: WrongAnswerEvidence) { ids.push(evidence.eventId); if (failed) { failed = false; throw new Error('sink failed') }; state = applyWrongAnswerEvidence(state, evidence).state } }
+    const review = { identityForItem: async () => ({ reviewContentId: 'extra-content', originalQuestionType: 'vocabulary-term-to-meaning-choice', domain: 'vocabulary' as const, source: {} }), sink }
+    const first = new ExtraVocabularyTrainingRuntime({ ...options(), repository, wrongAnswerReview: review }); await first.initialize(); await first.next(); await first.select('wrong'); await expect(first.submit()).rejects.toThrow('sink failed'); expect(first.currentSnapshot?.phase).toBe('feedback'); expect(first.currentSnapshot?.pendingWrongAnswerEvidence).toHaveLength(1)
+    const second = new ExtraVocabularyTrainingRuntime({ ...options(), repository, wrongAnswerReview: review }); const restored = await second.initialize(); expect(restored.pendingWrongAnswerEvidence).toEqual([]); expect(ids[0]).toBe(ids[1]); expect(Object.values(state.records)[0]?.incorrectCount).toBe(1)
   })
 })
