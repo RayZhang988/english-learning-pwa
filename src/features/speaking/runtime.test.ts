@@ -183,6 +183,8 @@ function runtime(options: {
   readonly network?: NetworkStatusService
   readonly microphone?: MicrophonePermissionService
   readonly contentSource?: ReadonlyDataSource<SpeakingCatalog>
+  readonly repository?: SpeakingSessionRepository
+  readonly wrongAnswerEvidence?: ConstructorParameters<typeof SpeakingTrainingRuntime>[0]['wrongAnswerEvidence']
 }) {
   return new SpeakingTrainingRuntime({
     task: createSpeakingTask(),
@@ -192,7 +194,7 @@ function runtime(options: {
         load: async () => createSpeakingCatalogFixture(),
       },
     eventSink: options.sink,
-    repository: new SpeakingSessionRepository(new MemoryStore()),
+    repository: options.repository ?? new SpeakingSessionRepository(new MemoryStore()),
     networkStatus: options.network ?? online,
     microphonePermission: options.microphone ?? permission(),
     recorder: options.recorder ?? new FakeRecorder(),
@@ -205,10 +207,25 @@ function runtime(options: {
       }),
     now: clock(),
     createId: ids('event'),
+    wrongAnswerEvidence: options.wrongAnswerEvidence,
   })
 }
 
 describe('speaking training runtime fallbacks', () => {
+  it('persists daily incorrect evidence before delivery and replays its stable id after restart', async () => {
+    const repository = new SpeakingSessionRepository(new MemoryStore())
+    const received: string[] = []; let reject = true
+    const wrongAnswerEvidence = { resolver: { resolveItem: () => { throw new Error('unused') }, resolvePrompt: () => ({ reviewContentId: 'review-speaking', originalQuestionType: 'speaking-activity-prompt', domain: 'speaking' as const, source: { kind: 'daily-supply' as const, itemId: 'item', sourceId: speakingPrompt.id, contentRef: createSpeakingTask().contentRef } }) }, sink: { publishWrongAnswerEvidence: async (e: { eventId: string }) => { if (reject) { reject = false; throw new Error('sink down') }; received.push(e.eventId) } } }
+    const first = runtime({ sink: new InMemoryPlatformEventSink(), repository, recognition: new FakeRecognition({ status: 'recognized', transcript: 'wrong words', alternatives: [] }), wrongAnswerEvidence })
+    await first.initialize(); await first.startRecording(); await first.stopRecording()
+    await expect(first.advance()).rejects.toThrow('sink down')
+    const pending = first.currentSession?.pendingWrongAnswerEvidence?.[0]
+    expect(pending?.outcome).toBe('incorrect')
+    const restored = runtime({ sink: new InMemoryPlatformEventSink(), repository, wrongAnswerEvidence })
+    await restored.initialize()
+    expect(received).toEqual([pending?.eventId])
+    expect(restored.currentSession?.pendingWrongAnswerEvidence).toEqual([])
+  })
   it('continues from the plan seed into a prompt from another published unit', async () => {
     const secondPrompt = {
       ...speakingPrompt,

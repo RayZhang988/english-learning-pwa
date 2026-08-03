@@ -1,4 +1,5 @@
 import type { LearningEvent, LearningTask, LearningTaskSupplyItem } from '../../learning-engine/index.ts'
+import type { WrongAnswerEvidence } from '../../learning-engine/index.ts'
 import type {
   MicrophonePermissionState,
   NetworkStatus,
@@ -258,6 +259,8 @@ export interface SpeakingSession {
   readonly updatedAt: string
   readonly lastActiveAt: string | null
   readonly pendingEvents: readonly LearningEvent[]
+  /** Durable R13-D outbox. It is intentionally separate from learning events. */
+  readonly pendingWrongAnswerEvidence?: readonly WrongAnswerEvidence[]
   readonly failure: SpeakingSessionFailure | null
   /** Present only when 01 has injected the QA-011 training-budget port. */
   readonly stream: SpeakingStreamState | null

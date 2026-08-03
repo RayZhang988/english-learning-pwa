@@ -78,7 +78,7 @@ import type {
 } from './types.ts'
 import {
   createSpeakingWrongAnswerEvidence,
-  SpeakingWrongAnswerContentResolver,
+  type SpeakingWrongAnswerIdentityResolver,
   type SpeakingWrongAnswerEvidenceSink,
 } from './wrong-answer.ts'
 
@@ -103,7 +103,7 @@ export interface SpeakingTrainingRuntimeOptions {
   readonly trainingBudgetStatus?: () => 'running' | 'finish-current-item'
   /** Optional until 01 wires the unified-library repository. */
   readonly wrongAnswerEvidence?: {
-    readonly resolver: SpeakingWrongAnswerContentResolver
+    readonly resolver: SpeakingWrongAnswerIdentityResolver
     readonly sink: SpeakingWrongAnswerEvidenceSink
   }
 }
@@ -439,6 +439,13 @@ export class SpeakingTrainingRuntime {
       )
       await this.save(session)
     }
+    while (session.pendingWrongAnswerEvidence?.length) {
+      const evidence = session.pendingWrongAnswerEvidence[0]
+      if (!this.wrongAnswerEvidence) break
+      await this.wrongAnswerEvidence.sink.publishWrongAnswerEvidence(evidence)
+      session = { ...session, pendingWrongAnswerEvidence: session.pendingWrongAnswerEvidence.filter((candidate) => candidate.eventId !== evidence.eventId), updatedAt: this.now() }
+      await this.save(session)
+    }
     return session
   }
 
@@ -446,22 +453,24 @@ export class SpeakingTrainingRuntime {
    * Unscorable capture paths intentionally emit nothing.  The evidence id is
    * derived from the durable answer checkpoint, so retries/reloads replay the
    * same fact and 04 de-duplicates it. */
-  private async publishWrongAnswerIfNeeded(current: SpeakingSession): Promise<void> {
+  private queueWrongAnswerIfNeeded(session: SpeakingSession, current: SpeakingSession): SpeakingSession {
     const port = this.wrongAnswerEvidence
     const answer = current.answers.at(-1)
     const prompt = getCurrentSpeakingPrompt(current)
     if (!port || !answer || !prompt || answer.match === null ||
-      (answer.match.level !== 'partial' && answer.match.level !== 'different')) return
+      (answer.match.level !== 'partial' && answer.match.level !== 'different')) return session
     const identity = current.stream?.activeItem
       ? port.resolver.resolveItem(current.stream.activeItem)
       : port.resolver.resolvePrompt(current.unit?.contentRef ?? '', prompt)
-    await port.sink.publishWrongAnswerEvidence(createSpeakingWrongAnswerEvidence({
+    const evidence = createSpeakingWrongAnswerEvidence({
       eventId: `speaking-wrong-answer:${this.task.taskId}:${answer.promptId}:${answer.submittedAt}`,
       occurredAt: answer.submittedAt,
       source: 'daily-training',
       identity,
       match: answer.match,
-    }))
+    })
+    if (session.pendingWrongAnswerEvidence?.some((candidate) => candidate.eventId === evidence.eventId)) return session
+    return { ...session, pendingWrongAnswerEvidence: [...(session.pendingWrongAnswerEvidence ?? []), evidence] }
   }
 
   private untrustedLegacyDuration(
@@ -1068,7 +1077,6 @@ export class SpeakingTrainingRuntime {
 
   private async advanceInternal(): Promise<SpeakingSession> {
     const current = this.requireSession()
-    await this.publishWrongAnswerIfNeeded(current)
     const isFinalPrompt =
       current.phase === 'feedback' &&
       current.unit !== null &&
@@ -1158,6 +1166,7 @@ export class SpeakingTrainingRuntime {
       }
       session = withPendingSpeakingEvent(session, event, now)
     }
+    session = this.queueWrongAnswerIfNeeded(session, current)
     await this.saveDuringExcludedPersistence(session, {
       fromPhase: 'feedback',
       recordActivity: true,

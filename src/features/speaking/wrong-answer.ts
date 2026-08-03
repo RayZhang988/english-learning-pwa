@@ -49,6 +49,10 @@ export class SpeakingWrongAnswerContentResolver {
 }
 
 export interface SpeakingWrongAnswerEvidenceSink { publishWrongAnswerEvidence(evidence: WrongAnswerEvidence): Promise<void> }
+export interface SpeakingWrongAnswerIdentityResolver {
+  resolveItem(item: SpeakingSupplyItem): Alias
+  resolvePrompt(contentRef: string, prompt: SpeakingPrompt): Alias
+}
 
 export function speakingWrongAnswerOutcome(match: ReturnType<typeof matchSpeakingText> | null): 'correct' | 'incorrect' | 'unscorable' {
   if (match === null) return 'unscorable'
@@ -103,10 +107,10 @@ export class SpeakingWrongAnswerReviewRuntime {
     if (!record) throw new TypeError('Speaking wrong-answer review record is missing.')
     const prompt = await this.promptForRecord(record)
     const result = submitSpeakingWrongAnswerReview({ library: state, eventId, occurredAt, transcript, prompt, record })
-    this.state = result.state
     await this.store.save(result.state)
+    this.state = result.state
     return { ...result, prompt }
   }
-  async advance(occurredAt: string) { const next = advanceSpeakingWrongAnswerReview(this.require(), occurredAt); this.state = next; await this.store.save(next); return next }
+  async advance(occurredAt: string) { const next = advanceSpeakingWrongAnswerReview(this.require(), occurredAt); await this.store.save(next); this.state = next; return next }
   snapshot() { return this.require() }
 }

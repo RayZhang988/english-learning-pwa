@@ -4,6 +4,7 @@ import type {
   ExtraTrainingSupplyRequest,
   LearningTaskSupplyResult,
 } from '../../learning-engine/index.ts'
+import type { WrongAnswerEvidence } from '../../learning-engine/index.ts'
 import { migrateExtraTrainingSessionToOpenEnded } from '../../learning-engine/index.ts'
 import type {
   ExtraTrainingEffectiveTimingSessionFactoryPort,
@@ -25,7 +26,7 @@ import type {
 } from './types.ts'
 import {
   createSpeakingWrongAnswerEvidence,
-  SpeakingWrongAnswerContentResolver,
+  type SpeakingWrongAnswerIdentityResolver,
   type SpeakingWrongAnswerEvidenceSink,
 } from './wrong-answer.ts'
 
@@ -52,6 +53,7 @@ export interface ExtraSpeakingTrainingSnapshot {
   readonly recordingAvailable: boolean
   readonly answer: ExtraSpeakingAnswer | null
   readonly pendingEvents: readonly ExtraTrainingEvent[]
+  readonly pendingWrongAnswerEvidence: readonly WrongAnswerEvidence[]
   readonly updatedAt: string
 }
 
@@ -77,7 +79,7 @@ export interface ExtraSpeakingTrainingRuntimeOptions {
   readonly createId?: () => string
   /** Injected by 01; absent ports preserve the completed R6 runtime. */
   readonly wrongAnswerEvidence?: {
-    readonly resolver: SpeakingWrongAnswerContentResolver
+    readonly resolver: SpeakingWrongAnswerIdentityResolver
     readonly sink: SpeakingWrongAnswerEvidenceSink
   }
 }
@@ -117,18 +119,20 @@ export class ExtraSpeakingTrainingRuntime {
     this.timing ??= await this.options.timingSessionFactory.create(this.options.session)
     const restored = await this.repository.load(this.options.session.sessionId)
     if (restored) {
-      return this.save({
+      const snapshot = await this.save({
         ...restored,
         session: migrateExtraTrainingSessionToOpenEnded(
           restored.session,
           this.now(),
         ),
         recordingAvailable: false,
+        pendingWrongAnswerEvidence: restored.pendingWrongAnswerEvidence ?? [],
         updatedAt: this.now(),
       })
+      return this.flushWrongAnswerEvidence(snapshot)
     }
     const event = this.base('learning.extra-training.started.v1')
-    return this.save({ schemaVersion: 1, session: this.options.session, unit: null, prompt: null, activeItem: null, activeRequestId: null, suppliedNextCursor: null, phase: 'practicing', recordingAvailable: false, answer: null, pendingEvents: [event], updatedAt: event.occurredAt })
+    return this.save({ schemaVersion: 1, session: this.options.session, unit: null, prompt: null, activeItem: null, activeRequestId: null, suppliedNextCursor: null, phase: 'practicing', recordingAvailable: false, answer: null, pendingEvents: [event], pendingWrongAnswerEvidence: [], updatedAt: event.occurredAt })
   }) }
   async flush() { return this.queue(async () => {
     let snapshot = this.require()
@@ -138,8 +142,17 @@ export class ExtraSpeakingTrainingRuntime {
       snapshot = { ...snapshot, pendingEvents: snapshot.pendingEvents.filter((candidate) => candidate.id !== event.id), updatedAt: this.now() }
       await this.save(snapshot)
     }
-    return snapshot
+    return this.flushWrongAnswerEvidence(snapshot)
   }) }
+  private async flushWrongAnswerEvidence(snapshot: ExtraSpeakingTrainingSnapshot) {
+    let current = snapshot
+    while (current.pendingWrongAnswerEvidence.length && this.options.wrongAnswerEvidence) {
+      const evidence = current.pendingWrongAnswerEvidence[0]
+      await this.options.wrongAnswerEvidence.sink.publishWrongAnswerEvidence(evidence)
+      current = await this.save({ ...current, pendingWrongAnswerEvidence: current.pendingWrongAnswerEvidence.filter((candidate) => candidate.eventId !== evidence.eventId), updatedAt: this.now() })
+    }
+    return current
+  }
   async next() { return this.queue(async () => {
     const snapshot = this.require()
     if (snapshot.activeItem || snapshot.phase === 'feedback') throw new SpeakingError('session-transition-invalid', 'Complete the current extra speaking item before requesting another.')
@@ -220,19 +233,18 @@ export class ExtraSpeakingTrainingRuntime {
     const count = s.session.completedItemCount + 1
     const attempt = this.base('learning.extra-training.attempt.completed.v1')
     const correct = s.answer.match?.level === 'match' || s.answer.match?.level === 'close'
-    if (this.options.wrongAnswerEvidence && s.answer.match && !correct) {
+    const wrongEvidence = this.options.wrongAnswerEvidence && s.answer.match && !correct
+      ? (() => {
       const identity = this.options.wrongAnswerEvidence.resolver.resolveItem(s.activeItem)
-      await this.options.wrongAnswerEvidence.sink.publishWrongAnswerEvidence(
-        createSpeakingWrongAnswerEvidence({
+      return createSpeakingWrongAnswerEvidence({
           eventId: `extra-speaking-wrong-answer:${s.session.sessionId}:${s.activeItem.itemId}`,
           occurredAt: this.now(), source: 'extra-training', identity, match: s.answer.match,
-        }),
-      )
-    }
+        })
+      })() : null
     const attemptEvent = { ...attempt, payload: { ...attempt.payload, learningUnitId: s.activeItem.learningUnitId, contentRef: s.activeItem.contentRef, difficultyLevel: s.activeItem.difficultyLevel, estimatedSeconds: 1, result: s.answer.match ? 'scored' : 'unscorable', performanceScore: s.answer.match?.similarity ?? null, evidenceQuality: s.answer.match ? 1 : 0, assistanceLevel: 0, durationSeconds: 0, errorTags: [], contentTags: s.activeItem.tags, failureCategory: s.answer.failureCategory, scoreDelta: { schemaVersion: 1, correctCount: s.answer.match && correct ? 1 : 0, incorrectCount: s.answer.match && !correct ? 1 : 0, unscorableCount: s.answer.match ? 0 : 1 } } } as ExtraTrainingEvent
     const item = this.base('learning.extra-training.item.completed.v1')
     const itemEvent = { ...item, payload: { ...item.payload, item: s.activeItem, requestId: s.activeRequestId ?? `${s.session.sessionId}:supply`, nextSupplyCursor: s.suppliedNextCursor } } as ExtraTrainingEvent
-    const saved = await this.save({ ...s, unit: null, prompt: null, activeItem: null, activeRequestId: null, suppliedNextCursor: null, phase: 'practicing', recordingAvailable: false, answer: null, pendingEvents: [...s.pendingEvents, attemptEvent, itemEvent], session: { ...s.session, excludeItemIds: [...s.session.excludeItemIds, s.activeItem.itemId], completedItemCount: count, nextSupplyCursor: s.suppliedNextCursor, status: 'running', endReason: null, endedAt: null, updatedAt: item.occurredAt }, updatedAt: item.occurredAt })
+    const saved = await this.save({ ...s, unit: null, prompt: null, activeItem: null, activeRequestId: null, suppliedNextCursor: null, phase: 'practicing', recordingAvailable: false, answer: null, pendingEvents: [...s.pendingEvents, attemptEvent, itemEvent], pendingWrongAnswerEvidence: wrongEvidence ? [...s.pendingWrongAnswerEvidence, wrongEvidence] : s.pendingWrongAnswerEvidence, session: { ...s.session, excludeItemIds: [...s.session.excludeItemIds, s.activeItem.itemId], completedItemCount: count, nextSupplyCursor: s.suppliedNextCursor, status: 'running', endReason: null, endedAt: null, updatedAt: item.occurredAt }, updatedAt: item.occurredAt })
     return this.flushFromQueued(saved)
   }) }
   private async flushFromQueued(snapshot: ExtraSpeakingTrainingSnapshot) {
@@ -243,7 +255,7 @@ export class ExtraSpeakingTrainingRuntime {
       current = { ...current, pendingEvents: current.pendingEvents.filter((candidate) => candidate.id !== event.id), updatedAt: this.now() }
       await this.save(current)
     }
-    return current
+    return this.flushWrongAnswerEvidence(current)
   }
   exit() { return this.queue(async () => { const s = this.require(); if (s.session.status === 'paused' || s.session.status === 'completed') return s; this.recorder.cancel(); this.recognitionHandle?.abort(); await this.timing?.pause(); const event = this.base('learning.extra-training.exited.v1'); return this.save({ ...s, phase: 'paused', pendingEvents: [...s.pendingEvents, event], session: { ...s.session, status: 'paused', endReason: 'user-exited', endedAt: event.occurredAt, updatedAt: event.occurredAt }, updatedAt: event.occurredAt }) }) }
   resume() { return this.queue(async () => { const s = this.require(); if (s.session.status === 'running') return s; if (s.session.status !== 'paused') throw new SpeakingError('session-transition-invalid', 'Only paused extra speaking can resume.'); const phase = s.phase === 'feedback' ? { phase: 'feedback' as const, reason: 'active-feedback' as const } : { phase: 'answering' as const, reason: 'active-answering' as const }; await this.timing?.resume(phase); const event = this.base('learning.extra-training.started.v1'); return this.save({ ...s, phase: s.phase === 'feedback' ? 'feedback' : 'practicing', pendingEvents: [...s.pendingEvents, event], session: { ...s.session, status: 'running', endReason: null, endedAt: null, updatedAt: event.occurredAt }, updatedAt: event.occurredAt }) }) }

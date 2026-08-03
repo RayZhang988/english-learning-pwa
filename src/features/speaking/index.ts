@@ -130,5 +130,6 @@ export {
   speakingWrongAnswerOutcome,
   submitSpeakingWrongAnswerReview,
   type SpeakingWrongAnswerEvidenceSink,
+  type SpeakingWrongAnswerIdentityResolver,
   type SpeakingWrongAnswerReviewStore,
 } from './wrong-answer.ts'

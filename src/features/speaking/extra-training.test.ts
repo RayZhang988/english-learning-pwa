@@ -32,11 +32,11 @@ class Recorder implements SpeakingRecordingPort {
   dispose() {}
 }
 
-function recognition(outcome: 'recognized' | 'network'): SpeakingRecognitionPort {
-  return { capabilities: () => ({ supported: true, requiresSiri: true }), start: () => ({ result: Promise.resolve(outcome === 'recognized' ? { status: 'recognized', transcript: 'hello', alternatives: [] } : { status: 'failed', code: 'network', message: 'offline' }), stop() {}, abort() {} }) }
+function recognition(outcome: 'recognized' | 'wrong' | 'network'): SpeakingRecognitionPort {
+  return { capabilities: () => ({ supported: true, requiresSiri: true }), start: () => ({ result: Promise.resolve(outcome === 'recognized' || outcome === 'wrong' ? { status: 'recognized', transcript: outcome === 'wrong' ? 'goodbye' : 'hello', alternatives: [] } : { status: 'failed', code: 'network', message: 'offline' }), stop() {}, abort() {} }) }
 }
 function request() { return { schemaVersion: 1 as const, requestId: 'request-1', sessionId: session.sessionId, localDate: session.localDate, domain: 'speaking' as const, targetModuleId: 'speaking' as const, mode: 'learn' as const, targetDifficulty: 1, cursor: null, excludeItemIds: [], priority: ['recent-error', 'due-review', 'same-day-variant', 'new-optional-content'] as const, priorityItemIds: { 'recent-error': ['error'], 'due-review': ['due'], 'same-day-variant': ['same'], 'new-optional-content': ['new'] }, reason: 'initial' as const } }
-function options(suppliedItem: SpeakingSupplyItem = item, outcome: 'recognized' | 'network' = 'recognized') {
+function options(suppliedItem: SpeakingSupplyItem = item, outcome: 'recognized' | 'wrong' | 'network' = 'recognized') {
   const timing: string[] = []
   return { session, repository: new ExtraSpeakingTrainingRepository(new Store()), recorder: new Recorder(), recognition: recognition(outcome), requestMicrophone: async () => ({} as MediaStream), supplyRequest: () => request(), supplyProvider: { next: async (value: { requestId: string }) => ({ schemaVersion: 1 as const, requestId: value.requestId, status: 'item' as const, item: suppliedItem, nextCursor: suppliedItem.itemId }) }, promptForItem: async () => ({ unit, prompt }), timingSessionFactory: { create: async () => ({ start: async (value: { phase: string }) => { timing.push(`start:${value.phase}`) }, transition: async (value: { phase: string }) => { timing.push(`transition:${value.phase}`) }, activity: async () => {}, pause: async () => { timing.push('pause') }, resume: async (value: { phase: string }) => { timing.push(`resume:${value.phase}`) }, finish: async () => { timing.push('finish') }, dispose: async () => {} }) }, eventSink: { publishExtraTrainingEvent: async () => {} }, timing }
 }
@@ -130,5 +130,20 @@ describe('extra speaking training', () => {
     expect(delivered.filter((id) => id === exitId)).toEqual([exitId])
     expect(dailyPlan).toEqual(before)
     expect(JSON.stringify(restored.currentSnapshot)).not.toMatch(/planId|taskId/)
+  })
+
+  it('persists a partial/different wrong-answer outbox before delivery and replays the same id after a sink failure', async () => {
+    const repository = new ExtraSpeakingTrainingRepository(new Store())
+    const received: string[] = []; let fail = true
+    const wrongAnswerEvidence = { resolver: { resolveItem: () => ({ reviewContentId: 'review-speaking', originalQuestionType: 'speaking-activity-prompt', domain: 'speaking' as const, source: { kind: 'daily-supply' as const, itemId: item.itemId, sourceId: item.source.sourceId, contentRef: item.contentRef } }), resolvePrompt: () => { throw new Error('unused') } }, sink: { publishWrongAnswerEvidence: async (e: { eventId: string }) => { if (fail) { fail = false; throw new Error('sink down') }; received.push(e.eventId) } } }
+    const first = new ExtraSpeakingTrainingRuntime({ ...options(item, 'wrong'), repository, wrongAnswerEvidence })
+    await first.initialize(); await first.next(); await first.startRecording(); await first.stopRecording()
+    await expect(first.completeCurrentItem()).rejects.toThrow('sink down')
+    const pending = first.currentSnapshot?.pendingWrongAnswerEvidence[0]
+    expect(pending?.outcome).toBe('incorrect')
+    const restored = new ExtraSpeakingTrainingRuntime({ ...options(item, 'wrong'), repository, wrongAnswerEvidence })
+    await restored.initialize()
+    expect(received).toEqual([pending?.eventId])
+    expect(restored.currentSnapshot?.pendingWrongAnswerEvidence).toEqual([])
   })
 })
