@@ -352,7 +352,7 @@ export class SceneVocabularyPracticeRuntime {
   private requireSnapshot(): SceneVocabularyPracticeSnapshot { if (!this.snapshot) throw new VocabularyError('session-transition-invalid', 'Scene vocabulary runtime has not been initialized.'); return this.snapshot }
   private requireScene(): SceneVocabularyScene { if (!this.scene) throw new VocabularyError('session-transition-invalid', 'Scene vocabulary runtime has not loaded its scene.'); return this.scene }
   private queue<T>(operation: () => Promise<T>): Promise<T> { const result = this.tail.then(operation, operation); this.tail = result.then(() => undefined, () => undefined); return result }
-  private async save(snapshot: SceneVocabularyPracticeSnapshot): Promise<SceneVocabularyPracticeSnapshot> { await this.repository.save(snapshot); this.snapshot = snapshot; return snapshot }
+  private async save(snapshot: SceneVocabularyPracticeSnapshot): Promise<SceneVocabularyPracticeSnapshot> { const previous = this.snapshot; try { await this.repository.save(snapshot); this.snapshot = snapshot; return snapshot } catch (error) { this.snapshot = previous; throw error } }
   private async flushWrongAnswerEvidence(snapshot: SceneVocabularyPracticeSnapshot): Promise<SceneVocabularyPracticeSnapshot> {
     let next = snapshot
     while (next.pendingWrongAnswerEvidence?.length && this.options.wrongAnswerReview) {

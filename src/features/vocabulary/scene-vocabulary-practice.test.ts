@@ -5,6 +5,8 @@ import { describe, expect, it } from 'vitest'
 import { createStaticDataSource } from '../../core/testing/index.ts'
 import { localStorageService } from '../../storage/index.ts'
 import { VocabularyError } from './errors.ts'
+import { applyWrongAnswerEvidence, createWrongAnswerLibraryState, type WrongAnswerEvidence } from '../../learning-engine/index.ts'
+import type { WrongAnswerEvidenceSink, ReviewContentIndex } from './wrong-answer-review.ts'
 import {
   createSceneVocabularyQuestionBank,
   SceneVocabularyPracticeRuntime,
@@ -57,6 +59,7 @@ function clock() {
 function runtimeFor(
   bank: Awaited<ReturnType<typeof loadReleasedSceneBank>>,
   repository = new MemoryScenePracticeRepository(),
+  wrongAnswerReview?: { readonly index: ReviewContentIndex; readonly sink: WrongAnswerEvidenceSink },
 ) {
   return new SceneVocabularyPracticeRuntime({
     categoryId: 'airport-flight',
@@ -64,6 +67,7 @@ function runtimeFor(
     contentSource: createStaticDataSource(bank),
     repository,
     now: clock(),
+    wrongAnswerReview,
   })
 }
 
@@ -72,6 +76,12 @@ function legacyOptionId(questionId: string, position: number): string {
 }
 
 describe('R13-C scene vocabulary practice runtime', () => {
+  it('replays one durable scene error without changing R13-C feedback or target-only playback', async () => {
+    const bank = await loadReleasedSceneBank(); const index = JSON.parse(await readFile(new URL('content/curriculum/review-content-index.v1.json', projectRoot), 'utf8')) as ReviewContentIndex; const repository = new MemoryScenePracticeRepository(); let state = createWrongAnswerLibraryState(); const ids: string[] = []; let fail = true
+    const sink: WrongAnswerEvidenceSink = { async publish(evidence: WrongAnswerEvidence) { ids.push(evidence.eventId); if (fail) { fail = false; throw new Error('sink failed') }; state = applyWrongAnswerEvidence(state, evidence).state } }
+    const first = runtimeFor(bank, repository, { index, sink }); let snapshot = await first.initialize(); const view = first.toView(); const wrong = view.question!.options.find((option) => option.id !== view.question!.options.find((candidate) => candidate.state === 'correct')?.id) ?? view.question!.options[0]!; await first.select(wrong.id); await expect(first.submit()).rejects.toThrow('sink failed'); snapshot = first.currentSnapshot!; expect(snapshot.phase).toBe('feedback'); const answered = snapshot.answers.length; const playback = first.toView().question!.targetPlayback
+    const second = runtimeFor(bank, repository, { index, sink }); snapshot = await second.initialize(); expect(ids[0]).toBe(ids[1]); expect(snapshot.pendingWrongAnswerEvidence).toEqual([]); expect(snapshot.answers).toHaveLength(answered); expect(second.toView().question!.targetPlayback).toEqual(playback); expect(Object.values(state.records)[0]?.incorrectCount).toBe(1)
+  })
   it('stores and discards only the explicitly named corrupt scene record', async () => {
     const store = localStorageService.namespace(SCENE_VOCABULARY_STORAGE_NAMESPACE)
     const repository = new StoredSceneVocabularyPracticeRepository(store)
