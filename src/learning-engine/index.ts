@@ -100,6 +100,12 @@ export type {
   R1VocabularyStartPlacement,
   ResumeDecision,
   ReviewItemState,
+  ReviewContentIdentity,
+  WrongAnswerEvidence,
+  WrongAnswerLibraryState,
+  WrongAnswerRecord,
+  WrongAnswerReviewRound,
+  WrongAnswerSource,
   SkipDecision,
   SkipHistoryEntry,
   StandardErrorTag,
@@ -172,6 +178,21 @@ export {
   isReviewDue,
   updateReviewItem,
 } from './review.ts'
+export {
+  advanceWrongAnswerReviewRound,
+  applyWrongAnswerEvidence,
+  assertRecoverableWrongAnswerReviewRound,
+  createWrongAnswerLibraryState,
+  randomizeWrongAnswerRecordIds,
+  startWrongAnswerReviewRound,
+  submitWrongAnswerReviewAnswer,
+  updateWrongAnswerReviewRoundSnapshot,
+  wrongAnswerRecordId,
+} from './wrong-answer-library.ts'
+export type {
+  ApplyWrongAnswerEvidenceResult,
+  StartWrongAnswerReviewRoundInput,
+} from './wrong-answer-library.ts'
 export { generateDailyPlan } from './scheduler.ts'
 export {
   calculateContentBaselineSeconds,

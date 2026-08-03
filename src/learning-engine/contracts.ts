@@ -493,6 +493,69 @@ export interface LearningEngineState {
   readonly reviewItems: Readonly<Record<string, ReviewItemState>>
   /** Additive R6 state. Old schema-1 records omit it unchanged. */
   readonly extraTraining?: ExtraTrainingState
+  /** Additive R13-D state. It is intentionally separate from spaced review. */
+  readonly wrongAnswerLibrary?: WrongAnswerLibraryState
+}
+
+/** Stable, opaque identity resolved by the content owner (05). */
+export interface ReviewContentIdentity {
+  readonly reviewContentId: string
+  /** Original scored interaction type; same target words must not collapse it. */
+  readonly originalQuestionType: string
+}
+
+export type WrongAnswerSource =
+  | 'daily-training'
+  | 'extra-training'
+  | 'scenario-training'
+  | 'wrong-answer-review'
+
+export interface WrongAnswerRecord extends ReviewContentIdentity {
+  readonly schemaVersion: 1
+  readonly recordId: string
+  readonly domain: AbilityDomain
+  readonly status: 'active' | 'history'
+  readonly incorrectCount: number
+  readonly consecutiveReviewCorrect: 0 | 1 | 2
+  readonly lastIncorrectAt: string
+  readonly lastSource: WrongAnswerSource
+  readonly sources: readonly WrongAnswerSource[]
+}
+
+export interface WrongAnswerEvidence extends ReviewContentIdentity {
+  readonly schemaVersion: 1
+  /** Idempotency key, normally the module's persisted attempt/event id. */
+  readonly eventId: string
+  readonly occurredAt: string
+  readonly domain: AbilityDomain
+  readonly source: WrongAnswerSource
+  /** Only formal, resolvable incorrect results are admissible. */
+  readonly outcome: 'correct' | 'incorrect' | 'unscorable'
+  readonly formallyScored: boolean
+}
+
+export interface WrongAnswerReviewRound {
+  readonly schemaVersion: 1
+  readonly roundId: string
+  readonly seed: string
+  readonly order: readonly string[]
+  readonly index: number
+  readonly stage: 'answering' | 'feedback'
+  /** Generic persisted UI draft; the engine neither parses nor scores it. */
+  readonly answerDraft: string | readonly string[] | null
+  readonly answeredCount: number
+  readonly correctCount: number
+  readonly startedAt: string
+  readonly updatedAt: string
+  readonly status: 'active' | 'completed' | 'exited' | 'failed'
+  readonly failure: 'corrupt-snapshot' | 'identity-drift' | null
+}
+
+export interface WrongAnswerLibraryState {
+  readonly schemaVersion: 1
+  readonly records: Readonly<Record<string, WrongAnswerRecord>>
+  readonly processedEvidenceIds: readonly string[]
+  readonly activeRound: WrongAnswerReviewRound | null
 }
 
 export type ProgressTrend =
