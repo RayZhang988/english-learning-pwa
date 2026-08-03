@@ -34,6 +34,7 @@ import { VocabularySessionRepository } from './repository.ts'
 import { VocabularyRuntimeMountLifecycle } from './route-lifecycle.ts'
 import {
   VocabularyTrainingRuntime,
+  type VocabularyTrainingRuntimeOptions,
 } from './runtime.ts'
 import { getVocabularySessionResult } from './session.ts'
 import type { VocabularySupplyProvider } from './supply.ts'
@@ -65,6 +66,8 @@ export interface VocabularyTrainingRouteProps {
   /** 01 supplies both ports for QA-011 budget tasks. */
   readonly supplyProvider?: VocabularySupplyProvider
   readonly trainingBudgetStatus?: () => 'running' | 'finish-current-item'
+  /** R13-D host port; the route must recreate its runtime when this identity changes. */
+  readonly wrongAnswerReview?: VocabularyTrainingRuntimeOptions['wrongAnswerReview']
 }
 
 /** Public route seam: 01 supplies its restored budget ports here, never via UI. */
@@ -84,6 +87,7 @@ export function createVocabularyTrainingRouteRuntime(
     timingSessionFactory: props.timingSessionFactory,
     supplyProvider: props.supplyProvider,
     trainingBudgetStatus: props.trainingBudgetStatus,
+    wrongAnswerReview: props.wrongAnswerReview,
   })
 }
 
@@ -115,6 +119,9 @@ export function VocabularyTrainingRoute(
     readonly trainingBudgetStatus:
       | (() => 'running' | 'finish-current-item')
       | undefined
+    readonly wrongAnswerReview:
+      | VocabularyTrainingRuntimeOptions['wrongAnswerReview']
+      | undefined
   } | null>(null)
   const runtimeMountLifecycleRef =
     useRef<VocabularyRuntimeMountLifecycle | null>(null)
@@ -129,12 +136,14 @@ export function VocabularyTrainingRoute(
     runtimeRef.current.timingSessionFactory !== props.timingSessionFactory ||
     runtimeRef.current.supplyProvider !== props.supplyProvider ||
     runtimeRef.current.trainingBudgetStatus !== props.trainingBudgetStatus
+    || runtimeRef.current.wrongAnswerReview !== props.wrongAnswerReview
   ) {
     runtimeRef.current = {
       key: runtimeKey,
       timingSessionFactory: props.timingSessionFactory,
       supplyProvider: props.supplyProvider,
       trainingBudgetStatus: props.trainingBudgetStatus,
+      wrongAnswerReview: props.wrongAnswerReview,
       runtime: createVocabularyTrainingRouteRuntime(props, networkStatus),
     }
   }

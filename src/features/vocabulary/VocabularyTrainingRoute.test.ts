@@ -5,6 +5,7 @@ import { createVocabularyCatalog } from './content.ts'
 import { VocabularySessionRepository } from './repository.ts'
 import { createVocabularyTrainingRouteRuntime } from './VocabularyTrainingRoute.tsx'
 import { loadActualVocabularyDocuments, vocabularyTaskFor } from './test-fixtures.ts'
+import type { ReviewContentIndex, WrongAnswerEvidenceSink } from './wrong-answer-review.ts'
 
 class MemoryStore implements NamespaceStore {
   private readonly records = new Map<string, StoredRecord<unknown>>()
@@ -26,5 +27,12 @@ describe('VocabularyTrainingRoute QA-011 ports', () => {
 
     const legacy = createVocabularyTrainingRouteRuntime({ ...common, task: vocabularyTaskFor(catalog.units[0]), repository: new VocabularySessionRepository(new MemoryStore()) })
     expect((await legacy.initialize()).stream).toBeNull()
+  })
+  it('forwards the exact optional R13-D review port and keeps omission compatible', async () => {
+    const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments()); const common = { localDate: '2026-08-03', eventSink: new InMemoryPlatformEventSink(), contentSource: createStaticDataSource(catalog), onExit: () => undefined, task: vocabularyTaskFor(catalog.units[0]) }
+    const review = { index: { schemaVersion: 1, documentType: 'review-content-index', contentVersion: '1.0.0', aliases: {} } as ReviewContentIndex, sink: { publish: async () => undefined } as WrongAnswerEvidenceSink, source: 'daily-training' as const }
+    const withPort = createVocabularyTrainingRouteRuntime({ ...common, wrongAnswerReview: review }) as unknown as { wrongAnswerReview: unknown }
+    const withoutPort = createVocabularyTrainingRouteRuntime(common) as unknown as { wrongAnswerReview: unknown }
+    expect(withPort.wrongAnswerReview).toBe(review); expect(withoutPort.wrongAnswerReview).toBeUndefined()
   })
 })
