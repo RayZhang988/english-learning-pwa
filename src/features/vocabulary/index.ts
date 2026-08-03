@@ -131,4 +131,5 @@ export {
   type ReviewContentIndex,
   type WrongAnswerEvidenceSink,
 } from './wrong-answer-review.ts'
+export { VocabularyWrongAnswerReviewRuntime, type VocabularyReviewQuestion, type VocabularyWrongAnswerReviewRuntimeOptions, type WrongAnswerReviewStatePort } from './wrong-answer-review-runtime.ts'
 export { toVocabularyScreenViewModel } from './view-model.ts'

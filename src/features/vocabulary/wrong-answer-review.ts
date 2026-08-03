@@ -39,6 +39,6 @@ export function resolveSceneVocabularyReviewContent(index: ReviewContentIndex, b
 }
 
 /** Event IDs are answer-attempt identities, so publishing them again after a failed handoff is safe. */
-export function createVocabularyWrongAnswerEvidence(input: { readonly identity: ReviewContentAlias; readonly source: Exclude<WrongAnswerSource, 'wrong-answer-review'>; readonly taskOrSessionId: string; readonly questionId: string; readonly submittedAt: string; readonly correct: boolean }): WrongAnswerEvidence {
+export function createVocabularyWrongAnswerEvidence(input: { readonly identity: ReviewContentAlias; readonly source: WrongAnswerSource; readonly taskOrSessionId: string; readonly questionId: string; readonly submittedAt: string; readonly correct: boolean }): WrongAnswerEvidence {
   return { schemaVersion: 1, eventId: `wrong-answer:vocabulary:${input.source}:${input.taskOrSessionId}:${input.questionId}:${input.submittedAt}`, reviewContentId: input.identity.reviewContentId, originalQuestionType: input.identity.originalQuestionType, domain: 'vocabulary', source: input.source, outcome: input.correct ? 'correct' : 'incorrect', formallyScored: true, occurredAt: input.submittedAt }
 }
