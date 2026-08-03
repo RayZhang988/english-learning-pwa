@@ -123,4 +123,12 @@ export {
   type VocabularySupplyVariantId,
   type VocabularyStreamState,
 } from './types.ts'
+export {
+  createVocabularyWrongAnswerEvidence,
+  resolveDailyVocabularyReviewContent,
+  resolveSceneVocabularyReviewContent,
+  type ReviewContentAlias,
+  type ReviewContentIndex,
+  type WrongAnswerEvidenceSink,
+} from './wrong-answer-review.ts'
 export { toVocabularyScreenViewModel } from './view-model.ts'

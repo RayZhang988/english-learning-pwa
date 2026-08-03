@@ -53,6 +53,7 @@ import type {
   VocabularySessionFailure,
   VocabularyStreamState,
 } from './types.ts'
+import { createVocabularyWrongAnswerEvidence, resolveDailyVocabularyReviewContent, type ReviewContentIndex, type WrongAnswerEvidenceSink } from './wrong-answer-review.ts'
 
 type TaskPauseReason = LearningTaskPausedEvent['payload']['reason']
 type TaskSkipReason = LearningTaskSkippedEvent['payload']['reason']
@@ -74,6 +75,8 @@ export interface VocabularyTrainingRuntimeOptions {
   readonly supplyProvider?: VocabularySupplyProvider
   /** Mirrors 04's restored training progress; it is never inferred from wall time. */
   readonly trainingBudgetStatus?: () => 'running' | 'finish-current-item'
+  /** R13-D optional handoff; the host owns the single unified wrong-answer library. */
+  readonly wrongAnswerReview?: { readonly index: ReviewContentIndex; readonly sink: WrongAnswerEvidenceSink; readonly source: 'daily-training' | 'extra-training' }
 }
 
 function defaultId(): string {
@@ -92,6 +95,7 @@ export class VocabularyTrainingRuntime {
   private readonly timing: VocabularyEffectiveTiming
   private readonly suppliedProvider: VocabularySupplyProvider | undefined
   private readonly trainingBudgetStatus: (() => 'running' | 'finish-current-item') | undefined
+  private readonly wrongAnswerReview: VocabularyTrainingRuntimeOptions['wrongAnswerReview']
   /** A budget is continuous only when the 01 host has supplied its restored status port. */
   private readonly continuousTraining: boolean
   private session: VocabularySession | null = null
@@ -115,6 +119,7 @@ export class VocabularyTrainingRuntime {
     )
     this.suppliedProvider = options.supplyProvider
     this.trainingBudgetStatus = options.trainingBudgetStatus
+    this.wrongAnswerReview = options.wrongAnswerReview
     this.continuousTraining = Boolean(
       this.task.trainingBudget && this.trainingBudgetStatus,
     )
@@ -372,9 +377,15 @@ export class VocabularyTrainingRuntime {
   submit(): Promise<VocabularySession> {
     return this.enqueue(async () => {
       await this.timing.beginPersistenceWait(true)
-      const session = await this.save(
-        submitVocabularyAnswer(this.requireSession(), this.now()),
-      )
+      const before = this.requireSession()
+      const submittedAt = this.now()
+      const session = await this.save(submitVocabularyAnswer(before, submittedAt))
+      if (this.wrongAnswerReview && before.stream) {
+        const catalog = await this.contentSource.load()
+        const resolved = resolveDailyVocabularyReviewContent(this.wrongAnswerReview.index, before.stream.activeItem, catalog)
+        const answer = session.answers.at(-1)!
+        if (!answer.correct) await this.wrongAnswerReview.sink.publish(createVocabularyWrongAnswerEvidence({ identity: resolved.identity, source: this.wrongAnswerReview.source, taskOrSessionId: this.task.taskId, questionId: answer.questionId, submittedAt: answer.submittedAt, correct: false }))
+      }
       await this.timing.synchronize(session.phase)
       return session
     })
