@@ -15,6 +15,7 @@ import type {
 } from './duration-view-models.ts'
 import type { TrainingBudgetTargetViewModel } from './training-budget-view-models.ts'
 import { OfflineNotice } from './feedback-states.tsx'
+import type { WrongAnswerLibraryEntryProps } from './wrong-answer-library-surfaces.tsx'
 import { Icon, type IconName } from './icons.tsx'
 import {
   AiConversationPlaceholder,
@@ -189,6 +190,8 @@ interface LearningAppPrototypeBaseProps {
   readonly onTrainingAreaScreenChanged?: (
     screen: TrainingAreaScreen,
   ) => void
+  /** A single optional tool rendered only in the practice hub. */
+  readonly wrongAnswerLibrary?: WrongAnswerLibraryEntryProps
 }
 
 export type LearningAppPrototypeProps =
@@ -306,6 +309,7 @@ export function LearningAppPrototype({
   initialTrainingAreaScreen = { kind: 'hub' },
   onSectionChanged,
   onTrainingAreaScreenChanged,
+  wrongAnswerLibrary,
 }: LearningAppPrototypeProps) {
   const [section, setSection] = useState<AppSection>(initialSection)
   const [trainingAreaScreen, setTrainingAreaScreen] =
@@ -347,7 +351,10 @@ export function LearningAppPrototype({
         ) : null}
         {section === 'practice' ? (
           trainingAreaScreen.kind === 'hub' ? (
-            <TrainingAreaHub onSelect={openTrainingArea} />
+            <TrainingAreaHub
+              onSelect={openTrainingArea}
+              wrongAnswerLibrary={wrongAnswerLibrary}
+            />
           ) : trainingAreaScreen.kind === 'daily' ? (
             <PracticeModuleGrid
               modules={practiceModules ?? disconnectedPracticeModules}

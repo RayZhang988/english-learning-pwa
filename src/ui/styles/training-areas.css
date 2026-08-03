@@ -3,6 +3,12 @@
   gap: 14px;
 }
 
+.training-area-tools {
+  display: grid;
+  margin-top: 24px;
+  gap: 9px;
+}
+
 .training-area-card {
   position: relative;
   display: grid;

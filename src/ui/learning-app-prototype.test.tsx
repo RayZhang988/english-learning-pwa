@@ -18,6 +18,7 @@ import {
   type ProgressViewModel,
   type TrainingPracticeModuleId,
 } from './index.ts'
+import type { TrainingAreaScreen } from './training-area-surfaces.tsx'
 
 const taskIds = {
   vocabulary: 'plan-2026-07-27:task:vocabulary:exact',
@@ -148,6 +149,18 @@ const progress: ProgressViewModel = {
   completedSessions: '18',
   weeklyBars: [],
 }
+
+describe('R13-D practice-hub tool placement', () => {
+  const tool = { status: 'ready' as const, activeCount: 0, onOpen: vi.fn() }
+  const app = (initialSection: 'today' | 'practice', initialTrainingAreaScreen: TrainingAreaScreen = { kind: 'hub' }) => renderToStaticMarkup(<LearningAppPrototype plan={dailyPlan()} progress={progress} onTaskRequested={vi.fn()} practiceModules={practiceModules()} onAssessmentRequested={vi.fn()} initialSection={initialSection} initialTrainingAreaScreen={initialTrainingAreaScreen} wrongAnswerLibrary={tool} />)
+  it('shows the one tool only in the practice hub, never Today or area detail pages', () => {
+    expect(app('practice').match(/data-wrong-answer-library-entry=/gu)).toHaveLength(1)
+    expect(app('practice').match(/data-training-area=/gu)).toHaveLength(3)
+    expect(app('today')).not.toContain('data-wrong-answer-library-entry')
+    expect(app('practice', { kind: 'daily' })).not.toContain('data-wrong-answer-library-entry')
+    expect(app('practice', { kind: 'scenes' })).not.toContain('data-wrong-answer-library-entry')
+  })
+})
 
 function dailyPlan(
   tasks: readonly DailyTaskViewModel[] = allStartableTasks(),

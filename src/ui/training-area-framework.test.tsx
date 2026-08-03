@@ -46,6 +46,17 @@ describe('R12 and R13-A training framework contract', () => {
     expect(markup).not.toContain('开始AI对话')
   })
 
+  it('adds exactly one optional wrong-answer tool after the three areas and returns only open intent', () => {
+    const onOpen = vi.fn()
+    const hub = TrainingAreaHub({ onSelect: vi.fn(), wrongAnswerLibrary: { status: 'ready', activeCount: 0, onOpen } })
+    const markup = renderToStaticMarkup(hub)
+    expect(markup.match(/data-training-area=/gu)).toHaveLength(3)
+    expect(markup.match(/data-wrong-answer-library-entry=/gu)).toHaveLength(1)
+    expect(markup).toContain('学习工具')
+    expect(markup).toContain('暂无待复习错题')
+    expect(onOpen).not.toHaveBeenCalled()
+  })
+
   it('renders all category and child-scene entries with real structural counts', () => {
     const grid = renderToStaticMarkup(
       <TravelSceneCategoryGrid

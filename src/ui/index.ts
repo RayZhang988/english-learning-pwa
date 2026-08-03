@@ -25,6 +25,21 @@ export {
   type TrainingAreaScreen,
 } from './training-area-surfaces.tsx'
 export {
+  WrongAnswerLibraryEntry,
+  WrongAnswerLibraryScreen,
+  WrongAnswerReviewScreen,
+  type WrongAnswerLibraryEntryProps,
+  type WrongAnswerLibraryRecordViewModel,
+  type WrongAnswerLibraryScreenProps,
+  type WrongAnswerLibraryStatus,
+  type WrongAnswerLibraryTab,
+  type WrongAnswerLibraryViewModel,
+  type WrongAnswerReviewPhase,
+  type WrongAnswerReviewQuestionSlot,
+  type WrongAnswerReviewScreenProps,
+  type WrongAnswerReviewViewModel,
+} from './wrong-answer-library-surfaces.tsx'
+export {
   SceneVocabularyPracticeScreen,
   type SceneVocabularyPracticeScreenCallbacks,
   type SceneVocabularyPracticeScreenProps,

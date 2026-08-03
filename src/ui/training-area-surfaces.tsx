@@ -1,5 +1,9 @@
 import { Icon } from './icons.tsx'
 import {
+  WrongAnswerLibraryEntry,
+  type WrongAnswerLibraryEntryProps,
+} from './wrong-answer-library-surfaces.tsx'
+import {
   getTravelScene,
   getTravelSceneCategory,
   trainingAreas,
@@ -17,8 +21,11 @@ export type TrainingAreaScreen =
 
 export function TrainingAreaHub({
   onSelect,
+  wrongAnswerLibrary,
 }: {
   readonly onSelect: (areaId: TrainingAreaId) => void
+  /** Optional public learning tool. It is not a fourth training area. */
+  readonly wrongAnswerLibrary?: WrongAnswerLibraryEntryProps
 }) {
   return (
     <>
@@ -56,6 +63,15 @@ export function TrainingAreaHub({
           </button>
         ))}
       </section>
+      {wrongAnswerLibrary ? (
+        <section
+          className="training-area-tools"
+          aria-label="学习工具"
+        >
+          <span className="eyebrow">LEARNING TOOLS</span>
+          <WrongAnswerLibraryEntry {...wrongAnswerLibrary} />
+        </section>
+      ) : null}
     </>
   )
 }
