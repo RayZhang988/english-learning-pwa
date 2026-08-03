@@ -1,4 +1,8 @@
 import { describe, expect, it } from 'vitest'
+import { readFile } from 'node:fs/promises'
+import { createVocabularyCatalog } from './content.ts'
+import { loadActualVocabularyDocuments } from './test-fixtures.ts'
+import { createSceneVocabularyQuestionBank } from './scene-vocabulary-practice.ts'
 import type { VocabularyCatalog, VocabularySupplyItem } from './types.ts'
 import { createVocabularyWrongAnswerEvidence, resolveDailyVocabularyReviewContent, resolveSceneVocabularyReviewContent } from './wrong-answer-review.ts'
 
@@ -23,5 +27,26 @@ describe('R13-D vocabulary review content', () => {
   it('rejects alias drift and retains scene target-only identity', () => {
     expect(resolveSceneVocabularyReviewContent(index, 'bank', '1.0.0', { questionId: 'q1', sentenceEn: 'Show passport.', targetText: 'passport', targetOccurrence: 1, correctMeaningZh: '护照', distractorMeaningsZh: ['票', '酒店', '签证'], source: { sourceId: 'x', kind: 'project-authored-controlled-text', rights: 'original-project-content' } }).reviewContentId).toBe('r2')
     expect(() => resolveDailyVocabularyReviewContent(index, { ...supply, itemId: 'other' }, catalog)).toThrow('missing')
+  })
+  it('strictly resolves every released 05 daily and scene alias against released sources', async () => {
+    const root = new URL('../../../', import.meta.url)
+    const releasedIndex = JSON.parse(await readFile(new URL('content/curriculum/review-content-index.v1.json', root), 'utf8')) as typeof index
+    const supplyIndex = JSON.parse(await readFile(new URL('content/curriculum/training-supply-index.v1.json', root), 'utf8')) as { candidates: readonly VocabularySupplyItem[] }
+    const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
+    const daily = supplyIndex.candidates.filter((candidate) => candidate.domain === 'vocabulary')
+    expect(daily).toHaveLength(489)
+    for (const candidate of daily) {
+      const resolved = resolveDailyVocabularyReviewContent(releasedIndex, candidate, catalog)
+      expect(resolved.identity.originalQuestionType).toContain(candidate.source.variantId.replace('-choice', ''))
+      expect(resolved.question.options.some((option) => option.id === resolved.question.correctOptionId)).toBe(true)
+    }
+    const bank = createSceneVocabularyQuestionBank(JSON.parse(await readFile(new URL('content/lessons/survival-travel-american-4w/scene-vocabulary-questions.v1.json', root), 'utf8')) as unknown)
+    const questions = bank.scenes.flatMap((scene) => scene.questions)
+    expect(questions).toHaveLength(612)
+    for (const question of questions) {
+      const resolved = resolveSceneVocabularyReviewContent(releasedIndex, bank.bankId, bank.contentVersion, question)
+      expect(resolved.source.questionId).toBe(question.questionId)
+      expect(resolved.originalQuestionType).toBe('scene-vocabulary-meaning-choice')
+    }
   })
 })
