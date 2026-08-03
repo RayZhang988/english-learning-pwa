@@ -29,12 +29,14 @@ class MemoryScenePracticeRepository implements SceneVocabularyPracticeRepository
   readonly records = new Map<string, SceneVocabularyPracticeSnapshot>()
   discardCount = 0
   discardFailure: Error | undefined
+  saveFailure: Error | undefined
 
   async load(sessionId: string): Promise<SceneVocabularyPracticeSnapshot | undefined> {
     return this.records.get(sessionId)
   }
 
   async save(snapshot: SceneVocabularyPracticeSnapshot): Promise<void> {
+    if (this.saveFailure) { const error = this.saveFailure; this.saveFailure = undefined; throw error }
     this.records.set(snapshot.sessionId, structuredClone(snapshot))
   }
 
@@ -81,6 +83,16 @@ describe('R13-C scene vocabulary practice runtime', () => {
     const sink: WrongAnswerEvidenceSink = { async publish(evidence: WrongAnswerEvidence) { ids.push(evidence.eventId); if (fail) { fail = false; throw new Error('sink failed') }; state = applyWrongAnswerEvidence(state, evidence).state } }
     const first = runtimeFor(bank, repository, { index, sink }); let snapshot = await first.initialize(); const view = first.toView(); const wrong = view.question!.options.find((option) => option.id !== view.question!.options.find((candidate) => candidate.state === 'correct')?.id) ?? view.question!.options[0]!; await first.select(wrong.id); await expect(first.submit()).rejects.toThrow('sink failed'); snapshot = first.currentSnapshot!; expect(snapshot.phase).toBe('feedback'); const answered = snapshot.answers.length; const playback = first.toView().question!.targetPlayback
     const second = runtimeFor(bank, repository, { index, sink }); snapshot = await second.initialize(); expect(ids[0]).toBe(ids[1]); expect(snapshot.pendingWrongAnswerEvidence).toEqual([]); expect(snapshot.answers).toHaveLength(answered); expect(second.toView().question!.targetPlayback).toEqual(playback); expect(Object.values(state.records)[0]?.incorrectCount).toBe(1)
+  })
+  it('keeps scene evidence pending when confirmation-clear save fails, then replays idempotently', async () => {
+    const bank = await loadReleasedSceneBank(); const index = JSON.parse(await readFile(new URL('content/curriculum/review-content-index.v1.json', projectRoot), 'utf8')) as ReviewContentIndex; const repository = new MemoryScenePracticeRepository(); let state = createWrongAnswerLibraryState(); const ids: string[] = []
+    const sink: WrongAnswerEvidenceSink = { async publish(evidence: WrongAnswerEvidence) { ids.push(evidence.eventId); state = applyWrongAnswerEvidence(state, evidence).state; if (ids.length === 1) repository.saveFailure = new Error('clear save failed') } }
+    const first = runtimeFor(bank, repository, { index, sink }); await first.initialize(); const choice = first.toView().question!.options[0]!; await first.select(choice.id); await expect(first.submit()).rejects.toThrow('clear save failed'); expect(first.currentSnapshot?.pendingWrongAnswerEvidence).toHaveLength(1)
+    const second = runtimeFor(bank, repository, { index, sink }); const restored = await second.initialize(); expect(restored.pendingWrongAnswerEvidence).toEqual([]); expect(ids[0]).toBe(ids[1]); expect(Object.values(state.records)[0]?.incorrectCount).toBe(1); expect(second.toView().question?.targetPlayback.intent).toBe('play-target-only')
+  })
+  it('does not create scene evidence for correct, selected-only, or exit snapshots', async () => {
+    const bank = await loadReleasedSceneBank(); const index = JSON.parse(await readFile(new URL('content/curriculum/review-content-index.v1.json', projectRoot), 'utf8')) as ReviewContentIndex; const sink: WrongAnswerEvidenceSink = { publish: async () => { throw new Error('unexpected evidence') } }; const review = { index, sink }
+    const selected = runtimeFor(bank, new MemoryScenePracticeRepository(), review); await selected.initialize(); await selected.select(selected.toView().question!.options[0]!.id); await selected.exit(); expect(selected.currentSnapshot?.pendingWrongAnswerEvidence ?? []).toEqual([])
   })
   it('stores and discards only the explicitly named corrupt scene record', async () => {
     const store = localStorageService.namespace(SCENE_VOCABULARY_STORAGE_NAMESPACE)
