@@ -23,6 +23,11 @@ import type {
   SpeakingSupplyItem,
   SpeakingTrainingUnit,
 } from './types.ts'
+import {
+  createSpeakingWrongAnswerEvidence,
+  SpeakingWrongAnswerContentResolver,
+  type SpeakingWrongAnswerEvidenceSink,
+} from './wrong-answer.ts'
 
 type Phase = 'practicing' | 'feedback' | 'paused' | 'completed' | 'error'
 type FailureCategory = 'device' | 'permission' | 'network' | 'interrupted'
@@ -70,6 +75,11 @@ export interface ExtraSpeakingTrainingRuntimeOptions {
   readonly requestMicrophone?: () => Promise<MediaStream>
   readonly now?: () => string
   readonly createId?: () => string
+  /** Injected by 01; absent ports preserve the completed R6 runtime. */
+  readonly wrongAnswerEvidence?: {
+    readonly resolver: SpeakingWrongAnswerContentResolver
+    readonly sink: SpeakingWrongAnswerEvidenceSink
+  }
 }
 
 /** Optional speaking has its own durable state and event namespace; it never receives a daily task. */
@@ -210,6 +220,15 @@ export class ExtraSpeakingTrainingRuntime {
     const count = s.session.completedItemCount + 1
     const attempt = this.base('learning.extra-training.attempt.completed.v1')
     const correct = s.answer.match?.level === 'match' || s.answer.match?.level === 'close'
+    if (this.options.wrongAnswerEvidence && s.answer.match && !correct) {
+      const identity = this.options.wrongAnswerEvidence.resolver.resolveItem(s.activeItem)
+      await this.options.wrongAnswerEvidence.sink.publishWrongAnswerEvidence(
+        createSpeakingWrongAnswerEvidence({
+          eventId: `extra-speaking-wrong-answer:${s.session.sessionId}:${s.activeItem.itemId}`,
+          occurredAt: this.now(), source: 'extra-training', identity, match: s.answer.match,
+        }),
+      )
+    }
     const attemptEvent = { ...attempt, payload: { ...attempt.payload, learningUnitId: s.activeItem.learningUnitId, contentRef: s.activeItem.contentRef, difficultyLevel: s.activeItem.difficultyLevel, estimatedSeconds: 1, result: s.answer.match ? 'scored' : 'unscorable', performanceScore: s.answer.match?.similarity ?? null, evidenceQuality: s.answer.match ? 1 : 0, assistanceLevel: 0, durationSeconds: 0, errorTags: [], contentTags: s.activeItem.tags, failureCategory: s.answer.failureCategory, scoreDelta: { schemaVersion: 1, correctCount: s.answer.match && correct ? 1 : 0, incorrectCount: s.answer.match && !correct ? 1 : 0, unscorableCount: s.answer.match ? 0 : 1 } } } as ExtraTrainingEvent
     const item = this.base('learning.extra-training.item.completed.v1')
     const itemEvent = { ...item, payload: { ...item.payload, item: s.activeItem, requestId: s.activeRequestId ?? `${s.session.sessionId}:supply`, nextSupplyCursor: s.suppliedNextCursor } } as ExtraTrainingEvent

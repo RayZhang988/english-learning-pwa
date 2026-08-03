@@ -76,6 +76,11 @@ import type {
   SpeakingSupplyItem,
   SpeakingTextMatch,
 } from './types.ts'
+import {
+  createSpeakingWrongAnswerEvidence,
+  SpeakingWrongAnswerContentResolver,
+  type SpeakingWrongAnswerEvidenceSink,
+} from './wrong-answer.ts'
 
 type TaskPauseReason = LearningTaskPausedEvent['payload']['reason']
 type TaskSkipReason = LearningTaskSkippedEvent['payload']['reason']
@@ -96,6 +101,11 @@ export interface SpeakingTrainingRuntimeOptions {
   readonly timingSessionFactory?: SpeakingEffectiveTimingSessionFactoryPort
   readonly supplyProvider?: SpeakingSupplyProvider
   readonly trainingBudgetStatus?: () => 'running' | 'finish-current-item'
+  /** Optional until 01 wires the unified-library repository. */
+  readonly wrongAnswerEvidence?: {
+    readonly resolver: SpeakingWrongAnswerContentResolver
+    readonly sink: SpeakingWrongAnswerEvidenceSink
+  }
 }
 
 function defaultId(): string {
@@ -202,6 +212,7 @@ export class SpeakingTrainingRuntime {
   private readonly suppliedProvider: SpeakingSupplyProvider | undefined
   private readonly trainingBudgetStatus: (() => 'running' | 'finish-current-item') | undefined
   private readonly continuousTraining: boolean
+  private readonly wrongAnswerEvidence: SpeakingTrainingRuntimeOptions['wrongAnswerEvidence']
   private readonly listeners = new Set<SessionListener>()
   private session: SpeakingSession | null = null
   private recording: SpeakingRecording | null = null
@@ -241,6 +252,7 @@ export class SpeakingTrainingRuntime {
     this.suppliedProvider = options.supplyProvider
     this.trainingBudgetStatus = options.trainingBudgetStatus
     this.continuousTraining = Boolean(this.task.trainingBudget && this.trainingBudgetStatus)
+    this.wrongAnswerEvidence = options.wrongAnswerEvidence
   }
 
   get currentSession(): SpeakingSession | null {
@@ -428,6 +440,28 @@ export class SpeakingTrainingRuntime {
       await this.save(session)
     }
     return session
+  }
+
+  /** A recognized partial/different response is a formal wrong-answer fact.
+   * Unscorable capture paths intentionally emit nothing.  The evidence id is
+   * derived from the durable answer checkpoint, so retries/reloads replay the
+   * same fact and 04 de-duplicates it. */
+  private async publishWrongAnswerIfNeeded(current: SpeakingSession): Promise<void> {
+    const port = this.wrongAnswerEvidence
+    const answer = current.answers.at(-1)
+    const prompt = getCurrentSpeakingPrompt(current)
+    if (!port || !answer || !prompt || answer.match === null ||
+      (answer.match.level !== 'partial' && answer.match.level !== 'different')) return
+    const identity = current.stream?.activeItem
+      ? port.resolver.resolveItem(current.stream.activeItem)
+      : port.resolver.resolvePrompt(current.unit?.contentRef ?? '', prompt)
+    await port.sink.publishWrongAnswerEvidence(createSpeakingWrongAnswerEvidence({
+      eventId: `speaking-wrong-answer:${this.task.taskId}:${answer.promptId}:${answer.submittedAt}`,
+      occurredAt: answer.submittedAt,
+      source: 'daily-training',
+      identity,
+      match: answer.match,
+    }))
   }
 
   private untrustedLegacyDuration(
@@ -1034,6 +1068,7 @@ export class SpeakingTrainingRuntime {
 
   private async advanceInternal(): Promise<SpeakingSession> {
     const current = this.requireSession()
+    await this.publishWrongAnswerIfNeeded(current)
     const isFinalPrompt =
       current.phase === 'feedback' &&
       current.unit !== null &&

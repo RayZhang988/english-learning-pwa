@@ -120,3 +120,15 @@ export type {
   SpeakingStreamState,
 } from './types.ts'
 export { toSpeakingScreenViewModel } from './view-model.ts'
+export {
+  SpeakingWrongAnswerContentResolver,
+  SpeakingWrongAnswerReviewRuntime,
+  advanceSpeakingWrongAnswerReview,
+  applySpeakingWrongAnswerEvidence,
+  createSpeakingWrongAnswerEvidence,
+  resumeSpeakingWrongAnswerReview,
+  speakingWrongAnswerOutcome,
+  submitSpeakingWrongAnswerReview,
+  type SpeakingWrongAnswerEvidenceSink,
+  type SpeakingWrongAnswerReviewStore,
+} from './wrong-answer.ts'
