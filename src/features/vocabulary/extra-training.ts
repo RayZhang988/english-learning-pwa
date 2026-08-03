@@ -10,6 +10,8 @@ import type {
   ExtraTrainingEventSink,
 } from '../../platform/index.ts'
 import type { VocabularyQuestion, VocabularySupplyItem } from './types.ts'
+import type { WrongAnswerEvidence } from '../../learning-engine/index.ts'
+import { createVocabularyWrongAnswerEvidence, type ReviewContentAlias, type WrongAnswerEvidenceSink } from './wrong-answer-review.ts'
 import { judgeVocabularyAnswer } from './questions.ts'
 import { VocabularyError } from './errors.ts'
 import { ExtraVocabularyTrainingRepository } from './extra-training-repository.ts'
@@ -25,6 +27,7 @@ export interface ExtraVocabularyTrainingSnapshot {
   readonly selectedOptionId: string | null
   readonly phase: 'answering' | 'feedback' | 'paused' | 'completed' | 'error'
   readonly pendingEvents: readonly ExtraTrainingEvent[]
+  readonly pendingWrongAnswerEvidence?: readonly WrongAnswerEvidence[]
   readonly updatedAt: string
 }
 
@@ -43,6 +46,7 @@ export interface ExtraVocabularyTrainingRuntimeOptions {
   readonly repository?: ExtraVocabularyTrainingRepository
   readonly now?: () => string
   readonly createId?: () => string
+  readonly wrongAnswerReview?: { readonly identityForItem: (item: VocabularySupplyItem) => Promise<ReviewContentAlias>; readonly sink: WrongAnswerEvidenceSink }
 }
 
 export class ExtraVocabularyTrainingRuntime {
@@ -70,19 +74,20 @@ export class ExtraVocabularyTrainingRuntime {
     this.timing ??= await this.options.timingSessionFactory.create(this.options.session)
     const restored = await this.repository.load(this.options.session.sessionId)
     if (restored) {
-      return this.save({
+      const snapshot = await this.save({
         ...restored,
         session: migrateExtraTrainingSessionToOpenEnded(
           restored.session,
           this.now(),
         ),
         updatedAt: this.now(),
-      })
+      }); return this.flushWrongAnswerEvidence(snapshot)
     }
     const started = this.base('learning.extra-training.started.v1')
     const snapshot: ExtraVocabularyTrainingSnapshot = { schemaVersion: 1, session: this.options.session, question: null, activeItem: null, selectedOptionId: null, phase: 'answering', pendingEvents: [started], updatedAt: this.now() }
     return this.save(snapshot)
   }) }
+  private async flushWrongAnswerEvidence(snapshot: ExtraVocabularyTrainingSnapshot): Promise<ExtraVocabularyTrainingSnapshot> { let next = snapshot; while (next.pendingWrongAnswerEvidence?.length && this.options.wrongAnswerReview) { await this.options.wrongAnswerReview.sink.publish(next.pendingWrongAnswerEvidence[0]!); next = await this.save({ ...next, pendingWrongAnswerEvidence: next.pendingWrongAnswerEvidence.slice(1), updatedAt: this.now() }) } return next }
   async startTiming() { return this.queue(async () => { this.timing ??= await this.options.timingSessionFactory.create(this.options.session); await this.timing.start({ phase: 'answering', reason: 'active-answering' }); return this.require() }) }
   async feedbackTiming() { return this.queue(async () => { await this.timing?.transition({ phase: 'feedback', reason: 'active-feedback' }); return this.require() }) }
   async pauseTiming() { return this.queue(async () => { await this.timing?.pause(); return this.require() }) }
@@ -94,7 +99,7 @@ export class ExtraVocabularyTrainingRuntime {
   }) }
   private require() { if (!this.snapshot) throw new VocabularyError('session-transition-invalid', 'Extra vocabulary runtime is not initialized.'); return this.snapshot }
   select(optionId: string) { return this.queue(async () => { const snapshot = this.require(); if (!snapshot.question || !snapshot.question.options.some((option) => option.id === optionId)) throw new VocabularyError('session-transition-invalid', 'Option does not belong to extra vocabulary question.'); return this.save({ ...snapshot, selectedOptionId: optionId, updatedAt: this.now() }) }) }
-  submit() { return this.queue(async () => { const snapshot = this.require(); if (!snapshot.question || snapshot.selectedOptionId === null) throw new VocabularyError('session-transition-invalid', 'Select an answer before submitting.'); await this.timing?.transition({ phase: 'feedback', reason: 'active-feedback' }); return this.save({ ...snapshot, phase: 'feedback', updatedAt: this.now() }) }) }
+  submit() { return this.queue(async () => { const snapshot = this.require(); if (!snapshot.question || snapshot.selectedOptionId === null) throw new VocabularyError('session-transition-invalid', 'Select an answer before submitting.'); await this.timing?.transition({ phase: 'feedback', reason: 'active-feedback' }); const now = this.now(); let pendingWrongAnswerEvidence = snapshot.pendingWrongAnswerEvidence ?? []; if (this.options.wrongAnswerReview && snapshot.activeItem && !judgeVocabularyAnswer(snapshot.question, snapshot.selectedOptionId)) { const identity = await this.options.wrongAnswerReview.identityForItem(snapshot.activeItem); pendingWrongAnswerEvidence = [...pendingWrongAnswerEvidence, createVocabularyWrongAnswerEvidence({ identity, source: 'extra-training', taskOrSessionId: snapshot.session.sessionId, questionId: snapshot.question.id, submittedAt: now, correct: false })] } return this.flushWrongAnswerEvidence(await this.save({ ...snapshot, phase: 'feedback', pendingWrongAnswerEvidence, updatedAt: now })) }) }
   answerIsCorrect() { const snapshot = this.require(); return snapshot.question !== null && snapshot.selectedOptionId !== null && judgeVocabularyAnswer(snapshot.question, snapshot.selectedOptionId) }
   /** @deprecated R6.1 extra practice has no time budget to reach. */
   markBudgetReached() { return Promise.resolve(this.require()) }
