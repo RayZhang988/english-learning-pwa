@@ -38,7 +38,10 @@ import type {
 } from './types.ts'
 import { SpeakingSessionRepository } from './repository.ts'
 import { SpeakingRuntimeMountLifecycle } from './route-lifecycle.ts'
-import { SpeakingTrainingRuntime } from './runtime.ts'
+import {
+  SpeakingTrainingRuntime,
+  type SpeakingTrainingRuntimeOptions,
+} from './runtime.ts'
 import { SpeakingSessionScreen } from './SpeakingSessionScreen.tsx'
 import { getSpeakingSessionResult } from './session.ts'
 import type {
@@ -68,6 +71,41 @@ export interface SpeakingTrainingRouteProps {
   readonly timingSessionFactory?: SpeakingEffectiveTimingSessionFactoryPort
   readonly supplyProvider?: SpeakingSupplyProvider
   readonly trainingBudgetStatus?: () => 'running' | 'finish-current-item'
+  /** 01 injects the R13-D unified-library outbox port unchanged. */
+  readonly wrongAnswerEvidence?: SpeakingTrainingRuntimeOptions['wrongAnswerEvidence']
+}
+
+/** Kept public and pure so route wiring cannot silently strip the R13-D port. */
+export function toSpeakingTrainingRuntimeOptions(
+  props: SpeakingTrainingRouteProps,
+  networkStatus: NetworkStatusService,
+): SpeakingTrainingRuntimeOptions {
+  return {
+    task: props.task,
+    localDate: props.localDate,
+    contentSource: props.contentSource ?? currentSpeakingContentSource,
+    eventSink: props.eventSink,
+    repository: props.repository,
+    networkStatus,
+    microphonePermission: props.microphonePermission,
+    recorder: props.recorder,
+    recognition: props.recognition,
+    now: props.now,
+    createId: props.createId,
+    timingSessionFactory: props.timingSessionFactory,
+    supplyProvider: props.supplyProvider,
+    trainingBudgetStatus: props.trainingBudgetStatus,
+    wrongAnswerEvidence: props.wrongAnswerEvidence,
+  }
+}
+
+/** Runtime outbox replay depends on its resolver/sink pair. A replacement port
+ * must therefore create a fresh runtime rather than reuse a stale closure. */
+export function sameSpeakingWrongAnswerEvidencePort(
+  left: SpeakingTrainingRuntimeOptions['wrongAnswerEvidence'],
+  right: SpeakingTrainingRuntimeOptions['wrongAnswerEvidence'],
+): boolean {
+  return left === right
 }
 
 export function SpeakingTrainingRoute(
@@ -89,6 +127,8 @@ export function SpeakingTrainingRoute(
     readonly timingSessionFactory:
       | SpeakingEffectiveTimingSessionFactoryPort
       | undefined
+    readonly wrongAnswerEvidence:
+      | SpeakingTrainingRuntimeOptions['wrongAnswerEvidence']
   } | null>(null)
   const runtimeMountLifecycleRef =
     useRef<SpeakingRuntimeMountLifecycle | null>(null)
@@ -101,28 +141,19 @@ export function SpeakingTrainingRoute(
   if (
     runtimeRef.current?.key !== runtimeKey ||
     runtimeRef.current.timingSessionFactory !==
-      props.timingSessionFactory
+      props.timingSessionFactory ||
+    !sameSpeakingWrongAnswerEvidencePort(
+      runtimeRef.current.wrongAnswerEvidence,
+      props.wrongAnswerEvidence,
+    )
   ) {
     runtimeRef.current = {
       key: runtimeKey,
       timingSessionFactory: props.timingSessionFactory,
-      runtime: new SpeakingTrainingRuntime({
-        task: props.task,
-        localDate: props.localDate,
-        contentSource:
-          props.contentSource ?? currentSpeakingContentSource,
-        eventSink: props.eventSink,
-        repository: props.repository,
-        networkStatus,
-        microphonePermission: props.microphonePermission,
-        recorder: props.recorder,
-        recognition: props.recognition,
-        now: props.now,
-        createId: props.createId,
-        timingSessionFactory: props.timingSessionFactory,
-        supplyProvider: props.supplyProvider,
-        trainingBudgetStatus: props.trainingBudgetStatus,
-      }),
+      wrongAnswerEvidence: props.wrongAnswerEvidence,
+      runtime: new SpeakingTrainingRuntime(
+        toSpeakingTrainingRuntimeOptions(props, networkStatus),
+      ),
     }
   }
   const runtime = runtimeRef.current.runtime
