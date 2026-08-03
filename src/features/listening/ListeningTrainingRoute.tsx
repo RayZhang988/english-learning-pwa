@@ -32,7 +32,10 @@ import {
 import { ListeningSessionScreen } from './ListeningSessionScreen.tsx'
 import { ListeningSessionRepository } from './repository.ts'
 import { ListeningRuntimeMountLifecycle } from './route-lifecycle.ts'
-import { ListeningTrainingRuntime } from './runtime.ts'
+import {
+  ListeningTrainingRuntime,
+  type ListeningTrainingRuntimeOptions,
+} from './runtime.ts'
 import { getListeningSessionResult } from './session.ts'
 import type { ListeningSupplyProvider } from './supply.ts'
 import type { ListeningSpeechPort } from './speech-synthesis.ts'
@@ -66,6 +69,66 @@ export interface ListeningTrainingRouteProps {
   /** 01 supplies both ports for QA-011 budget tasks. */
   readonly supplyProvider?: ListeningSupplyProvider
   readonly trainingBudgetStatus?: () => 'running' | 'finish-current-item'
+  /** 01 resolves a supplied item through 05's review-content-index aliases. */
+  readonly reviewIdentityForItem?:
+    ListeningTrainingRuntimeOptions['reviewIdentityForItem']
+  /** 01 durably publishes acknowledged wrong-answer evidence. */
+  readonly publishWrongAnswerEvidence?:
+    ListeningTrainingRuntimeOptions['publishWrongAnswerEvidence']
+}
+
+export type ListeningRuntimeRouteIdentity = Pick<
+  ListeningTrainingRouteProps,
+  | 'timingSessionFactory'
+  | 'supplyProvider'
+  | 'trainingBudgetStatus'
+  | 'reviewIdentityForItem'
+  | 'publishWrongAnswerEvidence'
+>
+
+export function listeningRuntimeRouteIdentity(
+  props: ListeningTrainingRouteProps,
+): ListeningRuntimeRouteIdentity {
+  return {
+    timingSessionFactory: props.timingSessionFactory,
+    supplyProvider: props.supplyProvider,
+    trainingBudgetStatus: props.trainingBudgetStatus,
+    reviewIdentityForItem: props.reviewIdentityForItem,
+    publishWrongAnswerEvidence: props.publishWrongAnswerEvidence,
+  }
+}
+
+export function hasListeningRuntimeRouteIdentityChanged(
+  previous: ListeningRuntimeRouteIdentity,
+  next: ListeningRuntimeRouteIdentity,
+): boolean {
+  return previous.timingSessionFactory !== next.timingSessionFactory ||
+    previous.supplyProvider !== next.supplyProvider ||
+    previous.trainingBudgetStatus !== next.trainingBudgetStatus ||
+    previous.reviewIdentityForItem !== next.reviewIdentityForItem ||
+    previous.publishWrongAnswerEvidence !== next.publishWrongAnswerEvidence
+}
+
+export function listeningRuntimeOptionsFromRouteProps(
+  props: ListeningTrainingRouteProps,
+  networkStatus: NetworkStatusService,
+): ListeningTrainingRuntimeOptions {
+  return {
+    task: props.task,
+    localDate: props.localDate,
+    contentSource: props.contentSource ?? currentListeningContentSource,
+    eventSink: props.eventSink,
+    repository: props.repository,
+    networkStatus,
+    speech: props.speech,
+    now: props.now,
+    createId: props.createId,
+    timingSessionFactory: props.timingSessionFactory,
+    supplyProvider: props.supplyProvider,
+    trainingBudgetStatus: props.trainingBudgetStatus,
+    reviewIdentityForItem: props.reviewIdentityForItem,
+    publishWrongAnswerEvidence: props.publishWrongAnswerEvidence,
+  }
 }
 
 export function ListeningTrainingRoute(
@@ -80,14 +143,11 @@ export function ListeningTrainingRoute(
   })
   const exitPendingRef = useRef(false)
   const runtimeKey = `${props.task.planId}:${props.task.taskId}`
+  const routeIdentity = listeningRuntimeRouteIdentity(props)
   const runtimeRef = useRef<{
     readonly key: string
     readonly runtime: ListeningTrainingRuntime
-    readonly timingSessionFactory:
-      | ListeningEffectiveTimingSessionFactoryPort
-      | undefined
-    readonly supplyProvider: ListeningSupplyProvider | undefined
-    readonly trainingBudgetStatus: (() => 'running' | 'finish-current-item') | undefined
+    readonly identity: ListeningRuntimeRouteIdentity
   } | null>(null)
   const runtimeMountLifecycleRef =
     useRef<ListeningRuntimeMountLifecycle | null>(null)
@@ -99,31 +159,18 @@ export function ListeningTrainingRoute(
 
   if (
     runtimeRef.current?.key !== runtimeKey ||
-    runtimeRef.current.timingSessionFactory !==
-      props.timingSessionFactory ||
-    runtimeRef.current.supplyProvider !== props.supplyProvider ||
-    runtimeRef.current.trainingBudgetStatus !== props.trainingBudgetStatus
+    !runtimeRef.current ||
+    hasListeningRuntimeRouteIdentityChanged(
+      runtimeRef.current.identity,
+      routeIdentity,
+    )
   ) {
     runtimeRef.current = {
       key: runtimeKey,
-      timingSessionFactory: props.timingSessionFactory,
-      supplyProvider: props.supplyProvider,
-      trainingBudgetStatus: props.trainingBudgetStatus,
-      runtime: new ListeningTrainingRuntime({
-        task: props.task,
-        localDate: props.localDate,
-        contentSource:
-          props.contentSource ?? currentListeningContentSource,
-        eventSink: props.eventSink,
-        repository: props.repository,
-        networkStatus,
-        speech: props.speech,
-        now: props.now,
-        createId: props.createId,
-        timingSessionFactory: props.timingSessionFactory,
-        supplyProvider: props.supplyProvider,
-        trainingBudgetStatus: props.trainingBudgetStatus,
-      }),
+      identity: routeIdentity,
+      runtime: new ListeningTrainingRuntime(
+        listeningRuntimeOptionsFromRouteProps(props, networkStatus),
+      ),
     }
   }
   const runtime = runtimeRef.current.runtime
