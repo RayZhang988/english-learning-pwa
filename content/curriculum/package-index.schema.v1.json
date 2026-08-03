@@ -23,6 +23,8 @@
     "trainingSupplyIndexFile",
     "trainingSupplyIndexSchemaFile",
     "trainingSupplyTotals",
+    "reviewContentIndexFile",
+    "reviewContentIndexSchemaFile",
     "learningCandidateProjection"
   ],
   "properties": {
@@ -152,6 +154,12 @@
         "speakingCandidates": {"type": "integer", "minimum": 1},
         "allCandidates": {"type": "integer", "minimum": 3}
       }
+    },
+    "reviewContentIndexFile": {
+      "const": "content/curriculum/review-content-index.v1.json"
+    },
+    "reviewContentIndexSchemaFile": {
+      "const": "content/curriculum/review-content-index.schema.v1.json"
     },
     "learningCandidateProjection": {
       "type": "object",

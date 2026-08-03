@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Unified Review Content Index v1",
+  "type": "object",
+  "required": ["schemaVersion", "documentType", "contentVersion", "identityVersion", "sources", "canonicalization", "totals", "aliases", "identities"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "documentType": {"const": "review-content-index"},
+    "contentVersion": {"const": "1.0.0"},
+    "identityVersion": {"const": "review-content-v1-fnv1a32"},
+    "sources": {"type": "object"},
+    "canonicalization": {"type": "object"},
+    "totals": {"type": "object"},
+    "aliases": {"type": "object", "minProperties": 1476},
+    "identities": {"type": "object", "minProperties": 1}
+  },
+  "additionalProperties": false
+}

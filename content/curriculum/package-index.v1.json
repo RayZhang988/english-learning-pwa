@@ -24,11 +24,13 @@
     "content/curriculum/content-quality-notes.v1.md",
     "content/curriculum/handoff-v1.md",
     "content/curriculum/training-supply-handoff-v1.md"
+    ,"content/curriculum/review-content-index-handoff-v1.md"
   ],
   "validationFiles": [
     "content/curriculum/validate-duration-baselines.v1.mjs",
     "content/curriculum/validate-training-supply.v1.mjs",
     "content/curriculum/validate-listening-bilingual-options.v1.mjs"
+    ,"content/curriculum/generate-review-content-index.v1.mjs"
   ],
   "mediaAssets": [],
   "totals": {
@@ -57,6 +59,8 @@
     "speakingCandidates": 122,
     "allCandidates": 864
   },
+  "reviewContentIndexFile": "content/curriculum/review-content-index.v1.json",
+  "reviewContentIndexSchemaFile": "content/curriculum/review-content-index.schema.v1.json",
   "learningCandidateProjection": {
     "staticFields": [
       "learningUnitId",
