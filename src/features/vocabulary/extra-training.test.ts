@@ -11,6 +11,7 @@ import { applyWrongAnswerEvidence, createWrongAnswerLibraryState, type WrongAnsw
 import type { WrongAnswerEvidenceSink } from './wrong-answer-review.ts'
 
 class Store implements NamespaceStore { records = new Map<string, StoredRecord<unknown>>(); async get<T>(key:string){ return this.records.get(key) as StoredRecord<T>|undefined }; async put<T>(key:string,value:T,schemaVersion=1){ this.records.set(key,{namespace:'test',key,value,schemaVersion,updatedAt:'2026-07-29T00:00:00.000Z'}) }; async delete(key:string){this.records.delete(key)}; async keys(){return [...this.records.keys()]}; async clear(){this.records.clear()} }
+class FailNextStore extends Store { failNext = false; override async put<T>(key: string, value: T, schemaVersion = 1) { if (this.failNext) { this.failNext = false; throw new Error('clear save failed') }; return super.put(key, value, schemaVersion) } }
 
 const session = { schemaVersion: 1, sessionId: 'extra-vocabulary', localDate: '2026-07-29', domain: 'vocabulary', targetModuleId: 'vocabulary', mode: 'learn', targetDifficulty: 1, completionMode: 'open-ended', effectiveSeconds: 0, status: 'running', nextSupplyCursor: null, excludeItemIds: [], completedItemCount: 0, startedAt: '2026-07-29T00:00:00.000Z', updatedAt: '2026-07-29T00:00:00.000Z', endedAt: null, endReason: null } as const
 const item = { itemId: 'supply-vocabulary-1', learningUnitId: 'unit-1', contentRef: 'lesson://unit-1', difficultyLevel: 1, tags: [], source: { sourceType: 'vocabulary-item', sourceId: 'word', variantId: 'term-to-meaning-choice', distractorItemIds: [] } } as const
@@ -138,5 +139,19 @@ describe('extra vocabulary commands', () => {
     const review = { identityForItem: async () => ({ reviewContentId: 'extra-content', originalQuestionType: 'vocabulary-term-to-meaning-choice', domain: 'vocabulary' as const, source: {} }), sink }
     const first = new ExtraVocabularyTrainingRuntime({ ...options(), repository, wrongAnswerReview: review }); await first.initialize(); await first.next(); await first.select('wrong'); await expect(first.submit()).rejects.toThrow('sink failed'); expect(first.currentSnapshot?.phase).toBe('feedback'); expect(first.currentSnapshot?.pendingWrongAnswerEvidence).toHaveLength(1)
     const second = new ExtraVocabularyTrainingRuntime({ ...options(), repository, wrongAnswerReview: review }); const restored = await second.initialize(); expect(restored.pendingWrongAnswerEvidence).toEqual([]); expect(ids[0]).toBe(ids[1]); expect(Object.values(state.records)[0]?.incorrectCount).toBe(1)
+  })
+  it('does not create extra wrong-answer evidence for correct, unsubmitted, or exit paths', async () => {
+    const sink: WrongAnswerEvidenceSink = { publish: async () => { throw new Error('must not publish') } }; const review = { identityForItem: async () => ({ reviewContentId: 'x', originalQuestionType: 'vocabulary-term-to-meaning-choice', domain: 'vocabulary' as const, source: {} }), sink }
+    const correct = new ExtraVocabularyTrainingRuntime({ ...options(), wrongAnswerReview: review }); await correct.initialize(); await correct.next(); await correct.select('right'); await correct.submit(); expect(correct.currentSnapshot?.pendingWrongAnswerEvidence ?? []).toEqual([])
+    const untouched = new ExtraVocabularyTrainingRuntime({ ...options(), wrongAnswerReview: review }); await untouched.initialize(); await untouched.next(); await untouched.exit(); expect(untouched.currentSnapshot?.pendingWrongAnswerEvidence ?? []).toEqual([])
+  })
+  it('rejects a feedback double-submit before another extra evidence can be created', async () => {
+    const ids: string[] = []; const review = { identityForItem: async () => ({ reviewContentId: 'double', originalQuestionType: 'vocabulary-term-to-meaning-choice', domain: 'vocabulary' as const, source: {} }), sink: { publish: async (evidence: WrongAnswerEvidence) => { ids.push(evidence.eventId) } } }
+    const runtime = new ExtraVocabularyTrainingRuntime({ ...options(), wrongAnswerReview: review }); await runtime.initialize(); await runtime.next(); await runtime.select('wrong'); await runtime.submit(); await expect(runtime.submit()).rejects.toThrow('Select'); expect(ids).toHaveLength(1)
+  })
+  it('replays after confirmation-clear persistence fails and 04 absorbs the duplicate', async () => {
+    const store = new FailNextStore(); const repository = new ExtraVocabularyTrainingRepository(store); let state = createWrongAnswerLibraryState(); const ids: string[] = []; const review = { identityForItem: async () => ({ reviewContentId: 'clear', originalQuestionType: 'vocabulary-term-to-meaning-choice', domain: 'vocabulary' as const, source: {} }), sink: { publish: async (evidence: WrongAnswerEvidence) => { ids.push(evidence.eventId); state = applyWrongAnswerEvidence(state, evidence).state; if (ids.length === 1) store.failNext = true } } }
+    const first = new ExtraVocabularyTrainingRuntime({ ...options(), repository, wrongAnswerReview: review }); await first.initialize(); await first.next(); await first.select('wrong'); await expect(first.submit()).rejects.toThrow('clear save failed'); expect(first.currentSnapshot?.pendingWrongAnswerEvidence).toHaveLength(1)
+    const second = new ExtraVocabularyTrainingRuntime({ ...options(), repository, wrongAnswerReview: review }); await second.initialize(); expect(ids).toHaveLength(2); expect(ids[0]).toBe(ids[1]); expect(Object.values(state.records)[0]?.incorrectCount).toBe(1)
   })
 })
