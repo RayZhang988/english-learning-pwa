@@ -1,6 +1,8 @@
 import type { ReadonlyDataSource } from '../../core/index.ts'
 import { localStorageService, type NamespaceStore } from '../../storage/index.ts'
 import { VocabularyError } from './errors.ts'
+import type { WrongAnswerEvidence } from '../../learning-engine/index.ts'
+import { createVocabularyWrongAnswerEvidence, resolveSceneVocabularyReviewContent, type ReviewContentIndex, type WrongAnswerEvidenceSink } from './wrong-answer-review.ts'
 
 const SCENE_VOCABULARY_BANK_ID = 'r13b-travel-scene-vocabulary'
 /** Content remains at 1.0.0 until the R13-C 500-item authored bank is released. */
@@ -186,6 +188,8 @@ export interface SceneVocabularyPracticeSnapshot {
   readonly phase: 'answering' | 'feedback'
   readonly createdAt: string
   readonly updatedAt: string
+  /** R13-D durable outbox; source snapshot statistics remain unchanged. */
+  readonly pendingWrongAnswerEvidence?: readonly WrongAnswerEvidence[]
 }
 
 type StoredSceneVocabularyPracticeSnapshot = SceneVocabularyPracticeSnapshot | LegacySceneVocabularyPracticeSnapshot
@@ -257,6 +261,7 @@ export interface SceneVocabularyPracticeRuntimeOptions {
   readonly repository?: SceneVocabularyPracticeRepository
   readonly sessionId?: string
   readonly now?: () => string
+  readonly wrongAnswerReview?: { readonly index: ReviewContentIndex; readonly sink: WrongAnswerEvidenceSink }
 }
 
 function optionId(questionId: string, position: number): string { return `${questionId}:meaning:${position + 1}` }
@@ -348,6 +353,14 @@ export class SceneVocabularyPracticeRuntime {
   private requireScene(): SceneVocabularyScene { if (!this.scene) throw new VocabularyError('session-transition-invalid', 'Scene vocabulary runtime has not loaded its scene.'); return this.scene }
   private queue<T>(operation: () => Promise<T>): Promise<T> { const result = this.tail.then(operation, operation); this.tail = result.then(() => undefined, () => undefined); return result }
   private async save(snapshot: SceneVocabularyPracticeSnapshot): Promise<SceneVocabularyPracticeSnapshot> { await this.repository.save(snapshot); this.snapshot = snapshot; return snapshot }
+  private async flushWrongAnswerEvidence(snapshot: SceneVocabularyPracticeSnapshot): Promise<SceneVocabularyPracticeSnapshot> {
+    let next = snapshot
+    while (next.pendingWrongAnswerEvidence?.length && this.options.wrongAnswerReview) {
+      await this.options.wrongAnswerReview.sink.publish(next.pendingWrongAnswerEvidence[0]!)
+      next = await this.save({ ...next, pendingWrongAnswerEvidence: next.pendingWrongAnswerEvidence.slice(1), updatedAt: this.now() })
+    }
+    return next
+  }
   initialize(): Promise<SceneVocabularyPracticeSnapshot> {
     return this.queue(async () => {
       try {
@@ -356,7 +369,7 @@ export class SceneVocabularyPracticeRuntime {
         if (!scene) throw new VocabularyError('content-reference-missing', `Scene vocabulary content is unavailable for ${this.options.categoryId}/${this.options.sceneId}.`)
         this.scene = scene
         const stored = await this.repository.load(this.sessionId)
-        if (stored && isSnapshot(stored)) { validateSnapshot(stored, scene, this.options.categoryId, this.options.sceneId, this.sessionId); this.snapshot = stored; this.recoveryInvalidSnapshot = false; return stored }
+        if (stored && isSnapshot(stored)) { validateSnapshot(stored, scene, this.options.categoryId, this.options.sceneId, this.sessionId); this.snapshot = stored; this.recoveryInvalidSnapshot = false; return this.flushWrongAnswerEvidence(stored) }
         if (stored && isLegacySnapshot(stored)) { const migrated = await this.save(migrateLegacySnapshot(stored, scene, this.options.categoryId, this.options.sceneId, this.sessionId, this.now())); this.recoveryInvalidSnapshot = false; return migrated }
         const fresh = await this.save(newSnapshot(scene, this.sessionId, this.now()))
         this.recoveryInvalidSnapshot = false
@@ -400,8 +413,13 @@ export class SceneVocabularyPracticeRuntime {
     return this.queue(async () => {
       const snapshot = this.requireSnapshot(); const question = questionById(this.requireScene(), snapshot.currentQuestionId)
       if (snapshot.phase !== 'answering' || !question || snapshot.selectedOptionId === null) throw new VocabularyError('session-transition-invalid', 'Select a scene vocabulary meaning before submitting.')
-      const correct = snapshot.selectedOptionId === correctOptionId(question)
-      return this.save({ ...snapshot, answers: [...snapshot.answers, { questionId: question.questionId, selectedOptionId: snapshot.selectedOptionId, submittedAt: this.now() }], correctCount: snapshot.correctCount + (correct ? 1 : 0), incorrectCount: snapshot.incorrectCount + (correct ? 0 : 1), selectedOptionId: null, phase: 'feedback', updatedAt: this.now() })
+      const correct = snapshot.selectedOptionId === correctOptionId(question); const submittedAt = this.now()
+      let pendingWrongAnswerEvidence = snapshot.pendingWrongAnswerEvidence ?? []
+      if (!correct && this.options.wrongAnswerReview) {
+        const identity = resolveSceneVocabularyReviewContent(this.options.wrongAnswerReview.index, SCENE_VOCABULARY_BANK_ID, SCENE_VOCABULARY_CONTENT_VERSION, question)
+        pendingWrongAnswerEvidence = [...pendingWrongAnswerEvidence, createVocabularyWrongAnswerEvidence({ identity, source: 'scenario-training', taskOrSessionId: this.sessionId, questionId: question.questionId, submittedAt, correct: false })]
+      }
+      return this.flushWrongAnswerEvidence(await this.save({ ...snapshot, answers: [...snapshot.answers, { questionId: question.questionId, selectedOptionId: snapshot.selectedOptionId, submittedAt }], correctCount: snapshot.correctCount + (correct ? 1 : 0), incorrectCount: snapshot.incorrectCount + (correct ? 0 : 1), selectedOptionId: null, phase: 'feedback', pendingWrongAnswerEvidence, updatedAt: submittedAt }))
     })
   }
   advance(): Promise<SceneVocabularyPracticeSnapshot> {

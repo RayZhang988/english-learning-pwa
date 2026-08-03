@@ -4,6 +4,7 @@ import type {
   LearningTaskSupplyItem,
   StandardErrorTag,
 } from '../../learning-engine/index.ts'
+import type { WrongAnswerEvidence } from '../../learning-engine/index.ts'
 
 export const VOCABULARY_SESSION_SCHEMA_VERSION = 1 as const
 
@@ -169,6 +170,8 @@ export interface VocabularySession {
   readonly lastActiveAt: string | null
   readonly updatedAt: string
   readonly pendingEvents: readonly LearningEvent[]
+  /** R13-D durable outbox. Only formally incorrect vocabulary answers enter it. */
+  readonly pendingWrongAnswerEvidence?: readonly WrongAnswerEvidence[]
   readonly failure: VocabularySessionFailure | null
   /** Present only for QA-011 training-budget tasks. */
   readonly stream: VocabularyStreamState | null

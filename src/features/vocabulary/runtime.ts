@@ -204,6 +204,12 @@ export class VocabularyTrainingRuntime {
 
   private async flushPendingEvents(): Promise<VocabularySession> {
     let session = this.requireSession()
+    while (session.pendingWrongAnswerEvidence?.length) {
+      if (!this.wrongAnswerReview) break
+      const evidence = session.pendingWrongAnswerEvidence[0]!
+      await this.wrongAnswerReview.sink.publish(evidence)
+      session = await this.save({ ...session, pendingWrongAnswerEvidence: session.pendingWrongAnswerEvidence.slice(1), updatedAt: this.now() })
+    }
     while (session.pendingEvents.length > 0) {
       const event = session.pendingEvents[0]
       if ((event.type === 'learning.attempt.completed.v1' && event.payload.taskCompleted) || event.type === 'learning.training.budget.completed.v1') {
@@ -379,13 +385,17 @@ export class VocabularyTrainingRuntime {
       await this.timing.beginPersistenceWait(true)
       const before = this.requireSession()
       const submittedAt = this.now()
-      const session = await this.save(submitVocabularyAnswer(before, submittedAt))
+      let evidence = null
       if (this.wrongAnswerReview && before.stream) {
         const catalog = await this.contentSource.load()
         const resolved = resolveDailyVocabularyReviewContent(this.wrongAnswerReview.index, before.stream.activeItem, catalog)
-        const answer = session.answers.at(-1)!
-        if (!answer.correct) await this.wrongAnswerReview.sink.publish(createVocabularyWrongAnswerEvidence({ identity: resolved.identity, source: this.wrongAnswerReview.source, taskOrSessionId: this.task.taskId, questionId: answer.questionId, submittedAt: answer.submittedAt, correct: false }))
+        const question = before.questions[before.questionIndex]!
+        if (before.selectedOptionId !== question.correctOptionId) evidence = createVocabularyWrongAnswerEvidence({ identity: resolved.identity, source: this.wrongAnswerReview.source, taskOrSessionId: this.task.taskId, questionId: question.id, submittedAt, correct: false })
       }
+      let session = submitVocabularyAnswer(before, submittedAt)
+      if (evidence) session = { ...session, pendingWrongAnswerEvidence: [...(session.pendingWrongAnswerEvidence ?? []), evidence] }
+      session = await this.save(session)
+      session = await this.flushPendingEvents()
       await this.timing.synchronize(session.phase)
       return session
     })
