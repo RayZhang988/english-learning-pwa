@@ -1289,6 +1289,13 @@ async function verifyR62ModuleFirstCompletion(page, moduleId) {
   const before = activeRuntime(await page.dumpIndexedDb()).activePlan
   await clickDailyModule(page, moduleId)
   await waitForDailyQuestion(page, moduleId)
+  if (moduleId === 'listening') {
+    await page.clickByText('播放音频')
+    await page.waitFor(`globalThis.speechSynthesis?.speaking === true`)
+  } else if (moduleId === 'speaking') {
+    await page.clickByText('开始录音')
+    await page.waitFor(`document.body.innerText.includes('正在录音')`)
+  }
   const deadline = Date.now() + 35_000
   let budgetRuntime
   while (Date.now() < deadline) {
@@ -1299,9 +1306,15 @@ async function verifyR62ModuleFirstCompletion(page, moduleId) {
   assert.equal(executionFor(budgetRuntime, moduleId).training?.status, 'finish-current-item')
   if (moduleId === 'vocabulary') await submitVocabularyAnswer(page)
   else if (moduleId === 'listening') {
-    await finishControlledSpeech(page)
+    assert.equal(await page.evaluate(`globalThis.speechSynthesis?.speaking === true`), true)
+    assert.equal(await page.evaluate(`globalThis.__qaFinishSpeech()`), true)
+    await page.waitFor(`document.body.innerText.includes('播放完毕')`, 10_000)
     await answerListening(page)
-  } else await recordSpeaking(page)
+  } else {
+    assert.match(await page.bodyText(), /正在录音/u)
+    await page.clickByText('停止录音')
+    await page.waitFor(`document.body.innerText.includes('录音完成') || document.body.innerText.includes('录音不可用')`, 20_000)
+  }
   await page.waitFor(`Array.from(document.querySelectorAll('button')).some((button) => ['完成训练', '完成本题并结束'].includes(button.innerText.trim()) && !button.disabled)`, 20_000)
   await page.clickByText('完成训练', '完成本题并结束')
   const completed = await waitForDailyExecutionCompleted(page, moduleId)
@@ -1326,10 +1339,10 @@ async function verifyR62ModuleFirstCompletion(page, moduleId) {
   // Today and Training show only the independently qualified module as extra.
   await page.navigate(new URL('#/', baseUrl).href)
   await page.waitFor(
-    `location.hash === '#/' && document.querySelectorAll('button.task-row[data-module-id][data-task-id]').length === 3`,
+    `location.hash === '#/' && document.querySelectorAll('button.task-row[data-module-id]').length === 3`,
     20_000,
   )
-  const today = await page.evaluate(`(() => [...document.querySelectorAll('button.task-row')].map((b) => ({ moduleId: b.dataset.moduleId, taskId: b.dataset.taskId, text: b.innerText })))()`)
+  const today = await page.evaluate(`(() => [...document.querySelectorAll('button.task-row')].map((b) => ({ moduleId: b.dataset.moduleId, taskId: b.dataset.taskId ?? null, availability: b.dataset.availability, disabled: b.disabled, text: b.innerText })))()`)
   assert.equal(executionFor(completed, moduleId).status, 'completed')
   const afterRuntime = activeRuntime(await page.dumpIndexedDb())
   const after = afterRuntime.activePlan
@@ -1342,20 +1355,125 @@ async function verifyR62ModuleFirstCompletion(page, moduleId) {
   )
   const todayCompleted = today.find((item) => item.moduleId === moduleId)
   assert.ok(todayCompleted?.text.includes('继续训练'))
+  assert.equal(todayCompleted?.availability, 'extra-training')
+  assert.equal(todayCompleted?.taskId, null)
+  assert.equal(todayCompleted?.disabled, false)
   for (const other of MODULES.filter((id) => id !== moduleId)) {
     const card = today.find((item) => item.moduleId === other)
     assert.ok(card?.taskId)
+    assert.equal(card?.availability, 'startable')
+    assert.equal(card?.disabled, false)
     assert.equal(card?.text.includes('继续训练'), false)
   }
   await page.clickByText('训练')
   await page.waitFor(`document.querySelectorAll('[data-training-area]').length === 3`, 20_000)
   await clickSelector(page, '[data-training-area="daily"]')
-  await page.waitFor(`document.querySelectorAll('.module-card').length === 3`, 20_000)
-  const cards = await page.evaluate(`(() => [...document.querySelectorAll('.module-card')].map((c) => ({moduleId:c.dataset.moduleId, availability:c.dataset.availability, text:c.innerText})))()`)
+  await page.waitFor(`location.hash === '#/practice/daily' && document.querySelectorAll('button.module-card[data-module-id]').length === 4`, 20_000)
+  const cards = await page.evaluate(`(() => [...document.querySelectorAll('button.module-card[data-module-id]')].map((c) => ({moduleId:c.dataset.moduleId, availability:c.dataset.availability, text:c.innerText})))()`)
   assert.equal(cards.filter((c) => c.availability === 'extra-training').length, 1)
   assert.equal(cards.find((c) => c.moduleId === moduleId)?.availability, 'extra-training')
   assert.equal(cards.filter((c) => c.moduleId !== moduleId).every((c) => c.availability !== 'extra-training'), true)
   return { moduleId, directSessionId, cards, today }
+}
+
+async function verifyR62Sequence(page) {
+  const completed = new Set()
+  const results = []
+  for (const moduleId of MODULES) {
+    // Reuse the public-UI completion path; after the first step its strict
+    // pending-only assertions are intentionally replaced by set assertions.
+    await clickDailyModule(page, moduleId)
+    await waitForDailyQuestion(page, moduleId)
+    if (moduleId === 'listening') {
+      await page.clickByText('播放音频')
+      await page.waitFor(`globalThis.speechSynthesis?.speaking === true`)
+    } else if (moduleId === 'speaking') {
+      await page.clickByText('开始录音')
+      await page.waitFor(`document.body.innerText.includes('正在录音')`)
+    }
+    const deadline = Date.now() + 35_000
+    let runtime
+    while (Date.now() < deadline) {
+      runtime = activeRuntime(await page.dumpIndexedDb())
+      if (executionFor(runtime, moduleId).training?.status === 'finish-current-item') break
+      await new Promise((resolve) => setTimeout(resolve, 250))
+    }
+    assert.equal(executionFor(runtime, moduleId).training?.status, 'finish-current-item')
+    if (moduleId === 'vocabulary') await submitVocabularyAnswer(page)
+    else if (moduleId === 'listening') { await page.evaluate(`globalThis.__qaFinishSpeech()`); await answerListening(page) }
+    else { await page.clickByText('停止录音'); await page.waitFor(`document.body.innerText.includes('录音完成') || document.body.innerText.includes('录音不可用')`) }
+    await page.waitFor(`Array.from(document.querySelectorAll('button')).some((button) => ['完成训练', '完成本题并结束'].includes(button.innerText.trim()) && !button.disabled)`, 20_000)
+    await page.clickByText('完成训练', '完成本题并结束')
+    await waitForDailyExecutionCompleted(page, moduleId)
+    assert.match(await page.bodyText(), /正确率|正确率无法计算/u)
+    assert.match(await page.bodyText(), /继续训练/u)
+    completed.add(moduleId)
+    await returnFromDailyModule(page, moduleId)
+    if (completed.size === 3) {
+      await page.waitFor(`location.hash === '#/' && document.body.innerText.includes('今日三项训练已完成')`)
+      assert.doesNotMatch(await page.bodyText(), /完成今日\s*3\/3\s*后再继续训练/u)
+      await page.clickByText('查看今日计划')
+    }
+    await page.waitFor(`location.hash === '#/' && document.querySelectorAll('button.task-row[data-module-id]').length === 3`)
+    const snapshot = await page.evaluate(`(() => [...document.querySelectorAll('button.task-row[data-module-id]')].map((b) => ({id:b.dataset.moduleId, availability:b.dataset.availability, taskId:b.dataset.taskId ?? null, text:b.innerText})))()`)
+    for (const id of MODULES) {
+      const card = snapshot.find((x) => x.id === id)
+      if (completed.has(id)) { assert.equal(card?.availability, 'extra-training'); assert.equal(card?.taskId, null); assert.match(card?.text ?? '', /继续训练/u) }
+      else { assert.equal(card?.availability, 'startable'); assert.ok(card?.taskId) }
+    }
+    await page.clickByText('训练')
+    await page.waitFor(`document.querySelectorAll('[data-training-area]').length === 3`)
+    await clickSelector(page, '[data-training-area="daily"]')
+    await page.waitFor(`location.hash === '#/practice/daily'`)
+    const training = await page.evaluate(`(() => [...document.querySelectorAll('button.module-card[data-module-id]')].map((b) => ({id:b.dataset.moduleId, availability:b.dataset.availability})))()`)
+    for (const id of completed) assert.equal(training.find((x) => x.id === id)?.availability, 'extra-training')
+    await page.navigate(new URL('#/extra-training', baseUrl).href)
+    await waitForPicker(page)
+    const picker = await pickerSnapshot(page)
+    assert.deepEqual(picker.map((x) => x.moduleId).sort(), [...completed].sort())
+    results.push({ moduleId, completed: [...completed], snapshot })
+  }
+  return results
+}
+
+async function verifyR62PostCompletionRegression(page) {
+  const completedRuntime = activeRuntime(await page.dumpIndexedDb())
+  await assertDailyThreeOfThree(page, completedRuntime)
+  await waitForPicker(page)
+  const initialPicker = await pickerSnapshot(page)
+  assert.deepEqual(initialPicker.map((item) => item.moduleId).sort(), [...MODULES].sort())
+  const vocabularyId = await startOrResumeExtra(page, 'vocabulary', true)
+  await exitExtra(page, 'vocabulary')
+  const recovery = {}
+  for (const moduleId of MODULES) {
+    recovery[moduleId] = await verifyExitRefreshResume(page, moduleId, moduleId === 'vocabulary')
+    await assertDailyThreeOfThree(page, completedRuntime)
+  }
+  assert.equal(extraSessions(await page.dumpIndexedDb(), 'vocabulary').length, 1)
+  const openEnded = {}
+  for (const moduleId of MODULES) {
+    openEnded[moduleId] = await verifyOpenEndedContinues(page, moduleId, recovery[moduleId].sessionId)
+    await assertDailyThreeOfThree(page, completedRuntime)
+  }
+  const freshSpeaking = await page.evaluate(`(() => {
+    const card = document.querySelector('.extra-training-module-card[data-module-id="speaking"]')
+    const button = [...(card?.querySelectorAll('button') ?? [])].find((b) => b.innerText.trim() === '开始新一轮')
+    if (!button || button.disabled) return false
+    button.click(); return true
+  })()`)
+  assert.equal(freshSpeaking, true)
+  await page.waitFor(`location.hash.startsWith('#/extra-training/speaking?sessionId=')`)
+  const newSpeakingId = new URLSearchParams(new URL(await page.url()).hash.split('?')[1] ?? '').get('sessionId')
+  assert.notEqual(newSpeakingId, recovery.speaking.sessionId)
+  const oldSpeaking = extraSession(await page.dumpIndexedDb(), recovery.speaking.sessionId)
+  assert.equal(oldSpeaking.status, 'expired')
+  assert.equal(oldSpeaking.endReason, 'user-restarted')
+  await waitForExtraQuestion(page, 'speaking')
+  await exitExtra(page, 'speaking')
+  const pwa = await assertPwaCache(page)
+  const offline = await verifyOfflineCore(page)
+  await assertDailyThreeOfThree(page, completedRuntime)
+  return { vocabularyId, recovery, openEnded, pwa, offline }
 }
 
 async function waitForPicker(page) {
@@ -1743,7 +1861,7 @@ async function verifyOfflineCore(page) {
   try {
     await page.reload()
     await waitForPicker(page)
-    assert.match(await page.bodyText(), /不会改变今日 3\/3 完成状态/u)
+    assert.match(await page.bodyText(), /不会改变今日模块完成状态|不会改变今日完成状态/u)
 
     const vocabularyId = await startOrResumeExtra(
       page,
@@ -1845,7 +1963,33 @@ async function run() {
       ),
     })
 
+    if (process.env.QA_R62_NORMAL_BUDGET === '1') {
+      assert.deepEqual(generated.activePlan.plan.tasks.map((task) => task.trainingBudget?.targetEffectiveSeconds), [900, 900, 900])
+      assert.match(await qa.page.bodyText(), /15 分钟有效训练/u)
+      await clickDailyModule(qa.page, 'vocabulary')
+      await waitForDailyQuestion(qa.page, 'vocabulary')
+      assert.equal(
+        await qa.page.evaluate(`document.querySelector('.training-budget-progress')?.getAttribute('data-display-target-seconds')`),
+        '900',
+      )
+      assert.match(await qa.page.bodyText(), /目标\s*15:00/u)
+      checkpoint('r62-normal-budget', { targetSeconds: 900 })
+      evidence.status = 'passed'
+      console.log(JSON.stringify(evidence, null, 2))
+      return
+    }
+
     const r62FirstModule = process.env.QA_R62_FIRST_MODULE
+    if (process.env.QA_R62_SEQUENCE === '1') {
+      const result = await verifyR62Sequence(qa.page)
+      checkpoint('r62-public-ui-sequence', { result })
+      if (process.env.QA_R62_FULL_REGRESSION === '1') {
+        checkpoint('r62-post-completion-regression', await verifyR62PostCompletionRegression(qa.page))
+      }
+      evidence.status = 'passed'
+      console.log(JSON.stringify(evidence, null, 2))
+      return
+    }
     if (r62FirstModule) {
       assert.ok(MODULES.includes(r62FirstModule))
       const result = await verifyR62ModuleFirstCompletion(
