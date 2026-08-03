@@ -242,6 +242,7 @@ function restoreSession(
     !Array.isArray(value.transcript) ||
     !Array.isArray(value.answers) ||
     !Array.isArray(value.pendingEvents) ||
+    (value.pendingWrongAnswerEvidence !== undefined && !Array.isArray(value.pendingWrongAnswerEvidence)) ||
     !isRecord(value.playback) ||
     !validStream(value.stream)
   ) {
@@ -326,6 +327,7 @@ function restoreSession(
   return normalizeStream(upgradeLegacyPassageSession({
     ...(value as unknown as ListeningSession),
     pendingEvents,
+    pendingWrongAnswerEvidence: (value.pendingWrongAnswerEvidence ?? []) as ListeningSession['pendingWrongAnswerEvidence'],
   }))
 }
 

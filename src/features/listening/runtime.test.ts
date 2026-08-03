@@ -312,6 +312,36 @@ function dialogueCatalog(): ListeningCatalog {
 }
 
 describe('listening training runtime', () => {
+  it('persists a rejected daily wrong-answer outbox and replays its stable id after refresh', async () => {
+    const currentCatalog = catalog([choiceQuestion])
+    const item = { itemId: 'wrong-outbox-item', learningUnitId: 'st4w-w1d1-listening', contentRef: 'lesson://survival-travel-american-4w/1.0.0/w1d1/listening', difficultyLevel: 2, tags: ['scene:introductions'], source: { sourceType: 'listening-extension' as const, sourceId: choiceQuestion.id, variantId: 'word-discrimination' } }
+    const store = new MemoryStore(); const task = createListeningTask({ trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } })
+    const evidence: import('../../learning-engine/index.ts').WrongAnswerEvidence[] = []; let reject = true
+    const base = { task, localDate: '2026-07-29', contentSource: { load: async () => currentCatalog }, eventSink: new InMemoryPlatformEventSink(), repository: new ListeningSessionRepository(store), now: clock(), supplyProvider: { next: async (request: import('../../learning-engine/index.ts').LearningTaskSupplyRequest) => ({ schemaVersion: 1 as const, requestId: request.requestId, status: 'item' as const, item, nextCursor: item.itemId }) }, trainingBudgetStatus: () => 'running' as const, reviewIdentityForItem: () => ({ reviewContentId: 'review-daily', originalQuestionType: 'listening-word-discrimination' }), publishWrongAnswerEvidence: async (value: import('../../learning-engine/index.ts').WrongAnswerEvidence) => { evidence.push(value); if (reject) throw new Error('sink rejected') } }
+    const speech = new ImmediateSpeech(); const first = new ListeningTrainingRuntime({ ...base, speech })
+    await first.initialize(); await completeRuntimePlayback(first, speech); await first.select('b')
+    await Promise.allSettled([first.submit(), first.submit()])
+    expect(first.currentSession?.pendingWrongAnswerEvidence).toHaveLength(1)
+    const firstId = first.currentSession?.pendingWrongAnswerEvidence?.[0]?.eventId
+    expect(evidence.map((entry) => entry.eventId)).toEqual([firstId])
+    reject = false
+    const restored = new ListeningTrainingRuntime({ ...base, speech: new ImmediateSpeech() })
+    await restored.initialize()
+    expect(evidence.map((entry) => entry.eventId)).toEqual([firstId, firstId])
+    expect(restored.currentSession?.pendingWrongAnswerEvidence).toEqual([])
+  })
+  it('does not enqueue daily wrong-answer evidence for a correct answer or unanswered exit', async () => {
+    const currentCatalog = catalog([choiceQuestion]); const item = { itemId: 'daily-exclusion', learningUnitId: 'st4w-w1d1-listening', contentRef: 'lesson://survival-travel-american-4w/1.0.0/w1d1/listening', difficultyLevel: 2, tags: [], source: { sourceType: 'listening-extension' as const, sourceId: choiceQuestion.id, variantId: 'word-discrimination' } }; const calls: unknown[] = []
+    const make = (taskId: string) => { const speech = new ImmediateSpeech(); const runtime = new ListeningTrainingRuntime({ task: createListeningTask({ taskId, trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } }), localDate: '2026-08-03', contentSource: { load: async () => currentCatalog }, eventSink: new InMemoryPlatformEventSink(), repository: new ListeningSessionRepository(new MemoryStore()), speech, now: clock(), supplyProvider: { next: async (request) => ({ schemaVersion: 1 as const, requestId: request.requestId, status: 'item' as const, item, nextCursor: item.itemId }) }, trainingBudgetStatus: () => 'running' as const, reviewIdentityForItem: () => ({ reviewContentId: 'review-exclusion', originalQuestionType: 'listening-word-discrimination' }), publishWrongAnswerEvidence: async (value) => { calls.push(value) } }); return { runtime, speech } }
+    const correct = make('daily-correct'); await correct.runtime.initialize(); await completeRuntimePlayback(correct.runtime, correct.speech); await correct.runtime.select('a'); await correct.runtime.submit(); expect(correct.runtime.currentSession?.pendingWrongAnswerEvidence).toEqual([])
+    const exit = make('daily-exit'); await exit.runtime.initialize(); await exit.runtime.skip('user-skipped'); expect(exit.runtime.currentSession?.pendingWrongAnswerEvidence).toEqual([]); expect(calls).toEqual([])
+  })
+  it.each([() => null, () => { throw new Error('identity failed') }])('keeps incorrect feedback when the review identity resolver is unavailable', async (resolver) => {
+    const currentCatalog = catalog([choiceQuestion]); const item = { itemId: 'daily-identity', learningUnitId: 'st4w-w1d1-listening', contentRef: 'lesson://survival-travel-american-4w/1.0.0/w1d1/listening', difficultyLevel: 2, tags: [], source: { sourceType: 'listening-extension' as const, sourceId: choiceQuestion.id, variantId: 'word-discrimination' } }; const calls: unknown[] = []; const speech = new ImmediateSpeech()
+    const runtime = new ListeningTrainingRuntime({ task: createListeningTask({ trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } }), localDate: '2026-08-03', contentSource: { load: async () => currentCatalog }, eventSink: new InMemoryPlatformEventSink(), repository: new ListeningSessionRepository(new MemoryStore()), speech, now: clock(), supplyProvider: { next: async (request) => ({ schemaVersion: 1 as const, requestId: request.requestId, status: 'item' as const, item, nextCursor: item.itemId }) }, trainingBudgetStatus: () => 'running' as const, reviewIdentityForItem: resolver, publishWrongAnswerEvidence: async (value) => { calls.push(value) } })
+    await runtime.initialize(); await completeRuntimePlayback(runtime, speech); await runtime.select('b'); await runtime.submit()
+    expect(runtime.currentSession).toMatchObject({ phase: 'feedback', pendingWrongAnswerEvidence: [] }); expect(runtime.currentSession?.answers[0]?.correct).toBe(false); expect(calls).toEqual([])
+  })
   it('starts a continuous budget from a supplied unit different from the plan seed', async () => {
     const task = createListeningTask({
       trainingBudget: {
@@ -1086,6 +1116,7 @@ describe('listening training runtime', () => {
 
   it('turns an active audio interruption into unscorable device evidence', async () => {
     const sink = new InMemoryPlatformEventSink()
+    const wrongAnswerSink: unknown[] = []
     const speech = new ImmediateSpeech()
     const runtime = new ListeningTrainingRuntime({
       task: createListeningTask(),
@@ -1100,6 +1131,7 @@ describe('listening training runtime', () => {
         let id = 0
         return () => `device-id-${++id}`
       })(),
+      publishWrongAnswerEvidence: async (evidence) => { wrongAnswerSink.push(evidence) },
     })
     await runtime.initialize()
     await runtime.togglePlayback()
@@ -1116,5 +1148,7 @@ describe('listening training runtime', () => {
       })
     })
     expect(runtime.currentSession?.failure?.category).toBe('device')
+    expect(runtime.currentSession?.pendingWrongAnswerEvidence).toEqual([])
+    expect(wrongAnswerSink).toEqual([])
   })
 })

@@ -187,6 +187,7 @@ function createListeningSessionInternal(
     lastActiveAt: now,
     updatedAt: now,
     pendingEvents: [],
+    pendingWrongAnswerEvidence: [],
     failure: null,
     stream: null,
   }
@@ -232,6 +233,7 @@ export function createFailedListeningSession(
     lastActiveAt: null,
     updatedAt: now,
     pendingEvents: [],
+    pendingWrongAnswerEvidence: [],
     failure,
     stream: null,
   }

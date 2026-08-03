@@ -61,6 +61,12 @@ export {
   EXTRA_LISTENING_TRAINING_STORAGE_NAMESPACE,
 } from './extra-training-repository.ts'
 export {
+  ListeningWrongAnswerReviewRuntime,
+  resolveListeningWrongAnswerReviewItem,
+  type ListeningWrongAnswerReviewRuntimeOptions,
+  type ListeningWrongAnswerReviewSnapshot,
+} from './wrong-answer-review.ts'
+export {
   ListeningCatalogSupplyProvider,
   resolveListeningSupplyQuestion,
   type ListeningSupplyProvider,

@@ -6,6 +6,8 @@ import type {
   ExtraTrainingSession,
   ExtraTrainingSupplyRequest,
   LearningTaskSupplyResult,
+  WrongAnswerEvidence,
+  ReviewContentIdentity,
 } from '../../learning-engine/index.ts'
 import { migrateExtraTrainingSessionToOpenEnded } from '../../learning-engine/index.ts'
 import type {
@@ -43,6 +45,7 @@ export interface ExtraListeningTrainingSnapshot {
   readonly playback: ListeningPlaybackState | null
   readonly phase: 'answering' | 'feedback' | 'paused' | 'completed' | 'error'
   readonly pendingEvents: readonly ExtraTrainingEvent[]
+  readonly pendingWrongAnswerEvidence?: readonly WrongAnswerEvidence[]
   readonly updatedAt: string
 }
 
@@ -64,6 +67,9 @@ export interface ExtraListeningTrainingRuntimeOptions {
   readonly repository?: ExtraListeningTrainingRepository
   readonly now?: () => string
   readonly createId?: () => string
+  /** 01 supplies 05's exact alias resolver; no playback id is an identity. */
+  readonly reviewIdentityForItem?: (item: ListeningSupplyItem) => ReviewContentIdentity | null
+  readonly publishWrongAnswerEvidence?: (evidence: WrongAnswerEvidence) => Promise<void>
 }
 
 function initialPlayback(question: ListeningQuestion): ListeningPlaybackState {
@@ -192,10 +198,10 @@ export class ExtraListeningTrainingRuntime {
       }
       await this.save(recovered)
       this.attachController(recovered)
-      return recovered
+      return this.flushWrongAnswerEvidence(recovered)
     }
     const started = this.base('learning.extra-training.started.v1')
-    return this.save({ schemaVersion: 1, session: this.options.session, unit: null, question: null, activeItem: null, activeRequestId: null, suppliedNextCursor: null, selectedOptionId: null, dictationInput: '', answer: null, playback: null, phase: 'answering', pendingEvents: [started], updatedAt: started.occurredAt })
+    return this.save({ schemaVersion: 1, session: this.options.session, unit: null, question: null, activeItem: null, activeRequestId: null, suppliedNextCursor: null, selectedOptionId: null, dictationInput: '', answer: null, playback: null, phase: 'answering', pendingEvents: [started], pendingWrongAnswerEvidence: [], updatedAt: started.occurredAt })
   }) }
   async flush(): Promise<ExtraListeningTrainingSnapshot> { return this.queue(async () => {
     let snapshot = this.require()
@@ -207,6 +213,20 @@ export class ExtraListeningTrainingRuntime {
     }
     return snapshot
   }) }
+  private async flushWrongAnswerEvidence(snapshot: ExtraListeningTrainingSnapshot): Promise<ExtraListeningTrainingSnapshot> {
+    let current = snapshot
+    while (current.pendingWrongAnswerEvidence?.length && this.options.publishWrongAnswerEvidence) {
+      await this.options.publishWrongAnswerEvidence(current.pendingWrongAnswerEvidence[0]!)
+      const acknowledged = { ...current, pendingWrongAnswerEvidence: current.pendingWrongAnswerEvidence.slice(1), updatedAt: this.now() }
+      try {
+        current = await this.save(acknowledged)
+      } catch (error) {
+        this.snapshot = current
+        throw error
+      }
+    }
+    return current
+  }
   async next(): Promise<ExtraListeningTrainingSnapshot> { return this.queue(async () => {
     const snapshot = this.require()
     if (snapshot.activeItem || snapshot.phase === 'feedback') throw new ListeningError('session-transition-invalid', 'Complete the current extra listening item before requesting another.')
@@ -300,7 +320,13 @@ export class ExtraListeningTrainingRuntime {
     const correct = judgeListeningAnswer(s.question, response)
     await this.timing?.transition({ phase: 'feedback', reason: 'active-feedback' }); await this.timing?.activity()
     const answer: ListeningAnswerRecord = { questionId: s.question.id, response, correct, submittedAt: this.now(), playCount: Object.values(this.controller?.snapshot.playCounts ?? s.playback?.playCounts ?? {}).reduce((sum, count) => sum + count, 0), rate: this.controller?.snapshot.rate ?? s.playback!.rate, repeatMode: this.controller?.snapshot.repeatMode ?? s.playback!.repeatMode }
-    return this.save({ ...this.require(), answer, phase: 'feedback', playback: this.controller?.snapshot ?? s.playback, updatedAt: answer.submittedAt })
+    const current = this.require()
+    const identity = !correct && current.activeItem ? this.options.reviewIdentityForItem?.(current.activeItem) : null
+    const evidence: WrongAnswerEvidence | null = identity && current.activeItem
+      ? { schemaVersion: 1, eventId: `extra-listening:${current.session.sessionId}:${current.activeItem.itemId}:${answer.submittedAt}:wrong-answer`, occurredAt: answer.submittedAt, domain: 'listening', source: 'extra-training', outcome: 'incorrect', formallyScored: true, ...identity }
+      : null
+    const saved = await this.save({ ...current, answer, phase: 'feedback', playback: this.controller?.snapshot ?? s.playback, pendingWrongAnswerEvidence: evidence ? [...(current.pendingWrongAnswerEvidence ?? []), evidence] : (current.pendingWrongAnswerEvidence ?? []), updatedAt: answer.submittedAt })
+    return this.flushWrongAnswerEvidence(saved)
   }) }
   answerIsCorrect() { const s = this.require(); return Boolean(s.answer?.correct) }
   /** @deprecated R6.1 extra practice has no time budget to reach. */
@@ -314,7 +340,8 @@ export class ExtraListeningTrainingRuntime {
     const item = { ...base, payload: { ...base.payload, item: s.activeItem, requestId: s.activeRequestId ?? `${s.session.sessionId}:supply`, nextSupplyCursor: s.suppliedNextCursor ?? s.activeItem.itemId } } as ExtraTrainingEvent
     const count = s.session.completedItemCount + 1
     const saved = await this.save({ ...s, unit: null, question: null, activeItem: null, activeRequestId: null, suppliedNextCursor: null, selectedOptionId: null, dictationInput: '', answer: null, playback: null, phase: 'answering', pendingEvents: [...s.pendingEvents, attempt, item], session: { ...s.session, excludeItemIds: [...s.session.excludeItemIds, s.activeItem.itemId], completedItemCount: count, nextSupplyCursor: s.suppliedNextCursor ?? s.activeItem.itemId, status: 'running', endReason: null, endedAt: null, updatedAt: item.occurredAt }, updatedAt: item.occurredAt })
-    return this.flushFromQueued(saved)
+    const flushed = await this.flushFromQueued(saved)
+    return this.flushWrongAnswerEvidence(flushed)
   }) }
   private async flushFromQueued(snapshot: ExtraListeningTrainingSnapshot) {
     let current = snapshot

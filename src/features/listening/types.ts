@@ -2,6 +2,7 @@ import type {
   LearningEvent,
   LearningTask,
   LearningTaskSupplyItem,
+  WrongAnswerEvidence,
   StandardErrorTag,
 } from '../../learning-engine/index.ts'
 
@@ -218,6 +219,8 @@ export interface ListeningSession {
   readonly lastActiveAt: string | null
   readonly updatedAt: string
   readonly pendingEvents: readonly LearningEvent[]
+  /** Durable outbox: formal incorrect answers are never inferred after reload. */
+  readonly pendingWrongAnswerEvidence?: readonly WrongAnswerEvidence[]
   readonly failure: ListeningSessionFailure | null
   /** Present only for QA-011 training-budget tasks. */
   readonly stream: ListeningStreamState | null

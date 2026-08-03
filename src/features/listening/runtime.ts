@@ -7,6 +7,8 @@ import type {
   LearningTaskPausedEvent,
   LearningTaskSkippedEvent,
   LearningTaskSupplyRequest,
+  WrongAnswerEvidence,
+  ReviewContentIdentity,
 } from '../../learning-engine/index.ts'
 import {
   browserNetworkStatus,
@@ -90,6 +92,10 @@ export interface ListeningTrainingRuntimeOptions {
   readonly supplyProvider?: ListeningSupplyProvider
   /** Mirrors 04's restored training progress; it is never inferred from wall time. */
   readonly trainingBudgetStatus?: () => 'running' | 'finish-current-item'
+  /** 01 resolves this exclusively through 05's review-content-index aliases. */
+  readonly reviewIdentityForItem?: (item: import('./types.ts').ListeningSupplyItem) => ReviewContentIdentity | null
+  /** Durable host sink for the single unified wrong-answer library. */
+  readonly publishWrongAnswerEvidence?: (evidence: WrongAnswerEvidence) => Promise<void>
 }
 
 function defaultId(): string {
@@ -109,6 +115,8 @@ export class ListeningTrainingRuntime {
   private readonly timing: ListeningEffectiveTiming
   private readonly suppliedProvider: ListeningSupplyProvider | undefined
   private readonly trainingBudgetStatus: (() => 'running' | 'finish-current-item') | undefined
+  private readonly reviewIdentityForItem: ((item: import('./types.ts').ListeningSupplyItem) => ReviewContentIdentity | null) | undefined
+  private readonly publishWrongAnswerEvidence: ((evidence: WrongAnswerEvidence) => Promise<void>) | undefined
   /** A budget is continuous only when the 01 host has supplied its restored status port. */
   private readonly continuousTraining: boolean
   private readonly listeners = new Set<SessionListener>()
@@ -143,6 +151,8 @@ export class ListeningTrainingRuntime {
     )
     this.suppliedProvider = options.supplyProvider
     this.trainingBudgetStatus = options.trainingBudgetStatus
+    this.reviewIdentityForItem = options.reviewIdentityForItem
+    this.publishWrongAnswerEvidence = options.publishWrongAnswerEvidence
     this.continuousTraining = Boolean(
       this.task.trainingBudget && this.trainingBudgetStatus,
     )
@@ -414,6 +424,20 @@ export class ListeningTrainingRuntime {
 
   private async flushPendingEvents(): Promise<ListeningSession> {
     let session = this.requireSession()
+    while (session.pendingWrongAnswerEvidence?.length) {
+      if (!this.publishWrongAnswerEvidence) break
+      const evidence = session.pendingWrongAnswerEvidence[0]!
+      await this.publishWrongAnswerEvidence(evidence)
+      const acknowledged = { ...session, pendingWrongAnswerEvidence: session.pendingWrongAnswerEvidence.slice(1) }
+      try {
+        session = await this.save(acknowledged)
+      } catch (error) {
+        // The library may have accepted the fact, but without an acknowledged
+        // local deletion this exact event id must remain replayable.
+        this.session = session
+        throw error
+      }
+    }
     while (session.pendingEvents.length > 0) {
       const event = session.pendingEvents[0]
       if (
@@ -700,13 +724,37 @@ export class ListeningTrainingRuntime {
     ])
     await this.waitForInputDrafts()
     await this.timing.beginPersistenceWait('answering', true)
-    return this.save(
-      submitListeningAnswer(this.requireSession(), this.now()),
+    const submittedAt = this.now()
+    const before = this.requireSession()
+    let submitted = submitListeningAnswer(before, submittedAt)
+    const answer = submitted.answers.at(-1)
+    let identity: ReviewContentIdentity | null | undefined
+    try {
+      identity = before.stream?.activeItem && this.reviewIdentityForItem?.(before.stream.activeItem)
+    } catch {
+      // A 05 identity lookup is optional evidence enrichment.  It must not
+      // erase a formally scored listening feedback checkpoint.
+      identity = null
+    }
+    if (answer && !answer.correct && identity) {
+      const itemId = before.stream!.activeItem.itemId
+      submitted = {
+        ...submitted,
+        pendingWrongAnswerEvidence: [
+          ...(submitted.pendingWrongAnswerEvidence ?? []),
+          { schemaVersion: 1, eventId: `listening:${this.task.taskId}:${itemId}:${answer.submittedAt}:wrong-answer`, occurredAt: answer.submittedAt, domain: 'listening', source: 'daily-training', outcome: 'incorrect', formallyScored: true, ...identity },
+        ],
+      }
+    }
+    const saved = await this.save(
+      submitted,
       {
         beforeNotify: () =>
           this.timing.endPersistenceWait('feedback', true),
       },
     )
+    void saved
+    return this.flushPendingEvents()
   }
 
   submit(): Promise<ListeningSession> {

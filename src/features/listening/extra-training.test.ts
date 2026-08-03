@@ -94,6 +94,52 @@ describe('extra listening commands', () => {
     await restored.submit(); expect(restored.currentSnapshot?.answer?.response).toBe('hello')
   })
 
+  it('writes one formally-scored incorrect evidence through the unified host sink', async () => {
+    const configured = options(wordQuestion)
+    const evidence: unknown[] = []
+    const runtime = new ExtraListeningTrainingRuntime({
+      ...configured,
+      reviewIdentityForItem: () => ({ reviewContentId: 'review-listening-word', originalQuestionType: 'listening-word-discrimination' }),
+      publishWrongAnswerEvidence: async (value) => { evidence.push(value) },
+    })
+    await runtime.initialize(); await runtime.next(); await completePlayback(runtime, configured.speech)
+    await runtime.select('wrong'); await runtime.submit()
+    expect(evidence).toEqual([expect.objectContaining({ domain: 'listening', source: 'extra-training', outcome: 'incorrect', formallyScored: true, reviewContentId: 'review-listening-word' })])
+  })
+
+  it('replays a rejected extra wrong-answer outbox with the same evidence id after restore', async () => {
+    const configured = options(wordQuestion); const evidence: { eventId: string }[] = []; let reject = true
+    const shared = { ...configured, reviewIdentityForItem: () => ({ reviewContentId: 'review-extra', originalQuestionType: 'listening-word-discrimination' }), publishWrongAnswerEvidence: async (value: { eventId: string }) => { evidence.push(value); if (reject) throw new Error('reject') } }
+    const first = new ExtraListeningTrainingRuntime(shared)
+    await first.initialize(); await first.next(); await completePlayback(first, configured.speech); await first.select('wrong')
+    await expect(first.submit()).rejects.toThrow('reject')
+    expect(first.currentSnapshot?.pendingWrongAnswerEvidence).toHaveLength(1)
+    const id = first.currentSnapshot?.pendingWrongAnswerEvidence?.[0]?.eventId
+    reject = false
+    const restored = new ExtraListeningTrainingRuntime({ ...shared, repository: shared.repository, speech: new Speech() })
+    await restored.initialize()
+    expect(evidence.map((entry) => entry.eventId)).toEqual([id, id])
+    expect(restored.currentSnapshot?.pendingWrongAnswerEvidence).toEqual([])
+  })
+
+  it('keeps one extra wrong-answer outbox entry across a double submit', async () => {
+    const configured = options(wordQuestion)
+    const runtime = new ExtraListeningTrainingRuntime({ ...configured, reviewIdentityForItem: () => ({ reviewContentId: 'review-double', originalQuestionType: 'listening-word-discrimination' }), publishWrongAnswerEvidence: async () => { throw new Error('offline') } })
+    await runtime.initialize(); await runtime.next(); await completePlayback(runtime, configured.speech); await runtime.select('wrong')
+    await Promise.allSettled([runtime.submit(), runtime.submit()])
+    expect(runtime.currentSnapshot?.pendingWrongAnswerEvidence).toHaveLength(1)
+  })
+  it('does not emit extra wrong-answer evidence for a correct answer or an unanswered exit', async () => {
+    const configured = options(wordQuestion); const evidence: unknown[] = []
+    const shared = { ...configured, reviewIdentityForItem: () => ({ reviewContentId: 'review-exclusion', originalQuestionType: 'listening-word-discrimination' }), publishWrongAnswerEvidence: async (value: unknown) => { evidence.push(value) } }
+    const correct = new ExtraListeningTrainingRuntime(shared)
+    await correct.initialize(); await correct.next(); await completePlayback(correct, configured.speech); await correct.select('right'); await correct.submit(); await correct.completeCurrentItem()
+    expect(correct.currentSnapshot?.pendingWrongAnswerEvidence).toEqual([]); expect(evidence).toEqual([])
+    const exit = new ExtraListeningTrainingRuntime({ ...shared, session: { ...session, sessionId: 'extra-exit' }, repository: new ExtraListeningTrainingRepository(new Store()), speech: new Speech() })
+    await exit.initialize(); await exit.next(); await exit.exit()
+    expect(exit.currentSnapshot?.pendingWrongAnswerEvidence).toEqual([]); expect(evidence).toEqual([])
+  })
+
   it('uses the exact four-level priority request and natural single-voice speech parameters', async () => {
     let supplied: unknown
     const configured = options(wordQuestion)
