@@ -4,6 +4,10 @@ import { ExtraListeningTrainingRuntime } from './extra-training.ts'
 import { ExtraListeningTrainingRepository } from './extra-training-repository.ts'
 import type { ListeningSpeechCallbacks, ListeningSpeechPort } from './speech-synthesis.ts'
 import type { ListeningQuestion } from './types.ts'
+import {
+  applyWrongAnswerEvidence,
+  createWrongAnswerLibraryState,
+} from '../../learning-engine/index.ts'
 
 class Store implements NamespaceStore {
   records = new Map<string, StoredRecord<unknown>>()
@@ -12,6 +16,18 @@ class Store implements NamespaceStore {
   async delete(key: string) { this.records.delete(key) }
   async keys() { return [...this.records.keys()] }
   async clear() { this.records.clear() }
+}
+
+class ClearEvidenceFailingStore extends Store {
+  armed = true
+  override async put<T>(key: string, value: T, schemaVersion = 1) {
+    const candidate = value as { phase?: string; pendingWrongAnswerEvidence?: unknown[] }
+    if (this.armed && candidate.phase === 'feedback' && Array.isArray(candidate.pendingWrongAnswerEvidence) && candidate.pendingWrongAnswerEvidence.length === 0) {
+      this.armed = false
+      throw new Error('clear evidence checkpoint failed')
+    }
+    await super.put(key, value, schemaVersion)
+  }
 }
 
 const session = {
@@ -120,6 +136,23 @@ describe('extra listening commands', () => {
     await restored.initialize()
     expect(evidence.map((entry) => entry.eventId)).toEqual([id, id])
     expect(restored.currentSnapshot?.pendingWrongAnswerEvidence).toEqual([])
+  })
+
+  it('retains extra evidence when its acknowledgement checkpoint fails, then replays one library fact', async () => {
+    const store = new ClearEvidenceFailingStore(); const repository = new ExtraListeningTrainingRepository(store); const configured = options(wordQuestion); const evidence: import('../../learning-engine/index.ts').WrongAnswerEvidence[] = []
+    const shared = { ...configured, repository, reviewIdentityForItem: () => ({ reviewContentId: 'review-extra-clear', originalQuestionType: 'listening-word-discrimination' }), publishWrongAnswerEvidence: async (value: import('../../learning-engine/index.ts').WrongAnswerEvidence) => { evidence.push(value) } }
+    const first = new ExtraListeningTrainingRuntime(shared)
+    await first.initialize(); await first.next(); await completePlayback(first, shared.speech); await first.select('wrong')
+    await expect(first.submit()).rejects.toThrow('clear evidence checkpoint failed')
+    const eventId = evidence[0]?.eventId
+    expect(first.currentSnapshot?.pendingWrongAnswerEvidence).toHaveLength(1)
+    expect((await repository.load(session.sessionId))?.pendingWrongAnswerEvidence).toHaveLength(1)
+    const restored = new ExtraListeningTrainingRuntime({ ...shared, speech: new Speech() })
+    await restored.initialize()
+    expect(evidence.map((value) => value.eventId)).toEqual([eventId, eventId])
+    expect(restored.currentSnapshot?.pendingWrongAnswerEvidence).toEqual([])
+    const library = evidence.reduce((state, value) => applyWrongAnswerEvidence(state, value).state, createWrongAnswerLibraryState())
+    expect(Object.values(library.records)).toHaveLength(1); expect(Object.values(library.records)[0]?.incorrectCount).toBe(1)
   })
 
   it('keeps one extra wrong-answer outbox entry across a double submit', async () => {

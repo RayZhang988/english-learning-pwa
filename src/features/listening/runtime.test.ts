@@ -1,7 +1,11 @@
 import { describe, expect, it, vi } from 'vitest'
 import { InMemoryPlatformEventSink } from '../../core/testing/index.ts'
 import type { PlatformEvent, PlatformEventSink } from '../../core/index.ts'
-import { parseLearningEvent } from '../../learning-engine/index.ts'
+import {
+  applyWrongAnswerEvidence,
+  createWrongAnswerLibraryState,
+  parseLearningEvent,
+} from '../../learning-engine/index.ts'
 import type { NetworkStatusService } from '../../platform/index.ts'
 import type {
   NamespaceStore,
@@ -60,6 +64,24 @@ class MemoryStore implements NamespaceStore {
 
   async clear(): Promise<void> {
     this.records.clear()
+  }
+}
+
+class ClearEvidenceFailingStore extends MemoryStore {
+  armed = true
+
+  override async put<T>(key: string, value: T, schemaVersion = 1): Promise<void> {
+    const candidate = value as Partial<ListeningSession>
+    if (
+      this.armed &&
+      candidate.phase === 'feedback' &&
+      Array.isArray(candidate.pendingWrongAnswerEvidence) &&
+      candidate.pendingWrongAnswerEvidence.length === 0
+    ) {
+      this.armed = false
+      throw new Error('clear evidence checkpoint failed')
+    }
+    await super.put(key, value, schemaVersion)
   }
 }
 
@@ -312,6 +334,25 @@ function dialogueCatalog(): ListeningCatalog {
 }
 
 describe('listening training runtime', () => {
+  it('retains daily evidence when its acknowledgement checkpoint fails, then replays one library fact', async () => {
+    const currentCatalog = catalog([choiceQuestion])
+    const item = { itemId: 'daily-clear-failure', learningUnitId: 'st4w-w1d1-listening', contentRef: 'lesson://survival-travel-american-4w/1.0.0/w1d1/listening', difficultyLevel: 2, tags: [], source: { sourceType: 'listening-extension' as const, sourceId: choiceQuestion.id, variantId: 'word-discrimination' } }
+    const store = new ClearEvidenceFailingStore(); const repository = new ListeningSessionRepository(store); const evidence: import('../../learning-engine/index.ts').WrongAnswerEvidence[] = []
+    const base = { task: createListeningTask({ trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } }), localDate: '2026-08-03', contentSource: { load: async () => currentCatalog }, eventSink: new InMemoryPlatformEventSink(), repository, now: clock(), supplyProvider: { next: async (request: import('../../learning-engine/index.ts').LearningTaskSupplyRequest) => ({ schemaVersion: 1 as const, requestId: request.requestId, status: 'item' as const, item, nextCursor: item.itemId }) }, trainingBudgetStatus: () => 'running' as const, reviewIdentityForItem: () => ({ reviewContentId: 'review-daily-clear', originalQuestionType: 'listening-word-discrimination' }), publishWrongAnswerEvidence: async (value: import('../../learning-engine/index.ts').WrongAnswerEvidence) => { evidence.push(value) } }
+    const speech = new ImmediateSpeech(); const first = new ListeningTrainingRuntime({ ...base, speech })
+    await first.initialize(); await completeRuntimePlayback(first, speech); await first.select('b')
+    await expect(first.submit()).rejects.toThrow('clear evidence checkpoint failed')
+    const eventId = evidence[0]?.eventId
+    expect(first.currentSession?.pendingWrongAnswerEvidence).toHaveLength(1)
+    expect((await repository.load(base.task))?.pendingWrongAnswerEvidence).toHaveLength(1)
+    const restored = new ListeningTrainingRuntime({ ...base, speech: new ImmediateSpeech() })
+    await restored.initialize()
+    expect(evidence.map((value) => value.eventId)).toEqual([eventId, eventId])
+    expect(restored.currentSession?.pendingWrongAnswerEvidence).toEqual([])
+    const library = evidence.reduce((state, value) => applyWrongAnswerEvidence(state, value).state, createWrongAnswerLibraryState())
+    expect(Object.values(library.records)).toHaveLength(1); expect(Object.values(library.records)[0]?.incorrectCount).toBe(1)
+  })
+
   it('persists a rejected daily wrong-answer outbox and replays its stable id after refresh', async () => {
     const currentCatalog = catalog([choiceQuestion])
     const item = { itemId: 'wrong-outbox-item', learningUnitId: 'st4w-w1d1-listening', contentRef: 'lesson://survival-travel-american-4w/1.0.0/w1d1/listening', difficultyLevel: 2, tags: ['scene:introductions'], source: { sourceType: 'listening-extension' as const, sourceId: choiceQuestion.id, variantId: 'word-discrimination' } }
