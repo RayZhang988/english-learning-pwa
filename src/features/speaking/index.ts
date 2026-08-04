@@ -132,4 +132,5 @@ export {
   type SpeakingWrongAnswerEvidenceSink,
   type SpeakingWrongAnswerIdentityResolver,
   type SpeakingWrongAnswerReviewStore,
+  type SpeakingWrongAnswerReviewView,
 } from './wrong-answer.ts'
