@@ -37,6 +37,10 @@ interface CapturedRouteProps {
   readonly completedExtraTrainingEntry?: {
     readonly onContinueTraining: () => Promise<void>
   }
+  readonly wrongAnswerReview?: unknown
+  readonly reviewIdentityForItem?: unknown
+  readonly publishWrongAnswerEvidence?: unknown
+  readonly wrongAnswerEvidence?: unknown
 }
 
 const routeCaptures = vi.hoisted(
@@ -440,6 +444,34 @@ function renderHost(
 }
 
 describe('TrainingRouteHost R3 production integration', () => {
+  it.each(trainingModules)(
+    'keeps the %s wrong-answer evidence ports stable across host rerenders',
+    (moduleId) => {
+      routeCaptures.clear()
+      const state = stateFor(moduleId, false)
+      renderHost(moduleId, state)
+      const first = routeCaptures.get(moduleId)
+
+      renderHost(moduleId, state)
+      const second = routeCaptures.get(moduleId)
+
+      if (moduleId === 'vocabulary') {
+        expect(second?.wrongAnswerReview).toBe(first?.wrongAnswerReview)
+      } else if (moduleId === 'listening') {
+        expect(second?.reviewIdentityForItem).toBe(
+          first?.reviewIdentityForItem,
+        )
+        expect(second?.publishWrongAnswerEvidence).toBe(
+          first?.publishWrongAnswerEvidence,
+        )
+      } else {
+        expect(second?.wrongAnswerEvidence).toBe(
+          first?.wrongAnswerEvidence,
+        )
+      }
+    },
+  )
+
   it.each([
     'vocabulary',
     'listening',

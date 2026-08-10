@@ -35,6 +35,43 @@ type ReadyWrongAnswerEvidencePorts = Pick<
   'vocabulary' | 'listeningIdentity' | 'publishListening' | 'speaking'
 >
 
+type StableWrongAnswerRoutePorts = {
+  readonly vocabulary: ReadyWrongAnswerEvidencePorts['vocabulary'] & {
+    readonly source: 'daily-training'
+  }
+  readonly listeningIdentity:
+    ReadyWrongAnswerEvidencePorts['listeningIdentity']
+  readonly publishListening:
+    ReadyWrongAnswerEvidencePorts['publishListening']
+  readonly speaking: ReadyWrongAnswerEvidencePorts['speaking']
+}
+
+const wrongAnswerRoutePortsByEvidence = new WeakMap<
+  object,
+  StableWrongAnswerRoutePorts
+>()
+
+function stableWrongAnswerRoutePorts(
+  evidence: ReadyWrongAnswerEvidencePorts,
+): StableWrongAnswerRoutePorts {
+  const cached = wrongAnswerRoutePortsByEvidence.get(evidence)
+  if (cached) {
+    return cached
+  }
+  const created: StableWrongAnswerRoutePorts = {
+    vocabulary: {
+      ...evidence.vocabulary,
+      source: 'daily-training',
+    },
+    listeningIdentity: (item) => evidence.listeningIdentity(item),
+    publishListening: (wrongAnswerEvidence) =>
+      evidence.publishListening(wrongAnswerEvidence),
+    speaking: evidence.speaking,
+  }
+  wrongAnswerRoutePortsByEvidence.set(evidence, created)
+  return created
+}
+
 export function TrainingRouteHost({
   moduleId,
   readyWrongAnswerEvidence,
@@ -259,6 +296,7 @@ export function TrainingRouteHost({
       appearance="strip"
     />
   )
+  const wrongAnswerPorts = stableWrongAnswerRoutePorts(evidencePorts)
 
   if (moduleId === 'vocabulary') {
     return (
@@ -267,7 +305,7 @@ export function TrainingRouteHost({
         <VocabularyTrainingRoute
           {...commonProps}
           contentSource={vocabularyContentSource}
-          wrongAnswerReview={{ ...evidencePorts.vocabulary, source: 'daily-training' }}
+          wrongAnswerReview={wrongAnswerPorts.vocabulary}
         />
       </>
     )
@@ -279,8 +317,8 @@ export function TrainingRouteHost({
         <ListeningTrainingRoute
           {...commonProps}
           contentSource={listeningContentSource}
-          reviewIdentityForItem={(item) => evidencePorts.listeningIdentity(item)}
-          publishWrongAnswerEvidence={(evidence) => evidencePorts.publishListening(evidence)}
+          reviewIdentityForItem={wrongAnswerPorts.listeningIdentity}
+          publishWrongAnswerEvidence={wrongAnswerPorts.publishListening}
         />
       </>
     )
@@ -291,7 +329,7 @@ export function TrainingRouteHost({
       <SpeakingTrainingRoute
         {...commonProps}
         contentSource={speakingContentSource}
-        wrongAnswerEvidence={evidencePorts.speaking}
+        wrongAnswerEvidence={wrongAnswerPorts.speaking}
       />
     </>
   )
