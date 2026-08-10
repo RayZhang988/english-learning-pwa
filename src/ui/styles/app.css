@@ -8,6 +8,7 @@
 @import "./scene-vocabulary-practice.css";
 @import "./wrong-answer-library.css";
 @import "./wrong-answer-review-options.css";
+@import "./listening-voice-diagnostic.css";
 
 .training-test-mode-banner {
   position: sticky;

@@ -19,6 +19,8 @@ export interface ListeningSpeechRequest {
   readonly text: string
   readonly locale: 'en-US'
   readonly rate: ListeningPlaybackRate
+  /** Diagnostic-only explicit device voice. Normal training omits this. */
+  readonly voiceId?: string
 }
 
 export interface ListeningSpeechCallbacks {
@@ -232,11 +234,22 @@ export class BrowserListeningSpeechSynthesis
         'The speech request has invalid text or playback rate.',
       )
     }
+    const requestedVoice = request.voiceId
+      ? localEnUsVoices(this.synthesis).find(
+          (entry) => entry.id === request.voiceId,
+        )?.voice
+      : undefined
+    if (request.voiceId && !requestedVoice) {
+      throw new ListeningError(
+        'speech-failed',
+        'The requested device voice is unavailable.',
+      )
+    }
     const utterance = this.createUtterance(request.text)
     utterance.lang = request.locale
     utterance.rate = request.rate
     utterance.pitch = 1
-    utterance.voice = null
+    utterance.voice = requestedVoice ?? null
     utterance.onstart = callbacks.onStart ?? null
     utterance.onend = callbacks.onEnd ?? null
     utterance.onpause = callbacks.onPause ?? null

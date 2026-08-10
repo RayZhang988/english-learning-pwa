@@ -13,6 +13,7 @@ import { SceneVocabularyPracticeRouteHost } from './scene-vocabulary-practice-ro
 import { SceneVocabularyRouteLifecycle } from './scene-vocabulary-route-lifecycle.ts'
 import { playSceneVocabularyTarget } from './scene-vocabulary-target-playback.ts'
 import { WrongAnswerLibraryRouteHost, WrongAnswerReviewRouteHost } from './wrong-answer-library-routes.tsx'
+import { ListeningVoiceDiagnosticRouteHost } from './listening-voice-diagnostic-route.tsx'
 
 const projectRoot = new URL('../../', import.meta.url)
 
@@ -35,6 +36,7 @@ describe('R13-B production route integration', () => {
   it('routes the one unified library and one review session before the practice wildcard', () => {
     expect((matchRoutes(appRoutes, '/practice/wrong-answers')?.at(-1)?.route.element as { type?: unknown })?.type).toBe(WrongAnswerLibraryRouteHost)
     expect((matchRoutes(appRoutes, '/practice/wrong-answers/review')?.at(-1)?.route.element as { type?: unknown })?.type).toBe(WrongAnswerReviewRouteHost)
+    expect((matchRoutes(appRoutes, '/diagnostics/listening-voices')?.at(-1)?.route.element as { type?: unknown })?.type).toBe(ListeningVoiceDiagnosticRouteHost)
   })
   it('invalidates an old scene initializer before the next hash route accepts a snapshot', () => {
     const lifecycle = new SceneVocabularyRouteLifecycle()

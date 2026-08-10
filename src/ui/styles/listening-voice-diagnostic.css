@@ -1,0 +1,106 @@
+.listening-voice-diagnostic {
+  width: min(100%, 560px);
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: max(20px, env(safe-area-inset-top)) 20px max(40px, env(safe-area-inset-bottom));
+}
+
+.listening-voice-diagnostic > header {
+  margin-bottom: 24px;
+}
+
+.listening-voice-diagnostic > header > button {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 22px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  color: var(--ink);
+  background: var(--surface);
+}
+
+.listening-voice-diagnostic > header > p:first-of-type {
+  margin: 0 0 6px;
+  color: var(--ink-faint);
+  font: 700 12px/1.3 var(--utility-font);
+  letter-spacing: 0.12em;
+}
+
+.listening-voice-diagnostic h1 {
+  margin: 0 0 10px;
+  font: 700 clamp(30px, 9vw, 42px)/1.08 var(--display-font);
+}
+
+.listening-voice-diagnostic > header > p:last-child {
+  margin: 0;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+
+.listening-voice-diagnostic > ol {
+  display: grid;
+  gap: 14px;
+  margin: 0 0 18px;
+  padding: 0;
+  list-style: none;
+}
+
+.listening-voice-diagnostic > ol > li,
+.listening-voice-diagnostic > section {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+
+.listening-voice-diagnostic h2 {
+  overflow-wrap: anywhere;
+  margin: 0 0 16px;
+  font: 700 20px/1.25 var(--display-font);
+}
+
+.listening-voice-diagnostic [role="group"] {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.listening-voice-diagnostic button {
+  min-height: 44px;
+  border: 1px solid #cfd6e6;
+  border-radius: 13px;
+  color: var(--ink);
+  background: #f8f9fc;
+  font-weight: 700;
+}
+
+.listening-voice-diagnostic button[aria-pressed="true"] {
+  color: var(--indigo-strong);
+  border-color: var(--indigo);
+  background: var(--indigo-soft);
+}
+
+.listening-voice-diagnostic li > button:last-child,
+.listening-voice-diagnostic > button:last-child,
+.listening-voice-diagnostic > section button {
+  width: 100%;
+}
+
+.listening-voice-diagnostic li > button:last-child[aria-pressed="true"] {
+  color: #fff;
+  border-color: var(--mint);
+  background: var(--mint);
+}
+
+@media (width <= 360px) {
+  .listening-voice-diagnostic {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .listening-voice-diagnostic > ol > li {
+    padding: 16px;
+  }
+}

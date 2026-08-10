@@ -51,6 +51,7 @@ function createFakeSpeech() {
     synthesis,
     utterance,
     localVoice,
+    secondLocalVoice,
     setVoices: (
       next: typeof voices,
     ) => {
@@ -114,6 +115,45 @@ describe('browser listening speech synthesis', () => {
     expect(callbacks.onStart).toHaveBeenCalledOnce()
     expect(callbacks.onEnd).toHaveBeenCalledOnce()
     expect(callbacks.onError).toHaveBeenCalledWith('network')
+  })
+
+  it('uses the exact local en-US voice requested by the diagnostic player', () => {
+    const { synthesis, utterance, secondLocalVoice } = createFakeSpeech()
+    const speech = new BrowserListeningSpeechSynthesis(
+      synthesis,
+      () => utterance,
+    )
+
+    speech.speak(
+      {
+        text: 'Could you show me the way to the station?',
+        locale: 'en-US',
+        rate: 1,
+        voiceId: 'second-local-voice',
+      },
+      {},
+    )
+
+    expect(utterance.voice).toBe(secondLocalVoice)
+  })
+
+  it('does not disguise a vanished diagnostic voice as the device default', () => {
+    const { synthesis, utterance } = createFakeSpeech()
+    const speech = new BrowserListeningSpeechSynthesis(
+      synthesis,
+      () => utterance,
+    )
+
+    expect(() => speech.speak(
+      {
+        text: 'passport',
+        locale: 'en-US',
+        rate: 1,
+        voiceId: 'voice-that-is-no-longer-available',
+      },
+      {},
+    )).toThrow(/requested device voice is unavailable/i)
+    expect(synthesis.speak).not.toHaveBeenCalled()
   })
 
   it('refreshes an asynchronously populated local voice list and excludes remote voices', () => {

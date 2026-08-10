@@ -62,6 +62,11 @@ export {
 } from './training-area-model.ts'
 export { PlatformPrototype } from './platform-prototype.tsx'
 export {
+  ListeningVoiceDiagnosticScreen,
+  type ListeningVoiceDiagnosticScreenProps,
+  type ListeningVoiceDiagnosticViewModel,
+} from './listening-voice-diagnostic.tsx'
+export {
   EmptyState,
   ErrorState,
   LoadingState,
