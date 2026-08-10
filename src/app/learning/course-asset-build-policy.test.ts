@@ -12,6 +12,7 @@ describe('course asset build policy', () => {
       'package-index.v1.json',
       'listening-exercise-extension-index.v1.json',
       'training-supply-index.v1.json',
+      'review-content-index.v1.json',
     ])
     expect(
       courseAssetBuildPolicy.workboxGlobPatterns.some((pattern) =>

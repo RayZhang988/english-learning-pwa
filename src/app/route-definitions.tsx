@@ -10,6 +10,7 @@ import {
   PlatformShell,
 } from './platform-pages.tsx'
 import { SceneVocabularyPracticeRouteHost } from './scene-vocabulary-practice-route.tsx'
+import { WrongAnswerLibraryRouteHost, WrongAnswerReviewRouteHost } from './wrong-answer-library-routes.tsx'
 
 /** Route definitions stay importable in Node tests without constructing browser history. */
 export const appRoutes = [
@@ -21,6 +22,14 @@ export const appRoutes = [
       {
         index: true,
         element: <PlatformReadyPage />,
+      },
+      {
+        path: 'practice/wrong-answers',
+        element: <WrongAnswerLibraryRouteHost />,
+      },
+      {
+        path: 'practice/wrong-answers/review',
+        element: <WrongAnswerReviewRouteHost />,
       },
       {
         path: 'practice/scenes/:category/:scene',

@@ -12,6 +12,7 @@ import { appRoutes } from './route-definitions.tsx'
 import { SceneVocabularyPracticeRouteHost } from './scene-vocabulary-practice-route.tsx'
 import { SceneVocabularyRouteLifecycle } from './scene-vocabulary-route-lifecycle.ts'
 import { playSceneVocabularyTarget } from './scene-vocabulary-target-playback.ts'
+import { WrongAnswerLibraryRouteHost, WrongAnswerReviewRouteHost } from './wrong-answer-library-routes.tsx'
 
 const projectRoot = new URL('../../', import.meta.url)
 
@@ -31,6 +32,10 @@ afterEach(async () => {
 })
 
 describe('R13-B production route integration', () => {
+  it('routes the one unified library and one review session before the practice wildcard', () => {
+    expect((matchRoutes(appRoutes, '/practice/wrong-answers')?.at(-1)?.route.element as { type?: unknown })?.type).toBe(WrongAnswerLibraryRouteHost)
+    expect((matchRoutes(appRoutes, '/practice/wrong-answers/review')?.at(-1)?.route.element as { type?: unknown })?.type).toBe(WrongAnswerReviewRouteHost)
+  })
   it('invalidates an old scene initializer before the next hash route accepts a snapshot', () => {
     const lifecycle = new SceneVocabularyRouteLifecycle()
     const airport = lifecycle.begin('airport-flight:airport')

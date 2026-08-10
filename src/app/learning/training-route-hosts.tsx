@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { ListeningTrainingRoute } from '../../features/listening/index.ts'
 import { SpeakingTrainingRoute } from '../../features/speaking/index.ts'
@@ -28,11 +28,20 @@ import {
   trainingSupplyProviders,
   vocabularyContentSource,
 } from './training-production-resources.ts'
+import { productionWrongAnswerEvidencePorts } from '../wrong-answer-evidence-production.ts'
+
+type ReadyWrongAnswerEvidencePorts = Pick<
+  typeof productionWrongAnswerEvidencePorts,
+  'vocabulary' | 'listeningIdentity' | 'publishListening' | 'speaking'
+>
 
 export function TrainingRouteHost({
   moduleId,
+  readyWrongAnswerEvidence,
 }: {
   readonly moduleId: TrainingModuleId
+  /** Tests and composition roots may inject an already validated index. */
+  readonly readyWrongAnswerEvidence?: ReadyWrongAnswerEvidencePorts
 }) {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -49,7 +58,21 @@ export function TrainingRouteHost({
   } | null>(null)
   const [completionDurationTaskId, setCompletionDurationTaskId] =
     useState<string | null>(null)
+  const evidencePorts = readyWrongAnswerEvidence ?? productionWrongAnswerEvidencePorts
+  const [reviewEvidenceState, setReviewEvidenceState] = useState<'loading' | 'ready' | 'error'>(readyWrongAnswerEvidence ? 'ready' : 'loading')
+  useEffect(() => {
+    if (readyWrongAnswerEvidence) return
+    let current = true
+    void productionWrongAnswerEvidencePorts.initialize().then(
+      () => { if (current) setReviewEvidenceState('ready') },
+      () => { if (current) setReviewEvidenceState('error') },
+    )
+    return () => { current = false }
+  }, [readyWrongAnswerEvidence])
   const taskId = searchParams.get('taskId')
+
+  if (reviewEvidenceState === 'loading') return <LoadingState label="正在准备统一错题库" />
+  if (reviewEvidenceState === 'error') return <ErrorState title="无法准备错题库" description="训练不会在错题记录无法保存时继续，以免丢失正式错题。" onRetry={() => { setReviewEvidenceState('loading'); void productionWrongAnswerEvidencePorts.initialize().then(() => setReviewEvidenceState('ready'), () => setReviewEvidenceState('error')) }} />
 
   if (state.status === 'loading') {
     return <LoadingState label="正在恢复今日学习任务" />
@@ -244,6 +267,7 @@ export function TrainingRouteHost({
         <VocabularyTrainingRoute
           {...commonProps}
           contentSource={vocabularyContentSource}
+          wrongAnswerReview={{ ...evidencePorts.vocabulary, source: 'daily-training' }}
         />
       </>
     )
@@ -255,6 +279,8 @@ export function TrainingRouteHost({
         <ListeningTrainingRoute
           {...commonProps}
           contentSource={listeningContentSource}
+          reviewIdentityForItem={(item) => evidencePorts.listeningIdentity(item)}
+          publishWrongAnswerEvidence={(evidence) => evidencePorts.publishListening(evidence)}
         />
       </>
     )
@@ -265,6 +291,7 @@ export function TrainingRouteHost({
       <SpeakingTrainingRoute
         {...commonProps}
         contentSource={speakingContentSource}
+        wrongAnswerEvidence={evidencePorts.speaking}
       />
     </>
   )

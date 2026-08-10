@@ -23,6 +23,7 @@ import {
 import {
   buildVocabularySupplyQuestion,
   ExtraVocabularyTrainingRuntime,
+  resolveDailyVocabularyReviewContent,
   type ExtraVocabularyTrainingSnapshot,
   type VocabularySupplyItem,
 } from '../../features/vocabulary/index.ts'
@@ -63,6 +64,12 @@ import {
   trainingSupplyProviders,
   vocabularyContentSource,
 } from './training-production-resources.ts'
+import { productionWrongAnswerEvidencePorts } from '../wrong-answer-evidence-production.ts'
+
+type ReadyWrongAnswerEvidencePorts = Pick<
+  typeof productionWrongAnswerEvidencePorts,
+  'vocabulary' | 'listeningIdentity' | 'publishListening' | 'speaking'
+>
 
 export const EXTRA_TRAINING_ROUTE = '/extra-training'
 
@@ -333,9 +340,11 @@ async function initializeVocabulary(
 function ExtraVocabularyRoute({
   session,
   retryRequested,
+  evidencePorts,
 }: {
   readonly session: ExtraTrainingSession
   readonly retryRequested: boolean
+  readonly evidencePorts: ReadyWrongAnswerEvidencePorts
 }) {
   const navigate = useNavigate()
   const { coordinator } = useLearningApp()
@@ -368,6 +377,15 @@ function ExtraVocabularyRoute({
             ),
             item.source.variantId,
           )
+        },
+        wrongAnswerReview: {
+          identityForItem: async (item) =>
+            (await resolveDailyVocabularyReviewContent(
+              evidencePorts.vocabulary.index,
+              item,
+              await vocabularyContentSource.load(),
+            )).identity,
+          sink: evidencePorts.vocabulary.sink,
         },
       }),
   )
@@ -500,9 +518,11 @@ async function initializeListening(
 function ExtraListeningRoute({
   session,
   retryRequested,
+  evidencePorts,
 }: {
   readonly session: ExtraTrainingSession
   readonly retryRequested: boolean
+  readonly evidencePorts: ReadyWrongAnswerEvidencePorts
 }) {
   const navigate = useNavigate()
   const { coordinator } = useLearningApp()
@@ -520,6 +540,10 @@ function ExtraListeningRoute({
             await listeningContentSource.load(),
             item,
           ),
+        reviewIdentityForItem: (item) =>
+          evidencePorts.listeningIdentity(item),
+        publishWrongAnswerEvidence: (evidence) =>
+          evidencePorts.publishListening(evidence),
       }),
   )
   const controller = useDurableRuntime(
@@ -656,9 +680,11 @@ async function initializeSpeaking(
 function ExtraSpeakingRoute({
   session,
   retryRequested,
+  evidencePorts,
 }: {
   readonly session: ExtraTrainingSession
   readonly retryRequested: boolean
+  readonly evidencePorts: ReadyWrongAnswerEvidencePorts
 }) {
   const navigate = useNavigate()
   const { coordinator } = useLearningApp()
@@ -678,6 +704,7 @@ function ExtraSpeakingRoute({
           ),
         requestMicrophone: () =>
           browserMicrophonePermission.request(),
+        wrongAnswerEvidence: evidencePorts.speaking,
       }),
   )
   const controller = useDurableRuntime(
@@ -777,12 +804,29 @@ function ExtraSpeakingRoute({
   )
 }
 
-export function ExtraTrainingRouteHost() {
+export function ExtraTrainingRouteHost({
+  readyWrongAnswerEvidence,
+}: {
+  readonly readyWrongAnswerEvidence?: ReadyWrongAnswerEvidencePorts
+} = {}) {
   const navigate = useNavigate()
   const { moduleId } = useParams<{ readonly moduleId: string }>()
   const [searchParams] = useSearchParams()
   const { coordinator, state } = useLearningApp()
   const sessionId = searchParams.get('sessionId')
+  const evidencePorts = readyWrongAnswerEvidence ?? productionWrongAnswerEvidencePorts
+  const [evidenceState, setEvidenceState] = useState<'loading' | 'ready' | 'error'>(
+    readyWrongAnswerEvidence ? 'ready' : 'loading',
+  )
+  useEffect(() => {
+    if (readyWrongAnswerEvidence) return
+    let current = true
+    void productionWrongAnswerEvidencePorts.initialize().then(
+      () => { if (current) setEvidenceState('ready') },
+      () => { if (current) setEvidenceState('error') },
+    )
+    return () => { current = false }
+  }, [readyWrongAnswerEvidence])
 
   if (state.status === 'loading') {
     return loading('正在恢复额外训练会话')
@@ -894,12 +938,29 @@ export function ExtraTrainingRouteHost() {
   }
 
   const retryRequested = searchParams.get('retry') === '1'
+  if (evidenceState === 'loading') {
+    return loading('正在准备统一错题库')
+  }
+  if (evidenceState === 'error') {
+    return sessionFailure(
+      '无法准备错题库',
+      new Error('正式错题无法保存，额外训练已暂停。'),
+      () => {
+        setEvidenceState('loading')
+        void productionWrongAnswerEvidencePorts.initialize().then(
+          () => setEvidenceState('ready'),
+          () => setEvidenceState('error'),
+        )
+      },
+    )
+  }
   if (moduleId === 'vocabulary') {
     return (
       <ExtraVocabularyRoute
         key={session.sessionId}
         session={session}
         retryRequested={retryRequested}
+        evidencePorts={evidencePorts}
       />
     )
   }
@@ -909,6 +970,7 @@ export function ExtraTrainingRouteHost() {
         key={session.sessionId}
         session={session}
         retryRequested={retryRequested}
+        evidencePorts={evidencePorts}
       />
     )
   }
@@ -917,6 +979,7 @@ export function ExtraTrainingRouteHost() {
       key={session.sessionId}
       session={session}
       retryRequested={retryRequested}
+      evidencePorts={evidencePorts}
     />
   )
 }

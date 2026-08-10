@@ -39,6 +39,7 @@ import {
   pathForTrainingAreaScreen,
   trainingAreaScreenFromPath,
 } from './training-area-routing.ts'
+import { wrongAnswerLibraryStore } from './wrong-answer-library-store.ts'
 
 export function PlatformShell() {
   return (
@@ -56,6 +57,9 @@ export function PlatformReadyPage() {
     browserNetworkStatus.current(),
   )
   const [requestError, setRequestError] = useState<Error>()
+  const [wrongAnswerLibrary, setWrongAnswerLibrary] = useState<
+    { readonly status: 'loading' | 'ready' | 'error'; readonly activeCount: number }
+  >({ status: 'loading', activeCount: 0 })
   const [showCompletedPlan, setShowCompletedPlan] =
     useState(false)
   const extraTrainingRequestPending = useRef(false)
@@ -64,6 +68,14 @@ export function PlatformReadyPage() {
     () => browserNetworkStatus.subscribe(setNetwork),
     [],
   )
+  useEffect(() => {
+    let current = true
+    void wrongAnswerLibraryStore.load().then(
+      (library) => { if (current) setWrongAnswerLibrary({ status: 'ready', activeCount: Object.values(library.records).filter((record) => record.status === 'active').length }) },
+      () => { if (current) setWrongAnswerLibrary({ status: 'error', activeCount: 0 }) },
+    )
+    return () => { current = false }
+  }, [location.pathname])
 
   if (
     import.meta.env.DEV &&
@@ -212,6 +224,7 @@ export function PlatformReadyPage() {
         extraTrainingEligibleModules,
       )}
       offline={network === 'offline'}
+      wrongAnswerLibrary={{ ...wrongAnswerLibrary, onOpen: () => navigate('/practice/wrong-answers') }}
       onSectionChanged={(section) => {
         if (section === 'today') {
           navigate('/')

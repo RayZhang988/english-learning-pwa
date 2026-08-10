@@ -88,6 +88,13 @@ vi.mock('../../features/speaking/index.ts', async (importOriginal) => {
 import { productionEffectiveTimingSessions } from './effective-timing-production.ts'
 import { TrainingRouteHost } from './training-route-hosts.tsx'
 
+const readyWrongAnswerEvidence = {
+  vocabulary: { index: { schemaVersion: 1, aliases: {}, canonical: {} }, sink: { publish: vi.fn() } },
+  listeningIdentity: vi.fn(() => null),
+  publishListening: vi.fn(async () => undefined),
+  speaking: { resolver: { resolve: vi.fn(() => null) }, sink: { publishWrongAnswerEvidence: vi.fn() } },
+} as never
+
 const trainingModules = [
   'vocabulary',
   'listening',
@@ -423,7 +430,10 @@ function renderHost(
           `/${moduleId}?taskId=${encodeURIComponent(taskId)}`,
         ]}
       >
-        <TrainingRouteHost moduleId={moduleId} />
+        <TrainingRouteHost
+          moduleId={moduleId}
+          readyWrongAnswerEvidence={readyWrongAnswerEvidence}
+        />
       </MemoryRouter>
     </LearningAppContext.Provider>,
   )

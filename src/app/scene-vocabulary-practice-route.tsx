@@ -23,6 +23,7 @@ import {
 import {
   SceneVocabularyRouteLifecycle,
 } from './scene-vocabulary-route-lifecycle.ts'
+import { productionWrongAnswerEvidencePorts } from './wrong-answer-evidence-production.ts'
 
 const createProductionSceneVocabularyRuntime = (
   options: SceneVocabularyPracticeRuntimeOptions,
@@ -55,6 +56,7 @@ export interface SceneVocabularyPracticeRouteHostProps {
   readonly createRuntime?: (
     options: SceneVocabularyPracticeRuntimeOptions,
   ) => SceneVocabularyPracticeRuntime
+  readonly readyWrongAnswerReview?: SceneVocabularyPracticeRuntimeOptions['wrongAnswerReview']
 }
 
 function errorMessage(reason: unknown): string {
@@ -90,6 +92,7 @@ export function SceneVocabularyPracticeRouteHost({
   contentSource = sceneVocabularyContentSource,
   speech = browserListeningSpeech,
   createRuntime = createProductionSceneVocabularyRuntime,
+  readyWrongAnswerReview,
 }: SceneVocabularyPracticeRouteHostProps) {
   const navigate = useNavigate()
   const { category: categoryId, scene: sceneId } = useParams()
@@ -101,6 +104,25 @@ export function SceneVocabularyPracticeRouteHost({
   const [routeState, setRouteState] =
     useState<SceneVocabularyRouteState>(initialRouteState)
   const [retryRevision, setRetryRevision] = useState(0)
+  const [reviewState, setReviewState] = useState<'loading' | 'ready' | 'error'>(
+    readyWrongAnswerReview ? 'ready' : 'loading',
+  )
+  useEffect(() => {
+    if (readyWrongAnswerReview) return
+    let current = true
+    void productionWrongAnswerEvidencePorts.initialize().then(
+      () => { if (current) setReviewState('ready') },
+      () => { if (current) setReviewState('error') },
+    )
+    return () => { current = false }
+  }, [readyWrongAnswerReview])
+  const wrongAnswerReview = useMemo(
+    () => readyWrongAnswerReview ??
+      (reviewState === 'ready'
+        ? productionWrongAnswerEvidencePorts.vocabulary
+        : undefined),
+    [readyWrongAnswerReview, reviewState],
+  )
 
   const routeScene = sceneId ? getTravelScene(sceneId) : undefined
   const isKnownScene =
@@ -110,10 +132,10 @@ export function SceneVocabularyPracticeRouteHost({
 
   const runtime = useMemo(
     () =>
-      isKnownScene && categoryId && sceneId && identity
-        ? createRuntime({ categoryId, sceneId, contentSource })
+      isKnownScene && categoryId && sceneId && identity && wrongAnswerReview
+        ? createRuntime({ categoryId, sceneId, contentSource, wrongAnswerReview })
         : undefined,
-    [categoryId, contentSource, createRuntime, identity, isKnownScene, sceneId],
+    [categoryId, contentSource, createRuntime, identity, isKnownScene, sceneId, wrongAnswerReview],
   )
 
   useEffect(() => {
@@ -277,6 +299,30 @@ export function SceneVocabularyPracticeRouteHost({
     )
   }
 
+  if (isKnownScene && categoryId && sceneId && reviewState === 'loading') {
+    return <SceneVocabularyPracticeScreen
+      presentation={{ status: 'loading', label: '正在准备统一错题库' }}
+      sceneTitle={routeScene.scene.title}
+      onExit={onExit}
+      onOptionSelected={() => undefined}
+      onSubmit={() => undefined}
+      onContinue={() => undefined}
+      onTargetPlayback={() => undefined}
+    />
+  }
+  if (isKnownScene && categoryId && sceneId && reviewState === 'error') {
+    return <main className="full-page-feedback"><ErrorState
+      title="无法准备错题库"
+      description="正式错题无法保存，场景训练已暂停。"
+      onRetry={() => {
+        setReviewState('loading')
+        void productionWrongAnswerEvidencePorts.initialize().then(
+          () => setReviewState('ready'),
+          () => setReviewState('error'),
+        )
+      }}
+    /></main>
+  }
   if (!isKnownScene || !runtime || !categoryId || !sceneId) {
     return (
       <main className="full-page-feedback">

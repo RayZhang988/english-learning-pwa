@@ -25,6 +25,10 @@ const expectedCourseAssets = [
     directory: 'content/curriculum/',
     prefix: 'training-supply-index.v1-',
   },
+  {
+    directory: 'content/curriculum/',
+    prefix: 'review-content-index.v1-',
+  },
   { directory: 'assets/', prefix: 'scene-vocabulary-questions.v1-' },
   { directory: 'assets/', prefix: 'listening-exercises.v1-' },
   {

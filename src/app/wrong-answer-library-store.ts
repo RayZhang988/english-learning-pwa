@@ -10,6 +10,8 @@ import {
 import { assertPortableValue } from '../storage/portable-value.ts'
 import { createRecordId } from '../storage/record-id.ts'
 import { appDatabase, type AppDatabase, type DatabaseRecord } from '../storage/indexed-db/AppDatabase.ts'
+import type { ProductionReviewContentIndex } from './review-content-source.ts'
+import { migrateLegacyWrongAnswerCandidates, type LegacyWrongAnswerMigrationResult } from './wrong-answer-legacy-migration.ts'
 
 export const WRONG_ANSWER_LIBRARY_NAMESPACE = 'app.wrong-answer-library'
 export const WRONG_ANSWER_LIBRARY_KEY = 'library-v1'
@@ -20,6 +22,15 @@ export interface WrongAnswerLibraryCorruptBackup {
   readonly capturedAt: string
   readonly reason: string
   readonly value: unknown
+}
+
+export class WrongAnswerLibraryCorruptStateError extends Error {
+  readonly cause: unknown
+  constructor(cause: unknown) {
+    super('错题库保存的数据不完整或与当前版本不匹配。')
+    this.name = 'WrongAnswerLibraryCorruptStateError'
+    this.cause = cause
+  }
 }
 
 function libraryRecord(value: WrongAnswerLibraryState, now: string): DatabaseRecord {
@@ -43,7 +54,11 @@ export class WrongAnswerLibraryStore implements WrongAnswerLibraryStatePort {
   async #read(): Promise<WrongAnswerLibraryState> {
     const stored = await this.#database.records.get(createRecordId(WRONG_ANSWER_LIBRARY_NAMESPACE, WRONG_ANSWER_LIBRARY_KEY))
     if (!stored) return createWrongAnswerLibraryState()
-    assertWrongAnswerLibraryState(stored.value)
+    try {
+      assertWrongAnswerLibraryState(stored.value)
+    } catch (error) {
+      throw new WrongAnswerLibraryCorruptStateError(error)
+    }
     return stored.value
   }
 
@@ -51,26 +66,47 @@ export class WrongAnswerLibraryStore implements WrongAnswerLibraryStatePort {
     try {
       return await this.#database.transaction('r', this.#database.records, () => this.#read())
     } catch (error) {
-      await this.#backupCorrupt(error)
+      if (error instanceof WrongAnswerLibraryCorruptStateError) {
+        await this.#backupCorrupt(error)
+      }
       throw error
     }
   }
 
   async update(transform: WrongAnswerLibraryStateTransform): Promise<WrongAnswerLibraryState> {
-    return this.#database.transaction('rw', this.#database.records, async () => {
-      const current = await this.#read()
-      const next = transform(current)
-      assertWrongAnswerLibraryState(next)
-      assertPortableValue(next)
-      // Writing is intentional even for the same reference: update never
-      // pretends durability happened merely because object identity matches.
-      await this.#database.records.put(libraryRecord(next, this.#now()))
-      return next
-    })
+    try {
+      return await this.#database.transaction('rw', this.#database.records, async () => {
+        const current = await this.#read()
+        const next = transform(current)
+        assertWrongAnswerLibraryState(next)
+        assertPortableValue(next)
+        // Writing is intentional even for the same reference: update never
+        // pretends durability happened merely because object identity matches.
+        await this.#database.records.put(libraryRecord(next, this.#now()))
+        return next
+      })
+    } catch (error) {
+      if (error instanceof WrongAnswerLibraryCorruptStateError) {
+        await this.#backupCorrupt(error)
+      }
+      throw error
+    }
   }
 
   publish(evidence: WrongAnswerEvidence): Promise<WrongAnswerLibraryState> {
     return this.update((state) => applyWrongAnswerEvidence(state, evidence).state)
+  }
+
+  async migrateLegacyCandidates(
+    values: readonly unknown[],
+    index: ProductionReviewContentIndex,
+  ): Promise<LegacyWrongAnswerMigrationResult> {
+    let migration: LegacyWrongAnswerMigrationResult | undefined
+    const state = await this.update((current) => {
+      migration = migrateLegacyWrongAnswerCandidates(current, values, index)
+      return migration.state
+    })
+    return migration ?? { state, accepted: 0, duplicates: 0, rejected: values.length }
   }
 
   async resetAfterUserRecovery(): Promise<void> {

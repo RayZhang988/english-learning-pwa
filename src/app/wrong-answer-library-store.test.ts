@@ -41,10 +41,25 @@ describe('WrongAnswerLibraryStore cross-instance atomic persistence', () => {
     expect((await db.records.get(createRecordId('app.learning-runtime', 'active-plan')))?.value).toEqual({ kept: true })
   })
 
+  it('also backs up corruption discovered by a producer update', async () => {
+    const db = database(); const store = new WrongAnswerLibraryStore(db, () => '2026-08-10T00:00:03.000Z')
+    await db.records.put({ id: createRecordId(WRONG_ANSWER_LIBRARY_NAMESPACE, WRONG_ANSWER_LIBRARY_KEY), namespace: WRONG_ANSWER_LIBRARY_NAMESPACE, key: WRONG_ANSWER_LIBRARY_KEY, value: { broken: true }, schemaVersion: 1, updatedAt: 'old' })
+    await expect(store.publish(evidence('producer', 'review'))).rejects.toThrow('数据不完整')
+    expect(await db.records.where('namespace').equals(WRONG_ANSWER_LIBRARY_BACKUP_NAMESPACE).count()).toBe(1)
+  })
+
   it('validates the transformed state before committing it', async () => {
     const db = database(); const store = new WrongAnswerLibraryStore(db)
     await store.update((state) => applyWrongAnswerEvidence(state, evidence('valid', 'review')).state)
     await expect(store.update(() => ({ broken: true }) as never)).rejects.toThrow()
+    expect((await store.load()).records['review::choice']?.incorrectCount).toBe(1)
+  })
+
+  it('runs narrow legacy import inside the same atomic state transaction', async () => {
+    const db = database(); const store = new WrongAnswerLibraryStore(db)
+    const index = { schemaVersion: 1 as const, documentType: 'review-content-index' as const, contentVersion: '1.0.0' as const, aliases: { 'daily:item': { reviewContentId: 'review', originalQuestionType: 'choice', domain: 'vocabulary' as const, source: { kind: 'daily-supply', itemId: 'item' } } } }
+    const result = await store.migrateLegacyCandidates([{ schemaVersion: 1, aliasKey: 'daily:item', evidence: evidence('legacy', 'review') }], index)
+    expect(result.accepted).toBe(1)
     expect((await store.load()).records['review::choice']?.incorrectCount).toBe(1)
   })
 })
