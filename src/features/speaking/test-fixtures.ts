@@ -35,6 +35,7 @@ export const speakingPrompt: SpeakingPrompt = {
   cueZh: '说明你来自上海。',
   partnerLine: 'Where are you from?',
   modelAnswer: "I'm from Shanghai.",
+  modelAnswerTranslationZh: '我来自上海。',
   acceptedAnswers: ["I'm from Shanghai.", 'I am from Shanghai.'],
   requiredConcepts: ['from', 'Shanghai'],
 }

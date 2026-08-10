@@ -705,6 +705,7 @@ function speakingContentMatch(
     return {
       state: 'unscorable',
       targetText: prompt.modelAnswer,
+      targetTranslationZh: prompt.modelAnswerTranslationZh,
       recognizedText: null,
       resultLabel: '本次无法判断内容是否说对',
       guidance: answer.recorded
@@ -716,6 +717,7 @@ function speakingContentMatch(
   return {
     state: 'recognized',
     targetText: answer.match.closestAcceptedAnswer,
+    targetTranslationZh: prompt.modelAnswerTranslationZh,
     recognizedText: answer.match.transcript,
     level: answer.match.level,
     resultLabel: {

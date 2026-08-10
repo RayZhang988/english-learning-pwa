@@ -150,6 +150,7 @@ function speakingPrompt(id: string): SpeakingPrompt {
     cueZh: '请回答',
     partnerLine: 'Hello',
     modelAnswer: id,
+    modelAnswerTranslationZh: `翻译：${id}`,
     acceptedAnswers: [id],
     requiredConcepts: [id],
   }

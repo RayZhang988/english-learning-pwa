@@ -43,6 +43,69 @@ describe('speaking content catalog', () => {
     expect(
       catalog.units.flatMap((unit) => unit.scenePrompts),
     ).toHaveLength(28)
+    expect(
+      (
+        catalog.units[0].prompts[0] as unknown as {
+          modelAnswerTranslationZh?: string
+        }
+      ).modelAnswerTranslationZh,
+    ).toBe('你好，Maya。我是 Lin。')
+    expect(
+      (
+        catalog.units[0].scenePrompts[0] as unknown as {
+          modelAnswerTranslationZh?: string
+        }
+      ).modelAnswerTranslationZh,
+    ).toBe('我也很高兴认识你。')
+  })
+
+  it('rejects an activity prompt without a model-answer translation', () => {
+    const changed = structuredClone(week1) as {
+      lessons: {
+        learningUnits: {
+          domain: string
+          activity: { prompts?: Record<string, unknown>[] }
+        }[]
+      }[]
+    }
+    const speaking = changed.lessons[0].learningUnits.find(
+      (unit) => unit.domain === 'speaking',
+    )
+    if (!speaking?.activity.prompts?.[0]) {
+      throw new Error('Expected a speaking prompt fixture.')
+    }
+    delete speaking.activity.prompts[0].modelAnswerTranslationZh
+
+    expect(() =>
+      createSpeakingCatalog({
+        ...documents(),
+        lessonsByPath: {
+          ...documents().lessonsByPath,
+          [lessonPaths[0]]: changed,
+        },
+      }),
+    ).toThrow(/modelAnswerTranslationZh/i)
+  })
+
+  it('rejects a scene speaking prompt without a model-answer translation', () => {
+    const changed = structuredClone(week1) as {
+      lessons: { sceneQuiz: Record<string, unknown>[] }[]
+    }
+    const scenePrompt = changed.lessons[0].sceneQuiz.find(
+      (item) => item.domain === 'speaking',
+    )
+    if (!scenePrompt) throw new Error('Expected a speaking scene fixture.')
+    delete scenePrompt.modelAnswerTranslationZh
+
+    expect(() =>
+      createSpeakingCatalog({
+        ...documents(),
+        lessonsByPath: {
+          ...documents().lessonsByPath,
+          [lessonPaths[0]]: changed,
+        },
+      }),
+    ).toThrow(/modelAnswerTranslationZh/i)
   })
 
   it('resolves only tasks whose id and content reference both match', () => {

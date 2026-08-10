@@ -139,6 +139,11 @@ function parsePrompt(value: unknown, label: string): SpeakingPrompt {
     cueZh: stringValue(prompt, 'cueZh', label),
     partnerLine: stringValue(prompt, 'partnerLine', label),
     modelAnswer,
+    modelAnswerTranslationZh: stringValue(
+      prompt,
+      'modelAnswerTranslationZh',
+      label,
+    ),
     acceptedAnswers,
     requiredConcepts: stringArray(prompt, 'requiredConcepts', label),
   }
@@ -169,6 +174,11 @@ function parseScenePrompt(value: unknown, label: string): SpeakingPrompt {
     cueZh,
     partnerLine: cueZh,
     modelAnswer,
+    modelAnswerTranslationZh: stringValue(
+      scene,
+      'modelAnswerTranslationZh',
+      label,
+    ),
     acceptedAnswers,
     requiredConcepts: stringArray(scene, 'requiredConcepts', label),
   }

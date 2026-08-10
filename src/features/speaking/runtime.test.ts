@@ -459,6 +459,7 @@ describe('speaking training runtime fallbacks', () => {
       id: 'w1d1-q3', cueZh: '对方说“Nice to meet you.” 请回应。',
       partnerLine: '对方说“Nice to meet you.” 请回应。',
       modelAnswer: 'Nice to meet you, too.',
+      modelAnswerTranslationZh: '我也很高兴认识你。',
       acceptedAnswers: ['Nice to meet you, too.'], requiredConcepts: ['polite-response'],
     }
     const catalog = createSpeakingCatalogFixture({

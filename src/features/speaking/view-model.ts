@@ -102,6 +102,7 @@ function matchFeedback(
 function contentMatchViewModel(
   answer: SpeakingAnswerRecord | undefined,
   defaultTargetText: string,
+  targetTranslationZh: string,
 ): SpeakingContentMatchViewModel | undefined {
   if (!answer) {
     return undefined
@@ -110,6 +111,7 @@ function contentMatchViewModel(
     return {
       state: 'unscorable',
       targetText: defaultTargetText,
+      targetTranslationZh,
       recognizedText: null,
       resultLabel: '本次无法判断内容是否说对',
       guidance: answer.recorded
@@ -134,6 +136,7 @@ function contentMatchViewModel(
   return {
     state: 'recognized',
     targetText: answer.match.closestAcceptedAnswer,
+    targetTranslationZh,
     recognizedText: answer.match.transcript,
     level: answer.match.level,
     resultLabel: resultLabel[answer.match.level],
@@ -207,6 +210,7 @@ export function toSpeakingScreenViewModel(
     contentMatch: contentMatchViewModel(
       currentAnswer,
       prompt.modelAnswer,
+      prompt.modelAnswerTranslationZh,
     ),
     recorder: {
       status: recorderStatus,

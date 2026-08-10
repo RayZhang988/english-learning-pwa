@@ -283,6 +283,7 @@ export type SpeakingContentMatchViewModel =
   | {
       readonly state: 'recognized'
       readonly targetText: string
+      readonly targetTranslationZh: string
       readonly recognizedText: string
       readonly level: 'match' | 'close' | 'partial' | 'different'
       readonly resultLabel: string
@@ -291,6 +292,7 @@ export type SpeakingContentMatchViewModel =
   | {
       readonly state: 'unscorable'
       readonly targetText: string
+      readonly targetTranslationZh: string
       readonly recognizedText: null
       readonly resultLabel: string
       readonly guidance: string

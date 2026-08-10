@@ -16,6 +16,7 @@ export interface SpeakingPrompt {
   readonly cueZh: string
   readonly partnerLine: string
   readonly modelAnswer: string
+  readonly modelAnswerTranslationZh: string
   readonly acceptedAnswers: readonly string[]
   readonly requiredConcepts: readonly string[]
 }

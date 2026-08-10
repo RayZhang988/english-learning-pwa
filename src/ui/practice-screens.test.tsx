@@ -51,6 +51,7 @@ describe('SpeakingTrainingScreen R8 content comparison', () => {
     const markup = screen({
       state: 'recognized',
       targetText: "I'm from Shanghai.",
+      targetTranslationZh: '我来自上海。',
       recognizedText: 'I am Shanghai',
       level: 'partial',
       resultLabel: '只匹配到部分内容',
@@ -71,6 +72,7 @@ describe('SpeakingTrainingScreen R8 content comparison', () => {
     const markup = screen({
       state: 'unscorable',
       targetText: "I'm from Shanghai.",
+      targetTranslationZh: '我来自上海。',
       recognizedText: null,
       resultLabel: '本次无法判断内容是否说对',
       guidance: '录音已经保留，请回放并对照目标表达自查。',

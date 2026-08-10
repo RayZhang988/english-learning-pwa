@@ -73,6 +73,7 @@ describe('speaking screen ViewModel', () => {
     expect(viewModel.contentMatch).toEqual({
       state: 'recognized',
       targetText: "I'm from Shanghai.",
+      targetTranslationZh: '我来自上海。',
       recognizedText: 'I am from Shanghai',
       level: 'match',
       resultLabel: '内容一致',
@@ -111,6 +112,7 @@ describe('speaking screen ViewModel', () => {
     expect(toSpeakingScreenViewModel(session).contentMatch).toEqual({
       state: 'recognized',
       targetText: "I'm from Shanghai.",
+      targetTranslationZh: '我来自上海。',
       recognizedText: 'I am Shanghai',
       level: 'partial',
       resultLabel: '只匹配到部分内容',
@@ -145,6 +147,7 @@ describe('speaking screen ViewModel', () => {
     expect(toSpeakingScreenViewModel(session).contentMatch).toEqual({
       state: 'unscorable',
       targetText: "I'm from Shanghai.",
+      targetTranslationZh: '我来自上海。',
       recognizedText: null,
       resultLabel: '本次无法判断内容是否说对',
       guidance: '录音已经保留，请回放并对照目标表达自查。',

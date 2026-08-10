@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import {
+  matchSpeakingText,
+  type ExtraSpeakingTrainingSnapshot,
+} from '../../features/speaking/index.ts'
+import {
+  createSpeakingUnit,
+  speakingPrompt,
+} from '../../features/speaking/test-fixtures.ts'
+import {
   createExtraTrainingSession,
   type ExtraTrainingSession,
 } from '../../learning-engine/index.ts'
@@ -12,6 +20,7 @@ import {
   toExtraTrainingActiveViewModel,
   toExtraTrainingCompletionViewModel,
   toExtraTrainingPickerViewModel,
+  toExtraSpeakingScreenViewModel,
 } from './extra-training-view-model.ts'
 
 function session(
@@ -56,6 +65,56 @@ function engineWith(...sessions: ExtraTrainingSession[]) {
 }
 
 describe('R6 app view models', () => {
+  it('passes the authored target translation through recognized and unscorable speaking feedback', () => {
+    const base: ExtraSpeakingTrainingSnapshot = {
+      schemaVersion: 1,
+      session: session({
+        domain: 'speaking',
+        targetModuleId: 'speaking',
+      }),
+      unit: createSpeakingUnit(),
+      prompt: speakingPrompt,
+      activeItem: null,
+      activeRequestId: null,
+      suppliedNextCursor: null,
+      phase: 'feedback',
+      recordingAvailable: true,
+      answer: {
+        recorded: true,
+        transcript: "I'm from Shanghai.",
+        match: matchSpeakingText(
+          "I'm from Shanghai.",
+          speakingPrompt.acceptedAnswers,
+        ),
+        failureCategory: null,
+        fallbackReason: null,
+      },
+      pendingEvents: [],
+      pendingWrongAnswerEvidence: [],
+      updatedAt: '2026-08-10T00:00:00.000Z',
+    }
+
+    expect(toExtraSpeakingScreenViewModel(base).contentMatch).toMatchObject({
+      state: 'recognized',
+      targetTranslationZh: '我来自上海。',
+    })
+    expect(
+      toExtraSpeakingScreenViewModel({
+        ...base,
+        answer: {
+          ...base.answer!,
+          transcript: null,
+          match: null,
+          failureCategory: 'device',
+          fallbackReason: 'recognition-no-speech',
+        },
+      }).contentMatch,
+    ).toMatchObject({
+      state: 'unscorable',
+      targetTranslationZh: '我来自上海。',
+    })
+  })
+
   it('requires the real same-day three-task completion gate', () => {
     const completed = completedExtraTrainingPlan()
     expect(
