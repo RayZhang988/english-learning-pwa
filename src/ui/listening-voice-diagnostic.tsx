@@ -28,7 +28,7 @@ export function ListeningVoiceDiagnosticScreen({ viewModel, onPlay, onRefresh, o
       <button type="button" onClick={onExit} aria-label="退出音色测试">←</button>
       <p>LISTENING VOICE CHECK</p>
       <h1>音色自然度测试</h1>
-      <p>请在同一部 iPhone 上试听。已过滤明显特效音和旧机械音；这里只记录你的选择，不会自动应用到正式听力。</p>
+      <p>请在同一部 iPhone 上试听。已过滤明显特效音和旧机械音；你选中的音色会用于正式听力。</p>
     </header>
     {viewModel.status === 'loading' ? <p role="status">正在读取设备音色…</p> : null}
     {viewModel.status === 'empty' ? <section><h2>暂未读取到美式英语音色</h2><p>iPhone 的音色列表可能仍在加载，请稍后刷新。</p><button type="button" onClick={onRefresh}>重新读取音色</button></section> : null}

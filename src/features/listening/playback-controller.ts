@@ -180,6 +180,7 @@ export class ListeningPlaybackController {
           text: continuousText(segments),
           locale: 'en-US',
           rate: this.state.rate,
+          usePreferredDeviceVoice: true,
         },
         {
           onStart: () => {

@@ -180,7 +180,7 @@ describe('extra listening commands', () => {
     const runtime = new ExtraListeningTrainingRuntime({ ...configured, supplyRequest: () => priority, supplyProvider: { next: async (value) => { supplied = value; return { schemaVersion: 1 as const, requestId: value.requestId, status: 'item' as const, item, nextCursor: item.itemId } } } })
     await runtime.initialize(); await runtime.next(); await runtime.toggleAudio()
     expect(supplied).toEqual(priority)
-    expect(configured.speech.calls).toEqual([{ text: 'Maya says hello.', locale: 'en-US', rate: 1 }])
+    expect(configured.speech.calls).toEqual([{ text: 'Maya says hello.', locale: 'en-US', rate: 1, usePreferredDeviceVoice: true }])
   })
 
   it('notifies the route when browser speech ends outside a command', async () => {
@@ -285,7 +285,7 @@ describe('extra listening commands', () => {
     expect(runtime.currentSnapshot?.session.status).toBe('running')
     expect(supplied).toBe(1)
     await runtime.toggleAudio()
-    expect(configured.speech.calls.at(-1)).toEqual({ text: 'Maya says hello.', locale: 'en-US', rate: 1 })
+    expect(configured.speech.calls.at(-1)).toEqual({ text: 'Maya says hello.', locale: 'en-US', rate: 1, usePreferredDeviceVoice: true })
     expect(runtime.currentSnapshot?.pendingEvents.filter((event) => event.type === 'learning.extra-training.started.v1')).toHaveLength(1)
   })
 

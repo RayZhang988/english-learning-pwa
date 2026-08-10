@@ -28,6 +28,6 @@ describe('ListeningVoiceDiagnosticScreen', () => {
     expect(markup).toContain('短句')
     expect(markup).toContain('对话')
     expect(markup).toContain('已选择')
-    expect(markup).toContain('不会自动应用到正式听力')
+    expect(markup).toContain('会用于正式听力')
   })
 })

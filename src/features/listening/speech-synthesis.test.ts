@@ -137,6 +137,90 @@ describe('browser listening speech synthesis', () => {
     expect(utterance.voice).toBe(secondLocalVoice)
   })
 
+  it('uses the saved natural voice when formal listening explicitly opts in', () => {
+    const { synthesis, utterance, secondLocalVoice } = createFakeSpeech()
+    const speech = new BrowserListeningSpeechSynthesis(
+      synthesis,
+      () => utterance,
+      () => 'second-local-voice',
+    )
+
+    speech.speak(
+      {
+        text: 'Could you show me the way to the station?',
+        locale: 'en-US',
+        rate: 1,
+        usePreferredDeviceVoice: true,
+      },
+      {},
+    )
+
+    expect(utterance.voice).toBe(secondLocalVoice)
+  })
+
+  it('preserves the neutral device default when formal listening has no saved preference', () => {
+    const { synthesis, utterance } = createFakeSpeech()
+    const speech = new BrowserListeningSpeechSynthesis(
+      synthesis,
+      () => utterance,
+      () => null,
+    )
+
+    speech.speak(
+      {
+        text: 'passport',
+        locale: 'en-US',
+        rate: 1,
+        usePreferredDeviceVoice: true,
+      },
+      {},
+    )
+
+    expect(utterance.voice).toBeNull()
+  })
+
+  it('does not silently replace a vanished saved voice with an electronic default', () => {
+    const { synthesis, utterance } = createFakeSpeech()
+    const speech = new BrowserListeningSpeechSynthesis(
+      synthesis,
+      () => utterance,
+      () => 'voice-that-is-no-longer-available',
+    )
+
+    expect(() => speech.speak(
+      {
+        text: 'passport',
+        locale: 'en-US',
+        rate: 1,
+        usePreferredDeviceVoice: true,
+      },
+      {},
+    )).toThrow(/saved device voice is unavailable/i)
+    expect(synthesis.speak).not.toHaveBeenCalled()
+  })
+
+  it('keeps an explicit diagnostic voice stronger than the saved formal preference', () => {
+    const { synthesis, utterance, localVoice } = createFakeSpeech()
+    const speech = new BrowserListeningSpeechSynthesis(
+      synthesis,
+      () => utterance,
+      () => 'second-local-voice',
+    )
+
+    speech.speak(
+      {
+        text: 'passport',
+        locale: 'en-US',
+        rate: 1,
+        voiceId: 'local-voice',
+        usePreferredDeviceVoice: true,
+      },
+      {},
+    )
+
+    expect(utterance.voice).toBe(localVoice)
+  })
+
   it('does not disguise a vanished diagnostic voice as the device default', () => {
     const { synthesis, utterance } = createFakeSpeech()
     const speech = new BrowserListeningSpeechSynthesis(

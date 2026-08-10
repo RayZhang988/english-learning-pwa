@@ -792,6 +792,7 @@ describe('listening training runtime', () => {
         text: 'Good morning. How can I help? I need a ticket.',
         locale: 'en-US',
         rate: 1,
+        usePreferredDeviceVoice: true,
       },
     ])
     expect(speech.speakRequests[0].text).not.toMatch(/Alex:|Blair:/u)

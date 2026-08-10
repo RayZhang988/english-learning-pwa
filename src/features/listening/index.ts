@@ -109,6 +109,11 @@ export {
   type ListeningSpeechVoice,
 } from './speech-synthesis.ts'
 export {
+  LISTENING_VOICE_PREFERENCE_STORAGE_KEY,
+  readListeningVoicePreference,
+  saveListeningVoicePreference,
+} from './voice-preference.ts'
+export {
   LISTENING_SESSION_SCHEMA_VERSION,
   type ListeningAnswerFeedback,
   type ListeningAnswerRecord,

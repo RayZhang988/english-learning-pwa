@@ -1,5 +1,6 @@
 import { ListeningError } from './errors.ts'
 import type { ListeningPlaybackRate } from './types.ts'
+import { readListeningVoicePreference } from './voice-preference.ts'
 
 export type ListeningSpeechErrorCode =
   | 'canceled'
@@ -21,6 +22,8 @@ export interface ListeningSpeechRequest {
   readonly rate: ListeningPlaybackRate
   /** Diagnostic-only explicit device voice. Normal training omits this. */
   readonly voiceId?: string
+  /** Formal listening opts in; other speech features keep their current voice. */
+  readonly usePreferredDeviceVoice?: true
 }
 
 export interface ListeningSpeechCallbacks {
@@ -168,14 +171,18 @@ export class BrowserListeningSpeechSynthesis
   private readonly createUtterance: (
     text: string,
   ) => SpeechUtteranceLike
+  private readonly preferredVoiceId: () => string | null
 
   constructor(
     synthesis: SpeechSynthesisLike | undefined = browserSynthesis(),
     createUtterance: (text: string) => SpeechUtteranceLike =
       browserUtterance,
+    preferredVoiceId: () => string | null =
+      readListeningVoicePreference,
   ) {
     this.synthesis = synthesis
     this.createUtterance = createUtterance
+    this.preferredVoiceId = preferredVoiceId
   }
 
   capabilities(): ListeningSpeechCapabilities {
@@ -234,15 +241,21 @@ export class BrowserListeningSpeechSynthesis
         'The speech request has invalid text or playback rate.',
       )
     }
-    const requestedVoice = request.voiceId
+    const preferredVoiceId = request.voiceId ??
+      (request.usePreferredDeviceVoice
+        ? this.preferredVoiceId()
+        : null)
+    const requestedVoice = preferredVoiceId
       ? localEnUsVoices(this.synthesis).find(
-          (entry) => entry.id === request.voiceId,
+          (entry) => entry.id === preferredVoiceId,
         )?.voice
       : undefined
-    if (request.voiceId && !requestedVoice) {
+    if (preferredVoiceId && !requestedVoice) {
       throw new ListeningError(
         'speech-failed',
-        'The requested device voice is unavailable.',
+        request.voiceId
+          ? 'The requested device voice is unavailable.'
+          : 'The saved device voice is unavailable.',
       )
     }
     const utterance = this.createUtterance(request.text)

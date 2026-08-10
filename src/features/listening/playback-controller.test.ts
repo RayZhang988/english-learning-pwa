@@ -143,6 +143,7 @@ describe('listening playback controller', () => {
       text: 'Maya',
       locale: 'en-US',
       rate: 1,
+      usePreferredDeviceVoice: true,
     })
     expect(controller.snapshot.playCounts).toEqual({})
     speech.callbacks?.onStart?.()
@@ -281,6 +282,7 @@ describe('listening playback controller', () => {
         text: 'Good morning. How can I help? I need a ticket.',
         locale: 'en-US',
         rate: 1,
+        usePreferredDeviceVoice: true,
       },
     ])
     expect(speech.speakRequests[0].text).not.toMatch(/Alex:|Blair:/u)
@@ -313,6 +315,7 @@ describe('listening playback controller', () => {
       text: 'How can I help?',
       locale: 'en-US',
       rate: 0.75,
+      usePreferredDeviceVoice: true,
     })
     controller.toggle()
     expect(speech.pauseSpy).toHaveBeenCalledOnce()
@@ -326,6 +329,7 @@ describe('listening playback controller', () => {
       text: 'How can I help?',
       locale: 'en-US',
       rate: 1.25,
+      usePreferredDeviceVoice: true,
     })
     controller.interrupt()
     expect(speech.cancelSpy).toHaveBeenCalled()

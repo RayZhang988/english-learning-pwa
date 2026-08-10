@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { browserListeningSpeech } from '../features/listening/index.ts'
+import {
+  browserListeningSpeech,
+  readListeningVoicePreference,
+  saveListeningVoicePreference,
+} from '../features/listening/index.ts'
 import { ListeningVoiceDiagnosticScreen, type ListeningVoiceDiagnosticViewModel } from '../ui/index.ts'
 import { naturalListeningVoiceCandidates } from './listening-voice-diagnostic-model.ts'
 
 export const LISTENING_VOICE_DIAGNOSTIC_ROUTE = '/diagnostics/listening-voices'
-export const LISTENING_VOICE_DIAGNOSTIC_STORAGE_KEY = 'english-learning:listening-voice-diagnostic:v1'
 
 const samples = {
   word: 'passport',
@@ -13,14 +16,11 @@ const samples = {
   dialogue: "Good morning. Hello. I'd like to check in, please. Certainly. May I see your passport?",
 } as const
 
-function savedVoice(): string | null {
-  try { return window.localStorage.getItem(LISTENING_VOICE_DIAGNOSTIC_STORAGE_KEY) }
-  catch { return null }
-}
-
 export function ListeningVoiceDiagnosticRouteHost() {
   const navigate = useNavigate()
-  const [selected, setSelected] = useState<string | null>(savedVoice)
+  const [selected, setSelected] = useState<string | null>(
+    readListeningVoicePreference,
+  )
   const [viewModel, setViewModel] = useState<ListeningVoiceDiagnosticViewModel>({ status: 'loading', voices: [], playing: null })
   const refresh = useCallback(() => {
     const voices = naturalListeningVoiceCandidates(browserListeningSpeech.voices())
@@ -44,7 +44,7 @@ export function ListeningVoiceDiagnosticRouteHost() {
     }
   }
   const select = (voiceId: string) => {
-    try { window.localStorage.setItem(LISTENING_VOICE_DIAGNOSTIC_STORAGE_KEY, voiceId) } catch { /* selection remains visible for this visit */ }
+    saveListeningVoicePreference(voiceId)
     setSelected(voiceId)
     setViewModel((current) => ({ ...current, voices: current.voices.map((voice) => ({ ...voice, selected: voice.id === voiceId })) }))
   }

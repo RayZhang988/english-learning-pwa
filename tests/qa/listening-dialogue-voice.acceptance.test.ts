@@ -185,7 +185,7 @@ describe('released listening continuous speech acceptance', () => {
     }
   })
 
-  it('submits a full dialogue as one ordered neutral request', () => {
+  it('submits a full dialogue as one ordered preferred-device-voice request', () => {
     const question = firstDialogueQuestion()
     const { controller, speech } = createController(question)
 
@@ -196,6 +196,7 @@ describe('released listening continuous speech acceptance', () => {
         text: continuousText(question),
         locale: 'en-US',
         rate: 1,
+        usePreferredDeviceVoice: true,
       },
     ])
     expect(speech.requests[0]).not.toHaveProperty('voiceId')
@@ -228,6 +229,7 @@ describe('released listening continuous speech acceptance', () => {
           text: continuousText(question),
           locale: 'en-US',
           rate,
+          usePreferredDeviceVoice: true,
         },
       ])
     },
@@ -246,6 +248,7 @@ describe('released listening continuous speech acceptance', () => {
         text: selected.text,
         locale: 'en-US',
         rate: 1,
+        usePreferredDeviceVoice: true,
       },
     ])
     expect(speech.requests[0].text).not.toContain(
