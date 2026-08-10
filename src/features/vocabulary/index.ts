@@ -127,6 +127,7 @@ export {
   createVocabularyWrongAnswerEvidence,
   resolveDailyVocabularyReviewContent,
   resolveSceneVocabularyReviewContent,
+  resolveSceneVocabularyReviewQuestion,
   type ReviewContentAlias,
   type ReviewContentIndex,
   type WrongAnswerEvidenceSink,

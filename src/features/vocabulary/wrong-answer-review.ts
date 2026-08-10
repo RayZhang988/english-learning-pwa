@@ -2,7 +2,8 @@ import type { WrongAnswerEvidence, WrongAnswerSource } from '../../learning-engi
 import { VocabularyError } from './errors.ts'
 import { buildVocabularySupplyQuestion } from './questions.ts'
 import type { VocabularyCatalog, VocabularyQuestion, VocabularySupplyItem } from './types.ts'
-import type { SceneVocabularyQuestion } from './scene-vocabulary-practice.ts'
+import type { SceneVocabularyQuestion, SceneVocabularyQuestionBank } from './scene-vocabulary-practice.ts'
+import type { VocabularyReviewQuestion } from './wrong-answer-review-runtime.ts'
 
 export interface WrongAnswerEvidenceSink { publish(evidence: WrongAnswerEvidence): Promise<void> }
 
@@ -36,6 +37,54 @@ export function resolveSceneVocabularyReviewContent(index: ReviewContentIndex, b
   const identity = requireAlias(index, aliasForScene(bankId, contentVersion, question.questionId))
   if (identity.source.kind !== 'scene-vocabulary-bank' || identity.source.questionId !== question.questionId || identity.originalQuestionType !== 'scene-vocabulary-meaning-choice') throw new VocabularyError('content-invalid', 'Scene review alias does not match the released question.')
   return identity
+}
+
+function sceneReviewQuestion(identity: ReviewContentAlias, question: SceneVocabularyQuestion): VocabularyReviewQuestion {
+  const targetIndex = question.sentenceEn.toLocaleLowerCase('en-US').indexOf(question.targetText.toLocaleLowerCase('en-US'))
+  const meanings = [question.correctMeaningZh, ...question.distractorMeaningsZh]
+  let hash = 0
+  for (const character of question.questionId) hash = (hash * 31 + character.charCodeAt(0)) >>> 0
+  const offset = hash % meanings.length
+  const ordered = [...meanings.slice(offset), ...meanings.slice(0, offset)]
+  const options = ordered.map((label, index) => ({ id: `${question.questionId}:meaning:${index + 1}`, label }))
+  const correctOption = options.find((option) => option.label === question.correctMeaningZh)
+  if (!correctOption || targetIndex < 0) throw new VocabularyError('content-invalid', 'Scene review question cannot reproduce its released interaction.')
+  return {
+    identity,
+    questionId: question.questionId,
+    correctOptionId: correctOption.id,
+    prompt: '这个词是什么意思？',
+    options,
+    scenePresentation: {
+      sentenceEn: {
+        beforeTarget: question.sentenceEn.slice(0, targetIndex),
+        targetText: question.targetText,
+        afterTarget: question.sentenceEn.slice(targetIndex + question.targetText.length),
+      },
+      targetPlayback: { intent: 'play-target-only', text: question.targetText, locale: 'en-US' },
+    },
+  }
+}
+
+/** Resolves a stable library identity directly to the released R13-B scene question and interaction. */
+export function resolveSceneVocabularyReviewQuestion(
+  index: ReviewContentIndex,
+  bank: SceneVocabularyQuestionBank,
+  requested: { readonly reviewContentId: string; readonly originalQuestionType: string },
+): VocabularyReviewQuestion {
+  const matches = Object.values(index.aliases).filter((alias) =>
+    alias.domain === 'vocabulary' &&
+    alias.reviewContentId === requested.reviewContentId &&
+    alias.originalQuestionType === requested.originalQuestionType &&
+    alias.source.kind === 'scene-vocabulary-bank',
+  )
+  if (matches.length !== 1) throw new VocabularyError('content-invalid', 'Scene review identity must resolve to exactly one released alias.')
+  const identity = matches[0]!
+  const questionId = identity.source.questionId
+  const question = bank.scenes.flatMap((scene) => scene.questions).find((candidate) => candidate.questionId === questionId)
+  if (!question) throw new VocabularyError('content-reference-missing', 'Scene review question is missing from the released bank.')
+  const verified = resolveSceneVocabularyReviewContent(index, bank.bankId, bank.contentVersion, question)
+  return sceneReviewQuestion(verified, question)
 }
 
 /** Event IDs are answer-attempt identities, so publishing them again after a failed handoff is safe. */

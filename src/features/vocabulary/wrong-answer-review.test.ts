@@ -4,7 +4,7 @@ import { createVocabularyCatalog } from './content.ts'
 import { loadActualVocabularyDocuments } from './test-fixtures.ts'
 import { createSceneVocabularyQuestionBank } from './scene-vocabulary-practice.ts'
 import type { VocabularyCatalog, VocabularySupplyItem } from './types.ts'
-import { createVocabularyWrongAnswerEvidence, resolveDailyVocabularyReviewContent, resolveSceneVocabularyReviewContent } from './wrong-answer-review.ts'
+import { createVocabularyWrongAnswerEvidence, resolveDailyVocabularyReviewContent, resolveSceneVocabularyReviewContent, resolveSceneVocabularyReviewQuestion } from './wrong-answer-review.ts'
 
 const item = { id: 'term', term: 'passport', partOfSpeech: 'noun', meaningZh: '护照', exampleEn: 'Show your passport.', exampleZh: '出示护照。' }
 const distractorA = { ...item, id: 'a', term: 'ticket', meaningZh: '票' }
@@ -47,6 +47,17 @@ describe('R13-D vocabulary review content', () => {
       const resolved = resolveSceneVocabularyReviewContent(releasedIndex, bank.bankId, bank.contentVersion, question)
       expect(resolved.source.questionId).toBe(question.questionId)
       expect(resolved.originalQuestionType).toBe('scene-vocabulary-meaning-choice')
+      const view = resolveSceneVocabularyReviewQuestion(releasedIndex, bank, resolved)
+      expect(view.questionId).toBe(question.questionId)
+      expect(view.options.find((option) => option.id === view.correctOptionId)?.label).toBe(question.correctMeaningZh)
+      expect(view.scenePresentation).toEqual({
+        sentenceEn: {
+          beforeTarget: question.sentenceEn.slice(0, question.sentenceEn.toLocaleLowerCase('en-US').indexOf(question.targetText.toLocaleLowerCase('en-US'))),
+          targetText: question.targetText,
+          afterTarget: question.sentenceEn.slice(question.sentenceEn.toLocaleLowerCase('en-US').indexOf(question.targetText.toLocaleLowerCase('en-US')) + question.targetText.length),
+        },
+        targetPlayback: { intent: 'play-target-only', text: question.targetText, locale: 'en-US' },
+      })
     }
   })
 })
