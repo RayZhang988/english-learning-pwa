@@ -248,6 +248,17 @@
           },
           "then": {
             "properties": {
+              "activity": {
+                "type": "object",
+                "required": ["prompts"],
+                "properties": {
+                  "prompts": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {"$ref": "#/$defs/speakingPrompt"}
+                  }
+                }
+              },
               "durationBaseline": {
                 "properties": {
                   "contentType": {
@@ -342,7 +353,48 @@
         "format": {
           "enum": ["single-choice", "fixed-response", "intent-matching"]
         },
-        "promptZh": {"type": "string", "minLength": 1}
+        "promptZh": {"type": "string", "minLength": 1},
+        "modelAnswer": {"type": "string", "minLength": 1},
+        "modelAnswerTranslationZh": {"type": "string", "minLength": 1}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"domain": {"const": "speaking"}},
+            "required": ["domain"]
+          },
+          "then": {
+            "required": ["modelAnswer", "modelAnswerTranslationZh"]
+          }
+        }
+      ]
+    },
+    "speakingPrompt": {
+      "type": "object",
+      "required": [
+        "id",
+        "cueZh",
+        "partnerLine",
+        "modelAnswer",
+        "modelAnswerTranslationZh",
+        "acceptedAnswers",
+        "requiredConcepts"
+      ],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "cueZh": {"type": "string", "minLength": 1},
+        "partnerLine": {"type": "string", "minLength": 1},
+        "modelAnswer": {"type": "string", "minLength": 1},
+        "modelAnswerTranslationZh": {"type": "string", "minLength": 1},
+        "acceptedAnswers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "requiredConcepts": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        }
       }
     }
   }

@@ -122,6 +122,7 @@
                 "cueZh": "询问在哪里转乘去丹佛的航班。",
                 "partnerLine": "Welcome. Do you have another flight?",
                 "modelAnswer": "Yes. Where do I make my connection to Denver?",
+                "modelAnswerTranslationZh": "是的。我要在哪里转乘去丹佛的航班？",
                 "acceptedAnswers": ["Yes. Where do I make my connection to Denver?", "Where is my connecting flight to Denver?", "Which gate do I use for my Denver connection?"],
                 "requiredConcepts": ["connection", "Denver"]
               },
@@ -130,6 +131,7 @@
                 "cueZh": "询问行李提取处在哪里。",
                 "partnerLine": "Arrivals are this way.",
                 "modelAnswer": "Excuse me, where is baggage claim?",
+                "modelAnswerTranslationZh": "打扰一下，行李提取处在哪里？",
                 "acceptedAnswers": ["Excuse me, where is baggage claim?", "How do I get to baggage claim?", "Where do I pick up my bag?"],
                 "requiredConcepts": ["baggage-claim", "location-question"]
               },
@@ -138,6 +140,7 @@
                 "cueZh": "报告你的蓝色大行李箱没到。",
                 "partnerLine": "How can I help you?",
                 "modelAnswer": "My large blue suitcase didn't arrive.",
+                "modelAnswerTranslationZh": "我的蓝色大行李箱没有到。",
                 "acceptedAnswers": ["My large blue suitcase didn't arrive.", "My big blue suitcase is missing.", "I can't find my large blue suitcase."],
                 "requiredConcepts": ["missing-bag", "large", "blue"]
               }
@@ -148,7 +151,7 @@
       "sceneQuiz": [
         {"id": "w4d22-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "抵达后取托运行李应去哪里？", "options": ["security", "baggage claim", "boarding gate"], "correctOptionIndex": 1, "rationaleZh": "baggage claim 是行李提取处。"},
         {"id": "w4d22-q2", "domain": "listening", "format": "single-choice", "audioText": "Bags from flight 715 will arrive on carousel three.", "promptZh": "715 航班的行李在哪里？", "options": ["三号转盘", "七号转盘", "十五号转盘"], "correctOptionIndex": 0, "rationaleZh": "on carousel three。"},
-        {"id": "w4d22-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "说明你在芝加哥转机。", "modelAnswer": "I have a connection in Chicago.", "acceptedAnswers": ["I have a connection in Chicago.", "I'm connecting in Chicago.", "My connecting flight is in Chicago."], "requiredConcepts": ["connection", "Chicago"]}
+        {"id": "w4d22-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "说明你在芝加哥转机。", "modelAnswer": "I have a connection in Chicago.", "modelAnswerTranslationZh": "我要在芝加哥转机。", "acceptedAnswers": ["I have a connection in Chicago.", "I'm connecting in Chicago.", "My connecting flight is in Chicago."], "requiredConcepts": ["connection", "Chicago"]}
       ]
     },
     {
@@ -267,6 +270,7 @@
                 "cueZh": "你迷路了，请求帮助。",
                 "partnerLine": "Are you okay?",
                 "modelAnswer": "I'm lost. Could you help me?",
+                "modelAnswerTranslationZh": "我迷路了。你能帮帮我吗？",
                 "acceptedAnswers": ["I'm lost. Could you help me?", "I think I'm lost. I need help.", "Could you help me? I don't know where I am."],
                 "requiredConcepts": ["lost", "help-request"]
               },
@@ -275,6 +279,7 @@
                 "cueZh": "说明你的脚踝疼，需要坐下。",
                 "partnerLine": "What happened?",
                 "modelAnswer": "My ankle hurts. I need to sit down.",
+                "modelAnswerTranslationZh": "我的脚踝疼。我需要坐下来。",
                 "acceptedAnswers": ["My ankle hurts. I need to sit down.", "I hurt my ankle, and I need a seat.", "My ankle is hurt. Can I sit here?"],
                 "requiredConcepts": ["ankle", "pain", "sit"]
               },
@@ -283,6 +288,7 @@
                 "cueZh": "询问最近的药店在哪里。",
                 "partnerLine": "What are you looking for?",
                 "modelAnswer": "Where is the nearest pharmacy?",
+                "modelAnswerTranslationZh": "最近的药店在哪里？",
                 "acceptedAnswers": ["Where is the nearest pharmacy?", "Is there a pharmacy nearby?", "How do I get to the nearest pharmacy?"],
                 "requiredConcepts": ["pharmacy", "nearest"]
               },
@@ -291,6 +297,7 @@
                 "cueZh": "这是紧急情况，请求对方立即呼叫救护车。",
                 "partnerLine": "Do you need help?",
                 "modelAnswer": "Yes. This is an emergency. Please call an ambulance now.",
+                "modelAnswerTranslationZh": "是的，这是紧急情况。请马上叫救护车。",
                 "acceptedAnswers": ["Yes. This is an emergency. Please call an ambulance now.", "Emergency. Please call an ambulance.", "We need an ambulance right away."],
                 "requiredConcepts": ["emergency", "ambulance", "immediate"]
               }
@@ -301,7 +308,7 @@
       "sceneQuiz": [
         {"id": "w4d23-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "“I feel dizzy.”表示什么？", "options": ["我头晕", "我迷路", "我很饿"], "correctOptionIndex": 0, "rationaleZh": "dizzy 指头晕。"},
         {"id": "w4d23-q2", "domain": "listening", "format": "single-choice", "audioText": "I lost my passport near the ticket counter. I need the police desk.", "promptZh": "说话人遇到什么问题？", "options": ["护照丢失", "错过航班", "身体不适"], "correctOptionIndex": 0, "rationaleZh": "说话人明确说 lost my passport。"},
-        {"id": "w4d23-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "说明你在西门，需要警察帮助。", "modelAnswer": "I'm at the west entrance, and I need the police.", "acceptedAnswers": ["I'm at the west entrance, and I need the police.", "We need police help at the west entrance.", "Please send the police to the west entrance."], "requiredConcepts": ["west-entrance", "police-help"]}
+        {"id": "w4d23-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "说明你在西门，需要警察帮助。", "modelAnswer": "I'm at the west entrance, and I need the police.", "modelAnswerTranslationZh": "我在西门，我需要警察帮助。", "acceptedAnswers": ["I'm at the west entrance, and I need the police.", "We need police help at the west entrance.", "Please send the police to the west entrance."], "requiredConcepts": ["west-entrance", "police-help"]}
       ]
     },
     {
@@ -422,6 +429,7 @@
                 "cueZh": "回应天气很好，并说你准备去公园。",
                 "partnerLine": "The weather is great today.",
                 "modelAnswer": "It is. I'm planning to visit the park.",
+                "modelAnswerTranslationZh": "是啊。我打算去公园。",
                 "acceptedAnswers": ["It is. I'm planning to visit the park.", "Yes, it's beautiful. I'm going to the park.", "It is nice. I plan to visit the park."],
                 "requiredConcepts": ["weather-agreement", "park-plan"]
               },
@@ -430,6 +438,7 @@
                 "cueZh": "询问对方下午有什么计划。",
                 "partnerLine": "I'm free after lunch.",
                 "modelAnswer": "What are your plans for this afternoon?",
+                "modelAnswerTranslationZh": "你今天下午有什么计划？",
                 "acceptedAnswers": ["What are your plans for this afternoon?", "What are you doing this afternoon?", "Do you have plans this afternoon?"],
                 "requiredConcepts": ["afternoon-plan-question"]
               },
@@ -438,6 +447,7 @@
                 "cueZh": "请对方推荐附近的咖啡店。",
                 "partnerLine": "This neighborhood has some good places.",
                 "modelAnswer": "Could you recommend a nearby café?",
+                "modelAnswerTranslationZh": "你能推荐一家附近的咖啡馆吗？",
                 "acceptedAnswers": ["Could you recommend a nearby café?", "Do you know a good café nearby?", "What nearby café do you recommend?"],
                 "requiredConcepts": ["recommendation", "nearby-cafe"]
               },
@@ -446,6 +456,7 @@
                 "cueZh": "感谢建议并结束对话。",
                 "partnerLine": "Try the café across from the park.",
                 "modelAnswer": "Thanks for the recommendation. Have a good day!",
+                "modelAnswerTranslationZh": "谢谢你的推荐。祝你今天愉快！",
                 "acceptedAnswers": ["Thanks for the recommendation. Have a good day!", "Thank you. Enjoy your day!", "That sounds good. Thanks, and have a good day."],
                 "requiredConcepts": ["thanks", "polite-close"]
               }
@@ -456,7 +467,7 @@
       "sceneQuiz": [
         {"id": "w4d24-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "请别人推荐时使用哪个动词？", "options": ["recommend", "remove", "refund"], "correctOptionIndex": 0, "rationaleZh": "recommend 表示推荐。"},
         {"id": "w4d24-q2", "domain": "listening", "format": "single-choice", "audioText": "I'm free in the morning, but I have a tour this afternoon.", "promptZh": "说话人什么时候有空？", "options": ["上午", "下午", "晚上"], "correctOptionIndex": 0, "rationaleZh": "明确说 free in the morning。"},
-        {"id": "w4d24-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "说明你今晚计划去河边散步。", "modelAnswer": "I'm planning to walk by the river this evening.", "acceptedAnswers": ["I'm planning to walk by the river this evening.", "I plan to take a walk by the river tonight.", "I'm going for a walk by the river this evening."], "requiredConcepts": ["river-walk", "evening"]}
+        {"id": "w4d24-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "说明你今晚计划去河边散步。", "modelAnswer": "I'm planning to walk by the river this evening.", "modelAnswerTranslationZh": "我今晚打算去河边散步。", "acceptedAnswers": ["I'm planning to walk by the river this evening.", "I plan to take a walk by the river tonight.", "I'm going for a walk by the river this evening."], "requiredConcepts": ["river-walk", "evening"]}
       ]
     },
     {
@@ -576,6 +587,7 @@
                 "cueZh": "询问 River Hotel 接驳车的上车点和车费。",
                 "partnerLine": "Welcome to arrivals. How can I help?",
                 "modelAnswer": "Where is the River Hotel shuttle pickup, and how much is the fare?",
+                "modelAnswerTranslationZh": "River Hotel 的接驳车在哪里上车，车费多少钱？",
                 "acceptedAnswers": ["Where is the River Hotel shuttle pickup, and how much is the fare?", "Where do I get the River Hotel shuttle? Is it free?", "Could you tell me the hotel shuttle pickup location and fare?"],
                 "requiredConcepts": ["River-Hotel", "shuttle-pickup", "fare-question"]
               },
@@ -584,6 +596,7 @@
                 "cueZh": "请司机把你送到酒店正门，并确认地址是 18 Pine Street。",
                 "partnerLine": "Where would you like to go?",
                 "modelAnswer": "Please take me to the main entrance of the River Hotel. Let me confirm: 18 Pine Street?",
+                "modelAnswerTranslationZh": "请送我到 River Hotel 的正门。我确认一下：地址是 Pine Street 18号，对吗？",
                 "acceptedAnswers": ["Please take me to the main entrance of the River Hotel. Let me confirm: 18 Pine Street?", "River Hotel, main entrance, please. The address is 18 Pine Street, right?", "Please drop me off at the River Hotel at 18 Pine Street."],
                 "requiredConcepts": ["River-Hotel", "main-entrance", "18-Pine-Street"]
               },
@@ -592,6 +605,7 @@
                 "cueZh": "你在 Zhou 名下有预订，确认早餐和退房时间。",
                 "partnerLine": "Welcome to the hotel.",
                 "modelAnswer": "I have a reservation under Zhou. Is breakfast included, and what time is checkout?",
+                "modelAnswerTranslationZh": "我在 Zhou 名下有预订。包含早餐吗？几点退房？",
                 "acceptedAnswers": ["I have a reservation under Zhou. Is breakfast included, and what time is checkout?", "I'm checking in under Zhou. Could you confirm breakfast and checkout time?", "The reservation is under Zhou. Does it include breakfast, and when is checkout?"],
                 "requiredConcepts": ["Zhou", "breakfast", "checkout-time"]
               },
@@ -600,6 +614,7 @@
                 "cueZh": "你在 624 房，报告 Wi-Fi 连不上。",
                 "partnerLine": "Front desk. How can I help?",
                 "modelAnswer": "Hi, this is room 624. I can't connect to the Wi-Fi.",
+                "modelAnswerTranslationZh": "你好，我是 624 房的客人。我连不上 Wi-Fi。",
                 "acceptedAnswers": ["Hi, this is room 624. I can't connect to the Wi-Fi.", "The Wi-Fi isn't working in room 624.", "I'm in room 624, and I need help with the Wi-Fi."],
                 "requiredConcepts": ["room-624", "wifi-problem"]
               }
@@ -610,7 +625,7 @@
       "sceneQuiz": [
         {"id": "w4d25-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "机场到酒店的“shuttle”通常是什么？", "options": ["接驳车", "行李转盘", "房卡"], "correctOptionIndex": 0, "rationaleZh": "shuttle 指往返固定地点的接驳交通。"},
         {"id": "w4d25-q2", "domain": "listening", "format": "single-choice", "audioText": "Take the free shuttle outside door four. It leaves every twenty minutes and stops at the hotel's north entrance.", "promptZh": "哪项信息正确？", "options": ["四号门外上车，每二十分钟一班，酒店北门下车", "北门上车，四号门下车，收费二十美元", "二十号门外上车，只到酒店正门"], "correctOptionIndex": 0, "rationaleZh": "三个细节分别是 outside door four、every twenty minutes、north entrance。"},
-        {"id": "w4d25-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "完成入住核心句：预订在 Wu 名下，询问退房时间。", "modelAnswer": "I have a reservation under Wu. What time is checkout?", "acceptedAnswers": ["I have a reservation under Wu. What time is checkout?", "I'm checking in under Wu. When do I need to check out?", "The reservation is under Wu. Could you tell me the checkout time?"], "requiredConcepts": ["Wu", "checkout-time"]}
+        {"id": "w4d25-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "完成入住核心句：预订在 Wu 名下，询问退房时间。", "modelAnswer": "I have a reservation under Wu. What time is checkout?", "modelAnswerTranslationZh": "我在 Wu 名下有预订。几点退房？", "acceptedAnswers": ["I have a reservation under Wu. What time is checkout?", "I'm checking in under Wu. When do I need to check out?", "The reservation is under Wu. Could you tell me the checkout time?"], "requiredConcepts": ["Wu", "checkout-time"]}
       ]
     },
     {
@@ -729,6 +744,7 @@
                 "cueZh": "地铁停运，询问是否可以改坐公交。",
                 "partnerLine": "The subway isn't running today.",
                 "modelAnswer": "Could I take the bus instead? Which route goes downtown?",
+                "modelAnswerTranslationZh": "我可以改坐公交车吗？哪条线路去市中心？",
                 "acceptedAnswers": ["Could I take the bus instead? Which route goes downtown?", "Is there a bus option? I need to go downtown.", "Could we use a bus instead of the subway?"],
                 "requiredConcepts": ["bus-alternative", "downtown"]
               },
@@ -737,6 +753,7 @@
                 "cueZh": "确认第四站下车，再左转。",
                 "partnerLine": "Get off at the fourth stop and turn left.",
                 "modelAnswer": "Let me confirm: the fourth stop, then left?",
+                "modelAnswerTranslationZh": "我确认一下：在第四站下车，然后左转，对吗？",
                 "acceptedAnswers": ["Let me confirm: the fourth stop, then left?", "I get off at stop four and turn left, right?", "Fourth stop, then a left turn, correct?"],
                 "requiredConcepts": ["fourth-stop", "left", "confirmation"]
               },
@@ -745,6 +762,7 @@
                 "cueZh": "点牛肉汉堡，不加洋葱，并说明花生过敏。",
                 "partnerLine": "What can I get for you?",
                 "modelAnswer": "I'd like the beef burger without onions. I'm allergic to peanuts.",
+                "modelAnswerTranslationZh": "我想要牛肉汉堡，不加洋葱。我对花生过敏。",
                 "acceptedAnswers": ["I'd like the beef burger without onions. I'm allergic to peanuts.", "A beef burger, no onions, please. I have a peanut allergy.", "Can I get the beef burger without onions? Also, I'm allergic to peanuts."],
                 "requiredConcepts": ["beef-burger", "without-onions", "peanut-allergy"]
               },
@@ -753,6 +771,7 @@
                 "cueZh": "凭收据把太小的棕色鞋换成黑色九码。",
                 "partnerLine": "What's wrong with the shoes?",
                 "modelAnswer": "They're too small. I have the receipt. Could I exchange them for black shoes in size nine?",
+                "modelAnswerTranslationZh": "它们太小了。我有收据。可以把它们换成九码的黑色鞋吗？",
                 "acceptedAnswers": ["They're too small. I have the receipt. Could I exchange them for black shoes in size nine?", "These brown shoes are too small. Can I exchange them for a black size nine? Here's the receipt.", "I'd like to exchange these for black shoes, size nine. I have my receipt."],
                 "requiredConcepts": ["too-small", "receipt", "exchange", "black-size-nine"]
               }
@@ -763,7 +782,7 @@
       "sceneQuiz": [
         {"id": "w4d26-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "当原方案不可用时，哪个词可引出替代方案？", "options": ["instead", "receipt", "boarding"], "correctOptionIndex": 0, "rationaleZh": "instead 表示改用另一个方案。"},
         {"id": "w4d26-q2", "domain": "listening", "format": "single-choice", "audioText": "Take bus eight for five stops. The café is across from the final stop, and the store is one block farther.", "promptZh": "哪项路线正确？", "options": ["坐 5 路 8 站，商店在终点", "坐 8 路 5 站，咖啡店在终点对面", "坐 8 路 1 站，咖啡店在商店对面"], "correctOptionIndex": 1, "rationaleZh": "bus eight、for five stops、café across from the final stop。"},
-        {"id": "w4d26-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "原配菜含花生。说明过敏，并请服务员确认沙拉是否适合。", "modelAnswer": "I'm allergic to peanuts. Could you check whether the salad is safe for me?", "acceptedAnswers": ["I'm allergic to peanuts. Could you check whether the salad is safe for me?", "I have a peanut allergy. Is there a salad your kitchen can confirm is safe for me?", "The side has peanuts, and I'm allergic. Could you help me choose another option?"], "requiredConcepts": ["peanut-allergy", "staff-confirmation", "alternative"]}
+        {"id": "w4d26-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "原配菜含花生。说明过敏，并请服务员确认沙拉是否适合。", "modelAnswer": "I'm allergic to peanuts. Could you check whether the salad is safe for me?", "modelAnswerTranslationZh": "我对花生过敏。你能确认一下这份沙拉对我是否安全吗？", "acceptedAnswers": ["I'm allergic to peanuts. Could you check whether the salad is safe for me?", "I have a peanut allergy. Is there a salad your kitchen can confirm is safe for me?", "The side has peanuts, and I'm allergic. Could you help me choose another option?"], "requiredConcepts": ["peanut-allergy", "staff-confirmation", "alternative"]}
       ]
     },
     {
@@ -882,6 +901,7 @@
                 "cueZh": "中午接驳车取消。你的航班四点，请前台改叫出租车。",
                 "partnerLine": "The next shuttle leaves at one thirty.",
                 "modelAnswer": "My flight is at four. Could you call a taxi instead?",
+                "modelAnswerTranslationZh": "我的航班是四点。可以改为帮我叫一辆出租车吗？",
                 "acceptedAnswers": ["My flight is at four. Could you call a taxi instead?", "One thirty is too late for my four o'clock flight. Could you get me a taxi?", "Could we use a taxi instead? My flight leaves at four."],
                 "requiredConcepts": ["flight-4:00", "taxi-alternative"]
               },
@@ -890,6 +910,7 @@
                 "cueZh": "护照找不到，最后在酒店前台见到。",
                 "partnerLine": "What item is missing, and where did you last see it?",
                 "modelAnswer": "My passport is missing. I last saw it at the hotel front desk.",
+                "modelAnswerTranslationZh": "我的护照不见了。我最后一次看到它是在酒店前台。",
                 "acceptedAnswers": ["My passport is missing. I last saw it at the hotel front desk.", "I can't find my passport. It was at the hotel front desk.", "I lost my passport, and the front desk was the last place I saw it."],
                 "requiredConcepts": ["missing-passport", "hotel-front-desk"]
               },
@@ -898,6 +919,7 @@
                 "cueZh": "请求问讯台工作人员联系酒店。",
                 "partnerLine": "How can I help with the missing passport?",
                 "modelAnswer": "Could you help me contact the hotel right away?",
+                "modelAnswerTranslationZh": "你能帮我马上联系酒店吗？",
                 "acceptedAnswers": ["Could you help me contact the hotel right away?", "Please call the hotel now.", "I need help contacting my hotel immediately."],
                 "requiredConcepts": ["contact-hotel", "immediate"]
               },
@@ -906,6 +928,7 @@
                 "cueZh": "确认 A12 登机口、4:30 登机、5:10 出发。",
                 "partnerLine": "Your flight has a new schedule.",
                 "modelAnswer": "Let me confirm: gate A12, boarding at four thirty, and departure at five ten?",
+                "modelAnswerTranslationZh": "我确认一下：登机口是 A12，四点半登机，五点十分起飞，对吗？",
                 "acceptedAnswers": ["Let me confirm: gate A12, boarding at four thirty, and departure at five ten?", "The new gate is A12, we board at 4:30, and leave at 5:10, right?", "A12, boarding 4:30, departure 5:10, correct?"],
                 "requiredConcepts": ["gate-A12", "4:30", "5:10", "confirmation"]
               }
@@ -916,7 +939,7 @@
       "sceneQuiz": [
         {"id": "w4d27-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "“The shuttle was canceled.”是什么意思？", "options": ["接驳车改时间", "接驳车取消", "接驳车已到"], "correctOptionIndex": 1, "rationaleZh": "canceled 表示取消。"},
         {"id": "w4d27-q2", "domain": "listening", "format": "single-choice", "audioText": "The two o'clock train was canceled. Take the bus at two twenty from stop six instead.", "promptZh": "替代方案是什么？", "options": ["2:00 坐火车", "2:20 在 6 号站坐公交", "6:20 坐公交"], "correctOptionIndex": 1, "rationaleZh": "bus at two twenty from stop six instead。"},
-        {"id": "w4d27-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "报告黑色护照夹丢失，最后在安检处见到。", "modelAnswer": "My black passport holder is missing. I last saw it at security.", "acceptedAnswers": ["My black passport holder is missing. I last saw it at security.", "I lost a black passport holder near security.", "I can't find my black passport holder. It was last at security."], "requiredConcepts": ["black-passport-holder", "security", "missing"]}
+        {"id": "w4d27-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "报告黑色护照夹丢失，最后在安检处见到。", "modelAnswer": "My black passport holder is missing. I last saw it at security.", "modelAnswerTranslationZh": "我的黑色护照夹不见了。我最后一次看到它是在安检处。", "acceptedAnswers": ["My black passport holder is missing. I last saw it at security.", "I lost a black passport holder near security.", "I can't find my black passport holder. It was last at security."], "requiredConcepts": ["black-passport-holder", "security", "missing"]}
       ]
     },
     {
@@ -1053,6 +1076,7 @@
                 "cueZh": "退房并请求寄存一件行李到下午两点。",
                 "partnerLine": "Good morning. How can I help?",
                 "modelAnswer": "I'd like to check out of room 407. Could you store one suitcase until two p.m.?",
+                "modelAnswerTranslationZh": "我想从 407 房退房。可以帮我寄存一件行李到下午两点吗？",
                 "acceptedAnswers": ["I'd like to check out of room 407. Could you store one suitcase until two p.m.?", "I'm checking out of room 407. Can you hold one bag until two?", "Room 407 is checking out. Could I leave a suitcase here until 2:00?"],
                 "requiredConcepts": ["room-407", "check-out", "one-suitcase", "2:00-pm"]
               },
@@ -1061,6 +1085,7 @@
                 "cueZh": "点火鸡三明治，不加奶酪；说明花生过敏。",
                 "partnerLine": "What would you like for lunch?",
                 "modelAnswer": "I'd like the turkey sandwich without cheese. I'm allergic to peanuts.",
+                "modelAnswerTranslationZh": "我想要火鸡三明治，不加奶酪。我对花生过敏。",
                 "acceptedAnswers": ["I'd like the turkey sandwich without cheese. I'm allergic to peanuts.", "A turkey sandwich, no cheese, please. I have a peanut allergy.", "Can I get the turkey sandwich without cheese? Also, I'm allergic to peanuts."],
                 "requiredConcepts": ["turkey-sandwich", "without-cheese", "peanut-allergy"]
               },
@@ -1069,6 +1094,7 @@
                 "cueZh": "常用入口关闭，确认改去二号航站楼下客区。",
                 "partnerLine": "The main airport entrance is closed.",
                 "modelAnswer": "Could you drop me off at terminal two instead? Let me confirm: terminal two drop-off?",
+                "modelAnswerTranslationZh": "可以改在二号航站楼让我下车吗？我确认一下：是二号航站楼下客区，对吗？",
                 "acceptedAnswers": ["Could you drop me off at terminal two instead? Let me confirm: terminal two drop-off?", "Please use terminal two drop-off instead. That's terminal two, right?", "Terminal two drop-off is fine. Could you take me there?"],
                 "requiredConcepts": ["terminal-two", "drop-off", "alternative", "confirmation"]
               },
@@ -1077,6 +1103,7 @@
                 "cueZh": "确认 905 航班改到 B16，五点登机。",
                 "partnerLine": "Your gate has changed.",
                 "modelAnswer": "Let me confirm: flight 905 is now at gate B16, and boarding starts at five?",
+                "modelAnswerTranslationZh": "我确认一下：905 航班现在在 B16 登机口，五点开始登机，对吗？",
                 "acceptedAnswers": ["Let me confirm: flight 905 is now at gate B16, and boarding starts at five?", "Flight 905, gate B16, boarding at five, correct?", "So I go to B16 and board at 5:00, right?"],
                 "requiredConcepts": ["flight-905", "gate-B16", "5:00", "confirmation"]
               },
@@ -1085,6 +1112,7 @@
                 "cueZh": "在 B16 附近有人头晕但清醒，向工作人员求助。",
                 "partnerLine": "What is the emergency?",
                 "modelAnswer": "We need help near gate B16. A traveler feels dizzy but is awake.",
+                "modelAnswerTranslationZh": "B16 登机口附近有人需要帮助。一位旅客感到头晕，但意识清醒。",
                 "acceptedAnswers": ["We need help near gate B16. A traveler feels dizzy but is awake.", "Please send help to gate B16. Someone is dizzy, but they're awake.", "A traveler near B16 feels dizzy. They're awake, and we need help."],
                 "requiredConcepts": ["help-request", "gate-B16", "dizzy", "awake"]
               }
@@ -1095,7 +1123,7 @@
       "sceneQuiz": [
         {"id": "w4d28-q1", "domain": "vocabulary", "format": "intent-matching", "promptZh": "将意图与表达匹配：确认 / 提替代 / 更正错误 / 紧急求助。", "pairs": [{"intentZh": "确认", "answer": "Let me confirm..."}, {"intentZh": "提替代", "answer": "Could we ... instead?"}, {"intentZh": "更正错误", "answer": "I think this is wrong."}, {"intentZh": "紧急求助", "answer": "This is an emergency. We need help."}], "rationaleZh": "四种表达分别对应核对、替代、纠错和求助。"},
         {"id": "w4d28-q2", "domain": "listening", "format": "single-choice", "audioText": "Checkout is at noon. The airport shuttle was canceled, so take a taxi to terminal three. Your gate changed to C8, and boarding starts at four fifteen.", "promptZh": "哪项完整信息正确？", "options": ["中午退房—出租车去三号航站楼—C8—4:15 登机", "中午退房—接驳车去 C8—3:00 登机", "下午退房—出租车去四号航站楼—C15"], "correctOptionIndex": 0, "rationaleZh": "四项信息均在音频中直接给出。"},
-        {"id": "w4d28-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "综合完成：报告护照丢失、最后在酒店前台见到，并请求立即联系酒店。", "modelAnswer": "My passport is missing. I last saw it at the hotel front desk. Could you help me contact the hotel right away?", "acceptedAnswers": ["My passport is missing. I last saw it at the hotel front desk. Could you help me contact the hotel right away?", "I can't find my passport. It was last at the hotel front desk. Please help me call the hotel now.", "I lost my passport after leaving the hotel front desk. Could we contact the hotel immediately?"], "requiredConcepts": ["missing-passport", "hotel-front-desk", "contact-hotel", "immediate"]}
+        {"id": "w4d28-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "综合完成：报告护照丢失、最后在酒店前台见到，并请求立即联系酒店。", "modelAnswer": "My passport is missing. I last saw it at the hotel front desk. Could you help me contact the hotel right away?", "modelAnswerTranslationZh": "我的护照不见了。我最后一次看到它是在酒店前台。你能帮我马上联系酒店吗？", "acceptedAnswers": ["My passport is missing. I last saw it at the hotel front desk. Could you help me contact the hotel right away?", "I can't find my passport. It was last at the hotel front desk. Please help me call the hotel now.", "I lost my passport after leaving the hotel front desk. Could we contact the hotel immediately?"], "requiredConcepts": ["missing-passport", "hotel-front-desk", "contact-hotel", "immediate"]}
       ]
     }
   ]

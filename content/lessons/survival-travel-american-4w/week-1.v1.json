@@ -117,6 +117,7 @@
                 "cueZh": "你叫 Lin。回应对方并介绍自己。",
                 "partnerLine": "Hi, I'm Maya.",
                 "modelAnswer": "Hi, Maya. I'm Lin.",
+                "modelAnswerTranslationZh": "你好，Maya。我是 Lin。",
                 "acceptedAnswers": ["Hi, Maya. I'm Lin.", "Hello, Maya. I'm Lin.", "Nice to meet you, Maya. I'm Lin."],
                 "requiredConcepts": ["greeting", "speaker-name"]
               },
@@ -125,6 +126,7 @@
                 "cueZh": "说明你来自上海。",
                 "partnerLine": "Where are you from?",
                 "modelAnswer": "I'm from Shanghai.",
+                "modelAnswerTranslationZh": "我来自上海。",
                 "acceptedAnswers": ["I'm from Shanghai.", "I am from Shanghai."],
                 "requiredConcepts": ["from", "Shanghai"]
               },
@@ -133,6 +135,7 @@
                 "cueZh": "说明你在纽约旅行。",
                 "partnerLine": "Do you live here?",
                 "modelAnswer": "No, I'm visiting New York.",
+                "modelAnswerTranslationZh": "不，我正在纽约旅行。",
                 "acceptedAnswers": ["No, I'm visiting New York.", "No. I'm here on vacation.", "No, I'm a visitor."],
                 "requiredConcepts": ["not-local", "visit"]
               }
@@ -143,7 +146,7 @@
       "sceneQuiz": [
         {"id": "w1d1-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "哪一句表示“我来自北京”？", "options": ["I'm Beijing.", "I'm from Beijing.", "I visit from Beijing."], "correctOptionIndex": 1, "rationaleZh": "表示来源使用 be from。"},
         {"id": "w1d1-q2", "domain": "listening", "format": "single-choice", "audioText": "Hi, I'm Nora. I'm visiting Chicago.", "promptZh": "Nora 在哪里旅行？", "options": ["Chicago", "Boston", "New York"], "correctOptionIndex": 0, "rationaleZh": "visiting 后面的地点是 Chicago。"},
-        {"id": "w1d1-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "对方说“Nice to meet you.” 请回应。", "modelAnswer": "Nice to meet you, too.", "acceptedAnswers": ["Nice to meet you, too.", "You, too.", "It's nice to meet you, too."], "requiredConcepts": ["polite-response"]}
+        {"id": "w1d1-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "对方说“Nice to meet you.” 请回应。", "modelAnswer": "Nice to meet you, too.", "modelAnswerTranslationZh": "我也很高兴认识你。", "acceptedAnswers": ["Nice to meet you, too.", "You, too.", "It's nice to meet you, too."], "requiredConcepts": ["polite-response"]}
       ]
     },
     {
@@ -262,6 +265,7 @@
                 "cueZh": "你的姓是 Li。拼给对方听。",
                 "partnerLine": "Could you spell your last name?",
                 "modelAnswer": "Sure. It's L-I.",
+                "modelAnswerTranslationZh": "当然。是 L-I。",
                 "acceptedAnswers": ["Sure. It's L-I.", "L-I.", "My last name is Li, L-I."],
                 "requiredConcepts": ["L", "I"]
               },
@@ -270,6 +274,7 @@
                 "cueZh": "提供虚构电话号码 555-0136。",
                 "partnerLine": "What's your phone number?",
                 "modelAnswer": "My phone number is 555-0136.",
+                "modelAnswerTranslationZh": "我的电话号码是 555-0136。",
                 "acceptedAnswers": ["My phone number is 555-0136.", "It's 555-0136.", "555-0136."],
                 "requiredConcepts": ["555-0136"]
               },
@@ -278,6 +283,7 @@
                 "cueZh": "你没听清电子邮箱地址，请对方再说一次。",
                 "partnerLine": "My email address is maya@example.com.",
                 "modelAnswer": "Could you say that again, please?",
+                "modelAnswerTranslationZh": "请你再说一遍好吗？",
                 "acceptedAnswers": ["Could you say that again, please?", "Could you repeat that, please?", "Sorry, what was the email address?"],
                 "requiredConcepts": ["repeat-request"]
               }
@@ -288,7 +294,7 @@
       "sceneQuiz": [
         {"id": "w1d2-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "表格中的“last name”要求填写什么？", "options": ["名字", "姓", "电话号码"], "correctOptionIndex": 1, "rationaleZh": "美式表格中 last name 指姓。"},
         {"id": "w1d2-q2", "domain": "listening", "format": "single-choice", "audioText": "My name is Bea. That's B-E-A.", "promptZh": "名字怎么拼？", "options": ["B-E-A", "B-I-A", "P-E-A"], "correctOptionIndex": 0, "rationaleZh": "说话人明确拼为 B-E-A。"},
-        {"id": "w1d2-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "请对方拼一下姓名。", "modelAnswer": "Could you spell your name, please?", "acceptedAnswers": ["Could you spell your name, please?", "How do you spell your name?", "Can you spell that, please?"], "requiredConcepts": ["spell", "name"]}
+        {"id": "w1d2-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "请对方拼一下姓名。", "modelAnswer": "Could you spell your name, please?", "modelAnswerTranslationZh": "请你拼一下你的名字好吗？", "acceptedAnswers": ["Could you spell your name, please?", "How do you spell your name?", "Can you spell that, please?"], "requiredConcepts": ["spell", "name"]}
       ]
     },
     {
@@ -407,6 +413,7 @@
                 "cueZh": "询问这张票多少钱。",
                 "partnerLine": "Can I help you?",
                 "modelAnswer": "How much is this ticket?",
+                "modelAnswerTranslationZh": "这张票多少钱？",
                 "acceptedAnswers": ["How much is this ticket?", "What's the price of this ticket?", "How much does this ticket cost?"],
                 "requiredConcepts": ["price-question", "ticket"]
               },
@@ -415,6 +422,7 @@
                 "cueZh": "告诉对方价格是 12.50 美元。",
                 "partnerLine": "How much is it?",
                 "modelAnswer": "It's twelve dollars and fifty cents.",
+                "modelAnswerTranslationZh": "十二美元五十美分。",
                 "acceptedAnswers": ["It's twelve dollars and fifty cents.", "It's twelve fifty.", "Twelve dollars and fifty cents."],
                 "requiredConcepts": ["12.50"]
               },
@@ -423,6 +431,7 @@
                 "cueZh": "你不确定听到的是 15 还是 50，请确认。",
                 "partnerLine": "It's fifty dollars.",
                 "modelAnswer": "Is that fifteen or fifty dollars?",
+                "modelAnswerTranslationZh": "是十五美元还是五十美元？",
                 "acceptedAnswers": ["Is that fifteen or fifty dollars?", "Did you say fifteen or fifty?", "Sorry, was that fifty dollars?"],
                 "requiredConcepts": ["number-confirmation"]
               }
@@ -433,7 +442,7 @@
       "sceneQuiz": [
         {"id": "w1d3-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "“ninety-nine cents”是多少钱？", "options": ["$0.99", "$9.90", "$99.00"], "correctOptionIndex": 0, "rationaleZh": "一美元等于一百美分，99 cents 是 $0.99。"},
         {"id": "w1d3-q2", "domain": "listening", "format": "single-choice", "audioText": "Your total is thirty dollars and thirteen cents.", "promptZh": "总价是多少？", "options": ["$13.30", "$30.13", "$30.30"], "correctOptionIndex": 1, "rationaleZh": "thirty dollars and thirteen cents 是 $30.13。"},
-        {"id": "w1d3-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "询问这件物品的价格。", "modelAnswer": "How much is this?", "acceptedAnswers": ["How much is this?", "How much does this cost?", "What's the price of this?"], "requiredConcepts": ["price-question"]}
+        {"id": "w1d3-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "询问这件物品的价格。", "modelAnswer": "How much is this?", "modelAnswerTranslationZh": "这个多少钱？", "acceptedAnswers": ["How much is this?", "How much does this cost?", "What's the price of this?"], "requiredConcepts": ["price-question"]}
       ]
     },
     {
@@ -551,6 +560,7 @@
                 "cueZh": "询问早餐几点开始。",
                 "partnerLine": "Breakfast is downstairs.",
                 "modelAnswer": "What time does breakfast start?",
+                "modelAnswerTranslationZh": "早餐几点开始？",
                 "acceptedAnswers": ["What time does breakfast start?", "What time is breakfast?", "When does breakfast start?"],
                 "requiredConcepts": ["breakfast", "time-question"]
               },
@@ -559,6 +569,7 @@
                 "cueZh": "提议明天上午九点见。",
                 "partnerLine": "When should we meet?",
                 "modelAnswer": "Let's meet tomorrow morning at nine.",
+                "modelAnswerTranslationZh": "我们明天上午九点见吧。",
                 "acceptedAnswers": ["Let's meet tomorrow morning at nine.", "How about tomorrow at nine in the morning?", "Let's meet at nine tomorrow morning."],
                 "requiredConcepts": ["tomorrow", "9:00"]
               },
@@ -567,6 +578,7 @@
                 "cueZh": "确认对方说的是 6:15。",
                 "partnerLine": "The train leaves at six fifteen.",
                 "modelAnswer": "Let me confirm: it leaves at six fifteen?",
+                "modelAnswerTranslationZh": "我确认一下：它是六点十五分出发吗？",
                 "acceptedAnswers": ["Let me confirm: it leaves at six fifteen?", "Did you say six fifteen?", "So the train leaves at 6:15, right?"],
                 "requiredConcepts": ["6:15", "confirmation"]
               }
@@ -577,7 +589,7 @@
       "sceneQuiz": [
         {"id": "w1d4-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "“this evening”通常指什么时间？", "options": ["今天上午", "今天下午", "今天晚上"], "correctOptionIndex": 2, "rationaleZh": "evening 指晚上。"},
         {"id": "w1d4-q2", "domain": "listening", "format": "single-choice", "audioText": "The tour starts at a quarter after two this afternoon.", "promptZh": "旅行团几点出发？", "options": ["2:15 p.m.", "2:30 p.m.", "1:45 p.m."], "correctOptionIndex": 0, "rationaleZh": "a quarter after two 是 2:15。"},
-        {"id": "w1d4-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "询问活动几点开始。", "modelAnswer": "What time does it start?", "acceptedAnswers": ["What time does it start?", "When does it start?", "What time is the event?"], "requiredConcepts": ["start-time-question"]}
+        {"id": "w1d4-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "询问活动几点开始。", "modelAnswer": "What time does it start?", "modelAnswerTranslationZh": "它几点开始？", "acceptedAnswers": ["What time does it start?", "When does it start?", "What time is the event?"], "requiredConcepts": ["start-time-question"]}
       ]
     },
     {
@@ -695,6 +707,7 @@
                 "cueZh": "礼貌询问洗手间在哪里。",
                 "partnerLine": "Can I help you?",
                 "modelAnswer": "Excuse me, where is the restroom?",
+                "modelAnswerTranslationZh": "打扰一下，洗手间在哪里？",
                 "acceptedAnswers": ["Excuse me, where is the restroom?", "Could you tell me where the restroom is?", "Where's the restroom, please?"],
                 "requiredConcepts": ["restroom", "location-question"]
               },
@@ -703,6 +716,7 @@
                 "cueZh": "请求一杯水。",
                 "partnerLine": "What do you need?",
                 "modelAnswer": "Could I have some water, please?",
+                "modelAnswerTranslationZh": "请给我一些水好吗？",
                 "acceptedAnswers": ["Could I have some water, please?", "Can I get some water, please?", "Some water, please."],
                 "requiredConcepts": ["water", "polite-request"]
               },
@@ -711,6 +725,7 @@
                 "cueZh": "你没听懂，请对方说慢一点。",
                 "partnerLine": "Take the escalator past the information desk.",
                 "modelAnswer": "Sorry, I don't understand. Could you speak more slowly?",
+                "modelAnswerTranslationZh": "对不起，我没听懂。你能说慢一点吗？",
                 "acceptedAnswers": ["Sorry, I don't understand. Could you speak more slowly?", "Could you say that again, more slowly?", "Sorry, could you speak more slowly?"],
                 "requiredConcepts": ["repair", "slowly"]
               }
@@ -721,7 +736,7 @@
       "sceneQuiz": [
         {"id": "w1d5-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "向陌生人提问时，哪种开场最合适？", "options": ["Excuse me.", "Give me that.", "Hey, you."], "correctOptionIndex": 0, "rationaleZh": "Excuse me 是中性、常用的礼貌开场。"},
         {"id": "w1d5-q2", "domain": "listening", "format": "single-choice", "audioText": "The restroom is across from the front desk.", "promptZh": "洗手间在哪里？", "options": ["前台里面", "前台对面", "前台后面"], "correctOptionIndex": 1, "rationaleZh": "across from 表示在……对面。"},
-        {"id": "w1d5-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "请对方再说一遍。", "modelAnswer": "Could you say that again, please?", "acceptedAnswers": ["Could you say that again, please?", "Could you repeat that, please?", "Sorry, can you say that again?"], "requiredConcepts": ["repeat-request"]}
+        {"id": "w1d5-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "请对方再说一遍。", "modelAnswer": "Could you say that again, please?", "modelAnswerTranslationZh": "请你再说一遍好吗？", "acceptedAnswers": ["Could you say that again, please?", "Could you repeat that, please?", "Sorry, can you say that again?"], "requiredConcepts": ["repeat-request"]}
       ]
     },
     {
@@ -840,6 +855,7 @@
                 "cueZh": "点一杯小杯咖啡。",
                 "partnerLine": "What can I get for you?",
                 "modelAnswer": "I'd like a small coffee, please.",
+                "modelAnswerTranslationZh": "我想要一杯小杯咖啡。",
                 "acceptedAnswers": ["I'd like a small coffee, please.", "Can I get a small coffee, please?", "A small coffee, please."],
                 "requiredConcepts": ["small", "coffee"]
               },
@@ -848,6 +864,7 @@
                 "cueZh": "说明你要外带。",
                 "partnerLine": "Is that for here or to go?",
                 "modelAnswer": "To go, please.",
+                "modelAnswerTranslationZh": "请打包带走。",
                 "acceptedAnswers": ["To go, please.", "It's to go.", "Takeout, please."],
                 "requiredConcepts": ["takeout"]
               },
@@ -856,6 +873,7 @@
                 "cueZh": "请求三明治不加洋葱。",
                 "partnerLine": "Anything else?",
                 "modelAnswer": "Could I get the sandwich without onions?",
+                "modelAnswerTranslationZh": "三明治可以不加洋葱吗？",
                 "acceptedAnswers": ["Could I get the sandwich without onions?", "No onions on the sandwich, please.", "I'd like the sandwich without onions."],
                 "requiredConcepts": ["sandwich", "without-onions"]
               }
@@ -866,7 +884,7 @@
       "sceneQuiz": [
         {"id": "w1d6-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "美式柜台对话中“to go”通常表示什么？", "options": ["在店里吃", "外带", "稍后再来"], "correctOptionIndex": 1, "rationaleZh": "to go 是常见美式外带表达。"},
         {"id": "w1d6-q2", "domain": "listening", "format": "single-choice", "audioText": "A large iced tea, no sugar, for here.", "promptZh": "这份订单是什么？", "options": ["大杯无糖冰茶，堂食", "小杯甜冰茶，外带", "大杯热茶，外带"], "correctOptionIndex": 0, "rationaleZh": "large、no sugar、for here 分别对应大杯、无糖、堂食。"},
-        {"id": "w1d6-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "点一杯中杯茶，堂食。", "modelAnswer": "I'd like a medium tea for here, please.", "acceptedAnswers": ["I'd like a medium tea for here, please.", "Can I get a medium tea for here?", "A medium tea, for here, please."], "requiredConcepts": ["medium", "tea", "dine-in"]}
+        {"id": "w1d6-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "点一杯中杯茶，堂食。", "modelAnswer": "I'd like a medium tea for here, please.", "modelAnswerTranslationZh": "我想要一杯中杯茶，在这里喝。", "acceptedAnswers": ["I'd like a medium tea for here, please.", "Can I get a medium tea for here?", "A medium tea, for here, please."], "requiredConcepts": ["medium", "tea", "dine-in"]}
       ]
     },
     {
@@ -983,6 +1001,7 @@
                 "cueZh": "你叫 Mei，来自杭州。介绍自己。",
                 "partnerLine": "Hi, I'm Jordan. What's your name?",
                 "modelAnswer": "Hi, Jordan. I'm Mei. I'm from Hangzhou.",
+                "modelAnswerTranslationZh": "你好，Jordan。我是 Mei。我来自杭州。",
                 "acceptedAnswers": ["Hi, Jordan. I'm Mei. I'm from Hangzhou.", "My name is Mei, and I'm from Hangzhou.", "I'm Mei. Nice to meet you. I'm from Hangzhou."],
                 "requiredConcepts": ["Mei", "Hangzhou"]
               },
@@ -991,6 +1010,7 @@
                 "cueZh": "提议明天上午十点喝咖啡。",
                 "partnerLine": "Are you free tomorrow?",
                 "modelAnswer": "Yes. Let's get coffee tomorrow morning at ten.",
+                "modelAnswerTranslationZh": "好啊。我们明天上午十点去喝咖啡吧。",
                 "acceptedAnswers": ["Yes. Let's get coffee tomorrow morning at ten.", "How about coffee at ten tomorrow morning?", "I'm free. Let's meet for coffee at ten."],
                 "requiredConcepts": ["coffee", "tomorrow", "10:00"]
               },
@@ -999,6 +1019,7 @@
                 "cueZh": "点一杯中杯咖啡，外带。",
                 "partnerLine": "What can I get for you?",
                 "modelAnswer": "I'd like a medium coffee to go, please.",
+                "modelAnswerTranslationZh": "我想要一杯中杯咖啡，打包带走。",
                 "acceptedAnswers": ["I'd like a medium coffee to go, please.", "Can I get a medium coffee to go?", "A medium coffee, to go, please."],
                 "requiredConcepts": ["medium", "coffee", "takeout"]
               },
@@ -1007,6 +1028,7 @@
                 "cueZh": "你没听清总价，请对方重复。",
                 "partnerLine": "Your total is four seventy-five.",
                 "modelAnswer": "Sorry, could you repeat the total, please?",
+                "modelAnswerTranslationZh": "对不起，请你再说一遍总金额好吗？",
                 "acceptedAnswers": ["Sorry, could you repeat the total, please?", "Could you say the price again, please?", "Sorry, how much is it?"],
                 "requiredConcepts": ["repeat-request", "price"]
               }
@@ -1017,7 +1039,7 @@
       "sceneQuiz": [
         {"id": "w1d7-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "哪组表达按“问候—介绍—回应”排列正确？", "options": ["Hi. / I'm Mei. / Nice to meet you.", "Check. / Fifty. / Tomorrow.", "Restroom. / Large. / Email."], "correctOptionIndex": 0, "rationaleZh": "第一组能组成自然的初次见面流程。"},
         {"id": "w1d7-q2", "domain": "listening", "format": "single-choice", "audioText": "Let's meet tomorrow at ten fifteen in the lobby. The café opens at ten.", "promptZh": "见面时间和地点是什么？", "options": ["明天 10:00，在咖啡店", "明天 10:15，在大堂", "今天 10:15，在大堂"], "correctOptionIndex": 1, "rationaleZh": "meet tomorrow at ten fifteen in the lobby。"},
-        {"id": "w1d7-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "完成三项信息：你叫 Yun，来自南京，正在西雅图旅行。", "modelAnswer": "Hi, I'm Yun. I'm from Nanjing, and I'm visiting Seattle.", "acceptedAnswers": ["Hi, I'm Yun. I'm from Nanjing, and I'm visiting Seattle.", "My name is Yun. I'm from Nanjing. I'm visiting Seattle.", "I'm Yun from Nanjing, and I'm here visiting Seattle."], "requiredConcepts": ["Yun", "Nanjing", "Seattle"]}
+        {"id": "w1d7-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "完成三项信息：你叫 Yun，来自南京，正在西雅图旅行。", "modelAnswer": "Hi, I'm Yun. I'm from Nanjing, and I'm visiting Seattle.", "modelAnswerTranslationZh": "你好，我是 Yun。我来自南京，正在西雅图旅行。", "acceptedAnswers": ["Hi, I'm Yun. I'm from Nanjing, and I'm visiting Seattle.", "My name is Yun. I'm from Nanjing. I'm visiting Seattle.", "I'm Yun from Nanjing, and I'm here visiting Seattle."], "requiredConcepts": ["Yun", "Nanjing", "Seattle"]}
       ]
     }
   ]

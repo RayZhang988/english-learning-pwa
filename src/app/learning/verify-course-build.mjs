@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { readdir, readFile } from 'node:fs/promises'
 import '../../../content/curriculum/validate-listening-bilingual-options.v1.mjs'
 import '../../../content/curriculum/validate-scene-vocabulary-question-bank.v1.mjs'
+import '../../../content/curriculum/validate-speaking-translations.v1.mjs'
 
 const distUrl = new URL('../../../dist/', import.meta.url)
 const expectedCourseAssets = [

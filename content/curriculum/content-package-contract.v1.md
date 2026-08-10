@@ -87,6 +87,19 @@
 
 未知活动类型必须显式失败，不能降级成另一题型后仍上报可评分结果。
 
+### 5.1 R16 口语目标表达翻译
+
+每个口语活动提示和每个 `sceneQuiz` 固定口语回答必须同时发布：
+
+- `modelAnswer`：正式英文目标表达；
+- `modelAnswerTranslationZh`：只对应 `modelAnswer` 的正式中文翻译。
+
+`cueZh` 是作答任务提示，不是目标表达翻译，消费者不得用它替代
+`modelAnswerTranslationZh`。中文翻译只供录音后的反馈披露；识别文本不使用该字段，也不
+在运行时调用机器翻译。完整性校验位于
+`content/curriculum/validate-speaking-translations.v1.mjs`，必须覆盖94个活动提示和28个
+场景固定回答，合计122个正式口语供应身份。
+
 ## 6. 向 04 投影 `LearningCandidate`
 
 05 不复制候选列表。集成方从所有当前已安装的 `learningUnits` 投影：

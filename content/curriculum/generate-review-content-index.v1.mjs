@@ -37,7 +37,18 @@ function scoredContent(value) {
   if (Array.isArray(value)) return value.map(scoredContent)
   if (!value || typeof value !== 'object') return value
   return Object.fromEntries(Object.entries(value)
-    .filter(([key]) => !['id', 'exerciseId', 'segmentId', 'sourceId', 'baseContentRef', 'learningUnitId'].includes(key))
+    .filter(([key]) => ![
+      'id',
+      'exerciseId',
+      'segmentId',
+      'sourceId',
+      'baseContentRef',
+      'learningUnitId',
+      // R16 feedback copy is not part of the scored English answer. Keeping it
+      // out prevents a translation-only correction from invalidating an
+      // existing wrong-answer identity.
+      'modelAnswerTranslationZh',
+    ].includes(key))
     .map(([key, child]) => [key, scoredContent(child)]))
 }
 

@@ -119,6 +119,7 @@
                 "cueZh": "你们两个人，没有预订。",
                 "partnerLine": "Good evening. Do you have a reservation?",
                 "modelAnswer": "No. A table for two, please.",
+                "modelAnswerTranslationZh": "没有预订。请给我们一张两人桌。",
                 "acceptedAnswers": ["No. A table for two, please.", "We don't have a reservation. We need a table for two.", "No reservation. There are two of us."],
                 "requiredConcepts": ["no-reservation", "two-people"]
               },
@@ -127,6 +128,7 @@
                 "cueZh": "你在 Chen 名下预订了七点的位置。",
                 "partnerLine": "What name is the reservation under?",
                 "modelAnswer": "It's under Chen, for seven o'clock.",
+                "modelAnswerTranslationZh": "预订在 Chen 名下，时间是七点。",
                 "acceptedAnswers": ["It's under Chen, for seven o'clock.", "The reservation is under Chen at seven.", "Chen. We have a seven o'clock reservation."],
                 "requiredConcepts": ["Chen", "7:00"]
               },
@@ -135,6 +137,7 @@
                 "cueZh": "等位时请求看菜单。",
                 "partnerLine": "The wait is about fifteen minutes.",
                 "modelAnswer": "That's fine. Could we see the menu while we wait?",
+                "modelAnswerTranslationZh": "没问题。我们等候时可以看看菜单吗？",
                 "acceptedAnswers": ["That's fine. Could we see the menu while we wait?", "Can we have the menus while we wait?", "Could we look at a menu now?"],
                 "requiredConcepts": ["menu-request"]
               }
@@ -145,7 +148,7 @@
       "sceneQuiz": [
         {"id": "w2d8-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "“The wait is twenty minutes.”是什么意思？", "options": ["餐厅二十分钟后关门", "需要等二十分钟", "用餐限时二十分钟"], "correctOptionIndex": 1, "rationaleZh": "餐厅接待语境中的 the wait 指等位时间。"},
         {"id": "w2d8-q2", "domain": "listening", "format": "single-choice", "audioText": "I have a reservation for four under Park at six thirty.", "promptZh": "预订信息是什么？", "options": ["Park，四人，6:30", "Park，六人，4:30", "Four，Park，6:00"], "correctOptionIndex": 0, "rationaleZh": "for four、under Park、at six thirty。"},
-        {"id": "w2d8-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "说明你们三个人，需要一张桌子。", "modelAnswer": "A table for three, please.", "acceptedAnswers": ["A table for three, please.", "We need a table for three.", "There are three of us."], "requiredConcepts": ["three-people"]}
+        {"id": "w2d8-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "说明你们三个人，需要一张桌子。", "modelAnswer": "A table for three, please.", "modelAnswerTranslationZh": "请给我们一张三人桌。", "acceptedAnswers": ["A table for three, please.", "We need a table for three.", "There are three of us."], "requiredConcepts": ["three-people"]}
       ]
     },
     {
@@ -263,6 +266,7 @@
                 "cueZh": "点烤鸡和沙拉。",
                 "partnerLine": "What would you like?",
                 "modelAnswer": "I'd like the grilled chicken with a salad, please.",
+                "modelAnswerTranslationZh": "我想要烤鸡配沙拉。",
                 "acceptedAnswers": ["I'd like the grilled chicken with a salad, please.", "Can I get the grilled chicken and a salad?", "The grilled chicken with a salad, please."],
                 "requiredConcepts": ["grilled-chicken", "salad"]
               },
@@ -271,6 +275,7 @@
                 "cueZh": "请求三明治不加奶酪。",
                 "partnerLine": "How would you like the sandwich?",
                 "modelAnswer": "Could I get it without cheese?",
+                "modelAnswerTranslationZh": "可以不加奶酪吗？",
                 "acceptedAnswers": ["Could I get it without cheese?", "No cheese, please.", "I'd like the sandwich without cheese."],
                 "requiredConcepts": ["without-cheese"]
               },
@@ -279,6 +284,7 @@
                 "cueZh": "明确说明你对花生过敏。",
                 "partnerLine": "Do you have any food allergies?",
                 "modelAnswer": "Yes, I'm allergic to peanuts.",
+                "modelAnswerTranslationZh": "是的，我对花生过敏。",
                 "acceptedAnswers": ["Yes, I'm allergic to peanuts.", "I have a peanut allergy.", "Peanuts. I'm allergic to them."],
                 "requiredConcepts": ["peanut-allergy"]
               }
@@ -289,7 +295,7 @@
       "sceneQuiz": [
         {"id": "w2d9-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "“substitute salad for fries”是什么意思？", "options": ["沙拉和薯条都要", "用沙拉替换薯条", "不要沙拉，只要薯条"], "correctOptionIndex": 1, "rationaleZh": "substitute A for B 表示用 A 替换 B。"},
         {"id": "w2d9-q2", "domain": "listening", "format": "single-choice", "audioText": "The soup has cream in it, but the salad is dairy-free.", "promptZh": "哪一样不含乳制品？", "options": ["汤", "沙拉", "两者都不含"], "correctOptionIndex": 1, "rationaleZh": "dairy-free 明确描述 salad。"},
-        {"id": "w2d9-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "点意面，不加肉。", "modelAnswer": "I'd like the pasta without meat, please.", "acceptedAnswers": ["I'd like the pasta without meat, please.", "Can I get the pasta with no meat?", "The pasta, without meat, please."], "requiredConcepts": ["pasta", "without-meat"]}
+        {"id": "w2d9-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "点意面，不加肉。", "modelAnswer": "I'd like the pasta without meat, please.", "modelAnswerTranslationZh": "我想要意面，不加肉。", "acceptedAnswers": ["I'd like the pasta without meat, please.", "Can I get the pasta with no meat?", "The pasta, without meat, please."], "requiredConcepts": ["pasta", "without-meat"]}
       ]
     },
     {
@@ -407,6 +413,7 @@
                 "cueZh": "索要账单。",
                 "partnerLine": "Can I get you anything else?",
                 "modelAnswer": "No, thank you. Could we get the check, please?",
+                "modelAnswerTranslationZh": "不用了，谢谢。请把账单给我们好吗？",
                 "acceptedAnswers": ["No, thank you. Could we get the check, please?", "We're ready for the check, please.", "The check, please."],
                 "requiredConcepts": ["check-request"]
               },
@@ -415,6 +422,7 @@
                 "cueZh": "说明账单上多了一份甜点。",
                 "partnerLine": "Is everything correct?",
                 "modelAnswer": "I think there's an extra dessert on the check.",
+                "modelAnswerTranslationZh": "我觉得账单上多算了一份甜点。",
                 "acceptedAnswers": ["I think there's an extra dessert on the check.", "We didn't order this dessert.", "The dessert charge is wrong."],
                 "requiredConcepts": ["extra-dessert", "check-problem"]
               },
@@ -423,6 +431,7 @@
                 "cueZh": "说明你刷卡付款。",
                 "partnerLine": "Cash or card?",
                 "modelAnswer": "I'll pay by card.",
+                "modelAnswerTranslationZh": "我刷卡付款。",
                 "acceptedAnswers": ["I'll pay by card.", "Card, please.", "I'd like to pay with a card."],
                 "requiredConcepts": ["card-payment"]
               }
@@ -433,7 +442,7 @@
       "sceneQuiz": [
         {"id": "w2d10-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "餐厅里的“extra charge”指什么？", "options": ["额外收费", "额外座位", "免费加菜"], "correctOptionIndex": 0, "rationaleZh": "charge 在账单语境中指收费项目。"},
         {"id": "w2d10-q2", "domain": "listening", "format": "single-choice", "audioText": "The total is forty-two dollars. The tip is not included.", "promptZh": "哪项信息正确？", "options": ["总额含小费", "总额是 $24", "总额是 $42，未含小费"], "correctOptionIndex": 2, "rationaleZh": "说话人明确说 forty-two dollars，tip is not included。"},
-        {"id": "w2d10-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "礼貌指出送错了菜。", "modelAnswer": "Excuse me, I think this is the wrong dish.", "acceptedAnswers": ["Excuse me, I think this is the wrong dish.", "Sorry, I didn't order this.", "I think this is the wrong order."], "requiredConcepts": ["wrong-item"]}
+        {"id": "w2d10-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "礼貌指出送错了菜。", "modelAnswer": "Excuse me, I think this is the wrong dish.", "modelAnswerTranslationZh": "打扰一下，我觉得这道菜送错了。", "acceptedAnswers": ["Excuse me, I think this is the wrong dish.", "Sorry, I didn't order this.", "I think this is the wrong order."], "requiredConcepts": ["wrong-item"]}
       ]
     },
     {
@@ -550,6 +559,7 @@
                 "cueZh": "询问怎么去火车站。",
                 "partnerLine": "You look lost. Can I help?",
                 "modelAnswer": "Yes, please. How do I get to the train station?",
+                "modelAnswerTranslationZh": "好的，谢谢。请问怎么去火车站？",
                 "acceptedAnswers": ["Yes, please. How do I get to the train station?", "Could you tell me how to get to the train station?", "Where is the train station?"],
                 "requiredConcepts": ["train-station", "direction-question"]
               },
@@ -558,6 +568,7 @@
                 "cueZh": "确认是在第二个街角左转。",
                 "partnerLine": "Turn left at the second corner.",
                 "modelAnswer": "Let me confirm: left at the second corner?",
+                "modelAnswerTranslationZh": "我确认一下：在第二个街角左转，对吗？",
                 "acceptedAnswers": ["Let me confirm: left at the second corner?", "Did you say left at the second corner?", "The second corner, then left, right?"],
                 "requiredConcepts": ["left", "second-corner", "confirmation"]
               },
@@ -566,6 +577,7 @@
                 "cueZh": "询问目的地是否靠近公园。",
                 "partnerLine": "The museum is on Oak Street.",
                 "modelAnswer": "Is it near the park?",
+                "modelAnswerTranslationZh": "它在公园附近吗？",
                 "acceptedAnswers": ["Is it near the park?", "Is the museum close to the park?", "Is it by the park?"],
                 "requiredConcepts": ["park", "near-question"]
               }
@@ -576,7 +588,7 @@
       "sceneQuiz": [
         {"id": "w2d11-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "“across from the bank”表示哪里？", "options": ["银行里面", "银行旁边", "银行对面"], "correctOptionIndex": 2, "rationaleZh": "across from 表示在……对面。"},
         {"id": "w2d11-q2", "domain": "listening", "format": "single-choice", "audioText": "Walk one block, turn left, and the hotel is on your right.", "promptZh": "转弯后酒店在哪边？", "options": ["左边", "右边", "对面"], "correctOptionIndex": 1, "rationaleZh": "hotel is on your right。"},
-        {"id": "w2d11-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "询问博物馆怎么走。", "modelAnswer": "How do I get to the museum?", "acceptedAnswers": ["How do I get to the museum?", "Could you tell me how to get to the museum?", "Where is the museum?"], "requiredConcepts": ["museum", "direction-question"]}
+        {"id": "w2d11-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "询问博物馆怎么走。", "modelAnswer": "How do I get to the museum?", "modelAnswerTranslationZh": "请问怎么去博物馆？", "acceptedAnswers": ["How do I get to the museum?", "Could you tell me how to get to the museum?", "Where is the museum?"], "requiredConcepts": ["museum", "direction-question"]}
       ]
     },
     {
@@ -693,6 +705,7 @@
                 "cueZh": "询问去市中心需要哪条线。",
                 "partnerLine": "Where are you going?",
                 "modelAnswer": "Which line do I need for downtown?",
+                "modelAnswerTranslationZh": "去市中心需要坐哪条线路？",
                 "acceptedAnswers": ["Which line do I need for downtown?", "What line goes downtown?", "Which train should I take downtown?"],
                 "requiredConcepts": ["line-question", "downtown"]
               },
@@ -701,6 +714,7 @@
                 "cueZh": "询问是否需要换乘。",
                 "partnerLine": "Take the Green Line first.",
                 "modelAnswer": "Do I need to transfer?",
+                "modelAnswerTranslationZh": "我需要换乘吗？",
                 "acceptedAnswers": ["Do I need to transfer?", "Is there a transfer?", "Do I change trains?"],
                 "requiredConcepts": ["transfer-question"]
               },
@@ -709,6 +723,7 @@
                 "cueZh": "确认下一站下车。",
                 "partnerLine": "Your stop is next.",
                 "modelAnswer": "So I get off at the next stop, right?",
+                "modelAnswerTranslationZh": "所以我在下一站下车，对吗？",
                 "acceptedAnswers": ["So I get off at the next stop, right?", "The next stop, correct?", "Do I get off at the next stop?"],
                 "requiredConcepts": ["next-stop", "confirmation"]
               }
@@ -719,7 +734,7 @@
       "sceneQuiz": [
         {"id": "w2d12-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "“transfer to the Red Line”是什么意思？", "options": ["离开红线", "换乘红线", "在红线终点下车"], "correctOptionIndex": 1, "rationaleZh": "transfer to 指换乘到另一条线路。"},
         {"id": "w2d12-q2", "domain": "listening", "format": "single-choice", "audioText": "The next train leaves from platform eight in twelve minutes.", "promptZh": "列车信息是什么？", "options": ["8 分钟后从 12 号站台出发", "12 分钟后从 8 号站台出发", "8:12 从站台出发"], "correctOptionIndex": 1, "rationaleZh": "platform eight，in twelve minutes。"},
-        {"id": "w2d12-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "询问在哪里换乘。", "modelAnswer": "Where do I transfer?", "acceptedAnswers": ["Where do I transfer?", "Where should I change trains?", "Which station do I transfer at?"], "requiredConcepts": ["transfer-location-question"]}
+        {"id": "w2d12-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "询问在哪里换乘。", "modelAnswer": "Where do I transfer?", "modelAnswerTranslationZh": "我在哪里换乘？", "acceptedAnswers": ["Where do I transfer?", "Where should I change trains?", "Which station do I transfer at?"], "requiredConcepts": ["transfer-location-question"]}
       ]
     },
     {
@@ -836,6 +851,7 @@
                 "cueZh": "买一张去 Salem 的往返票。",
                 "partnerLine": "Where are you traveling?",
                 "modelAnswer": "One round-trip ticket to Salem, please.",
+                "modelAnswerTranslationZh": "请给我一张去 Salem 的往返票。",
                 "acceptedAnswers": ["One round-trip ticket to Salem, please.", "I'd like a round-trip ticket to Salem.", "Can I get a round-trip ticket to Salem?"],
                 "requiredConcepts": ["round-trip", "Salem"]
               },
@@ -844,6 +860,7 @@
                 "cueZh": "询问票价。",
                 "partnerLine": "The next bus leaves at four.",
                 "modelAnswer": "How much is the fare?",
+                "modelAnswerTranslationZh": "车费多少钱？",
                 "acceptedAnswers": ["How much is the fare?", "What's the fare?", "How much is the ticket?"],
                 "requiredConcepts": ["fare-question"]
               },
@@ -852,6 +869,7 @@
                 "cueZh": "请司机在酒店正门让你下车。",
                 "partnerLine": "Where would you like to get out?",
                 "modelAnswer": "Please drop me off at the hotel's main entrance.",
+                "modelAnswerTranslationZh": "请在酒店正门让我下车。",
                 "acceptedAnswers": ["Please drop me off at the hotel's main entrance.", "The main hotel entrance, please.", "Could you stop at the main entrance of the hotel?"],
                 "requiredConcepts": ["hotel-main-entrance", "drop-off"]
               }
@@ -862,7 +880,7 @@
       "sceneQuiz": [
         {"id": "w2d13-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "只去不回应该买哪种票？", "options": ["one-way", "round trip", "transfer"], "correctOptionIndex": 0, "rationaleZh": "one-way 指单程。"},
         {"id": "w2d13-q2", "domain": "listening", "format": "single-choice", "audioText": "Meet your driver at pickup zone C outside door five.", "promptZh": "在哪里上车？", "options": ["五号门内的 C 区", "五号门外的 C 上车区", "三号门外"], "correctOptionIndex": 1, "rationaleZh": "pickup zone C outside door five。"},
-        {"id": "w2d13-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "买一张去机场的单程票。", "modelAnswer": "One one-way ticket to the airport, please.", "acceptedAnswers": ["One one-way ticket to the airport, please.", "I'd like a one-way ticket to the airport.", "A one-way airport ticket, please."], "requiredConcepts": ["one-way", "airport"]}
+        {"id": "w2d13-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "买一张去机场的单程票。", "modelAnswer": "One one-way ticket to the airport, please.", "modelAnswerTranslationZh": "请给我一张去机场的单程票。", "acceptedAnswers": ["One one-way ticket to the airport, please.", "I'd like a one-way ticket to the airport.", "A one-way airport ticket, please."], "requiredConcepts": ["one-way", "airport"]}
       ]
     },
     {
@@ -978,6 +996,7 @@
                 "cueZh": "点鸡肉三明治，不加洋葱，并说明花生过敏。",
                 "partnerLine": "What would you like?",
                 "modelAnswer": "I'd like the chicken sandwich without onions. I'm allergic to peanuts.",
+                "modelAnswerTranslationZh": "我想要鸡肉三明治，不加洋葱。我对花生过敏。",
                 "acceptedAnswers": ["I'd like the chicken sandwich without onions. I'm allergic to peanuts.", "A chicken sandwich, no onions, please. I have a peanut allergy.", "Can I get the chicken sandwich without onions? I'm allergic to peanuts."],
                 "requiredConcepts": ["chicken-sandwich", "without-onions", "peanut-allergy"]
               },
@@ -986,6 +1005,7 @@
                 "cueZh": "索要账单并说你刷卡。",
                 "partnerLine": "Can I get you anything else?",
                 "modelAnswer": "No, thanks. Could I get the check? I'll pay by card.",
+                "modelAnswerTranslationZh": "不用了，谢谢。请给我账单好吗？我刷卡付款。",
                 "acceptedAnswers": ["No, thanks. Could I get the check? I'll pay by card.", "The check, please. I'd like to pay by card.", "We're ready for the check, and I'll use a card."],
                 "requiredConcepts": ["check", "card"]
               },
@@ -994,6 +1014,7 @@
                 "cueZh": "询问怎么去中央车站。",
                 "partnerLine": "Can I help you find something?",
                 "modelAnswer": "Yes. How do I get to Central Station?",
+                "modelAnswerTranslationZh": "好的。请问怎么去中央车站？",
                 "acceptedAnswers": ["Yes. How do I get to Central Station?", "Could you tell me how to get to Central Station?", "Where is Central Station?"],
                 "requiredConcepts": ["Central-Station", "direction-question"]
               },
@@ -1002,6 +1023,7 @@
                 "cueZh": "买两张去市中心的单程票。",
                 "partnerLine": "What tickets do you need?",
                 "modelAnswer": "Two one-way tickets downtown, please.",
+                "modelAnswerTranslationZh": "请给我两张去市中心的单程票。",
                 "acceptedAnswers": ["Two one-way tickets downtown, please.", "I'd like two one-way tickets to downtown.", "Can I get two one-way tickets downtown?"],
                 "requiredConcepts": ["two", "one-way", "downtown"]
               }
@@ -1012,7 +1034,7 @@
       "sceneQuiz": [
         {"id": "w2d14-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "哪组词按“账单—路线—车票”排列？", "options": ["check—turn—ticket", "menu—tip—server", "station—dish—cash"], "correctOptionIndex": 0, "rationaleZh": "check 属于结账，turn 属于路线，ticket 属于乘车。"},
         {"id": "w2d14-q2", "domain": "listening", "format": "single-choice", "audioText": "Pay the check first, walk one block to the station, and take the Red Line for two stops.", "promptZh": "正确顺序是什么？", "options": ["乘车—步行—付款", "付款—步行—乘车", "步行—付款—乘车"], "correctOptionIndex": 1, "rationaleZh": "first pay，then walk，最后 take the Red Line。"},
-        {"id": "w2d14-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "确认路线：直走两个街区，然后左转。", "modelAnswer": "Let me confirm: straight for two blocks, then left?", "acceptedAnswers": ["Let me confirm: straight for two blocks, then left?", "So I go straight two blocks and turn left, right?", "Two blocks straight, then left, correct?"], "requiredConcepts": ["two-blocks", "left", "confirmation"]}
+        {"id": "w2d14-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "确认路线：直走两个街区，然后左转。", "modelAnswer": "Let me confirm: straight for two blocks, then left?", "modelAnswerTranslationZh": "我确认一下：直走两个街区，然后左转，对吗？", "acceptedAnswers": ["Let me confirm: straight for two blocks, then left?", "So I go straight two blocks and turn left, right?", "Two blocks straight, then left, correct?"], "requiredConcepts": ["two-blocks", "left", "confirmation"]}
       ]
     }
   ]

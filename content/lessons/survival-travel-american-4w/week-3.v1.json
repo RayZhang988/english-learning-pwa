@@ -121,6 +121,7 @@
                 "cueZh": "询问这件衬衫有没有大码。",
                 "partnerLine": "Can I help you find a size?",
                 "modelAnswer": "Do you have this shirt in a large?",
+                "modelAnswerTranslationZh": "这件衬衫有大码吗？",
                 "acceptedAnswers": ["Do you have this shirt in a large?", "Is this shirt available in a large?", "Could I get this shirt in a large?"],
                 "requiredConcepts": ["shirt", "large"]
               },
@@ -129,6 +130,7 @@
                 "cueZh": "请求试穿这双鞋。",
                 "partnerLine": "Would you like to see the shoes?",
                 "modelAnswer": "Yes. Can I try these on?",
+                "modelAnswerTranslationZh": "好的。我可以试穿这双吗？",
                 "acceptedAnswers": ["Yes. Can I try these on?", "Could I try on these shoes?", "I'd like to try these shoes on."],
                 "requiredConcepts": ["try-on", "shoes"]
               },
@@ -137,6 +139,7 @@
                 "cueZh": "说明裤子太小。",
                 "partnerLine": "How do the pants fit?",
                 "modelAnswer": "They're too small.",
+                "modelAnswerTranslationZh": "它们太小了。",
                 "acceptedAnswers": ["They're too small.", "The pants are too small.", "They don't fit. They're too small."],
                 "requiredConcepts": ["too-small"]
               }
@@ -147,7 +150,7 @@
       "sceneQuiz": [
         {"id": "w3d15-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "“It fits well.”表示什么？", "options": ["很合身", "太大", "太贵"], "correctOptionIndex": 0, "rationaleZh": "fit well 指尺寸合适。"},
         {"id": "w3d15-q2", "domain": "listening", "format": "single-choice", "audioText": "The black shoes are available in size eight, but the brown ones are not.", "promptZh": "八码有什么颜色？", "options": ["黑色", "棕色", "黑色和棕色"], "correctOptionIndex": 0, "rationaleZh": "black shoes are available in size eight。"},
-        {"id": "w3d15-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "询问有没有蓝色。", "modelAnswer": "Do you have this in blue?", "acceptedAnswers": ["Do you have this in blue?", "Is this available in blue?", "Could I see this in blue?"], "requiredConcepts": ["blue", "availability-question"]}
+        {"id": "w3d15-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "询问有没有蓝色。", "modelAnswer": "Do you have this in blue?", "modelAnswerTranslationZh": "这个有蓝色的吗？", "acceptedAnswers": ["Do you have this in blue?", "Is this available in blue?", "Could I see this in blue?"], "requiredConcepts": ["blue", "availability-question"]}
       ]
     },
     {
@@ -266,6 +269,7 @@
                 "cueZh": "询问这件衬衫是否打折。",
                 "partnerLine": "That shirt is forty dollars.",
                 "modelAnswer": "Is it on sale?",
+                "modelAnswerTranslationZh": "它在打折吗？",
                 "acceptedAnswers": ["Is it on sale?", "Is there a discount on it?", "Is the shirt on sale?"],
                 "requiredConcepts": ["sale-question"]
               },
@@ -274,6 +278,7 @@
                 "cueZh": "你想退掉这双鞋，因为太大。",
                 "partnerLine": "How can I help?",
                 "modelAnswer": "I'd like to return these shoes. They're too big.",
+                "modelAnswerTranslationZh": "我想退掉这双鞋。它们太大了。",
                 "acceptedAnswers": ["I'd like to return these shoes. They're too big.", "Can I return these shoes? They're too big.", "These shoes are too big, and I'd like to return them."],
                 "requiredConcepts": ["return", "shoes", "too-big"]
               },
@@ -282,6 +287,7 @@
                 "cueZh": "请求退款退回银行卡。",
                 "partnerLine": "Would you like store credit?",
                 "modelAnswer": "Could I get a refund to my card instead?",
+                "modelAnswerTranslationZh": "可以把退款退回我的银行卡吗？",
                 "acceptedAnswers": ["Could I get a refund to my card instead?", "I'd like the refund on my card.", "Can you refund my card?"],
                 "requiredConcepts": ["refund", "card"]
               }
@@ -292,7 +298,7 @@
       "sceneQuiz": [
         {"id": "w3d16-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "想换同款不同尺码，应该用哪个词？", "options": ["exchange", "refund", "tax"], "correctOptionIndex": 0, "rationaleZh": "exchange 指换货。"},
         {"id": "w3d16-q2", "domain": "listening", "format": "single-choice", "audioText": "The bag is twenty-five dollars before tax. Your total is twenty-seven fifty.", "promptZh": "税后总价是多少？", "options": ["$25.00", "$27.15", "$27.50"], "correctOptionIndex": 2, "rationaleZh": "说话人明确说 total is twenty-seven fifty。"},
-        {"id": "w3d16-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "请求把小码换成中码。", "modelAnswer": "Could I exchange the small for a medium?", "acceptedAnswers": ["Could I exchange the small for a medium?", "Can I get a medium instead of the small?", "I'd like to exchange this for a medium."], "requiredConcepts": ["exchange", "medium"]}
+        {"id": "w3d16-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "请求把小码换成中码。", "modelAnswer": "Could I exchange the small for a medium?", "modelAnswerTranslationZh": "我可以把小码换成中码吗？", "acceptedAnswers": ["Could I exchange the small for a medium?", "Can I get a medium instead of the small?", "I'd like to exchange this for a medium."], "requiredConcepts": ["exchange", "medium"]}
       ]
     },
     {
@@ -411,6 +417,7 @@
                 "cueZh": "你要入住，预订在 Zhang 名下。",
                 "partnerLine": "Welcome. How can I help?",
                 "modelAnswer": "I'd like to check in. I have a reservation under Zhang.",
+                "modelAnswerTranslationZh": "我想办理入住。我在 Zhang 名下有预订。",
                 "acceptedAnswers": ["I'd like to check in. I have a reservation under Zhang.", "I'm checking in. The reservation is under Zhang.", "I have a reservation under Zhang, and I'd like to check in."],
                 "requiredConcepts": ["check-in", "Zhang"]
               },
@@ -419,6 +426,7 @@
                 "cueZh": "确认早餐是否包含。",
                 "partnerLine": "Your room is ready.",
                 "modelAnswer": "Thank you. Is breakfast included?",
+                "modelAnswerTranslationZh": "谢谢。包含早餐吗？",
                 "acceptedAnswers": ["Thank you. Is breakfast included?", "Does the room include breakfast?", "Is breakfast included with the room?"],
                 "requiredConcepts": ["breakfast-inclusion-question"]
               },
@@ -427,6 +435,7 @@
                 "cueZh": "询问明天几点退房。",
                 "partnerLine": "Here are your key cards.",
                 "modelAnswer": "Thanks. What time is checkout tomorrow?",
+                "modelAnswerTranslationZh": "谢谢。明天几点退房？",
                 "acceptedAnswers": ["Thanks. What time is checkout tomorrow?", "When do I need to check out tomorrow?", "What time do we check out?"],
                 "requiredConcepts": ["checkout-time-question"]
               }
@@ -437,7 +446,7 @@
       "sceneQuiz": [
         {"id": "w3d17-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "房卡用哪个美式表达？", "options": ["room paper", "key card", "door ticket"], "correctOptionIndex": 1, "rationaleZh": "酒店电子房卡常称 key card。"},
         {"id": "w3d17-q2", "domain": "listening", "format": "single-choice", "audioText": "Your room is 704 on the seventh floor. The elevators are behind the lobby.", "promptZh": "房间信息是什么？", "options": ["704，七楼", "740，四楼", "704，大堂层"], "correctOptionIndex": 0, "rationaleZh": "room 704 on the seventh floor。"},
-        {"id": "w3d17-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "说明你在 Kim 名下有预订。", "modelAnswer": "I have a reservation under Kim.", "acceptedAnswers": ["I have a reservation under Kim.", "The reservation is under Kim.", "It's booked under Kim."], "requiredConcepts": ["reservation", "Kim"]}
+        {"id": "w3d17-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "说明你在 Kim 名下有预订。", "modelAnswer": "I have a reservation under Kim.", "modelAnswerTranslationZh": "我在 Kim 名下有预订。", "acceptedAnswers": ["I have a reservation under Kim.", "The reservation is under Kim.", "It's booked under Kim."], "requiredConcepts": ["reservation", "Kim"]}
       ]
     },
     {
@@ -555,6 +564,7 @@
                 "cueZh": "你在 420 房，请求两条额外毛巾。",
                 "partnerLine": "Front desk. How can I help?",
                 "modelAnswer": "Hi, this is room 420. Could I get two extra towels?",
+                "modelAnswerTranslationZh": "你好，我是 420 房的客人。可以给我两条额外的毛巾吗？",
                 "acceptedAnswers": ["Hi, this is room 420. Could I get two extra towels?", "Room 420 needs two extra towels, please.", "Could you send two extra towels to room 420?"],
                 "requiredConcepts": ["room-420", "two-towels"]
               },
@@ -563,6 +573,7 @@
                 "cueZh": "报告房间 Wi-Fi 无法使用。",
                 "partnerLine": "What seems to be the problem?",
                 "modelAnswer": "The Wi-Fi isn't working in my room.",
+                "modelAnswerTranslationZh": "我房间里的 Wi-Fi 用不了。",
                 "acceptedAnswers": ["The Wi-Fi isn't working in my room.", "I can't connect to the Wi-Fi.", "The room Wi-Fi isn't working."],
                 "requiredConcepts": ["wifi-problem"]
               },
@@ -571,6 +582,7 @@
                 "cueZh": "请求把退房时间延迟到下午一点。",
                 "partnerLine": "Checkout is at eleven.",
                 "modelAnswer": "Could I have a late checkout at one p.m.?",
+                "modelAnswerTranslationZh": "我可以延迟到下午一点退房吗？",
                 "acceptedAnswers": ["Could I have a late checkout at one p.m.?", "Is it possible to check out at one?", "Could I check out at one instead?"],
                 "requiredConcepts": ["late-checkout", "1:00-pm"]
               }
@@ -581,7 +593,7 @@
       "sceneQuiz": [
         {"id": "w3d18-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "设施坏了可使用哪个结构？", "options": ["The Wi-Fi isn't working.", "The Wi-Fi doesn't room.", "The Wi-Fi is checkout."], "correctOptionIndex": 0, "rationaleZh": "isn't working 是报告设施无法工作的常用表达。"},
         {"id": "w3d18-q2", "domain": "listening", "format": "single-choice", "audioText": "The room next door is very noisy. Could you help?", "promptZh": "客人遇到什么问题？", "options": ["隔壁太吵", "门卡失效", "房间太冷"], "correctOptionIndex": 0, "rationaleZh": "room next door is very noisy。"},
-        {"id": "w3d18-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "请求一条额外毯子。", "modelAnswer": "Could I get an extra blanket, please?", "acceptedAnswers": ["Could I get an extra blanket, please?", "I need one more blanket, please.", "Could you send an extra blanket to my room?"], "requiredConcepts": ["extra-blanket"]}
+        {"id": "w3d18-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "请求一条额外毯子。", "modelAnswer": "Could I get an extra blanket, please?", "modelAnswerTranslationZh": "请给我一条额外的毯子好吗？", "acceptedAnswers": ["Could I get an extra blanket, please?", "I need one more blanket, please.", "Could you send an extra blanket to my room?"], "requiredConcepts": ["extra-blanket"]}
       ]
     },
     {
@@ -700,6 +712,7 @@
                 "cueZh": "你办理飞往芝加哥的 316 航班值机。",
                 "partnerLine": "Where are you flying today?",
                 "modelAnswer": "I'm checking in for flight 316 to Chicago.",
+                "modelAnswerTranslationZh": "我要办理飞往芝加哥的 316 航班值机。",
                 "acceptedAnswers": ["I'm checking in for flight 316 to Chicago.", "I'm on flight 316 to Chicago.", "Chicago, flight 316."],
                 "requiredConcepts": ["flight-316", "Chicago"]
               },
@@ -708,6 +721,7 @@
                 "cueZh": "你有一件随身行李和两件托运行李。",
                 "partnerLine": "How many bags do you have?",
                 "modelAnswer": "I have one carry-on and two bags to check.",
+                "modelAnswerTranslationZh": "我有一件随身行李和两件要托运的行李。",
                 "acceptedAnswers": ["I have one carry-on and two bags to check.", "One carry-on and two checked bags.", "I need to check two bags, and I have one carry-on."],
                 "requiredConcepts": ["one-carry-on", "two-checked-bags"]
               },
@@ -716,6 +730,7 @@
                 "cueZh": "如果可以，你想要靠窗座位。",
                 "partnerLine": "Do you have a seat preference?",
                 "modelAnswer": "I'd like a window seat, if possible.",
+                "modelAnswerTranslationZh": "如果可以，我想要靠窗的座位。",
                 "acceptedAnswers": ["I'd like a window seat, if possible.", "A window seat, please.", "I prefer a window seat."],
                 "requiredConcepts": ["window-seat"]
               }
@@ -726,7 +741,7 @@
       "sceneQuiz": [
         {"id": "w3d19-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "不托运、带上飞机的行李叫什么？", "options": ["carry-on", "boarding pass", "check-in"], "correctOptionIndex": 0, "rationaleZh": "carry-on 指随身带上飞机的行李。"},
         {"id": "w3d19-q2", "domain": "listening", "format": "single-choice", "audioText": "Your flight is on time. Boarding starts at gate A9 at five forty.", "promptZh": "哪项信息正确？", "options": ["航班延误，A5", "航班准时，A9，5:40 登机", "航班准时，9:05 登机"], "correctOptionIndex": 1, "rationaleZh": "on time、gate A9、at five forty。"},
-        {"id": "w3d19-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "递上护照。", "modelAnswer": "Here's my passport.", "acceptedAnswers": ["Here's my passport.", "Sure. Here is my passport.", "Of course. This is my passport."], "requiredConcepts": ["passport"]}
+        {"id": "w3d19-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "递上护照。", "modelAnswer": "Here's my passport.", "modelAnswerTranslationZh": "这是我的护照。", "acceptedAnswers": ["Here's my passport.", "Sure. Here is my passport.", "Of course. This is my passport."], "requiredConcepts": ["passport"]}
       ]
     },
     {
@@ -843,6 +858,7 @@
                 "cueZh": "询问登机口是否从 B7 改了。",
                 "partnerLine": "Your flight information was updated.",
                 "modelAnswer": "Has the gate changed from B7?",
+                "modelAnswerTranslationZh": "登机口从 B7 改了吗？",
                 "acceptedAnswers": ["Has the gate changed from B7?", "Is the gate still B7?", "Did they change gate B7?"],
                 "requiredConcepts": ["gate-B7", "change-question"]
               },
@@ -851,6 +867,7 @@
                 "cueZh": "询问几点开始登机。",
                 "partnerLine": "The flight leaves at eight.",
                 "modelAnswer": "What time does boarding start?",
+                "modelAnswerTranslationZh": "几点开始登机？",
                 "acceptedAnswers": ["What time does boarding start?", "When do we start boarding?", "What is the boarding time?"],
                 "requiredConcepts": ["boarding-time-question"]
               },
@@ -859,6 +876,7 @@
                 "cueZh": "确认航班延误四十分钟。",
                 "partnerLine": "The new departure time is nine twenty.",
                 "modelAnswer": "Let me confirm: the flight is delayed by forty minutes?",
+                "modelAnswerTranslationZh": "我确认一下：航班延误四十分钟，是吗？",
                 "acceptedAnswers": ["Let me confirm: the flight is delayed by forty minutes?", "So the delay is forty minutes, right?", "Did you say a forty-minute delay?"],
                 "requiredConcepts": ["forty-minute-delay", "confirmation"]
               }
@@ -869,7 +887,7 @@
       "sceneQuiz": [
         {"id": "w3d20-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "安检时“remove your jacket”要求做什么？", "options": ["穿上夹克", "脱下夹克", "把夹克托运"], "correctOptionIndex": 1, "rationaleZh": "remove 在这里表示脱下。"},
         {"id": "w3d20-q2", "domain": "listening", "format": "single-choice", "audioText": "Flight 206 is on time, but boarding has moved from gate A3 to A6.", "promptZh": "哪项发生变化？", "options": ["出发时间", "登机口", "航班号"], "correctOptionIndex": 1, "rationaleZh": "航班准时，变化的是 gate A3 to A6。"},
-        {"id": "w3d20-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "询问航班是否准时。", "modelAnswer": "Is the flight on time?", "acceptedAnswers": ["Is the flight on time?", "Is our flight still on time?", "Has the flight been delayed?"], "requiredConcepts": ["flight-status-question"]}
+        {"id": "w3d20-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "询问航班是否准时。", "modelAnswer": "Is the flight on time?", "modelAnswerTranslationZh": "航班准时吗？", "acceptedAnswers": ["Is the flight on time?", "Is our flight still on time?", "Has the flight been delayed?"], "requiredConcepts": ["flight-status-question"]}
       ]
     },
     {
@@ -985,6 +1003,7 @@
                 "cueZh": "凭收据把黑色小码衬衫换成蓝色中码。",
                 "partnerLine": "How can I help you?",
                 "modelAnswer": "I'd like to exchange this black shirt for a blue medium. I have the receipt.",
+                "modelAnswerTranslationZh": "我想凭收据把这件黑色衬衫换成蓝色中码。",
                 "acceptedAnswers": ["I'd like to exchange this black shirt for a blue medium. I have the receipt.", "Can I exchange this small black shirt for a medium blue one? Here's the receipt.", "I need a blue medium instead. I have my receipt."],
                 "requiredConcepts": ["exchange", "black-small", "blue-medium", "receipt"]
               },
@@ -993,6 +1012,7 @@
                 "cueZh": "你在 518 房，准备退房。",
                 "partnerLine": "Good morning. What can I do for you?",
                 "modelAnswer": "I'm in room 518, and I'm ready to check out.",
+                "modelAnswerTranslationZh": "我住在 518 房，准备退房。",
                 "acceptedAnswers": ["I'm in room 518, and I'm ready to check out.", "I'd like to check out of room 518.", "Room 518. I'm checking out."],
                 "requiredConcepts": ["room-518", "check-out"]
               },
@@ -1001,6 +1021,7 @@
                 "cueZh": "说明航班 620，有一件托运行李。",
                 "partnerLine": "Which flight are you on, and do you have bags?",
                 "modelAnswer": "I'm on flight 620, and I have one bag to check.",
+                "modelAnswerTranslationZh": "我乘坐 620 航班，有一件行李要托运。",
                 "acceptedAnswers": ["I'm on flight 620, and I have one bag to check.", "Flight 620. I need to check one bag.", "I'm checking in for flight 620 with one checked bag."],
                 "requiredConcepts": ["flight-620", "one-checked-bag"]
               },
@@ -1009,6 +1030,7 @@
                 "cueZh": "确认新登机口是 D9，登机时间 4:50。",
                 "partnerLine": "Your flight information has changed.",
                 "modelAnswer": "Let me confirm: gate D9, and boarding starts at four fifty?",
+                "modelAnswerTranslationZh": "我确认一下：登机口是 D9，四点五十分开始登机，对吗？",
                 "acceptedAnswers": ["Let me confirm: gate D9, and boarding starts at four fifty?", "So the new gate is D9 and boarding is at 4:50, right?", "D9 at four fifty, correct?"],
                 "requiredConcepts": ["gate-D9", "4:50", "confirmation"]
               }
@@ -1019,7 +1041,7 @@
       "sceneQuiz": [
         {"id": "w3d21-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "哪组词分别对应购物售后、酒店和机场？", "options": ["exchange—checkout—gate", "gate—receipt—towel", "refund—flight—fitting room"], "correctOptionIndex": 0, "rationaleZh": "exchange 属购物售后，checkout 属酒店，gate 属机场。"},
         {"id": "w3d21-q2", "domain": "listening", "format": "single-choice", "audioText": "Return the jacket before noon, check out at one, and be at gate B6 by four thirty.", "promptZh": "正确时间顺序是什么？", "options": ["中午前退货—1:00 退房—4:30 到登机口", "1:00 退货—4:30 退房—中午登机", "4:30 退货—中午退房—1:00 登机"], "correctOptionIndex": 0, "rationaleZh": "三个时间与动作逐一对应。"},
-        {"id": "w3d21-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "报告酒店空调不工作，并请求延迟到一点退房。", "modelAnswer": "The air conditioner isn't working. Could I also have a late checkout at one?", "acceptedAnswers": ["The air conditioner isn't working. Could I also have a late checkout at one?", "My room's air conditioner is broken, and I'd like to check out at one.", "The AC isn't working. Is a one o'clock checkout possible?"], "requiredConcepts": ["air-conditioner-problem", "late-checkout", "1:00"]}
+        {"id": "w3d21-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "报告酒店空调不工作，并请求延迟到一点退房。", "modelAnswer": "The air conditioner isn't working. Could I also have a late checkout at one?", "modelAnswerTranslationZh": "空调坏了。我还可以延迟到一点退房吗？", "acceptedAnswers": ["The air conditioner isn't working. Could I also have a late checkout at one?", "My room's air conditioner is broken, and I'd like to check out at one.", "The AC isn't working. Is a one o'clock checkout possible?"], "requiredConcepts": ["air-conditioner-problem", "late-checkout", "1:00"]}
       ]
     }
   ]
