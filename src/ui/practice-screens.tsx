@@ -400,6 +400,10 @@ export function SpeakingTrainingScreen({
               <dd lang="en-US">{viewModel.contentMatch.targetText}</dd>
             </div>
             <div>
+              <dt>中文翻译</dt>
+              <dd>{viewModel.contentMatch.targetTranslationZh}</dd>
+            </div>
+            <div>
               <dt>实际识别</dt>
               <dd
                 lang={

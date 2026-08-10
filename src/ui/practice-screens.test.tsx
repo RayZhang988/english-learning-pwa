@@ -62,6 +62,8 @@ describe('SpeakingTrainingScreen R8 content comparison', () => {
     expect(markup).toContain('data-content-match-level="partial"')
     expect(markup).toContain('目标表达')
     expect(markup).toContain('I&#x27;m from Shanghai.')
+    expect(markup).toContain('中文翻译')
+    expect(markup).toContain('我来自上海。')
     expect(markup).toContain('实际识别')
     expect(markup).toContain('I am Shanghai')
     expect(markup).toContain('只匹配到部分内容')
@@ -81,6 +83,8 @@ describe('SpeakingTrainingScreen R8 content comparison', () => {
     expect(markup).toContain('data-content-match-state="unscorable"')
     expect(markup).toContain('本次没有得到可用的识别文本')
     expect(markup).toContain('本次无法判断内容是否说对')
+    expect(markup).toContain('中文翻译')
+    expect(markup).toContain('我来自上海。')
     expect(markup).not.toContain('data-content-match-level=')
   })
 
@@ -89,5 +93,7 @@ describe('SpeakingTrainingScreen R8 content comparison', () => {
 
     expect(markup).not.toContain('口语内容匹配结果')
     expect(markup).not.toContain('data-content-match-state=')
+    expect(markup).not.toContain('中文翻译')
+    expect(markup).not.toContain('我来自上海。')
   })
 })
