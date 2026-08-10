@@ -37,4 +37,11 @@ describe('WrongAnswerReviewCoordinator', () => {
     expect(coordinator.snapshot.library?.activeRound?.roundId).toBe('round')
     expect(coordinator.snapshot.error?.message).toContain('offline')
   })
+  it('surfaces a draft save failure while retaining the original question for retry', async () => {
+    const state = new State(); const coordinator = new WrongAnswerReviewCoordinator({ state, resolver: { resolve: async () => ({ kind: 'vocabulary' as const, question }) } })
+    await coordinator.initialize(); state.fail = true; await coordinator.selectVocabulary('yes')
+    expect(coordinator.snapshot.status).toBe('error')
+    expect(coordinator.snapshot.active).toMatchObject({ kind: 'vocabulary', selectedOptionId: null })
+    expect(state.state.activeRound?.answerDraft).toBeNull()
+  })
 })
