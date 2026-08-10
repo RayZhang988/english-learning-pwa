@@ -41,6 +41,10 @@ export interface WrongAnswerReviewViewModel {
   readonly accuracy: number | null
   readonly remainingCount: number
   readonly questionSlot?: WrongAnswerReviewQuestionSlot
+  /** Supplied by 01 from the active module state; 02 never guesses readiness. */
+  readonly primaryAction?: { readonly label: string; readonly disabled: boolean; readonly hidden?: boolean; readonly busy?: boolean }
+  /** A completed round exposes this only when another active record really exists. */
+  readonly newRoundAction?: { readonly label: string; readonly disabled: boolean; readonly hidden?: boolean }
   readonly feedback?:
     | { readonly outcome: 'correct'; readonly consecutiveCorrect: 1; readonly message: string }
     | { readonly outcome: 'incorrect'; readonly consecutiveCorrect: 0; readonly message: string }
@@ -71,7 +75,7 @@ function RecordList({ records, history }: { readonly records: readonly WrongAnsw
   if (records.length === 0) return <EmptyState title={history ? '还没有历史记录' : '暂无待复习错题'} description={history ? '连续答对两次的错题会保留在这里，方便回看。' : '正式答错的题目会自动加入这里；无法评分的题目不会被算作错题。'} />
   return <ul className="wrong-answer-record-list" aria-label={history ? '历史错题记录' : '待复习错题'}>{records.map((record) => <li key={record.id}>
     <article><span className="wrong-answer-record__source">{record.sourceLabel}</span><h2>{record.summary}</h2>
-      {history ? <p>移入历史：{record.movedAtLabel}</p> : <dl><div><dt>累计答错</dt><dd>{record.incorrectCount} 次</dd></div><div><dt>最近答错</dt><dd>{record.lastIncorrectAtLabel}</dd></div><div><dt>连续答对</dt><dd>{record.consecutiveCorrect}/2</dd></div></dl>}
+      {history ? record.movedAtLabel ? <p>移入历史：{record.movedAtLabel}</p> : null : <dl><div><dt>累计答错</dt><dd>{record.incorrectCount} 次</dd></div><div><dt>最近答错</dt><dd>{record.lastIncorrectAtLabel}</dd></div><div><dt>连续答对</dt><dd>{record.consecutiveCorrect}/2</dd></div></dl>}
     </article></li>)}</ul>
 }
 
@@ -107,11 +111,13 @@ export interface WrongAnswerReviewScreenProps {
 
 export function WrongAnswerReviewScreen({ viewModel, onExit, onSubmit, onAdvance, onRetry, onNewRound }: WrongAnswerReviewScreenProps) {
   const busy = viewModel.phase === 'saving'
-  return <main className="wrong-answer-review" aria-busy={busy}><header className="wrong-answer-review__header"><button type="button" className="back-button" onClick={onExit} aria-label="退出错题复习"><Icon name="arrow-left" /></button><div><span className="eyebrow">WRONG ANSWER REVIEW</span><h1>错题复习</h1></div></header>
+  const action = viewModel.primaryAction
+  const actionButton = action && !action.hidden ? <button className="primary-button" type="button" disabled={busy || action.busy || action.disabled} aria-busy={action.busy} onClick={viewModel.phase === 'feedback' ? onAdvance : onSubmit}>{action.label}</button> : null
+  return <main className="wrong-answer-review" aria-busy={busy}><header className="wrong-answer-review__header"><button type="button" className="back-button" onClick={onExit} disabled={busy} aria-label="退出错题复习"><Icon name="arrow-left" /></button><div><span className="eyebrow">WRONG ANSWER REVIEW</span><h1>错题复习</h1></div></header>
     <dl className="wrong-answer-review__stats" aria-label="本轮复习进度"><div><dt>已答</dt><dd>{viewModel.answeredCount}</dd></div><div><dt>答对</dt><dd>{viewModel.correctCount}</dd></div><div><dt>正确率</dt><dd>{accuracy(viewModel.accuracy)}</dd></div><div><dt>剩余</dt><dd>{viewModel.remainingCount}</dd></div></dl>
-    {viewModel.phase === 'round-completed' ? <section className="wrong-answer-review__complete" aria-live="polite"><h2>本轮复习完成</h2><p>本轮已答 {viewModel.answeredCount} 题，答对 {viewModel.correctCount} 题。</p><button className="primary-button" type="button" onClick={onNewRound}>开始新一轮</button></section> : null}
+    {viewModel.phase === 'round-completed' ? <section className="wrong-answer-review__complete" aria-live="polite"><h2>本轮复习完成</h2><p>本轮已答 {viewModel.answeredCount} 题，答对 {viewModel.correctCount} 题。</p>{viewModel.newRoundAction && !viewModel.newRoundAction.hidden ? <button className="primary-button" type="button" disabled={viewModel.newRoundAction.disabled} onClick={onNewRound}>{viewModel.newRoundAction.label}</button> : null}</section> : null}
     {viewModel.phase === 'error' ? <ErrorState title={viewModel.error?.title ?? '本轮复习暂时无法继续'} description={viewModel.error?.description ?? '已保存的进度不会丢失。'} onRetry={onRetry} /> : null}
-    {viewModel.phase === 'unscorable' ? <section className="wrong-answer-review__notice" role="alert"><h2>本题暂时无法评分</h2><p>可重试或稍后继续；这不会被记为错题，也不会改变连续答对进度。</p><button className="secondary-button" type="button" onClick={onRetry}>重试本题</button></section> : null}
-    {viewModel.phase === 'answering' || viewModel.phase === 'feedback' || busy ? <section className="wrong-answer-review__question" aria-live="polite">{viewModel.questionSlot?.content}{busy ? <p className="wrong-answer-review__saving">正在保存本题结果…</p> : null}{viewModel.phase === 'feedback' && viewModel.feedback ? <div className={`wrong-answer-review__feedback wrong-answer-review__feedback--${viewModel.feedback.outcome}`}><h2>{viewModel.feedback.message}</h2><p>{viewModel.feedback.outcome === 'incorrect' ? '连续答对已归零。' : viewModel.feedback.outcome === 'moved-to-history' ? '已连续答对 2 次，已移入历史记录。' : '连续答对 1/2，再答对一次即可移入历史记录。'}</p><button className="primary-button" type="button" onClick={onAdvance}>下一题</button></div> : viewModel.phase === 'answering' ? <button className="primary-button" type="button" onClick={onSubmit}>提交答案</button> : null}</section> : null}
+    {viewModel.phase === 'unscorable' ? <><section className="wrong-answer-review__question" aria-live="polite">{viewModel.questionSlot?.content}</section><section className="wrong-answer-review__notice" role="alert"><h2>本题暂时无法评分</h2><p>可重试或稍后继续；这不会被记为错题，也不会改变连续答对进度。</p><button className="secondary-button" type="button" onClick={onRetry}>重试本题</button></section></> : null}
+    {viewModel.phase === 'answering' || viewModel.phase === 'feedback' || busy ? <section className="wrong-answer-review__question" aria-live="polite">{viewModel.questionSlot?.content}{busy ? <p className="wrong-answer-review__saving">正在保存本题结果…</p> : null}{viewModel.phase === 'feedback' && viewModel.feedback ? <div className={`wrong-answer-review__feedback wrong-answer-review__feedback--${viewModel.feedback.outcome}`}><h2>{viewModel.feedback.message}</h2><p>{viewModel.feedback.outcome === 'incorrect' ? '连续答对已归零。' : viewModel.feedback.outcome === 'moved-to-history' ? '已连续答对 2 次，已移入历史记录。' : '连续答对 1/2，再答对一次即可移入历史记录。'}</p>{actionButton}</div> : viewModel.phase === 'answering' ? actionButton : null}</section> : null}
   </main>
 }

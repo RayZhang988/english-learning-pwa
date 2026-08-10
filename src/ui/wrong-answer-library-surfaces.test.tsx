@@ -35,17 +35,18 @@ describe('WrongAnswerLibrary R13-D display contract', () => {
   })
   it('shows supplied review numbers, unscorable honesty, and feedback consequences', () => {
     const common = { onExit: vi.fn(), onSubmit: vi.fn(), onAdvance: vi.fn(), onRetry: vi.fn(), onNewRound: vi.fn() }
-    const unscorable = renderToStaticMarkup(<WrongAnswerReviewScreen {...common} viewModel={{ phase: 'unscorable', answeredCount: 2, correctCount: 1, accuracy: .5, remainingCount: 4 }} />)
+    const unscorable = renderToStaticMarkup(<WrongAnswerReviewScreen {...common} viewModel={{ phase: 'unscorable', answeredCount: 2, correctCount: 1, accuracy: .5, remainingCount: 4, questionSlot: { kind: 'speaking', content: <p>原口语题</p> } }} />)
     expect(unscorable).toContain('正确率</dt><dd>50%')
     expect(unscorable).toContain('本题暂时无法评分')
     expect(unscorable).toContain('不会被记为错题')
-    const moved = renderToStaticMarkup(<WrongAnswerReviewScreen {...common} viewModel={{ phase: 'feedback', answeredCount: 2, correctCount: 2, accuracy: 1, remainingCount: 0, feedback: { outcome: 'moved-to-history', consecutiveCorrect: 2, message: '已移入历史' }, questionSlot: { kind: 'vocabulary', content: <p>题面</p> } }} />)
+    expect(unscorable).toContain('原口语题')
+    const moved = renderToStaticMarkup(<WrongAnswerReviewScreen {...common} viewModel={{ phase: 'feedback', answeredCount: 2, correctCount: 2, accuracy: 1, remainingCount: 0, feedback: { outcome: 'moved-to-history', consecutiveCorrect: 2, message: '已移入历史' }, questionSlot: { kind: 'vocabulary', content: <p>题面</p> }, primaryAction: { label: '下一题', disabled: false } }} />)
     expect(moved).toContain('已连续答对 2 次，已移入历史记录。')
     expect(moved).not.toContain('15分钟')
   })
   it('renders all feedback and terminal states from supplied facts without fixed sequence copy', () => {
     const common = { onExit: vi.fn(), onSubmit: vi.fn(), onAdvance: vi.fn(), onRetry: vi.fn(), onNewRound: vi.fn() }
-    const render = (phase: 'feedback' | 'saving' | 'error' | 'round-completed') => renderToStaticMarkup(<WrongAnswerReviewScreen {...common} viewModel={phase === 'feedback' ? { phase, answeredCount: 7, correctCount: 3, accuracy: .428, remainingCount: 8, feedback: { outcome: 'incorrect', consecutiveCorrect: 0, message: '回答不正确' }, questionSlot: { kind: 'listening', content: <p>听写题</p> } } : phase === 'saving' ? { phase, answeredCount: 7, correctCount: 3, accuracy: .428, remainingCount: 8, questionSlot: { kind: 'speaking', content: <p>录音题</p> } } : phase === 'error' ? { phase, answeredCount: 7, correctCount: 3, accuracy: .428, remainingCount: 8, error: { title: '保存失败', description: '可重试' } } : { phase, answeredCount: 7, correctCount: 3, accuracy: .428, remainingCount: 0 } } />)
+    const render = (phase: 'feedback' | 'saving' | 'error' | 'round-completed') => renderToStaticMarkup(<WrongAnswerReviewScreen {...common} viewModel={phase === 'feedback' ? { phase, answeredCount: 7, correctCount: 3, accuracy: .428, remainingCount: 8, feedback: { outcome: 'incorrect', consecutiveCorrect: 0, message: '回答不正确' }, questionSlot: { kind: 'listening', content: <p>听写题</p> }, primaryAction: { label: '下一题', disabled: false } } : phase === 'saving' ? { phase, answeredCount: 7, correctCount: 3, accuracy: .428, remainingCount: 8, questionSlot: { kind: 'speaking', content: <p>录音题</p> } } : phase === 'error' ? { phase, answeredCount: 7, correctCount: 3, accuracy: .428, remainingCount: 8, error: { title: '保存失败', description: '可重试' } } : { phase, answeredCount: 7, correctCount: 3, accuracy: .428, remainingCount: 0, newRoundAction: { label: '开始新一轮', disabled: false } } } />)
     expect(render('feedback')).toContain('连续答对已归零。')
     expect(render('saving')).toContain('aria-busy="true"')
     expect(render('saving')).toContain('正在保存本题结果')
@@ -54,5 +55,16 @@ describe('WrongAnswerLibrary R13-D display contract', () => {
     const all = `${render('feedback')}${render('saving')}${render('error')}${render('round-completed')}`
     expect(all).not.toContain('3/3')
     expect(all).not.toContain('固定顺序')
+  })
+  it('does not invent history time or a new round action, and locks exit while saving', () => {
+    const callbacks = { onExit: vi.fn(), onSwitchTab: vi.fn(), onStartRound: vi.fn(), onResumeRound: vi.fn(), onRetry: vi.fn() }
+    const history = renderToStaticMarkup(<WrongAnswerLibraryScreen {...callbacks} viewModel={ready({ selectedTab: 'history', historyRecords: [{ ...record, consecutiveCorrect: 0 }] })} />)
+    expect(history).not.toContain('移入历史：')
+    const common = { onExit: vi.fn(), onSubmit: vi.fn(), onAdvance: vi.fn(), onRetry: vi.fn(), onNewRound: vi.fn() }
+    const completed = renderToStaticMarkup(<WrongAnswerReviewScreen {...common} viewModel={{ phase: 'round-completed', answeredCount: 1, correctCount: 1, accuracy: 1, remainingCount: 0 }} />)
+    expect(completed).not.toContain('开始新一轮')
+    const saving = renderToStaticMarkup(<WrongAnswerReviewScreen {...common} viewModel={{ phase: 'saving', answeredCount: 0, correctCount: 0, accuracy: null, remainingCount: 1, questionSlot: { kind: 'listening', content: <p>原题</p> } }} />)
+    expect(saving).toContain('disabled="" aria-label="退出错题复习"')
+    expect(saving).toContain('原题')
   })
 })
