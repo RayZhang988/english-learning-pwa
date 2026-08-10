@@ -28,7 +28,9 @@ describe('R13-D production review resolver coverage', () => {
     const counts = { vocabulary: 0, listening: 0, speaking: 0 }
     for (const alias of aliases) {
       const record: WrongAnswerRecord = { schemaVersion: 1, recordId: `${alias.reviewContentId}::${alias.originalQuestionType}`, reviewContentId: alias.reviewContentId, originalQuestionType: alias.originalQuestionType, domain: alias.domain, status: 'active', incorrectCount: 1, consecutiveReviewCorrect: 0, lastIncorrectAt: '2026-08-10T00:00:00.000Z', lastReviewAttemptAt: null, movedToHistoryAt: null, lastSource: 'daily-training', sources: ['daily-training'] }
-      expect((await resolver.resolve(record)).kind).toBe(alias.domain)
+      const resolved = await resolver.resolve(record)
+      expect(resolved.kind).toBe(alias.domain)
+      if (resolved.kind === 'speaking') expect(resolved.prompt.modelAnswerTranslationZh.trim().length).toBeGreaterThan(0)
       counts[alias.domain] += 1
     }
     expect(counts).toEqual({ vocabulary: 1101, listening: 253, speaking: 122 })
