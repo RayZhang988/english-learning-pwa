@@ -1,4 +1,14 @@
-import type { ReviewContentIdentity, WrongAnswerEvidence, WrongAnswerRecord } from '../../learning-engine/index.ts'
+import {
+  advanceWrongAnswerReviewRound,
+  assertRecoverableWrongAnswerReviewRound,
+  submitWrongAnswerReviewAnswer,
+  updateWrongAnswerReviewRoundSnapshot,
+  type ReviewContentIdentity,
+  type WrongAnswerEvidence,
+  type WrongAnswerLibraryState,
+  type WrongAnswerLibraryStatePort,
+  type WrongAnswerRecord,
+} from '../../learning-engine/index.ts'
 import { judgeListeningAnswer } from './answers.ts'
 import { ListeningError } from './errors.ts'
 import { ListeningPlaybackController } from './playback-controller.ts'
@@ -44,13 +54,33 @@ export interface ListeningWrongAnswerReviewRuntimeOptions {
   readonly record: WrongAnswerRecord
   /** Must resolve 05's exact alias, including its original question type. */
   readonly resolve: (record: WrongAnswerRecord) => Promise<{ unit: ListeningTrainingUnit; question: ListeningQuestion; identity: ReviewContentIdentity }>
-  /** 04's dedicated review API, never ordinary daily/extra evidence handling. */
-  readonly submitReviewEvidence: (evidence: WrongAnswerEvidence) => Promise<void>
+  /** One 04-owned atomic state. Draft, evidence and round progress never use separate writes. */
+  readonly state: WrongAnswerLibraryStatePort
   readonly restoredSnapshot?: ListeningWrongAnswerReviewSnapshot
-  readonly onSnapshot?: (snapshot: ListeningWrongAnswerReviewSnapshot) => Promise<void> | void
+  /** Observation only. Persistence is complete before this callback runs. */
+  readonly onView?: (snapshot: ListeningWrongAnswerReviewSnapshot) => void
   readonly speech?: ListeningSpeechPort
   readonly now?: () => string
-  readonly createId?: () => string
+}
+
+const LISTENING_DRAFT_PREFIX = 'listening-wrong-answer-review:v1:'
+
+function encodeSnapshot(snapshot: ListeningWrongAnswerReviewSnapshot): string {
+  return `${LISTENING_DRAFT_PREFIX}${JSON.stringify(snapshot)}`
+}
+
+function decodeSnapshot(value: string | readonly string[] | null): ListeningWrongAnswerReviewSnapshot | null {
+  if (typeof value !== 'string' || !value.startsWith(LISTENING_DRAFT_PREFIX)) return null
+  let decoded: unknown
+  try { decoded = JSON.parse(value.slice(LISTENING_DRAFT_PREFIX.length)) } catch (error) {
+    throw new ListeningError('session-recovery-invalid', 'Wrong-answer listening draft is corrupt.', { cause: error })
+  }
+  if (!decoded || typeof decoded !== 'object' || Array.isArray(decoded)) throw new ListeningError('session-recovery-invalid', 'Wrong-answer listening draft is corrupt.')
+  const snapshot = decoded as Partial<ListeningWrongAnswerReviewSnapshot>
+  if (snapshot.schemaVersion !== 1 || typeof snapshot.recordId !== 'string' || !snapshot.identity || !snapshot.question || !snapshot.unit || !snapshot.playback || !['answering', 'feedback', 'completed', 'error'].includes(String(snapshot.phase)) || typeof snapshot.updatedAt !== 'string') {
+    throw new ListeningError('session-recovery-invalid', 'Wrong-answer listening draft is corrupt.')
+  }
+  return snapshot as ListeningWrongAnswerReviewSnapshot
 }
 
 function playback(question: ListeningQuestion): ListeningPlaybackState {
@@ -65,20 +95,30 @@ export class ListeningWrongAnswerReviewRuntime {
   private controller: ListeningPlaybackController | null = null
   private readonly speech: ListeningSpeechPort
   private readonly now: () => string
-  private readonly createId: () => string
   private readonly options: ListeningWrongAnswerReviewRuntimeOptions
   constructor(options: ListeningWrongAnswerReviewRuntimeOptions) {
     this.options = options
     this.speech = options.speech ?? browserListeningSpeech
     this.now = options.now ?? (() => new Date().toISOString())
-    this.createId = options.createId ?? (() => crypto.randomUUID())
   }
   get currentSnapshot() { return this.snapshot }
+  private assertActiveRecord(state: WrongAnswerLibraryState) {
+    const round = assertRecoverableWrongAnswerReviewRound(state)
+    const record = round?.status === 'active' ? state.records[round.order[round.index]!] : undefined
+    if (!round || !record || record.recordId !== this.options.record.recordId) throw new ListeningError('session-transition-invalid', 'Wrong-answer listening review moved to another item.')
+    return { round, record }
+  }
   private async save(snapshot: ListeningWrongAnswerReviewSnapshot) {
-    // A host persistence failure must leave the current runtime at its last
-    // acknowledged checkpoint; callers can safely reconstruct it after reload.
-    await this.options.onSnapshot?.(snapshot)
+    await this.options.state.update((latest) => {
+      const { round } = this.assertActiveRecord(latest)
+      return updateWrongAnswerReviewRoundSnapshot(latest, {
+        index: round.index, stage: round.stage, answerDraft: encodeSnapshot(snapshot),
+        answeredCount: round.answeredCount, correctCount: round.correctCount,
+        updatedAt: snapshot.updatedAt, status: round.status,
+      })
+    })
     this.snapshot = snapshot
+    this.options.onView?.(snapshot)
     return snapshot
   }
   private queuePlayback(playback: ListeningPlaybackState, generation: number) {
@@ -100,11 +140,16 @@ export class ListeningWrongAnswerReviewRuntime {
   }
   private require() { if (!this.snapshot) throw new ListeningError('session-transition-invalid', 'Wrong-answer listening review is not initialized.'); return this.snapshot }
   async initialize() {
-    const restored = this.options.restoredSnapshot
+    const library = await this.options.state.load()
+    const { round, record } = this.assertActiveRecord(library)
+    if (record.reviewContentId !== this.options.record.reviewContentId || record.originalQuestionType !== this.options.record.originalQuestionType) throw new ListeningError('session-recovery-invalid', 'Wrong-answer review record identity drift.')
+    const restored = decodeSnapshot(round.answerDraft) ?? this.options.restoredSnapshot
     if (restored) {
       if (restored.recordId !== this.options.record.recordId || restored.identity.reviewContentId !== this.options.record.reviewContentId || restored.identity.originalQuestionType !== this.options.record.originalQuestionType) throw new ListeningError('session-recovery-invalid', 'Wrong-answer review snapshot identity drift.')
-      this.snapshot = restored.playback.status === 'playing' ? { ...restored, playback: { ...restored.playback, status: 'paused' }, updatedAt: this.now() } : restored
-      this.attach(this.snapshot); return this.flush()
+      const normalized = restored.playback.status === 'playing' ? { ...restored, playback: { ...restored.playback, status: 'paused' as const }, updatedAt: this.now() } : restored
+      this.snapshot = normalized
+      if (normalized !== restored || !decodeSnapshot(round.answerDraft)) await this.save(normalized)
+      this.attach(this.snapshot); return this.snapshot
     }
     const resolved = await this.options.resolve(this.options.record)
     if (resolved.identity.reviewContentId !== this.options.record.reviewContentId || resolved.identity.originalQuestionType !== this.options.record.originalQuestionType || resolved.question.type === undefined) throw new ListeningError('content-invalid', 'Wrong-answer review resolver returned identity drift.')
@@ -122,15 +167,43 @@ export class ListeningWrongAnswerReviewRuntime {
     if (s.phase !== 'answering' || !response || (s.playback.completedPlayCounts?.[s.question.primarySegmentId] ?? 0) === 0) throw new ListeningError('session-transition-invalid', 'Play and answer before submitting wrong-answer review.')
     this.controller?.interrupt(); const correct = judgeListeningAnswer(s.question, response); const submittedAt = this.now()
     const answer = { questionId: s.question.id, response, correct, submittedAt, playCount: s.playback.playCounts[s.question.primarySegmentId] ?? 0, rate: s.playback.rate, repeatMode: s.playback.repeatMode }
-    return this.save({ ...s, answer, phase: 'feedback', pendingEvidence: { schemaVersion: 1, eventId: `listening-review:${s.recordId}:${submittedAt}:${this.createId()}`, occurredAt: submittedAt, domain: 'listening', source: 'wrong-answer-review', outcome: correct ? 'correct' : 'incorrect', formallyScored: true, ...s.identity }, updatedAt: submittedAt })
+    const feedback = { ...s, answer, phase: 'feedback' as const, pendingEvidence: null, updatedAt: submittedAt }
+    await this.options.state.update((latest) => {
+      const { round } = this.assertActiveRecord(latest)
+      const evidence: WrongAnswerEvidence = { schemaVersion: 1, eventId: `listening-review:${round.roundId}:${s.recordId}`, occurredAt: submittedAt, domain: 'listening', source: 'wrong-answer-review', outcome: correct ? 'correct' : 'incorrect', formallyScored: true, reviewContentId: s.identity.reviewContentId, originalQuestionType: s.identity.originalQuestionType }
+      const scored = submitWrongAnswerReviewAnswer(latest, evidence).state
+      const scoredRound = scored.activeRound!
+      return updateWrongAnswerReviewRoundSnapshot(scored, {
+        index: scoredRound.index, stage: scoredRound.stage, answerDraft: encodeSnapshot(feedback),
+        answeredCount: scoredRound.answeredCount, correctCount: scoredRound.correctCount,
+        updatedAt: submittedAt, status: scoredRound.status,
+      })
+    })
+    this.snapshot = feedback
+    this.options.onView?.(feedback)
+    return feedback
   }
-  async flush() { const s = this.require(); if (!s.pendingEvidence) return s; await this.options.submitReviewEvidence(s.pendingEvidence); return this.save({ ...s, pendingEvidence: null, updatedAt: this.now() }) }
+  async flush() { return this.require() }
   /** The round owner may request its next randomized record only after this acknowledgement. */
   async advance() {
-    const s = await this.flush()
+    const s = this.require()
     if (s.phase !== 'feedback') throw new ListeningError('session-transition-invalid', 'Wrong-answer review can advance only after feedback.')
+    const completed = { ...s, phase: 'completed' as const, updatedAt: this.now() }
+    await this.options.state.update((latest) => {
+      this.assertActiveRecord(latest)
+      return advanceWrongAnswerReviewRound(latest, completed.updatedAt)
+    })
     this.controller?.dispose(); this.controller = null; this.generation += 1
-    return this.save({ ...s, phase: 'completed', updatedAt: this.now() })
+    this.snapshot = completed
+    this.options.onView?.(completed)
+    return completed
+  }
+  async retryPlayback() {
+    const s = this.require()
+    if (s.phase !== 'error') throw new ListeningError('session-transition-invalid', 'Listening playback is not in an error state.')
+    const recovered = await this.save({ ...s, phase: 'answering', playback: playback(s.question), updatedAt: this.now() })
+    this.attach(recovered)
+    return recovered
   }
   dispose() { this.controller?.dispose(); this.controller = null }
 }
