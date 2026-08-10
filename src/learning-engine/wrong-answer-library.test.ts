@@ -3,6 +3,7 @@ import {
   advanceWrongAnswerReviewRound,
   applyWrongAnswerEvidence,
   assertRecoverableWrongAnswerReviewRound,
+  assertWrongAnswerLibraryState,
   createWrongAnswerLibraryState,
   randomizeWrongAnswerRecordIds,
   startWrongAnswerReviewRound,
@@ -55,15 +56,23 @@ describe('R13-D unified wrong-answer library', () => {
 
   it('moves an item to history only after two dedicated review answers, then reactivates it on later formal error', () => {
     let state = applyWrongAnswerEvidence(createWrongAnswerLibraryState(), evidence()).state
+    expect(Object.values(state.records)[0]?.movedToHistoryAt).toBeNull()
     state = startWrongAnswerReviewRound(state, { roundId: 'round-1', seed: 'seed-1', startedAt: '2026-08-03T00:00:01.000Z' })
     state = submitWrongAnswerReviewAnswer(state, evidence({ eventId: 'review-1', source: 'wrong-answer-review', outcome: 'correct', occurredAt: '2026-08-03T00:00:02.000Z' })).state
     state = advanceWrongAnswerReviewRound(state, '2026-08-03T00:00:03.000Z')
-    expect(Object.values(state.records)[0]?.consecutiveReviewCorrect).toBe(1)
+    expect(Object.values(state.records)[0]).toMatchObject({ consecutiveReviewCorrect: 1, movedToHistoryAt: null })
     state = startWrongAnswerReviewRound({ ...state, activeRound: null }, { roundId: 'round-2', seed: 'seed-2', startedAt: '2026-08-03T00:00:04.000Z' })
     state = submitWrongAnswerReviewAnswer(state, evidence({ eventId: 'review-2', source: 'wrong-answer-review', outcome: 'correct', occurredAt: '2026-08-03T00:00:05.000Z' })).state
-    expect(Object.values(state.records)[0]?.status).toBe('history')
+    expect(Object.values(state.records)[0]).toMatchObject({ status: 'history', movedToHistoryAt: '2026-08-03T00:00:05.000Z' })
     state = applyWrongAnswerEvidence(state, evidence({ eventId: 'later-error', occurredAt: '2026-08-03T00:00:06.000Z', source: 'extra-training' })).state
-    expect(Object.values(state.records)[0]).toMatchObject({ status: 'active', consecutiveReviewCorrect: 0, incorrectCount: 2 })
+    expect(Object.values(state.records)[0]).toMatchObject({ status: 'active', consecutiveReviewCorrect: 0, incorrectCount: 2, movedToHistoryAt: null })
+  })
+
+  it('keeps the history timestamp null when a dedicated review answer is incorrect', () => {
+    let state = applyWrongAnswerEvidence(createWrongAnswerLibraryState(), evidence()).state
+    state = startWrongAnswerReviewRound(state, { roundId: 'round-wrong', seed: 'seed-wrong', startedAt: '2026-08-03T00:00:01.000Z' })
+    state = submitWrongAnswerReviewAnswer(state, evidence({ eventId: 'review-wrong', source: 'wrong-answer-review', outcome: 'incorrect', occurredAt: '2026-08-03T00:00:02.000Z' })).state
+    expect(Object.values(state.records)[0]).toMatchObject({ status: 'active', consecutiveReviewCorrect: 0, movedToHistoryAt: null })
   })
 
   it('rejects time reversal and corrupted or drifting persisted rounds', () => {
@@ -71,5 +80,48 @@ describe('R13-D unified wrong-answer library', () => {
     expect(() => applyWrongAnswerEvidence(first, evidence({ eventId: 'older', occurredAt: '2026-08-02T00:00:00.000Z' }))).toThrow('predate')
     const round = startWrongAnswerReviewRound(first, { roundId: 'round', seed: 'seed', startedAt: '2026-08-03T00:00:01.000Z' })
     expect(() => assertRecoverableWrongAnswerReviewRound({ ...round, activeRound: { ...round.activeRound!, order: ['missing'] } })).toThrow('identity drift')
+  })
+
+  it('strictly recovers a JSON round-trip with the exact history transition time', () => {
+    let state = applyWrongAnswerEvidence(createWrongAnswerLibraryState(), evidence()).state
+    state = startWrongAnswerReviewRound(state, { roundId: 'round-json-history-1', seed: 'seed-json-history-1', startedAt: '2026-08-03T00:00:01.000Z' })
+    state = submitWrongAnswerReviewAnswer(state, evidence({ eventId: 'json-review-1', source: 'wrong-answer-review', outcome: 'correct', occurredAt: '2026-08-03T00:00:02.000Z' })).state
+    state = advanceWrongAnswerReviewRound(state, '2026-08-03T00:00:03.000Z')
+    state = startWrongAnswerReviewRound({ ...state, activeRound: null }, { roundId: 'round-json-history-2', seed: 'seed-json-history-2', startedAt: '2026-08-03T00:00:04.000Z' })
+    state = submitWrongAnswerReviewAnswer(state, evidence({ eventId: 'json-review-2', source: 'wrong-answer-review', outcome: 'correct', occurredAt: '2026-08-03T00:00:05.000Z' })).state
+    const recovered: unknown = JSON.parse(JSON.stringify(state))
+    assertWrongAnswerLibraryState(recovered)
+    expect(Object.values(recovered.records)[0]?.movedToHistoryAt).toBe('2026-08-03T00:00:05.000Z')
+  })
+
+  it('rejects pre-release snapshots missing movedToHistoryAt instead of inventing history evidence', () => {
+    const active = applyWrongAnswerEvidence(createWrongAnswerLibraryState(), evidence()).state
+    const recordId = Object.keys(active.records)[0]!
+    const history = {
+      ...active,
+      records: { ...active.records, [recordId]: { ...active.records[recordId]!, status: 'history' as const, consecutiveReviewCorrect: 2 as const, movedToHistoryAt: '2026-08-03T00:00:01.000Z' } },
+    }
+    const oldSnapshot = JSON.parse(JSON.stringify(history)) as { records: Record<string, Record<string, unknown>> }
+    const record = Object.values(oldSnapshot.records)[0]!
+    delete record.movedToHistoryAt
+    expect(() => assertWrongAnswerLibraryState(oldSnapshot)).toThrow('movedToHistoryAt')
+    expect(record).not.toHaveProperty('movedToHistoryAt')
+  })
+
+  it('rejects corrupt active/history timestamp invariants during JSON recovery', () => {
+    const active = applyWrongAnswerEvidence(createWrongAnswerLibraryState(), evidence()).state
+    const activeRecordId = Object.keys(active.records)[0]!
+    expect(() => assertWrongAnswerLibraryState({
+      ...active,
+      records: { ...active.records, [activeRecordId]: { ...active.records[activeRecordId]!, movedToHistoryAt: '2026-08-03T00:00:01.000Z' } },
+    })).toThrow('active')
+    expect(() => assertWrongAnswerLibraryState({
+      ...active,
+      records: { ...active.records, [activeRecordId]: { ...active.records[activeRecordId]!, status: 'history', consecutiveReviewCorrect: 2, movedToHistoryAt: null } },
+    })).toThrow('history')
+    expect(() => assertWrongAnswerLibraryState({
+      ...active,
+      records: { ...active.records, [activeRecordId]: { ...active.records[activeRecordId]!, status: 'history', consecutiveReviewCorrect: 2, movedToHistoryAt: 'not-a-time' } },
+    })).toThrow('movedToHistoryAt')
   })
 })

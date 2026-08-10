@@ -4,9 +4,10 @@ import type {
   WrongAnswerRecord,
   WrongAnswerReviewRound,
 } from './contracts.ts'
-import { parseTimestamp, uniqueStrings } from './utils.ts'
+import { ABILITY_DOMAINS, parseTimestamp, uniqueStrings } from './utils.ts'
 
 const MAX_PROCESSED_EVIDENCE_IDS = 500
+const WRONG_ANSWER_SOURCES = ['daily-training', 'extra-training', 'scenario-training', 'wrong-answer-review'] as const
 
 export type ApplyWrongAnswerEvidenceResult = {
   readonly state: WrongAnswerLibraryState
@@ -37,6 +38,74 @@ export function wrongAnswerRecordId(identity: {
 
 export function createWrongAnswerLibraryState(): WrongAnswerLibraryState {
   return { schemaVersion: 1, records: {}, processedEvidenceIds: [], activeRound: null }
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+function assertStringArray(value: unknown, field: string): asserts value is readonly string[] {
+  if (!Array.isArray(value) || value.some((item) => typeof item !== 'string' || item.trim().length === 0)) {
+    throw new TypeError(`${field} must be an array of non-empty strings`)
+  }
+}
+
+function assertPersistedRecord(recordId: string, value: unknown): asserts value is WrongAnswerRecord {
+  if (!isRecord(value) || value.schemaVersion !== 1) throw new TypeError('Wrong-answer library contains an unsupported record')
+  if (value.recordId !== recordId) throw new TypeError('Wrong-answer record key does not match recordId')
+  if (typeof value.reviewContentId !== 'string' || typeof value.originalQuestionType !== 'string' || wrongAnswerRecordId({ reviewContentId: value.reviewContentId, originalQuestionType: value.originalQuestionType }) !== recordId) {
+    throw new TypeError('Wrong-answer record identity is corrupt')
+  }
+  if (!ABILITY_DOMAINS.includes(value.domain as (typeof ABILITY_DOMAINS)[number])) throw new TypeError('Wrong-answer record domain is invalid')
+  if (value.status !== 'active' && value.status !== 'history') throw new TypeError('Wrong-answer record status is invalid')
+  if (!Number.isInteger(value.incorrectCount) || Number(value.incorrectCount) < 1) throw new TypeError('Wrong-answer record incorrectCount is invalid')
+  if (value.consecutiveReviewCorrect !== 0 && value.consecutiveReviewCorrect !== 1 && value.consecutiveReviewCorrect !== 2) throw new TypeError('Wrong-answer record review streak is invalid')
+  if (typeof value.lastIncorrectAt !== 'string') throw new TypeError('lastIncorrectAt must be a valid ISO 8601 timestamp')
+  const lastIncorrectAt = parseTimestamp(value.lastIncorrectAt, 'lastIncorrectAt')
+  if (!Object.hasOwn(value, 'movedToHistoryAt')) {
+    throw new TypeError('movedToHistoryAt is required; pre-release snapshots are not migrated')
+  }
+  if (value.status === 'active') {
+    if (value.movedToHistoryAt !== null) throw new TypeError('An active wrong-answer record must have movedToHistoryAt=null')
+    if (value.consecutiveReviewCorrect === 2) throw new TypeError('An active wrong-answer record cannot have a completed review streak')
+  } else {
+    if (typeof value.movedToHistoryAt !== 'string') throw new TypeError('A history wrong-answer record must have movedToHistoryAt')
+    if (parseTimestamp(value.movedToHistoryAt, 'movedToHistoryAt') < lastIncorrectAt) throw new RangeError('movedToHistoryAt cannot predate lastIncorrectAt')
+    if (value.consecutiveReviewCorrect !== 2) throw new TypeError('A history wrong-answer record must have a completed review streak')
+  }
+  if (!WRONG_ANSWER_SOURCES.includes(value.lastSource as (typeof WRONG_ANSWER_SOURCES)[number])) throw new TypeError('Wrong-answer record lastSource is invalid')
+  assertStringArray(value.sources, 'sources')
+  if (new Set(value.sources).size !== value.sources.length || !value.sources.includes(value.lastSource as string)) throw new TypeError('Wrong-answer record sources are invalid')
+}
+
+function assertPersistedRound(value: unknown): asserts value is WrongAnswerReviewRound {
+  if (!isRecord(value) || value.schemaVersion !== 1) throw new TypeError('Wrong-answer review round uses an unsupported schema')
+  assertNonEmpty(value.roundId as string, 'roundId')
+  assertNonEmpty(value.seed as string, 'seed')
+  assertStringArray(value.order, 'order')
+  if (!Number.isInteger(value.index) || Number(value.index) < 0) throw new TypeError('Wrong-answer review index is invalid')
+  if (value.stage !== 'answering' && value.stage !== 'feedback') throw new TypeError('Wrong-answer review stage is invalid')
+  if (value.answerDraft !== null && typeof value.answerDraft !== 'string') assertStringArray(value.answerDraft, 'answerDraft')
+  if (!Number.isInteger(value.answeredCount) || Number(value.answeredCount) < 0 || !Number.isInteger(value.correctCount) || Number(value.correctCount) < 0) throw new TypeError('Wrong-answer review counts are invalid')
+  if (typeof value.startedAt !== 'string' || typeof value.updatedAt !== 'string') throw new TypeError('Wrong-answer review timestamps are invalid')
+  const startedAt = parseTimestamp(value.startedAt, 'startedAt')
+  if (parseTimestamp(value.updatedAt, 'updatedAt') < startedAt) throw new RangeError('Wrong-answer review updatedAt cannot predate startedAt')
+  if (value.status !== 'active' && value.status !== 'completed' && value.status !== 'exited' && value.status !== 'failed') throw new TypeError('Wrong-answer review status is invalid')
+  if (value.failure !== null && value.failure !== 'corrupt-snapshot' && value.failure !== 'identity-drift') throw new TypeError('Wrong-answer review failure is invalid')
+}
+
+/**
+ * Strict recovery gate for persisted JSON. R13-D has not shipped with a
+ * pre-movedToHistoryAt schema, so missing timestamps are rejected rather than
+ * fabricated from lastIncorrectAt or another unrelated event.
+ */
+export function assertWrongAnswerLibraryState(value: unknown): asserts value is WrongAnswerLibraryState {
+  if (!isRecord(value) || value.schemaVersion !== 1 || !isRecord(value.records)) throw new TypeError('Wrong-answer library is not a supported schema-1 state')
+  for (const [recordId, record] of Object.entries(value.records)) assertPersistedRecord(recordId, record)
+  assertStringArray(value.processedEvidenceIds, 'processedEvidenceIds')
+  if (value.processedEvidenceIds.length > MAX_PROCESSED_EVIDENCE_IDS || new Set(value.processedEvidenceIds).size !== value.processedEvidenceIds.length) throw new TypeError('processedEvidenceIds are invalid')
+  if (value.activeRound !== null) assertPersistedRound(value.activeRound)
+  assertRecoverableWrongAnswerReviewRound(value as unknown as WrongAnswerLibraryState)
 }
 
 function assertEvidence(evidence: WrongAnswerEvidence): void {
@@ -92,6 +161,7 @@ export function applyWrongAnswerEvidence(
         incorrectCount: (previous?.incorrectCount ?? 0) + 1,
         consecutiveReviewCorrect: 0,
         lastIncorrectAt: evidence.occurredAt,
+        movedToHistoryAt: null,
         lastSource: evidence.source,
         sources: uniqueStrings([...(previous?.sources ?? []), evidence.source]),
       }
@@ -100,7 +170,12 @@ export function applyWrongAnswerEvidence(
           throw new TypeError('Review correctness requires an active wrong-answer record')
         }
         const streak = previous.consecutiveReviewCorrect + 1
-        return { ...previous, consecutiveReviewCorrect: streak as 1 | 2, status: streak >= 2 ? 'history' : 'active' }
+        return {
+          ...previous,
+          consecutiveReviewCorrect: streak as 1 | 2,
+          status: streak >= 2 ? 'history' : 'active',
+          movedToHistoryAt: streak >= 2 ? evidence.occurredAt : null,
+        }
       })()
   const next = withEvidenceId({ ...state, records: { ...state.records, [recordId]: record } }, evidence.eventId)
   return { state: next, record, reason: 'accepted' }

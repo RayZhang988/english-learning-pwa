@@ -518,6 +518,12 @@ export interface WrongAnswerRecord extends ReviewContentIdentity {
   readonly incorrectCount: number
   readonly consecutiveReviewCorrect: 0 | 1 | 2
   readonly lastIncorrectAt: string
+  /**
+   * Exact dedicated-review evidence time that moved this record to history.
+   * Active records must persist null; history records persist the second
+   * consecutive dedicated-review correct answer's occurredAt.
+   */
+  readonly movedToHistoryAt: string | null
   readonly lastSource: WrongAnswerSource
   readonly sources: readonly WrongAnswerSource[]
 }
@@ -556,6 +562,22 @@ export interface WrongAnswerLibraryState {
   readonly records: Readonly<Record<string, WrongAnswerRecord>>
   readonly processedEvidenceIds: readonly string[]
   readonly activeRound: WrongAnswerReviewRound | null
+}
+
+/** Synchronous, pure read-modify-write transform applied to the latest state. */
+export type WrongAnswerLibraryStateTransform = (
+  state: WrongAnswerLibraryState,
+) => WrongAnswerLibraryState
+
+/**
+ * Unified atomic persistence boundary for all wrong-answer producers and the
+ * review coordinator. update must serialize against the latest durable state,
+ * return that persisted state, and leave durability unchanged when loading,
+ * transforming, validating, or writing fails.
+ */
+export interface WrongAnswerLibraryStatePort {
+  load(): Promise<WrongAnswerLibraryState>
+  update(transform: WrongAnswerLibraryStateTransform): Promise<WrongAnswerLibraryState>
 }
 
 export type ProgressTrend =

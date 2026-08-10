@@ -103,6 +103,8 @@ export type {
   ReviewContentIdentity,
   WrongAnswerEvidence,
   WrongAnswerLibraryState,
+  WrongAnswerLibraryStatePort,
+  WrongAnswerLibraryStateTransform,
   WrongAnswerRecord,
   WrongAnswerReviewRound,
   WrongAnswerSource,
@@ -181,6 +183,7 @@ export {
 export {
   advanceWrongAnswerReviewRound,
   applyWrongAnswerEvidence,
+  assertWrongAnswerLibraryState,
   assertRecoverableWrongAnswerReviewRound,
   createWrongAnswerLibraryState,
   randomizeWrongAnswerRecordIds,
