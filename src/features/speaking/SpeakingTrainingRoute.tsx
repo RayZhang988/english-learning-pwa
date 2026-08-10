@@ -105,7 +105,10 @@ export function sameSpeakingWrongAnswerEvidencePort(
   left: SpeakingTrainingRuntimeOptions['wrongAnswerEvidence'],
   right: SpeakingTrainingRuntimeOptions['wrongAnswerEvidence'],
 ): boolean {
-  return left === right
+  return left === right || (
+    left?.resolver === right?.resolver &&
+    left?.sink === right?.sink
+  )
 }
 
 export function SpeakingTrainingRoute(

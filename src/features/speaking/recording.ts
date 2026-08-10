@@ -67,6 +67,7 @@ export class BrowserSpeakingRecorder
   private activeAudio: PlaybackAudio | null = null
   private activeAudioUrl: string | null = null
   private finishPlayback: ((error?: Error) => void) | null = null
+  private rejectPendingStop: ((error: Error) => void) | null = null
   private recordingLifecycle:
     | SpeakingRecordingLifecycleCallbacks
     | null = null
@@ -170,9 +171,11 @@ export class BrowserSpeakingRecorder
       )
     }
     return new Promise<SpeakingRecording>((resolve, reject) => {
+      this.rejectPendingStop = reject
       const startedAt = this.startedAt
       recorder.onerror = (event) => {
         this.recordingLifecycle?.onError(event.error)
+        this.rejectPendingStop = null
         this.clearRecorder()
         reject(
           new SpeakingError(
@@ -193,6 +196,7 @@ export class BrowserSpeakingRecorder
           Math.round(this.nowMs() - startedAt),
         )
         this.recordingLifecycle?.onStopped()
+        this.rejectPendingStop = null
         this.clearRecorder()
         if (blob.size === 0) {
           reject(
@@ -214,6 +218,7 @@ export class BrowserSpeakingRecorder
         recorder.stop()
       } catch (error) {
         this.recordingLifecycle?.onError(error)
+        this.rejectPendingStop = null
         this.clearRecorder()
         reject(
           new SpeakingError(
@@ -229,18 +234,28 @@ export class BrowserSpeakingRecorder
   cancel(): void {
     const recorder = this.recorder
     const lifecycle = this.recordingLifecycle
-    if (recorder && recorder.state !== 'inactive') {
+    const reject = this.rejectPendingStop
+    this.rejectPendingStop = null
+    if (recorder) {
       recorder.ondataavailable = null
       recorder.onstop = null
       recorder.onerror = null
-      try {
-        recorder.stop()
-      } catch {
-        // The capture is already unusable; tracks are still stopped below.
+      if (recorder.state !== 'inactive') {
+        try {
+          recorder.stop()
+        } catch {
+          // The capture is already unusable; tracks are still stopped below.
+        }
       }
     }
     lifecycle?.onStopped()
     this.clearRecorder()
+    reject?.(
+      new SpeakingError(
+        'session-transition-invalid',
+        'Speaking recording was cancelled before it could stop.',
+      ),
+    )
   }
 
   play(

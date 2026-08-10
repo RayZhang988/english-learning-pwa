@@ -59,6 +59,22 @@ class FakeMediaRecorder {
   }
 }
 
+class DelayedStopMediaRecorder extends FakeMediaRecorder {
+  private static stopCalls = 0
+
+  stop() {
+    DelayedStopMediaRecorder.stopCalls += 1
+    this.state = 'inactive'
+    if (DelayedStopMediaRecorder.stopCalls < 2) {
+      return
+    }
+    this.ondataavailable?.({
+      data: new Blob(['voice'], { type: this.mimeType }),
+    } as BlobEvent)
+    this.onstop?.()
+  }
+}
+
 afterEach(() => {
   vi.unstubAllGlobals()
 })
@@ -97,6 +113,18 @@ describe('browser speaking recorder', () => {
     })
     expect(recording.blob.size).toBeGreaterThan(0)
     expect(stopTrack).toHaveBeenCalledOnce()
+  })
+
+  it('settles a pending native stop when cancelled, then permits another recording to stop', async () => {
+    vi.stubGlobal('MediaRecorder', DelayedStopMediaRecorder)
+    const stream = { getTracks: () => [{ stop: vi.fn() }] } as unknown as MediaStream
+    const recorder = new BrowserSpeakingRecorder({ createId: () => 'after-cancel' })
+    recorder.start(stream)
+    const pending = recorder.stop()
+    recorder.cancel()
+    await expect(pending).rejects.toThrow('cancelled before it could stop')
+    recorder.start(stream)
+    await expect(recorder.stop()).resolves.toMatchObject({ id: 'after-cancel' })
   })
 
   it('reports actual MediaRecorder start, pause, resume, stop and error callbacks', async () => {

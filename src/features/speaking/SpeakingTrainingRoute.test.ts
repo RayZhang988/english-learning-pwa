@@ -20,6 +20,13 @@ describe('SpeakingTrainingRoute wrong-answer injection', () => {
     expect(sameSpeakingWrongAnswerEvidencePort(one, one)).toBe(true)
     expect(sameSpeakingWrongAnswerEvidencePort(one, two)).toBe(false)
   })
+  it('keeps runtime identity for a new wrapper around the same resolver/sink pair', () => {
+    const resolver = {} as never
+    const sink = {} as never
+    expect(sameSpeakingWrongAnswerEvidencePort({ resolver, sink }, { resolver, sink })).toBe(true)
+    expect(sameSpeakingWrongAnswerEvidencePort({ resolver, sink }, { resolver: {} as never, sink })).toBe(false)
+    expect(sameSpeakingWrongAnswerEvidencePort({ resolver, sink }, { resolver, sink: {} as never })).toBe(false)
+  })
   it('keeps the existing route behavior compatible without the optional port', () => {
     expect(toSpeakingTrainingRuntimeOptions(base, network).wrongAnswerEvidence).toBeUndefined()
     expect(sameSpeakingWrongAnswerEvidencePort(undefined, undefined)).toBe(true)
