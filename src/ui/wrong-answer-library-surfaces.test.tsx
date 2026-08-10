@@ -54,6 +54,31 @@ describe('WrongAnswerLibrary R13-D display contract', () => {
     expect(moved).toContain('已连续答对 2 次，已移入历史记录。')
     expect(moved).not.toContain('15分钟')
   })
+  it('marks vocabulary review questions for full-width selectable option styling', () => {
+    const common = { onExit: vi.fn(), onSubmit: vi.fn(), onAdvance: vi.fn(), onRetry: vi.fn(), onNewRound: vi.fn() }
+    const markup = renderToStaticMarkup(
+      <WrongAnswerReviewScreen
+        {...common}
+        viewModel={{
+          phase: 'answering',
+          answeredCount: 0,
+          correctCount: 0,
+          accuracy: null,
+          remainingCount: 1,
+          questionSlot: {
+            kind: 'vocabulary',
+            content: <div role="group" aria-label="词汇答案"><button type="button" aria-pressed="true">嗨；你好</button></div>,
+          },
+          primaryAction: { label: '提交答案', disabled: false },
+        }}
+      />,
+    )
+
+    expect(markup).toContain(
+      'wrong-answer-review__question--vocabulary',
+    )
+    expect(markup).toContain('aria-pressed="true"')
+  })
   it('renders all feedback and terminal states from supplied facts without fixed sequence copy', () => {
     const common = { onExit: vi.fn(), onSubmit: vi.fn(), onAdvance: vi.fn(), onRetry: vi.fn(), onNewRound: vi.fn() }
     const render = (phase: 'feedback' | 'saving' | 'error' | 'round-completed') => renderToStaticMarkup(<WrongAnswerReviewScreen {...common} viewModel={phase === 'feedback' ? { phase, answeredCount: 7, correctCount: 3, accuracy: .428, remainingCount: 8, feedback: { outcome: 'incorrect', consecutiveCorrect: 0, message: '回答不正确' }, questionSlot: { kind: 'listening', content: <p>听写题</p> }, primaryAction: { label: '下一题', disabled: false } } : phase === 'saving' ? { phase, answeredCount: 7, correctCount: 3, accuracy: .428, remainingCount: 8, questionSlot: { kind: 'speaking', content: <p>录音题</p> } } : phase === 'error' ? { phase, answeredCount: 7, correctCount: 3, accuracy: .428, remainingCount: 8, questionSlot: { kind: 'listening', content: <p>原题仍保留</p> }, error: { title: '保存失败', description: '可重试' } } : { phase, answeredCount: 7, correctCount: 3, accuracy: .428, remainingCount: 0, newRoundAction: { label: '开始新一轮', disabled: false } } } />)

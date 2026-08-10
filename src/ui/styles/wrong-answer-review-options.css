@@ -1,0 +1,49 @@
+.wrong-answer-review__question--vocabulary article {
+  display: grid;
+  gap: 18px;
+}
+
+.wrong-answer-review__question--vocabulary article > p {
+  margin: 0;
+  color: var(--ink);
+  line-height: 1.55;
+}
+
+.wrong-answer-review__question--vocabulary [role="group"][aria-label="词汇答案"] {
+  display: grid;
+  gap: 10px;
+}
+
+.wrong-answer-review__question--vocabulary [role="group"][aria-label="词汇答案"] > button {
+  display: flex;
+  width: 100%;
+  min-height: 54px;
+  padding: 14px 16px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  color: var(--ink);
+  text-align: left;
+  background: var(--surface);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.wrong-answer-review__question--vocabulary [role="group"][aria-label="词汇答案"] > button[aria-pressed="true"] {
+  border-color: var(--indigo);
+  color: var(--indigo);
+  background: var(--indigo-soft);
+  box-shadow: 0 0 0 2px rgb(80 87 230 / 12%);
+}
+
+.wrong-answer-review__question--vocabulary [role="group"][aria-label="词汇答案"] > button:focus-visible {
+  outline: 3px solid rgb(80 87 230 / 24%);
+  outline-offset: 2px;
+}
+
+.wrong-answer-review__question--vocabulary [role="group"][aria-label="词汇答案"] > button:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
