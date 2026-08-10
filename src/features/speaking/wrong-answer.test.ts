@@ -57,7 +57,7 @@ describe('speaking wrong-answer boundary', () => {
     const identity = { reviewContentId: 'review-content-v1-store', originalQuestionType: 'speaking-activity-prompt', domain: 'speaking' as const, source: { kind: 'daily-supply' as const, itemId: 'item', sourceId: speakingPrompt.id, contentRef: 'lesson://x' } }
     library = applyWrongAnswerEvidence(library, createSpeakingWrongAnswerEvidence({ eventId: 'wrong-store', occurredAt: '2026-08-03T00:00:00.000Z', source: 'daily-training', identity, match: { level: 'different' } as never })).state
     library = startWrongAnswerReviewRound(library, { roundId: 'round-store', seed: 'seed-store', startedAt: '2026-08-03T00:00:01.000Z' })
-    const runtime = new SpeakingWrongAnswerReviewRuntime({ load: async () => library, save: async () => { throw new Error('store down') } }, async () => speakingPrompt)
+    const runtime = new SpeakingWrongAnswerReviewRuntime({ load: async () => library, update: async () => { throw new Error('store down') } }, async () => speakingPrompt)
     await runtime.initialize()
     await expect(runtime.submitTranscript(speakingPrompt.modelAnswer, 'review-store', '2026-08-03T00:00:02.000Z')).rejects.toThrow('store down')
     expect(library.records[Object.keys(library.records)[0]].consecutiveReviewCorrect).toBe(0)

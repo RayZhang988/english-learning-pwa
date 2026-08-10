@@ -1,6 +1,7 @@
 import type {
   WrongAnswerEvidence,
   WrongAnswerLibraryState,
+  WrongAnswerLibraryStatePort,
   WrongAnswerRecord,
 } from '../../learning-engine/index.ts'
 import {
@@ -82,10 +83,7 @@ export function resumeSpeakingWrongAnswerReview(library: WrongAnswerLibraryState
 export function advanceSpeakingWrongAnswerReview(library: WrongAnswerLibraryState, occurredAt: string) { return advanceWrongAnswerReviewRound(library, occurredAt) }
 export function applySpeakingWrongAnswerEvidence(library: WrongAnswerLibraryState, evidence: WrongAnswerEvidence) { return applyWrongAnswerEvidence(library, evidence) }
 
-export interface SpeakingWrongAnswerReviewStore {
-  load(): Promise<WrongAnswerLibraryState>
-  save(state: WrongAnswerLibraryState): Promise<void>
-}
+export type SpeakingWrongAnswerReviewStore = WrongAnswerLibraryStatePort
 
 export interface SpeakingWrongAnswerReviewView {
   readonly library: WrongAnswerLibraryState
@@ -122,32 +120,35 @@ export class SpeakingWrongAnswerReviewRuntime {
   private pendingStop: Promise<unknown> | null = null
   private pendingSubmission: Promise<unknown> | null = null
   private pendingAdvance: Promise<SpeakingWrongAnswerReviewView> | null = null
-  constructor(store: SpeakingWrongAnswerReviewStore, promptForRecord: (record: WrongAnswerRecord) => Promise<SpeakingPrompt>, options: { recorder?: SpeakingRecordingPort; recognition?: SpeakingRecognitionPort; requestMicrophone?: () => Promise<MediaStream> } = {}) {
+  private readonly onView: ((view: SpeakingWrongAnswerReviewView) => void) | undefined
+  constructor(store: SpeakingWrongAnswerReviewStore, promptForRecord: (record: WrongAnswerRecord) => Promise<SpeakingPrompt>, options: { recorder?: SpeakingRecordingPort; recognition?: SpeakingRecognitionPort; requestMicrophone?: () => Promise<MediaStream>; onView?: (view: SpeakingWrongAnswerReviewView) => void } = {}) {
     this.store = store
     this.promptForRecord = promptForRecord
     this.recorder = options.recorder ?? browserSpeakingRecorder
     this.recognition = options.recognition ?? browserSpeakingRecognition
     this.requestMicrophone = options.requestMicrophone
+    this.onView = options.onView
   }
   private readonly requestMicrophone: (() => Promise<MediaStream>) | undefined
-  async initialize() { this.state = await this.store.load(); const round = resumeSpeakingWrongAnswerReview(this.state); await this.loadActive(); return this.view(round) }
+  async initialize() { this.state = await this.store.load(); const round = resumeSpeakingWrongAnswerReview(this.state); await this.loadActive(); const view = this.view(round); this.onView?.(view); return view }
   private require() { if (!this.state) throw new TypeError('Speaking wrong-answer review is not initialized.'); return this.state }
   private async loadActive() { this.active = null; this.feedback = null; const state = this.require(); const round = resumeSpeakingWrongAnswerReview(state); if (!round || round.status !== 'active') return; const record = state.records[round.order[round.index]]; if (!record) throw new TypeError('Speaking wrong-answer review record is missing.'); const prompt = await this.promptForRecord(record); this.active = { record, prompt }; this.feedback = round.stage === 'feedback' && typeof round.answerDraft === 'string' ? { transcript: round.answerDraft, match: matchSpeakingText(round.answerDraft, prompt.acceptedAnswers) } : null }
   private view(round = resumeSpeakingWrongAnswerReview(this.require())): SpeakingWrongAnswerReviewView { return { library: this.require(), round, record: this.active?.record ?? null, prompt: this.active?.prompt ?? null, stage: round?.stage ?? 'answering', feedback: this.feedback, recordingAvailable: this.recording !== null, unscorable: this.unscorable, mediaStatus: this.mediaStatus, advancing: this.pendingAdvance !== null } }
+  private emit() { if (this.state) this.onView?.(this.view()) }
   current() { return this.view() }
   private answering() { const round = resumeSpeakingWrongAnswerReview(this.require()); return Boolean(this.active && round?.status === 'active' && round.stage === 'answering') }
   private busy() { return this.pendingStart !== null || this.pendingStop !== null || this.pendingSubmission !== null || this.pendingAdvance !== null }
-  startRecording() { if (!this.answering() || this.busy() || this.mediaStatus !== 'idle') return Promise.reject(new TypeError('Speaking wrong-answer review cannot start recording while another operation is active.')); const run = (async () => { if (!this.requestMicrophone) { this.unscorable = true; return this.view() }; const generation = ++this.generation; let stream: MediaStream | null = null; let recorderStarted = false; try { stream = await this.requestMicrophone(); if (generation !== this.generation) { for (const track of stream.getTracks()) track.stop(); return this.view() }; this.recorder.start(stream); recorderStarted = true; this.mediaStatus = 'capturing'; this.handle = this.recognition.capabilities().supported ? this.recognition.start('en-US') : null; void this.handle?.result.catch(() => undefined); this.unscorable = false } catch { if (generation !== this.generation) return this.view(); if (recorderStarted) this.recorder.cancel(); else if (stream) for (const track of stream.getTracks()) track.stop(); this.handle = null; this.mediaStatus = 'idle'; this.unscorable = true }; return this.view() })(); this.pendingStart = run; void run.then(() => { if (this.pendingStart === run) this.pendingStart = null }, () => { if (this.pendingStart === run) this.pendingStart = null }); return run }
-  stopRecording(eventId: string, occurredAt: string) { if (this.pendingStop) return this.pendingStop; if (this.pendingSubmission || !this.answering() || (this.mediaStatus !== 'capturing' && this.pendingStart === null)) return Promise.reject(new TypeError('Speaking wrong-answer review cannot stop recording in its current state.')); const run = (async () => { if (this.pendingStart) { this.cancelRecording(); return this.view() }; const generation = this.generation; const handle = this.handle; const recognitionResult = handle?.result; this.mediaStatus = 'stopping'; void recognitionResult?.catch(() => undefined); try { handle?.stop(); const recording = await this.recorder.stop();
+  startRecording() { if (!this.answering() || this.busy() || this.mediaStatus !== 'idle') return Promise.reject(new TypeError('Speaking wrong-answer review cannot start recording while another operation is active.')); const run = (async () => { if (!this.requestMicrophone) { this.unscorable = true; this.emit(); return this.view() }; const generation = ++this.generation; let stream: MediaStream | null = null; let recorderStarted = false; try { stream = await this.requestMicrophone(); if (generation !== this.generation) { for (const track of stream.getTracks()) track.stop(); return this.view() }; this.recorder.start(stream); recorderStarted = true; this.mediaStatus = 'capturing'; this.handle = this.recognition.capabilities().supported ? this.recognition.start('en-US') : null; void this.handle?.result.catch(() => undefined); this.unscorable = false; this.emit() } catch { if (generation !== this.generation) return this.view(); if (recorderStarted) this.recorder.cancel(); else if (stream) for (const track of stream.getTracks()) track.stop(); this.handle = null; this.mediaStatus = 'idle'; this.unscorable = true; this.emit() }; return this.view() })(); this.pendingStart = run; void run.then(() => { if (this.pendingStart === run) this.pendingStart = null }, () => { if (this.pendingStart === run) this.pendingStart = null }); return run }
+  stopRecording(eventId: string, occurredAt: string) { if (this.pendingStop) return this.pendingStop; if (this.pendingSubmission || !this.answering() || (this.mediaStatus !== 'capturing' && this.pendingStart === null)) return Promise.reject(new TypeError('Speaking wrong-answer review cannot stop recording in its current state.')); const run = (async () => { if (this.pendingStart) { this.cancelRecording(); return this.view() }; const generation = this.generation; const handle = this.handle; const recognitionResult = handle?.result; this.mediaStatus = 'stopping'; this.emit(); void recognitionResult?.catch(() => undefined); try { handle?.stop(); const recording = await this.recorder.stop();
       // Capture succeeded independently of recognition. Keep it first so every
       // recognition failure remains an honest, replayable unscorable attempt.
       if (generation !== this.generation) return this.view()
       this.recording = recording
-      this.mediaStatus = 'idle'
+      this.mediaStatus = 'idle'; this.emit()
       const outcome = recognitionResult ? await recognitionResult : { status: 'failed' as const, code: 'unavailable' as const, message: 'Recognition unavailable' }
-      if (generation !== this.generation || outcome.status !== 'recognized') { this.unscorable = true; return this.view() }; this.handle = null; return this.beginSubmission(outcome.transcript, eventId, occurredAt) } catch { if (generation !== this.generation) return this.view(); this.mediaStatus = 'idle'; this.unscorable = true; return this.view() } })(); this.pendingStop = run; void run.then(() => { if (this.pendingStop === run) this.pendingStop = null }, () => { if (this.pendingStop === run) this.pendingStop = null }); return run }
-  async playRecording() { if (!this.recording || this.mediaStatus !== 'idle' || this.busy()) throw new TypeError('No idle review recording is available.'); this.mediaStatus = 'playing'; try { await this.recorder.play(this.recording) } finally { if (this.mediaStatus === 'playing') this.mediaStatus = 'idle' }; return this.view() }
-  cancelRecording() { if (this.pendingAdvance) return this.view(); if (!this.pendingSubmission) { this.generation += 1; this.handle?.abort(); this.handle = null; this.pendingStart = null }; this.recorder.stopPlayback(); if (this.recording) this.recorder.discard(this.recording); this.recorder.cancel(); this.recording = null; this.mediaStatus = 'idle'; this.unscorable = false; return this.view() }
+      if (generation !== this.generation || outcome.status !== 'recognized') { this.unscorable = true; this.emit(); return this.view() }; this.handle = null; return this.beginSubmission(outcome.transcript, eventId, occurredAt) } catch { if (generation !== this.generation) return this.view(); this.mediaStatus = 'idle'; this.unscorable = true; this.emit(); return this.view() } })(); this.pendingStop = run; void run.then(() => { if (this.pendingStop === run) this.pendingStop = null }, () => { if (this.pendingStop === run) this.pendingStop = null }); return run }
+  async playRecording() { if (!this.recording || this.mediaStatus !== 'idle' || this.busy()) throw new TypeError('No idle review recording is available.'); this.mediaStatus = 'playing'; this.emit(); try { await this.recorder.play(this.recording) } finally { if (this.mediaStatus === 'playing') { this.mediaStatus = 'idle'; this.emit() } }; return this.view() }
+  cancelRecording() { if (this.pendingAdvance) return this.view(); if (!this.pendingSubmission) { this.generation += 1; this.handle?.abort(); this.handle = null; this.pendingStart = null }; this.recorder.stopPlayback(); if (this.recording) this.recorder.discard(this.recording); this.recorder.cancel(); this.recording = null; this.mediaStatus = 'idle'; this.unscorable = false; this.emit(); return this.view() }
   submitTranscript(transcript: string, eventId: string, occurredAt: string) {
     const mediaBusy = this.pendingStart !== null || this.pendingStop !== null
     if (mediaBusy) { this.cancelRecording(); return Promise.reject(new TypeError('Speaking wrong-answer review cannot submit while media is active.')) }
@@ -169,14 +170,22 @@ export class SpeakingWrongAnswerReviewRuntime {
     if (!record) throw new TypeError('Speaking wrong-answer review record is missing.')
     if (!this.active || this.active.record !== record) throw new TypeError('Active speaking wrong-answer review prompt is unavailable.')
     const prompt = this.active.prompt
-    const result = submitSpeakingWrongAnswerReview({ library: state, eventId, occurredAt, transcript, prompt, record })
-    const persisted = updateWrongAnswerReviewRoundSnapshot(result.state, { ...result.state.activeRound!, answerDraft: transcript, updatedAt: occurredAt })
-    await this.store.save(persisted)
+    let match: SpeakingTextMatch | null = null
+    const persisted = await this.store.update((latest) => {
+      const latestRound = resumeSpeakingWrongAnswerReview(latest)
+      const latestRecord = latestRound?.status === 'active' ? latest.records[latestRound.order[latestRound.index]] : undefined
+      if (!latestRound || latestRound.stage !== 'answering' || !latestRecord || latestRecord.recordId !== record.recordId) throw new TypeError('Speaking wrong-answer review moved to another item.')
+      const result = submitSpeakingWrongAnswerReview({ library: latest, eventId, occurredAt, transcript, prompt, record: latestRecord })
+      match = result.match
+      return updateWrongAnswerReviewRoundSnapshot(result.state, { ...result.state.activeRound!, answerDraft: transcript, updatedAt: occurredAt })
+    })
     if (generation !== this.generation) throw new TypeError('Speaking wrong-answer review changed during answer persistence.')
     this.state = persisted
-    this.feedback = { transcript, match: result.match }
-    return { ...result, prompt, view: this.view() }
+    if (!match) throw new TypeError('Speaking wrong-answer review result is unavailable.')
+    this.feedback = { transcript, match }
+    this.emit()
+    return { state: persisted, match, prompt, view: this.view() }
   }
-  advance(occurredAt: string) { if (this.pendingAdvance) return this.pendingAdvance; const round = resumeSpeakingWrongAnswerReview(this.require()); if (this.busy() || this.mediaStatus !== 'idle' || !round || round.status !== 'active' || round.stage !== 'feedback') return Promise.reject(new TypeError('Speaking wrong-answer review cannot advance while another operation is active.')); const generation = ++this.generation; const next = advanceSpeakingWrongAnswerReview(this.require(), occurredAt); const transaction: { promise: Promise<SpeakingWrongAnswerReviewView> | null } = { promise: null }; const run = (async () => { try { await this.store.save(next); if (generation !== this.generation) { if (this.pendingAdvance === transaction.promise) this.pendingAdvance = null; return this.view() }; this.handle?.abort(); this.handle = null; this.recorder.stopPlayback(); if (this.recording) this.recorder.discard(this.recording); this.recorder.cancel(); this.recording = null; this.mediaStatus = 'idle'; this.unscorable = false; this.state = next; this.feedback = null; await this.loadActive(); if (this.pendingAdvance === transaction.promise) this.pendingAdvance = null; return this.view() } catch (error) { if (this.pendingAdvance === transaction.promise) this.pendingAdvance = null; throw error } })(); transaction.promise = run; this.pendingAdvance = run; return run }
+  advance(occurredAt: string) { if (this.pendingAdvance) return this.pendingAdvance; const round = resumeSpeakingWrongAnswerReview(this.require()); if (this.busy() || this.mediaStatus !== 'idle' || !round || round.status !== 'active' || round.stage !== 'feedback') return Promise.reject(new TypeError('Speaking wrong-answer review cannot advance while another operation is active.')); const generation = ++this.generation; const transaction: { promise: Promise<SpeakingWrongAnswerReviewView> | null } = { promise: null }; const run = (async () => { try { const next = await this.store.update((latest) => advanceSpeakingWrongAnswerReview(latest, occurredAt)); if (generation !== this.generation) { if (this.pendingAdvance === transaction.promise) { this.pendingAdvance = null; this.emit() } return this.view() }; this.handle?.abort(); this.handle = null; this.recorder.stopPlayback(); if (this.recording) this.recorder.discard(this.recording); this.recorder.cancel(); this.recording = null; this.mediaStatus = 'idle'; this.unscorable = false; this.state = next; this.feedback = null; await this.loadActive(); if (this.pendingAdvance === transaction.promise) { this.pendingAdvance = null; this.emit() } return this.view() } catch (error) { if (this.pendingAdvance === transaction.promise) { this.pendingAdvance = null; this.emit() } throw error } })(); transaction.promise = run; this.pendingAdvance = run; this.emit(); return run }
   snapshot() { return this.require() }
 }

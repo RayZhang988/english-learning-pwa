@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { applyWrongAnswerEvidence, createWrongAnswerLibraryState, startWrongAnswerReviewRound, type WrongAnswerLibraryState } from '../../learning-engine/index.ts'
+import { applyWrongAnswerEvidence, createWrongAnswerLibraryState, startWrongAnswerReviewRound, type WrongAnswerLibraryState, type WrongAnswerLibraryStateTransform } from '../../learning-engine/index.ts'
 import { speakingPrompt } from './test-fixtures.ts'
 import type { SpeakingRecognitionHandle, SpeakingRecognitionOutcome, SpeakingRecording, SpeakingRecordingPort } from './types.ts'
 import { SpeakingWrongAnswerReviewRuntime, createSpeakingWrongAnswerEvidence } from './wrong-answer.ts'
@@ -25,7 +25,7 @@ class Store {
   saves = 0
   constructor(state = library()) { this.state = state }
   load = async () => this.state
-  save = async (state: WrongAnswerLibraryState) => { this.saves += 1; if (this.fail) throw new Error('save failed'); this.state = state }
+  update = async (transform: WrongAnswerLibraryStateTransform) => { this.saves += 1; if (this.fail) throw new Error('save failed'); const state = transform(this.state); this.state = state; return state }
 }
 
 function deferred<T>() { let resolve!: (value: T) => void; let reject!: (reason?: unknown) => void; const promise = new Promise<T>((done, fail) => { resolve = done; reject = fail }); return { promise, resolve, reject } }
@@ -44,6 +44,29 @@ function runtime(store: Store, options: ReturnType<typeof media>, promptForRecor
 }
 
 describe('SpeakingWrongAnswerReviewRuntime media boundary', () => {
+  it('publishes capturing, stopping, playing, and advancing views as they happen', async () => {
+    const stopped = deferred<SpeakingRecording>(); const played = deferred<void>(); const setup = media();
+    (setup.recorder.stop as ReturnType<typeof vi.fn>).mockReturnValueOnce(stopped.promise)
+    ;(setup.recorder.play as ReturnType<typeof vi.fn>).mockReturnValueOnce(played.promise)
+    const views: Array<{ mediaStatus: string; advancing: boolean }> = []
+    const store = new Store(library(2))
+    const subject = new SpeakingWrongAnswerReviewRuntime(store, async () => speakingPrompt, { recorder: setup.recorder, recognition: setup.recognition, requestMicrophone: async () => ({ getTracks: () => [] }) as unknown as MediaStream, onView: (view) => { views.push({ mediaStatus: view.mediaStatus, advancing: view.advancing }) } })
+    await subject.initialize(); await subject.startRecording(); const stopping = subject.stopRecording('view-states', now)
+    expect(views.some((view) => view.mediaStatus === 'capturing')).toBe(true); expect(views.some((view) => view.mediaStatus === 'stopping')).toBe(true)
+    stopped.resolve(recording); await stopping
+    const playing = subject.playRecording(); expect(views.some((view) => view.mediaStatus === 'playing')).toBe(true); played.resolve(); await playing
+    const advancing = subject.advance(now); expect(views.some((view) => view.advancing)).toBe(true); await advancing
+    expect(views.at(-1)).toEqual({ mediaStatus: 'idle', advancing: false })
+  })
+
+  it('submits against the latest atomic state without overwriting a concurrent wrong answer', async () => {
+    const store = new Store(); const subject = runtime(store, media()); await subject.initialize()
+    store.state = applyWrongAnswerEvidence(store.state, createSpeakingWrongAnswerEvidence({ eventId: 'concurrent', occurredAt: now, source: 'daily-training', identity: { reviewContentId: 'concurrent-review', originalQuestionType: 'speaking-activity-prompt', domain: 'speaking', source: { kind: 'daily-supply', itemId: 'other', sourceId: speakingPrompt.id, contentRef: 'lesson://x' } }, match: { level: 'different' } as never })).state
+    await subject.submitTranscript(speakingPrompt.modelAnswer, 'atomic-answer', now)
+    expect(store.state.records['concurrent-review::speaking-activity-prompt']?.incorrectCount).toBe(1)
+    expect(store.state.records['review-0::speaking-activity-prompt']?.consecutiveReviewCorrect).toBe(1)
+  })
+
   it('restores the official prompt and recognized draft/feedback after reconstruction', async () => {
     const store = new Store(); const first = runtime(store, media())
     await first.initialize(); expect(first.current().stage).toBe('answering'); expect(first.current().prompt).toEqual(speakingPrompt)
@@ -185,12 +208,12 @@ describe('SpeakingWrongAnswerReviewRuntime media boundary', () => {
   })
 
   it('serializes cancellation behind an in-flight answer save so durable and in-memory scoring cannot diverge', async () => {
-    const saved = deferred<void>(); const store = new Store(); store.save = async (state) => { store.saves += 1; await saved.promise; store.state = state }; const setup = media(); const subject = runtime(store, setup); await subject.initialize(); await subject.startRecording(); const submitting = subject.stopRecording('serialized-save', now); await vi.waitFor(() => expect(store.saves).toBe(1)); subject.cancelRecording(); saved.resolve(); await submitting
+    const saved = deferred<void>(); const store = new Store(); store.update = async (transform) => { store.saves += 1; await saved.promise; const state = transform(store.state); store.state = state; return state }; const setup = media(); const subject = runtime(store, setup); await subject.initialize(); await subject.startRecording(); const submitting = subject.stopRecording('serialized-save', now); await vi.waitFor(() => expect(store.saves).toBe(1)); subject.cancelRecording(); saved.resolve(); await submitting
     expect(store.state.activeRound?.stage).toBe('feedback'); expect(subject.current().stage).toBe('feedback'); expect(subject.current().feedback?.transcript).toBe(speakingPrompt.modelAnswer); expect(subject.current().recordingAvailable).toBe(false)
   })
 
   it('rejects recording starts while answer persistence is pending, then clears the boundary after save success or failure', async () => {
-    const saved = deferred<void>(); const store = new Store(library(2)); store.save = async (state) => { store.saves += 1; await saved.promise; store.state = state }; const setup = media(); const subject = runtime(store, setup); await subject.initialize(); await subject.startRecording(); const submitting = subject.stopRecording('pending-start-success', now); await vi.waitFor(() => expect(store.saves).toBe(1)); const starts = (setup.recorder.start as ReturnType<typeof vi.fn>).mock.calls.length
+    const saved = deferred<void>(); const store = new Store(library(2)); store.update = async (transform) => { store.saves += 1; await saved.promise; const state = transform(store.state); store.state = state; return state }; const setup = media(); const subject = runtime(store, setup); await subject.initialize(); await subject.startRecording(); const submitting = subject.stopRecording('pending-start-success', now); await vi.waitFor(() => expect(store.saves).toBe(1)); const starts = (setup.recorder.start as ReturnType<typeof vi.fn>).mock.calls.length
     await expect(subject.startRecording()).rejects.toThrow('cannot start recording'); expect(setup.recorder.start).toHaveBeenCalledTimes(starts); saved.resolve(); await submitting; await new Promise((resolve) => setTimeout(resolve)); expect(subject.current().stage).toBe('feedback')
     await subject.advance(now); await subject.startRecording(); expect(setup.recorder.start).toHaveBeenCalledTimes(starts + 1)
     const failedStore = new Store(); failedStore.fail = true; const failedSetup = media(); const failed = runtime(failedStore, failedSetup); await failed.initialize(); await failed.startRecording(); await expect(failed.stopRecording('pending-start-failure', now)).rejects.toThrow('save failed'); await new Promise((resolve) => setTimeout(resolve)); await expect(failed.startRecording()).resolves.toMatchObject({ stage: 'answering' }); expect(failedSetup.recorder.start).toHaveBeenCalledTimes(2)
@@ -218,7 +241,7 @@ describe('SpeakingWrongAnswerReviewRuntime media boundary', () => {
   })
 
   it('single-flights advance, exposes advancing, and releases the operation after success or save failure', async () => {
-    const saved = deferred<void>(); const store = new Store(library(2)); const setup = media(); const subject = runtime(store, setup); await subject.initialize(); await subject.submitTranscript(speakingPrompt.modelAnswer, 'advance-pending', now); store.save = async (state) => { store.saves += 1; await saved.promise; store.state = state }
+    const saved = deferred<void>(); const store = new Store(library(2)); const setup = media(); const subject = runtime(store, setup); await subject.initialize(); await subject.submitTranscript(speakingPrompt.modelAnswer, 'advance-pending', now); store.update = async (transform) => { store.saves += 1; await saved.promise; const state = transform(store.state); store.state = state; return state }
     const first = subject.advance(now); const second = subject.advance(now); expect(second).toBe(first); expect(subject.current().advancing).toBe(true); await expect(subject.startRecording()).rejects.toThrow('cannot start'); await expect(subject.playRecording()).rejects.toThrow('No idle')
     saved.resolve(); const returned = await first; expect(await second).toEqual(returned); expect(returned.advancing).toBe(false); expect(store.saves).toBe(2); expect(subject.current().advancing).toBe(false)
     const failed = new Store(library(2)); const failureSubject = runtime(failed, media()); await failureSubject.initialize(); await failureSubject.submitTranscript(speakingPrompt.modelAnswer, 'advance-fails', now); failed.fail = true; await expect(failureSubject.advance(now)).rejects.toThrow('save failed'); await Promise.resolve(); expect(failureSubject.current().advancing).toBe(false); expect(failureSubject.current().stage).toBe('feedback')
