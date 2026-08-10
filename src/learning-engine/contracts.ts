@@ -518,6 +518,8 @@ export interface WrongAnswerRecord extends ReviewContentIdentity {
   readonly incorrectCount: number
   readonly consecutiveReviewCorrect: 0 | 1 | 2
   readonly lastIncorrectAt: string
+  /** Latest scored fact produced inside the dedicated review flow. */
+  readonly lastReviewAttemptAt: string | null
   /**
    * Exact dedicated-review evidence time that moved this record to history.
    * Active records must persist null; history records persist the second
@@ -564,9 +566,22 @@ export interface WrongAnswerLibraryState {
   readonly activeRound: WrongAnswerReviewRound | null
 }
 
+type DeepReadonly<T> =
+  T extends (...args: never[]) => unknown
+    ? T
+    : T extends readonly (infer TItem)[]
+      ? readonly DeepReadonly<TItem>[]
+      : T extends object
+        ? { readonly [TKey in keyof T]: DeepReadonly<T[TKey]> }
+        : T
+
+/** Immutable latest snapshot supplied to an atomic persistence transform. */
+export type WrongAnswerLibraryStateSnapshot =
+  DeepReadonly<WrongAnswerLibraryState>
+
 /** Synchronous, pure read-modify-write transform applied to the latest state. */
 export type WrongAnswerLibraryStateTransform = (
-  state: WrongAnswerLibraryState,
+  state: WrongAnswerLibraryStateSnapshot,
 ) => WrongAnswerLibraryState
 
 /**

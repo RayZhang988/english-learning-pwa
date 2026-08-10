@@ -104,6 +104,7 @@ export type {
   WrongAnswerEvidence,
   WrongAnswerLibraryState,
   WrongAnswerLibraryStatePort,
+  WrongAnswerLibraryStateSnapshot,
   WrongAnswerLibraryStateTransform,
   WrongAnswerRecord,
   WrongAnswerReviewRound,

@@ -45,8 +45,11 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function assertStringArray(value: unknown, field: string): asserts value is readonly string[] {
-  if (!Array.isArray(value) || value.some((item) => typeof item !== 'string' || item.trim().length === 0)) {
-    throw new TypeError(`${field} must be an array of non-empty strings`)
+  if (!Array.isArray(value)) throw new TypeError(`${field} must be an array of non-empty strings`)
+  for (let index = 0; index < value.length; index += 1) {
+    if (!Object.hasOwn(value, index)) throw new TypeError(`${field} must be a dense array`)
+    const item = value[index]
+    if (typeof item !== 'string' || item.trim().length === 0) throw new TypeError(`${field} must contain only non-empty strings`)
   }
 }
 
@@ -62,20 +65,25 @@ function assertPersistedRecord(recordId: string, value: unknown): asserts value 
   if (value.consecutiveReviewCorrect !== 0 && value.consecutiveReviewCorrect !== 1 && value.consecutiveReviewCorrect !== 2) throw new TypeError('Wrong-answer record review streak is invalid')
   if (typeof value.lastIncorrectAt !== 'string') throw new TypeError('lastIncorrectAt must be a valid ISO 8601 timestamp')
   const lastIncorrectAt = parseTimestamp(value.lastIncorrectAt, 'lastIncorrectAt')
+  if (!Object.hasOwn(value, 'lastReviewAttemptAt')) throw new TypeError('lastReviewAttemptAt is required; pre-release snapshots are not migrated')
+  if (value.lastReviewAttemptAt !== null && typeof value.lastReviewAttemptAt !== 'string') throw new TypeError('lastReviewAttemptAt must be null or a valid ISO 8601 timestamp')
+  const lastReviewAttemptAt = value.lastReviewAttemptAt === null ? null : parseTimestamp(value.lastReviewAttemptAt, 'lastReviewAttemptAt')
   if (!Object.hasOwn(value, 'movedToHistoryAt')) {
     throw new TypeError('movedToHistoryAt is required; pre-release snapshots are not migrated')
   }
   if (value.status === 'active') {
     if (value.movedToHistoryAt !== null) throw new TypeError('An active wrong-answer record must have movedToHistoryAt=null')
     if (value.consecutiveReviewCorrect === 2) throw new TypeError('An active wrong-answer record cannot have a completed review streak')
+    if (value.consecutiveReviewCorrect === 1 && (lastReviewAttemptAt === null || lastReviewAttemptAt < lastIncorrectAt)) throw new TypeError('An active review streak requires a current lastReviewAttemptAt')
   } else {
     if (typeof value.movedToHistoryAt !== 'string') throw new TypeError('A history wrong-answer record must have movedToHistoryAt')
     if (parseTimestamp(value.movedToHistoryAt, 'movedToHistoryAt') < lastIncorrectAt) throw new RangeError('movedToHistoryAt cannot predate lastIncorrectAt')
     if (value.consecutiveReviewCorrect !== 2) throw new TypeError('A history wrong-answer record must have a completed review streak')
+    if (value.lastReviewAttemptAt !== value.movedToHistoryAt) throw new TypeError('A history transition must equal lastReviewAttemptAt')
   }
   if (!WRONG_ANSWER_SOURCES.includes(value.lastSource as (typeof WRONG_ANSWER_SOURCES)[number])) throw new TypeError('Wrong-answer record lastSource is invalid')
   assertStringArray(value.sources, 'sources')
-  if (new Set(value.sources).size !== value.sources.length || !value.sources.includes(value.lastSource as string)) throw new TypeError('Wrong-answer record sources are invalid')
+  if (value.sources.length === 0 || value.sources.some((source) => !WRONG_ANSWER_SOURCES.includes(source as (typeof WRONG_ANSWER_SOURCES)[number])) || new Set(value.sources).size !== value.sources.length || !value.sources.includes(value.lastSource as string)) throw new TypeError('Wrong-answer record sources are invalid')
 }
 
 function assertPersistedRound(value: unknown): asserts value is WrongAnswerReviewRound {
@@ -125,6 +133,13 @@ function withEvidenceId(state: WrongAnswerLibraryState, eventId: string): WrongA
   return { ...state, processedEvidenceIds: [...state.processedEvidenceIds, eventId].slice(-MAX_PROCESSED_EVIDENCE_IDS) }
 }
 
+function latestWrongAnswerFactTime(record: WrongAnswerRecord): number {
+  const facts = [parseTimestamp(record.lastIncorrectAt, 'lastIncorrectAt')]
+  if (record.lastReviewAttemptAt !== null) facts.push(parseTimestamp(record.lastReviewAttemptAt, 'lastReviewAttemptAt'))
+  if (record.movedToHistoryAt !== null) facts.push(parseTimestamp(record.movedToHistoryAt, 'movedToHistoryAt'))
+  return Math.max(...facts)
+}
+
 /**
  * Applies only formal wrong-answer facts. Ordinary correct attempts are
  * deliberately ignored; only a correct answer inside the dedicated review
@@ -146,8 +161,8 @@ export function applyWrongAnswerEvidence(
   if (evidence.outcome === 'correct' && evidence.source !== 'wrong-answer-review') {
     return { state: withEvidenceId(state, evidence.eventId), record: previous, reason: 'ignored-correct' }
   }
-  if (previous !== null && parseTimestamp(evidence.occurredAt, 'occurredAt') < parseTimestamp(previous.lastIncorrectAt, 'lastIncorrectAt')) {
-    throw new RangeError('Wrong-answer evidence cannot predate the record')
+  if (previous !== null && parseTimestamp(evidence.occurredAt, 'occurredAt') < latestWrongAnswerFactTime(previous)) {
+    throw new RangeError('Wrong-answer evidence cannot predate the latest wrong-answer fact')
   }
 
   const record: WrongAnswerRecord = evidence.outcome === 'incorrect'
@@ -161,6 +176,9 @@ export function applyWrongAnswerEvidence(
         incorrectCount: (previous?.incorrectCount ?? 0) + 1,
         consecutiveReviewCorrect: 0,
         lastIncorrectAt: evidence.occurredAt,
+        lastReviewAttemptAt: evidence.source === 'wrong-answer-review'
+          ? evidence.occurredAt
+          : (previous?.lastReviewAttemptAt ?? null),
         movedToHistoryAt: null,
         lastSource: evidence.source,
         sources: uniqueStrings([...(previous?.sources ?? []), evidence.source]),
@@ -174,6 +192,7 @@ export function applyWrongAnswerEvidence(
           ...previous,
           consecutiveReviewCorrect: streak as 1 | 2,
           status: streak >= 2 ? 'history' : 'active',
+          lastReviewAttemptAt: evidence.occurredAt,
           movedToHistoryAt: streak >= 2 ? evidence.occurredAt : null,
         }
       })()
@@ -229,7 +248,19 @@ export function assertRecoverableWrongAnswerReviewRound(state: WrongAnswerLibrar
   if (round === null) return null
   const unique = new Set(round.order)
   const expectedAnsweredCount = round.stage === 'feedback' ? round.index + 1 : round.index
-  if (unique.size !== round.order.length || round.index < 0 || round.index > round.order.length || round.answeredCount !== expectedAnsweredCount || round.correctCount > round.answeredCount) throw new TypeError('Wrong-answer review snapshot is corrupt')
+  if (unique.size !== round.order.length) throw new TypeError('Wrong-answer review order must contain unique record ids')
+  if (round.index < 0 || round.index > round.order.length || round.answeredCount !== expectedAnsweredCount || round.correctCount > round.answeredCount) throw new TypeError('Wrong-answer review snapshot is corrupt')
+  if (round.stage === 'feedback' && round.index >= round.order.length) throw new TypeError('Wrong-answer review feedback must reference a current order item')
+  if (round.status === 'completed') {
+    if (round.stage !== 'answering' || round.index !== round.order.length || round.answerDraft !== null || round.failure !== null) throw new TypeError('A completed wrong-answer review round must be at its terminal checkpoint')
+  } else {
+    if (round.index >= round.order.length) throw new TypeError(`A ${round.status} wrong-answer review round must have an unfinished item`)
+    if (round.status === 'failed') {
+      if (round.failure === null) throw new TypeError('A failed wrong-answer review round must declare its failure')
+    } else if (round.failure !== null) {
+      throw new TypeError('Only a failed wrong-answer review round may declare a failure')
+    }
+  }
   const firstUnansweredIndex = round.stage === 'feedback' ? round.index + 1 : round.index
   for (const recordId of round.order.slice(firstUnansweredIndex)) {
     const record = state.records[recordId]

@@ -2,6 +2,7 @@ import { describe, expectTypeOf, it } from 'vitest'
 import type {
   WrongAnswerLibraryState,
   WrongAnswerLibraryStatePort,
+  WrongAnswerLibraryStateSnapshot,
   WrongAnswerLibraryStateTransform,
   WrongAnswerRecord,
 } from './index.ts'
@@ -16,6 +17,25 @@ describe('R13-D atomic wrong-answer state port contract', () => {
       .toEqualTypeOf<Promise<WrongAnswerLibraryState>>()
     expectTypeOf<ReturnType<WrongAnswerLibraryStateTransform>>()
       .toEqualTypeOf<WrongAnswerLibraryState>()
+    expectTypeOf<Parameters<WrongAnswerLibraryStateTransform>[0]>()
+      .toEqualTypeOf<WrongAnswerLibraryStateSnapshot>()
+  })
+
+  it('prevents transforms from mutating nested durable state', () => {
+    const transform: WrongAnswerLibraryStateTransform = (state) => {
+      // @ts-expect-error atomic transforms receive a deeply immutable snapshot
+      state.activeRound = null
+      // @ts-expect-error nested records cannot be replaced in place
+      state.records['review::choice'] = {} as WrongAnswerRecord
+      // @ts-expect-error nested evidence ids cannot be appended in place
+      state.processedEvidenceIds.push('mutated')
+      if (state.activeRound !== null) {
+        // @ts-expect-error nested review order is immutable as well
+        state.activeRound.order.push('mutated')
+      }
+      return state
+    }
+    expectTypeOf(transform).toEqualTypeOf<WrongAnswerLibraryStateTransform>()
   })
 
   it('requires every record to declare its history transition time', () => {
