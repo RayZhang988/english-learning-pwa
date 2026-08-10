@@ -49,6 +49,7 @@ describe('R13-D atomic wrong-answer state port contract', () => {
       incorrectCount: 1,
       consecutiveReviewCorrect: 0 as const,
       lastIncorrectAt: '2026-08-10T00:00:00.000Z',
+      lastReviewAttemptAt: null,
       lastSource: 'daily-training' as const,
       sources: ['daily-training'] as const,
     }
