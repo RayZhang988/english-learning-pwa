@@ -48,6 +48,14 @@ describe('WrongAnswerLibraryStore cross-instance atomic persistence', () => {
     expect(await db.records.where('namespace').equals(WRONG_ANSWER_LIBRARY_BACKUP_NAMESPACE).count()).toBe(1)
   })
 
+  it('preserves a non-portable corrupt field instead of losing the forensic backup', async () => {
+    const db = database(); const store = new WrongAnswerLibraryStore(db)
+    const corrupt = { schemaVersion: 1, records: {}, processedEvidenceIds: [undefined], activeRound: null }
+    await db.records.put({ id: createRecordId(WRONG_ANSWER_LIBRARY_NAMESPACE, WRONG_ANSWER_LIBRARY_KEY), namespace: WRONG_ANSWER_LIBRARY_NAMESPACE, key: WRONG_ANSWER_LIBRARY_KEY, value: corrupt, schemaVersion: 1, updatedAt: 'old' })
+    await expect(store.load()).rejects.toThrow()
+    expect((await store.corruptBackups())[0]?.value).toEqual(corrupt)
+  })
+
   it('validates the transformed state before committing it', async () => {
     const db = database(); const store = new WrongAnswerLibraryStore(db)
     await store.update((state) => applyWrongAnswerEvidence(state, evidence('valid', 'review')).state)

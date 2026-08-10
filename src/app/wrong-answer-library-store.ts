@@ -128,7 +128,8 @@ export class WrongAnswerLibraryStore implements WrongAnswerLibraryStatePort {
       const capturedAt = this.#now()
       const key = `corrupt-${capturedAt}-${crypto.randomUUID()}`
       const backup: WrongAnswerLibraryCorruptBackup = { schemaVersion: 1, capturedAt, reason: error instanceof Error ? error.message : 'invalid-state', value: corrupt.value }
-      assertPortableValue(backup)
+      // Preserve the exact already-stored value for recovery, including a
+      // non-portable field that may itself be the corruption cause.
       await this.#database.records.put({ id: createRecordId(WRONG_ANSWER_LIBRARY_BACKUP_NAMESPACE, key), namespace: WRONG_ANSWER_LIBRARY_BACKUP_NAMESPACE, key, value: backup, schemaVersion: 1, updatedAt: capturedAt })
     })
   }
