@@ -26,6 +26,25 @@ describe('WrongAnswerLibrary R13-D display contract', () => {
     expect(markup).toContain('aria-controls="wrong-answer-panel-active"')
     expect(markup).toContain('aria-labelledby="wrong-answer-tab-active"')
   })
+  it('keeps an existing review round resumable when a new round cannot start', () => {
+    const markup = renderToStaticMarkup(
+      <WrongAnswerLibraryScreen
+        viewModel={ready({
+          canStart: false,
+          hasResumableRound: true,
+        })}
+        onExit={vi.fn()}
+        onSwitchTab={vi.fn()}
+        onStartRound={vi.fn()}
+        onResumeRound={vi.fn()}
+        onRetry={vi.fn()}
+      />,
+    )
+
+    expect(markup).toContain(
+      '<button class="primary-button wrong-answer-library__start" type="button">继续本轮复习</button>',
+    )
+  })
   it('renders loading, error, active empty and history empty states honestly', () => {
     const callbacks = { onExit: vi.fn(), onSwitchTab: vi.fn(), onStartRound: vi.fn(), onResumeRound: vi.fn(), onRetry: vi.fn() }
     expect(renderToStaticMarkup(<WrongAnswerLibraryScreen {...callbacks} viewModel={ready({ status: 'loading' })} />)).toContain('正在读取错题库')
