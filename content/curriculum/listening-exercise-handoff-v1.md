@@ -1,4 +1,4 @@
-# 05 → 07/09｜结构化听力练习扩展交付（v1.0.0）
+# 05 → 07/09｜结构化听力练习扩展交付（v1.2.0）
 
 ## 唯一入口
 
@@ -9,7 +9,7 @@
 不得扫描 `content/lessons/**` 猜测扩展文件。入口中的 `exerciseBundleFiles` 是有序、
 完整的读取清单。
 
-扩展 `survival-travel-american-listening-exercises@1.0.0` 只挂接
+扩展 `survival-travel-american-listening-exercises@1.2.0` 只挂接
 `survival-travel-american-4w@1.0.0`。这是只增不改的旁路扩展：
 
 - 不修改核心包 `content/curriculum/package-index.v1.json`；
@@ -50,6 +50,10 @@
 - `acceptedAnswers` 已显式列出数字、时间、连字符或缩写等允许变体；
 - `normalizationHints` 只声明可做的轻量规范化，不是 05 实现的判题算法；
 - 07 不得自行扩写可接受答案或用开放式语义判断替代受控答案。
+- `answerGuidance` 是答题前可公开的引导：`answerType` 表示所需信息类别，
+  `guidanceZh` 说明应填写的内容及格式，`acceptedInputFormats` 枚举允许输入形式。
+  它不得包含 `targetKeywords`、`standardAnswer` 或 `acceptedAnswers` 中的实际答案文本；
+  07 必须原样传递给展示层，不能从答案字段推测或改写提示。
 
 ## 音频来源
 
@@ -111,7 +115,8 @@ Web Speech 实际时长。
 4. 每课三种题型各一题，总计 84 题、84 个唯一 `segmentId`。
 5. 所有 `transcript-line` 的引用行存在，且文本与 `expectedText` 完全一致。
 6. 每道选择题的 `correctOptionId` 命中唯一选项。
-7. 每道听写题的 `standardAnswer` 在 `acceptedAnswers` 中，目标关键词非空。
+7. 每道听写题的 `standardAnswer` 在 `acceptedAnswers` 中，目标关键词非空，且有不泄露
+   答案的 `answerGuidance`。
 8. 每题 locale 为 `en-US`，播放速度只使用 Schema 允许值。
 9. 核心包入口、四周文件、既有 ID 和 `contentRef` 没有被扩展覆盖。
 10. 原有场景理解选择题仍可由 07 加载。

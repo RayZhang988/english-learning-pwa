@@ -244,6 +244,7 @@
         "type",
         "audioSource",
         "promptZh",
+        "answerGuidance",
         "targetKeywords",
         "standardAnswer",
         "acceptedAnswers",
@@ -259,6 +260,32 @@
         "type": {"const": "keyword-dictation"},
         "audioSource": {"$ref": "#/$defs/audioSource"},
         "promptZh": {"type": "string", "minLength": 1},
+        "answerGuidance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["answerType", "guidanceZh", "acceptedInputFormats"],
+          "properties": {
+            "answerType": {
+              "enum": [
+                "place-name", "surname", "number", "time",
+                "manner-or-short-phrase", "product-description",
+                "reservation-details", "allergy-information", "payment-method",
+                "direction-and-distance", "transfer-instruction", "ticket-details",
+                "size-or-condition", "checkout-time", "device-problem", "gate-code",
+                "availability-time", "room-number", "gate-and-time"
+              ]
+            },
+            "guidanceZh": {"type": "string", "minLength": 8},
+            "acceptedInputFormats": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "enum": ["english-words", "digits", "clock-time", "gate-code", "room-number"]
+              }
+            }
+          }
+        },
         "targetKeywords": {
           "type": "array",
           "minItems": 1,

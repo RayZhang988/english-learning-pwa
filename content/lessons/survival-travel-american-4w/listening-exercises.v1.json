@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "documentType": "listening-exercise-extension",
   "extensionId": "survival-travel-american-listening-exercises",
-  "extensionVersion": "1.1.0",
+  "extensionVersion": "1.2.0",
   "baseCourseId": "survival-travel-american-4w",
   "basePackageVersion": "1.0.0",
   "targetLocale": "en-US",
@@ -96,6 +96,7 @@
             "ttsText": "I'm visiting Boston this week."
           },
           "promptZh": "写出听到的城市名。",
+          "answerGuidance": {"answerType": "place-name", "guidanceZh": "填写听到的英文城市名；使用英文单词输入。", "acceptedInputFormats": ["english-words"]},
           "targetKeywords": [
             "Boston"
           ],
@@ -287,6 +288,7 @@
             "ttsText": "My last name is Sun."
           },
           "promptZh": "写出听到的姓。",
+          "answerGuidance": {"answerType": "surname", "guidanceZh": "填写听到的英文姓氏；使用英文单词输入。", "acceptedInputFormats": ["english-words"]},
           "targetKeywords": [
             "Sun"
           ],
@@ -478,6 +480,7 @@
             "ttsText": "The hat is fifteen dollars."
           },
           "promptZh": "写出听到的价格数字。",
+          "answerGuidance": {"answerType": "number", "guidanceZh": "填写听到的价格数字；可用英文数字词或阿拉伯数字。", "acceptedInputFormats": ["english-words", "digits"]},
           "targetKeywords": [
             "fifteen"
           ],
@@ -670,6 +673,7 @@
             "ttsText": "Let's meet at nine thirty."
           },
           "promptZh": "写出听到的见面时间。",
+          "answerGuidance": {"answerType": "time", "guidanceZh": "填写听到的时间；可用英文时间表达或数字时间。", "acceptedInputFormats": ["english-words", "clock-time"]},
           "targetKeywords": [
             "nine",
             "thirty"
@@ -864,6 +868,7 @@
             "ttsText": "Please speak more slowly."
           },
           "promptZh": "写出表示“慢一点”的关键词。",
+          "answerGuidance": {"answerType": "manner-or-short-phrase", "guidanceZh": "填写表示语速要求的英文词或短语。", "acceptedInputFormats": ["english-words"]},
           "targetKeywords": [
             "slowly"
           ],
@@ -1056,6 +1061,7 @@
             "ttsText": "A medium coffee, please."
           },
           "promptZh": "写出饮品的大小和名称。",
+          "answerGuidance": {"answerType": "product-description", "guidanceZh": "填写饮品的英文大小和名称，按听到的顺序输入。", "acceptedInputFormats": ["english-words"]},
           "targetKeywords": [
             "medium",
             "coffee"
@@ -1249,6 +1255,7 @@
             "ttsText": "The tour starts at eleven."
           },
           "promptZh": "写出听到的开始时间。",
+          "answerGuidance": {"answerType": "time", "guidanceZh": "填写听到的开始时间；可用英文数字词或阿拉伯数字。", "acceptedInputFormats": ["english-words", "digits"]},
           "targetKeywords": [
             "eleven"
           ],
@@ -1441,6 +1448,7 @@
             "ttsText": "A table for three under Wu."
           },
           "promptZh": "写出预订人数和预订姓氏。",
+          "answerGuidance": {"answerType": "reservation-details", "guidanceZh": "填写预订人数和预订姓氏，使用英文短语按听到的顺序输入。", "acceptedInputFormats": ["english-words"]},
           "targetKeywords": [
             "three",
             "Wu"
@@ -1634,6 +1642,7 @@
             "ttsText": "I'm allergic to peanuts."
           },
           "promptZh": "写出听到的过敏信息。",
+          "answerGuidance": {"answerType": "allergy-information", "guidanceZh": "填写听到的英文过敏信息，使用英文短语输入。", "acceptedInputFormats": ["english-words"]},
           "targetKeywords": [
             "allergic",
             "peanuts"
@@ -1827,6 +1836,7 @@
             "ttsText": "I'll pay by card."
           },
           "promptZh": "写出听到的付款方式。",
+          "answerGuidance": {"answerType": "payment-method", "guidanceZh": "填写听到的英文付款方式，使用英文词或短语输入。", "acceptedInputFormats": ["english-words"]},
           "targetKeywords": [
             "card"
           ],
@@ -2019,6 +2029,7 @@
             "ttsText": "Go straight for two blocks."
           },
           "promptZh": "写出听到的方向和距离。",
+          "answerGuidance": {"answerType": "direction-and-distance", "guidanceZh": "填写听到的英文方向和距离，使用英文短语按顺序输入。", "acceptedInputFormats": ["english-words"]},
           "targetKeywords": [
             "straight",
             "two",
@@ -2213,6 +2224,7 @@
             "ttsText": "Transfer to the Airport Line."
           },
           "promptZh": "写出换乘动作和线路名。",
+          "answerGuidance": {"answerType": "transfer-instruction", "guidanceZh": "填写听到的英文换乘动作和线路名称，使用英文短语输入。", "acceptedInputFormats": ["english-words"]},
           "targetKeywords": [
             "transfer",
             "Airport Line"
@@ -2406,6 +2418,7 @@
             "ttsText": "Please drop me off at the River Hotel."
           },
           "promptZh": "写出下车地点。",
+          "answerGuidance": {"answerType": "place-name", "guidanceZh": "填写听到的英文地点名称，使用英文单词或短语输入。", "acceptedInputFormats": ["english-words"]},
           "targetKeywords": [
             "River Hotel"
           ],
@@ -2598,6 +2611,7 @@
             "ttsText": "Two one-way tickets, please."
           },
           "promptZh": "写出车票数量和类型。",
+          "answerGuidance": {"answerType": "ticket-details", "guidanceZh": "填写听到的车票数量和类型；数量可用英文数字词或阿拉伯数字。", "acceptedInputFormats": ["english-words", "digits"]},
           "targetKeywords": [
             "two",
             "one-way",
@@ -2793,6 +2807,7 @@
             "ttsText": "The jacket is too big."
           },
           "promptZh": "写出描述尺码不合适的短语。",
+          "answerGuidance": {"answerType": "size-or-condition", "guidanceZh": "填写听到的英文尺码或状态短语。", "acceptedInputFormats": ["english-words"]},
           "targetKeywords": [
             "too",
             "big"
@@ -2986,6 +3001,7 @@
             "ttsText": "Could I get a large instead?"
           },
           "promptZh": "写出目标尺码和表示替换的词。",
+          "answerGuidance": {"answerType": "size-or-condition", "guidanceZh": "填写听到的英文目标尺码和替换信息，按顺序输入。", "acceptedInputFormats": ["english-words"]},
           "targetKeywords": [
             "large",
             "instead"
@@ -3179,6 +3195,7 @@
             "ttsText": "Checkout is at eleven."
           },
           "promptZh": "写出退房时间。",
+          "answerGuidance": {"answerType": "checkout-time", "guidanceZh": "填写听到的英文退房时间；可用英文数字词或阿拉伯数字。", "acceptedInputFormats": ["english-words", "digits"]},
           "targetKeywords": [
             "checkout",
             "eleven"
@@ -3373,6 +3390,7 @@
             "ttsText": "The air conditioner isn't working."
           },
           "promptZh": "写出故障设备和状态。",
+          "answerGuidance": {"answerType": "device-problem", "guidanceZh": "填写听到的英文设备名称和故障状态，使用英文短语输入。", "acceptedInputFormats": ["english-words"]},
           "targetKeywords": [
             "air conditioner",
             "working"
@@ -3567,6 +3585,7 @@
             "ttsText": "Gate C14."
           },
           "promptZh": "写出登机口。",
+          "answerGuidance": {"answerType": "gate-code", "guidanceZh": "填写听到的登机口编号；可只写编号，也可写英文登机口短语。", "acceptedInputFormats": ["gate-code", "english-words"]},
           "targetKeywords": [
             "C14"
           ],
@@ -3759,6 +3778,7 @@
             "ttsText": "Boarding will begin at seven ten."
           },
           "promptZh": "写出登机开始时间。",
+          "answerGuidance": {"answerType": "gate-and-time", "guidanceZh": "填写听到的英文登机开始时间；可用英文时间表达或数字时间。", "acceptedInputFormats": ["english-words", "clock-time"]},
           "targetKeywords": [
             "boarding",
             "seven ten"
@@ -3953,6 +3973,7 @@
             "ttsText": "My flight is at five thirty."
           },
           "promptZh": "写出航班时间。",
+          "answerGuidance": {"answerType": "time", "guidanceZh": "填写听到的航班时间；可用英文时间表达或数字时间。", "acceptedInputFormats": ["english-words", "clock-time"]},
           "targetKeywords": [
             "five thirty"
           ],
@@ -4145,6 +4166,7 @@
             "ttsText": "The bag should arrive at nine."
           },
           "promptZh": "写出行李到达时间。",
+          "answerGuidance": {"answerType": "time", "guidanceZh": "填写听到的英文到达时间；可用英文数字词或阿拉伯数字。", "acceptedInputFormats": ["english-words", "digits"]},
           "targetKeywords": [
             "arrive",
             "nine"
@@ -4339,6 +4361,7 @@
             "ttsText": "We're by the north entrance."
           },
           "promptZh": "写出所在位置。",
+          "answerGuidance": {"answerType": "place-name", "guidanceZh": "填写听到的英文位置名称，使用英文单词或短语输入。", "acceptedInputFormats": ["english-words"]},
           "targetKeywords": [
             "north entrance"
           ],
@@ -4531,6 +4554,7 @@
             "ttsText": "I'm free this evening."
           },
           "promptZh": "写出有空的时间。",
+          "answerGuidance": {"answerType": "availability-time", "guidanceZh": "填写听到的英文有空时间或时段，使用英文短语输入。", "acceptedInputFormats": ["english-words"]},
           "targetKeywords": [
             "free",
             "evening"
@@ -4724,6 +4748,7 @@
             "ttsText": "Room 624."
           },
           "promptZh": "写出房间号。",
+          "answerGuidance": {"answerType": "room-number", "guidanceZh": "填写听到的房间号；可只写数字，也可写英文房间号短语。", "acceptedInputFormats": ["digits", "room-number", "english-words"]},
           "targetKeywords": [
             "624"
           ],
@@ -4916,6 +4941,7 @@
             "ttsText": "I need a size nine."
           },
           "promptZh": "写出需要的尺码。",
+          "answerGuidance": {"answerType": "size-or-condition", "guidanceZh": "填写听到的英文尺码；可用英文数字词或阿拉伯数字。", "acceptedInputFormats": ["english-words", "digits"]},
           "targetKeywords": [
             "size",
             "nine"
@@ -5110,6 +5136,7 @@
             "ttsText": "Gate A12 at four thirty."
           },
           "promptZh": "写出登机口和时间。",
+          "answerGuidance": {"answerType": "gate-and-time", "guidanceZh": "填写听到的英文登机口和时间；可用英文表达、登机口编号或数字时间。", "acceptedInputFormats": ["english-words", "gate-code", "clock-time"]},
           "targetKeywords": [
             "A12",
             "four thirty"
@@ -5304,6 +5331,7 @@
             "ttsText": "Boarding begins at five."
           },
           "promptZh": "写出登机开始时间。",
+          "answerGuidance": {"answerType": "gate-and-time", "guidanceZh": "填写听到的英文登机开始时间；可用英文时间表达或数字时间。", "acceptedInputFormats": ["english-words", "clock-time"]},
           "targetKeywords": [
             "boarding",
             "five"
