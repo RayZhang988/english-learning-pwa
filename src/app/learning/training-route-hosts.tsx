@@ -131,7 +131,11 @@ export function TrainingRouteHost({
     if (
       roundKey === null ||
       roundTask?.trainingBudget === undefined ||
-      roundExecution?.status !== 'active' ||
+      // A newly generated daily task is pending until its feature runtime
+      // records the first start event.  The round must be persisted before
+      // that runtime exists, so pending is a valid creation state too.
+      (roundExecution?.status !== 'pending' &&
+        roundExecution?.status !== 'active') ||
       persistedSupplyRound !== undefined
     ) {
       return
