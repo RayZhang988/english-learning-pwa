@@ -5,6 +5,10 @@ export const LEARNING_ENGINE_STORAGE_NAMESPACE = 'learning.engine'
 export const LEARNING_ENGINE_STORAGE_SCHEMA_VERSION = 1
 export const LEARNING_ENGINE_STATE_KEY = 'current-state'
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
 function hasValidTrainingScore(value: unknown): boolean {
   if (value === undefined) {
     return true
@@ -184,6 +188,20 @@ function assertLearningEngineState(
     value.reviewItems === null
   ) {
     throw new TypeError('Stored learning engine state is invalid')
+  }
+  const recent = (value as Record<string, unknown>).recentTrainingItemIds
+  if (
+    recent !== undefined &&
+    (!isRecord(recent) ||
+      Object.entries(recent).some(([bucket, ids]) =>
+        bucket.trim().length === 0 ||
+        !Array.isArray(ids) ||
+        ids.length > 12 ||
+        new Set(ids).size !== ids.length ||
+        ids.some((id) => typeof id !== 'string' || id.trim().length === 0),
+      ))
+  ) {
+    throw new TypeError('recentTrainingItemIds is invalid')
   }
 }
 

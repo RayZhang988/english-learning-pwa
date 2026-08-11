@@ -12,6 +12,7 @@ import { EXTRA_TRAINING_EFFECTIVE_SECONDS } from './contracts.ts'
 import { classifyTimingSegment } from './timing.ts'
 import { emptyTrainingUnitScore, mergeTrainingUnitScore } from './training-score.ts'
 import { assertLocalDate, parseTimestamp } from './utils.ts'
+import { assertSupplyRoundAdvances } from './training-round-acknowledgement.ts'
 
 const MAX_PROCESSED_EVENT_IDS = 500
 const MAX_EXCLUDED_ITEM_IDS = 500
@@ -422,6 +423,7 @@ export function applyExtraTrainingEvent(
     if (session.status !== 'running' && session.status !== 'finish-current-item') {
       throw new TypeError('Extra-training session is not accepting completed items')
     }
+    assertSupplyRoundAdvances(session.supplyRound, event.payload.supplyRound)
     const excluded = session.excludeItemIds.includes(event.payload.item.itemId)
       ? session.excludeItemIds
       : [...session.excludeItemIds, event.payload.item.itemId].slice(-MAX_EXCLUDED_ITEM_IDS)
@@ -430,6 +432,7 @@ export function applyExtraTrainingEvent(
       excludeItemIds: excluded,
       completedItemCount: session.completedItemCount + (excluded === session.excludeItemIds ? 0 : 1),
       nextSupplyCursor: event.payload.nextSupplyCursor,
+      ...(event.payload.supplyRound === undefined ? {} : { supplyRound: event.payload.supplyRound }),
       endReason: null,
       updatedAt: event.occurredAt,
     }

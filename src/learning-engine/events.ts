@@ -6,6 +6,7 @@ import type {
 } from './contracts.ts'
 import { classifyTimingSegment } from './timing.ts'
 import { assertTrainingUnitScore } from './training-score.ts'
+import { assertTrainingSupplyRound } from './training-randomization.ts'
 import {
   assertLocalDate,
   assertPositiveSeconds,
@@ -271,6 +272,18 @@ function validateStreamItem(payload: Record<string, unknown>): void {
   requireStringArray(payload.item, 'tags')
 }
 
+function validateAcknowledgedSupplyRound(
+  payload: Record<string, unknown>,
+): void {
+  if (payload.supplyRound === undefined) return
+  assertTrainingSupplyRound(payload.supplyRound)
+  const round = payload.supplyRound
+  const itemId = isRecord(payload.item) ? payload.item.itemId : undefined
+  if (round.cursor < 1 || round.order[round.cursor - 1] !== itemId) {
+    throw new TypeError('supplyRound must acknowledge the completed item exactly once')
+  }
+}
+
 export function parseLearningEvent(event: PlatformEvent): LearningEvent {
   if (
     !EVENT_TYPES.includes(
@@ -383,6 +396,7 @@ export function parseLearningEvent(event: PlatformEvent): LearningEvent {
       throw new TypeError('nextSupplyCursor must be a string or null')
     }
     requireEnum(payload, 'outcome', ['scored', 'unscorable-practice'])
+    validateAcknowledgedSupplyRound(payload)
   } else if (event.type === 'learning.training.content.exhausted.v1') {
     requireEnum(payload, 'mode', MODES)
     requireString(payload, 'requestId')
@@ -446,6 +460,7 @@ export function parseExtraTrainingEvent(
     if (payload.nextSupplyCursor !== null && typeof payload.nextSupplyCursor !== 'string') {
       throw new TypeError('nextSupplyCursor must be a string or null')
     }
+    validateAcknowledgedSupplyRound(payload)
   } else if (event.type === 'learning.extra-training.budget.completed.v1') {
     const count = requireNumber(payload, 'completedItemCount')
     if (!Number.isInteger(count) || count <= 0) {

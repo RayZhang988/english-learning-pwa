@@ -23,7 +23,29 @@ export function createLearningEngineState(
     schemaVersion: 1,
     progress: createInitialProgressState(profile, initializedAt),
     reviewItems: {},
+    recentTrainingItemIds: {},
   }
+}
+
+export function trainingRecentBucket(
+  domain: string,
+  mode: string,
+  difficultyLevel: number,
+): string {
+  return `${domain}:${mode}:${difficultyLevel}`
+}
+
+export function recordRecentTrainingItem(
+  state: LearningEngineState,
+  bucket: string,
+  itemId: string,
+): LearningEngineState {
+  if (bucket.trim().length === 0 || itemId.trim().length === 0) {
+    throw new TypeError('Recent training bucket and itemId must be non-empty')
+  }
+  const current = state.recentTrainingItemIds?.[bucket] ?? []
+  const next = [...current.filter((value) => value !== itemId), itemId].slice(-12)
+  return { ...state, recentTrainingItemIds: { ...(state.recentTrainingItemIds ?? {}), [bucket]: next } }
 }
 
 function reviewMapWith(

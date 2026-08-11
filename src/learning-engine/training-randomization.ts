@@ -8,7 +8,7 @@
  */
 export const SHORT_TERM_EXCLUSION_WINDOW = 12
 
-export interface TrainingSupplyRound {
+export interface TrainingSupplyRound extends Readonly<Record<string, PortableData>> {
   readonly schemaVersion: 1
   readonly seed: string
   readonly order: readonly string[]
@@ -162,3 +162,4 @@ export function assertTrainingSupplyRound(value: unknown): asserts value is Trai
     throw new TypeError('shortTermExcludedItemIds exceeds its bounded window')
   }
 }
+import type { PortableData } from '../core/index.ts'

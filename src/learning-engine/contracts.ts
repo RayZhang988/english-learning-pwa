@@ -502,6 +502,8 @@ export interface LearningEngineState {
   readonly extraTraining?: ExtraTrainingState
   /** Additive R13-D state. It is intentionally separate from spaced review. */
   readonly wrongAnswerLibrary?: WrongAnswerLibraryState
+  /** R11 cooldown history, keyed by domain/mode/difficulty bucket. */
+  readonly recentTrainingItemIds?: Readonly<Record<string, readonly string[]>>
 }
 
 /** Stable, opaque identity resolved by the content owner (05). */
@@ -923,6 +925,7 @@ export type LearningTrainingItemCompletedPayload =
     readonly requestId: string
     readonly nextSupplyCursor: string | null
     readonly outcome: LearningTrainingItemOutcome
+    readonly supplyRound?: TrainingSupplyRound
   }
 
 export type LearningTrainingContentExhaustedPayload =
@@ -976,6 +979,7 @@ export type ExtraTrainingItemCompletedPayload = ExtraTrainingEventBasePayload & 
   readonly item: LearningTaskSupplyItem
   readonly requestId: string
   readonly nextSupplyCursor: string | null
+  readonly supplyRound?: TrainingSupplyRound
 }
 
 export type ExtraTrainingExitedPayload = ExtraTrainingEventBasePayload

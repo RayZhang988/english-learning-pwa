@@ -24,6 +24,7 @@ import {
   withBudgetAfterEffectiveTime,
 } from './training-budget.ts'
 import { emptyTrainingUnitScore, mergeTrainingUnitScore } from './training-score.ts'
+import { assertSupplyRoundAdvances } from './training-round-acknowledgement.ts'
 
 function withOptionalTraining(
   execution: TaskExecutionState,
@@ -309,14 +310,21 @@ export function applyPlanEvent(
     if (execution.training.status === 'content-exhausted') {
       throw new TypeError('Cannot complete an item after content exhaustion')
     }
+    assertSupplyRoundAdvances(
+      execution.training.supplyRound,
+      event.payload.supplyRound,
+    )
     updated = {
       ...execution,
       status: execution.status === 'pending' ? 'active' : execution.status,
-      training: appendCompletedStreamItem(
+      training: {
+        ...appendCompletedStreamItem(
         execution.training,
         event.payload.item.itemId,
         event.payload.nextSupplyCursor,
-      ),
+        ),
+        ...(event.payload.supplyRound === undefined ? {} : { supplyRound: event.payload.supplyRound }),
+      },
       updatedAt: event.occurredAt,
     }
   } else if (event.type === 'learning.training.content.exhausted.v1') {

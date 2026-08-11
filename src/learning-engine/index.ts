@@ -141,6 +141,8 @@ export {
   applyExtraTrainingAttempt,
   applyLearningAttempt,
   createLearningEngineState,
+  recordRecentTrainingItem,
+  trainingRecentBucket,
 } from './engine.ts'
 export {
   isExtraTrainingEvent,
@@ -157,6 +159,10 @@ export {
   summarizePlanActivity,
   toSkipHistoryEntry,
 } from './lifecycle.ts'
+export {
+  applyLearningEngineExtraTrainingEvent,
+  applyLearningEngineTrainingEvent,
+} from './training-event-state.ts'
 export {
   buildProgressSnapshot,
   createInitialProgressState,

@@ -132,6 +132,35 @@ describe('LearningEngineRepository', () => {
     await expect(repository.load()).resolves.toEqual(withTiming)
   })
 
+  it('reads a legacy schema 1 record that predates the recent-training ledger', async () => {
+    const store = new MemoryNamespaceStore()
+    const repository = new LearningEngineRepository(store)
+    const current = createLearningEngineState(
+      abilityProfile(),
+      '2026-08-11T00:00:00.000Z',
+    )
+    const { recentTrainingItemIds: _recentTrainingItemIds, ...legacy } = current
+
+    await store.put(LEARNING_ENGINE_STATE_KEY, legacy, 1)
+
+    await expect(repository.load()).resolves.toEqual(legacy)
+  })
+
+  it('rejects malformed recent-training ledgers instead of silently accepting duplicate identities', async () => {
+    const store = new MemoryNamespaceStore()
+    const repository = new LearningEngineRepository(store)
+    const state = createLearningEngineState(
+      abilityProfile(),
+      '2026-08-11T00:00:00.000Z',
+    )
+    await store.put(LEARNING_ENGINE_STATE_KEY, {
+      ...state,
+      recentTrainingItemIds: { 'vocabulary:learn:3': ['same-item', 'same-item'] },
+    }, 1)
+
+    await expect(repository.load()).rejects.toThrow('recentTrainingItemIds is invalid')
+  })
+
   it('rejects legacy scored attempts masquerading as trusted timing samples', async () => {
     const store = new MemoryNamespaceStore()
     const repository = new LearningEngineRepository(store)
