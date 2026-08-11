@@ -9,6 +9,7 @@ import type {
   WrongAnswerEvidence,
   ReviewContentIdentity,
 } from '../../learning-engine/index.ts'
+import { recordTrainingSupplyItem } from '../../learning-engine/index.ts'
 import { migrateExtraTrainingSessionToOpenEnded } from '../../learning-engine/index.ts'
 import type {
   ExtraTrainingEffectiveTimingSessionFactoryPort,
@@ -339,7 +340,7 @@ export class ExtraListeningTrainingRuntime {
     const attempt = { ...this.base('learning.extra-training.attempt.completed.v1'), payload: { ...base.payload, learningUnitId: s.activeItem.learningUnitId, contentRef: s.activeItem.contentRef, difficultyLevel: s.activeItem.difficultyLevel, estimatedSeconds: s.unit?.estimatedSeconds ?? 1, result: 'scored', performanceScore: s.answer.correct ? 1 : 0, evidenceQuality: 1, assistanceLevel: 0, durationSeconds: 0, errorTags: s.answer.correct ? [] : [s.question.type === 'keyword-dictation' ? 'detail-missed' : s.question.type === 'word-discrimination' ? 'sound-discrimination' : 'detail-missed'], contentTags: s.activeItem.tags, failureCategory: null, scoreDelta: { schemaVersion: 1, correctCount: s.answer.correct ? 1 : 0, incorrectCount: s.answer.correct ? 0 : 1, unscorableCount: 0 } } } as ExtraTrainingEvent
     const item = { ...base, payload: { ...base.payload, item: s.activeItem, requestId: s.activeRequestId ?? `${s.session.sessionId}:supply`, nextSupplyCursor: s.suppliedNextCursor ?? s.activeItem.itemId } } as ExtraTrainingEvent
     const count = s.session.completedItemCount + 1
-    const saved = await this.save({ ...s, unit: null, question: null, activeItem: null, activeRequestId: null, suppliedNextCursor: null, selectedOptionId: null, dictationInput: '', answer: null, playback: null, phase: 'answering', pendingEvents: [...s.pendingEvents, attempt, item], session: { ...s.session, excludeItemIds: [...s.session.excludeItemIds, s.activeItem.itemId], completedItemCount: count, nextSupplyCursor: s.suppliedNextCursor ?? s.activeItem.itemId, status: 'running', endReason: null, endedAt: null, updatedAt: item.occurredAt }, updatedAt: item.occurredAt })
+    const saved = await this.save({ ...s, unit: null, question: null, activeItem: null, activeRequestId: null, suppliedNextCursor: null, selectedOptionId: null, dictationInput: '', answer: null, playback: null, phase: 'answering', pendingEvents: [...s.pendingEvents, attempt, item], session: { ...s.session, excludeItemIds: [...s.session.excludeItemIds, s.activeItem.itemId], ...(s.session.supplyRound === undefined ? {} : { supplyRound: recordTrainingSupplyItem(s.session.supplyRound, s.activeItem.itemId) }), completedItemCount: count, nextSupplyCursor: s.suppliedNextCursor ?? s.activeItem.itemId, status: 'running', endReason: null, endedAt: null, updatedAt: item.occurredAt }, updatedAt: item.occurredAt })
     const flushed = await this.flushFromQueued(saved)
     return this.flushWrongAnswerEvidence(flushed)
   }) }

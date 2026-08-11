@@ -5,6 +5,7 @@ import type {
   WrongAnswerEvidence,
   StandardErrorTag,
 } from '../../learning-engine/index.ts'
+import type { TrainingSupplyRound } from '../../learning-engine/index.ts'
 
 export const LISTENING_SESSION_SCHEMA_VERSION = 1 as const
 
@@ -191,6 +192,7 @@ export interface ListeningStreamState {
   readonly activeItem: ListeningSupplyItem
   readonly activeRequestId: string
   readonly nextSupplyCursor: string | null
+  readonly supplyRound?: TrainingSupplyRound
   readonly completedItemIds: readonly string[]
   readonly completedItemCount: number
   readonly correctItemCount: number

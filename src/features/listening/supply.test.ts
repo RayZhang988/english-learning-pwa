@@ -11,6 +11,7 @@ import week3 from '../../../content/lessons/survival-travel-american-4w/week-3.v
 import week4 from '../../../content/lessons/survival-travel-american-4w/week-4.v1.json'
 import { createListeningCatalog } from './content.ts'
 import { resolveListeningSupplyQuestion, ListeningCatalogSupplyProvider } from './supply.ts'
+import { createTrainingSupplyRound } from '../../learning-engine/index.ts'
 import type { ListeningSupplyItem } from './types.ts'
 
 function catalog() {
@@ -33,6 +34,15 @@ function catalog() {
 }
 
 describe('listening training supply', () => {
+  it('uses the persisted randomized round instead of its independent session rank', async () => {
+    const current = catalog()
+    const provider = new ListeningCatalogSupplyProvider(current.trainingSupplyIndex, current)
+    const candidates = (current.trainingSupplyIndex as { candidates: { itemId: string; difficultyLevel: number; domain: string }[] }).candidates
+      .filter((candidate) => candidate.domain === 'listening' && candidate.difficultyLevel === 1)
+    const round = ['listening-a', 'listening-b', 'listening-c'].map((seed) => createTrainingSupplyRound({ seed, candidateItemIds: candidates.map((candidate) => candidate.itemId), shortTermExcludedItemIds: [] })).find((candidate) => candidate.order[0] !== candidates[0]?.itemId)!
+    const result = await provider.next({ schemaVersion: 1, requestId: 'round', planId: 'plan', taskId: 'task', domain: 'listening', targetModuleId: 'listening', mode: 'learn', targetDifficulty: 1, cursor: null, excludeItemIds: [], supplyRound: round, reason: 'initial' })
+    expect(result).toMatchObject({ status: 'item', item: { itemId: round.order[0] } })
+  })
   it('selects stable non-repeating approved listening items from all three source types', async () => {
     const current = catalog()
     const provider = new ListeningCatalogSupplyProvider(current.trainingSupplyIndex, current)

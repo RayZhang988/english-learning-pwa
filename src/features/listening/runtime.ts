@@ -7,9 +7,11 @@ import type {
   LearningTaskPausedEvent,
   LearningTaskSkippedEvent,
   LearningTaskSupplyRequest,
+  TrainingSupplyRound,
   WrongAnswerEvidence,
   ReviewContentIdentity,
 } from '../../learning-engine/index.ts'
+import { recordTrainingSupplyItem } from '../../learning-engine/index.ts'
 import {
   browserNetworkStatus,
   type NetworkStatusService,
@@ -92,6 +94,7 @@ export interface ListeningTrainingRuntimeOptions {
   readonly supplyProvider?: ListeningSupplyProvider
   /** Mirrors 04's restored training progress; it is never inferred from wall time. */
   readonly trainingBudgetStatus?: () => 'running' | 'finish-current-item'
+  readonly supplyRound?: TrainingSupplyRound
   /** 01 resolves this exclusively through 05's review-content-index aliases. */
   readonly reviewIdentityForItem?: (item: import('./types.ts').ListeningSupplyItem) => ReviewContentIdentity | null
   /** Durable host sink for the single unified wrong-answer library. */
@@ -115,6 +118,7 @@ export class ListeningTrainingRuntime {
   private readonly timing: ListeningEffectiveTiming
   private readonly suppliedProvider: ListeningSupplyProvider | undefined
   private readonly trainingBudgetStatus: (() => 'running' | 'finish-current-item') | undefined
+  private readonly initialSupplyRound: TrainingSupplyRound | undefined
   private readonly reviewIdentityForItem: ((item: import('./types.ts').ListeningSupplyItem) => ReviewContentIdentity | null) | undefined
   private readonly publishWrongAnswerEvidence: ((evidence: WrongAnswerEvidence) => Promise<void>) | undefined
   /** A budget is continuous only when the 01 host has supplied its restored status port. */
@@ -151,6 +155,7 @@ export class ListeningTrainingRuntime {
     )
     this.suppliedProvider = options.supplyProvider
     this.trainingBudgetStatus = options.trainingBudgetStatus
+    this.initialSupplyRound = options.supplyRound
     this.reviewIdentityForItem = options.reviewIdentityForItem
     this.publishWrongAnswerEvidence = options.publishWrongAnswerEvidence
     this.continuousTraining = Boolean(
@@ -501,6 +506,9 @@ export class ListeningTrainingRuntime {
       targetDifficulty: this.task.difficultyLevel,
       cursor,
       excludeItemIds: completed,
+      ...(stream?.supplyRound === undefined && this.initialSupplyRound === undefined
+        ? {}
+        : { supplyRound: stream?.supplyRound ?? this.initialSupplyRound }),
       reason: completed.length === 0 ? 'initial' : 'continue-after-item',
     }
   }
@@ -553,6 +561,7 @@ export class ListeningTrainingRuntime {
             activeItem: result.item as import('./types.ts').ListeningSupplyItem,
             activeRequestId: request.requestId,
             nextSupplyCursor: result.nextCursor,
+            ...(request.supplyRound === undefined ? {} : { supplyRound: recordTrainingSupplyItem(request.supplyRound, (result.item as import('./types.ts').ListeningSupplyItem).itemId) }),
             completedItemIds: [],
             completedItemCount: 0,
             correctItemCount: 0,
@@ -811,6 +820,7 @@ export class ListeningTrainingRuntime {
               activeItem: result.item as import('./types.ts').ListeningSupplyItem,
               activeRequestId: request.requestId,
               nextSupplyCursor: result.nextCursor,
+              ...(request.supplyRound === undefined ? {} : { supplyRound: recordTrainingSupplyItem(request.supplyRound, (result.item as import('./types.ts').ListeningSupplyItem).itemId) }),
             }, now)
           }
         } catch (error) {
@@ -1051,6 +1061,7 @@ export class ListeningTrainingRuntime {
         activeItem: result.item as import('./types.ts').ListeningSupplyItem,
         activeRequestId: request.requestId,
         nextSupplyCursor: result.nextCursor,
+        ...(request.supplyRound === undefined ? {} : { supplyRound: recordTrainingSupplyItem(request.supplyRound, (result.item as import('./types.ts').ListeningSupplyItem).itemId) }),
         exhaustionRequestId: null,
         recoveryEventId: null,
       }, now)
