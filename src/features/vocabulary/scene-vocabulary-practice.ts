@@ -1,14 +1,20 @@
 import type { ReadonlyDataSource } from '../../core/index.ts'
 import { localStorageService, type NamespaceStore } from '../../storage/index.ts'
 import { VocabularyError } from './errors.ts'
-import type { WrongAnswerEvidence } from '../../learning-engine/index.ts'
+import {
+  assertTrainingSupplyRound,
+  createTrainingSupplyRound,
+  recordTrainingSupplyItem,
+  SHORT_TERM_EXCLUSION_WINDOW,
+  type TrainingSupplyRound,
+  type WrongAnswerEvidence,
+} from '../../learning-engine/index.ts'
 import { createVocabularyWrongAnswerEvidence, resolveSceneVocabularyReviewContent, type ReviewContentIndex, type WrongAnswerEvidenceSink } from './wrong-answer-review.ts'
 
 const SCENE_VOCABULARY_BANK_ID = 'r13b-travel-scene-vocabulary'
 /** Content remains at 1.0.0 until the R13-C 500-item authored bank is released. */
 const SCENE_VOCABULARY_CONTENT_VERSION = '1.0.0'
 const SCENE_VOCABULARY_STORAGE_NAMESPACE = 'feature.vocabulary.scene-practice'
-const SHORT_TERM_EXCLUSION_LIMIT = 3
 
 type UnknownRecord = Record<string, unknown>
 
@@ -177,6 +183,8 @@ export interface SceneVocabularyPracticeSnapshot {
   readonly supplyCursor: number
   readonly questionIds: readonly string[]
   readonly shortTermExclusionIds: readonly string[]
+  /** R11-A source of truth for seed, order, cursor and short-term exclusion. */
+  readonly supplyRound?: TrainingSupplyRound
   readonly currentQuestionId: string
   /** Cumulative, including answers restored from a migrated R13-B snapshot. */
   readonly answers: readonly SceneVocabularyPracticeAnswer[]
@@ -261,6 +269,10 @@ export interface SceneVocabularyPracticeRuntimeOptions {
   readonly repository?: SceneVocabularyPracticeRepository
   readonly sessionId?: string
   readonly now?: () => string
+  /** 01 may inject a newly-created R11-A round; the runtime persists acknowledgements. */
+  readonly supplyRound?: TrainingSupplyRound
+  /** Injected only when this runtime itself starts a later explicit round. */
+  readonly createRoundSeed?: () => string
   readonly wrongAnswerReview?: { readonly index: ReviewContentIndex; readonly sink: WrongAnswerEvidenceSink }
 }
 
@@ -274,25 +286,31 @@ function meaningsFor(question: SceneVocabularyQuestion): readonly string[] {
 }
 function correctOptionId(question: SceneVocabularyQuestion): string { return optionId(question.questionId, meaningsFor(question).indexOf(question.correctMeaningZh)) }
 function questionById(scene: SceneVocabularyScene, questionId: string): SceneVocabularyQuestion | undefined { return scene.questions.find((question) => question.questionId === questionId) }
-function stableRank(questionId: string, round: number): number {
-  let hash = (round * 2_654_435_761) >>> 0
-  for (const character of questionId) hash = Math.imul(hash ^ character.charCodeAt(0), 16_777_619) >>> 0
-  return hash
+function createSceneRound(scene: SceneVocabularyScene, seed: string, excluded: readonly string[]): TrainingSupplyRound {
+  return createTrainingSupplyRound({ seed, candidateItemIds: scene.questions.map((question) => question.questionId), shortTermExcludedItemIds: excluded })
 }
-function orderForRound(scene: SceneVocabularyScene, round: number, excluded: readonly string[]): readonly string[] {
-  const ordered = [...scene.questions.map((question) => question.questionId)].sort((left, right) => stableRank(left, round) - stableRank(right, round) || left.localeCompare(right))
-  const start = ordered.findIndex((id) => !excluded.includes(id))
-  return start <= 0 ? ordered : [...ordered.slice(start), ...ordered.slice(0, start)]
-}
-function newSnapshot(scene: SceneVocabularyScene, sessionId: string, now: string, round = 1, previous: Pick<SceneVocabularyPracticeSnapshot, 'answers' | 'correctCount' | 'incorrectCount' | 'shortTermExclusionIds' | 'priorRounds' | 'createdAt'> | undefined = undefined): SceneVocabularyPracticeSnapshot {
-  const questionIds = orderForRound(scene, round, previous?.shortTermExclusionIds ?? [])
-  return { schemaVersion: 2, sessionId, bankId: 'r13b-travel-scene-vocabulary', contentVersion: '1.0.0', categoryId: scene.categoryId, sceneId: scene.sceneId, round, supplyCursor: 0, questionIds, shortTermExclusionIds: previous?.shortTermExclusionIds ?? [], currentQuestionId: questionIds[0]!, answers: previous?.answers ?? [], correctCount: previous?.correctCount ?? 0, incorrectCount: previous?.incorrectCount ?? 0, priorRounds: previous?.priorRounds ?? [], selectedOptionId: null, phase: 'answering', createdAt: previous?.createdAt ?? now, updatedAt: now }
+function newSnapshot(scene: SceneVocabularyScene, sessionId: string, now: string, supplyRound: TrainingSupplyRound, round = 1, previous: Pick<SceneVocabularyPracticeSnapshot, 'answers' | 'correctCount' | 'incorrectCount' | 'priorRounds' | 'createdAt'> | undefined = undefined): SceneVocabularyPracticeSnapshot {
+  assertTrainingSupplyRound(supplyRound)
+  const questionIds = supplyRound.order
+  const currentQuestionId = questionIds[supplyRound.cursor]
+  if (currentQuestionId === undefined) throw new VocabularyError('content-invalid', 'A new scene round has no available question.')
+  return { schemaVersion: 2, sessionId, bankId: 'r13b-travel-scene-vocabulary', contentVersion: '1.0.0', categoryId: scene.categoryId, sceneId: scene.sceneId, round, supplyCursor: supplyRound.cursor, questionIds, shortTermExclusionIds: supplyRound.shortTermExcludedItemIds, supplyRound, currentQuestionId, answers: previous?.answers ?? [], correctCount: previous?.correctCount ?? 0, incorrectCount: previous?.incorrectCount ?? 0, priorRounds: previous?.priorRounds ?? [], selectedOptionId: null, phase: 'answering', createdAt: previous?.createdAt ?? now, updatedAt: now }
 }
 
 function validateSnapshot(snapshot: SceneVocabularyPracticeSnapshot, scene: SceneVocabularyScene, categoryId: string, sceneId: string, sessionId: string): void {
   const released = new Set(scene.questions.map((question) => question.questionId))
-  if (snapshot.sessionId !== sessionId || snapshot.categoryId !== categoryId || snapshot.sceneId !== sceneId || snapshot.questionIds.length !== scene.questions.length || new Set(snapshot.questionIds).size !== scene.questions.length || snapshot.questionIds.some((id) => !released.has(id)) || snapshot.round < 1 || snapshot.supplyCursor < 0 || snapshot.supplyCursor >= snapshot.questionIds.length || snapshot.currentQuestionId !== snapshot.questionIds[snapshot.supplyCursor] || snapshot.shortTermExclusionIds.length > SHORT_TERM_EXCLUSION_LIMIT || snapshot.shortTermExclusionIds.some((id) => !released.has(id)) || snapshot.correctCount < 0 || snapshot.incorrectCount < 0 || snapshot.answers.length !== snapshot.correctCount + snapshot.incorrectCount || snapshot.priorRounds.some((summary) => summary.round < 1 || summary.answeredCount < 0 || summary.correctCount < 0 || summary.incorrectCount < 0 || summary.answeredCount !== summary.correctCount + summary.incorrectCount)) {
+  if (snapshot.sessionId !== sessionId || snapshot.categoryId !== categoryId || snapshot.sceneId !== sceneId || snapshot.questionIds.length === 0 || snapshot.questionIds.length > scene.questions.length || new Set(snapshot.questionIds).size !== snapshot.questionIds.length || snapshot.questionIds.some((id) => !released.has(id)) || snapshot.round < 1 || snapshot.supplyCursor < 0 || snapshot.supplyCursor >= snapshot.questionIds.length || snapshot.currentQuestionId !== snapshot.questionIds[snapshot.supplyCursor] || snapshot.shortTermExclusionIds.length > SHORT_TERM_EXCLUSION_WINDOW || snapshot.shortTermExclusionIds.some((id) => !released.has(id)) || snapshot.correctCount < 0 || snapshot.incorrectCount < 0 || snapshot.answers.length !== snapshot.correctCount + snapshot.incorrectCount || snapshot.priorRounds.some((summary) => summary.round < 1 || summary.answeredCount < 0 || summary.correctCount < 0 || summary.incorrectCount < 0 || summary.answeredCount !== summary.correctCount + summary.incorrectCount)) {
     throw new VocabularyError('session-recovery-invalid', 'Stored scene vocabulary practice does not match the released scene sequence.')
+  }
+  if (snapshot.supplyRound !== undefined) {
+    try {
+      assertTrainingSupplyRound(snapshot.supplyRound)
+    } catch {
+      throw new VocabularyError('session-recovery-invalid', 'Stored scene vocabulary randomized round is invalid.')
+    }
+    if (snapshot.supplyRound.cursor !== snapshot.supplyCursor || snapshot.supplyRound.order.join('\u0000') !== snapshot.questionIds.join('\u0000') || snapshot.supplyRound.shortTermExcludedItemIds.join('\u0000') !== snapshot.shortTermExclusionIds.join('\u0000')) {
+      throw new VocabularyError('session-recovery-invalid', 'Stored scene vocabulary randomized round does not match the visible checkpoint.')
+    }
   }
   if (snapshot.answers.some((answer) => {
     const answeredQuestion = questionById(scene, answer.questionId)
@@ -323,7 +341,7 @@ function migrateLegacySnapshot(legacy: LegacySceneVocabularyPracticeSnapshot, sc
     if (!question || answer.questionId !== question.questionId || !meaningsFor(question).some((_, optionIndex) => optionId(question.questionId, optionIndex) === answer.selectedOptionId)) throw new VocabularyError('session-recovery-invalid', 'Legacy scene vocabulary answer does not match released options.')
   })
   const correctCount = legacy.answers.filter((answer, index) => answer.selectedOptionId === correctOptionId(scene.questions[index]!)).length
-  const exclusion = legacy.answers.slice(-SHORT_TERM_EXCLUSION_LIMIT).map((answer) => answer.questionId)
+  const exclusion = legacy.answers.slice(-SHORT_TERM_EXCLUSION_WINDOW).map((answer) => answer.questionId)
   if (legacy.phase === 'feedback') {
     const cursor = legacy.answers.length - 1
     const active = legacy.answers[cursor]!
@@ -335,7 +353,7 @@ function migrateLegacySnapshot(legacy: LegacySceneVocabularyPracticeSnapshot, sc
     if (legacy.selectedOptionId !== null && !meaningsFor(active).some((_, index) => optionId(active.questionId, index) === legacy.selectedOptionId)) throw new VocabularyError('session-recovery-invalid', 'Legacy scene vocabulary selection does not match released options.')
     return { schemaVersion: 2, sessionId, bankId: 'r13b-travel-scene-vocabulary', contentVersion: '1.0.0', categoryId, sceneId, round: 1, supplyCursor: cursor, questionIds: releasedQuestionIds, shortTermExclusionIds: exclusion, currentQuestionId: active.questionId, answers: legacy.answers, correctCount, incorrectCount: legacy.answers.length - correctCount, priorRounds: [], selectedOptionId: legacy.selectedOptionId, phase: 'answering', createdAt: legacy.createdAt, updatedAt: now }
   }
-  return newSnapshot(scene, sessionId, now, 2, { answers: legacy.answers, correctCount, incorrectCount: legacy.answers.length - correctCount, shortTermExclusionIds: exclusion, priorRounds: [], createdAt: legacy.createdAt })
+  return newSnapshot(scene, sessionId, now, createSceneRound(scene, `${sessionId}:legacy:2`, exclusion), 2, { answers: legacy.answers, correctCount, incorrectCount: legacy.answers.length - correctCount, priorRounds: [], createdAt: legacy.createdAt })
 }
 
 export class SceneVocabularyPracticeRuntime {
@@ -349,6 +367,11 @@ export class SceneVocabularyPracticeRuntime {
   constructor(options: SceneVocabularyPracticeRuntimeOptions) { this.options = options; this.repository = options.repository ?? new StoredSceneVocabularyPracticeRepository(); this.now = options.now ?? (() => new Date().toISOString()) }
   get currentSnapshot(): SceneVocabularyPracticeSnapshot | null { return this.snapshot }
   private get sessionId(): string { return this.options.sessionId ?? `r13b-scene-vocabulary:${this.options.categoryId}:${this.options.sceneId}` }
+  private createRound(scene: SceneVocabularyScene, excluded: readonly string[], initial = false): TrainingSupplyRound {
+    const supplied = initial ? this.options.supplyRound : undefined
+    if (supplied !== undefined) return supplied
+    return createSceneRound(scene, this.options.createRoundSeed?.() ?? crypto.randomUUID(), excluded)
+  }
   private requireSnapshot(): SceneVocabularyPracticeSnapshot { if (!this.snapshot) throw new VocabularyError('session-transition-invalid', 'Scene vocabulary runtime has not been initialized.'); return this.snapshot }
   private requireScene(): SceneVocabularyScene { if (!this.scene) throw new VocabularyError('session-transition-invalid', 'Scene vocabulary runtime has not loaded its scene.'); return this.scene }
   private queue<T>(operation: () => Promise<T>): Promise<T> { const result = this.tail.then(operation, operation); this.tail = result.then(() => undefined, () => undefined); return result }
@@ -371,7 +394,7 @@ export class SceneVocabularyPracticeRuntime {
         const stored = await this.repository.load(this.sessionId)
         if (stored && isSnapshot(stored)) { validateSnapshot(stored, scene, this.options.categoryId, this.options.sceneId, this.sessionId); this.snapshot = stored; this.recoveryInvalidSnapshot = false; return this.flushWrongAnswerEvidence(stored) }
         if (stored && isLegacySnapshot(stored)) { const migrated = await this.save(migrateLegacySnapshot(stored, scene, this.options.categoryId, this.options.sceneId, this.sessionId, this.now())); this.recoveryInvalidSnapshot = false; return migrated }
-        const fresh = await this.save(newSnapshot(scene, this.sessionId, this.now()))
+        const fresh = await this.save(newSnapshot(scene, this.sessionId, this.now(), this.createRound(scene, [], true)))
         this.recoveryInvalidSnapshot = false
         return fresh
       } catch (error) {
@@ -397,7 +420,7 @@ export class SceneVocabularyPracticeRuntime {
       await this.repository.discardInvalidSnapshot(this.sessionId)
       this.scene = scene
       this.snapshot = null
-      const fresh = await this.save(newSnapshot(scene, this.sessionId, this.now()))
+      const fresh = await this.save(newSnapshot(scene, this.sessionId, this.now(), this.createRound(scene, [], true)))
       this.recoveryInvalidSnapshot = false
       return fresh
     })
@@ -426,12 +449,15 @@ export class SceneVocabularyPracticeRuntime {
     return this.queue(async () => {
       const snapshot = this.requireSnapshot(); const scene = this.requireScene()
       if (snapshot.phase !== 'feedback') throw new VocabularyError('session-transition-invalid', 'Advance is available only after scene vocabulary feedback.')
-      const exclusions = [...snapshot.shortTermExclusionIds, snapshot.currentQuestionId].slice(-SHORT_TERM_EXCLUSION_LIMIT)
+      const acknowledged = snapshot.supplyRound === undefined
+        ? { schemaVersion: 1 as const, seed: `${this.sessionId}:legacy`, order: snapshot.questionIds, cursor: snapshot.supplyCursor, shortTermExcludedItemIds: snapshot.shortTermExclusionIds }
+        : recordTrainingSupplyItem(snapshot.supplyRound, snapshot.currentQuestionId)
+      const exclusions = acknowledged.shortTermExcludedItemIds
       if (snapshot.supplyCursor + 1 < snapshot.questionIds.length) {
         const cursor = snapshot.supplyCursor + 1
-        return this.save({ ...snapshot, supplyCursor: cursor, currentQuestionId: snapshot.questionIds[cursor]!, shortTermExclusionIds: exclusions, selectedOptionId: null, phase: 'answering', updatedAt: this.now() })
+        return this.save({ ...snapshot, supplyCursor: cursor, currentQuestionId: snapshot.questionIds[cursor]!, shortTermExclusionIds: exclusions, supplyRound: acknowledged, selectedOptionId: null, phase: 'answering', updatedAt: this.now() })
       }
-      return this.save(newSnapshot(scene, this.sessionId, this.now(), snapshot.round + 1, { answers: snapshot.answers, correctCount: snapshot.correctCount, incorrectCount: snapshot.incorrectCount, shortTermExclusionIds: exclusions, priorRounds: snapshot.priorRounds, createdAt: snapshot.createdAt }))
+      return this.save(newSnapshot(scene, this.sessionId, this.now(), this.createRound(scene, exclusions), snapshot.round + 1, { answers: snapshot.answers, correctCount: snapshot.correctCount, incorrectCount: snapshot.incorrectCount, priorRounds: snapshot.priorRounds, createdAt: snapshot.createdAt }))
     })
   }
   /** Explicit user intent: retains no prior progress under the same session id. */
@@ -439,11 +465,10 @@ export class SceneVocabularyPracticeRuntime {
     return this.queue(async () => {
       const snapshot = this.requireSnapshot(); const scene = this.requireScene()
       const endedAt = this.now()
-      return this.save(newSnapshot(scene, this.sessionId, endedAt, snapshot.round + 1, {
+      return this.save(newSnapshot(scene, this.sessionId, endedAt, this.createRound(scene, snapshot.shortTermExclusionIds), snapshot.round + 1, {
         answers: [],
         correctCount: 0,
         incorrectCount: 0,
-        shortTermExclusionIds: snapshot.shortTermExclusionIds,
         priorRounds: [...snapshot.priorRounds, {
           round: snapshot.round,
           answeredCount: snapshot.answers.length,

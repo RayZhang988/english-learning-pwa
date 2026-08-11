@@ -6,6 +6,7 @@ import { createStaticDataSource } from '../../core/testing/index.ts'
 import { localStorageService } from '../../storage/index.ts'
 import { VocabularyError } from './errors.ts'
 import { applyWrongAnswerEvidence, createWrongAnswerLibraryState, type WrongAnswerEvidence } from '../../learning-engine/index.ts'
+import { createTrainingSupplyRound } from '../../learning-engine/index.ts'
 import type { WrongAnswerEvidenceSink, ReviewContentIndex } from './wrong-answer-review.ts'
 import {
   createSceneVocabularyQuestionBank,
@@ -81,7 +82,7 @@ describe('R13-C scene vocabulary practice runtime', () => {
   it('replays one durable scene error without changing R13-C feedback or target-only playback', async () => {
     const bank = await loadReleasedSceneBank(); const index = JSON.parse(await readFile(new URL('content/curriculum/review-content-index.v1.json', projectRoot), 'utf8')) as ReviewContentIndex; const repository = new MemoryScenePracticeRepository(); let state = createWrongAnswerLibraryState(); const ids: string[] = []; let fail = true
     const sink: WrongAnswerEvidenceSink = { async publish(evidence: WrongAnswerEvidence) { ids.push(evidence.eventId); if (fail) { fail = false; throw new Error('sink failed') }; state = applyWrongAnswerEvidence(state, evidence).state } }
-    const first = runtimeFor(bank, repository, { index, sink }); let snapshot = await first.initialize(); const view = first.toView(); const wrong = view.question!.options.find((option) => option.id !== view.question!.options.find((candidate) => candidate.state === 'correct')?.id) ?? view.question!.options[0]!; await first.select(wrong.id); await expect(first.submit()).rejects.toThrow('sink failed'); snapshot = first.currentSnapshot!; expect(snapshot.phase).toBe('feedback'); const answered = snapshot.answers.length; const playback = first.toView().question!.targetPlayback
+    const first = runtimeFor(bank, repository, { index, sink }); let snapshot = await first.initialize(); const view = first.toView(); const active = bank.getScene('airport-flight', 'airport')!.questions.find((question) => question.questionId === view.question!.questionId)!; const wrong = view.question!.options.find((option) => option.labelZh !== active.correctMeaningZh)!; await first.select(wrong.id); await expect(first.submit()).rejects.toThrow('sink failed'); snapshot = first.currentSnapshot!; expect(snapshot.phase).toBe('feedback'); const answered = snapshot.answers.length; const playback = first.toView().question!.targetPlayback
     const second = runtimeFor(bank, repository, { index, sink }); snapshot = await second.initialize(); expect(ids[0]).toBe(ids[1]); expect(snapshot.pendingWrongAnswerEvidence).toEqual([]); expect(snapshot.answers).toHaveLength(answered); expect(second.toView().question!.targetPlayback).toEqual(playback); expect(Object.values(state.records)[0]?.incorrectCount).toBe(1)
   })
   it('keeps scene evidence pending when confirmation-clear save fails, then replays idempotently', async () => {
@@ -164,7 +165,7 @@ describe('R13-C scene vocabulary practice runtime', () => {
     const question = bank.getScene('airport-flight', 'airport')!.questions.find(
       (entry) => entry.questionId === view.question?.questionId,
     )!
-    const targetIndex = question.sentenceEn.indexOf(question.targetText)
+    const targetIndex = question.sentenceEn.toLocaleLowerCase('en-US').indexOf(question.targetText.toLocaleLowerCase('en-US'))
     expect(view.question).toMatchObject({
       questionId: question.questionId,
       promptZh: '这个词是什么意思？',
@@ -284,6 +285,26 @@ describe('R13-C scene vocabulary practice runtime', () => {
     expect(first.currentSnapshot?.priorRounds).toContainEqual(
       expect.objectContaining({ answeredCount: 48, correctCount: 48 }),
     )
+  })
+
+  it('keeps an injected shared randomized scene round through refresh and feedback', async () => {
+    const bank = await loadReleasedSceneBank()
+    const repository = new MemoryScenePracticeRepository()
+    const scene = bank.getScene('airport-flight', 'airport')!
+    const round = createTrainingSupplyRound({ seed: 'scene-round', candidateItemIds: scene.questions.map((question) => question.questionId), shortTermExcludedItemIds: [] })
+    const options = { categoryId: 'airport-flight', sceneId: 'airport', contentSource: createStaticDataSource(bank), repository, now: clock(), supplyRound: round } as unknown as ConstructorParameters<typeof SceneVocabularyPracticeRuntime>[0]
+    const first = new SceneVocabularyPracticeRuntime(options)
+    const started = await first.initialize()
+    expect(started.supplyRound).toEqual(round)
+    expect(first.toView().question?.questionId).toBe(round.order[0])
+    const active = first.toView().question!
+    const question = scene.questions.find((candidate) => candidate.questionId === active.questionId)!
+    await first.select(active.options.find((option) => option.labelZh === question.correctMeaningZh)!.id)
+    await first.submit()
+    const advanced = await first.advance()
+    expect(advanced.supplyRound).toMatchObject({ seed: 'scene-round', cursor: 1 })
+    const restored = await new SceneVocabularyPracticeRuntime(options).initialize()
+    expect(restored.supplyRound).toEqual(advanced.supplyRound)
   })
 
   it('keeps corrupt or drifted scene snapshots isolated so a retry cannot mutate daily or extra-training state', async () => {
