@@ -96,4 +96,51 @@ describe('SpeakingTrainingScreen R8 content comparison', () => {
     expect(markup).not.toContain('中文翻译')
     expect(markup).not.toContain('我来自上海。')
   })
+
+  it('groups my recording and the original sentence as separate comparison controls after recording', () => {
+    const markup = renderToStaticMarkup(
+      <SpeakingTrainingScreen
+        viewModel={{
+          ...viewModel(),
+          secondaryActionLabel: '播放示范原句',
+        }}
+        onExit={() => undefined}
+        onRecorderAction={() => undefined}
+        onPlayback={() => undefined}
+        onSecondaryAction={() => undefined}
+        onAction={() => undefined}
+      />,
+    )
+
+    expect(markup).toContain('录音对比播放')
+    expect(markup).toContain('播放我的录音')
+    expect(markup).toContain('播放示范原句')
+  })
+
+  it('disables both comparison controls while a comparison playback is busy', () => {
+    const markup = renderToStaticMarkup(
+      <SpeakingTrainingScreen
+        viewModel={{
+          ...viewModel(),
+          secondaryActionLabel: '播放示范原句',
+          recorder: {
+            status: 'processing',
+            statusLabel: '正在处理',
+            description: '正在播放示范原句。',
+            playbackAvailable: true,
+          },
+        }}
+        onExit={() => undefined}
+        onRecorderAction={() => undefined}
+        onPlayback={() => undefined}
+        onSecondaryAction={() => undefined}
+        onAction={() => undefined}
+      />,
+    )
+
+    expect(markup).toContain('正在播放示范原句')
+    expect(markup).toMatch(/播放我的录音<\/button>/)
+    expect(markup).toMatch(/播放示范原句<\/button>/)
+    expect((markup.match(/disabled=""/g) ?? []).length).toBeGreaterThanOrEqual(3)
+  })
 })

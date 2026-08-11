@@ -326,6 +326,13 @@ export function SpeakingTrainingScreen({
   exitBusy,
   contextNotice,
 }: SpeakingTrainingScreenProps) {
+  const originalPlaybackLabel =
+    viewModel.secondaryActionLabel === '播放示范原句'
+      ? viewModel.secondaryActionLabel
+      : undefined
+  const onOriginalPlayback = originalPlaybackLabel
+    ? onSecondaryAction
+    : undefined
   return (
     <TrainingScreen
       header={viewModel.header}
@@ -346,7 +353,7 @@ export function SpeakingTrainingScreen({
           >
             {viewModel.action.loading ? '正在处理' : viewModel.action.label}
           </button>
-          {viewModel.secondaryActionLabel && onSecondaryAction ? (
+          {viewModel.secondaryActionLabel && onSecondaryAction && !originalPlaybackLabel ? (
             <button
               className="text-button"
               type="button"
@@ -378,6 +385,8 @@ export function SpeakingTrainingScreen({
         recorder={viewModel.recorder}
         onPrimaryAction={onRecorderAction}
         onPlayback={onPlayback}
+        originalPlaybackLabel={originalPlaybackLabel}
+        onOriginalPlayback={onOriginalPlayback}
       />
       {viewModel.contentMatch ? (
         <section

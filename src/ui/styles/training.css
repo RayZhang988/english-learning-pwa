@@ -839,6 +839,24 @@
   min-height: 48px;
 }
 
+.recorder__comparison-controls {
+  display: grid;
+  width: min(100%, 380px);
+  margin-top: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.recorder__comparison-controls .recorder__playback {
+  display: inline-flex;
+  min-height: 48px;
+  padding-inline: 12px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  touch-action: manipulation;
+}
+
 .assessment-intro {
   padding: 10px 0 6px;
 }

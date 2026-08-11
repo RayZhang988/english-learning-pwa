@@ -520,13 +520,26 @@ export function Recorder({
   recorder,
   onPrimaryAction,
   onPlayback,
+  originalPlaybackLabel,
+  onOriginalPlayback,
 }: {
   readonly recorder: RecorderViewModel
   readonly onPrimaryAction: () => void
   readonly onPlayback?: () => void
+  readonly originalPlaybackLabel?: string
+  readonly onOriginalPlayback?: () => void
 }) {
   const isRecording = recorder.status === 'recording'
   const isProcessing = recorder.status === 'processing'
+  const comparisonAvailable =
+    recorder.playbackAvailable &&
+    onPlayback !== undefined &&
+    originalPlaybackLabel !== undefined &&
+    onOriginalPlayback !== undefined
+  const originalIsPlaying =
+    isProcessing && recorder.description === '正在播放示范原句。'
+  const recordingIsPlaying =
+    isProcessing && recorder.description === '正在播放你的录音。'
   const primaryLabel =
     recorder.status === 'permission'
       ? '允许麦克风'
@@ -554,7 +567,34 @@ export function Recorder({
         <span className="recorder__time">{recorder.timeLabel}</span>
       ) : null}
       {recorder.description ? <p>{recorder.description}</p> : null}
-      {recorder.playbackAvailable && onPlayback ? (
+      {comparisonAvailable ? (
+        <div
+          className="recorder__comparison-controls"
+          aria-label="录音对比播放"
+          aria-busy={isProcessing || undefined}
+        >
+          <button
+            className="secondary-button recorder__playback"
+            type="button"
+            aria-label={recordingIsPlaying ? '正在播放我的录音' : '播放我的录音'}
+            disabled={isProcessing}
+            onClick={onPlayback}
+          >
+            <Icon name="play" />
+            {recordingIsPlaying ? '正在播放我的录音' : '播放我的录音'}
+          </button>
+          <button
+            className="secondary-button recorder__playback recorder__playback--original"
+            type="button"
+            aria-label={originalIsPlaying ? '正在播放示范原句' : originalPlaybackLabel}
+            disabled={isProcessing}
+            onClick={onOriginalPlayback}
+          >
+            <Icon name="play" />
+            {originalIsPlaying ? '正在播放示范原句' : originalPlaybackLabel}
+          </button>
+        </div>
+      ) : recorder.playbackAvailable && onPlayback ? (
         <button
           className="secondary-button recorder__playback"
           type="button"
