@@ -142,6 +142,14 @@ export type ListeningTextInputVisualState =
   | 'submitting'
   | 'submitted'
 
+export interface ListeningDictationAnswerGuidanceViewModel {
+  /** Published content category; never an answer inferred by the UI. */
+  readonly answerType: string
+  /** Published learner-facing instruction that does not reveal the answer. */
+  readonly guidanceZh: string
+  readonly acceptedInputFormats: readonly string[]
+}
+
 export interface ListeningKeywordDictationQuestionViewModel {
   readonly kind: 'keyword-dictation'
   readonly prompt: string
@@ -151,6 +159,7 @@ export interface ListeningKeywordDictationQuestionViewModel {
     readonly orderLabel: string
     readonly formatLabel: string
   }
+  readonly answerGuidance: ListeningDictationAnswerGuidanceViewModel
   readonly textInput: {
     readonly label: string
     readonly value: string

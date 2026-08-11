@@ -6,12 +6,55 @@ import type {
   AudioPlayerViewModel,
   ChoiceViewModel,
   FeedbackViewModel,
+  ListeningDictationAnswerGuidanceViewModel,
   ListeningKeywordDictationQuestionViewModel,
   ListeningPlaybackControlsViewModel,
   ListeningRepeatMode,
   RecorderViewModel,
   TrainingHeaderViewModel,
 } from './view-models.ts'
+
+const dictationAnswerTypeLabels: Readonly<Record<string, string>> = {
+  'place-name': '地点名', surname: '姓氏', number: '数字', time: '时间',
+  'manner-or-short-phrase': '短语', 'product-description': '商品描述',
+  'reservation-details': '预订信息', 'allergy-information': '过敏信息',
+  'payment-method': '付款方式', 'direction-and-distance': '方向或距离',
+  'transfer-instruction': '换乘指引', 'ticket-details': '票务信息',
+  'size-or-condition': '尺码或状态', 'checkout-time': '退房时间',
+  'device-problem': '设备问题', 'gate-code': '登机口代码',
+  'availability-time': '可用时间', 'room-number': '房间号',
+  'gate-and-time': '登机口和时间',
+}
+
+const dictationInputFormatLabels: Readonly<Record<string, string>> = {
+  'english-words': '英文单词', digits: '阿拉伯数字',
+  'clock-time': '时钟时间', 'gate-code': '登机口代码',
+  'room-number': '房间号',
+}
+
+export function DictationAnswerGuidance({
+  guidance,
+  id,
+}: {
+  readonly guidance: ListeningDictationAnswerGuidanceViewModel
+  readonly id?: string
+}) {
+  const answerTypeLabel =
+    dictationAnswerTypeLabels[guidance.answerType] ?? '关键信息'
+  const formatLabels = guidance.acceptedInputFormats.map(
+    (format) => dictationInputFormatLabels[format] ?? format,
+  )
+  return (
+    <section id={id} className="keyword-dictation__guidance" aria-label="本题作答提示">
+      <strong>本题作答提示</strong>
+      <dl>
+        <div><dt>填写内容</dt><dd>{answerTypeLabel}</dd></div>
+        <div><dt>作答提示</dt><dd>{guidance.guidanceZh}</dd></div>
+        <div><dt>可用输入格式</dt><dd>{formatLabels.join('、')}</dd></div>
+      </dl>
+    </section>
+  )
+}
 
 export interface TrainingContextNoticeViewModel {
   readonly eyebrow: string
@@ -382,11 +425,14 @@ export function KeywordDictationField({
 }) {
   const textInput = question.textInput
   const inputId = useId()
+  const guidanceId = `${inputId}-guidance`
   const descriptionId = textInput.description
     ? `${inputId}-description`
     : undefined
   const statusId = textInput.statusLabel ? `${inputId}-status` : undefined
-  const describedBy = [descriptionId, statusId].filter(Boolean).join(' ')
+  const describedBy = [guidanceId, descriptionId, statusId]
+    .filter(Boolean)
+    .join(' ')
 
   return (
     <div
@@ -410,6 +456,7 @@ export function KeywordDictationField({
         <li>{question.requirements.orderLabel}</li>
         <li>{question.requirements.formatLabel}</li>
       </ul>
+      <DictationAnswerGuidance guidance={question.answerGuidance} id={guidanceId} />
       {textInput.description ? (
         <p id={descriptionId}>{textInput.description}</p>
       ) : null}

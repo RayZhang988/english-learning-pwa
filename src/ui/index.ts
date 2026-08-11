@@ -171,6 +171,7 @@ export {
 export {
   AudioPlayer,
   ChoiceList,
+  DictationAnswerGuidance,
   FeedbackPanel,
   KeywordDictationField,
   ListeningPlaybackControls,
@@ -250,6 +251,7 @@ export type {
   ChoiceVisualState,
   DomainProgressViewModel,
   FeedbackViewModel,
+  ListeningDictationAnswerGuidanceViewModel,
   ListeningKeywordDictationQuestionViewModel,
   ListeningPlaybackControlsViewModel,
   ListeningPlaybackRateOptionViewModel,

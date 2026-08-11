@@ -227,6 +227,11 @@ describe('ListeningTrainingScreen UI contract', () => {
           orderLabel: '必须按照音频中出现的顺序填写。',
           formatLabel: '输入一条英文短语，用空格连接。',
         },
+        answerGuidance: {
+          answerType: 'reservation-details',
+          guidanceZh: '填写听到的预订信息；使用英文单词输入。',
+          acceptedInputFormats: ['english-words'],
+        },
         textInput: {
           label: '关键词',
           value: 'reservation',
@@ -272,6 +277,45 @@ describe('ListeningTrainingScreen UI contract', () => {
     expect(markup).not.toContain('role="radiogroup"')
   })
 
+  it('shows what to enter and accepted formats before dictation is submitted without revealing the answer', () => {
+    const viewModel: ListeningScreenViewModel = {
+      ...commonViewModel,
+      question: {
+        kind: 'keyword-dictation',
+        prompt: '写出听到的开始时间。',
+        requirements: {
+          targetLabel: '写出听到的开始时间。',
+          countLabel: '需要填写 1 项关键信息。',
+          orderLabel: '只有 1 项，不涉及先后顺序。',
+          formatLabel: '输入一条英文短语。',
+        },
+        answerGuidance: {
+          answerType: 'time',
+          guidanceZh: '填写听到的开始时间；可使用英文数字词、阿拉伯数字或时钟时间。',
+          acceptedInputFormats: ['english-words', 'digits', 'clock-time'],
+        },
+        textInput: {
+          label: '听写答案',
+          value: '',
+          placeholder: '输入听到的关键词',
+          disabled: false,
+          state: 'empty',
+        },
+      },
+    }
+
+    const markup = renderToStaticMarkup(
+      <ListeningTrainingScreen viewModel={viewModel} {...createCallbacks()} />,
+    )
+
+    expect(markup).toContain('本题作答提示')
+    expect(markup).toContain('<dt>填写内容</dt><dd>时间</dd>')
+    expect(markup).toContain('填写听到的开始时间；可使用英文数字词、阿拉伯数字或时钟时间。')
+    expect(markup).toContain('<dt>可用输入格式</dt><dd>英文单词、阿拉伯数字、时钟时间</dd>')
+    expect(markup).toContain('aria-describedby=')
+    expect(markup).not.toContain('nine thirty')
+  })
+
   it('emits keyword text changes without requiring choice data', () => {
     const intents: ListeningQuestionInputIntent[] = []
     const viewModel: ListeningScreenViewModel = {
@@ -284,6 +328,11 @@ describe('ListeningTrainingScreen UI contract', () => {
           countLabel: '需要填写 1 项关键信息。',
           orderLabel: '只有 1 项，不涉及先后顺序。',
           formatLabel: '输入一条英文短语。',
+        },
+        answerGuidance: {
+          answerType: 'surname',
+          guidanceZh: '填写听到的英文姓氏；使用英文单词输入。',
+          acceptedInputFormats: ['english-words'],
         },
         textInput: {
           label: '关键词',
@@ -342,6 +391,11 @@ describe('ListeningTrainingScreen UI contract', () => {
           countLabel: '需要填写 1 项关键信息。',
           orderLabel: '只有 1 项，不涉及先后顺序。',
           formatLabel: '输入一条英文短语。',
+        },
+        answerGuidance: {
+          answerType: 'surname',
+          guidanceZh: '填写听到的英文姓氏；使用英文单词输入。',
+          acceptedInputFormats: ['english-words'],
         },
         textInput: {
           label: '关键词',

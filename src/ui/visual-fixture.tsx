@@ -865,6 +865,11 @@ export function UiVisualFixture({ id }: { readonly id: UiVisualFixtureId }) {
               orderLabel: '只有 1 项，不涉及先后顺序。',
               formatLabel: '输入一条英文短语。',
             },
+            answerGuidance: {
+              answerType: 'place-name',
+              guidanceZh: '填写听到的英文城市名；使用英文单词输入。',
+              acceptedInputFormats: ['english-words'],
+            },
             textInput: {
               label: '英文关键词',
               value: dictationValue,

@@ -569,6 +569,7 @@ export function toExtraListeningScreenViewModel(
               formatLabel:
                 '输入一条英文短语，用空格连接；连接词可以省略，大小写和句末标点不影响判定。',
             },
+            answerGuidance: question.answerGuidance,
             textInput: {
               label: '听写答案',
               value: snapshot.dictationInput,

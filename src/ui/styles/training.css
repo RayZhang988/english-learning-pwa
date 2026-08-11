@@ -630,6 +630,46 @@
   line-height: 1.5;
 }
 
+.keyword-dictation__guidance {
+  display: grid;
+  padding: 12px 14px;
+  gap: 8px;
+  border: 1px solid rgb(79 70 229 / 16%);
+  border-radius: 14px;
+  background: rgb(79 70 229 / 6%);
+}
+
+.keyword-dictation__guidance > strong {
+  color: var(--ink);
+  font-size: 0.82rem;
+}
+
+.keyword-dictation__guidance dl {
+  display: grid;
+  margin: 0;
+  gap: 7px;
+}
+
+.keyword-dictation__guidance dl div {
+  display: grid;
+  grid-template-columns: minmax(78px, auto) minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+}
+
+.keyword-dictation__guidance dt {
+  color: var(--ink-faint);
+  font-size: 0.72rem;
+}
+
+.keyword-dictation__guidance dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--ink-soft);
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+
 .keyword-dictation p {
   margin: 0;
   color: var(--ink-soft);

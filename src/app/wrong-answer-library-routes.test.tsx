@@ -1,9 +1,13 @@
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { speakingPrompt } from '../features/speaking/test-fixtures.ts'
+import { dictationQuestion } from '../features/listening/test-fixtures.ts'
 import type { SpeakingWrongAnswerReviewView } from '../features/speaking/index.ts'
 import type { WrongAnswerReviewActive, WrongAnswerReviewCoordinator } from './wrong-answer-review-coordinator.ts'
-import { SpeakingReviewQuestionSlot } from './wrong-answer-library-routes.tsx'
+import {
+  ListeningReviewQuestionSlot,
+  SpeakingReviewQuestionSlot,
+} from './wrong-answer-library-routes.tsx'
 
 function active(view: SpeakingWrongAnswerReviewView): Extract<WrongAnswerReviewActive, { kind: 'speaking' }> {
   return { kind: 'speaking', record: {} as Extract<WrongAnswerReviewActive, { kind: 'speaking' }>['record'], view }
@@ -51,5 +55,41 @@ describe('SpeakingReviewQuestionSlot', () => {
     expect(markup).toContain('中文翻译')
     expect(markup).toContain(speakingPrompt.modelAnswerTranslationZh)
     expect(markup).not.toContain('识别文本')
+  })
+})
+
+describe('ListeningReviewQuestionSlot', () => {
+  it('shows published dictation guidance before submission without showing the answer', () => {
+    const listening = {
+      kind: 'listening' as const,
+      record: {} as Extract<WrongAnswerReviewActive, { kind: 'listening' }>['record'],
+      snapshot: {
+        question: dictationQuestion,
+        dictationInput: '',
+        playback: {
+          status: 'idle' as const,
+          rate: 1 as const,
+          repeatMode: 'none' as const,
+          currentSegmentId: dictationQuestion.primarySegmentId,
+          playCounts: {},
+          completedPlayCounts: {},
+          errorMessage: null,
+        },
+      },
+    } as Extract<WrongAnswerReviewActive, { kind: 'listening' }>
+    const markup = renderToStaticMarkup(
+      <ListeningReviewQuestionSlot
+        active={listening}
+        coordinator={coordinator}
+        phase="answering"
+        disabled={false}
+      />,
+    )
+
+    expect(markup).toContain('本题作答提示')
+    expect(markup).toContain('填写内容')
+    expect(markup).toContain('地点名')
+    expect(markup).toContain(dictationQuestion.answerGuidance.guidanceZh)
+    expect(markup).not.toContain(dictationQuestion.standardAnswer)
   })
 })
