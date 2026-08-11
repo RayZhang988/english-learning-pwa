@@ -12,6 +12,7 @@ import type {
   LearningTaskSupplyRequest,
 } from '../../learning-engine/index.ts'
 import {
+  collectEligibleSupplyItemIds,
   createProductionTrainingSupplyProviders,
 } from './training-supply-providers.ts'
 
@@ -78,6 +79,18 @@ function speakingCatalog(
 }
 
 describe('production training supply providers', () => {
+  it('collects only the stable eligible identities exposed by a provider', async () => {
+    const seen: string[][] = []
+    const provider = { async next(value: LearningTaskSupplyRequest) {
+      seen.push([...value.excludeItemIds])
+      const itemId = ['one', 'two'].find((id) => !value.excludeItemIds.includes(id))
+      return itemId === undefined
+        ? { schemaVersion: 1 as const, requestId: value.requestId, status: 'content-exhausted' as const, reason: 'all-eligible-content-recently-used' as const }
+        : { schemaVersion: 1 as const, requestId: value.requestId, status: 'item' as const, item: { itemId, learningUnitId: itemId, contentRef: itemId, difficultyLevel: 1, tags: [] }, nextCursor: itemId }
+    } }
+    await expect(collectEligibleSupplyItemIds(provider, request('vocabulary'))).resolves.toEqual(['one', 'two'])
+    expect(seen).toEqual([[], ['one'], ['one', 'two']])
+  })
   it('loads and parses each released package supply index lazily once', async () => {
     const loads = {
       vocabulary: 0,

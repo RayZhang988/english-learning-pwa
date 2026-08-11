@@ -30,6 +30,35 @@ export interface ProductionTrainingSupplyProvider {
 }
 
 /**
+ * Builds a round from the owning module's own eligibility semantics. 01 sees
+ * only stable item identities: it never parses lesson answers or duplicates
+ * module-specific difficulty rules.
+ */
+export async function collectEligibleSupplyItemIds(
+  provider: ProductionTrainingSupplyProvider,
+  request: LearningTaskSupplyRequest,
+): Promise<readonly string[]> {
+  const itemIds: string[] = []
+  const maximumItems = 1_000
+  while (itemIds.length < maximumItems) {
+    const result = await provider.next({
+      ...request,
+      requestId: `${request.requestId}:round:${itemIds.length + 1}`,
+      cursor: null,
+      excludeItemIds: itemIds,
+    })
+    if (result.status === 'content-exhausted') {
+      return itemIds
+    }
+    if (itemIds.includes(result.item.itemId)) {
+      throw new TypeError('Supply provider repeated a supposedly excluded item.')
+    }
+    itemIds.push(result.item.itemId)
+  }
+  throw new TypeError('Supply provider exceeded the bounded round enumeration.')
+}
+
+/**
  * Loads and validates the released supply index through the same offline-first
  * package source as the owning feature. A failed load is deliberately not
  * cached, so an explicit retry can recover after the network or local asset
