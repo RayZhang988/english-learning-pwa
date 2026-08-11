@@ -178,7 +178,8 @@ describe('vocabulary training runtime', () => {
     } }
     const task = vocabularyTaskFor(catalog.units[0], { trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } })
     const store = new MemoryNamespaceStore()
-    const options = { task, localDate: '2026-08-11', contentSource: createStaticDataSource(catalog), eventSink: new InMemoryPlatformEventSink(), repository: new VocabularySessionRepository(store), supplyProvider, trainingBudgetStatus: () => 'running' as const, supplyRound: round } as unknown as ConstructorParameters<typeof VocabularyTrainingRuntime>[0]
+    const sink = new InMemoryPlatformEventSink()
+    const options = { task, localDate: '2026-08-11', contentSource: createStaticDataSource(catalog), eventSink: sink, repository: new VocabularySessionRepository(store), supplyProvider, trainingBudgetStatus: () => 'running' as const, supplyRound: round } as unknown as ConstructorParameters<typeof VocabularyTrainingRuntime>[0]
     const runtime = new VocabularyTrainingRuntime(options)
     const session = await runtime.initialize()
 
@@ -188,6 +189,13 @@ describe('vocabulary training runtime', () => {
     const refreshed = new VocabularyTrainingRuntime(options)
     const restored = await refreshed.initialize()
     expect(restored.stream?.supplyRound).toEqual(session.stream?.supplyRound)
+
+    await refreshed.select(restored.questions[0]!.correctOptionId)
+    await refreshed.submit()
+    await refreshed.advance()
+    expect(sink.events.find((event) => event.type === 'learning.training.item.completed.v1')?.payload).toMatchObject({
+      supplyRound: { seed: 'vocabulary-refresh', cursor: 1 },
+    })
   })
 
   it('durably replays one failed daily wrong-answer evidence with the same identity', async () => {

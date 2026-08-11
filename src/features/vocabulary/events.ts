@@ -10,6 +10,7 @@ import type {
   LearningTrainingItemCompletedEvent,
   LearningTaskSupplyItem,
   LearningTaskSkippedEvent,
+  TrainingSupplyRound,
 } from '../../learning-engine/index.ts'
 import { getVocabularySessionResult } from './session.ts'
 import type { VocabularySession } from './types.ts'
@@ -173,10 +174,11 @@ export function createVocabularyTrainingItemCompletedEvent(
   item: LearningTaskSupplyItem,
   requestId: string,
   nextSupplyCursor: string | null,
+  supplyRound: TrainingSupplyRound | undefined,
   identity: EventIdentity,
 ): LearningTrainingItemCompletedEvent {
   return { id: identity.eventId, type: 'learning.training.item.completed.v1', sourceModuleId: 'vocabulary', occurredAt: identity.occurredAt, schemaVersion: 1,
-    payload: { ...basePayload(task, identity.localDate), mode: task.mode, item, requestId, nextSupplyCursor, outcome: 'scored' } }
+    payload: { ...basePayload(task, identity.localDate), mode: task.mode, item, requestId, nextSupplyCursor, outcome: 'scored', ...(supplyRound === undefined ? {} : { supplyRound }) } }
 }
 
 export function createVocabularyTrainingContentExhaustedEvent(

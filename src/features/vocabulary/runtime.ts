@@ -427,7 +427,7 @@ export class VocabularyTrainingRuntime {
         const completedItemIds = active.completedItemIds.includes(active.activeItem.itemId) ? active.completedItemIds : [...active.completedItemIds, active.activeItem.itemId]
         const completedStream: VocabularyStreamState = { ...active, completedItemIds, completedItemCount: active.completedItemCount + (active.completedItemIds.includes(active.activeItem.itemId) ? 0 : 1), correctItemCount: active.correctItemCount + (answer.correct ? 1 : 0), finishCurrentItem: active.finishCurrentItem || this.trainingBudgetStatus?.() === 'finish-current-item' }
         session = withPendingVocabularyEvent(session, createVocabularyStreamAttemptEvent(current, this.untrustedLegacyDuration(current), this.identity(now)), now)
-        session = withPendingVocabularyEvent(session, createVocabularyTrainingItemCompletedEvent(this.task, active.activeItem, active.activeRequestId, active.nextSupplyCursor, this.identity(now)), now)
+        session = withPendingVocabularyEvent(session, createVocabularyTrainingItemCompletedEvent(this.task, active.activeItem, active.activeRequestId, active.nextSupplyCursor, active.supplyRound, this.identity(now)), now)
         if (completedStream.finishCurrentItem) {
           session = completeVocabularyStreamSession(session, completedStream, now)
           session = withPendingVocabularyEvent(session, createVocabularyTrainingBudgetCompletedEvent(this.task, active.activeItem.itemId, completedStream.completedItemCount, this.identity(now)), now)

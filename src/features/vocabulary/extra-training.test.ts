@@ -54,6 +54,9 @@ describe('extra vocabulary commands', () => {
     await runtime.initialize(); await runtime.next(); await runtime.select('right'); await runtime.submit()
     const completed = await runtime.completeCurrentItem()
     expect(completed.session.supplyRound).toMatchObject({ seed: 'extra-round', cursor: 1, shortTermExcludedItemIds: [item.itemId] })
+    expect(completed.pendingEvents.find((event) => event.type === 'learning.extra-training.item.completed.v1')?.payload).toMatchObject({
+      supplyRound: { seed: 'extra-round', cursor: 1, shortTermExcludedItemIds: [item.itemId] },
+    })
   })
   it('persists exit and replays a failed outbox event with the same identity', async () => {
     const repository = new ExtraVocabularyTrainingRepository(new Store())

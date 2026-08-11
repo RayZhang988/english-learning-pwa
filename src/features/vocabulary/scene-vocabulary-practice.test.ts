@@ -63,6 +63,7 @@ function runtimeFor(
   bank: Awaited<ReturnType<typeof loadReleasedSceneBank>>,
   repository = new MemoryScenePracticeRepository(),
   wrongAnswerReview?: { readonly index: ReviewContentIndex; readonly sink: WrongAnswerEvidenceSink },
+  onTrainingItemCompleted?: ConstructorParameters<typeof SceneVocabularyPracticeRuntime>[0]['onTrainingItemCompleted'],
 ) {
   return new SceneVocabularyPracticeRuntime({
     categoryId: 'airport-flight',
@@ -71,6 +72,7 @@ function runtimeFor(
     repository,
     now: clock(),
     wrongAnswerReview,
+    onTrainingItemCompleted,
   })
 }
 
@@ -221,6 +223,22 @@ describe('R13-C scene vocabulary practice runtime', () => {
     const persisted = [...repository.records.values()][0]!
     expect(persisted.answers).toHaveLength(6)
     expect(persisted.correctCount).toBe(5)
+  })
+
+  it('emits one durable scene completion only after the answered item is saved', async () => {
+    const bank = await loadReleasedSceneBank()
+    const completions: string[] = []
+    const runtime = runtimeFor(bank, new MemoryScenePracticeRepository(), undefined, async (completion) => { completions.push(completion.acknowledgementId) })
+    await runtime.initialize()
+    const view = runtime.toView()
+    await runtime.select(view.question!.options[0]!.id)
+    await runtime.submit()
+    await runtime.advance()
+
+    expect(completions).toHaveLength(1)
+    expect(runtime.currentSnapshot?.pendingTrainingItemCompletions).toEqual([])
+    await expect(runtime.advance()).rejects.toThrow('feedback')
+    expect(completions).toHaveLength(1)
   })
 
   it('restores a selected answer and refuses tampered progress that does not match the released order or option ids', async () => {

@@ -198,6 +198,17 @@ export interface SceneVocabularyPracticeSnapshot {
   readonly updatedAt: string
   /** R13-D durable outbox; source snapshot statistics remain unchanged. */
   readonly pendingWrongAnswerEvidence?: readonly WrongAnswerEvidence[]
+  /** Durable R11 handoff; 01 owns delivery into LearningEngineState. */
+  readonly pendingTrainingItemCompletions?: readonly SceneVocabularyTrainingItemCompletion[]
+}
+
+export interface SceneVocabularyTrainingItemCompletion {
+  readonly acknowledgementId: string
+  readonly itemId: string
+  readonly domain: 'vocabulary'
+  readonly mode: 'learn'
+  readonly difficultyLevel: number
+  readonly supplyRound: TrainingSupplyRound
 }
 
 type StoredSceneVocabularyPracticeSnapshot = SceneVocabularyPracticeSnapshot | LegacySceneVocabularyPracticeSnapshot
@@ -274,6 +285,9 @@ export interface SceneVocabularyPracticeRuntimeOptions {
   /** Injected only when this runtime itself starts a later explicit round. */
   readonly createRoundSeed?: () => string
   readonly wrongAnswerReview?: { readonly index: ReviewContentIndex; readonly sink: WrongAnswerEvidenceSink }
+  /** 01 injects the sole bridge to 04's shared recent-12 ledger. */
+  readonly onTrainingItemCompleted?: (completion: SceneVocabularyTrainingItemCompletion) => Promise<void>
+  readonly trainingDifficultyLevel?: number
 }
 
 function optionId(questionId: string, position: number): string { return `${questionId}:meaning:${position + 1}` }
@@ -384,6 +398,14 @@ export class SceneVocabularyPracticeRuntime {
     }
     return next
   }
+  private async flushTrainingItemCompletions(snapshot: SceneVocabularyPracticeSnapshot): Promise<SceneVocabularyPracticeSnapshot> {
+    let next = snapshot
+    while (next.pendingTrainingItemCompletions?.length && this.options.onTrainingItemCompleted) {
+      await this.options.onTrainingItemCompleted(next.pendingTrainingItemCompletions[0]!)
+      next = await this.save({ ...next, pendingTrainingItemCompletions: next.pendingTrainingItemCompletions.slice(1), updatedAt: this.now() })
+    }
+    return next
+  }
   initialize(): Promise<SceneVocabularyPracticeSnapshot> {
     return this.queue(async () => {
       try {
@@ -392,7 +414,7 @@ export class SceneVocabularyPracticeRuntime {
         if (!scene) throw new VocabularyError('content-reference-missing', `Scene vocabulary content is unavailable for ${this.options.categoryId}/${this.options.sceneId}.`)
         this.scene = scene
         const stored = await this.repository.load(this.sessionId)
-        if (stored && isSnapshot(stored)) { validateSnapshot(stored, scene, this.options.categoryId, this.options.sceneId, this.sessionId); this.snapshot = stored; this.recoveryInvalidSnapshot = false; return this.flushWrongAnswerEvidence(stored) }
+        if (stored && isSnapshot(stored)) { validateSnapshot(stored, scene, this.options.categoryId, this.options.sceneId, this.sessionId); this.snapshot = stored; this.recoveryInvalidSnapshot = false; return this.flushTrainingItemCompletions(await this.flushWrongAnswerEvidence(stored)) }
         if (stored && isLegacySnapshot(stored)) { const migrated = await this.save(migrateLegacySnapshot(stored, scene, this.options.categoryId, this.options.sceneId, this.sessionId, this.now())); this.recoveryInvalidSnapshot = false; return migrated }
         const fresh = await this.save(newSnapshot(scene, this.sessionId, this.now(), this.createRound(scene, [], true)))
         this.recoveryInvalidSnapshot = false
@@ -453,11 +475,20 @@ export class SceneVocabularyPracticeRuntime {
         ? { schemaVersion: 1 as const, seed: `${this.sessionId}:legacy`, order: snapshot.questionIds, cursor: snapshot.supplyCursor, shortTermExcludedItemIds: snapshot.shortTermExclusionIds }
         : recordTrainingSupplyItem(snapshot.supplyRound, snapshot.currentQuestionId)
       const exclusions = acknowledged.shortTermExcludedItemIds
+      const completion: SceneVocabularyTrainingItemCompletion = {
+        acknowledgementId: `${this.sessionId}:round:${snapshot.round}:cursor:${acknowledged.cursor}`,
+        itemId: snapshot.currentQuestionId,
+        domain: 'vocabulary', mode: 'learn',
+        difficultyLevel: this.options.trainingDifficultyLevel ?? 3,
+        supplyRound: acknowledged,
+      }
       if (snapshot.supplyCursor + 1 < snapshot.questionIds.length) {
         const cursor = snapshot.supplyCursor + 1
-        return this.save({ ...snapshot, supplyCursor: cursor, currentQuestionId: snapshot.questionIds[cursor]!, shortTermExclusionIds: exclusions, supplyRound: acknowledged, selectedOptionId: null, phase: 'answering', updatedAt: this.now() })
+        const saved = await this.save({ ...snapshot, supplyCursor: cursor, currentQuestionId: snapshot.questionIds[cursor]!, shortTermExclusionIds: exclusions, supplyRound: acknowledged, selectedOptionId: null, phase: 'answering', pendingTrainingItemCompletions: [...(snapshot.pendingTrainingItemCompletions ?? []), completion], updatedAt: this.now() })
+        return this.flushTrainingItemCompletions(saved)
       }
-      return this.save(newSnapshot(scene, this.sessionId, this.now(), this.createRound(scene, exclusions), snapshot.round + 1, { answers: snapshot.answers, correctCount: snapshot.correctCount, incorrectCount: snapshot.incorrectCount, priorRounds: snapshot.priorRounds, createdAt: snapshot.createdAt }))
+      const saved = await this.save({ ...newSnapshot(scene, this.sessionId, this.now(), this.createRound(scene, exclusions), snapshot.round + 1, { answers: snapshot.answers, correctCount: snapshot.correctCount, incorrectCount: snapshot.incorrectCount, priorRounds: snapshot.priorRounds, createdAt: snapshot.createdAt }), pendingTrainingItemCompletions: [...(snapshot.pendingTrainingItemCompletions ?? []), completion] })
+      return this.flushTrainingItemCompletions(saved)
     })
   }
   /** Explicit user intent: retains no prior progress under the same session id. */
