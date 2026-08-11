@@ -1129,7 +1129,7 @@ export class SpeakingTrainingRuntime {
       const now = this.now()
       session = { ...session, reportedDurationSeconds: session.activeDurationSeconds }
       session = withPendingSpeakingEvent(session, createSpeakingStreamAttemptEvent(current, this.untrustedLegacyDuration(current), this.identity(now)), now)
-      session = withPendingSpeakingEvent(session, createSpeakingTrainingItemCompletedEvent(this.task, activeItem, active.activeRequestId, active.nextSupplyCursor, result.performanceScore === null ? 'unscorable-practice' : 'scored', this.identity(now)), now)
+      session = withPendingSpeakingEvent(session, createSpeakingTrainingItemCompletedEvent(this.task, activeItem, active.activeRequestId, active.nextSupplyCursor, result.performanceScore === null ? 'unscorable-practice' : 'scored', active.supplyRound, this.identity(now)), now)
       if (completedStream.finishCurrentItem) {
         session = { ...session, stream: completedStream }
         session = withPendingSpeakingEvent(session, createSpeakingTrainingBudgetCompletedEvent(this.task, activeItem.itemId, completedStream.completedItemCount, this.identity(now)), now)

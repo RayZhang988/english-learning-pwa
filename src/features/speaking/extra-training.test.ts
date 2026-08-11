@@ -3,6 +3,7 @@ import type { NamespaceStore, StoredRecord } from '../../storage/index.ts'
 import { ExtraSpeakingTrainingRuntime } from './extra-training.ts'
 import { ExtraSpeakingTrainingRepository } from './extra-training-repository.ts'
 import type { SpeakingRecognitionPort, SpeakingRecordingPort, SpeakingSupplyItem } from './types.ts'
+import { createTrainingSupplyRound } from '../../learning-engine/index.ts'
 
 class Store implements NamespaceStore {
   records = new Map<string, StoredRecord<unknown>>()
@@ -67,6 +68,31 @@ describe('extra speaking training', () => {
     expect(configured.timing).toContain('start:recording')
     expect(configured.timing).not.toContain('finish')
   })
+
+  it.each(['recognized', 'network'] as const)(
+    'publishes the acknowledged randomized round after a %s extra-speaking completion',
+    async (outcome) => {
+      const configured = options(item, outcome)
+      const events: import('../../learning-engine/index.ts').ExtraTrainingEvent[] = []
+      const runtime = new ExtraSpeakingTrainingRuntime({
+        ...configured,
+        session: {
+          ...session,
+          supplyRound: createTrainingSupplyRound({
+            seed: 'extra-speaking-round',
+            candidateItemIds: [item.itemId],
+            shortTermExcludedItemIds: [],
+          }),
+        },
+        eventSink: { publishExtraTrainingEvent: async (event) => { events.push(event) } },
+      })
+      await runtime.initialize(); await runtime.next(); await runtime.startRecording(); await runtime.stopRecording(); await runtime.completeCurrentItem()
+      const completion = events.find((event) => event.type === 'learning.extra-training.item.completed.v1')
+      expect(completion?.payload.supplyRound).toMatchObject({
+        seed: 'extra-speaking-round', cursor: 1, order: [item.itemId],
+      })
+    },
+  )
 
   it('records an unscorable network fallback without inventing a score and can exit then restore', async () => {
     const configured = options(item, 'network')

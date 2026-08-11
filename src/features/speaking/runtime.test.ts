@@ -1,7 +1,10 @@
 import { describe, expect, it, vi } from 'vitest'
 import { InMemoryPlatformEventSink } from '../../core/testing/index.ts'
 import type { PlatformEvent, PlatformEventSink } from '../../core/index.ts'
-import { parseLearningEvent } from '../../learning-engine/index.ts'
+import {
+  createTrainingSupplyRound,
+  parseLearningEvent,
+} from '../../learning-engine/index.ts'
 import type {
   LearningTrainingContentExhaustedEvent,
   LearningTrainingContentRecoveredEvent,
@@ -434,6 +437,12 @@ describe('speaking training runtime fallbacks', () => {
       contentSource: { load: async () => catalog }, eventSink: sink,
       repository: new SpeakingSessionRepository(store), networkStatus: online, microphonePermission: permission(), recorder: new FakeRecorder(),
       recognition: new FakeRecognition({ status: 'recognized' as const, transcript: "I'm from Shanghai.", alternatives: [] }), now: clock(), createId: ids('stream'), supplyProvider, trainingBudgetStatus: () => budget,
+      supplyRound: createTrainingSupplyRound({
+        seed: 'daily-speaking-round',
+        candidateItemIds: items.map((item) => item.itemId),
+        shortTermExcludedItemIds: [],
+        priorityItemIds: ['supply-1'],
+      }),
     }
     const training = new SpeakingTrainingRuntime(options)
     let session = await training.initialize()
@@ -450,6 +459,10 @@ describe('speaking training runtime fallbacks', () => {
     expect(session.phase).toBe('completed')
     const events = sink.events.map((event) => parseLearningEvent(event))
     expect(events.filter((event) => event.type === 'learning.training.item.completed.v1')).toHaveLength(2)
+    expect(events.find((event) => event.type === 'learning.training.item.completed.v1')?.payload.supplyRound).toMatchObject({
+      seed: 'daily-speaking-round', cursor: 1,
+      order: expect.arrayContaining(['supply-1', 'supply-2']),
+    })
     expect(events.some((event) => event.type === 'learning.training.budget.completed.v1')).toBe(true)
     expect(events.filter((event) => event.type === 'learning.attempt.completed.v1').every((event) => event.payload.taskCompleted === false)).toBe(true)
   })

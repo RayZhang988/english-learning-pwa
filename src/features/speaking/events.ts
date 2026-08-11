@@ -9,6 +9,7 @@ import type {
   LearningTrainingContentExhaustedEvent,
   LearningTrainingContentRecoveredEvent,
   LearningTrainingItemCompletedEvent,
+  TrainingSupplyRound,
 } from '../../learning-engine/index.ts'
 import { SpeakingError } from './errors.ts'
 import { getSpeakingSessionResult } from './session.ts'
@@ -233,10 +234,13 @@ export function createSpeakingStreamAttemptEvent(
 export function createSpeakingTrainingItemCompletedEvent(
   task: LearningTask, item: LearningTaskSupplyItem, requestId: string,
   nextSupplyCursor: string | null,
-  outcome: 'scored' | 'unscorable-practice', identity: EventIdentity,
+  outcome: 'scored' | 'unscorable-practice',
+  supplyRound: TrainingSupplyRound | undefined,
+  identity: EventIdentity,
 ): LearningTrainingItemCompletedEvent {
   return { id: identity.eventId, type: 'learning.training.item.completed.v1', sourceModuleId: 'speaking', occurredAt: identity.occurredAt, schemaVersion: 1,
-    payload: { ...basePayload(task, identity.localDate), mode: task.mode, item, requestId, nextSupplyCursor, outcome } }
+    payload: { ...basePayload(task, identity.localDate), mode: task.mode, item, requestId, nextSupplyCursor, outcome,
+      ...(supplyRound === undefined ? {} : { supplyRound }) } }
 }
 
 export function createSpeakingTrainingContentExhaustedEvent(
