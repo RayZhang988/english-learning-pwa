@@ -77,6 +77,59 @@ describe('listening content catalog', () => {
       .toBe(false)
   })
 
+  it('keeps all released keyword-dictation answer guidance structured and non-answer-revealing', () => {
+    const catalog = createListeningCatalog(documents())
+    const dictations = catalog.units
+      .flatMap((unit) => unit.questions)
+      .filter((question) => question.type === 'keyword-dictation')
+
+    expect(dictations).toHaveLength(28)
+    expect(dictations.every((question) => (
+      question.answerGuidance.answerType.length > 0 &&
+      question.answerGuidance.guidanceZh.length > 0 &&
+      question.answerGuidance.acceptedInputFormats.length > 0
+    ))).toBe(true)
+    expect(dictations[0]?.answerGuidance).toEqual({
+      answerType: 'place-name',
+      guidanceZh: '填写听到的英文城市名；使用英文单词输入。',
+      acceptedInputFormats: ['english-words'],
+    })
+  })
+
+  it('rejects missing or answer-revealing keyword-dictation guidance', () => {
+    const missing = structuredClone(exercises) as {
+      lessons: { exercises: Record<string, unknown>[] }[]
+    }
+    const missingGuidance = missing.lessons[0]?.exercises.find(
+      (exercise) => exercise.type === 'keyword-dictation',
+    )
+    if (!missingGuidance) {
+      throw new Error('Expected a keyword-dictation exercise fixture.')
+    }
+    delete missingGuidance.answerGuidance
+    expect(() => createListeningCatalog(documents(missing))).toThrow(
+      /answerGuidance/i,
+    )
+
+    const revealing = structuredClone(exercises) as {
+      lessons: { exercises: Record<string, unknown>[] }[]
+    }
+    const revealingGuidance = revealing.lessons[0]?.exercises.find(
+      (exercise) => exercise.type === 'keyword-dictation',
+    )
+    if (!revealingGuidance) {
+      throw new Error('Expected a keyword-dictation exercise fixture.')
+    }
+    revealingGuidance.answerGuidance = {
+      answerType: 'place-name',
+      guidanceZh: '填写 Boston。',
+      acceptedInputFormats: ['english-words'],
+    }
+    expect(() => createListeningCatalog(documents(revealing))).toThrow(
+      /must not reveal an answer/i,
+    )
+  })
+
   it('resolves only matching listening tasks', () => {
     const catalog = createListeningCatalog(documents())
     const unit = resolveListeningTask(catalog, createListeningTask())

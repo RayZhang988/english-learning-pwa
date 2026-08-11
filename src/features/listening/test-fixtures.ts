@@ -91,6 +91,11 @@ export const dictationQuestion: ListeningKeywordDictationQuestion = {
     normalizeApostrophes: true,
     stripTerminalPunctuation: true,
   },
+  answerGuidance: {
+    answerType: 'place-name',
+    guidanceZh: '填写听到的英文城市名；使用英文单词输入。',
+    acceptedInputFormats: ['english-words'],
+  },
   rationaleZh: '城市是 Boston。',
   errorTag: 'detail-missed',
 }

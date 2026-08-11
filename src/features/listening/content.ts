@@ -4,6 +4,9 @@ import type {
   ListeningCatalog,
   ListeningChoiceOption,
   ListeningContentDocuments,
+  ListeningDictationAnswerGuidance,
+  ListeningDictationAnswerType,
+  ListeningDictationInputFormat,
   ListeningKeywordDictationQuestion,
   ListeningNormalizationHints,
   ListeningPlaybackPolicy,
@@ -139,6 +142,99 @@ function uniqueStrings(values: readonly string[], label: string): void {
       'content-invalid',
       `${label} contains duplicate identifiers.`,
     )
+  }
+}
+
+const dictationAnswerTypes = new Set<ListeningDictationAnswerType>([
+  'place-name', 'surname', 'number', 'time', 'manner-or-short-phrase',
+  'product-description', 'reservation-details', 'allergy-information',
+  'payment-method', 'direction-and-distance', 'transfer-instruction',
+  'ticket-details', 'size-or-condition', 'checkout-time', 'device-problem',
+  'gate-code', 'availability-time', 'room-number', 'gate-and-time',
+])
+
+const dictationInputFormats = new Set<ListeningDictationInputFormat>([
+  'english-words', 'digits', 'clock-time', 'gate-code', 'room-number',
+])
+
+function normalizedGuidanceText(value: string): string {
+  return value
+    .toLocaleLowerCase('en-US')
+    .replace(/[\s\p{P}]+/gu, ' ')
+    .trim()
+}
+
+function parseDictationAnswerGuidance(
+  value: UnknownRecord,
+  label: string,
+  answerFragments: readonly string[],
+): ListeningDictationAnswerGuidance {
+  const guidance = record(value.answerGuidance, `${label}.answerGuidance`)
+  const keys = Object.keys(guidance).sort()
+  const expectedKeys = [
+    'acceptedInputFormats',
+    'answerType',
+    'guidanceZh',
+  ]
+  if (
+    keys.length !== expectedKeys.length ||
+    keys.some((key, index) => key !== expectedKeys[index])
+  ) {
+    throw new ListeningError(
+      'content-invalid',
+      `${label}.answerGuidance must use the published guidance fields only.`,
+    )
+  }
+  const answerType = stringValue(
+    guidance,
+    'answerType',
+    `${label}.answerGuidance`,
+  )
+  if (!dictationAnswerTypes.has(answerType as ListeningDictationAnswerType)) {
+    throw new ListeningError(
+      'content-invalid',
+      `${label}.answerGuidance.answerType is unsupported.`,
+    )
+  }
+  const guidanceZh = stringValue(
+    guidance,
+    'guidanceZh',
+    `${label}.answerGuidance`,
+  )
+  const formats = stringArray(
+    guidance,
+    'acceptedInputFormats',
+    `${label}.answerGuidance`,
+  )
+  if (
+    formats.length === 0 ||
+    new Set(formats).size !== formats.length ||
+    formats.some(
+      (format) =>
+        !dictationInputFormats.has(format as ListeningDictationInputFormat),
+    )
+  ) {
+    throw new ListeningError(
+      'content-invalid',
+      `${label}.answerGuidance.acceptedInputFormats is unsupported.`,
+    )
+  }
+  const normalizedGuidance = normalizedGuidanceText(guidanceZh)
+  if (
+    answerFragments
+      .map(normalizedGuidanceText)
+      .filter((fragment) => fragment.length >= 3)
+      .some((fragment) => normalizedGuidance.includes(fragment))
+  ) {
+    throw new ListeningError(
+      'content-invalid',
+      `${label}.answerGuidance must not reveal an answer.`,
+    )
+  }
+  return {
+    answerType: answerType as ListeningDictationAnswerType,
+    guidanceZh,
+    acceptedInputFormats: formats as readonly ListeningDictationInputFormat[],
   }
 }
 
@@ -681,17 +777,24 @@ function extensionQuestion(
         `${exercise.id} omits its standard answer.`,
       )
     }
+    const targetKeywords = stringArray(
+      value,
+      'targetKeywords',
+      exercise.id,
+    )
+    const answerGuidance = parseDictationAnswerGuidance(
+      value,
+      exercise.id,
+      [...targetKeywords, standardAnswer, ...acceptedAnswers],
+    )
     const question: ListeningKeywordDictationQuestion = {
       ...common,
       type: 'keyword-dictation',
-      targetKeywords: stringArray(
-        value,
-        'targetKeywords',
-        exercise.id,
-      ),
+      targetKeywords,
       standardAnswer,
       acceptedAnswers,
       normalizationHints,
+      answerGuidance,
       errorTag: 'detail-missed',
     }
     return question
@@ -900,7 +1003,7 @@ export function createListeningCatalog(
   if (
     extensionIndex.extensionId !==
       'survival-travel-american-listening-exercises' ||
-    extensionIndex.extensionVersion !== '1.1.0' ||
+    extensionIndex.extensionVersion !== '1.2.0' ||
     extensionIndex.basePackageVersion !== '1.0.0' ||
     extensionIndex.baseCourseId !== packageIndex.courseId
   ) {
@@ -929,7 +1032,7 @@ export function createListeningCatalog(
       path,
     )
     if (
-      bundle.extensionVersion !== '1.1.0' ||
+      bundle.extensionVersion !== '1.2.0' ||
       bundle.basePackageVersion !== '1.0.0'
     ) {
       throw new ListeningError(
@@ -1020,7 +1123,7 @@ export function createListeningCatalog(
   return {
     schemaVersion: 1,
     packageVersion: '1.0.0',
-    extensionVersion: '1.1.0',
+    extensionVersion: '1.2.0',
     courseId: packageIndex.courseId as string,
     units,
     trainingSupplyIndex: documents.trainingSupplyIndex,

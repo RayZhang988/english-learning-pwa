@@ -82,6 +82,44 @@ export interface ListeningNormalizationHints {
   readonly stripTerminalPunctuation: true
 }
 
+export type ListeningDictationAnswerType =
+  | 'place-name'
+  | 'surname'
+  | 'number'
+  | 'time'
+  | 'manner-or-short-phrase'
+  | 'product-description'
+  | 'reservation-details'
+  | 'allergy-information'
+  | 'payment-method'
+  | 'direction-and-distance'
+  | 'transfer-instruction'
+  | 'ticket-details'
+  | 'size-or-condition'
+  | 'checkout-time'
+  | 'device-problem'
+  | 'gate-code'
+  | 'availability-time'
+  | 'room-number'
+  | 'gate-and-time'
+
+export type ListeningDictationInputFormat =
+  | 'english-words'
+  | 'digits'
+  | 'clock-time'
+  | 'gate-code'
+  | 'room-number'
+
+/**
+ * Published by the course author. This is deliberately a learner-facing
+ * instruction, not a value derived from any accepted answer.
+ */
+export interface ListeningDictationAnswerGuidance {
+  readonly answerType: ListeningDictationAnswerType
+  readonly guidanceZh: string
+  readonly acceptedInputFormats: readonly ListeningDictationInputFormat[]
+}
+
 export interface ListeningKeywordDictationQuestion
   extends ListeningQuestionBase {
   readonly type: 'keyword-dictation'
@@ -89,6 +127,7 @@ export interface ListeningKeywordDictationQuestion
   readonly standardAnswer: string
   readonly acceptedAnswers: readonly string[]
   readonly normalizationHints: ListeningNormalizationHints
+  readonly answerGuidance: ListeningDictationAnswerGuidance
 }
 
 export type ListeningQuestion =
@@ -113,7 +152,11 @@ export interface ListeningTrainingUnit {
 export interface ListeningCatalog {
   readonly schemaVersion: 1
   readonly packageVersion: '1.0.0'
-  readonly extensionVersion: '1.1.0'
+  /**
+   * 1.1.0 is retained only for isolated legacy test catalogs. Released
+   * documents are parsed strictly as 1.2.0 by createListeningCatalog().
+   */
+  readonly extensionVersion: '1.1.0' | '1.2.0'
   readonly courseId: string
   readonly units: readonly ListeningTrainingUnit[]
   readonly trainingSupplyIndex?: unknown

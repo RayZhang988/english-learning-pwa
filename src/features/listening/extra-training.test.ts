@@ -51,7 +51,7 @@ const baseQuestion = {
 }
 const wordQuestion = { ...baseQuestion, type: 'word-discrimination' as const, options: [{ id: 'right', label: '对' }, { id: 'wrong', label: '错' }], correctOptionId: 'right' }
 const sentenceQuestion = { ...baseQuestion, id: 'sentence', type: 'short-sentence-choice' as const, options: [{ id: 'right', label: '对' }, { id: 'wrong', label: '错' }], correctOptionId: 'right', errorTag: 'detail-missed' as const }
-const dictationQuestion = { ...baseQuestion, id: 'dictation', type: 'keyword-dictation' as const, targetKeywords: ['hello'], standardAnswer: 'hello', acceptedAnswers: ['hello'], normalizationHints: { trim: true, caseFoldLocale: 'en-US' as const, collapseWhitespace: true, normalizeApostrophes: true, stripTerminalPunctuation: true } as const }
+const dictationQuestion = { ...baseQuestion, id: 'dictation', type: 'keyword-dictation' as const, targetKeywords: ['hello'], standardAnswer: 'hello', acceptedAnswers: ['hello'], normalizationHints: { trim: true, caseFoldLocale: 'en-US' as const, collapseWhitespace: true, normalizeApostrophes: true, stripTerminalPunctuation: true } as const, answerGuidance: { answerType: 'manner-or-short-phrase' as const, guidanceZh: '填写听到的英文短语。', acceptedInputFormats: ['english-words'] as const } }
 const unit = { learningUnitId: 'unit-1', contentRef: 'lesson://unit-1', difficultyLevel: 1, estimatedSeconds: 12, tags: ['travel'], activityType: 'listening-dialogue' as const, titleZh: '对话', transcript: [{ id: 'line-1', speaker: 'Maya', text: 'Maya says hello.', translationZh: '你好' }], questions: [wordQuestion] }
 
 class Speech implements ListeningSpeechPort {

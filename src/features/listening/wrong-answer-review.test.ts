@@ -11,6 +11,7 @@ import week2 from '../../../content/lessons/survival-travel-american-4w/week-2.v
 import week3 from '../../../content/lessons/survival-travel-american-4w/week-3.v1.json'
 import week4 from '../../../content/lessons/survival-travel-american-4w/week-4.v1.json'
 import { createListeningCatalog } from './content.ts'
+import { resolveListeningSupplyQuestion } from './supply.ts'
 import { resolveListeningWrongAnswerReviewItem } from './wrong-answer-review.ts'
 import { ListeningWrongAnswerReviewRuntime } from './wrong-answer-review.ts'
 import type { ListeningSpeechCallbacks, ListeningSpeechPort } from './speech-synthesis.ts'
@@ -57,6 +58,36 @@ describe('released R13-D listening review aliases', () => {
       'listening-word-discrimination', 'listening-short-sentence-choice', 'listening-keyword-dictation',
       'listening-full-transcript-detail-choice', 'listening-scene-audio-single-choice',
     ]))
+  })
+
+  it('exposes the identical published dictation guidance to daily, extra, and review resolvers', () => {
+    const alias = aliases.find(
+      ([, value]) => value.originalQuestionType === 'listening-keyword-dictation',
+    )?.[1]
+    if (!alias) throw new Error('Missing released keyword-dictation alias')
+    const item = candidates.find(
+      (candidate) => candidate.itemId === alias.source.itemId,
+    )
+    if (!item) throw new Error('Missing released keyword-dictation supply item')
+
+    // Both daily and R6 extra training resolve the published supply item here;
+    // the dedicated review resolver must not manufacture another prompt.
+    const daily = resolveListeningSupplyQuestion(catalog, item as never)
+    const extra = resolveListeningSupplyQuestion(catalog, item as never)
+    const review = resolveListeningWrongAnswerReviewItem(
+      catalog,
+      item as never,
+      alias,
+    )
+    if (
+      daily.question.type !== 'keyword-dictation' ||
+      extra.question.type !== 'keyword-dictation' ||
+      review.question.type !== 'keyword-dictation'
+    ) {
+      throw new Error('Expected a keyword-dictation question.')
+    }
+    expect(extra.question.answerGuidance).toEqual(daily.question.answerGuidance)
+    expect(review.question.answerGuidance).toEqual(daily.question.answerGuidance)
   })
 
   it.each([
