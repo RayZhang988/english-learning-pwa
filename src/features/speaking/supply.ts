@@ -3,6 +3,7 @@ import type {
   LearningTaskSupplyRequest,
   LearningTaskSupplyResult,
 } from '../../learning-engine/index.ts'
+import { assertTrainingSupplyRound, nextTrainingSupplyItem } from '../../learning-engine/index.ts'
 import { SpeakingError } from './errors.ts'
 import type {
   SpeakingCatalog,
@@ -106,6 +107,16 @@ export class SpeakingCatalogSupplyProvider implements SpeakingSupplyProvider {
           .find((candidate) => available.includes(candidate))
         if (item) return { schemaVersion: 1, ...base, status: 'item', item, nextCursor: item.itemId }
       }
+    }
+    if (request.supplyRound !== undefined) {
+      try { assertTrainingSupplyRound(request.supplyRound) } catch {
+        return { schemaVersion: 1, ...base, status: 'content-exhausted', reason: 'provider-failure' }
+      }
+      const next = nextTrainingSupplyItem(request.supplyRound)
+      if (next.status === 'content-exhausted') return { schemaVersion: 1, ...base, status: 'content-exhausted', reason: next.reason }
+      const item = available.find((candidate) => candidate.itemId === next.itemId)
+      if (!item) return { schemaVersion: 1, ...base, status: 'content-exhausted', reason: 'provider-failure' }
+      return { schemaVersion: 1, ...base, status: 'item', item, nextCursor: item.itemId }
     }
     const cursor = request.cursor
     const cursorIndex = cursor === null ? -1 : candidates.findIndex((item) => item.itemId === cursor)

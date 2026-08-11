@@ -4,6 +4,7 @@ import type {
   ExtraTrainingSupplyRequest,
   LearningTaskSupplyResult,
 } from '../../learning-engine/index.ts'
+import { recordTrainingSupplyItem } from '../../learning-engine/index.ts'
 import type { WrongAnswerEvidence } from '../../learning-engine/index.ts'
 import { migrateExtraTrainingSessionToOpenEnded } from '../../learning-engine/index.ts'
 import type {
@@ -244,7 +245,7 @@ export class ExtraSpeakingTrainingRuntime {
     const attemptEvent = { ...attempt, payload: { ...attempt.payload, learningUnitId: s.activeItem.learningUnitId, contentRef: s.activeItem.contentRef, difficultyLevel: s.activeItem.difficultyLevel, estimatedSeconds: 1, result: s.answer.match ? 'scored' : 'unscorable', performanceScore: s.answer.match?.similarity ?? null, evidenceQuality: s.answer.match ? 1 : 0, assistanceLevel: 0, durationSeconds: 0, errorTags: [], contentTags: s.activeItem.tags, failureCategory: s.answer.failureCategory, scoreDelta: { schemaVersion: 1, correctCount: s.answer.match && correct ? 1 : 0, incorrectCount: s.answer.match && !correct ? 1 : 0, unscorableCount: s.answer.match ? 0 : 1 } } } as ExtraTrainingEvent
     const item = this.base('learning.extra-training.item.completed.v1')
     const itemEvent = { ...item, payload: { ...item.payload, item: s.activeItem, requestId: s.activeRequestId ?? `${s.session.sessionId}:supply`, nextSupplyCursor: s.suppliedNextCursor } } as ExtraTrainingEvent
-    const saved = await this.save({ ...s, unit: null, prompt: null, activeItem: null, activeRequestId: null, suppliedNextCursor: null, phase: 'practicing', recordingAvailable: false, answer: null, pendingEvents: [...s.pendingEvents, attemptEvent, itemEvent], pendingWrongAnswerEvidence: wrongEvidence ? [...s.pendingWrongAnswerEvidence, wrongEvidence] : s.pendingWrongAnswerEvidence, session: { ...s.session, excludeItemIds: [...s.session.excludeItemIds, s.activeItem.itemId], completedItemCount: count, nextSupplyCursor: s.suppliedNextCursor, status: 'running', endReason: null, endedAt: null, updatedAt: item.occurredAt }, updatedAt: item.occurredAt })
+    const saved = await this.save({ ...s, unit: null, prompt: null, activeItem: null, activeRequestId: null, suppliedNextCursor: null, phase: 'practicing', recordingAvailable: false, answer: null, pendingEvents: [...s.pendingEvents, attemptEvent, itemEvent], pendingWrongAnswerEvidence: wrongEvidence ? [...s.pendingWrongAnswerEvidence, wrongEvidence] : s.pendingWrongAnswerEvidence, session: { ...s.session, excludeItemIds: [...s.session.excludeItemIds, s.activeItem.itemId], ...(s.session.supplyRound === undefined ? {} : { supplyRound: recordTrainingSupplyItem(s.session.supplyRound, s.activeItem.itemId) }), completedItemCount: count, nextSupplyCursor: s.suppliedNextCursor, status: 'running', endReason: null, endedAt: null, updatedAt: item.occurredAt }, updatedAt: item.occurredAt })
     return this.flushFromQueued(saved)
   }) }
   private async flushFromQueued(snapshot: ExtraSpeakingTrainingSnapshot) {

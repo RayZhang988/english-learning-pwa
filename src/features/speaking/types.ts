@@ -1,5 +1,6 @@
 import type { LearningEvent, LearningTask, LearningTaskSupplyItem } from '../../learning-engine/index.ts'
 import type { WrongAnswerEvidence } from '../../learning-engine/index.ts'
+import type { TrainingSupplyRound } from '../../learning-engine/index.ts'
 import type {
   MicrophonePermissionState,
   NetworkStatus,
@@ -62,6 +63,7 @@ export interface SpeakingStreamState {
   readonly activeItem: SpeakingSupplyItem | null
   readonly activeRequestId: string
   readonly nextSupplyCursor: string | null
+  readonly supplyRound?: TrainingSupplyRound
   readonly completedItemIds: readonly string[]
   readonly completedItemCount: number
   readonly recognizedItemCount: number

@@ -7,7 +7,9 @@ import type {
   LearningTaskPausedEvent,
   LearningTaskSkippedEvent,
   LearningTaskSupplyRequest,
+  TrainingSupplyRound,
 } from '../../learning-engine/index.ts'
+import { recordTrainingSupplyItem } from '../../learning-engine/index.ts'
 import {
   browserMicrophonePermission,
   browserNetworkStatus,
@@ -101,6 +103,7 @@ export interface SpeakingTrainingRuntimeOptions {
   readonly timingSessionFactory?: SpeakingEffectiveTimingSessionFactoryPort
   readonly supplyProvider?: SpeakingSupplyProvider
   readonly trainingBudgetStatus?: () => 'running' | 'finish-current-item'
+  readonly supplyRound?: TrainingSupplyRound
   /** Optional until 01 wires the unified-library repository. */
   readonly wrongAnswerEvidence?: {
     readonly resolver: SpeakingWrongAnswerIdentityResolver
@@ -211,6 +214,7 @@ export class SpeakingTrainingRuntime {
   private readonly timing: SpeakingEffectiveTiming
   private readonly suppliedProvider: SpeakingSupplyProvider | undefined
   private readonly trainingBudgetStatus: (() => 'running' | 'finish-current-item') | undefined
+  private readonly initialSupplyRound: TrainingSupplyRound | undefined
   private readonly continuousTraining: boolean
   private readonly wrongAnswerEvidence: SpeakingTrainingRuntimeOptions['wrongAnswerEvidence']
   private readonly listeners = new Set<SessionListener>()
@@ -251,6 +255,7 @@ export class SpeakingTrainingRuntime {
     )
     this.suppliedProvider = options.supplyProvider
     this.trainingBudgetStatus = options.trainingBudgetStatus
+    this.initialSupplyRound = options.supplyRound
     this.continuousTraining = Boolean(this.task.trainingBudget && this.trainingBudgetStatus)
     this.wrongAnswerEvidence = options.wrongAnswerEvidence
   }
@@ -520,6 +525,7 @@ export class SpeakingTrainingRuntime {
       planId: this.task.planId, taskId: this.task.taskId,
       domain: 'speaking', targetModuleId: 'speaking', mode: this.task.mode,
       targetDifficulty: this.task.difficultyLevel, cursor, excludeItemIds: completed,
+      ...(stream?.supplyRound === undefined && this.initialSupplyRound === undefined ? {} : { supplyRound: stream?.supplyRound ?? this.initialSupplyRound }),
       reason: completed.length === 0 ? 'initial' : 'continue-after-item',
     }
   }
@@ -537,9 +543,11 @@ export class SpeakingTrainingRuntime {
   private streamState(
     item: SpeakingSupplyItem | null, requestId: string, cursor: string | null,
     prior: SpeakingStreamState | null = null,
+    supplyRound: TrainingSupplyRound | undefined = undefined,
   ): SpeakingStreamState {
     return {
       activeItem: item, activeRequestId: requestId, nextSupplyCursor: cursor,
+      ...(supplyRound === undefined ? {} : { supplyRound: recordTrainingSupplyItem(supplyRound, item!.itemId) }),
       completedItemIds: prior?.completedItemIds ?? [],
       completedItemCount: prior?.completedItemCount ?? 0,
       recognizedItemCount: prior?.recognizedItemCount ?? 0,
@@ -585,7 +593,7 @@ export class SpeakingTrainingRuntime {
         }
         const supplied = resolveSpeakingSupplyPrompt(catalog, result.item as SpeakingSupplyItem)
         const base = createSpeakingStreamSession(this.task, { ...supplied.unit, prompts: [supplied.prompt] }, permission, this.networkStatus.current(), this.recorder.capabilities(), this.recognition.capabilities(), now)
-        session = { ...base, stream: this.streamState(result.item as SpeakingSupplyItem, request.requestId, result.nextCursor) }
+        session = { ...base, stream: this.streamState(result.item as SpeakingSupplyItem, request.requestId, result.nextCursor, null, request.supplyRound) }
       } else {
         const unit = resolveSpeakingTask(catalog, this.task)
         session = createSpeakingSession(this.task, unit, permission, this.networkStatus.current(), this.recorder.capabilities(), this.recognition.capabilities(), now)
@@ -1137,7 +1145,7 @@ export class SpeakingTrainingRuntime {
           } else {
             const supplied = resolveSpeakingSupplyPrompt(catalog, next.item as SpeakingSupplyItem)
             session = this.createStreamSession(session, supplied.unit, supplied.prompt,
-              this.streamState(next.item as SpeakingSupplyItem, request.requestId, next.nextCursor, completedStream))
+              this.streamState(next.item as SpeakingSupplyItem, request.requestId, next.nextCursor, completedStream, request.supplyRound))
           }
         } catch (error) {
           session = { ...session, phase: 'error', pausedFromPhase: null, lastActiveAt: null,
@@ -1335,6 +1343,7 @@ export class SpeakingTrainingRuntime {
       const session = this.createStreamSession(recovery, supplied.unit, supplied.prompt,
         { ...recovery.stream!, activeItem: result.item as SpeakingSupplyItem,
           activeRequestId: request.requestId, nextSupplyCursor: result.nextCursor,
+          ...(request.supplyRound === undefined ? {} : { supplyRound: recordTrainingSupplyItem(request.supplyRound, (result.item as SpeakingSupplyItem).itemId) }),
           exhaustionRequestId: null, recoveryEventId: null })
       await this.saveDuringExcludedPersistence(session)
       return this.flushPendingEvents()

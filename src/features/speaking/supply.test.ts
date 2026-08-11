@@ -8,6 +8,7 @@ import week3 from '../../../content/lessons/survival-travel-american-4w/week-3.v
 import week4 from '../../../content/lessons/survival-travel-american-4w/week-4.v1.json'
 import { createSpeakingCatalog } from './content.ts'
 import { SpeakingCatalogSupplyProvider, resolveSpeakingSupplyPrompt } from './supply.ts'
+import { createTrainingSupplyRound } from '../../learning-engine/index.ts'
 import type { SpeakingContentDocuments, SpeakingSupplyItem } from './types.ts'
 
 function catalog() {
@@ -50,6 +51,13 @@ function extraRequest(
 }
 
 describe('released speaking supply resolver', () => {
+  it('uses the persisted randomized round instead of source order', async () => {
+    const released = catalog()
+    const provider = new SpeakingCatalogSupplyProvider(trainingSupplyIndex, released)
+    const candidates = trainingSupplyIndex.candidates.filter((item) => item.domain === 'speaking' && item.difficultyLevel === 1)
+    const round = ['speaking-a', 'speaking-b', 'speaking-c'].map((seed) => createTrainingSupplyRound({ seed, candidateItemIds: candidates.map((item) => item.itemId), shortTermExcludedItemIds: [] })).find((candidate) => candidate.order[0] !== candidates[0]?.itemId)!
+    await expect(provider.next({ ...request(), supplyRound: round })).resolves.toMatchObject({ status: 'item', item: { itemId: round.order[0] } })
+  })
   it('parses the real 808 index and resolves both activity and scene fixed-response candidates', async () => {
     const released = catalog()
     const provider = new SpeakingCatalogSupplyProvider(trainingSupplyIndex, released)
