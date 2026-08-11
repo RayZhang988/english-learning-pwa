@@ -5,6 +5,7 @@ import type {
   LearningTaskSupplyResult,
 } from '../../learning-engine/index.ts'
 import { migrateExtraTrainingSessionToOpenEnded } from '../../learning-engine/index.ts'
+import { recordTrainingSupplyItem } from '../../learning-engine/index.ts'
 import type {
   ExtraTrainingEffectiveTimingSessionFactoryPort,
   ExtraTrainingEventSink,
@@ -130,7 +131,7 @@ export class ExtraVocabularyTrainingRuntime {
     const attempt = { ...this.base('learning.extra-training.attempt.completed.v1'), payload: { ...base.payload, learningUnitId: snapshot.activeItem.learningUnitId, contentRef: snapshot.activeItem.contentRef, difficultyLevel: snapshot.activeItem.difficultyLevel, estimatedSeconds: 1, result: 'scored', performanceScore: correct ? 1 : 0, evidenceQuality: 1, assistanceLevel: 0, durationSeconds: 0, errorTags: correct ? [] : [question!.errorTag], contentTags: snapshot.activeItem.tags, failureCategory: null, scoreDelta: { schemaVersion: 1, correctCount: correct ? 1 : 0, incorrectCount: correct ? 0 : 1, unscorableCount: 0 } } } as ExtraTrainingEvent
     const event = { ...base, payload: { ...base.payload, item: snapshot.activeItem, requestId: snapshot.activeRequestId ?? `${snapshot.session.sessionId}:supply`, nextSupplyCursor: snapshot.suppliedNextCursor ?? snapshot.activeItem.itemId } } as ExtraTrainingEvent
     const count = snapshot.session.completedItemCount + 1
-    return this.save({ ...snapshot, phase: 'answering', pendingEvents: [...snapshot.pendingEvents, attempt, event], session: { ...snapshot.session, excludeItemIds: [...snapshot.session.excludeItemIds, snapshot.activeItem.itemId], completedItemCount: count, nextSupplyCursor: snapshot.suppliedNextCursor ?? snapshot.activeItem.itemId, status: 'running', endReason: null, endedAt: null, updatedAt: event.occurredAt }, updatedAt: event.occurredAt })
+    return this.save({ ...snapshot, phase: 'answering', pendingEvents: [...snapshot.pendingEvents, attempt, event], session: { ...snapshot.session, excludeItemIds: [...snapshot.session.excludeItemIds, snapshot.activeItem.itemId], ...(snapshot.session.supplyRound === undefined ? {} : { supplyRound: recordTrainingSupplyItem(snapshot.session.supplyRound, snapshot.activeItem.itemId) }), completedItemCount: count, nextSupplyCursor: snapshot.suppliedNextCursor ?? snapshot.activeItem.itemId, status: 'running', endReason: null, endedAt: null, updatedAt: event.occurredAt }, updatedAt: event.occurredAt })
   }
   completeCurrentItem() { return this.queue(async () => this.completeCurrentItemNow(this.require())) }
   private async nextNow(snapshot: ExtraVocabularyTrainingSnapshot): Promise<ExtraVocabularyTrainingSnapshot> {

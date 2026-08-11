@@ -3,6 +3,7 @@ import type {
   LearningTaskSupplyRequest,
   LearningTaskSupplyResult,
 } from '../../learning-engine/index.ts'
+import { assertTrainingSupplyRound, nextTrainingSupplyItem } from '../../learning-engine/index.ts'
 import { VocabularyError } from './errors.ts'
 import type { VocabularyCatalog, VocabularySupplyItem } from './types.ts'
 
@@ -132,6 +133,22 @@ export class VocabularyCatalogSupplyProvider implements VocabularySupplyProvider
           if (selected) return { schemaVersion: 1, requestId: request.requestId, status: 'item', item: selected, nextCursor: selected.itemId }
         }
       }
+    }
+    if (request.supplyRound !== undefined) {
+      try {
+        assertTrainingSupplyRound(request.supplyRound)
+      } catch {
+        return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
+      }
+      const next = nextTrainingSupplyItem(request.supplyRound)
+      if (next.status === 'content-exhausted') {
+        return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: next.reason }
+      }
+      const item = available.find((candidate) => candidate.itemId === next.itemId)
+      if (!item) {
+        return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
+      }
+      return { schemaVersion: 1, requestId: request.requestId, status: 'item', item, nextCursor: item.itemId }
     }
     const cursorIndex = request.cursor === null ? -1 : eligible.findIndex((item) => item.itemId === request.cursor)
     if (request.cursor !== null && cursorIndex < 0) {

@@ -9,6 +9,7 @@ import type {
 } from '../../core/index.ts'
 import { parseLearningEvent } from '../../learning-engine/index.ts'
 import { applyWrongAnswerEvidence, createWrongAnswerLibraryState, type WrongAnswerEvidence } from '../../learning-engine/index.ts'
+import { createTrainingSupplyRound } from '../../learning-engine/index.ts'
 import type { WrongAnswerEvidenceSink, ReviewContentIndex } from './wrong-answer-review.ts'
 import type { NetworkStatusService } from '../../platform/index.ts'
 import type {
@@ -164,6 +165,31 @@ const structuredDurationEstimate = {
 } as const
 
 describe('vocabulary training runtime', () => {
+  it('persists the acknowledged randomized supply cursor before a refresh', async () => {
+    const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
+    const candidates = (catalog.trainingSupplyIndex as { candidates: VocabularySupplyItem[] }).candidates
+      .filter((candidate) => candidate.domain === 'vocabulary' && candidate.difficultyLevel === 1)
+    const round = createTrainingSupplyRound({ seed: 'vocabulary-refresh', candidateItemIds: candidates.map((candidate) => candidate.itemId), shortTermExcludedItemIds: [] })
+    const requests: import('../../learning-engine/index.ts').LearningTaskSupplyRequest[] = []
+    const supplyProvider: VocabularySupplyProvider = { async next(request) {
+      requests.push(request)
+      const item = candidates.find((candidate) => candidate.itemId === request.supplyRound?.order[request.supplyRound.cursor])!
+      return { schemaVersion: 1, requestId: request.requestId, status: 'item', item, nextCursor: item.itemId }
+    } }
+    const task = vocabularyTaskFor(catalog.units[0], { trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } })
+    const store = new MemoryNamespaceStore()
+    const options = { task, localDate: '2026-08-11', contentSource: createStaticDataSource(catalog), eventSink: new InMemoryPlatformEventSink(), repository: new VocabularySessionRepository(store), supplyProvider, trainingBudgetStatus: () => 'running' as const, supplyRound: round } as unknown as ConstructorParameters<typeof VocabularyTrainingRuntime>[0]
+    const runtime = new VocabularyTrainingRuntime(options)
+    const session = await runtime.initialize()
+
+    expect(requests[0]?.supplyRound).toEqual(round)
+    expect(session.stream?.supplyRound).toMatchObject({ seed: 'vocabulary-refresh', cursor: 1 })
+
+    const refreshed = new VocabularyTrainingRuntime(options)
+    const restored = await refreshed.initialize()
+    expect(restored.stream?.supplyRound).toEqual(session.stream?.supplyRound)
+  })
+
   it('durably replays one failed daily wrong-answer evidence with the same identity', async () => {
     const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments()); const item = (catalog.trainingSupplyIndex as { candidates: VocabularySupplyItem[] }).candidates.find((candidate) => candidate.domain === 'vocabulary')!; const index = JSON.parse(await (await import('node:fs/promises')).readFile(new URL('../../../content/curriculum/review-content-index.v1.json', import.meta.url), 'utf8')) as ReviewContentIndex
     let state = createWrongAnswerLibraryState(); const seen: string[] = []; let fail = true

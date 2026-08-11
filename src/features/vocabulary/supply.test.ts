@@ -4,6 +4,7 @@ import { buildVocabularySupplyQuestion } from './questions.ts'
 import { VocabularyCatalogSupplyProvider } from './supply.ts'
 import { loadActualVocabularyDocuments, vocabularyTaskFor } from './test-fixtures.ts'
 import type { VocabularySupplyItem } from './types.ts'
+import { createTrainingSupplyRound } from '../../learning-engine/index.ts'
 
 describe('vocabulary training supply', () => {
   it('selects stable non-repeating approved vocabulary items', async () => {
@@ -30,6 +31,35 @@ describe('vocabulary training supply', () => {
     const provider = new VocabularyCatalogSupplyProvider(catalog.trainingSupplyIndex, catalog)
     const result = await provider.next({ schemaVersion: 1, requestId: 'request', planId: 'plan', taskId: 'task', domain: 'vocabulary', targetModuleId: 'vocabulary', mode: 'learn', targetDifficulty: 0.5, cursor: null, excludeItemIds: (catalog.trainingSupplyIndex as { candidates: { itemId: string }[] }).candidates.map((item) => item.itemId), reason: 'continue-after-item' })
     expect(result).toMatchObject({ status: 'content-exhausted', reason: 'all-eligible-content-recently-used' })
+  })
+
+  it('uses the persisted randomized round order instead of source-file order', async () => {
+    const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
+    const provider = new VocabularyCatalogSupplyProvider(catalog.trainingSupplyIndex, catalog)
+    const candidateIds = (catalog.trainingSupplyIndex as { candidates: { itemId: string; difficultyLevel: number }[] }).candidates
+      .filter((candidate) => candidate.itemId.startsWith('supply-v1-vocabulary-') && candidate.difficultyLevel === 1)
+      .map((candidate) => candidate.itemId)
+    const firstBySourceOrder = candidateIds[0]!
+    const round = ['round-a', 'round-b', 'round-c', 'round-d']
+      .map((seed) => createTrainingSupplyRound({ seed, candidateItemIds: candidateIds, shortTermExcludedItemIds: [] }))
+      .find((candidate) => candidate.order[0] !== firstBySourceOrder)!
+
+    const result = await provider.next({
+      schemaVersion: 1,
+      requestId: 'random-order',
+      planId: 'plan',
+      taskId: 'task',
+      domain: 'vocabulary',
+      targetModuleId: 'vocabulary',
+      mode: 'learn',
+      targetDifficulty: 1,
+      cursor: null,
+      excludeItemIds: [],
+      supplyRound: round,
+      reason: 'initial',
+    })
+
+    expect(result).toMatchObject({ status: 'item', item: { itemId: round.order[0] } })
   })
 
   it('selects the exact published recent-error item before falling back', async () => {

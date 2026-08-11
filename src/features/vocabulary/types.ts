@@ -5,6 +5,7 @@ import type {
   StandardErrorTag,
 } from '../../learning-engine/index.ts'
 import type { WrongAnswerEvidence } from '../../learning-engine/index.ts'
+import type { TrainingSupplyRound } from '../../learning-engine/index.ts'
 
 export const VOCABULARY_SESSION_SCHEMA_VERSION = 1 as const
 
@@ -118,6 +119,8 @@ export interface VocabularyStreamState {
   readonly activeItem: VocabularySupplyItem
   readonly activeRequestId: string
   readonly nextSupplyCursor: string | null
+  /** R11-A: persisted randomized supplier order and acknowledged cursor. */
+  readonly supplyRound?: TrainingSupplyRound
   readonly completedItemIds: readonly string[]
   readonly completedItemCount: number
   readonly correctItemCount: number

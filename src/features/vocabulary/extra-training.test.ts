@@ -8,6 +8,7 @@ import {
 import type { NamespaceStore, StoredRecord } from '../../storage/index.ts'
 import type { ExtraTrainingSession } from '../../learning-engine/index.ts'
 import { applyWrongAnswerEvidence, createWrongAnswerLibraryState, type WrongAnswerEvidence } from '../../learning-engine/index.ts'
+import { createTrainingSupplyRound } from '../../learning-engine/index.ts'
 import type { WrongAnswerEvidenceSink } from './wrong-answer-review.ts'
 
 class Store implements NamespaceStore { records = new Map<string, StoredRecord<unknown>>(); async get<T>(key:string){ return this.records.get(key) as StoredRecord<T>|undefined }; async put<T>(key:string,value:T,schemaVersion=1){ this.records.set(key,{namespace:'test',key,value,schemaVersion,updatedAt:'2026-07-29T00:00:00.000Z'}) }; async delete(key:string){this.records.delete(key)}; async keys(){return [...this.records.keys()]}; async clear(){this.records.clear()} }
@@ -42,6 +43,17 @@ describe('extra vocabulary commands', () => {
     expect(advanced.session.completedItemCount).toBe(1)
     expect(advanced.pendingEvents.filter((event) => event.type === 'learning.extra-training.attempt.completed.v1')).toHaveLength(1)
     await expect(runtime.advanceAfterFeedback()).rejects.toThrow('feedback')
+  })
+  it('acknowledges the persisted randomized extra-training cursor after an item', async () => {
+    const round = createTrainingSupplyRound({ seed: 'extra-round', candidateItemIds: [item.itemId], shortTermExcludedItemIds: [] })
+    const runtime = new ExtraVocabularyTrainingRuntime({
+      ...options(),
+      session: { ...session, supplyRound: round },
+      supplyRequest: (current) => ({ ...(options().supplyRequest(current)!), supplyRound: current.supplyRound }),
+    })
+    await runtime.initialize(); await runtime.next(); await runtime.select('right'); await runtime.submit()
+    const completed = await runtime.completeCurrentItem()
+    expect(completed.session.supplyRound).toMatchObject({ seed: 'extra-round', cursor: 1, shortTermExcludedItemIds: [item.itemId] })
   })
   it('persists exit and replays a failed outbox event with the same identity', async () => {
     const repository = new ExtraVocabularyTrainingRepository(new Store())

@@ -7,7 +7,9 @@ import type {
   LearningTaskPausedEvent,
   LearningTaskSkippedEvent,
   LearningTaskSupplyRequest,
+  TrainingSupplyRound,
 } from '../../learning-engine/index.ts'
+import { recordTrainingSupplyItem } from '../../learning-engine/index.ts'
 import {
   browserNetworkStatus,
   type NetworkStatusService,
@@ -75,6 +77,8 @@ export interface VocabularyTrainingRuntimeOptions {
   readonly supplyProvider?: VocabularySupplyProvider
   /** Mirrors 04's restored training progress; it is never inferred from wall time. */
   readonly trainingBudgetStatus?: () => 'running' | 'finish-current-item'
+  /** R11-A host checkpoint for a newly started vocabulary training round. */
+  readonly supplyRound?: TrainingSupplyRound
   /** R13-D optional handoff; the host owns the single unified wrong-answer library. */
   readonly wrongAnswerReview?: { readonly index: ReviewContentIndex; readonly sink: WrongAnswerEvidenceSink; readonly source: 'daily-training' | 'extra-training' }
 }
@@ -95,6 +99,7 @@ export class VocabularyTrainingRuntime {
   private readonly timing: VocabularyEffectiveTiming
   private readonly suppliedProvider: VocabularySupplyProvider | undefined
   private readonly trainingBudgetStatus: (() => 'running' | 'finish-current-item') | undefined
+  private readonly initialSupplyRound: TrainingSupplyRound | undefined
   private readonly wrongAnswerReview: VocabularyTrainingRuntimeOptions['wrongAnswerReview']
   /** A budget is continuous only when the 01 host has supplied its restored status port. */
   private readonly continuousTraining: boolean
@@ -119,6 +124,7 @@ export class VocabularyTrainingRuntime {
     )
     this.suppliedProvider = options.supplyProvider
     this.trainingBudgetStatus = options.trainingBudgetStatus
+    this.initialSupplyRound = options.supplyRound
     this.wrongAnswerReview = options.wrongAnswerReview
     this.continuousTraining = Boolean(
       this.task.trainingBudget && this.trainingBudgetStatus,
@@ -234,6 +240,9 @@ export class VocabularyTrainingRuntime {
       requestId: `${this.task.taskId}:supply:${completed.length + 1}:${cursor ?? 'initial'}`,
       planId: this.task.planId, taskId: this.task.taskId, domain: 'vocabulary', targetModuleId: 'vocabulary', mode: this.task.mode,
       targetDifficulty: this.task.difficultyLevel, cursor, excludeItemIds: completed,
+      ...(stream?.supplyRound === undefined && this.initialSupplyRound === undefined
+        ? {}
+        : { supplyRound: stream?.supplyRound ?? this.initialSupplyRound }),
       reason: completed.length === 0 ? 'initial' : 'continue-after-item',
     }
   }
@@ -314,7 +323,8 @@ export class VocabularyTrainingRuntime {
         }
         const question = this.supplyQuestion(catalog, result.item as import('./types.ts').VocabularySupplyItem)
         session = createVocabularySession(this.task, [question], now)
-        session = { ...session, stream: { activeItem: result.item as import('./types.ts').VocabularySupplyItem, activeRequestId: request.requestId, nextSupplyCursor: result.nextCursor, completedItemIds: [], completedItemCount: 0, correctItemCount: 0, finishCurrentItem: this.trainingBudgetStatus?.() === 'finish-current-item', exhaustionRequestId: null, recoveryEventId: null } }
+        const activeItem = result.item as import('./types.ts').VocabularySupplyItem
+        session = { ...session, stream: { activeItem, activeRequestId: request.requestId, nextSupplyCursor: result.nextCursor, ...(request.supplyRound === undefined ? {} : { supplyRound: recordTrainingSupplyItem(request.supplyRound, activeItem.itemId) }), completedItemIds: [], completedItemCount: 0, correctItemCount: 0, finishCurrentItem: this.trainingBudgetStatus?.() === 'finish-current-item', exhaustionRequestId: null, recoveryEventId: null } }
       } else {
         const questions = buildVocabularyQuestions(unit)
         session = createVocabularySession(this.task, questions, now)
@@ -429,7 +439,8 @@ export class VocabularyTrainingRuntime {
               session = { ...session, phase: 'error', pausedFromPhase: null, lastActiveAt: null, failure: { category: 'content', message: '当前没有可继续的词汇题目。' }, stream: { ...completedStream, exhaustionRequestId: request.requestId, recoveryEventId: null }, updatedAt: now }
               session = withPendingVocabularyEvent(session, createVocabularyTrainingContentExhaustedEvent(this.task, request.requestId, request.cursor, result.reason, this.identity(now)), now)
             } else {
-              session = replaceVocabularyStreamQuestion(session, this.supplyQuestion(catalog, result.item as import('./types.ts').VocabularySupplyItem), { ...completedStream, activeItem: result.item as import('./types.ts').VocabularySupplyItem, activeRequestId: request.requestId, nextSupplyCursor: result.nextCursor }, now)
+              const activeItem = result.item as import('./types.ts').VocabularySupplyItem
+              session = replaceVocabularyStreamQuestion(session, this.supplyQuestion(catalog, activeItem), { ...completedStream, activeItem, activeRequestId: request.requestId, nextSupplyCursor: result.nextCursor, ...(request.supplyRound === undefined ? {} : { supplyRound: recordTrainingSupplyItem(request.supplyRound, activeItem.itemId) }) }, now)
             }
           } catch (error) {
             session = { ...session, phase: 'error', pausedFromPhase: null, lastActiveAt: null, failure: this.failureFor(error), stream: completedStream, updatedAt: now }
@@ -639,7 +650,8 @@ export class VocabularyTrainingRuntime {
         await this.save(recovery)
       }
       recovery = await this.flushPendingEvents()
-      const session = replaceVocabularyStreamQuestion(recovery, this.supplyQuestion(catalog, result.item as import('./types.ts').VocabularySupplyItem), { ...recovery.stream!, activeItem: result.item as import('./types.ts').VocabularySupplyItem, activeRequestId: request.requestId, nextSupplyCursor: result.nextCursor, exhaustionRequestId: null, recoveryEventId: null }, now)
+      const activeItem = result.item as import('./types.ts').VocabularySupplyItem
+      const session = replaceVocabularyStreamQuestion(recovery, this.supplyQuestion(catalog, activeItem), { ...recovery.stream!, activeItem, activeRequestId: request.requestId, nextSupplyCursor: result.nextCursor, ...(request.supplyRound === undefined ? {} : { supplyRound: recordTrainingSupplyItem(request.supplyRound, activeItem.itemId) }), exhaustionRequestId: null, recoveryEventId: null }, now)
       await this.save(session)
       await this.timing.synchronize(session.phase)
       return session
