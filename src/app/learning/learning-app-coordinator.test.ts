@@ -9,6 +9,7 @@ import {
   VersionedAssessmentProfileRepository,
 } from '../../features/assessment/index.ts'
 import {
+  createLearningEngineState,
   LearningEngineRepository,
   type LearningCandidate,
   type LearningTimingPhase,
@@ -26,6 +27,7 @@ import {
 } from './active-plan-repository.ts'
 import type { LearningCandidateSource } from './course-candidate-source.ts'
 import { LearningAppCoordinator } from './learning-app-coordinator.ts'
+import type { ProductionTrainingSupplyProviders } from './training-supply-providers.ts'
 import {
   toDailyPlanViewModel,
   toPracticeModulesViewModel,
@@ -34,6 +36,7 @@ import {
 class MemoryNamespaceStore implements NamespaceStore {
   readonly records = new Map<string, StoredRecord<unknown>>()
   readonly namespace: string
+  failWrites = false
 
   constructor(namespace: string) {
     this.namespace = namespace
@@ -48,6 +51,9 @@ class MemoryNamespaceStore implements NamespaceStore {
     value: T,
     schemaVersion = 1,
   ): Promise<void> {
+    if (this.failWrites) {
+      throw new Error('simulated persistent-storage failure')
+    }
     this.records.set(key, {
       namespace: this.namespace,
       key,
@@ -365,20 +371,52 @@ describe('LearningAppCoordinator', () => {
   let candidates: SequencedCandidateSource
   let currentDate: Date
   let idSequence: number
+  let activePlanStore: MemoryNamespaceStore
+  let trainingSupplyProviders: ProductionTrainingSupplyProviders
 
   beforeEach(() => {
     profiles = new AssessmentProfileRepository(
       new MemoryNamespaceStore('feature.assessment'),
     )
-    activePlans = new ActivePlanRepository(
-      new MemoryNamespaceStore('app.learning-runtime'),
-    )
+    activePlanStore = new MemoryNamespaceStore('app.learning-runtime')
+    activePlans = new ActivePlanRepository(activePlanStore)
     engineStates = new LearningEngineRepository(
       new MemoryNamespaceStore('learning.engine'),
     )
     candidates = new SequencedCandidateSource()
     currentDate = new Date(2026, 6, 24, 8, 0, 0)
     idSequence = 0
+    const providerFor = (moduleId: TrainingModuleId) => ({
+      async next(request: { readonly requestId: string; readonly excludeItemIds: readonly string[] }) {
+        const ids = [`${moduleId}:eligible:1`, `${moduleId}:eligible:2`]
+        const itemId = ids.find((id) => !request.excludeItemIds.includes(id))
+        return itemId === undefined
+          ? {
+              schemaVersion: 1 as const,
+              requestId: request.requestId,
+              status: 'content-exhausted' as const,
+              reason: 'all-eligible-content-recently-used' as const,
+            }
+          : {
+              schemaVersion: 1 as const,
+              requestId: request.requestId,
+              status: 'item' as const,
+              item: {
+                itemId,
+                learningUnitId: `unit:${moduleId}`,
+                contentRef: `lesson://test/${moduleId}`,
+                difficultyLevel: 5,
+                tags: [],
+              },
+              nextCursor: itemId,
+            }
+      },
+    })
+    trainingSupplyProviders = {
+      vocabulary: providerFor('vocabulary'),
+      listening: providerFor('listening'),
+      speaking: providerFor('speaking'),
+    }
   })
 
   function coordinator() {
@@ -394,6 +432,7 @@ describe('LearningAppCoordinator', () => {
       ]),
       now: () => currentDate,
       createId: () => `id-${++idSequence}`,
+      trainingSupplyProviders,
     })
   }
 
@@ -403,6 +442,44 @@ describe('LearningAppCoordinator', () => {
     expect(state.status).toBe('assessment-required')
     expect(candidates.loadCount).toBe(0)
     await expect(activePlans.load()).resolves.toBeUndefined()
+  })
+
+  it('records scene acknowledgements atomically and does not reorder a replayed acknowledgement', async () => {
+    await engineStates.save(createLearningEngineState(
+      abilityProfile(),
+      '2026-07-24T08:00:00.000Z',
+    ))
+    const app = coordinator()
+    const first = {
+      acknowledgementId: 'scene:airport:round:1:cursor:1',
+      itemId: 'scene:airport:passport',
+      domain: 'vocabulary' as const,
+      mode: 'learn' as const,
+      difficultyLevel: 3,
+    }
+
+    const second = {
+      ...first,
+      acknowledgementId: 'scene:airport:round:1:cursor:2',
+      itemId: 'scene:airport:check-in',
+    }
+
+    await app.acknowledgeSceneTrainingItem(first)
+    await app.acknowledgeSceneTrainingItem(second)
+    await app.acknowledgeSceneTrainingItem(first)
+
+    expect(await engineStates.load()).toMatchObject({
+      recentTrainingItemIds: {
+        'vocabulary:learn:3': [
+          'scene:airport:passport',
+          'scene:airport:check-in',
+        ],
+      },
+      sceneTrainingAcknowledgementIds: [
+        first.acknowledgementId,
+        second.acknowledgementId,
+      ],
+    })
   })
 
   it('generates and refresh-restores one real active daily plan', async () => {
@@ -468,6 +545,108 @@ describe('LearningAppCoordinator', () => {
       firstState.taskAccess.startableTaskIds,
     )
     expect(candidates.loadCount).toBe(1)
+  })
+
+  it('creates one durable randomized round per daily module and restores its exact order', async () => {
+    await profiles.saveLatest(abilityProfile())
+    const app = coordinator()
+    const initialized = await app.initialize()
+    if (initialized.status !== 'ready') {
+      throw new Error('Expected a ready plan.')
+    }
+
+    const rounds = await Promise.all(
+      initialized.runtime.activePlan.plan.tasks.map(async (task) => ({
+        moduleId: task.targetModuleId,
+        round: await app.ensureDailyTrainingRound(task.taskId),
+      })),
+    )
+    for (const { moduleId, round } of rounds) {
+      expect(round.order).toHaveLength(2)
+      expect(new Set(round.order)).toEqual(new Set([
+        `${moduleId}:eligible:1`,
+        `${moduleId}:eligible:2`,
+      ]))
+    }
+
+    const vocabularyTask = initialized.runtime.activePlan.plan.tasks[0]!
+    const first = app.ensureDailyTrainingRound(vocabularyTask.taskId)
+    const second = app.ensureDailyTrainingRound(vocabularyTask.taskId)
+    expect(second).toBe(first)
+    await expect(first).resolves.toEqual(rounds[0]!.round)
+
+    const restored = coordinator()
+    const restoredState = await restored.initialize()
+    if (restoredState.status !== 'ready') {
+      throw new Error('Expected a restored plan.')
+    }
+    expect(
+      await restored.ensureDailyTrainingRound(vocabularyTask.taskId),
+    ).toEqual(rounds[0]!.round)
+  })
+
+  it('does not mutate memory or persistence when daily round creation fails, then retries cleanly', async () => {
+    await profiles.saveLatest(abilityProfile())
+    const app = coordinator()
+    const initialized = await app.initialize()
+    if (initialized.status !== 'ready') {
+      throw new Error('Expected a ready plan.')
+    }
+    const taskId = initialized.runtime.activePlan.plan.tasks[0]!.taskId
+    activePlanStore.failWrites = true
+
+    await expect(app.ensureDailyTrainingRound(taskId)).rejects.toThrow(
+      'simulated persistent-storage failure',
+    )
+    expect(app.state).toEqual(initialized)
+    expect(
+      (await activePlans.load())?.activePlan.tasks[0]?.training?.supplyRound,
+    ).toBeUndefined()
+
+    activePlanStore.failWrites = false
+    await expect(app.ensureDailyTrainingRound(taskId)).resolves.toEqual(
+      expect.objectContaining({ seed: 'id-3' }),
+    )
+    expect(
+      (await activePlans.load())?.activePlan.tasks[0]?.training?.supplyRound,
+    ).toEqual(expect.objectContaining({ seed: 'id-3' }))
+  })
+
+  it('rejects completed and unknown daily tasks before creating a round', async () => {
+    await profiles.saveLatest(abilityProfile())
+    const app = coordinator()
+    const initialized = await app.initialize()
+    if (initialized.status !== 'ready') {
+      throw new Error('Expected a ready plan.')
+    }
+    const taskId = initialized.runtime.activePlan.plan.tasks[0]!.taskId
+    const persisted = await activePlans.load()
+    if (!persisted) throw new Error('Expected persisted plan.')
+    await activePlans.save({
+      ...persisted,
+      activePlan: {
+        ...persisted.activePlan,
+        tasks: persisted.activePlan.tasks.map((entry) =>
+          entry.task.taskId === taskId
+            ? {
+                ...entry,
+                status: 'completed' as const,
+                training: {
+                  ...entry.training!,
+                  status: 'completed' as const,
+                  remainingEffectiveSeconds: 0,
+                },
+              }
+            : entry,
+        ),
+      },
+    })
+    await expect(app.ensureDailyTrainingRound(taskId)).rejects.toThrow(
+      'cannot start',
+    )
+    await expect(app.ensureDailyTrainingRound('missing-task')).rejects.toThrow(
+      'taskId has no active training budget',
+    )
   })
 
   it('routes every unfinished task from the current plan by exact taskId', async () => {

@@ -5,7 +5,7 @@ import type {
 import { AppError } from '../../core/index.ts'
 import {
   applyLearningAttempt,
-  applyPlanEvent,
+  applyLearningEngineTrainingEvent,
   parseLearningEvent,
   recordDailyActivity,
   recordTaskDurationSample,
@@ -215,12 +215,14 @@ export class ProductionLearningEventSink implements PlatformEventSink {
       )
     }
 
-    const progress = applyPlanEvent(
-      runtime.activePlan,
+    const transition = applyLearningEngineTrainingEvent({
+      engineState,
+      progress: runtime.activePlan,
       event,
-      runtime.skipHistory,
-    )
-    let nextEngineState = engineState
+      skipHistory: runtime.skipHistory,
+    })
+    const progress = transition.progress
+    let nextEngineState = transition.engineState
     let pendingTrainingAttempts =
       runtime.pendingTrainingAttempts ?? []
     if (event.type === 'learning.attempt.completed.v1') {

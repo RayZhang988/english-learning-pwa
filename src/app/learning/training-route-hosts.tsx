@@ -5,6 +5,7 @@ import { SpeakingTrainingRoute } from '../../features/speaking/index.ts'
 import { VocabularyTrainingRoute } from '../../features/vocabulary/index.ts'
 import type {
   LearningTask,
+  TrainingSupplyRound,
   TrainingModuleId,
 } from '../../learning-engine/index.ts'
 import {
@@ -95,6 +96,12 @@ export function TrainingRouteHost({
   } | null>(null)
   const [completionDurationTaskId, setCompletionDurationTaskId] =
     useState<string | null>(null)
+  const [supplyRoundState, setSupplyRoundState] = useState<{
+    readonly key: string
+    readonly round?: TrainingSupplyRound
+    readonly error?: Error
+  } | null>(null)
+  const [roundRetry, setRoundRetry] = useState(0)
   const evidencePorts = readyWrongAnswerEvidence ?? productionWrongAnswerEvidencePorts
   const [reviewEvidenceState, setReviewEvidenceState] = useState<'loading' | 'ready' | 'error'>(readyWrongAnswerEvidence ? 'ready' : 'loading')
   useEffect(() => {
@@ -107,6 +114,58 @@ export function TrainingRouteHost({
     return () => { current = false }
   }, [readyWrongAnswerEvidence])
   const taskId = searchParams.get('taskId')
+  const roundExecution =
+    state.status === 'ready' && taskId
+      ? state.runtime.activePlan.tasks.find(
+          (execution) =>
+            execution.task.taskId === taskId &&
+            execution.task.targetModuleId === moduleId,
+        )
+      : undefined
+  const roundTask = roundExecution?.task
+  const roundKey = roundTask
+    ? `${roundTask.planId}:${roundTask.taskId}:${moduleId}`
+    : null
+  const persistedSupplyRound = roundExecution?.training?.supplyRound
+  useEffect(() => {
+    if (
+      roundKey === null ||
+      roundTask?.trainingBudget === undefined ||
+      roundExecution?.status !== 'active' ||
+      persistedSupplyRound !== undefined
+    ) {
+      return
+    }
+    let current = true
+    setSupplyRoundState({ key: roundKey })
+    void coordinator.ensureDailyTrainingRound(roundTask.taskId).then(
+      (round) => {
+        if (current) setSupplyRoundState({ key: roundKey, round })
+      },
+      (reason: unknown) => {
+        if (current) {
+          setSupplyRoundState({
+            key: roundKey,
+            error:
+              reason instanceof Error
+                ? reason
+                : new Error('无法创建训练题目顺序。'),
+          })
+        }
+      },
+    )
+    return () => {
+      current = false
+    }
+  }, [
+    coordinator,
+    persistedSupplyRound,
+    roundExecution?.status,
+    roundKey,
+    roundRetry,
+    roundTask?.taskId,
+    roundTask?.trainingBudget,
+  ])
 
   if (reviewEvidenceState === 'loading') return <LoadingState label="正在准备统一错题库" />
   if (reviewEvidenceState === 'error') return <ErrorState title="无法准备错题库" description="训练不会在错题记录无法保存时继续，以免丢失正式错题。" onRetry={() => { setReviewEvidenceState('loading'); void productionWrongAnswerEvidencePorts.initialize().then(() => setReviewEvidenceState('ready'), () => setReviewEvidenceState('error')) }} />
@@ -204,6 +263,16 @@ export function TrainingRouteHost({
             execution.task.targetModuleId === moduleId,
         )
       : undefined
+  // A restored budget task already owns a durable round. Do not make the
+  // user wait for an effect (or accidentally create a second round) before
+  // handing that exact order back to the feature runtime.
+  const supplyRound = persistedSupplyRound ?? supplyRoundState?.round
+  if (task.trainingBudget !== undefined && supplyRound === undefined && !supplyRoundState?.error) {
+    return <LoadingState label="正在准备训练题目顺序" />
+  }
+  if (supplyRoundState?.error) {
+    return <ErrorState title="无法准备训练题目顺序" description={supplyRoundState.error.message} onRetry={() => setRoundRetry((value) => value + 1)} />
+  }
   const budgetPortKey = `${task.planId}:${task.taskId}:${moduleId}:${state.localDate}`
   if (budgetPortRef.current?.key !== budgetPortKey) {
     budgetPortRef.current = {
@@ -248,6 +317,7 @@ export function TrainingRouteHost({
       task.trainingBudget === undefined
         ? undefined
         : budgetPortRef.current.status,
+    supplyRound,
     completedExtraTrainingEntry:
       currentExecution?.status === 'completed'
         ? {

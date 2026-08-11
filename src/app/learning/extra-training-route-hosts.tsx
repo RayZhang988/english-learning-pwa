@@ -804,6 +804,99 @@ function ExtraSpeakingRoute({
   )
 }
 
+function PreparedExtraTrainingRoute({
+  session,
+  retryRequested,
+  evidencePorts,
+}: {
+  readonly session: ExtraTrainingSession
+  readonly retryRequested: boolean
+  readonly evidencePorts: ReadyWrongAnswerEvidencePorts
+}) {
+  const { coordinator } = useLearningApp()
+  const [preparedSession, setPreparedSession] = useState<
+    ExtraTrainingSession | undefined
+  >(session.supplyRound === undefined ? undefined : session)
+  const [preparationError, setPreparationError] = useState<Error>()
+  const [retry, setRetry] = useState(0)
+
+  useEffect(() => {
+    if (session.supplyRound !== undefined) {
+      setPreparedSession(session)
+      setPreparationError(undefined)
+      return
+    }
+    let active = true
+    setPreparedSession(undefined)
+    setPreparationError(undefined)
+    void coordinator
+      .ensureExtraTrainingRound(session.sessionId, session.targetModuleId)
+      .then(
+        (next) => {
+          if (active) setPreparedSession(next)
+        },
+        (reason: unknown) => {
+          if (active) {
+            setPreparationError(
+              reason instanceof Error
+                ? reason
+                : new Error('无法创建额外训练题目顺序。'),
+            )
+          }
+        },
+      )
+    return () => {
+      active = false
+    }
+  }, [
+    coordinator,
+    retry,
+    session,
+    session.sessionId,
+    session.supplyRound,
+    session.targetModuleId,
+  ])
+
+  if (preparationError) {
+    return sessionFailure(
+      '无法准备额外训练题目顺序',
+      preparationError,
+      () => setRetry((value) => value + 1),
+    )
+  }
+  if (!preparedSession) {
+    return loading('正在准备额外训练题目顺序')
+  }
+  if (preparedSession.targetModuleId === 'vocabulary') {
+    return (
+      <ExtraVocabularyRoute
+        key={preparedSession.sessionId}
+        session={preparedSession}
+        retryRequested={retryRequested}
+        evidencePorts={evidencePorts}
+      />
+    )
+  }
+  if (preparedSession.targetModuleId === 'listening') {
+    return (
+      <ExtraListeningRoute
+        key={preparedSession.sessionId}
+        session={preparedSession}
+        retryRequested={retryRequested}
+        evidencePorts={evidencePorts}
+      />
+    )
+  }
+  return (
+    <ExtraSpeakingRoute
+      key={preparedSession.sessionId}
+      session={preparedSession}
+      retryRequested={retryRequested}
+      evidencePorts={evidencePorts}
+    />
+  )
+}
+
 export function ExtraTrainingRouteHost({
   readyWrongAnswerEvidence,
 }: {
@@ -954,29 +1047,8 @@ export function ExtraTrainingRouteHost({
       },
     )
   }
-  if (moduleId === 'vocabulary') {
-    return (
-      <ExtraVocabularyRoute
-        key={session.sessionId}
-        session={session}
-        retryRequested={retryRequested}
-        evidencePorts={evidencePorts}
-      />
-    )
-  }
-  if (moduleId === 'listening') {
-    return (
-      <ExtraListeningRoute
-        key={session.sessionId}
-        session={session}
-        retryRequested={retryRequested}
-        evidencePorts={evidencePorts}
-      />
-    )
-  }
   return (
-    <ExtraSpeakingRoute
-      key={session.sessionId}
+    <PreparedExtraTrainingRoute
       session={session}
       retryRequested={retryRequested}
       evidencePorts={evidencePorts}

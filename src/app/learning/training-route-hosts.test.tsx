@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest'
 import {
   createLearningEngineState,
   createPlanProgress,
+  createTrainingSupplyRound,
   getPlanTaskAccess,
   type DailyPlan,
   type LearningTask,
@@ -194,11 +195,25 @@ function stateFor(
     dailyPlan,
     '2026-07-28T08:00:00.000Z',
   )
+  const withRound = initial.tasks.map((execution) => ({
+    ...execution,
+    training: {
+      ...execution.training!,
+      supplyRound: createTrainingSupplyRound({
+        seed: `restored:${execution.task.taskId}`,
+        candidateItemIds: [
+          `${execution.task.taskId}:item:1`,
+          `${execution.task.taskId}:item:2`,
+        ],
+        shortTermExcludedItemIds: [],
+      }),
+    },
+  }))
   const progress: PlanProgress = completed
     ? {
         ...initial,
         status: 'completed',
-        tasks: initial.tasks.map((execution) => ({
+        tasks: withRound.map((execution) => ({
           ...execution,
           status: 'completed',
           completionKind: 'scored',
@@ -217,7 +232,7 @@ function stateFor(
           },
         })),
       }
-    : initial
+    : { ...initial, tasks: withRound }
   return {
     status: 'ready',
     localDate: dailyPlan.localDate,
@@ -278,6 +293,14 @@ function completedDailyPlanState(): Extract<
       effectiveTimeSource: 'timing-segments',
       training: {
         ...execution.training!,
+        supplyRound: createTrainingSupplyRound({
+          seed: `restored:${execution.task.taskId}`,
+          candidateItemIds: [
+            `${execution.task.taskId}:item:1`,
+            `${execution.task.taskId}:item:2`,
+          ],
+          shortTermExcludedItemIds: [],
+        }),
         remainingEffectiveSeconds: 0,
         status: 'completed',
       },
@@ -595,6 +618,33 @@ describe('TrainingRouteHost R3 production integration', () => {
     expect(captured?.completedExtraTrainingEntry).toEqual({
       onContinueTraining: expect.any(Function),
     })
+  })
+
+  it('keeps a legacy task without a training budget directly routable', () => {
+    routeCaptures.clear()
+    const current = stateFor('vocabulary', false)
+    const legacyProgress: PlanProgress = {
+      ...current.runtime.activePlan,
+      plan: {
+        ...current.runtime.activePlan.plan,
+        tasks: current.runtime.activePlan.plan.tasks.map((task) => ({
+          ...task,
+          trainingBudget: undefined,
+        })),
+      },
+      tasks: current.runtime.activePlan.tasks.map((execution) => ({
+        ...execution,
+        training: undefined,
+      })),
+    }
+    const legacyState: Extract<LearningAppState, { readonly status: 'ready' }> = {
+      ...current,
+      runtime: createActiveLearningRuntime(legacyProgress),
+      taskAccess: getPlanTaskAccess(legacyProgress),
+    }
+
+    renderHost('vocabulary', legacyState)
+    expect(routeCaptures.get('vocabulary')?.supplyProvider).toBeUndefined()
   })
 
   it('offers the real extra-training entry when this module daily task is completed', () => {

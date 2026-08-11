@@ -1,4 +1,6 @@
 import {
+  createTrainingSupplyRound,
+  buildExtraTrainingSupplyRequest,
   createExtraTrainingSession,
   expireExtraTrainingSessions,
   getExtraTrainingEligibility,
@@ -7,6 +9,7 @@ import {
   type LearningEngineRepository,
   type LearningEngineState,
   type TrainingModuleId,
+  trainingRecentBucket,
 } from '../../learning-engine/index.ts'
 import type { ActivePlanRepository } from './active-plan-repository.ts'
 import type {
@@ -17,11 +20,17 @@ import {
   type ExtraTrainingEngineUpdateListener,
 } from './production-extra-training-event-sink.ts'
 import { formatLocalDate } from './local-date.ts'
+import { trainingSupplyProviders } from './training-production-resources.ts'
+import {
+  collectEligibleSupplyItemIds,
+  type ProductionTrainingSupplyProviders,
+} from './training-supply-providers.ts'
 
 export interface ProductionExtraTrainingCoordinatorOptions {
   readonly activePlans: ActivePlanRepository
   readonly engineStates: LearningEngineRepository
   readonly priorities: ExtraTrainingPrioritySource
+  readonly trainingSupplyProviders?: ProductionTrainingSupplyProviders
   readonly now?: () => Date
   readonly createId?: () => string
 }
@@ -50,6 +59,7 @@ export class ProductionExtraTrainingCoordinator {
   readonly #priorities: ExtraTrainingPrioritySource
   readonly #now: () => Date
   readonly #createId: () => string
+  readonly #trainingSupplyProviders: ProductionTrainingSupplyProviders
   readonly #listeners =
     new Set<ExtraTrainingEngineUpdateListener>()
   readonly #starts = new Map<
@@ -58,6 +68,10 @@ export class ProductionExtraTrainingCoordinator {
   >()
   readonly eventSink: ProductionExtraTrainingEventSink
   #queue: Promise<void> = Promise.resolve()
+  readonly #roundWrites = new Map<
+    string,
+    Promise<ExtraTrainingSession>
+  >()
 
   constructor(options: ProductionExtraTrainingCoordinatorOptions) {
     this.#activePlans = options.activePlans
@@ -65,6 +79,8 @@ export class ProductionExtraTrainingCoordinator {
     this.#priorities = options.priorities
     this.#now = options.now ?? (() => new Date())
     this.#createId = options.createId ?? defaultId
+    this.#trainingSupplyProviders =
+      options.trainingSupplyProviders ?? trainingSupplyProviders
     this.eventSink = new ProductionExtraTrainingEventSink(
       this.#engineStates,
     )
@@ -122,6 +138,98 @@ export class ProductionExtraTrainingCoordinator {
     moduleId: TrainingModuleId,
   ): Promise<ExtraTrainingSession> {
     return this.#scheduleStart(moduleId, true)
+  }
+
+  /**
+   * Materializes one durable R11 round for an existing optional session.
+   * This runs through the same coordinator queue as session creation and
+   * event writes, so different modules cannot overwrite each other's state.
+   */
+  ensureExtraTrainingRound(
+    sessionId: string,
+    expectedModuleId?: TrainingModuleId,
+  ): Promise<ExtraTrainingSession> {
+    const existing = this.#roundWrites.get(sessionId)
+    if (existing) return existing
+    const operation = this.#enqueue(() =>
+      this.#ensureExtraTrainingRound(sessionId, expectedModuleId),
+    )
+    this.#roundWrites.set(sessionId, operation)
+    void operation
+      .finally(() => {
+        if (this.#roundWrites.get(sessionId) === operation) {
+          this.#roundWrites.delete(sessionId)
+        }
+      })
+      .catch(() => undefined)
+    return operation
+  }
+
+  async #ensureExtraTrainingRound(
+    sessionId: string,
+    expectedModuleId?: TrainingModuleId,
+  ): Promise<ExtraTrainingSession> {
+    const engineState = await this.#requireEngineState()
+    const session = engineState.extraTraining?.sessions[sessionId]
+    if (!session) {
+      throw new TypeError('Extra-training sessionId does not exist.')
+    }
+    if (
+      expectedModuleId !== undefined &&
+      session.targetModuleId !== expectedModuleId
+    ) {
+      throw new TypeError('Extra-training session does not belong to the requested module.')
+    }
+    if (session.status !== 'running' && session.status !== 'paused') {
+      throw new TypeError('Extra-training session cannot create a training round.')
+    }
+    if (session.supplyRound !== undefined) {
+      return session
+    }
+    const request = buildExtraTrainingSupplyRequest(session)
+    if (!request) {
+      throw new TypeError('Extra-training session cannot request training content.')
+    }
+    const bucket = trainingRecentBucket(
+      session.domain,
+      session.mode,
+      session.targetDifficulty,
+    )
+    const candidateItemIds = await collectEligibleSupplyItemIds(
+      this.#trainingSupplyProviders[session.targetModuleId],
+      request,
+    )
+    const candidateSet = new Set(candidateItemIds)
+    const priorityItemIds = Object.values(
+      session.priorityItemIds ?? {},
+    )
+      .flat()
+      .filter((itemId) => candidateSet.has(itemId))
+    const round = createTrainingSupplyRound({
+      seed: this.#createId(),
+      candidateItemIds,
+      shortTermExcludedItemIds:
+        engineState.recentTrainingItemIds?.[bucket] ?? [],
+      priorityItemIds,
+    })
+    const updatedSession: ExtraTrainingSession = {
+      ...session,
+      supplyRound: round,
+      updatedAt: this.#now().toISOString(),
+    }
+    const nextEngineState: LearningEngineState = {
+      ...engineState,
+      extraTraining: {
+        ...engineState.extraTraining!,
+        sessions: {
+          ...engineState.extraTraining!.sessions,
+          [sessionId]: updatedSession,
+        },
+      },
+    }
+    await this.#engineStates.save(nextEngineState)
+    this.#notify({ engineState: nextEngineState, session: updatedSession })
+    return updatedSession
   }
 
   #scheduleStart(

@@ -203,6 +203,19 @@ function assertLearningEngineState(
   ) {
     throw new TypeError('recentTrainingItemIds is invalid')
   }
+  const sceneAcknowledgements =
+    (value as Record<string, unknown>).sceneTrainingAcknowledgementIds
+  if (
+    sceneAcknowledgements !== undefined &&
+    (!Array.isArray(sceneAcknowledgements) ||
+      sceneAcknowledgements.length > 500 ||
+      new Set(sceneAcknowledgements).size !== sceneAcknowledgements.length ||
+      sceneAcknowledgements.some(
+        (id) => typeof id !== 'string' || id.trim().length === 0,
+      ))
+  ) {
+    throw new TypeError('sceneTrainingAcknowledgementIds is invalid')
+  }
 }
 
 export class LearningEngineRepository {

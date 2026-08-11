@@ -36,7 +36,7 @@ export interface ProductionTrainingSupplyProvider {
  */
 export async function collectEligibleSupplyItemIds(
   provider: ProductionTrainingSupplyProvider,
-  request: LearningTaskSupplyRequest,
+  request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
 ): Promise<readonly string[]> {
   const itemIds: string[] = []
   const maximumItems = 1_000

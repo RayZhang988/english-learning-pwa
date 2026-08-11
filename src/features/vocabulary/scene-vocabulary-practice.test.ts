@@ -241,6 +241,28 @@ describe('R13-C scene vocabulary practice runtime', () => {
     expect(completions).toHaveLength(1)
   })
 
+  it('retains an unacknowledged scene completion and replays it after refresh', async () => {
+    const bank = await loadReleasedSceneBank()
+    const repository = new MemoryScenePracticeRepository()
+    const acknowledgements: string[] = []
+    let fail = true
+    const complete = async (completion: { acknowledgementId: string }) => {
+      acknowledgements.push(completion.acknowledgementId)
+      if (fail) throw new Error('engine save failed')
+    }
+    const first = runtimeFor(bank, repository, undefined, complete)
+    await first.initialize(); const view = first.toView()
+    await first.select(view.question!.options[0]!.id); await first.submit()
+    await expect(first.advance()).rejects.toThrow('engine save failed')
+    const pending = first.currentSnapshot?.pendingTrainingItemCompletions?.[0]?.acknowledgementId
+    expect(pending).toBeTruthy()
+    fail = false
+    const restored = runtimeFor(bank, repository, undefined, complete)
+    await restored.initialize()
+    expect(acknowledgements).toEqual([pending, pending])
+    expect(restored.currentSnapshot?.pendingTrainingItemCompletions).toEqual([])
+  })
+
   it('restores a selected answer and refuses tampered progress that does not match the released order or option ids', async () => {
     const bank = await loadReleasedSceneBank()
     const repository = new MemoryScenePracticeRepository()

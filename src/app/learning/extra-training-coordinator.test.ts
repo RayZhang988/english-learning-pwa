@@ -9,6 +9,7 @@ import {
 } from '../../learning-engine/index.ts'
 import { ActivePlanRepository } from './active-plan-repository.ts'
 import { ProductionExtraTrainingCoordinator } from './extra-training-coordinator.ts'
+import type { ProductionTrainingSupplyProviders } from './training-supply-providers.ts'
 import {
   completedExtraTrainingPlan,
   completedExtraTrainingRuntime,
@@ -30,18 +31,56 @@ function setup() {
       'new-optional-content': [],
     })),
   }
+  const providerFor = (moduleId: TrainingModuleId) => ({
+    async next(request: {
+      readonly requestId: string
+      readonly excludeItemIds: readonly string[]
+    }) {
+      const itemIds = [`${moduleId}:candidate:1`, `${moduleId}:candidate:2`]
+      const itemId = itemIds.find(
+        (candidate) => !request.excludeItemIds.includes(candidate),
+      )
+      return itemId === undefined
+        ? {
+            schemaVersion: 1 as const,
+            requestId: request.requestId,
+            status: 'content-exhausted' as const,
+            reason: 'all-eligible-content-recently-used' as const,
+          }
+        : {
+            schemaVersion: 1 as const,
+            requestId: request.requestId,
+            status: 'item' as const,
+            item: {
+              itemId,
+              learningUnitId: `unit:${moduleId}`,
+              contentRef: `lesson://test/${moduleId}`,
+              difficultyLevel: 2,
+              tags: [],
+            },
+            nextCursor: itemId,
+          }
+    },
+  })
+  const trainingSupplyProviders: ProductionTrainingSupplyProviders = {
+    vocabulary: providerFor('vocabulary'),
+    listening: providerFor('listening'),
+    speaking: providerFor('speaking'),
+  }
   const coordinator = new ProductionExtraTrainingCoordinator({
     activePlans,
     engineStates,
     priorities,
     now: () => new Date('2026-07-29T09:00:00.000Z'),
     createId: () => 'stable-id',
+    trainingSupplyProviders,
   })
   return {
     activePlans,
     engineStates,
     priorities,
     coordinator,
+    engineStore,
   }
 }
 
@@ -148,6 +187,76 @@ describe('ProductionExtraTrainingCoordinator', () => {
       ).toBe('completed')
     },
   )
+
+  it('creates, serializes, persists, and refresh-restores module-owned extra rounds', async () => {
+    const { activePlans, engineStates, coordinator } = setup()
+    await activePlans.save(completedExtraTrainingRuntime())
+    await engineStates.save(extraTrainingEngineState())
+
+    const sessions = await Promise.all([
+      coordinator.start('vocabulary'),
+      coordinator.start('listening'),
+      coordinator.start('speaking'),
+    ])
+    const [vocabulary, listening, speaking] = await Promise.all(
+      sessions.map((session) =>
+        coordinator.ensureExtraTrainingRound(
+          session.sessionId,
+          session.targetModuleId,
+        ),
+      ),
+    )
+    for (const session of [vocabulary, listening, speaking]) {
+      expect(session.supplyRound?.order).toHaveLength(2)
+      expect(session.supplyRound?.order.every((itemId) =>
+        itemId.startsWith(`${session.targetModuleId}:candidate:`),
+      )).toBe(true)
+    }
+
+    const first = coordinator.ensureExtraTrainingRound(vocabulary.sessionId)
+    const second = coordinator.ensureExtraTrainingRound(vocabulary.sessionId)
+    expect(second).toBe(first)
+    await expect(first).resolves.toEqual(vocabulary)
+
+    const restored = new ProductionExtraTrainingCoordinator({
+      activePlans,
+      engineStates,
+      priorities: { async load() { return vocabulary.priorityItemIds! } },
+      trainingSupplyProviders: {
+        vocabulary: { async next() { throw new Error('must restore, not enumerate') } },
+        listening: { async next() { throw new Error('must restore, not enumerate') } },
+        speaking: { async next() { throw new Error('must restore, not enumerate') } },
+      },
+      now: () => new Date('2026-07-29T09:00:00.000Z'),
+      createId: () => 'unexpected',
+    })
+    await expect(
+      restored.ensureExtraTrainingRound(vocabulary.sessionId, 'vocabulary'),
+    ).resolves.toEqual(vocabulary)
+  })
+
+  it('does not mutate a session when extra round persistence fails and permits retry', async () => {
+    const { activePlans, engineStates, engineStore, coordinator } = setup()
+    await activePlans.save(completedExtraTrainingRuntime())
+    await engineStates.save(extraTrainingEngineState())
+    const session = await coordinator.start('vocabulary')
+    engineStore.failNextPut = true
+
+    await expect(
+      coordinator.ensureExtraTrainingRound(session.sessionId),
+    ).rejects.toThrow('simulated storage failure')
+    expect(
+      (await engineStates.load())?.extraTraining?.sessions[session.sessionId]
+        ?.supplyRound,
+    ).toBeUndefined()
+
+    await expect(
+      coordinator.ensureExtraTrainingRound(session.sessionId),
+    ).resolves.toEqual(expect.objectContaining({
+      sessionId: session.sessionId,
+      supplyRound: expect.any(Object),
+    }))
+  })
 
   it('expires a previous-day open session without changing either daily plan', async () => {
     const { activePlans, engineStates, coordinator } = setup()

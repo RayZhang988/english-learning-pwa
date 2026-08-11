@@ -140,6 +140,7 @@ export {
 export {
   applyExtraTrainingAttempt,
   applyLearningAttempt,
+  acknowledgeSceneTrainingItem,
   createLearningEngineState,
   recordRecentTrainingItem,
   trainingRecentBucket,

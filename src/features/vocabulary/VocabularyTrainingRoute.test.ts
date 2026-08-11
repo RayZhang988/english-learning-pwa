@@ -1,11 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import { InMemoryPlatformEventSink, createStaticDataSource } from '../../core/testing/index.ts'
+import { createTrainingSupplyRound } from '../../learning-engine/index.ts'
 import type { NamespaceStore, StoredRecord } from '../../storage/index.ts'
 import { createVocabularyCatalog } from './content.ts'
 import { VocabularySessionRepository } from './repository.ts'
 import { createVocabularyTrainingRouteRuntime } from './VocabularyTrainingRoute.tsx'
 import { loadActualVocabularyDocuments, vocabularyTaskFor } from './test-fixtures.ts'
 import type { ReviewContentIndex, WrongAnswerEvidenceSink } from './wrong-answer-review.ts'
+import type { VocabularySupplyProvider } from './supply.ts'
 
 class MemoryStore implements NamespaceStore {
   private readonly records = new Map<string, StoredRecord<unknown>>()
@@ -34,5 +36,58 @@ describe('VocabularyTrainingRoute QA-011 ports', () => {
     const withPort = createVocabularyTrainingRouteRuntime({ ...common, wrongAnswerReview: review }) as unknown as { wrongAnswerReview: unknown }
     const withoutPort = createVocabularyTrainingRouteRuntime(common) as unknown as { wrongAnswerReview: unknown }
     expect(withPort.wrongAnswerReview).toBe(review); expect(withoutPort.wrongAnswerReview).toBeUndefined()
+  })
+
+  it('forwards a supplied randomized round so its first item and refresh stay in that order', async () => {
+    const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
+    const candidates = (catalog.trainingSupplyIndex as {
+      readonly candidates: readonly { readonly itemId: string; readonly domain: string }[]
+    }).candidates.filter((candidate) => candidate.domain === 'vocabulary')
+    const round = createTrainingSupplyRound({
+      seed: 'vocabulary-route-round',
+      candidateItemIds: candidates.map((candidate) => candidate.itemId),
+      shortTermExcludedItemIds: [],
+    })
+    const supplyProvider: VocabularySupplyProvider = {
+      async next(request) {
+        const itemId = request.supplyRound?.order[request.supplyRound.cursor]
+        const item = candidates.find((candidate) => candidate.itemId === itemId)
+        if (!item) {
+          throw new Error('Route must forward the supplied round before requesting an item.')
+        }
+        return {
+          schemaVersion: 1,
+          requestId: request.requestId,
+          status: 'item',
+          item: item as never,
+          nextCursor: item.itemId,
+        }
+      },
+    }
+    const store = new MemoryStore()
+    const props = {
+      task: vocabularyTaskFor(catalog.units[0], {
+        trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 },
+      }),
+      localDate: '2026-08-11',
+      eventSink: new InMemoryPlatformEventSink(),
+      contentSource: createStaticDataSource(catalog),
+      repository: new VocabularySessionRepository(store),
+      supplyProvider,
+      supplyRound: round,
+      trainingBudgetStatus: () => 'running' as const,
+      onExit: () => undefined,
+    }
+
+    const first = await createVocabularyTrainingRouteRuntime(props).initialize()
+    expect(first.stream?.activeItem.itemId).toBe(round.order[0])
+    expect(first.stream?.supplyRound).toMatchObject({
+      order: round.order,
+      cursor: 1,
+    })
+
+    const refreshed = await createVocabularyTrainingRouteRuntime(props).initialize()
+    expect(refreshed.stream?.activeItem.itemId).toBe(round.order[0])
+    expect(refreshed.stream?.supplyRound).toEqual(first.stream?.supplyRound)
   })
 })

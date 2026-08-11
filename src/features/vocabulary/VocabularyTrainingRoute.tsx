@@ -11,6 +11,7 @@ import type {
 } from '../../core/index.ts'
 import type {
   LearningTask,
+  TrainingSupplyRound,
   TrainingUnitScore as TrainingUnitScoreLedger,
 } from '../../learning-engine/index.ts'
 import {
@@ -65,6 +66,8 @@ export interface VocabularyTrainingRouteProps {
   readonly timingSessionFactory?: VocabularyEffectiveTimingSessionFactoryPort
   /** 01 supplies both ports for QA-011 budget tasks. */
   readonly supplyProvider?: VocabularySupplyProvider
+  /** 01 supplies a persisted R11 randomized order for budget training. */
+  readonly supplyRound?: TrainingSupplyRound
   readonly trainingBudgetStatus?: () => 'running' | 'finish-current-item'
   /** R13-D host port; the route must recreate its runtime when this identity changes. */
   readonly wrongAnswerReview?: VocabularyTrainingRuntimeOptions['wrongAnswerReview']
@@ -86,6 +89,7 @@ export function createVocabularyTrainingRouteRuntime(
     createId: props.createId,
     timingSessionFactory: props.timingSessionFactory,
     supplyProvider: props.supplyProvider,
+    supplyRound: props.supplyRound,
     trainingBudgetStatus: props.trainingBudgetStatus,
     wrongAnswerReview: props.wrongAnswerReview,
   })
@@ -116,6 +120,7 @@ export function VocabularyTrainingRoute(
       | VocabularyEffectiveTimingSessionFactoryPort
       | undefined
     readonly supplyProvider: VocabularySupplyProvider | undefined
+    readonly supplyRound: TrainingSupplyRound | undefined
     readonly trainingBudgetStatus:
       | (() => 'running' | 'finish-current-item')
       | undefined
@@ -135,6 +140,7 @@ export function VocabularyTrainingRoute(
     runtimeRef.current?.key !== runtimeKey ||
     runtimeRef.current.timingSessionFactory !== props.timingSessionFactory ||
     runtimeRef.current.supplyProvider !== props.supplyProvider ||
+    runtimeRef.current.supplyRound !== props.supplyRound ||
     runtimeRef.current.trainingBudgetStatus !== props.trainingBudgetStatus
     || runtimeRef.current.wrongAnswerReview !== props.wrongAnswerReview
   ) {
@@ -142,6 +148,7 @@ export function VocabularyTrainingRoute(
       key: runtimeKey,
       timingSessionFactory: props.timingSessionFactory,
       supplyProvider: props.supplyProvider,
+      supplyRound: props.supplyRound,
       trainingBudgetStatus: props.trainingBudgetStatus,
       wrongAnswerReview: props.wrongAnswerReview,
       runtime: createVocabularyTrainingRouteRuntime(props, networkStatus),

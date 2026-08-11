@@ -504,6 +504,8 @@ export interface LearningEngineState {
   readonly wrongAnswerLibrary?: WrongAnswerLibraryState
   /** R11 cooldown history, keyed by domain/mode/difficulty bucket. */
   readonly recentTrainingItemIds?: Readonly<Record<string, readonly string[]>>
+  /** Durable R11 scene callback deduplication, independent from review state. */
+  readonly sceneTrainingAcknowledgementIds?: readonly string[]
 }
 
 /** Stable, opaque identity resolved by the content owner (05). */

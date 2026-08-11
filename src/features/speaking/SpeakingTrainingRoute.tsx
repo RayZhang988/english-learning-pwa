@@ -11,6 +11,7 @@ import type {
 } from '../../core/index.ts'
 import type {
   LearningTask,
+  TrainingSupplyRound,
   TrainingUnitScore as TrainingUnitScoreLedger,
 } from '../../learning-engine/index.ts'
 import {
@@ -70,6 +71,8 @@ export interface SpeakingTrainingRouteProps {
   readonly createId?: () => string
   readonly timingSessionFactory?: SpeakingEffectiveTimingSessionFactoryPort
   readonly supplyProvider?: SpeakingSupplyProvider
+  /** 01 supplies the persisted R11 randomized order for budget training. */
+  readonly supplyRound?: TrainingSupplyRound
   readonly trainingBudgetStatus?: () => 'running' | 'finish-current-item'
   /** 01 injects the R13-D unified-library outbox port unchanged. */
   readonly wrongAnswerEvidence?: SpeakingTrainingRuntimeOptions['wrongAnswerEvidence']
@@ -94,9 +97,20 @@ export function toSpeakingTrainingRuntimeOptions(
     createId: props.createId,
     timingSessionFactory: props.timingSessionFactory,
     supplyProvider: props.supplyProvider,
+    supplyRound: props.supplyRound,
     trainingBudgetStatus: props.trainingBudgetStatus,
     wrongAnswerEvidence: props.wrongAnswerEvidence,
   }
+}
+
+/** Public route seam: the route owns forwarding restored R11 round state. */
+export function createSpeakingTrainingRouteRuntime(
+  props: SpeakingTrainingRouteProps,
+  networkStatus: NetworkStatusService = browserNetworkStatus,
+): SpeakingTrainingRuntime {
+  return new SpeakingTrainingRuntime(
+    toSpeakingTrainingRuntimeOptions(props, networkStatus),
+  )
 }
 
 /** Runtime outbox replay depends on its resolver/sink pair. A replacement port
@@ -130,6 +144,7 @@ export function SpeakingTrainingRoute(
     readonly timingSessionFactory:
       | SpeakingEffectiveTimingSessionFactoryPort
       | undefined
+    readonly supplyRound: TrainingSupplyRound | undefined
     readonly wrongAnswerEvidence:
       | SpeakingTrainingRuntimeOptions['wrongAnswerEvidence']
   } | null>(null)
@@ -145,6 +160,7 @@ export function SpeakingTrainingRoute(
     runtimeRef.current?.key !== runtimeKey ||
     runtimeRef.current.timingSessionFactory !==
       props.timingSessionFactory ||
+    runtimeRef.current.supplyRound !== props.supplyRound ||
     !sameSpeakingWrongAnswerEvidencePort(
       runtimeRef.current.wrongAnswerEvidence,
       props.wrongAnswerEvidence,
@@ -153,10 +169,9 @@ export function SpeakingTrainingRoute(
     runtimeRef.current = {
       key: runtimeKey,
       timingSessionFactory: props.timingSessionFactory,
+      supplyRound: props.supplyRound,
       wrongAnswerEvidence: props.wrongAnswerEvidence,
-      runtime: new SpeakingTrainingRuntime(
-        toSpeakingTrainingRuntimeOptions(props, networkStatus),
-      ),
+      runtime: createSpeakingTrainingRouteRuntime(props, networkStatus),
     }
   }
   const runtime = runtimeRef.current.runtime

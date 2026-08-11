@@ -24,6 +24,7 @@ import {
   SceneVocabularyRouteLifecycle,
 } from './scene-vocabulary-route-lifecycle.ts'
 import { productionWrongAnswerEvidencePorts } from './wrong-answer-evidence-production.ts'
+import { useLearningApp } from './learning/learning-app-context.ts'
 
 const createProductionSceneVocabularyRuntime = (
   options: SceneVocabularyPracticeRuntimeOptions,
@@ -94,6 +95,7 @@ export function SceneVocabularyPracticeRouteHost({
   createRuntime = createProductionSceneVocabularyRuntime,
   readyWrongAnswerReview,
 }: SceneVocabularyPracticeRouteHostProps) {
+  const { coordinator } = useLearningApp()
   const navigate = useNavigate()
   const { category: categoryId, scene: sceneId } = useParams()
   const identity = categoryId && sceneId ? `${categoryId}:${sceneId}` : null
@@ -133,9 +135,16 @@ export function SceneVocabularyPracticeRouteHost({
   const runtime = useMemo(
     () =>
       isKnownScene && categoryId && sceneId && identity && wrongAnswerReview
-        ? createRuntime({ categoryId, sceneId, contentSource, wrongAnswerReview })
+        ? createRuntime({
+            categoryId,
+            sceneId,
+            contentSource,
+            wrongAnswerReview,
+            onTrainingItemCompleted: (completion) =>
+              coordinator.acknowledgeSceneTrainingItem(completion),
+          })
         : undefined,
-    [categoryId, contentSource, createRuntime, identity, isKnownScene, sceneId, wrongAnswerReview],
+    [categoryId, contentSource, coordinator, createRuntime, identity, isKnownScene, sceneId, wrongAnswerReview],
   )
 
   useEffect(() => {

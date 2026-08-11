@@ -48,6 +48,36 @@ export function recordRecentTrainingItem(
   return { ...state, recentTrainingItemIds: { ...(state.recentTrainingItemIds ?? {}), [bucket]: next } }
 }
 
+const MAX_SCENE_TRAINING_ACKNOWLEDGEMENTS = 500
+
+/**
+ * A scene callback is removed from its source snapshot only after this state
+ * is saved. Persist its acknowledgement ID beside the recent-12 update so a
+ * refresh between those two writes cannot reorder the cooldown again.
+ */
+export function acknowledgeSceneTrainingItem(
+  state: LearningEngineState,
+  acknowledgementId: string,
+  bucket: string,
+  itemId: string,
+): LearningEngineState {
+  if (acknowledgementId.trim().length === 0) {
+    throw new TypeError('Scene training acknowledgementId must be non-empty')
+  }
+  const processed = state.sceneTrainingAcknowledgementIds ?? []
+  if (processed.includes(acknowledgementId)) {
+    return state
+  }
+  const next = recordRecentTrainingItem(state, bucket, itemId)
+  return {
+    ...next,
+    sceneTrainingAcknowledgementIds: [
+      ...processed,
+      acknowledgementId,
+    ].slice(-MAX_SCENE_TRAINING_ACKNOWLEDGEMENTS),
+  }
+}
+
 function reviewMapWith(
   reviewItems: Readonly<Record<string, ReviewItemState>>,
   item: ReviewItemState,

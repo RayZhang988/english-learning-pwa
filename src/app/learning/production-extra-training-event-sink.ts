@@ -1,7 +1,7 @@
 import { AppError } from '../../core/index.ts'
 import {
   applyExtraTrainingAttempt,
-  applyExtraTrainingEvent,
+  applyLearningEngineExtraTrainingEvent,
   parseExtraTrainingEvent,
   type ExtraTrainingEvent,
   type ExtraTrainingSession,
@@ -96,29 +96,28 @@ export class ProductionExtraTrainingEventSink
     }
     assertSessionIdentity(session, event)
 
+    const transition = applyLearningEngineExtraTrainingEvent({
+      engineState,
+      extraTraining: engineState.extraTraining,
+      event,
+    })
     let nextEngineState: LearningEngineState
     if (
       event.type ===
       'learning.extra-training.attempt.completed.v1'
     ) {
       const attempted = applyExtraTrainingAttempt(
-        engineState,
+        transition.engineState,
         event,
       ).state
       nextEngineState = {
         ...attempted,
-        extraTraining: applyExtraTrainingEvent(
-          engineState.extraTraining,
-          event,
-        ),
+        extraTraining: transition.extraTraining,
       }
     } else {
       nextEngineState = {
-        ...engineState,
-        extraTraining: applyExtraTrainingEvent(
-          engineState.extraTraining,
-          event,
-        ),
+        ...transition.engineState,
+        extraTraining: transition.extraTraining,
       }
     }
     await this.#engineStates.save(nextEngineState)

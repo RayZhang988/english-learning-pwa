@@ -11,6 +11,7 @@ import type {
 } from '../../core/index.ts'
 import type {
   LearningTask,
+  TrainingSupplyRound,
   TrainingUnitScore as TrainingUnitScoreLedger,
 } from '../../learning-engine/index.ts'
 import {
@@ -68,6 +69,8 @@ export interface ListeningTrainingRouteProps {
   readonly timingSessionFactory?: ListeningEffectiveTimingSessionFactoryPort
   /** 01 supplies both ports for QA-011 budget tasks. */
   readonly supplyProvider?: ListeningSupplyProvider
+  /** 01 supplies the persisted R11 randomized order for budget training. */
+  readonly supplyRound?: TrainingSupplyRound
   readonly trainingBudgetStatus?: () => 'running' | 'finish-current-item'
   /** 01 resolves a supplied item through 05's review-content-index aliases. */
   readonly reviewIdentityForItem?:
@@ -81,6 +84,7 @@ export type ListeningRuntimeRouteIdentity = Pick<
   ListeningTrainingRouteProps,
   | 'timingSessionFactory'
   | 'supplyProvider'
+  | 'supplyRound'
   | 'trainingBudgetStatus'
   | 'reviewIdentityForItem'
   | 'publishWrongAnswerEvidence'
@@ -92,6 +96,7 @@ export function listeningRuntimeRouteIdentity(
   return {
     timingSessionFactory: props.timingSessionFactory,
     supplyProvider: props.supplyProvider,
+    supplyRound: props.supplyRound,
     trainingBudgetStatus: props.trainingBudgetStatus,
     reviewIdentityForItem: props.reviewIdentityForItem,
     publishWrongAnswerEvidence: props.publishWrongAnswerEvidence,
@@ -104,6 +109,7 @@ export function hasListeningRuntimeRouteIdentityChanged(
 ): boolean {
   return previous.timingSessionFactory !== next.timingSessionFactory ||
     previous.supplyProvider !== next.supplyProvider ||
+    previous.supplyRound !== next.supplyRound ||
     previous.trainingBudgetStatus !== next.trainingBudgetStatus ||
     previous.reviewIdentityForItem !== next.reviewIdentityForItem ||
     previous.publishWrongAnswerEvidence !== next.publishWrongAnswerEvidence
@@ -125,10 +131,21 @@ export function listeningRuntimeOptionsFromRouteProps(
     createId: props.createId,
     timingSessionFactory: props.timingSessionFactory,
     supplyProvider: props.supplyProvider,
+    supplyRound: props.supplyRound,
     trainingBudgetStatus: props.trainingBudgetStatus,
     reviewIdentityForItem: props.reviewIdentityForItem,
     publishWrongAnswerEvidence: props.publishWrongAnswerEvidence,
   }
+}
+
+/** Public route seam: the route owns forwarding restored R11 round state. */
+export function createListeningTrainingRouteRuntime(
+  props: ListeningTrainingRouteProps,
+  networkStatus: NetworkStatusService = browserNetworkStatus,
+): ListeningTrainingRuntime {
+  return new ListeningTrainingRuntime(
+    listeningRuntimeOptionsFromRouteProps(props, networkStatus),
+  )
 }
 
 export function ListeningTrainingRoute(
@@ -168,9 +185,7 @@ export function ListeningTrainingRoute(
     runtimeRef.current = {
       key: runtimeKey,
       identity: routeIdentity,
-      runtime: new ListeningTrainingRuntime(
-        listeningRuntimeOptionsFromRouteProps(props, networkStatus),
-      ),
+      runtime: createListeningTrainingRouteRuntime(props, networkStatus),
     }
   }
   const runtime = runtimeRef.current.runtime
