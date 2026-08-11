@@ -238,5 +238,9 @@ export function toSpeakingScreenViewModel(
           }
         : undefined,
     action,
+    secondaryActionLabel:
+      session.phase === 'feedback' && session.recorder.playbackAvailable
+        ? '播放示范原句'
+        : undefined,
   }
 }

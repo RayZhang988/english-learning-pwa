@@ -7,12 +7,14 @@ export function SpeakingSessionScreen({
   onExit,
   onRecorderAction,
   onPlayback,
+  onOriginalPlayback,
   onAction,
 }: {
   readonly session: SpeakingSession
   readonly onExit: () => void
   readonly onRecorderAction: () => void
   readonly onPlayback: () => void
+  readonly onOriginalPlayback: () => void
   readonly onAction: () => void
 }) {
   return (
@@ -21,6 +23,7 @@ export function SpeakingSessionScreen({
       onExit={onExit}
       onRecorderAction={onRecorderAction}
       onPlayback={onPlayback}
+      onSecondaryAction={onOriginalPlayback}
       onAction={onAction}
     />
   )

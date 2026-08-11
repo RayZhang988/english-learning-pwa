@@ -49,6 +49,7 @@ import type {
   SpeakingEffectiveTimingSessionFactoryPort,
 } from './timing.ts'
 import type { SpeakingSupplyProvider } from './supply.ts'
+import type { ListeningSpeechPort } from '../listening/speech-synthesis.ts'
 
 export interface SpeakingTrainingRouteProps {
   readonly task: LearningTask
@@ -74,6 +75,8 @@ export interface SpeakingTrainingRouteProps {
   /** 01 supplies the persisted R11 randomized order for budget training. */
   readonly supplyRound?: TrainingSupplyRound
   readonly trainingBudgetStatus?: () => 'running' | 'finish-current-item'
+  /** Optional natural voice port for user-initiated model-sentence playback. */
+  readonly originalSentenceSpeech?: ListeningSpeechPort
   /** 01 injects the R13-D unified-library outbox port unchanged. */
   readonly wrongAnswerEvidence?: SpeakingTrainingRuntimeOptions['wrongAnswerEvidence']
 }
@@ -99,6 +102,7 @@ export function toSpeakingTrainingRuntimeOptions(
     supplyProvider: props.supplyProvider,
     supplyRound: props.supplyRound,
     trainingBudgetStatus: props.trainingBudgetStatus,
+    originalSentenceSpeech: props.originalSentenceSpeech,
     wrongAnswerEvidence: props.wrongAnswerEvidence,
   }
 }
@@ -411,6 +415,9 @@ export function SpeakingTrainingRoute(
         onRecorderAction={recorderAction}
         onPlayback={() => {
           void perform(() => runtime.playRecording())
+        }}
+        onOriginalPlayback={() => {
+          void perform(() => runtime.playOriginalSentence())
         }}
         onAction={primaryAction}
       />

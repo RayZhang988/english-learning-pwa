@@ -80,6 +80,7 @@ describe('speaking screen ViewModel', () => {
       guidance: '识别文本包含完整目标表达，可以继续。',
     })
     expect(viewModel.recorder.playbackAvailable).toBe(true)
+    expect(viewModel.secondaryActionLabel).toBe('播放示范原句')
   })
 
   it('separates a partial transcript from the target without claiming pronunciation scoring', () => {
@@ -152,6 +153,7 @@ describe('speaking screen ViewModel', () => {
       resultLabel: '本次无法判断内容是否说对',
       guidance: '录音已经保留，请回放并对照目标表达自查。',
     })
+    expect(toSpeakingScreenViewModel(session).secondaryActionLabel).toBe('播放示范原句')
   })
 
   it('maps permission failure to device feedback and unscored continuation', () => {

@@ -2,6 +2,10 @@ import type {
   PlatformEventSink,
   ReadonlyDataSource,
 } from '../../core/index.ts'
+import {
+  browserListeningSpeech,
+  type ListeningSpeechPort,
+} from '../listening/speech-synthesis.ts'
 import type {
   LearningTask,
   LearningTaskPausedEvent,
@@ -104,6 +108,8 @@ export interface SpeakingTrainingRuntimeOptions {
   readonly supplyProvider?: SpeakingSupplyProvider
   readonly trainingBudgetStatus?: () => 'running' | 'finish-current-item'
   readonly supplyRound?: TrainingSupplyRound
+  /** Natural system speech for a user-requested model-sentence comparison. */
+  readonly originalSentenceSpeech?: ListeningSpeechPort
   /** Optional until 01 wires the unified-library repository. */
   readonly wrongAnswerEvidence?: {
     readonly resolver: SpeakingWrongAnswerIdentityResolver
@@ -209,6 +215,7 @@ export class SpeakingTrainingRuntime {
   private readonly microphonePermission: MicrophonePermissionService
   private readonly recorder: SpeakingRecordingPort
   private readonly recognition: SpeakingRecognitionPort
+  private readonly originalSentenceSpeech: ListeningSpeechPort
   private readonly now: () => string
   private readonly createId: () => string
   private readonly timing: SpeakingEffectiveTiming
@@ -230,6 +237,8 @@ export class SpeakingTrainingRuntime {
   private mediaTimingWrite: Promise<void> = Promise.resolve()
   private recordingGeneration = 0
   private playbackGeneration = 0
+  private originalSentenceGeneration = 0
+  private originalSentenceFinish: (() => void) | null = null
   private disposePromise: Promise<void> | null = null
   private interruptionRevision = 0
   private readonly interruptionWaiters = new Set<() => void>()
@@ -247,6 +256,8 @@ export class SpeakingTrainingRuntime {
     this.recorder = options.recorder ?? browserSpeakingRecorder
     this.recognition =
       options.recognition ?? browserSpeakingRecognition
+    this.originalSentenceSpeech =
+      options.originalSentenceSpeech ?? browserListeningSpeech
     this.now = options.now ?? (() => new Date().toISOString())
     this.createId = options.createId ?? defaultId
     this.timing = new SpeakingEffectiveTiming(
@@ -693,6 +704,7 @@ export class SpeakingTrainingRuntime {
   }
 
   private async startRecordingInternal(): Promise<SpeakingSession> {
+    this.stopOriginalSentencePlayback()
     const interruptionRevision = this.interruptionRevision
     let session = this.requireSession()
     if (session.phase === 'feedback') {
@@ -975,6 +987,7 @@ export class SpeakingTrainingRuntime {
   }
 
   private async playRecordingInternal(): Promise<SpeakingSession> {
+    this.stopOriginalSentencePlayback()
     const session = this.requireSession()
     if (!this.recording || !session.recorder.playbackAvailable) {
       throw new SpeakingError(
@@ -1037,6 +1050,103 @@ export class SpeakingTrainingRuntime {
     return this.runAction(
       'play-recording',
       () => this.playRecordingInternal(),
+    )
+  }
+
+  private stopOriginalSentencePlayback(): void {
+    this.originalSentenceGeneration += 1
+    this.originalSentenceSpeech.cancel()
+    const finish = this.originalSentenceFinish
+    this.originalSentenceFinish = null
+    finish?.()
+  }
+
+  private async playOriginalSentenceInternal(): Promise<SpeakingSession> {
+    const session = this.requireSession()
+    const prompt = getCurrentSpeakingPrompt(session)
+    if (
+      !prompt ||
+      session.phase !== 'feedback' ||
+      !this.recording ||
+      !session.recorder.playbackAvailable
+    ) {
+      throw new SpeakingError(
+        'playback-failed',
+        'No completed speaking recording is available for sentence comparison.',
+      )
+    }
+
+    this.playbackGeneration += 1
+    this.recorder.stopPlayback()
+    this.stopOriginalSentencePlayback()
+    const generation = ++this.originalSentenceGeneration
+    const playing = {
+      ...session,
+      recorder: {
+        ...session.recorder,
+        status: 'processing' as const,
+        message: '正在播放示范原句。',
+      },
+      updatedAt: this.now(),
+    }
+    await this.save(playing)
+
+    try {
+      await new Promise<void>((resolve, reject) => {
+        const finish = () => {
+          if (this.originalSentenceFinish === finish) {
+            this.originalSentenceFinish = null
+          }
+          resolve()
+        }
+        this.originalSentenceFinish = finish
+        this.originalSentenceSpeech.speak({
+          text: prompt.modelAnswer,
+          locale: 'en-US',
+          rate: 1,
+          usePreferredDeviceVoice: true,
+        }, {
+          onEnd: finish,
+          onError: () => reject(new Error('示范原句播放失败。')),
+        })
+      })
+      if (generation !== this.originalSentenceGeneration) {
+        return this.requireSession()
+      }
+      return this.save({
+        ...playing,
+        recorder: {
+          ...playing.recorder,
+          status: 'review',
+          message: '示范原句播放完毕。',
+        },
+        updatedAt: this.now(),
+      })
+    } catch (error) {
+      if (generation !== this.originalSentenceGeneration) {
+        return this.requireSession()
+      }
+      return this.save({
+        ...playing,
+        recorder: {
+          ...playing.recorder,
+          status: 'review',
+          message: toSpeakingError(error).message,
+        },
+        updatedAt: this.now(),
+      })
+    } finally {
+      if (generation === this.originalSentenceGeneration) {
+        this.originalSentenceFinish = null
+      }
+    }
+  }
+
+  /** User-initiated only; it never speaks a role label or partner line. */
+  playOriginalSentence(): Promise<SpeakingSession> {
+    return this.runAction(
+      'play-original-sentence',
+      () => this.playOriginalSentenceInternal(),
     )
   }
 
@@ -1106,6 +1216,7 @@ export class SpeakingTrainingRuntime {
     this.discardRecording()
     this.playbackGeneration += 1
     this.recorder.stopPlayback()
+    this.stopOriginalSentencePlayback()
     await this.mediaTimingWrite
     let session = advanceSpeakingSession(
       this.requireSession(),
@@ -1195,6 +1306,7 @@ export class SpeakingTrainingRuntime {
     }
     this.recordingGeneration += 1
     this.playbackGeneration += 1
+    this.stopOriginalSentencePlayback()
     this.recorder.cancel()
     this.recorder.stopPlayback()
     this.recognitionHandle?.abort()

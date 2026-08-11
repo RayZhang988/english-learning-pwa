@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { InMemoryPlatformEventSink } from '../../core/testing/index.ts'
 import { createTrainingSupplyRound } from '../../learning-engine/index.ts'
+import type { ListeningSpeechPort } from '../listening/speech-synthesis.ts'
 import type { NamespaceStore, StoredRecord } from '../../storage/index.ts'
 import { SpeakingSessionRepository } from './repository.ts'
 import type { SpeakingSupplyProvider } from './supply.ts'
@@ -76,6 +77,16 @@ describe('SpeakingTrainingRoute wrong-answer injection', () => {
   it('keeps the existing route behavior compatible without the optional port', () => {
     expect(toSpeakingTrainingRuntimeOptions(base, network).wrongAnswerEvidence).toBeUndefined()
     expect(sameSpeakingWrongAnswerEvidencePort(undefined, undefined)).toBe(true)
+  })
+
+  it('forwards the optional original-sentence speech port without changing old calls', () => {
+    const originalSentenceSpeech = {
+      capabilities: () => ({ supported: true, voicesKnown: true, enUsVoiceAvailable: true, localEnUsVoiceCount: 1, pauseResumeAvailable: true, supportedRates: [0.75, 1, 1.25] as const }),
+      voices: () => [], speak: () => undefined, pause: () => undefined, resume: () => undefined,
+      cancel: () => undefined, isPaused: () => false, isSpeaking: () => false,
+    } as ListeningSpeechPort
+    expect(toSpeakingTrainingRuntimeOptions({ ...base, originalSentenceSpeech }, network).originalSentenceSpeech).toBe(originalSentenceSpeech)
+    expect(toSpeakingTrainingRuntimeOptions(base, network).originalSentenceSpeech).toBeUndefined()
   })
 
   it('forwards a supplied round for prompt and scene items, preserving media and unscorable state through refresh', async () => {

@@ -1,6 +1,11 @@
 import { describe, expect, it, vi } from 'vitest'
 import { InMemoryPlatformEventSink } from '../../core/testing/index.ts'
 import type { PlatformEvent, PlatformEventSink } from '../../core/index.ts'
+import type {
+  ListeningSpeechCallbacks,
+  ListeningSpeechPort,
+  ListeningSpeechRequest,
+} from '../listening/speech-synthesis.ts'
 import {
   createTrainingSupplyRound,
   parseLearningEvent,
@@ -86,6 +91,7 @@ class FakeRecorder implements SpeakingRecordingPort {
   stopped = 0
   canceled = 0
   played = 0
+  playbackStops = 0
 
   capabilities() {
     return {
@@ -116,9 +122,50 @@ class FakeRecorder implements SpeakingRecordingPort {
     this.played += 1
   }
 
-  stopPlayback() {}
+  stopPlayback() { this.playbackStops += 1 }
   discard(_recording: SpeakingRecording) {}
   dispose() {}
+}
+
+class FakeOriginalSentenceSpeech implements ListeningSpeechPort {
+  readonly requests: ListeningSpeechRequest[] = []
+  canceled = 0
+  private callbacks: ListeningSpeechCallbacks | null = null
+
+  capabilities() {
+    return {
+      supported: true,
+      voicesKnown: true,
+      enUsVoiceAvailable: true,
+      localEnUsVoiceCount: 1,
+      pauseResumeAvailable: true,
+      supportedRates: [0.75, 1, 1.25] as const,
+    }
+  }
+
+  voices() { return [] }
+
+  speak(request: ListeningSpeechRequest, callbacks: ListeningSpeechCallbacks) {
+    this.requests.push(request)
+    this.callbacks = callbacks
+    callbacks.onStart?.()
+  }
+
+  cancel() {
+    this.canceled += 1
+    this.callbacks = null
+  }
+
+  pause() {}
+  resume() {}
+  isPaused() { return false }
+  isSpeaking() { return this.callbacks !== null }
+
+  finish() {
+    const callbacks = this.callbacks
+    this.callbacks = null
+    callbacks?.onEnd?.()
+  }
 }
 
 class FakeRecognition implements SpeakingRecognitionPort {
@@ -188,6 +235,7 @@ function runtime(options: {
   readonly contentSource?: ReadonlyDataSource<SpeakingCatalog>
   readonly repository?: SpeakingSessionRepository
   readonly wrongAnswerEvidence?: ConstructorParameters<typeof SpeakingTrainingRuntime>[0]['wrongAnswerEvidence']
+  readonly originalSentenceSpeech?: FakeOriginalSentenceSpeech
 }) {
   return new SpeakingTrainingRuntime({
     task: createSpeakingTask(),
@@ -211,6 +259,7 @@ function runtime(options: {
     now: clock(),
     createId: ids('event'),
     wrongAnswerEvidence: options.wrongAnswerEvidence,
+    originalSentenceSpeech: options.originalSentenceSpeech,
   })
 }
 
@@ -695,6 +744,42 @@ describe('speaking training runtime fallbacks', () => {
       match: null,
       fallbackReason: 'recognition-no-speech',
     })
+  })
+
+  it('plays only the model sentence after an unscorable recording and stops the recording player first', async () => {
+    const recorder = new FakeRecorder()
+    const originalSentenceSpeech = new FakeOriginalSentenceSpeech()
+    const training = runtime({
+      sink: new InMemoryPlatformEventSink(),
+      recorder,
+      recognition: new FakeRecognition({
+        status: 'failed', code: 'no-speech', message: '没有识别到文本。',
+      }),
+      originalSentenceSpeech,
+    })
+
+    await training.initialize()
+    await training.startRecording()
+    const reviewed = await training.stopRecording()
+    expect(reviewed.recorder.playbackAvailable).toBe(true)
+    expect(reviewed.recognition.errorCode).toBe('no-speech')
+
+    const playing = training.playOriginalSentence()
+    await vi.waitFor(() => expect(originalSentenceSpeech.requests).toEqual([{
+      text: speakingPrompt.modelAnswer,
+      locale: 'en-US',
+      rate: 1,
+      usePreferredDeviceVoice: true,
+    }]))
+    expect(recorder.playbackStops).toBeGreaterThan(0)
+    expect(training.currentSession?.recorder.message).toBe('正在播放示范原句。')
+    originalSentenceSpeech.finish()
+    const finished = await playing
+    expect(finished.recorder.message).toBe('示范原句播放完毕。')
+
+    await training.playRecording()
+    expect(originalSentenceSpeech.canceled).toBeGreaterThan(0)
+    expect(recorder.played).toBe(1)
   })
 
   it('allows unscored continuation after microphone permission denial', async () => {
