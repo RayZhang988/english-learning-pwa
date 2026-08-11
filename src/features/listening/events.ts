@@ -10,6 +10,7 @@ import type {
   LearningTrainingContentRecoveredEvent,
   LearningTrainingItemCompletedEvent,
   LearningTaskSkippedEvent,
+  TrainingSupplyRound,
 } from '../../learning-engine/index.ts'
 import { ListeningError } from './errors.ts'
 import { getListeningSessionResult } from './session.ts'
@@ -204,6 +205,7 @@ export function createListeningTrainingItemCompletedEvent(
   item: LearningTaskSupplyItem,
   requestId: string,
   nextSupplyCursor: string | null,
+  supplyRound: TrainingSupplyRound | undefined,
   identity: EventIdentity,
 ): LearningTrainingItemCompletedEvent {
   return {
@@ -212,7 +214,15 @@ export function createListeningTrainingItemCompletedEvent(
     sourceModuleId: 'listening',
     occurredAt: identity.occurredAt,
     schemaVersion: 1,
-    payload: { ...basePayload(task, identity.localDate), mode: task.mode, item, requestId, nextSupplyCursor, outcome: 'scored' },
+    payload: {
+      ...basePayload(task, identity.localDate),
+      mode: task.mode,
+      item,
+      requestId,
+      nextSupplyCursor,
+      outcome: 'scored',
+      ...(supplyRound === undefined ? {} : { supplyRound }),
+    },
   }
 }
 

@@ -3,6 +3,7 @@ import { InMemoryPlatformEventSink } from '../../core/testing/index.ts'
 import type { PlatformEvent, PlatformEventSink } from '../../core/index.ts'
 import {
   applyWrongAnswerEvidence,
+  createTrainingSupplyRound,
   createWrongAnswerLibraryState,
   parseLearningEvent,
 } from '../../learning-engine/index.ts'
@@ -585,6 +586,12 @@ describe('listening training runtime', () => {
       localDate: '2026-07-28', contentSource: { load: async () => currentCatalog }, eventSink: sink,
       repository: new ListeningSessionRepository(store), speech, now: clock(), createId: (() => { let id = 0; return () => `event-${id++}` })(),
       supplyProvider, trainingBudgetStatus: () => budget,
+      supplyRound: createTrainingSupplyRound({
+        seed: 'daily-listening-round',
+        candidateItemIds: items.map((item) => item.itemId),
+        shortTermExcludedItemIds: [],
+        priorityItemIds: ['supply-1'],
+      }),
     })
     let session = await runtime.initialize()
     expect(session.stream?.activeItem.itemId).toBe('supply-1')
@@ -617,6 +624,14 @@ describe('listening training runtime', () => {
       .map((event) => parseLearningEvent(event))
       .filter((event) => event.type === 'learning.attempt.completed.v1')
     expect(attempts.every((event) => event.payload.taskCompleted === false)).toBe(true)
+    const itemCompletions = sink.events
+      .map((event) => parseLearningEvent(event))
+      .filter((event) => event.type === 'learning.training.item.completed.v1')
+    expect(itemCompletions[0]?.payload.supplyRound).toMatchObject({
+      seed: 'daily-listening-round',
+      cursor: 1,
+      order: expect.arrayContaining(['supply-1', 'supply-2']),
+    })
   })
 
   it('reports a retryable exhausted stream without clearing completed exclusions', async () => {

@@ -6,6 +6,7 @@ import type { ListeningSpeechCallbacks, ListeningSpeechPort } from './speech-syn
 import type { ListeningQuestion } from './types.ts'
 import {
   applyWrongAnswerEvidence,
+  createTrainingSupplyRound,
   createWrongAnswerLibraryState,
 } from '../../learning-engine/index.ts'
 
@@ -100,6 +101,46 @@ describe('extra listening commands', () => {
     expect(runtime.currentSnapshot?.session.completedItemCount).toBe(1)
     expect(JSON.stringify(runtime.currentSnapshot)).not.toMatch(/planId|taskId/)
   })
+
+  it.each([wordQuestion, dictationQuestion])(
+    'publishes the acknowledged randomized round after completing %s',
+    async (question) => {
+      const configured = options(question)
+      const events: import('../../learning-engine/index.ts').ExtraTrainingEvent[] = []
+      const runtime = new ExtraListeningTrainingRuntime({
+        ...configured,
+        session: {
+          ...session,
+          supplyRound: createTrainingSupplyRound({
+            seed: 'extra-listening-round',
+            candidateItemIds: [item.itemId],
+            shortTermExcludedItemIds: [],
+          }),
+        },
+        eventSink: { publishExtraTrainingEvent: async (event) => { events.push(event) } },
+      })
+
+      await runtime.initialize()
+      await runtime.next()
+      await completePlayback(runtime, configured.speech)
+      if (question.type === 'keyword-dictation') {
+        await runtime.changeDictation('hello')
+      } else {
+        await runtime.select('right')
+      }
+      await runtime.submit()
+      await runtime.completeCurrentItem()
+
+      const completion = events.find(
+        (event) => event.type === 'learning.extra-training.item.completed.v1',
+      )
+      expect(completion?.payload.supplyRound).toMatchObject({
+        seed: 'extra-listening-round',
+        cursor: 1,
+        order: [item.itemId],
+      })
+    },
+  )
 
   it('persists the latest dictation input across restore and submits it', async () => {
     const configured = options(dictationQuestion)

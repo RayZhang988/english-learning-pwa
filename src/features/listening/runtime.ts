@@ -797,7 +797,7 @@ export class ListeningTrainingRuntime {
         finishCurrentItem: active.finishCurrentItem || this.trainingBudgetStatus?.() === 'finish-current-item',
       }
       session = withPendingListeningEvent(session, createListeningStreamAttemptEvent(current, this.untrustedLegacyDuration(current), this.identity(now)), now)
-      session = withPendingListeningEvent(session, createListeningTrainingItemCompletedEvent(this.task, active.activeItem, active.activeRequestId, active.nextSupplyCursor, this.identity(now)), now)
+      session = withPendingListeningEvent(session, createListeningTrainingItemCompletedEvent(this.task, active.activeItem, active.activeRequestId, active.nextSupplyCursor, active.supplyRound, this.identity(now)), now)
       if (completedStream.finishCurrentItem) {
         session = completeListeningStreamSession(session, completedStream, now)
         session = withPendingListeningEvent(session, createListeningTrainingBudgetCompletedEvent(this.task, active.activeItem.itemId, completedStream.completedItemCount, this.identity(now)), now)
