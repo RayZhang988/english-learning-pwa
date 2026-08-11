@@ -8,6 +8,16 @@ import {
   speakingPrompt,
 } from '../../features/speaking/test-fixtures.ts'
 import {
+  createListeningSession,
+  toListeningScreenViewModel,
+  type ExtraListeningTrainingSnapshot,
+} from '../../features/listening/index.ts'
+import {
+  createListeningTask,
+  createListeningUnit,
+  dictationQuestion,
+} from '../../features/listening/test-fixtures.ts'
+import {
   createExtraTrainingSession,
   type ExtraTrainingSession,
 } from '../../learning-engine/index.ts'
@@ -19,6 +29,7 @@ import {
   isDailyPlanCompleted3Of3,
   toExtraTrainingActiveViewModel,
   toExtraTrainingCompletionViewModel,
+  toExtraListeningScreenViewModel,
   toExtraTrainingPickerViewModel,
   toExtraSpeakingScreenViewModel,
 } from './extra-training-view-model.ts'
@@ -65,6 +76,58 @@ function engineWith(...sessions: ExtraTrainingSession[]) {
 }
 
 describe('R6 app view models', () => {
+  it('keeps the authored dictation guidance through daily and extra training view models', () => {
+    const unit = createListeningUnit([dictationQuestion])
+    const daily = toListeningScreenViewModel(
+      createListeningSession(
+        createListeningTask(),
+        unit,
+        '2026-08-11T00:00:00.000Z',
+      ),
+    )
+    const extraSnapshot: ExtraListeningTrainingSnapshot = {
+      schemaVersion: 1,
+      session: session({
+        domain: 'listening',
+        targetModuleId: 'listening',
+      }),
+      unit,
+      question: dictationQuestion,
+      activeItem: null,
+      activeRequestId: null,
+      suppliedNextCursor: null,
+      selectedOptionId: null,
+      dictationInput: '',
+      answer: null,
+      playback: {
+        status: 'idle',
+        currentSegmentId: dictationQuestion.primarySegmentId,
+        rate: 1,
+        repeatMode: 'none',
+        playCounts: {},
+        completedPlayCounts: {},
+        errorMessage: null,
+      },
+      phase: 'answering',
+      pendingEvents: [],
+      pendingWrongAnswerEvidence: [],
+      updatedAt: '2026-08-11T00:00:00.000Z',
+    }
+    const extra = toExtraListeningScreenViewModel(extraSnapshot)
+
+    if (
+      daily.question.kind !== 'keyword-dictation' ||
+      extra.question.kind !== 'keyword-dictation'
+    ) {
+      throw new Error('Expected keyword-dictation view models.')
+    }
+    expect(extra.question.answerGuidance).toEqual(
+      daily.question.answerGuidance,
+    )
+    expect(extra.question.answerGuidance).toEqual(
+      dictationQuestion.answerGuidance,
+    )
+  })
   it('passes the authored target translation through recognized and unscorable speaking feedback', () => {
     const base: ExtraSpeakingTrainingSnapshot = {
       schemaVersion: 1,
