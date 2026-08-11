@@ -10,6 +10,7 @@ import { createInitialProgressState } from './progress.ts'
 import { generateDailyPlan } from './scheduler.ts'
 import { getPlanTaskAccess } from './task-access.ts'
 import { buildLearningTaskSupplyRequest } from './training-budget.ts'
+import { createTrainingSupplyRound } from './training-randomization.ts'
 import { abilityProfile, learningCandidate } from './test-fixtures.ts'
 
 function taskAndProgress() {
@@ -125,6 +126,34 @@ function recoveryEvent(
 }
 
 describe('required effective-training budget', () => {
+  it('passes a persisted randomized round unchanged to every downstream daily supplier', () => {
+    const { progress } = taskAndProgress()
+    const supplyRound = createTrainingSupplyRound({
+      seed: 'daily-seed',
+      candidateItemIds: ['candidate-a', 'candidate-b'],
+      shortTermExcludedItemIds: ['previous-item'],
+    })
+    const withRound = {
+      ...progress,
+      tasks: progress.tasks.map((execution, index) =>
+        index === 0
+          ? {
+              ...execution,
+              training: { ...execution.training!, supplyRound },
+            }
+          : execution,
+      ),
+    }
+
+    const request = buildLearningTaskSupplyRequest(withRound.tasks[0]!)
+    expect(request?.supplyRound).toEqual(supplyRound)
+    expect(
+      buildLearningTaskSupplyRequest(
+        JSON.parse(JSON.stringify(withRound)).tasks[0],
+      )?.supplyRound,
+    ).toEqual(supplyRound)
+  })
+
   it('creates one independent 900-second stream per domain without using estimates as budgets', () => {
     const { progress } = taskAndProgress()
     expect(progress.plan.targetSeconds).toBe(2_700)

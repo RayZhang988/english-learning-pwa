@@ -211,6 +211,18 @@ export {
   remainingEffectiveSeconds,
 } from './training-budget.ts'
 export {
+  SHORT_TERM_EXCLUSION_WINDOW,
+  assertTrainingSupplyRound,
+  createTrainingSupplyRound,
+  nextTrainingSupplyItem,
+  recordTrainingSupplyItem,
+} from './training-randomization.ts'
+export type {
+  CreateTrainingSupplyRoundInput,
+  NextTrainingSupplyItem,
+  TrainingSupplyRound,
+} from './training-randomization.ts'
+export {
   applyExtraTrainingEvent,
   buildExtraTrainingSupplyRequest,
   createExtraTrainingSession,

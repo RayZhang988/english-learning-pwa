@@ -338,6 +338,9 @@ export function buildExtraTrainingSupplyRequest(
     targetDifficulty: session.targetDifficulty,
     cursor: session.nextSupplyCursor,
     excludeItemIds: session.excludeItemIds,
+    ...(session.supplyRound === undefined
+      ? {}
+      : { supplyRound: session.supplyRound }),
     priority: PRIORITY,
     priorityItemIds: sessionPriorityItemIds(session),
     reason:

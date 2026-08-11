@@ -15,6 +15,7 @@ import { createPlanProgress } from './lifecycle.ts'
 import { createInitialProgressState } from './progress.ts'
 import { generateDailyPlan } from './scheduler.ts'
 import { abilityProfile, learningCandidate } from './test-fixtures.ts'
+import { createTrainingSupplyRound } from './training-randomization.ts'
 
 function completedDailyPlan(): PlanProgress {
   const plan = generateDailyPlan({
@@ -212,6 +213,28 @@ describe('R6.2 module-scoped independent extra-training sessions', () => {
     })
     const resumed = applyExtraTrainingEvent(restored, event('learning.extra-training.started.v1'))
     expect(buildExtraTrainingSupplyRequest(resumed.sessions['vocabulary-extra-1'])?.reason).toBe('resume')
+  })
+
+  it('passes a persisted randomized round unchanged to an extra-training supplier', () => {
+    const initial = create()
+    const supplyRound = createTrainingSupplyRound({
+      seed: 'extra-seed',
+      candidateItemIds: ['optional-a', 'optional-b'],
+      shortTermExcludedItemIds: ['yesterday-item'],
+    })
+    const session = {
+      ...initial.sessions['vocabulary-extra-1'],
+      supplyRound,
+    }
+
+    expect(buildExtraTrainingSupplyRequest(session)?.supplyRound).toEqual(
+      supplyRound,
+    )
+    expect(
+      buildExtraTrainingSupplyRequest(
+        JSON.parse(JSON.stringify(session)),
+      )?.supplyRound,
+    ).toEqual(supplyRound)
   })
 
   it('rejects invalid priority item identities and reads old sessions as four empty groups', () => {

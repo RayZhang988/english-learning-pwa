@@ -8,6 +8,7 @@ import type {
   PlatformEvent,
   PortableData,
 } from '../core/index.ts'
+import type { TrainingSupplyRound } from './training-randomization.ts'
 
 export type {
   AbilityDomain,
@@ -186,6 +187,8 @@ export interface LearningTaskSupplyRequest {
   readonly cursor: string | null
   /** Includes completed stream items, so providers can avoid short repeats. */
   readonly excludeItemIds: readonly string[]
+  /** Additive R11-A checkpoint; legacy tasks omit it. */
+  readonly supplyRound?: TrainingSupplyRound
   readonly reason: 'initial' | 'continue-after-item'
 }
 
@@ -278,6 +281,8 @@ export interface ExtraTrainingSession {
   readonly status: ExtraTrainingStatus
   readonly nextSupplyCursor: string | null
   readonly excludeItemIds: readonly string[]
+  /** Additive R11-A checkpoint; legacy R6 sessions omit it. */
+  readonly supplyRound?: TrainingSupplyRound
   /** Published candidate item IDs supplied by 01/05; 04 never infers them. */
   readonly priorityItemIds?: ExtraTrainingPriorityItemIds
   readonly completedItemCount: number
@@ -326,6 +331,8 @@ export interface ExtraTrainingSupplyRequest {
   readonly targetDifficulty: number
   readonly cursor: string | null
   readonly excludeItemIds: readonly string[]
+  /** R11-A checkpoint passed to providers without a re-shuffle. */
+  readonly supplyRound?: TrainingSupplyRound
   readonly priority: readonly ExtraTrainingContentPriority[]
   readonly priorityItemIds: ExtraTrainingPriorityItemIds
   readonly reason: 'initial' | 'continue-after-item' | 'resume'
@@ -722,6 +729,8 @@ export interface TrainingTaskProgress {
   readonly status: TrainingTaskProgressStatus
   readonly completedItemIds: readonly string[]
   readonly nextSupplyCursor: string | null
+  /** Additive R11-A checkpoint; legacy active plans omit it. */
+  readonly supplyRound?: TrainingSupplyRound
   readonly contentExhausted: TrainingTaskContentExhausted | null
 }
 

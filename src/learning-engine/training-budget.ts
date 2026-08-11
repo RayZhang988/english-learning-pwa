@@ -86,6 +86,9 @@ export function buildLearningTaskSupplyRequest(
     targetDifficulty: execution.task.difficultyLevel,
     cursor: training.nextSupplyCursor,
     excludeItemIds: training.completedItemIds,
+    ...(training.supplyRound === undefined
+      ? {}
+      : { supplyRound: training.supplyRound }),
     reason,
   }
 }
