@@ -13,7 +13,7 @@ const allowedChineseSynonymMeaningWhitelist = new Map()
 assert.equal(batch.length, 62, 'Primary 2 3A must contain exactly 62 daily knowledge points.')
 assert.equal(items.filter((item) => difficultyOf(item) === 0).length, 200, 'Kindergarten must remain closed at 200.')
 assert.equal(items.filter((item) => difficultyOf(item) === .5).length, 200, 'Primary 1 must remain closed at 200.')
-assert.equal(items.filter((item) => difficultyOf(item) === 1).length, 75, 'Primary 2 must contain 13 preserved points plus this 62-point batch.')
+assert.ok(items.filter((item) => difficultyOf(item) === 1).length >= 75, 'Primary 2 must retain 13 preserved points plus this 62-point batch.')
 assert.equal(priorPrimaryOne.length, 195, 'All primary-1 batch identities must remain present.')
 for (const prefix of ['p1a', 'p1b', 'p1c']) for (let index = 1; index <= 65; index += 1) {
   const sequence = String(index).padStart(3, '0')

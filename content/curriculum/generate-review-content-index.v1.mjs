@@ -200,8 +200,11 @@ function expectedIndex() {
       speaking: 'Prompt/quiz fields including modelAnswer and acceptedAnswers are preserved; this does not define pronunciation scoring.',
     },
     totals: { dailyAliases: supply.candidates.length, sceneAliases: maps.sceneVocabulary.size, allAliases: entries.length, uniqueCanonicalContents: Object.keys(identities).length, crossSourceSharedCanonicalContents: shared, byDomainQuestionType },
+    // `identities` is deliberately a build-time collision audit rather than a
+    // released runtime copy of every alias. Runtime resolution uses aliases
+    // only; publishing both duplicated the index and broke offline precache
+    // once valid curriculum capacity grew.
     aliases,
-    identities,
   }
 }
 
