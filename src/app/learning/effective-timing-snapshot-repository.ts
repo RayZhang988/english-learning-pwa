@@ -231,6 +231,13 @@ function assertSnapshot(
   if (!Array.isArray(value.pendingEvents)) {
     throw new TypeError('pendingEvents must be an array.')
   }
+  if (
+    value.recoveryMarker !== undefined &&
+    (typeof value.recoveryMarker !== 'string' ||
+      value.recoveryMarker.trim().length === 0)
+  ) {
+    throw new TypeError('recoveryMarker must be a non-empty string when present.')
+  }
   const eventIds = new Set<string>()
   const eventIdPrefix = `timing:${value.sessionId}:`
   let previousSequence = 0

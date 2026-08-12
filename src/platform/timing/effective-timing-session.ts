@@ -43,6 +43,7 @@ interface CreateEffectiveTimingSessionOptions {
   readonly scheduler?: EffectiveTimingScheduler
   readonly interactionIdleClockSeconds?: number
   readonly maximumActiveClockSeconds?: number
+  readonly snapshotRecoveryMarker?: string
   readonly createId?: () => string
   readonly onError?: (error: unknown) => void
 }
@@ -67,6 +68,7 @@ interface CreateAdaptedEffectiveTimingSessionOptions<
   readonly scheduler?: EffectiveTimingScheduler
   readonly interactionIdleClockSeconds?: number
   readonly maximumActiveClockSeconds?: number
+  readonly snapshotRecoveryMarker?: string
   readonly createId?: () => string
   readonly onError?: (error: unknown) => void
 }
@@ -190,6 +192,7 @@ export class EffectiveTimingSession<
   readonly #scheduler: EffectiveTimingScheduler
   readonly #interactionIdleClockSeconds: number
   readonly #maximumActiveClockSeconds: number | undefined
+  readonly #snapshotRecoveryMarker: string | undefined
   readonly #createId: () => string
   readonly #onError: ((error: unknown) => void) | undefined
   #sessionId = ''
@@ -225,6 +228,7 @@ export class EffectiveTimingSession<
       MAX_INTERACTION_IDLE_SECONDS
     this.#maximumActiveClockSeconds =
       options.maximumActiveClockSeconds
+    this.#snapshotRecoveryMarker = options.snapshotRecoveryMarker
     this.#createId = options.createId ?? defaultId
     this.#onError = options.onError
     this.#visibility = this.#lifecycle.currentVisibility()
@@ -820,6 +824,9 @@ export class EffectiveTimingSession<
       suspended: this.#suspended,
       nextEventSequence: this.#nextEventSequence,
       pendingEvents: [...this.#pendingEvents],
+      ...(this.#snapshotRecoveryMarker === undefined
+        ? {}
+        : { recoveryMarker: this.#snapshotRecoveryMarker }),
       updatedAt: isoTimestamp(point.wallTimeMs),
     })
   }

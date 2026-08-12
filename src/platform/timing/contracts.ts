@@ -152,6 +152,8 @@ export interface EffectiveTimingSessionSnapshot<
   readonly suspended: boolean
   readonly nextEventSequence: number
   readonly pendingEvents: readonly TEvent[]
+  /** Optional producer marker for safe, one-time snapshot migrations. */
+  readonly recoveryMarker?: string
   readonly updatedAt: string
 }
 

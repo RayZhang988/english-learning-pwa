@@ -3,6 +3,7 @@ import type {
 } from '../../core/index.ts'
 import type {
   LearningTask,
+  TaskExecutionState,
   TrainingModuleId,
 } from '../../learning-engine/index.ts'
 import {
@@ -28,6 +29,30 @@ import { learningAppCoordinator } from './learning-app-coordinator.ts'
 export interface ResolvedTimingTask {
   readonly task: LearningTask
   readonly localDate: string
+  /** True only for the zero-progress test-mode remnant recovery path. */
+  readonly discardUntouchedTestTimingSnapshot?: boolean
+}
+
+/**
+ * An old 30-second test build could close timing before the learner reached a
+ * module.  Its snapshot is disposable only when the plan proves no training
+ * ever happened.  This intentionally excludes normal 15-minute learning.
+ */
+export function shouldDiscardUntouchedTrainingTestTimingSnapshot(
+  testModeEnabled: boolean,
+  execution: TaskExecutionState | undefined,
+): boolean {
+  const training = execution?.training
+  return (
+    testModeEnabled &&
+    execution?.status !== 'completed' &&
+    execution?.effectiveSeconds === 0 &&
+    (execution?.timingSegmentCount ?? 0) === 0 &&
+    training?.status === 'running' &&
+    training.remainingEffectiveSeconds ===
+      execution.task.trainingBudget?.targetEffectiveSeconds &&
+    training.completedItemIds.length === 0
+  )
 }
 
 export interface ProductionEffectiveTimingSessionFactoryOptions {
@@ -41,6 +66,7 @@ export interface ProductionEffectiveTimingSessionFactoryOptions {
   readonly clock?: EffectiveTimingClock
   /** Creates a clock when a task enters training, rather than at app boot. */
   readonly createClock?: () => EffectiveTimingClock | undefined
+  readonly snapshotRecoveryMarker?: string
   readonly scheduler?: EffectiveTimingScheduler
   readonly interactionIdleClockSeconds?: number
   readonly maximumActiveClockSeconds?: number
@@ -92,6 +118,16 @@ export class ProductionEffectiveTimingSessionFactory {
       this.#sessions.delete(key)
     }
 
+    if (resolved.discardUntouchedTestTimingSnapshot) {
+      const snapshot = await this.#options.snapshotStore.load(identity)
+      if (
+        snapshot !== undefined &&
+        snapshot.recoveryMarker !== this.#options.snapshotRecoveryMarker
+      ) {
+        await this.#options.snapshotStore.delete(identity)
+      }
+    }
+
     const creation = EffectiveTimingSession.create({
       identity,
       eventSink: this.#options.eventSink,
@@ -103,6 +139,7 @@ export class ProductionEffectiveTimingSessionFactory {
         this.#options.interactionIdleClockSeconds,
       maximumActiveClockSeconds:
         this.#options.maximumActiveClockSeconds,
+      snapshotRecoveryMarker: this.#options.snapshotRecoveryMarker,
       createId: this.#options.createId,
       onError: this.#options.onError,
     })
@@ -147,6 +184,13 @@ export const productionEffectiveTimingSessions =
       return {
         task,
         localDate: state.localDate,
+        discardUntouchedTestTimingSnapshot:
+          shouldDiscardUntouchedTrainingTestTimingSnapshot(
+            trainingTestMode.enabled,
+            state.runtime.activePlan.tasks.find(
+              (candidate) => candidate.task.taskId === task.taskId,
+            ),
+          ),
       }
     },
     eventSink: learningAppCoordinator.eventSink,
@@ -155,4 +199,7 @@ export const productionEffectiveTimingSessions =
     onError(error) {
       console.error('Effective timing lifecycle operation failed', error)
     },
+    snapshotRecoveryMarker: trainingTestMode.enabled
+      ? 'training-test-timing-v2'
+      : undefined,
   })
