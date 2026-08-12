@@ -1,0 +1,1160 @@
+{
+  "schemaVersion": 1,
+  "documentType": "r17-growth-level-capacity-audit",
+  "auditVersion": "1.0.0",
+  "source": {
+    "supplyPath": "content/curriculum/training-supply-index.v1.json",
+    "supplyVersion": "1.2.0",
+    "totalPublishedCandidates": 864
+  },
+  "scope": {
+    "included": "Only published continuous daily/R6 learn-mode candidates with a stable itemId and scoreable source identity.",
+    "excluded": [
+      "R13 dedicated scene training bank (612 questions)",
+      "R13-D wrong-answer review records",
+      "trainingTest=30 data and test-only snapshots",
+      "unscorable practice, drafts and duplicated item identities"
+    ],
+    "constraintsChecked": [
+      "travel-English course scope",
+      "listening R9 bilingual-choice source types retained",
+      "listening R10 keyword-dictation source type retained",
+      "speaking prompts retain original media/recognition contract"
+    ]
+  },
+  "mapping": {
+    "mappingVersion": "r17-growth-difficulty-to-level-v1",
+    "monotonic": true,
+    "levels": [
+      {
+        "ordinal": 0,
+        "id": "kindergarten",
+        "labelZh": "幼儿园",
+        "minimumDifficulty": 0,
+        "maximumDifficultyExclusive": 0.5
+      },
+      {
+        "ordinal": 1,
+        "id": "primary-1",
+        "labelZh": "一年级",
+        "minimumDifficulty": 0.5,
+        "maximumDifficultyExclusive": 1
+      },
+      {
+        "ordinal": 2,
+        "id": "primary-2",
+        "labelZh": "二年级",
+        "minimumDifficulty": 1,
+        "maximumDifficultyExclusive": 1.5
+      },
+      {
+        "ordinal": 3,
+        "id": "primary-3",
+        "labelZh": "三年级",
+        "minimumDifficulty": 1.5,
+        "maximumDifficultyExclusive": 2
+      },
+      {
+        "ordinal": 4,
+        "id": "primary-4",
+        "labelZh": "四年级",
+        "minimumDifficulty": 2,
+        "maximumDifficultyExclusive": 2.5
+      },
+      {
+        "ordinal": 5,
+        "id": "primary-5",
+        "labelZh": "五年级",
+        "minimumDifficulty": 2.5,
+        "maximumDifficultyExclusive": 3
+      },
+      {
+        "ordinal": 6,
+        "id": "primary-6",
+        "labelZh": "六年级",
+        "minimumDifficulty": 3,
+        "maximumDifficultyExclusive": 3.5
+      },
+      {
+        "ordinal": 7,
+        "id": "junior-1",
+        "labelZh": "初一",
+        "minimumDifficulty": 3.5,
+        "maximumDifficultyExclusive": 4
+      },
+      {
+        "ordinal": 8,
+        "id": "junior-2",
+        "labelZh": "初二",
+        "minimumDifficulty": 4,
+        "maximumDifficultyExclusive": 4.5
+      },
+      {
+        "ordinal": 9,
+        "id": "junior-3",
+        "labelZh": "初三",
+        "minimumDifficulty": 4.5,
+        "maximumDifficultyExclusive": 5
+      },
+      {
+        "ordinal": 10,
+        "id": "senior-1",
+        "labelZh": "高一",
+        "minimumDifficulty": 5,
+        "maximumDifficultyExclusive": 5.5
+      },
+      {
+        "ordinal": 11,
+        "id": "senior-2",
+        "labelZh": "高二",
+        "minimumDifficulty": 5.5,
+        "maximumDifficultyExclusive": 6
+      },
+      {
+        "ordinal": 12,
+        "id": "senior-3",
+        "labelZh": "高三",
+        "minimumDifficulty": 6,
+        "maximumDifficultyExclusive": 7
+      },
+      {
+        "ordinal": 13,
+        "id": "cet-4-reference",
+        "labelZh": "大学四级",
+        "minimumDifficulty": 7,
+        "maximumDifficultyExclusive": 8
+      },
+      {
+        "ordinal": 14,
+        "id": "cet-6-reference",
+        "labelZh": "大学六级",
+        "minimumDifficulty": 8,
+        "maximumDifficultyExclusive": null
+      }
+    ]
+  },
+  "capacityPolicy": {
+    "upgradeTestItems": 10,
+    "recommendedShortTermDedupItems": 20,
+    "identityRule": "Upgrade capacity is counted by sourceType+sourceId, not merely candidate itemId. Vocabulary variants of the same source word are distinct exercises but cannot inflate a ten-question upgrade test.",
+    "rationale": "Ten unique source prompts are required to run the upgrade test; twenty avoids immediately reusing half the same test pool on a near-term retry.",
+    "requiredQuestionTypes": {
+      "vocabulary": [
+        "term-to-meaning-choice",
+        "meaning-to-term-choice",
+        "example-gap-choice"
+      ],
+      "listening": [
+        "word-discrimination",
+        "short-sentence-choice",
+        "keyword-dictation",
+        "full-transcript-detail-choice",
+        "scene-audio-single-choice"
+      ],
+      "speaking": [
+        "activity-prompt",
+        "scene-fixed-response"
+      ]
+    }
+  },
+  "domains": {
+    "vocabulary": {
+      "uniqueScorableItemCount": 489,
+      "uniqueSourcePromptCount": 163,
+      "questionTypes": {
+        "example-gap-choice": 163,
+        "meaning-to-term-choice": 163,
+        "term-to-meaning-choice": 163
+      },
+      "levels": [
+        {
+          "ordinal": 0,
+          "id": "kindergarten",
+          "labelZh": "幼儿园",
+          "minimumDifficulty": 0,
+          "maximumDifficultyExclusive": 0.5,
+          "isUpgradeTarget": false,
+          "uniqueScorableItemCount": 0,
+          "uniqueSourcePromptCount": 0,
+          "questionTypes": {},
+          "missingQuestionTypes": [
+            "term-to-meaning-choice",
+            "meaning-to-term-choice",
+            "example-gap-choice"
+          ],
+          "minimumUpgradeTestCapacity": 0,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 20,
+          "status": "starting-level-not-an-upgrade-target"
+        },
+        {
+          "ordinal": 1,
+          "id": "primary-1",
+          "labelZh": "一年级",
+          "minimumDifficulty": 0.5,
+          "maximumDifficultyExclusive": 1,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 15,
+          "uniqueSourcePromptCount": 5,
+          "questionTypes": {
+            "example-gap-choice": 5,
+            "meaning-to-term-choice": 5,
+            "term-to-meaning-choice": 5
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 5,
+          "missingForRecommendedDedup": 15,
+          "status": "blocked"
+        },
+        {
+          "ordinal": 2,
+          "id": "primary-2",
+          "labelZh": "二年级",
+          "minimumDifficulty": 1,
+          "maximumDifficultyExclusive": 1.5,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 39,
+          "uniqueSourcePromptCount": 13,
+          "questionTypes": {
+            "example-gap-choice": 13,
+            "meaning-to-term-choice": 13,
+            "term-to-meaning-choice": 13
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 7,
+          "status": "minimum-only"
+        },
+        {
+          "ordinal": 3,
+          "id": "primary-3",
+          "labelZh": "三年级",
+          "minimumDifficulty": 1.5,
+          "maximumDifficultyExclusive": 2,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 42,
+          "uniqueSourcePromptCount": 14,
+          "questionTypes": {
+            "example-gap-choice": 14,
+            "meaning-to-term-choice": 14,
+            "term-to-meaning-choice": 14
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 6,
+          "status": "minimum-only"
+        },
+        {
+          "ordinal": 4,
+          "id": "primary-4",
+          "labelZh": "四年级",
+          "minimumDifficulty": 2,
+          "maximumDifficultyExclusive": 2.5,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 105,
+          "uniqueSourcePromptCount": 35,
+          "questionTypes": {
+            "example-gap-choice": 35,
+            "meaning-to-term-choice": 35,
+            "term-to-meaning-choice": 35
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 0,
+          "status": "recommended-capacity-met"
+        },
+        {
+          "ordinal": 5,
+          "id": "primary-5",
+          "labelZh": "五年级",
+          "minimumDifficulty": 2.5,
+          "maximumDifficultyExclusive": 3,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 96,
+          "uniqueSourcePromptCount": 32,
+          "questionTypes": {
+            "example-gap-choice": 32,
+            "meaning-to-term-choice": 32,
+            "term-to-meaning-choice": 32
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 0,
+          "status": "recommended-capacity-met"
+        },
+        {
+          "ordinal": 6,
+          "id": "primary-6",
+          "labelZh": "六年级",
+          "minimumDifficulty": 3,
+          "maximumDifficultyExclusive": 3.5,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 111,
+          "uniqueSourcePromptCount": 37,
+          "questionTypes": {
+            "example-gap-choice": 37,
+            "meaning-to-term-choice": 37,
+            "term-to-meaning-choice": 37
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 0,
+          "status": "recommended-capacity-met"
+        },
+        {
+          "ordinal": 7,
+          "id": "junior-1",
+          "labelZh": "初一",
+          "minimumDifficulty": 3.5,
+          "maximumDifficultyExclusive": 4,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 30,
+          "uniqueSourcePromptCount": 10,
+          "questionTypes": {
+            "example-gap-choice": 10,
+            "meaning-to-term-choice": 10,
+            "term-to-meaning-choice": 10
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 10,
+          "status": "minimum-only"
+        },
+        {
+          "ordinal": 8,
+          "id": "junior-2",
+          "labelZh": "初二",
+          "minimumDifficulty": 4,
+          "maximumDifficultyExclusive": 4.5,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 12,
+          "uniqueSourcePromptCount": 4,
+          "questionTypes": {
+            "example-gap-choice": 4,
+            "meaning-to-term-choice": 4,
+            "term-to-meaning-choice": 4
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 6,
+          "missingForRecommendedDedup": 16,
+          "status": "blocked"
+        },
+        {
+          "ordinal": 9,
+          "id": "junior-3",
+          "labelZh": "初三",
+          "minimumDifficulty": 4.5,
+          "maximumDifficultyExclusive": 5,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 12,
+          "uniqueSourcePromptCount": 4,
+          "questionTypes": {
+            "example-gap-choice": 4,
+            "meaning-to-term-choice": 4,
+            "term-to-meaning-choice": 4
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 6,
+          "missingForRecommendedDedup": 16,
+          "status": "blocked"
+        },
+        {
+          "ordinal": 10,
+          "id": "senior-1",
+          "labelZh": "高一",
+          "minimumDifficulty": 5,
+          "maximumDifficultyExclusive": 5.5,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 27,
+          "uniqueSourcePromptCount": 9,
+          "questionTypes": {
+            "example-gap-choice": 9,
+            "meaning-to-term-choice": 9,
+            "term-to-meaning-choice": 9
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 1,
+          "missingForRecommendedDedup": 11,
+          "status": "blocked"
+        },
+        {
+          "ordinal": 11,
+          "id": "senior-2",
+          "labelZh": "高二",
+          "minimumDifficulty": 5.5,
+          "maximumDifficultyExclusive": 6,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 0,
+          "uniqueSourcePromptCount": 0,
+          "questionTypes": {},
+          "missingQuestionTypes": [
+            "term-to-meaning-choice",
+            "meaning-to-term-choice",
+            "example-gap-choice"
+          ],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 10,
+          "missingForRecommendedDedup": 20,
+          "status": "blocked"
+        },
+        {
+          "ordinal": 12,
+          "id": "senior-3",
+          "labelZh": "高三",
+          "minimumDifficulty": 6,
+          "maximumDifficultyExclusive": 7,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 0,
+          "uniqueSourcePromptCount": 0,
+          "questionTypes": {},
+          "missingQuestionTypes": [
+            "term-to-meaning-choice",
+            "meaning-to-term-choice",
+            "example-gap-choice"
+          ],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 10,
+          "missingForRecommendedDedup": 20,
+          "status": "blocked"
+        },
+        {
+          "ordinal": 13,
+          "id": "cet-4-reference",
+          "labelZh": "大学四级",
+          "minimumDifficulty": 7,
+          "maximumDifficultyExclusive": 8,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 0,
+          "uniqueSourcePromptCount": 0,
+          "questionTypes": {},
+          "missingQuestionTypes": [
+            "term-to-meaning-choice",
+            "meaning-to-term-choice",
+            "example-gap-choice"
+          ],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 10,
+          "missingForRecommendedDedup": 20,
+          "status": "blocked"
+        },
+        {
+          "ordinal": 14,
+          "id": "cet-6-reference",
+          "labelZh": "大学六级",
+          "minimumDifficulty": 8,
+          "maximumDifficultyExclusive": null,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 0,
+          "uniqueSourcePromptCount": 0,
+          "questionTypes": {},
+          "missingQuestionTypes": [
+            "term-to-meaning-choice",
+            "meaning-to-term-choice",
+            "example-gap-choice"
+          ],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 10,
+          "missingForRecommendedDedup": 20,
+          "status": "blocked"
+        }
+      ]
+    },
+    "listening": {
+      "uniqueScorableItemCount": 253,
+      "uniqueSourcePromptCount": 253,
+      "questionTypes": {
+        "full-transcript-detail-choice": 85,
+        "keyword-dictation": 28,
+        "scene-audio-single-choice": 28,
+        "short-sentence-choice": 84,
+        "word-discrimination": 28
+      },
+      "levels": [
+        {
+          "ordinal": 0,
+          "id": "kindergarten",
+          "labelZh": "幼儿园",
+          "minimumDifficulty": 0,
+          "maximumDifficultyExclusive": 0.5,
+          "isUpgradeTarget": false,
+          "uniqueScorableItemCount": 0,
+          "uniqueSourcePromptCount": 0,
+          "questionTypes": {},
+          "missingQuestionTypes": [
+            "word-discrimination",
+            "short-sentence-choice",
+            "keyword-dictation",
+            "full-transcript-detail-choice",
+            "scene-audio-single-choice"
+          ],
+          "minimumUpgradeTestCapacity": 0,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 20,
+          "status": "starting-level-not-an-upgrade-target"
+        },
+        {
+          "ordinal": 1,
+          "id": "primary-1",
+          "labelZh": "一年级",
+          "minimumDifficulty": 0.5,
+          "maximumDifficultyExclusive": 1,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 0,
+          "uniqueSourcePromptCount": 0,
+          "questionTypes": {},
+          "missingQuestionTypes": [
+            "word-discrimination",
+            "short-sentence-choice",
+            "keyword-dictation",
+            "full-transcript-detail-choice",
+            "scene-audio-single-choice"
+          ],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 10,
+          "missingForRecommendedDedup": 20,
+          "status": "blocked"
+        },
+        {
+          "ordinal": 2,
+          "id": "primary-2",
+          "labelZh": "二年级",
+          "minimumDifficulty": 1,
+          "maximumDifficultyExclusive": 1.5,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 9,
+          "uniqueSourcePromptCount": 9,
+          "questionTypes": {
+            "full-transcript-detail-choice": 3,
+            "keyword-dictation": 1,
+            "scene-audio-single-choice": 1,
+            "short-sentence-choice": 3,
+            "word-discrimination": 1
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 1,
+          "missingForRecommendedDedup": 11,
+          "status": "blocked"
+        },
+        {
+          "ordinal": 3,
+          "id": "primary-3",
+          "labelZh": "三年级",
+          "minimumDifficulty": 1.5,
+          "maximumDifficultyExclusive": 2,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 18,
+          "uniqueSourcePromptCount": 18,
+          "questionTypes": {
+            "full-transcript-detail-choice": 6,
+            "keyword-dictation": 2,
+            "scene-audio-single-choice": 2,
+            "short-sentence-choice": 6,
+            "word-discrimination": 2
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 2,
+          "status": "minimum-only"
+        },
+        {
+          "ordinal": 4,
+          "id": "primary-4",
+          "labelZh": "四年级",
+          "minimumDifficulty": 2,
+          "maximumDifficultyExclusive": 2.5,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 36,
+          "uniqueSourcePromptCount": 36,
+          "questionTypes": {
+            "full-transcript-detail-choice": 12,
+            "keyword-dictation": 4,
+            "scene-audio-single-choice": 4,
+            "short-sentence-choice": 12,
+            "word-discrimination": 4
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 0,
+          "status": "recommended-capacity-met"
+        },
+        {
+          "ordinal": 5,
+          "id": "primary-5",
+          "labelZh": "五年级",
+          "minimumDifficulty": 2.5,
+          "maximumDifficultyExclusive": 3,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 36,
+          "uniqueSourcePromptCount": 36,
+          "questionTypes": {
+            "full-transcript-detail-choice": 12,
+            "keyword-dictation": 4,
+            "scene-audio-single-choice": 4,
+            "short-sentence-choice": 12,
+            "word-discrimination": 4
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 0,
+          "status": "recommended-capacity-met"
+        },
+        {
+          "ordinal": 6,
+          "id": "primary-6",
+          "labelZh": "六年级",
+          "minimumDifficulty": 3,
+          "maximumDifficultyExclusive": 3.5,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 54,
+          "uniqueSourcePromptCount": 54,
+          "questionTypes": {
+            "full-transcript-detail-choice": 18,
+            "keyword-dictation": 6,
+            "scene-audio-single-choice": 6,
+            "short-sentence-choice": 18,
+            "word-discrimination": 6
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 0,
+          "status": "recommended-capacity-met"
+        },
+        {
+          "ordinal": 7,
+          "id": "junior-1",
+          "labelZh": "初一",
+          "minimumDifficulty": 3.5,
+          "maximumDifficultyExclusive": 4,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 54,
+          "uniqueSourcePromptCount": 54,
+          "questionTypes": {
+            "full-transcript-detail-choice": 18,
+            "keyword-dictation": 6,
+            "scene-audio-single-choice": 6,
+            "short-sentence-choice": 18,
+            "word-discrimination": 6
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 0,
+          "status": "recommended-capacity-met"
+        },
+        {
+          "ordinal": 8,
+          "id": "junior-2",
+          "labelZh": "初二",
+          "minimumDifficulty": 4,
+          "maximumDifficultyExclusive": 4.5,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 9,
+          "uniqueSourcePromptCount": 9,
+          "questionTypes": {
+            "full-transcript-detail-choice": 3,
+            "keyword-dictation": 1,
+            "scene-audio-single-choice": 1,
+            "short-sentence-choice": 3,
+            "word-discrimination": 1
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 1,
+          "missingForRecommendedDedup": 11,
+          "status": "blocked"
+        },
+        {
+          "ordinal": 9,
+          "id": "junior-3",
+          "labelZh": "初三",
+          "minimumDifficulty": 4.5,
+          "maximumDifficultyExclusive": 5,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 9,
+          "uniqueSourcePromptCount": 9,
+          "questionTypes": {
+            "full-transcript-detail-choice": 3,
+            "keyword-dictation": 1,
+            "scene-audio-single-choice": 1,
+            "short-sentence-choice": 3,
+            "word-discrimination": 1
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 1,
+          "missingForRecommendedDedup": 11,
+          "status": "blocked"
+        },
+        {
+          "ordinal": 10,
+          "id": "senior-1",
+          "labelZh": "高一",
+          "minimumDifficulty": 5,
+          "maximumDifficultyExclusive": 5.5,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 9,
+          "uniqueSourcePromptCount": 9,
+          "questionTypes": {
+            "full-transcript-detail-choice": 3,
+            "keyword-dictation": 1,
+            "scene-audio-single-choice": 1,
+            "short-sentence-choice": 3,
+            "word-discrimination": 1
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 1,
+          "missingForRecommendedDedup": 11,
+          "status": "blocked"
+        },
+        {
+          "ordinal": 11,
+          "id": "senior-2",
+          "labelZh": "高二",
+          "minimumDifficulty": 5.5,
+          "maximumDifficultyExclusive": 6,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 19,
+          "uniqueSourcePromptCount": 19,
+          "questionTypes": {
+            "full-transcript-detail-choice": 7,
+            "keyword-dictation": 2,
+            "scene-audio-single-choice": 2,
+            "short-sentence-choice": 6,
+            "word-discrimination": 2
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 1,
+          "status": "minimum-only"
+        },
+        {
+          "ordinal": 12,
+          "id": "senior-3",
+          "labelZh": "高三",
+          "minimumDifficulty": 6,
+          "maximumDifficultyExclusive": 7,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 0,
+          "uniqueSourcePromptCount": 0,
+          "questionTypes": {},
+          "missingQuestionTypes": [
+            "word-discrimination",
+            "short-sentence-choice",
+            "keyword-dictation",
+            "full-transcript-detail-choice",
+            "scene-audio-single-choice"
+          ],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 10,
+          "missingForRecommendedDedup": 20,
+          "status": "blocked"
+        },
+        {
+          "ordinal": 13,
+          "id": "cet-4-reference",
+          "labelZh": "大学四级",
+          "minimumDifficulty": 7,
+          "maximumDifficultyExclusive": 8,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 0,
+          "uniqueSourcePromptCount": 0,
+          "questionTypes": {},
+          "missingQuestionTypes": [
+            "word-discrimination",
+            "short-sentence-choice",
+            "keyword-dictation",
+            "full-transcript-detail-choice",
+            "scene-audio-single-choice"
+          ],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 10,
+          "missingForRecommendedDedup": 20,
+          "status": "blocked"
+        },
+        {
+          "ordinal": 14,
+          "id": "cet-6-reference",
+          "labelZh": "大学六级",
+          "minimumDifficulty": 8,
+          "maximumDifficultyExclusive": null,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 0,
+          "uniqueSourcePromptCount": 0,
+          "questionTypes": {},
+          "missingQuestionTypes": [
+            "word-discrimination",
+            "short-sentence-choice",
+            "keyword-dictation",
+            "full-transcript-detail-choice",
+            "scene-audio-single-choice"
+          ],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 10,
+          "missingForRecommendedDedup": 20,
+          "status": "blocked"
+        }
+      ]
+    },
+    "speaking": {
+      "uniqueScorableItemCount": 122,
+      "uniqueSourcePromptCount": 122,
+      "questionTypes": {
+        "activity-prompt": 94,
+        "scene-fixed-response": 28
+      },
+      "levels": [
+        {
+          "ordinal": 0,
+          "id": "kindergarten",
+          "labelZh": "幼儿园",
+          "minimumDifficulty": 0,
+          "maximumDifficultyExclusive": 0.5,
+          "isUpgradeTarget": false,
+          "uniqueScorableItemCount": 0,
+          "uniqueSourcePromptCount": 0,
+          "questionTypes": {},
+          "missingQuestionTypes": [
+            "activity-prompt",
+            "scene-fixed-response"
+          ],
+          "minimumUpgradeTestCapacity": 0,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 20,
+          "status": "starting-level-not-an-upgrade-target"
+        },
+        {
+          "ordinal": 1,
+          "id": "primary-1",
+          "labelZh": "一年级",
+          "minimumDifficulty": 0.5,
+          "maximumDifficultyExclusive": 1,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 0,
+          "uniqueSourcePromptCount": 0,
+          "questionTypes": {},
+          "missingQuestionTypes": [
+            "activity-prompt",
+            "scene-fixed-response"
+          ],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 10,
+          "missingForRecommendedDedup": 20,
+          "status": "blocked"
+        },
+        {
+          "ordinal": 2,
+          "id": "primary-2",
+          "labelZh": "二年级",
+          "minimumDifficulty": 1,
+          "maximumDifficultyExclusive": 1.5,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 4,
+          "uniqueSourcePromptCount": 4,
+          "questionTypes": {
+            "activity-prompt": 3,
+            "scene-fixed-response": 1
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 6,
+          "missingForRecommendedDedup": 16,
+          "status": "blocked"
+        },
+        {
+          "ordinal": 3,
+          "id": "primary-3",
+          "labelZh": "三年级",
+          "minimumDifficulty": 1.5,
+          "maximumDifficultyExclusive": 2,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 8,
+          "uniqueSourcePromptCount": 8,
+          "questionTypes": {
+            "activity-prompt": 6,
+            "scene-fixed-response": 2
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 2,
+          "missingForRecommendedDedup": 12,
+          "status": "blocked"
+        },
+        {
+          "ordinal": 4,
+          "id": "primary-4",
+          "labelZh": "四年级",
+          "minimumDifficulty": 2,
+          "maximumDifficultyExclusive": 2.5,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 17,
+          "uniqueSourcePromptCount": 17,
+          "questionTypes": {
+            "activity-prompt": 13,
+            "scene-fixed-response": 4
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 3,
+          "status": "minimum-only"
+        },
+        {
+          "ordinal": 5,
+          "id": "primary-5",
+          "labelZh": "五年级",
+          "minimumDifficulty": 2.5,
+          "maximumDifficultyExclusive": 3,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 16,
+          "uniqueSourcePromptCount": 16,
+          "questionTypes": {
+            "activity-prompt": 12,
+            "scene-fixed-response": 4
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 4,
+          "status": "minimum-only"
+        },
+        {
+          "ordinal": 6,
+          "id": "primary-6",
+          "labelZh": "六年级",
+          "minimumDifficulty": 3,
+          "maximumDifficultyExclusive": 3.5,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 25,
+          "uniqueSourcePromptCount": 25,
+          "questionTypes": {
+            "activity-prompt": 19,
+            "scene-fixed-response": 6
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 0,
+          "status": "recommended-capacity-met"
+        },
+        {
+          "ordinal": 7,
+          "id": "junior-1",
+          "labelZh": "初一",
+          "minimumDifficulty": 3.5,
+          "maximumDifficultyExclusive": 4,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 26,
+          "uniqueSourcePromptCount": 26,
+          "questionTypes": {
+            "activity-prompt": 20,
+            "scene-fixed-response": 6
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 0,
+          "status": "recommended-capacity-met"
+        },
+        {
+          "ordinal": 8,
+          "id": "junior-2",
+          "labelZh": "初二",
+          "minimumDifficulty": 4,
+          "maximumDifficultyExclusive": 4.5,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 5,
+          "uniqueSourcePromptCount": 5,
+          "questionTypes": {
+            "activity-prompt": 4,
+            "scene-fixed-response": 1
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 5,
+          "missingForRecommendedDedup": 15,
+          "status": "blocked"
+        },
+        {
+          "ordinal": 9,
+          "id": "junior-3",
+          "labelZh": "初三",
+          "minimumDifficulty": 4.5,
+          "maximumDifficultyExclusive": 5,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 5,
+          "uniqueSourcePromptCount": 5,
+          "questionTypes": {
+            "activity-prompt": 4,
+            "scene-fixed-response": 1
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 5,
+          "missingForRecommendedDedup": 15,
+          "status": "blocked"
+        },
+        {
+          "ordinal": 10,
+          "id": "senior-1",
+          "labelZh": "高一",
+          "minimumDifficulty": 5,
+          "maximumDifficultyExclusive": 5.5,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 5,
+          "uniqueSourcePromptCount": 5,
+          "questionTypes": {
+            "activity-prompt": 4,
+            "scene-fixed-response": 1
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 5,
+          "missingForRecommendedDedup": 15,
+          "status": "blocked"
+        },
+        {
+          "ordinal": 11,
+          "id": "senior-2",
+          "labelZh": "高二",
+          "minimumDifficulty": 5.5,
+          "maximumDifficultyExclusive": 6,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 11,
+          "uniqueSourcePromptCount": 11,
+          "questionTypes": {
+            "activity-prompt": 9,
+            "scene-fixed-response": 2
+          },
+          "missingQuestionTypes": [],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 9,
+          "status": "minimum-only"
+        },
+        {
+          "ordinal": 12,
+          "id": "senior-3",
+          "labelZh": "高三",
+          "minimumDifficulty": 6,
+          "maximumDifficultyExclusive": 7,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 0,
+          "uniqueSourcePromptCount": 0,
+          "questionTypes": {},
+          "missingQuestionTypes": [
+            "activity-prompt",
+            "scene-fixed-response"
+          ],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 10,
+          "missingForRecommendedDedup": 20,
+          "status": "blocked"
+        },
+        {
+          "ordinal": 13,
+          "id": "cet-4-reference",
+          "labelZh": "大学四级",
+          "minimumDifficulty": 7,
+          "maximumDifficultyExclusive": 8,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 0,
+          "uniqueSourcePromptCount": 0,
+          "questionTypes": {},
+          "missingQuestionTypes": [
+            "activity-prompt",
+            "scene-fixed-response"
+          ],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 10,
+          "missingForRecommendedDedup": 20,
+          "status": "blocked"
+        },
+        {
+          "ordinal": 14,
+          "id": "cet-6-reference",
+          "labelZh": "大学六级",
+          "minimumDifficulty": 8,
+          "maximumDifficultyExclusive": null,
+          "isUpgradeTarget": true,
+          "uniqueScorableItemCount": 0,
+          "uniqueSourcePromptCount": 0,
+          "questionTypes": {},
+          "missingQuestionTypes": [
+            "activity-prompt",
+            "scene-fixed-response"
+          ],
+          "minimumUpgradeTestCapacity": 10,
+          "recommendedShortTermDedupCapacity": 20,
+          "missingForUpgradeTest": 10,
+          "missingForRecommendedDedup": 20,
+          "status": "blocked"
+        }
+      ]
+    }
+  },
+  "conclusion": {
+    "readyForAllFifteenLevels": false,
+    "blocker": "The released travel course only covers internal difficulty 0.5–5.5 (roughly pre-A1/A1 to B1). It cannot honestly supply senior-2, senior-3, CET-4 or CET-6 upgrade tests, and vocabulary has no current 5.5 candidate for senior-2."
+  }
+}
