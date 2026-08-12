@@ -27,11 +27,11 @@
             "schemaVersion": 1,
             "contentType": "vocabulary-set-v1",
             "fixedSeconds": 15,
-            "itemCount": 156,
+            "itemCount": 206,
             "secondsPerItem": 12,
             "activeAudioSeconds": 0,
             "expectedAudioPlaythroughs": 0,
-            "interactionStepCount": 312,
+            "interactionStepCount": 412,
             "secondsPerInteractionStep": 3,
             "minimumSeconds": 90,
             "maximumSeconds": 600
@@ -1586,6 +1586,506 @@
                 "exampleZh": "我的电话在口袋里。",
                 "growthDifficultyLevel": 0,
                 "dailyKnowledgeId": "daily-knowledge-v1:k1b:075"
+              },
+              {
+                "id": "r17-daily-k1c-001",
+                "term": "soap",
+                "meaningZh": "肥皂",
+                "partOfSpeech": "noun",
+                "exampleEn": "The soap is by the sink.",
+                "exampleZh": "肥皂在水槽旁边。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:001"
+              },
+              {
+                "id": "r17-daily-k1c-002",
+                "term": "tissue",
+                "meaningZh": "纸巾",
+                "partOfSpeech": "noun",
+                "exampleEn": "Please take a tissue.",
+                "exampleZh": "请拿一张纸巾。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:002"
+              },
+              {
+                "id": "r17-daily-k1c-003",
+                "term": "toilet paper",
+                "meaningZh": "卫生纸",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "We need toilet paper.",
+                "exampleZh": "我们需要卫生纸。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:003"
+              },
+              {
+                "id": "r17-daily-k1c-004",
+                "term": "toothbrush",
+                "meaningZh": "牙刷",
+                "partOfSpeech": "noun",
+                "exampleEn": "My toothbrush is in my bag.",
+                "exampleZh": "我的牙刷在包里。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:004"
+              },
+              {
+                "id": "r17-daily-k1c-005",
+                "term": "toothpaste",
+                "meaningZh": "牙膏",
+                "partOfSpeech": "noun",
+                "exampleEn": "I need toothpaste.",
+                "exampleZh": "我需要牙膏。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:005"
+              },
+              {
+                "id": "r17-daily-k1c-006",
+                "term": "shower",
+                "meaningZh": "淋浴",
+                "partOfSpeech": "noun",
+                "exampleEn": "The shower is in the room.",
+                "exampleZh": "淋浴间在房间里。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:006"
+              },
+              {
+                "id": "r17-daily-k1c-007",
+                "term": "sink",
+                "meaningZh": "水槽",
+                "partOfSpeech": "noun",
+                "exampleEn": "The sink is clean.",
+                "exampleZh": "水槽很干净。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:007"
+              },
+              {
+                "id": "r17-daily-k1c-008",
+                "term": "mirror",
+                "meaningZh": "镜子",
+                "partOfSpeech": "noun",
+                "exampleEn": "The mirror is on the wall.",
+                "exampleZh": "镜子在墙上。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:008"
+              },
+              {
+                "id": "r17-daily-k1c-009",
+                "term": "trash can",
+                "meaningZh": "垃圾桶",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Put it in the trash can.",
+                "exampleZh": "把它放进垃圾桶。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:009"
+              },
+              {
+                "id": "r17-daily-k1c-010",
+                "term": "clean",
+                "meaningZh": "干净的",
+                "partOfSpeech": "adjective",
+                "exampleEn": "The table is clean.",
+                "exampleZh": "桌子很干净。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:010"
+              },
+              {
+                "id": "r17-daily-k1c-011",
+                "term": "dirty",
+                "meaningZh": "脏的",
+                "partOfSpeech": "adjective",
+                "exampleEn": "My shoes are dirty.",
+                "exampleZh": "我的鞋子脏了。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:011"
+              },
+              {
+                "id": "r17-daily-k1c-012",
+                "term": "tired",
+                "meaningZh": "累的",
+                "partOfSpeech": "adjective",
+                "exampleEn": "I am tired now.",
+                "exampleZh": "我现在累了。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:012"
+              },
+              {
+                "id": "r17-daily-k1c-013",
+                "term": "thirsty",
+                "meaningZh": "口渴的",
+                "partOfSpeech": "adjective",
+                "exampleEn": "I am thirsty.",
+                "exampleZh": "我口渴了。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:013"
+              },
+              {
+                "id": "r17-daily-k1c-014",
+                "term": "hungry",
+                "meaningZh": "饿的",
+                "partOfSpeech": "adjective",
+                "exampleEn": "The child is hungry.",
+                "exampleZh": "孩子饿了。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:014"
+              },
+              {
+                "id": "r17-daily-k1c-015",
+                "term": "sleepy",
+                "meaningZh": "困的",
+                "partOfSpeech": "adjective",
+                "exampleEn": "The baby is sleepy.",
+                "exampleZh": "婴儿困了。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:015"
+              },
+              {
+                "id": "r17-daily-k1c-016",
+                "term": "fever",
+                "meaningZh": "发烧",
+                "partOfSpeech": "noun",
+                "exampleEn": "I have a fever.",
+                "exampleZh": "我发烧了。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:016"
+              },
+              {
+                "id": "r17-daily-k1c-017",
+                "term": "cough",
+                "meaningZh": "咳嗽",
+                "partOfSpeech": "noun",
+                "exampleEn": "I have a cough.",
+                "exampleZh": "我咳嗽。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:017"
+              },
+              {
+                "id": "r17-daily-k1c-018",
+                "term": "headache",
+                "meaningZh": "头痛",
+                "partOfSpeech": "noun",
+                "exampleEn": "I have a headache.",
+                "exampleZh": "我头痛。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:018"
+              },
+              {
+                "id": "r17-daily-k1c-019",
+                "term": "stomachache",
+                "meaningZh": "胃痛",
+                "partOfSpeech": "noun",
+                "exampleEn": "I have a stomachache.",
+                "exampleZh": "我胃痛。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:019"
+              },
+              {
+                "id": "r17-daily-k1c-020",
+                "term": "medicine",
+                "meaningZh": "药",
+                "partOfSpeech": "noun",
+                "exampleEn": "I need medicine.",
+                "exampleZh": "我需要药。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:020"
+              },
+              {
+                "id": "r17-daily-k1c-021",
+                "term": "bandage",
+                "meaningZh": "绷带",
+                "partOfSpeech": "noun",
+                "exampleEn": "I need a bandage.",
+                "exampleZh": "我需要绷带。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:021"
+              },
+              {
+                "id": "r17-daily-k1c-022",
+                "term": "six",
+                "meaningZh": "六",
+                "partOfSpeech": "number",
+                "exampleEn": "I need six tickets.",
+                "exampleZh": "我需要六张票。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:022"
+              },
+              {
+                "id": "r17-daily-k1c-023",
+                "term": "seven",
+                "meaningZh": "七",
+                "partOfSpeech": "number",
+                "exampleEn": "Gate seven is open.",
+                "exampleZh": "七号登机口开放了。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:023"
+              },
+              {
+                "id": "r17-daily-k1c-024",
+                "term": "eight",
+                "meaningZh": "八",
+                "partOfSpeech": "number",
+                "exampleEn": "Our table is eight.",
+                "exampleZh": "我们是八号桌。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:024"
+              },
+              {
+                "id": "r17-daily-k1c-025",
+                "term": "nine",
+                "meaningZh": "九",
+                "partOfSpeech": "number",
+                "exampleEn": "The bus comes at nine.",
+                "exampleZh": "公交车九点来。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:025"
+              },
+              {
+                "id": "r17-daily-k1c-026",
+                "term": "ten",
+                "meaningZh": "十",
+                "partOfSpeech": "number",
+                "exampleEn": "It is ten dollars.",
+                "exampleZh": "这是十美元。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:026"
+              },
+              {
+                "id": "r17-daily-k1c-027",
+                "term": "how much",
+                "meaningZh": "多少钱",
+                "partOfSpeech": "question phrase",
+                "exampleEn": "How much is this?",
+                "exampleZh": "这个多少钱？",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:027"
+              },
+              {
+                "id": "r17-daily-k1c-028",
+                "term": "coin",
+                "meaningZh": "硬币",
+                "partOfSpeech": "noun",
+                "exampleEn": "This coin is small.",
+                "exampleZh": "这枚硬币很小。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:028"
+              },
+              {
+                "id": "r17-daily-k1c-029",
+                "term": "banknote",
+                "meaningZh": "纸币",
+                "partOfSpeech": "noun",
+                "exampleEn": "This banknote is for the bus.",
+                "exampleZh": "这张纸币用来坐公交车。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:029"
+              },
+              {
+                "id": "r17-daily-k1c-030",
+                "term": "bill",
+                "meaningZh": "账单",
+                "partOfSpeech": "noun",
+                "exampleEn": "Can I have the bill?",
+                "exampleZh": "我可以要账单吗？",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:030"
+              },
+              {
+                "id": "r17-daily-k1c-031",
+                "term": "expensive",
+                "meaningZh": "贵的",
+                "partOfSpeech": "adjective",
+                "exampleEn": "The room is expensive.",
+                "exampleZh": "房间很贵。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:031"
+              },
+              {
+                "id": "r17-daily-k1c-032",
+                "term": "exit",
+                "meaningZh": "出口",
+                "partOfSpeech": "noun",
+                "exampleEn": "The exit is there.",
+                "exampleZh": "出口在那里。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:032"
+              },
+              {
+                "id": "r17-daily-k1c-033",
+                "term": "push",
+                "meaningZh": "推",
+                "partOfSpeech": "verb",
+                "exampleEn": "Push the door.",
+                "exampleZh": "推门。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:033"
+              },
+              {
+                "id": "r17-daily-k1c-034",
+                "term": "pull",
+                "meaningZh": "拉",
+                "partOfSpeech": "verb",
+                "exampleEn": "Pull the door.",
+                "exampleZh": "拉门。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:034"
+              },
+              {
+                "id": "r17-daily-k1c-035",
+                "term": "stairs",
+                "meaningZh": "楼梯",
+                "partOfSpeech": "noun",
+                "exampleEn": "The stairs are here.",
+                "exampleZh": "楼梯在这里。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:035"
+              },
+              {
+                "id": "r17-daily-k1c-036",
+                "term": "escalator",
+                "meaningZh": "自动扶梯",
+                "partOfSpeech": "noun",
+                "exampleEn": "Take the escalator down.",
+                "exampleZh": "乘自动扶梯下去。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:036"
+              },
+              {
+                "id": "r17-daily-k1c-037",
+                "term": "inside",
+                "meaningZh": "里面",
+                "partOfSpeech": "place word",
+                "exampleEn": "Wait inside.",
+                "exampleZh": "在里面等。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:037"
+              },
+              {
+                "id": "r17-daily-k1c-038",
+                "term": "outside",
+                "meaningZh": "外面",
+                "partOfSpeech": "place word",
+                "exampleEn": "The taxi is outside.",
+                "exampleZh": "出租车在外面。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:038"
+              },
+              {
+                "id": "r17-daily-k1c-039",
+                "term": "above",
+                "meaningZh": "上方",
+                "partOfSpeech": "place word",
+                "exampleEn": "The sign is above the door.",
+                "exampleZh": "标志在门上方。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:039"
+              },
+              {
+                "id": "r17-daily-k1c-040",
+                "term": "below",
+                "meaningZh": "下方",
+                "partOfSpeech": "place word",
+                "exampleEn": "The number is below the map.",
+                "exampleZh": "号码在地图下方。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:040"
+              },
+              {
+                "id": "r17-daily-k1c-041",
+                "term": "behind",
+                "meaningZh": "后面",
+                "partOfSpeech": "place word",
+                "exampleEn": "The hotel is behind the shop.",
+                "exampleZh": "酒店在商店后面。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:041"
+              },
+              {
+                "id": "r17-daily-k1c-042",
+                "term": "between",
+                "meaningZh": "在两者之间",
+                "partOfSpeech": "place word",
+                "exampleEn": "The bank is between two shops.",
+                "exampleZh": "银行在两家商店之间。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:042"
+              },
+              {
+                "id": "r17-daily-k1c-043",
+                "term": "fire",
+                "meaningZh": "火",
+                "partOfSpeech": "noun",
+                "exampleEn": "There is a fire.",
+                "exampleZh": "有火。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:043"
+              },
+              {
+                "id": "r17-daily-k1c-044",
+                "term": "smoke",
+                "meaningZh": "烟",
+                "partOfSpeech": "noun",
+                "exampleEn": "I can smell smoke.",
+                "exampleZh": "我闻到烟味。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:044"
+              },
+              {
+                "id": "r17-daily-k1c-045",
+                "term": "alarm",
+                "meaningZh": "警报",
+                "partOfSpeech": "noun",
+                "exampleEn": "The alarm is loud.",
+                "exampleZh": "警报很响。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:045"
+              },
+              {
+                "id": "r17-daily-k1c-046",
+                "term": "first aid",
+                "meaningZh": "急救",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "First aid is here.",
+                "exampleZh": "急救处在这里。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:046"
+              },
+              {
+                "id": "r17-daily-k1c-047",
+                "term": "careful",
+                "meaningZh": "小心",
+                "partOfSpeech": "adjective",
+                "exampleEn": "Be careful on the stairs.",
+                "exampleZh": "走楼梯要小心。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:047"
+              },
+              {
+                "id": "r17-daily-k1c-048",
+                "term": "follow",
+                "meaningZh": "跟随",
+                "partOfSpeech": "verb",
+                "exampleEn": "Follow me, please.",
+                "exampleZh": "请跟着我。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:048"
+              },
+              {
+                "id": "r17-daily-k1c-049",
+                "term": "touch",
+                "meaningZh": "触摸",
+                "partOfSpeech": "verb",
+                "exampleEn": "Do not touch this.",
+                "exampleZh": "不要碰这个。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:049"
+              },
+              {
+                "id": "r17-daily-k1c-050",
+                "term": "run",
+                "meaningZh": "跑",
+                "partOfSpeech": "verb",
+                "exampleEn": "Do not run here.",
+                "exampleZh": "不要在这里跑。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1c:050"
               }
             ]
           }

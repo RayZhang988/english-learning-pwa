@@ -7,7 +7,7 @@
     "dailySupply": {
       "file": "content/curriculum/training-supply-index.v1.json",
       "supplyVersion": "1.2.0",
-      "candidateCount": 1314
+      "candidateCount": 1464
     },
     "sceneVocabulary": {
       "indexFile": "content/curriculum/scene-vocabulary-question-bank-index.v1.json",
@@ -23,15 +23,15 @@
     "speaking": "Prompt/quiz fields including modelAnswer and acceptedAnswers are preserved; this does not define pronunciation scoring."
   },
   "totals": {
-    "dailyAliases": 1314,
+    "dailyAliases": 1464,
     "sceneAliases": 612,
-    "allAliases": 1926,
-    "uniqueCanonicalContents": 1926,
+    "allAliases": 2076,
+    "uniqueCanonicalContents": 2076,
     "crossSourceSharedCanonicalContents": 0,
     "byDomainQuestionType": {
-      "vocabulary:vocabulary-term-to-meaning-choice": 313,
-      "vocabulary:vocabulary-meaning-to-term-choice": 313,
-      "vocabulary:vocabulary-example-gap-choice": 313,
+      "vocabulary:vocabulary-term-to-meaning-choice": 363,
+      "vocabulary:vocabulary-meaning-to-term-choice": 363,
+      "vocabulary:vocabulary-example-gap-choice": 363,
       "listening:listening-word-discrimination": 28,
       "listening:listening-short-sentence-choice": 84,
       "listening:listening-keyword-dictation": 28,
@@ -5972,7 +5972,7 @@
       }
     },
     "daily:supply-v1-vocabulary-r17-daily-k1b-073-term-to-meaning-choice": {
-      "reviewContentId": "review-content-v1-735c63ab",
+      "reviewContentId": "review-content-v1-ee1068e5",
       "originalQuestionType": "vocabulary-term-to-meaning-choice",
       "domain": "vocabulary",
       "source": {
@@ -5985,7 +5985,7 @@
       }
     },
     "daily:supply-v1-vocabulary-r17-daily-k1b-073-meaning-to-term-choice": {
-      "reviewContentId": "review-content-v1-455c74fb",
+      "reviewContentId": "review-content-v1-55a2d17d",
       "originalQuestionType": "vocabulary-meaning-to-term-choice",
       "domain": "vocabulary",
       "source": {
@@ -5998,7 +5998,7 @@
       }
     },
     "daily:supply-v1-vocabulary-r17-daily-k1b-073-example-gap-choice": {
-      "reviewContentId": "review-content-v1-40975ac9",
+      "reviewContentId": "review-content-v1-cf732a4b",
       "originalQuestionType": "vocabulary-example-gap-choice",
       "domain": "vocabulary",
       "source": {
@@ -6011,7 +6011,7 @@
       }
     },
     "daily:supply-v1-vocabulary-r17-daily-k1b-074-term-to-meaning-choice": {
-      "reviewContentId": "review-content-v1-b82bf41a",
+      "reviewContentId": "review-content-v1-6543f9cf",
       "originalQuestionType": "vocabulary-term-to-meaning-choice",
       "domain": "vocabulary",
       "source": {
@@ -6024,7 +6024,7 @@
       }
     },
     "daily:supply-v1-vocabulary-r17-daily-k1b-074-meaning-to-term-choice": {
-      "reviewContentId": "review-content-v1-85788e4e",
+      "reviewContentId": "review-content-v1-95885d1b",
       "originalQuestionType": "vocabulary-meaning-to-term-choice",
       "domain": "vocabulary",
       "source": {
@@ -6037,7 +6037,7 @@
       }
     },
     "daily:supply-v1-vocabulary-r17-daily-k1b-074-example-gap-choice": {
-      "reviewContentId": "review-content-v1-5f69d13c",
+      "reviewContentId": "review-content-v1-f249b06d",
       "originalQuestionType": "vocabulary-example-gap-choice",
       "domain": "vocabulary",
       "source": {
@@ -6050,7 +6050,7 @@
       }
     },
     "daily:supply-v1-vocabulary-r17-daily-k1b-075-term-to-meaning-choice": {
-      "reviewContentId": "review-content-v1-017a2e15",
+      "reviewContentId": "review-content-v1-295c3ba5",
       "originalQuestionType": "vocabulary-term-to-meaning-choice",
       "domain": "vocabulary",
       "source": {
@@ -6063,7 +6063,7 @@
       }
     },
     "daily:supply-v1-vocabulary-r17-daily-k1b-075-meaning-to-term-choice": {
-      "reviewContentId": "review-content-v1-363829c5",
+      "reviewContentId": "review-content-v1-2641a40d",
       "originalQuestionType": "vocabulary-meaning-to-term-choice",
       "domain": "vocabulary",
       "source": {
@@ -6076,7 +6076,7 @@
       }
     },
     "daily:supply-v1-vocabulary-r17-daily-k1b-075-example-gap-choice": {
-      "reviewContentId": "review-content-v1-ac1a5219",
+      "reviewContentId": "review-content-v1-22b88a3f",
       "originalQuestionType": "vocabulary-example-gap-choice",
       "domain": "vocabulary",
       "source": {
@@ -6084,6 +6084,1956 @@
         "itemId": "supply-v1-vocabulary-r17-daily-k1b-075-example-gap-choice",
         "sourceType": "vocabulary-item",
         "sourceId": "r17-daily-k1b-075",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-001-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-2b78017d",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-001-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-001",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-001-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-87b748c5",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-001-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-001",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-001-example-gap-choice": {
+      "reviewContentId": "review-content-v1-17acab91",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-001-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-001",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-002-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-70059619",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-002-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-002",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-002-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-a4dae221",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-002-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-002",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-002-example-gap-choice": {
+      "reviewContentId": "review-content-v1-6e7ef809",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-002-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-002",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-003-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-6545854c",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-003-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-003",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-003-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-306a2690",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-003-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-003",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-003-example-gap-choice": {
+      "reviewContentId": "review-content-v1-4f428558",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-003-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-003",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-004-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-ab9de89b",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-004-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-004",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-004-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-c596774f",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-004-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-004",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-004-example-gap-choice": {
+      "reviewContentId": "review-content-v1-9c3f2ae1",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-004-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-004",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-005-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-e6635ca6",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-005-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-005",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-005-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-d300cc9e",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-005-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-005",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-005-example-gap-choice": {
+      "reviewContentId": "review-content-v1-322dc0c6",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-005-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-005",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-006-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-b503c3b2",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-006-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-006",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-006-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-6e5e7066",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-006-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-006",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-006-example-gap-choice": {
+      "reviewContentId": "review-content-v1-d0d181ac",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-006-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-006",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-007-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-1f8159e2",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-007-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-007",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-007-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-df3dd9ba",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-007-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-007",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-007-example-gap-choice": {
+      "reviewContentId": "review-content-v1-0b4b372c",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-007-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-007",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-008-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-0649c236",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-008-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-008",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-008-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-95b2d55a",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-008-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-008",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-008-example-gap-choice": {
+      "reviewContentId": "review-content-v1-225e9940",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-008-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-008",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-009-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-31958ab8",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-009-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-009",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-009-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-185d6060",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-009-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-009",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-009-example-gap-choice": {
+      "reviewContentId": "review-content-v1-85a06378",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-009-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-009",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-010-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-d8ffac09",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-010-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-010",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-010-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-ab48fee1",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-010-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-010",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-010-example-gap-choice": {
+      "reviewContentId": "review-content-v1-c015e1d9",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-010-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-010",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-011-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-da311ae8",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-011-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-011",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-011-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-b1325ce0",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-011-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-011",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-011-example-gap-choice": {
+      "reviewContentId": "review-content-v1-265bff7c",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-011-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-011",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-012-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-2e0788aa",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-012-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-012",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-012-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-a2901eaa",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-012-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-012",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-012-example-gap-choice": {
+      "reviewContentId": "review-content-v1-459b2108",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-012-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-012",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-013-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-38b22a28",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-013-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-013",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-013-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-ed06acd8",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-013-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-013",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-013-example-gap-choice": {
+      "reviewContentId": "review-content-v1-7702c6de",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-013-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-013",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-014-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-d8aa3ae6",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-014-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-014",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-014-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-8dedccd2",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-014-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-014",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-014-example-gap-choice": {
+      "reviewContentId": "review-content-v1-8d22d156",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-014-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-014",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-015-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-537dcff6",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-015-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-015",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-015-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-cf829efa",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-015-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-015",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-015-example-gap-choice": {
+      "reviewContentId": "review-content-v1-368cb20a",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-015-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-015",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-016-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-54559d32",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-016-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-016",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-016-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-1c00df82",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-016-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-016",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-016-example-gap-choice": {
+      "reviewContentId": "review-content-v1-501aaea4",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-016-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-016",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-017-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-2c87a90d",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-017-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-017",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-017-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-f3a535d1",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-017-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-017",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-017-example-gap-choice": {
+      "reviewContentId": "review-content-v1-71e0c279",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-017-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-017",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-018-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-c16fe6cf",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-018-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-018",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-018-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-f48bf713",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-018-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-018",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-018-example-gap-choice": {
+      "reviewContentId": "review-content-v1-2da0cc3b",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-018-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-018",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-019-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-77791c4a",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-019-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-019",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-019-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-f4a5ae76",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-019-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-019",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-019-example-gap-choice": {
+      "reviewContentId": "review-content-v1-90ee90b2",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-019-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-019",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-020-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-b0b15b85",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-020-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-020",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-020-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-a6475b69",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-020-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-020",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-020-example-gap-choice": {
+      "reviewContentId": "review-content-v1-50cc53d9",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-020-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-020",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-021-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-39dd5f08",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-021-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-021",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-021-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-db7a8264",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-021-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-021",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-021-example-gap-choice": {
+      "reviewContentId": "review-content-v1-4e8793a8",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-021-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-021",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-022-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-5fe49b88",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-022-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-022",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-022-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-69207a20",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-022-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-022",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-022-example-gap-choice": {
+      "reviewContentId": "review-content-v1-4cd9d858",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-022-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-022",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-023-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-70d8cb95",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-023-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-023",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-023-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-0230dafd",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-023-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-023",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-023-example-gap-choice": {
+      "reviewContentId": "review-content-v1-b634f9e5",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-023-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-023",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-024-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-520fecbe",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-024-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-024",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-024-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-5c51e40a",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-024-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-024",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-024-example-gap-choice": {
+      "reviewContentId": "review-content-v1-cfdae6f8",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-024-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-024",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-025-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-76475967",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-025-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-025",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-025-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-5b7fd713",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-025-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-025",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-025-example-gap-choice": {
+      "reviewContentId": "review-content-v1-856faae9",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-025-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-025",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-026-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-4391ce9d",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-026-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-026",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-026-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-8ae7bea1",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-026-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-026",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-026-example-gap-choice": {
+      "reviewContentId": "review-content-v1-248dfbe3",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-026-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-026",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-027-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-0907e2ef",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-027-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-027",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-027-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-5ebc327f",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-027-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-027",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-027-example-gap-choice": {
+      "reviewContentId": "review-content-v1-7bca1345",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-027-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-027",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-028-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-6fa7aab4",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-028-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-028",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-028-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-3f0b1324",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-028-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-028",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-028-example-gap-choice": {
+      "reviewContentId": "review-content-v1-05b70d32",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-028-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-028",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-029-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-87ea991c",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-029-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-029",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-029-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-08a5ca38",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-029-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-029",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-029-example-gap-choice": {
+      "reviewContentId": "review-content-v1-4ed846ba",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-029-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-029",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-030-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-244ddb75",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-030-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-030",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-030-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-bdfbb53d",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-030-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-030",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-030-example-gap-choice": {
+      "reviewContentId": "review-content-v1-2f099bd3",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-030-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-030",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-031-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-d57b48d2",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-031-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-031",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-031-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-cd26cd6e",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-031-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-031",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-031-example-gap-choice": {
+      "reviewContentId": "review-content-v1-8a57fe08",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-031-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-031",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-032-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-737b3766",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-032-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-032",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-032-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-e8e4518a",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-032-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-032",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-032-example-gap-choice": {
+      "reviewContentId": "review-content-v1-d0b41a06",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-032-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-032",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-033-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-f5fc3fc6",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-033-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-033",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-033-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-8d67b81a",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-033-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-033",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-033-example-gap-choice": {
+      "reviewContentId": "review-content-v1-bb1a9b38",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-033-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-033",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-034-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-704c4d1b",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-034-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-034",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-034-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-d21a79cb",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-034-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-034",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-034-example-gap-choice": {
+      "reviewContentId": "review-content-v1-d53a9cb7",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-034-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-034",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-035-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-00d9cc3c",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-035-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-035",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-035-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-b42b8ef8",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-035-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-035",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-035-example-gap-choice": {
+      "reviewContentId": "review-content-v1-c2d127f8",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-035-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-035",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-036-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-c6322e0e",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-036-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-036",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-036-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-51bd0306",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-036-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-036",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-036-example-gap-choice": {
+      "reviewContentId": "review-content-v1-fa467fc0",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-036-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-036",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-037-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-25529b57",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-037-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-037",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-037-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-3e8a69b7",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-037-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-037",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-037-example-gap-choice": {
+      "reviewContentId": "review-content-v1-d50c8fad",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-037-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-037",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-038-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-2e28ffd2",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-038-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-038",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-038-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-910762ba",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-038-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-038",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-038-example-gap-choice": {
+      "reviewContentId": "review-content-v1-ec82aff4",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-038-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-038",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-039-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-3194ae1d",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-039-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-039",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-039-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-d0f9666d",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-039-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-039",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-039-example-gap-choice": {
+      "reviewContentId": "review-content-v1-84be2fdb",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-039-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-039",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-040-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-d925d794",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-040-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-040",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-040-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-44533fac",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-040-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-040",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-040-example-gap-choice": {
+      "reviewContentId": "review-content-v1-2a4b95a0",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-040-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-040",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-041-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-01033fcf",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-041-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-041",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-041-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-973550a7",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-041-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-041",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-041-example-gap-choice": {
+      "reviewContentId": "review-content-v1-061ad201",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-041-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-041",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-042-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-3932d4a0",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-042-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-042",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-042-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-6619e2ac",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-042-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-042",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-042-example-gap-choice": {
+      "reviewContentId": "review-content-v1-3cbac3cc",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-042-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-042",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-043-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-2e29b107",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-043-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-043",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-043-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-7341d77b",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-043-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-043",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-043-example-gap-choice": {
+      "reviewContentId": "review-content-v1-3731be8d",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-043-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-043",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-044-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-5329ab47",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-044-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-044",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-044-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-cbea407f",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-044-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-044",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-044-example-gap-choice": {
+      "reviewContentId": "review-content-v1-3dcb388d",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-044-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-044",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-045-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-703a9274",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-045-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-045",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-045-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-640e2b44",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-045-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-045",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-045-example-gap-choice": {
+      "reviewContentId": "review-content-v1-f3216818",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-045-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-045",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-046-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-934198a4",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-046-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-046",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-046-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-834d1a58",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-046-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-046",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-046-example-gap-choice": {
+      "reviewContentId": "review-content-v1-aa67ce5a",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-046-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-046",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-047-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-c3514393",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-047-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-047",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-047-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-c9840c47",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-047-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-047",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-047-example-gap-choice": {
+      "reviewContentId": "review-content-v1-fa752471",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-047-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-047",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-048-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-4d30833a",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-048-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-048",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-048-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-29a7425e",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-048-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-048",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-048-example-gap-choice": {
+      "reviewContentId": "review-content-v1-acffd894",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-048-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-048",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-049-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-87a57dbb",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-049-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-049",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-049-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-0e65aa33",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-049-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-049",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-049-example-gap-choice": {
+      "reviewContentId": "review-content-v1-90e8e873",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-049-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-049",
+        "variantId": "example-gap-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-050-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-480670c9",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-050-term-to-meaning-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-050",
+        "variantId": "term-to-meaning-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-050-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-d83fa099",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-050-meaning-to-term-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-050",
+        "variantId": "meaning-to-term-choice",
+        "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
+      }
+    },
+    "daily:supply-v1-vocabulary-r17-daily-k1c-050-example-gap-choice": {
+      "reviewContentId": "review-content-v1-4e4a0df7",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "source": {
+        "kind": "daily-supply",
+        "itemId": "supply-v1-vocabulary-r17-daily-k1c-050-example-gap-choice",
+        "sourceType": "vocabulary-item",
+        "sourceId": "r17-daily-k1c-050",
         "variantId": "example-gap-choice",
         "contentRef": "lesson://survival-travel-american-4w/1.0.0/w1d1/vocabulary"
       }
@@ -28731,76 +30681,1276 @@
         "daily:supply-v1-vocabulary-r17-daily-k1b-072-example-gap-choice"
       ]
     },
-    "review-content-v1-735c63ab::vocabulary-term-to-meaning-choice": {
-      "reviewContentId": "review-content-v1-735c63ab",
+    "review-content-v1-ee1068e5::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-ee1068e5",
       "originalQuestionType": "vocabulary-term-to-meaning-choice",
       "domain": "vocabulary",
       "aliases": [
         "daily:supply-v1-vocabulary-r17-daily-k1b-073-term-to-meaning-choice"
       ]
     },
-    "review-content-v1-455c74fb::vocabulary-meaning-to-term-choice": {
-      "reviewContentId": "review-content-v1-455c74fb",
+    "review-content-v1-55a2d17d::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-55a2d17d",
       "originalQuestionType": "vocabulary-meaning-to-term-choice",
       "domain": "vocabulary",
       "aliases": [
         "daily:supply-v1-vocabulary-r17-daily-k1b-073-meaning-to-term-choice"
       ]
     },
-    "review-content-v1-40975ac9::vocabulary-example-gap-choice": {
-      "reviewContentId": "review-content-v1-40975ac9",
+    "review-content-v1-cf732a4b::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-cf732a4b",
       "originalQuestionType": "vocabulary-example-gap-choice",
       "domain": "vocabulary",
       "aliases": [
         "daily:supply-v1-vocabulary-r17-daily-k1b-073-example-gap-choice"
       ]
     },
-    "review-content-v1-b82bf41a::vocabulary-term-to-meaning-choice": {
-      "reviewContentId": "review-content-v1-b82bf41a",
+    "review-content-v1-6543f9cf::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-6543f9cf",
       "originalQuestionType": "vocabulary-term-to-meaning-choice",
       "domain": "vocabulary",
       "aliases": [
         "daily:supply-v1-vocabulary-r17-daily-k1b-074-term-to-meaning-choice"
       ]
     },
-    "review-content-v1-85788e4e::vocabulary-meaning-to-term-choice": {
-      "reviewContentId": "review-content-v1-85788e4e",
+    "review-content-v1-95885d1b::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-95885d1b",
       "originalQuestionType": "vocabulary-meaning-to-term-choice",
       "domain": "vocabulary",
       "aliases": [
         "daily:supply-v1-vocabulary-r17-daily-k1b-074-meaning-to-term-choice"
       ]
     },
-    "review-content-v1-5f69d13c::vocabulary-example-gap-choice": {
-      "reviewContentId": "review-content-v1-5f69d13c",
+    "review-content-v1-f249b06d::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-f249b06d",
       "originalQuestionType": "vocabulary-example-gap-choice",
       "domain": "vocabulary",
       "aliases": [
         "daily:supply-v1-vocabulary-r17-daily-k1b-074-example-gap-choice"
       ]
     },
-    "review-content-v1-017a2e15::vocabulary-term-to-meaning-choice": {
-      "reviewContentId": "review-content-v1-017a2e15",
+    "review-content-v1-295c3ba5::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-295c3ba5",
       "originalQuestionType": "vocabulary-term-to-meaning-choice",
       "domain": "vocabulary",
       "aliases": [
         "daily:supply-v1-vocabulary-r17-daily-k1b-075-term-to-meaning-choice"
       ]
     },
-    "review-content-v1-363829c5::vocabulary-meaning-to-term-choice": {
-      "reviewContentId": "review-content-v1-363829c5",
+    "review-content-v1-2641a40d::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-2641a40d",
       "originalQuestionType": "vocabulary-meaning-to-term-choice",
       "domain": "vocabulary",
       "aliases": [
         "daily:supply-v1-vocabulary-r17-daily-k1b-075-meaning-to-term-choice"
       ]
     },
-    "review-content-v1-ac1a5219::vocabulary-example-gap-choice": {
-      "reviewContentId": "review-content-v1-ac1a5219",
+    "review-content-v1-22b88a3f::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-22b88a3f",
       "originalQuestionType": "vocabulary-example-gap-choice",
       "domain": "vocabulary",
       "aliases": [
         "daily:supply-v1-vocabulary-r17-daily-k1b-075-example-gap-choice"
+      ]
+    },
+    "review-content-v1-2b78017d::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-2b78017d",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-001-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-87b748c5::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-87b748c5",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-001-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-17acab91::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-17acab91",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-001-example-gap-choice"
+      ]
+    },
+    "review-content-v1-70059619::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-70059619",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-002-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-a4dae221::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-a4dae221",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-002-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-6e7ef809::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-6e7ef809",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-002-example-gap-choice"
+      ]
+    },
+    "review-content-v1-6545854c::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-6545854c",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-003-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-306a2690::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-306a2690",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-003-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-4f428558::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-4f428558",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-003-example-gap-choice"
+      ]
+    },
+    "review-content-v1-ab9de89b::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-ab9de89b",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-004-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-c596774f::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-c596774f",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-004-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-9c3f2ae1::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-9c3f2ae1",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-004-example-gap-choice"
+      ]
+    },
+    "review-content-v1-e6635ca6::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-e6635ca6",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-005-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-d300cc9e::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-d300cc9e",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-005-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-322dc0c6::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-322dc0c6",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-005-example-gap-choice"
+      ]
+    },
+    "review-content-v1-b503c3b2::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-b503c3b2",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-006-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-6e5e7066::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-6e5e7066",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-006-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-d0d181ac::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-d0d181ac",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-006-example-gap-choice"
+      ]
+    },
+    "review-content-v1-1f8159e2::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-1f8159e2",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-007-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-df3dd9ba::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-df3dd9ba",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-007-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-0b4b372c::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-0b4b372c",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-007-example-gap-choice"
+      ]
+    },
+    "review-content-v1-0649c236::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-0649c236",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-008-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-95b2d55a::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-95b2d55a",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-008-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-225e9940::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-225e9940",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-008-example-gap-choice"
+      ]
+    },
+    "review-content-v1-31958ab8::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-31958ab8",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-009-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-185d6060::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-185d6060",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-009-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-85a06378::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-85a06378",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-009-example-gap-choice"
+      ]
+    },
+    "review-content-v1-d8ffac09::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-d8ffac09",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-010-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-ab48fee1::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-ab48fee1",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-010-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-c015e1d9::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-c015e1d9",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-010-example-gap-choice"
+      ]
+    },
+    "review-content-v1-da311ae8::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-da311ae8",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-011-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-b1325ce0::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-b1325ce0",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-011-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-265bff7c::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-265bff7c",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-011-example-gap-choice"
+      ]
+    },
+    "review-content-v1-2e0788aa::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-2e0788aa",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-012-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-a2901eaa::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-a2901eaa",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-012-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-459b2108::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-459b2108",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-012-example-gap-choice"
+      ]
+    },
+    "review-content-v1-38b22a28::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-38b22a28",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-013-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-ed06acd8::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-ed06acd8",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-013-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-7702c6de::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-7702c6de",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-013-example-gap-choice"
+      ]
+    },
+    "review-content-v1-d8aa3ae6::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-d8aa3ae6",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-014-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-8dedccd2::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-8dedccd2",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-014-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-8d22d156::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-8d22d156",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-014-example-gap-choice"
+      ]
+    },
+    "review-content-v1-537dcff6::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-537dcff6",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-015-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-cf829efa::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-cf829efa",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-015-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-368cb20a::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-368cb20a",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-015-example-gap-choice"
+      ]
+    },
+    "review-content-v1-54559d32::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-54559d32",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-016-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-1c00df82::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-1c00df82",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-016-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-501aaea4::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-501aaea4",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-016-example-gap-choice"
+      ]
+    },
+    "review-content-v1-2c87a90d::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-2c87a90d",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-017-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-f3a535d1::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-f3a535d1",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-017-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-71e0c279::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-71e0c279",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-017-example-gap-choice"
+      ]
+    },
+    "review-content-v1-c16fe6cf::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-c16fe6cf",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-018-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-f48bf713::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-f48bf713",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-018-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-2da0cc3b::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-2da0cc3b",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-018-example-gap-choice"
+      ]
+    },
+    "review-content-v1-77791c4a::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-77791c4a",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-019-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-f4a5ae76::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-f4a5ae76",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-019-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-90ee90b2::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-90ee90b2",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-019-example-gap-choice"
+      ]
+    },
+    "review-content-v1-b0b15b85::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-b0b15b85",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-020-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-a6475b69::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-a6475b69",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-020-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-50cc53d9::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-50cc53d9",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-020-example-gap-choice"
+      ]
+    },
+    "review-content-v1-39dd5f08::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-39dd5f08",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-021-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-db7a8264::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-db7a8264",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-021-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-4e8793a8::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-4e8793a8",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-021-example-gap-choice"
+      ]
+    },
+    "review-content-v1-5fe49b88::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-5fe49b88",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-022-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-69207a20::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-69207a20",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-022-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-4cd9d858::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-4cd9d858",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-022-example-gap-choice"
+      ]
+    },
+    "review-content-v1-70d8cb95::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-70d8cb95",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-023-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-0230dafd::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-0230dafd",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-023-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-b634f9e5::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-b634f9e5",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-023-example-gap-choice"
+      ]
+    },
+    "review-content-v1-520fecbe::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-520fecbe",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-024-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-5c51e40a::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-5c51e40a",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-024-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-cfdae6f8::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-cfdae6f8",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-024-example-gap-choice"
+      ]
+    },
+    "review-content-v1-76475967::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-76475967",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-025-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-5b7fd713::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-5b7fd713",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-025-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-856faae9::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-856faae9",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-025-example-gap-choice"
+      ]
+    },
+    "review-content-v1-4391ce9d::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-4391ce9d",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-026-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-8ae7bea1::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-8ae7bea1",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-026-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-248dfbe3::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-248dfbe3",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-026-example-gap-choice"
+      ]
+    },
+    "review-content-v1-0907e2ef::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-0907e2ef",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-027-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-5ebc327f::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-5ebc327f",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-027-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-7bca1345::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-7bca1345",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-027-example-gap-choice"
+      ]
+    },
+    "review-content-v1-6fa7aab4::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-6fa7aab4",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-028-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-3f0b1324::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-3f0b1324",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-028-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-05b70d32::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-05b70d32",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-028-example-gap-choice"
+      ]
+    },
+    "review-content-v1-87ea991c::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-87ea991c",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-029-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-08a5ca38::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-08a5ca38",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-029-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-4ed846ba::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-4ed846ba",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-029-example-gap-choice"
+      ]
+    },
+    "review-content-v1-244ddb75::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-244ddb75",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-030-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-bdfbb53d::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-bdfbb53d",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-030-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-2f099bd3::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-2f099bd3",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-030-example-gap-choice"
+      ]
+    },
+    "review-content-v1-d57b48d2::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-d57b48d2",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-031-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-cd26cd6e::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-cd26cd6e",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-031-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-8a57fe08::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-8a57fe08",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-031-example-gap-choice"
+      ]
+    },
+    "review-content-v1-737b3766::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-737b3766",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-032-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-e8e4518a::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-e8e4518a",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-032-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-d0b41a06::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-d0b41a06",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-032-example-gap-choice"
+      ]
+    },
+    "review-content-v1-f5fc3fc6::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-f5fc3fc6",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-033-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-8d67b81a::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-8d67b81a",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-033-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-bb1a9b38::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-bb1a9b38",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-033-example-gap-choice"
+      ]
+    },
+    "review-content-v1-704c4d1b::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-704c4d1b",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-034-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-d21a79cb::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-d21a79cb",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-034-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-d53a9cb7::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-d53a9cb7",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-034-example-gap-choice"
+      ]
+    },
+    "review-content-v1-00d9cc3c::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-00d9cc3c",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-035-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-b42b8ef8::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-b42b8ef8",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-035-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-c2d127f8::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-c2d127f8",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-035-example-gap-choice"
+      ]
+    },
+    "review-content-v1-c6322e0e::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-c6322e0e",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-036-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-51bd0306::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-51bd0306",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-036-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-fa467fc0::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-fa467fc0",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-036-example-gap-choice"
+      ]
+    },
+    "review-content-v1-25529b57::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-25529b57",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-037-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-3e8a69b7::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-3e8a69b7",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-037-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-d50c8fad::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-d50c8fad",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-037-example-gap-choice"
+      ]
+    },
+    "review-content-v1-2e28ffd2::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-2e28ffd2",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-038-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-910762ba::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-910762ba",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-038-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-ec82aff4::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-ec82aff4",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-038-example-gap-choice"
+      ]
+    },
+    "review-content-v1-3194ae1d::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-3194ae1d",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-039-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-d0f9666d::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-d0f9666d",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-039-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-84be2fdb::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-84be2fdb",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-039-example-gap-choice"
+      ]
+    },
+    "review-content-v1-d925d794::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-d925d794",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-040-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-44533fac::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-44533fac",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-040-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-2a4b95a0::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-2a4b95a0",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-040-example-gap-choice"
+      ]
+    },
+    "review-content-v1-01033fcf::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-01033fcf",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-041-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-973550a7::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-973550a7",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-041-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-061ad201::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-061ad201",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-041-example-gap-choice"
+      ]
+    },
+    "review-content-v1-3932d4a0::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-3932d4a0",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-042-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-6619e2ac::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-6619e2ac",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-042-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-3cbac3cc::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-3cbac3cc",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-042-example-gap-choice"
+      ]
+    },
+    "review-content-v1-2e29b107::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-2e29b107",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-043-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-7341d77b::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-7341d77b",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-043-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-3731be8d::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-3731be8d",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-043-example-gap-choice"
+      ]
+    },
+    "review-content-v1-5329ab47::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-5329ab47",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-044-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-cbea407f::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-cbea407f",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-044-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-3dcb388d::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-3dcb388d",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-044-example-gap-choice"
+      ]
+    },
+    "review-content-v1-703a9274::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-703a9274",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-045-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-640e2b44::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-640e2b44",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-045-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-f3216818::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-f3216818",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-045-example-gap-choice"
+      ]
+    },
+    "review-content-v1-934198a4::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-934198a4",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-046-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-834d1a58::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-834d1a58",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-046-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-aa67ce5a::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-aa67ce5a",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-046-example-gap-choice"
+      ]
+    },
+    "review-content-v1-c3514393::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-c3514393",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-047-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-c9840c47::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-c9840c47",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-047-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-fa752471::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-fa752471",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-047-example-gap-choice"
+      ]
+    },
+    "review-content-v1-4d30833a::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-4d30833a",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-048-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-29a7425e::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-29a7425e",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-048-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-acffd894::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-acffd894",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-048-example-gap-choice"
+      ]
+    },
+    "review-content-v1-87a57dbb::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-87a57dbb",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-049-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-0e65aa33::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-0e65aa33",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-049-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-90e8e873::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-90e8e873",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-049-example-gap-choice"
+      ]
+    },
+    "review-content-v1-480670c9::vocabulary-term-to-meaning-choice": {
+      "reviewContentId": "review-content-v1-480670c9",
+      "originalQuestionType": "vocabulary-term-to-meaning-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-050-term-to-meaning-choice"
+      ]
+    },
+    "review-content-v1-d83fa099::vocabulary-meaning-to-term-choice": {
+      "reviewContentId": "review-content-v1-d83fa099",
+      "originalQuestionType": "vocabulary-meaning-to-term-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-050-meaning-to-term-choice"
+      ]
+    },
+    "review-content-v1-4e4a0df7::vocabulary-example-gap-choice": {
+      "reviewContentId": "review-content-v1-4e4a0df7",
+      "originalQuestionType": "vocabulary-example-gap-choice",
+      "domain": "vocabulary",
+      "aliases": [
+        "daily:supply-v1-vocabulary-r17-daily-k1c-050-example-gap-choice"
       ]
     },
     "review-content-v1-9d3958e0::vocabulary-term-to-meaning-choice": {
