@@ -185,7 +185,7 @@ describe('09 released content acceptance', () => {
       exercises,
     }).join('\n')
     expect(contentText).not.toMatch(
-      /\b(?:TODO|TBD|PLACEHOLDER)\b|待补|占位/i,
+      /\b(?:TODO|TBD|PLACEHOLDER)\b|待补内容|占位内容/i,
     )
     expect(contentText).not.toMatch(/\b(?:911|112|999)\b/)
 

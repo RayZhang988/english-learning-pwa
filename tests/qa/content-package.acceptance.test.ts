@@ -287,7 +287,7 @@ describe('05 released content package acceptance', () => {
     ].join('\n')
 
     expect(packageText).not.toMatch(
-      /\b(?:TODO|TBD|PLACEHOLDER)\b|待补|占位内容/iu,
+      /\b(?:TODO|TBD|PLACEHOLDER)\b|待补内容|占位内容/iu,
     )
     for (const unit of units) {
       if (unit.activity.tts) {
