@@ -23,16 +23,16 @@
     "content/curriculum/content-package-contract.v1.md",
     "content/curriculum/content-quality-notes.v1.md",
     "content/curriculum/handoff-v1.md",
-    "content/curriculum/training-supply-handoff-v1.md",
-    "content/curriculum/review-content-index-handoff-v1.md"
+    "content/curriculum/training-supply-handoff-v1.md"
+    ,"content/curriculum/review-content-index-handoff-v1.md"
   ],
   "validationFiles": [
     "content/curriculum/validate-duration-baselines.v1.mjs",
     "content/curriculum/validate-training-supply.v1.mjs",
     "content/curriculum/validate-listening-bilingual-options.v1.mjs",
     "content/curriculum/validate-keyword-dictation-guidance.v1.mjs",
-    "content/curriculum/validate-speaking-translations.v1.mjs",
-    "content/curriculum/generate-review-content-index.v1.mjs"
+    "content/curriculum/validate-speaking-translations.v1.mjs"
+    ,"content/curriculum/generate-review-content-index.v1.mjs"
   ],
   "mediaAssets": [],
   "totals": {
@@ -48,18 +48,18 @@
   "durationBaselinePolicyFile": "content/curriculum/duration-baseline-authoring.v1.json",
   "durationBaselineTotals": {
     "learningUnits": 84,
-    "vocabularySeconds": 4983,
+    "vocabularySeconds": 4740,
     "listeningSeconds": 8516,
     "speakingSeconds": 5588,
-    "allUnitsSeconds": 19087
+    "allUnitsSeconds": 18844
   },
   "trainingSupplyIndexFile": "content/curriculum/training-supply-index.v1.json",
   "trainingSupplyIndexSchemaFile": "content/curriculum/training-supply-index.schema.v1.json",
   "trainingSupplyTotals": {
-    "vocabularyCandidates": 972,
+    "vocabularyCandidates": 489,
     "listeningCandidates": 253,
     "speakingCandidates": 122,
-    "allCandidates": 1347
+    "allCandidates": 864
   },
   "reviewContentIndexFile": "content/curriculum/review-content-index.v1.json",
   "reviewContentIndexSchemaFile": "content/curriculum/review-content-index.schema.v1.json",

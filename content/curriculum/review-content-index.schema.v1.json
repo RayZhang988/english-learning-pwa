@@ -11,7 +11,7 @@
     "sources": {"type": "object"},
     "canonicalization": {"type": "object"},
     "totals": {"type": "object"},
-    "aliases": {"type": "object", "minProperties": 1959},
+    "aliases": {"type": "object", "minProperties": 1476},
     "identities": {"type": "object", "minProperties": 1}
   },
   "additionalProperties": false

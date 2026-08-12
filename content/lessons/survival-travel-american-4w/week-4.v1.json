@@ -9,9 +9,7 @@
       "lessonId": "w4d22-boarding-and-arrival",
       "recommendedDay": 22,
       "titleZh": "登机、转机与行李提取",
-      "sceneIds": [
-        "airport"
-      ],
+      "sceneIds": ["airport"],
       "observableObjectives": [
         "处理座位或转机的固定信息。",
         "抵达后找到行李提取处并报告行李未到。"
@@ -36,76 +34,19 @@
             "minimumSeconds": 90,
             "maximumSeconds": 600
           },
-          "tags": [
-            "scene:airport",
-            "week:4",
-            "day:22",
-            "focus:arrival",
-            "focus:connection"
-          ],
-          "prerequisiteUnitIds": [
-            "st4w-w3d21-vocabulary"
-          ],
+          "tags": ["scene:airport", "week:4", "day:22", "focus:arrival", "focus:connection"],
+          "prerequisiteUnitIds": ["st4w-w3d21-vocabulary"],
           "activity": {
             "type": "vocabulary-set",
             "instructionsZh": "区分登机、转机和抵达后的行李流程。",
             "items": [
-              {
-                "id": "w4d22-v1",
-                "term": "board",
-                "partOfSpeech": "verb",
-                "meaningZh": "登机",
-                "exampleEn": "We're ready to board.",
-                "exampleZh": "我们准备登机了。"
-              },
-              {
-                "id": "w4d22-v2",
-                "term": "connection",
-                "partOfSpeech": "noun",
-                "meaningZh": "转机；联程航班",
-                "exampleEn": "I have a connection in Denver.",
-                "exampleZh": "我在丹佛转机。"
-              },
-              {
-                "id": "w4d22-v3",
-                "term": "arrival",
-                "partOfSpeech": "noun",
-                "meaningZh": "抵达",
-                "exampleEn": "Follow the signs to arrivals.",
-                "exampleZh": "跟随标志前往到达区。"
-              },
-              {
-                "id": "w4d22-v4",
-                "term": "baggage claim",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "行李提取处",
-                "exampleEn": "Baggage claim is downstairs.",
-                "exampleZh": "行李提取处在楼下。"
-              },
-              {
-                "id": "w4d22-v5",
-                "term": "carousel",
-                "partOfSpeech": "noun",
-                "meaningZh": "行李转盘",
-                "exampleEn": "Your bag will be on carousel six.",
-                "exampleZh": "你的行李会在六号转盘。"
-              },
-              {
-                "id": "w4d22-v6",
-                "term": "missing",
-                "partOfSpeech": "adjective",
-                "meaningZh": "找不到的；未到的",
-                "exampleEn": "My suitcase is missing.",
-                "exampleZh": "我的行李箱没到。"
-              },
-              {
-                "id": "w4d22-v7",
-                "term": "baggage tag",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "行李牌",
-                "exampleEn": "Please show me your baggage tag.",
-                "exampleZh": "请出示你的行李牌。"
-              }
+              {"id": "w4d22-v1", "term": "board", "partOfSpeech": "verb", "meaningZh": "登机", "exampleEn": "We're ready to board.", "exampleZh": "我们准备登机了。"},
+              {"id": "w4d22-v2", "term": "connection", "partOfSpeech": "noun", "meaningZh": "转机；联程航班", "exampleEn": "I have a connection in Denver.", "exampleZh": "我在丹佛转机。"},
+              {"id": "w4d22-v3", "term": "arrival", "partOfSpeech": "noun", "meaningZh": "抵达", "exampleEn": "Follow the signs to arrivals.", "exampleZh": "跟随标志前往到达区。"},
+              {"id": "w4d22-v4", "term": "baggage claim", "partOfSpeech": "noun phrase", "meaningZh": "行李提取处", "exampleEn": "Baggage claim is downstairs.", "exampleZh": "行李提取处在楼下。"},
+              {"id": "w4d22-v5", "term": "carousel", "partOfSpeech": "noun", "meaningZh": "行李转盘", "exampleEn": "Your bag will be on carousel six.", "exampleZh": "你的行李会在六号转盘。"},
+              {"id": "w4d22-v6", "term": "missing", "partOfSpeech": "adjective", "meaningZh": "找不到的；未到的", "exampleEn": "My suitcase is missing.", "exampleZh": "我的行李箱没到。"},
+              {"id": "w4d22-v7", "term": "baggage tag", "partOfSpeech": "noun phrase", "meaningZh": "行李牌", "exampleEn": "Please show me your baggage tag.", "exampleZh": "请出示你的行李牌。"}
             ]
           }
         },
@@ -128,103 +69,26 @@
             "minimumSeconds": 150,
             "maximumSeconds": 900
           },
-          "tags": [
-            "scene:airport",
-            "week:4",
-            "day:22",
-            "skill:detail",
-            "skill:inference",
-            "focus:missing-bag"
-          ],
-          "prerequisiteUnitIds": [
-            "st4w-w3d21-listening"
-          ],
+          "tags": ["scene:airport", "week:4", "day:22", "skill:detail", "skill:inference", "focus:missing-bag"],
+          "prerequisiteUnitIds": ["st4w-w3d21-listening"],
           "activity": {
             "type": "listening-dialogue",
             "titleZh": "行李没有出现在转盘上",
-            "tts": {
-              "locale": "en-US",
-              "defaultRate": 0.99
-            },
+            "tts": {"locale": "en-US", "defaultRate": 0.99},
             "transcript": [
-              {
-                "speaker": "Traveler",
-                "text": "Excuse me, my suitcase didn't arrive on carousel six.",
-                "translationZh": "打扰一下，我的行李箱没有出现在六号转盘上。"
-              },
-              {
-                "speaker": "Agent",
-                "text": "I'm sorry. May I see your baggage tag and boarding pass?",
-                "translationZh": "很抱歉。可以看一下您的行李牌和登机牌吗？"
-              },
-              {
-                "speaker": "Traveler",
-                "text": "Here they are. I arrived on flight 482 from Seattle.",
-                "translationZh": "给您。我乘坐从西雅图来的 482 航班抵达。"
-              },
-              {
-                "speaker": "Agent",
-                "text": "Can you describe the suitcase?",
-                "translationZh": "您可以描述一下行李箱吗？"
-              },
-              {
-                "speaker": "Traveler",
-                "text": "It's a medium black suitcase with a red tag.",
-                "translationZh": "是一个中等大小的黑色行李箱，带红色标签。"
-              },
-              {
-                "speaker": "Agent",
-                "text": "I found the record. The bag is on the next flight and should arrive at nine.",
-                "translationZh": "我找到记录了。行李在下一班航班上，应该九点到。"
-              },
-              {
-                "speaker": "Traveler",
-                "text": "Could you send it to my hotel?",
-                "translationZh": "你们可以把它送到我的酒店吗？"
-              },
-              {
-                "speaker": "Agent",
-                "text": "Yes. Please write the hotel name and address here.",
-                "translationZh": "可以。请在这里写下酒店名称和地址。"
-              }
+              {"speaker": "Traveler", "text": "Excuse me, my suitcase didn't arrive on carousel six.", "translationZh": "打扰一下，我的行李箱没有出现在六号转盘上。"},
+              {"speaker": "Agent", "text": "I'm sorry. May I see your baggage tag and boarding pass?", "translationZh": "很抱歉。可以看一下您的行李牌和登机牌吗？"},
+              {"speaker": "Traveler", "text": "Here they are. I arrived on flight 482 from Seattle.", "translationZh": "给您。我乘坐从西雅图来的 482 航班抵达。"},
+              {"speaker": "Agent", "text": "Can you describe the suitcase?", "translationZh": "您可以描述一下行李箱吗？"},
+              {"speaker": "Traveler", "text": "It's a medium black suitcase with a red tag.", "translationZh": "是一个中等大小的黑色行李箱，带红色标签。"},
+              {"speaker": "Agent", "text": "I found the record. The bag is on the next flight and should arrive at nine.", "translationZh": "我找到记录了。行李在下一班航班上，应该九点到。"},
+              {"speaker": "Traveler", "text": "Could you send it to my hotel?", "translationZh": "你们可以把它送到我的酒店吗？"},
+              {"speaker": "Agent", "text": "Yes. Please write the hotel name and address here.", "translationZh": "可以。请在这里写下酒店名称和地址。"}
             ],
             "checks": [
-              {
-                "id": "w4d22-l1",
-                "skill": "detail",
-                "promptZh": "行李应该在哪个转盘？",
-                "options": [
-                  "4",
-                  "6",
-                  "9"
-                ],
-                "correctOptionIndex": 1,
-                "rationaleZh": "旅客说 carousel six。"
-              },
-              {
-                "id": "w4d22-l2",
-                "skill": "detail",
-                "promptZh": "行李是什么样的？",
-                "options": [
-                  "小号红色箱子",
-                  "中号黑色箱子，红色标签",
-                  "大号黑色箱子，蓝色标签"
-                ],
-                "correctOptionIndex": 1,
-                "rationaleZh": "medium black suitcase with a red tag。"
-              },
-              {
-                "id": "w4d22-l3",
-                "skill": "detail",
-                "promptZh": "行李预计几点到？",
-                "options": [
-                  "6:00",
-                  "8:20",
-                  "9:00"
-                ],
-                "correctOptionIndex": 2,
-                "rationaleZh": "工作人员说 should arrive at nine。"
-              }
+              {"id": "w4d22-l1", "skill": "detail", "promptZh": "行李应该在哪个转盘？", "options": ["4", "6", "9"], "correctOptionIndex": 1, "rationaleZh": "旅客说 carousel six。"},
+              {"id": "w4d22-l2", "skill": "detail", "promptZh": "行李是什么样的？", "options": ["小号红色箱子", "中号黑色箱子，红色标签", "大号黑色箱子，蓝色标签"], "correctOptionIndex": 1, "rationaleZh": "medium black suitcase with a red tag。"},
+              {"id": "w4d22-l3", "skill": "detail", "promptZh": "行李预计几点到？", "options": ["6:00", "8:20", "9:00"], "correctOptionIndex": 2, "rationaleZh": "工作人员说 should arrive at nine。"}
             ]
           }
         },
@@ -247,16 +111,8 @@
             "minimumSeconds": 90,
             "maximumSeconds": 720
           },
-          "tags": [
-            "scene:airport",
-            "week:4",
-            "day:22",
-            "task:fixed-response",
-            "focus:arrival"
-          ],
-          "prerequisiteUnitIds": [
-            "st4w-w3d21-speaking"
-          ],
+          "tags": ["scene:airport", "week:4", "day:22", "task:fixed-response", "focus:arrival"],
+          "prerequisiteUnitIds": ["st4w-w3d21-speaking"],
           "activity": {
             "type": "fixed-response",
             "instructionsZh": "说明转机或行李问题时提供地点、航班或外观。",
@@ -267,15 +123,8 @@
                 "partnerLine": "Welcome. Do you have another flight?",
                 "modelAnswer": "Yes. Where do I make my connection to Denver?",
                 "modelAnswerTranslationZh": "是的。我要在哪里转乘去丹佛的航班？",
-                "acceptedAnswers": [
-                  "Yes. Where do I make my connection to Denver?",
-                  "Where is my connecting flight to Denver?",
-                  "Which gate do I use for my Denver connection?"
-                ],
-                "requiredConcepts": [
-                  "connection",
-                  "Denver"
-                ]
+                "acceptedAnswers": ["Yes. Where do I make my connection to Denver?", "Where is my connecting flight to Denver?", "Which gate do I use for my Denver connection?"],
+                "requiredConcepts": ["connection", "Denver"]
               },
               {
                 "id": "w4d22-s2",
@@ -283,15 +132,8 @@
                 "partnerLine": "Arrivals are this way.",
                 "modelAnswer": "Excuse me, where is baggage claim?",
                 "modelAnswerTranslationZh": "打扰一下，行李提取处在哪里？",
-                "acceptedAnswers": [
-                  "Excuse me, where is baggage claim?",
-                  "How do I get to baggage claim?",
-                  "Where do I pick up my bag?"
-                ],
-                "requiredConcepts": [
-                  "baggage-claim",
-                  "location-question"
-                ]
+                "acceptedAnswers": ["Excuse me, where is baggage claim?", "How do I get to baggage claim?", "Where do I pick up my bag?"],
+                "requiredConcepts": ["baggage-claim", "location-question"]
               },
               {
                 "id": "w4d22-s3",
@@ -299,75 +141,24 @@
                 "partnerLine": "How can I help you?",
                 "modelAnswer": "My large blue suitcase didn't arrive.",
                 "modelAnswerTranslationZh": "我的蓝色大行李箱没有到。",
-                "acceptedAnswers": [
-                  "My large blue suitcase didn't arrive.",
-                  "My big blue suitcase is missing.",
-                  "I can't find my large blue suitcase."
-                ],
-                "requiredConcepts": [
-                  "missing-bag",
-                  "large",
-                  "blue"
-                ]
+                "acceptedAnswers": ["My large blue suitcase didn't arrive.", "My big blue suitcase is missing.", "I can't find my large blue suitcase."],
+                "requiredConcepts": ["missing-bag", "large", "blue"]
               }
             ]
           }
         }
       ],
       "sceneQuiz": [
-        {
-          "id": "w4d22-q1",
-          "domain": "vocabulary",
-          "format": "single-choice",
-          "promptZh": "抵达后取托运行李应去哪里？",
-          "options": [
-            "security",
-            "baggage claim",
-            "boarding gate"
-          ],
-          "correctOptionIndex": 1,
-          "rationaleZh": "baggage claim 是行李提取处。"
-        },
-        {
-          "id": "w4d22-q2",
-          "domain": "listening",
-          "format": "single-choice",
-          "audioText": "Bags from flight 715 will arrive on carousel three.",
-          "promptZh": "715 航班的行李在哪里？",
-          "options": [
-            "三号转盘",
-            "七号转盘",
-            "十五号转盘"
-          ],
-          "correctOptionIndex": 0,
-          "rationaleZh": "on carousel three。"
-        },
-        {
-          "id": "w4d22-q3",
-          "domain": "speaking",
-          "format": "fixed-response",
-          "promptZh": "说明你在芝加哥转机。",
-          "modelAnswer": "I have a connection in Chicago.",
-          "modelAnswerTranslationZh": "我要在芝加哥转机。",
-          "acceptedAnswers": [
-            "I have a connection in Chicago.",
-            "I'm connecting in Chicago.",
-            "My connecting flight is in Chicago."
-          ],
-          "requiredConcepts": [
-            "connection",
-            "Chicago"
-          ]
-        }
+        {"id": "w4d22-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "抵达后取托运行李应去哪里？", "options": ["security", "baggage claim", "boarding gate"], "correctOptionIndex": 1, "rationaleZh": "baggage claim 是行李提取处。"},
+        {"id": "w4d22-q2", "domain": "listening", "format": "single-choice", "audioText": "Bags from flight 715 will arrive on carousel three.", "promptZh": "715 航班的行李在哪里？", "options": ["三号转盘", "七号转盘", "十五号转盘"], "correctOptionIndex": 0, "rationaleZh": "on carousel three。"},
+        {"id": "w4d22-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "说明你在芝加哥转机。", "modelAnswer": "I have a connection in Chicago.", "modelAnswerTranslationZh": "我要在芝加哥转机。", "acceptedAnswers": ["I have a connection in Chicago.", "I'm connecting in Chicago.", "My connecting flight is in Chicago."], "requiredConcepts": ["connection", "Chicago"]}
       ]
     },
     {
       "lessonId": "w4d23-simple-help",
       "recommendedDay": 23,
       "titleZh": "迷路、身体不适与紧急求助",
-      "sceneIds": [
-        "simple-help"
-      ],
+      "sceneIds": ["simple-help"],
       "observableObjectives": [
         "说明迷路、物品丢失或一种简单身体不适。",
         "请求药店、医院、警察或紧急救助。"
@@ -393,76 +184,19 @@
             "minimumSeconds": 90,
             "maximumSeconds": 600
           },
-          "tags": [
-            "scene:simple-help",
-            "week:4",
-            "day:23",
-            "focus:help",
-            "safety:urgent-communication"
-          ],
-          "prerequisiteUnitIds": [
-            "st4w-w4d22-vocabulary"
-          ],
+          "tags": ["scene:simple-help", "week:4", "day:23", "focus:help", "safety:urgent-communication"],
+          "prerequisiteUnitIds": ["st4w-w4d22-vocabulary"],
           "activity": {
             "type": "vocabulary-set",
             "instructionsZh": "紧急沟通优先说清人员、问题和位置。",
             "items": [
-              {
-                "id": "w4d23-v1",
-                "term": "lost",
-                "partOfSpeech": "adjective",
-                "meaningZh": "迷路的；丢失的",
-                "exampleEn": "I'm lost and need directions.",
-                "exampleZh": "我迷路了，需要指路。"
-              },
-              {
-                "id": "w4d23-v2",
-                "term": "sick",
-                "partOfSpeech": "adjective",
-                "meaningZh": "生病的；不舒服的",
-                "exampleEn": "I feel sick.",
-                "exampleZh": "我觉得不舒服。"
-              },
-              {
-                "id": "w4d23-v3",
-                "term": "hurt",
-                "partOfSpeech": "verb",
-                "meaningZh": "受伤；疼痛",
-                "exampleEn": "My ankle hurts.",
-                "exampleZh": "我的脚踝疼。"
-              },
-              {
-                "id": "w4d23-v4",
-                "term": "dizzy",
-                "partOfSpeech": "adjective",
-                "meaningZh": "头晕的",
-                "exampleEn": "I feel dizzy and need to sit down.",
-                "exampleZh": "我头晕，需要坐下。"
-              },
-              {
-                "id": "w4d23-v5",
-                "term": "pharmacy",
-                "partOfSpeech": "noun",
-                "meaningZh": "药店",
-                "exampleEn": "Where is the nearest pharmacy?",
-                "exampleZh": "最近的药店在哪里？"
-              },
-              {
-                "id": "w4d23-v6",
-                "term": "hospital",
-                "partOfSpeech": "noun",
-                "meaningZh": "医院",
-                "exampleEn": "Please take me to a hospital.",
-                "exampleZh": "请带我去医院。"
-              },
-              {
-                "id": "w4d23-v7",
-                "term": "emergency",
-                "partOfSpeech": "noun",
-                "meaningZh": "紧急情况",
-                "exampleEn": "This is an emergency.",
-                "exampleZh": "这是紧急情况。"
-              }
+              {"id": "w4d23-v1", "term": "lost", "partOfSpeech": "adjective", "meaningZh": "迷路的；丢失的", "exampleEn": "I'm lost and need directions.", "exampleZh": "我迷路了，需要指路。"},
+              {"id": "w4d23-v2", "term": "sick", "partOfSpeech": "adjective", "meaningZh": "生病的；不舒服的", "exampleEn": "I feel sick.", "exampleZh": "我觉得不舒服。"},
+              {"id": "w4d23-v3", "term": "hurt", "partOfSpeech": "verb", "meaningZh": "受伤；疼痛", "exampleEn": "My ankle hurts.", "exampleZh": "我的脚踝疼。"},
+              {"id": "w4d23-v4", "term": "dizzy", "partOfSpeech": "adjective", "meaningZh": "头晕的", "exampleEn": "I feel dizzy and need to sit down.", "exampleZh": "我头晕，需要坐下。"},
+              {"id": "w4d23-v5", "term": "pharmacy", "partOfSpeech": "noun", "meaningZh": "药店", "exampleEn": "Where is the nearest pharmacy?", "exampleZh": "最近的药店在哪里？"},
+              {"id": "w4d23-v6", "term": "hospital", "partOfSpeech": "noun", "meaningZh": "医院", "exampleEn": "Please take me to a hospital.", "exampleZh": "请带我去医院。"},
+              {"id": "w4d23-v7", "term": "emergency", "partOfSpeech": "noun", "meaningZh": "紧急情况", "exampleEn": "This is an emergency.", "exampleZh": "这是紧急情况。"}
             ]
           }
         },
@@ -485,93 +219,24 @@
             "minimumSeconds": 150,
             "maximumSeconds": 900
           },
-          "tags": [
-            "scene:simple-help",
-            "week:4",
-            "day:23",
-            "skill:detail",
-            "focus:location",
-            "safety:urgent-communication"
-          ],
-          "prerequisiteUnitIds": [
-            "st4w-w4d22-listening"
-          ],
+          "tags": ["scene:simple-help", "week:4", "day:23", "skill:detail", "focus:location", "safety:urgent-communication"],
+          "prerequisiteUnitIds": ["st4w-w4d22-listening"],
           "activity": {
             "type": "listening-dialogue",
             "titleZh": "在博物馆请求工作人员协助",
-            "tts": {
-              "locale": "en-US",
-              "defaultRate": 0.98
-            },
+            "tts": {"locale": "en-US", "defaultRate": 0.98},
             "transcript": [
-              {
-                "speaker": "Visitor",
-                "text": "Excuse me, I need help. My friend feels dizzy.",
-                "translationZh": "打扰一下，我需要帮助。我的朋友头晕。"
-              },
-              {
-                "speaker": "Staff",
-                "text": "Is your friend awake and able to sit down?",
-                "translationZh": "你的朋友清醒并且可以坐下吗？"
-              },
-              {
-                "speaker": "Visitor",
-                "text": "Yes. We're by the north entrance, next to the information desk.",
-                "translationZh": "可以。我们在北门，问讯台旁边。"
-              },
-              {
-                "speaker": "Staff",
-                "text": "Stay there. I'll bring our first-aid staff.",
-                "translationZh": "待在那里。我会带急救人员过去。"
-              },
-              {
-                "speaker": "Visitor",
-                "text": "Thank you. Do you need my phone number?",
-                "translationZh": "谢谢。你需要我的电话号码吗？"
-              },
-              {
-                "speaker": "Staff",
-                "text": "Not yet. If the situation becomes an emergency, call local emergency services immediately.",
-                "translationZh": "暂时不需要。如果情况变成紧急状况，请立即联系当地紧急服务。"
-              }
+              {"speaker": "Visitor", "text": "Excuse me, I need help. My friend feels dizzy.", "translationZh": "打扰一下，我需要帮助。我的朋友头晕。"},
+              {"speaker": "Staff", "text": "Is your friend awake and able to sit down?", "translationZh": "你的朋友清醒并且可以坐下吗？"},
+              {"speaker": "Visitor", "text": "Yes. We're by the north entrance, next to the information desk.", "translationZh": "可以。我们在北门，问讯台旁边。"},
+              {"speaker": "Staff", "text": "Stay there. I'll bring our first-aid staff.", "translationZh": "待在那里。我会带急救人员过去。"},
+              {"speaker": "Visitor", "text": "Thank you. Do you need my phone number?", "translationZh": "谢谢。你需要我的电话号码吗？"},
+              {"speaker": "Staff", "text": "Not yet. If the situation becomes an emergency, call local emergency services immediately.", "translationZh": "暂时不需要。如果情况变成紧急状况，请立即联系当地紧急服务。"}
             ],
             "checks": [
-              {
-                "id": "w4d23-l1",
-                "skill": "detail",
-                "promptZh": "朋友有什么不适？",
-                "options": [
-                  "头晕",
-                  "脚踝疼",
-                  "过敏"
-                ],
-                "correctOptionIndex": 0,
-                "rationaleZh": "访客说 friend feels dizzy。"
-              },
-              {
-                "id": "w4d23-l2",
-                "skill": "detail",
-                "promptZh": "两人在哪里？",
-                "options": [
-                  "南门咖啡店旁",
-                  "北门问讯台旁",
-                  "二楼电梯旁"
-                ],
-                "correctOptionIndex": 1,
-                "rationaleZh": "by the north entrance, next to the information desk。"
-              },
-              {
-                "id": "w4d23-l3",
-                "skill": "detail",
-                "promptZh": "工作人员将带谁过来？",
-                "options": [
-                  "餐厅服务员",
-                  "急救人员",
-                  "出租车司机"
-                ],
-                "correctOptionIndex": 1,
-                "rationaleZh": "工作人员说 bring our first-aid staff。"
-              }
+              {"id": "w4d23-l1", "skill": "detail", "promptZh": "朋友有什么不适？", "options": ["头晕", "脚踝疼", "过敏"], "correctOptionIndex": 0, "rationaleZh": "访客说 friend feels dizzy。"},
+              {"id": "w4d23-l2", "skill": "detail", "promptZh": "两人在哪里？", "options": ["南门咖啡店旁", "北门问讯台旁", "二楼电梯旁"], "correctOptionIndex": 1, "rationaleZh": "by the north entrance, next to the information desk。"},
+              {"id": "w4d23-l3", "skill": "detail", "promptZh": "工作人员将带谁过来？", "options": ["餐厅服务员", "急救人员", "出租车司机"], "correctOptionIndex": 1, "rationaleZh": "工作人员说 bring our first-aid staff。"}
             ]
           }
         },
@@ -594,16 +259,8 @@
             "minimumSeconds": 90,
             "maximumSeconds": 720
           },
-          "tags": [
-            "scene:simple-help",
-            "week:4",
-            "day:23",
-            "task:fixed-response",
-            "safety:urgent-communication"
-          ],
-          "prerequisiteUnitIds": [
-            "st4w-w4d22-speaking"
-          ],
+          "tags": ["scene:simple-help", "week:4", "day:23", "task:fixed-response", "safety:urgent-communication"],
+          "prerequisiteUnitIds": ["st4w-w4d22-speaking"],
           "activity": {
             "type": "fixed-response",
             "instructionsZh": "使用短句快速传达问题；不尝试自行诊断。",
@@ -614,15 +271,8 @@
                 "partnerLine": "Are you okay?",
                 "modelAnswer": "I'm lost. Could you help me?",
                 "modelAnswerTranslationZh": "我迷路了。你能帮帮我吗？",
-                "acceptedAnswers": [
-                  "I'm lost. Could you help me?",
-                  "I think I'm lost. I need help.",
-                  "Could you help me? I don't know where I am."
-                ],
-                "requiredConcepts": [
-                  "lost",
-                  "help-request"
-                ]
+                "acceptedAnswers": ["I'm lost. Could you help me?", "I think I'm lost. I need help.", "Could you help me? I don't know where I am."],
+                "requiredConcepts": ["lost", "help-request"]
               },
               {
                 "id": "w4d23-s2",
@@ -630,16 +280,8 @@
                 "partnerLine": "What happened?",
                 "modelAnswer": "My ankle hurts. I need to sit down.",
                 "modelAnswerTranslationZh": "我的脚踝疼。我需要坐下来。",
-                "acceptedAnswers": [
-                  "My ankle hurts. I need to sit down.",
-                  "I hurt my ankle, and I need a seat.",
-                  "My ankle is hurt. Can I sit here?"
-                ],
-                "requiredConcepts": [
-                  "ankle",
-                  "pain",
-                  "sit"
-                ]
+                "acceptedAnswers": ["My ankle hurts. I need to sit down.", "I hurt my ankle, and I need a seat.", "My ankle is hurt. Can I sit here?"],
+                "requiredConcepts": ["ankle", "pain", "sit"]
               },
               {
                 "id": "w4d23-s3",
@@ -647,15 +289,8 @@
                 "partnerLine": "What are you looking for?",
                 "modelAnswer": "Where is the nearest pharmacy?",
                 "modelAnswerTranslationZh": "最近的药店在哪里？",
-                "acceptedAnswers": [
-                  "Where is the nearest pharmacy?",
-                  "Is there a pharmacy nearby?",
-                  "How do I get to the nearest pharmacy?"
-                ],
-                "requiredConcepts": [
-                  "pharmacy",
-                  "nearest"
-                ]
+                "acceptedAnswers": ["Where is the nearest pharmacy?", "Is there a pharmacy nearby?", "How do I get to the nearest pharmacy?"],
+                "requiredConcepts": ["pharmacy", "nearest"]
               },
               {
                 "id": "w4d23-s4",
@@ -663,75 +298,24 @@
                 "partnerLine": "Do you need help?",
                 "modelAnswer": "Yes. This is an emergency. Please call an ambulance now.",
                 "modelAnswerTranslationZh": "是的，这是紧急情况。请马上叫救护车。",
-                "acceptedAnswers": [
-                  "Yes. This is an emergency. Please call an ambulance now.",
-                  "Emergency. Please call an ambulance.",
-                  "We need an ambulance right away."
-                ],
-                "requiredConcepts": [
-                  "emergency",
-                  "ambulance",
-                  "immediate"
-                ]
+                "acceptedAnswers": ["Yes. This is an emergency. Please call an ambulance now.", "Emergency. Please call an ambulance.", "We need an ambulance right away."],
+                "requiredConcepts": ["emergency", "ambulance", "immediate"]
               }
             ]
           }
         }
       ],
       "sceneQuiz": [
-        {
-          "id": "w4d23-q1",
-          "domain": "vocabulary",
-          "format": "single-choice",
-          "promptZh": "“I feel dizzy.”表示什么？",
-          "options": [
-            "我头晕",
-            "我迷路",
-            "我很饿"
-          ],
-          "correctOptionIndex": 0,
-          "rationaleZh": "dizzy 指头晕。"
-        },
-        {
-          "id": "w4d23-q2",
-          "domain": "listening",
-          "format": "single-choice",
-          "audioText": "I lost my passport near the ticket counter. I need the police desk.",
-          "promptZh": "说话人遇到什么问题？",
-          "options": [
-            "护照丢失",
-            "错过航班",
-            "身体不适"
-          ],
-          "correctOptionIndex": 0,
-          "rationaleZh": "说话人明确说 lost my passport。"
-        },
-        {
-          "id": "w4d23-q3",
-          "domain": "speaking",
-          "format": "fixed-response",
-          "promptZh": "说明你在西门，需要警察帮助。",
-          "modelAnswer": "I'm at the west entrance, and I need the police.",
-          "modelAnswerTranslationZh": "我在西门，我需要警察帮助。",
-          "acceptedAnswers": [
-            "I'm at the west entrance, and I need the police.",
-            "We need police help at the west entrance.",
-            "Please send the police to the west entrance."
-          ],
-          "requiredConcepts": [
-            "west-entrance",
-            "police-help"
-          ]
-        }
+        {"id": "w4d23-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "“I feel dizzy.”表示什么？", "options": ["我头晕", "我迷路", "我很饿"], "correctOptionIndex": 0, "rationaleZh": "dizzy 指头晕。"},
+        {"id": "w4d23-q2", "domain": "listening", "format": "single-choice", "audioText": "I lost my passport near the ticket counter. I need the police desk.", "promptZh": "说话人遇到什么问题？", "options": ["护照丢失", "错过航班", "身体不适"], "correctOptionIndex": 0, "rationaleZh": "说话人明确说 lost my passport。"},
+        {"id": "w4d23-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "说明你在西门，需要警察帮助。", "modelAnswer": "I'm at the west entrance, and I need the police.", "modelAnswerTranslationZh": "我在西门，我需要警察帮助。", "acceptedAnswers": ["I'm at the west entrance, and I need the police.", "We need police help at the west entrance.", "Please send the police to the west entrance."], "requiredConcepts": ["west-entrance", "police-help"]}
       ]
     },
     {
       "lessonId": "w4d24-small-talk-and-plans",
       "recommendedDay": 24,
       "titleZh": "天气、兴趣与当天计划",
-      "sceneIds": [
-        "integrated-travel"
-      ],
+      "sceneIds": ["integrated-travel"],
       "observableObjectives": [
         "围绕天气或当天计划进行 3–4 轮简短寒暄。",
         "请求附近地点推荐并自然结束对话。"
@@ -756,75 +340,19 @@
             "minimumSeconds": 90,
             "maximumSeconds": 600
           },
-          "tags": [
-            "scene:integrated-travel",
-            "week:4",
-            "day:24",
-            "focus:small-talk"
-          ],
-          "prerequisiteUnitIds": [
-            "st4w-w4d23-vocabulary"
-          ],
+          "tags": ["scene:integrated-travel", "week:4", "day:24", "focus:small-talk"],
+          "prerequisiteUnitIds": ["st4w-w4d23-vocabulary"],
           "activity": {
             "type": "vocabulary-set",
             "instructionsZh": "寒暄保持短、具体，避免追问私人敏感信息。",
             "items": [
-              {
-                "id": "w4d24-v1",
-                "term": "weather",
-                "partOfSpeech": "noun",
-                "meaningZh": "天气",
-                "exampleEn": "The weather is beautiful today.",
-                "exampleZh": "今天天气很好。"
-              },
-              {
-                "id": "w4d24-v2",
-                "term": "plan",
-                "partOfSpeech": "noun",
-                "meaningZh": "计划",
-                "exampleEn": "What's your plan for today?",
-                "exampleZh": "你今天有什么计划？"
-              },
-              {
-                "id": "w4d24-v3",
-                "term": "free time",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "空闲时间",
-                "exampleEn": "I like walking in my free time.",
-                "exampleZh": "我空闲时喜欢散步。"
-              },
-              {
-                "id": "w4d24-v4",
-                "term": "recommend",
-                "partOfSpeech": "verb",
-                "meaningZh": "推荐",
-                "exampleEn": "Could you recommend a nearby café?",
-                "exampleZh": "你可以推荐附近的咖啡店吗？"
-              },
-              {
-                "id": "w4d24-v5",
-                "term": "nearby",
-                "partOfSpeech": "adjective",
-                "meaningZh": "附近的",
-                "exampleEn": "Is there a nearby park?",
-                "exampleZh": "附近有公园吗？"
-              },
-              {
-                "id": "w4d24-v6",
-                "term": "sounds good",
-                "partOfSpeech": "phrase",
-                "meaningZh": "听起来不错",
-                "exampleEn": "That sounds good.",
-                "exampleZh": "听起来不错。"
-              },
-              {
-                "id": "w4d24-v7",
-                "term": "have a good day",
-                "partOfSpeech": "phrase",
-                "meaningZh": "祝你今天愉快",
-                "exampleEn": "Thanks. Have a good day!",
-                "exampleZh": "谢谢。祝你今天愉快！"
-              }
+              {"id": "w4d24-v1", "term": "weather", "partOfSpeech": "noun", "meaningZh": "天气", "exampleEn": "The weather is beautiful today.", "exampleZh": "今天天气很好。"},
+              {"id": "w4d24-v2", "term": "plan", "partOfSpeech": "noun", "meaningZh": "计划", "exampleEn": "What's your plan for today?", "exampleZh": "你今天有什么计划？"},
+              {"id": "w4d24-v3", "term": "free time", "partOfSpeech": "noun phrase", "meaningZh": "空闲时间", "exampleEn": "I like walking in my free time.", "exampleZh": "我空闲时喜欢散步。"},
+              {"id": "w4d24-v4", "term": "recommend", "partOfSpeech": "verb", "meaningZh": "推荐", "exampleEn": "Could you recommend a nearby café?", "exampleZh": "你可以推荐附近的咖啡店吗？"},
+              {"id": "w4d24-v5", "term": "nearby", "partOfSpeech": "adjective", "meaningZh": "附近的", "exampleEn": "Is there a nearby park?", "exampleZh": "附近有公园吗？"},
+              {"id": "w4d24-v6", "term": "sounds good", "partOfSpeech": "phrase", "meaningZh": "听起来不错", "exampleEn": "That sounds good.", "exampleZh": "听起来不错。"},
+              {"id": "w4d24-v7", "term": "have a good day", "partOfSpeech": "phrase", "meaningZh": "祝你今天愉快", "exampleEn": "Thanks. Have a good day!", "exampleZh": "谢谢。祝你今天愉快！"}
             ]
           }
         },
@@ -847,109 +375,27 @@
             "minimumSeconds": 150,
             "maximumSeconds": 900
           },
-          "tags": [
-            "scene:integrated-travel",
-            "week:4",
-            "day:24",
-            "skill:gist",
-            "skill:detail",
-            "skill:inference",
-            "focus:small-talk"
-          ],
-          "prerequisiteUnitIds": [
-            "st4w-w4d23-listening"
-          ],
+          "tags": ["scene:integrated-travel", "week:4", "day:24", "skill:gist", "skill:detail", "skill:inference", "focus:small-talk"],
+          "prerequisiteUnitIds": ["st4w-w4d23-listening"],
           "activity": {
             "type": "listening-dialogue",
             "titleZh": "早餐时的简短寒暄",
-            "tts": {
-              "locale": "en-US",
-              "defaultRate": 1
-            },
+            "tts": {"locale": "en-US", "defaultRate": 1},
             "transcript": [
-              {
-                "speaker": "Guest A",
-                "text": "Good morning. It looks like a beautiful day.",
-                "translationZh": "早上好。看起来今天会是个好天气。"
-              },
-              {
-                "speaker": "Guest B",
-                "text": "It does. I'm glad the rain stopped.",
-                "translationZh": "是的。很高兴雨停了。"
-              },
-              {
-                "speaker": "Guest A",
-                "text": "Do you have any plans for today?",
-                "translationZh": "你今天有什么计划吗？"
-              },
-              {
-                "speaker": "Guest B",
-                "text": "I'm planning to visit the science museum, then walk by the river.",
-                "translationZh": "我打算参观科学博物馆，然后沿河散步。"
-              },
-              {
-                "speaker": "Guest A",
-                "text": "That sounds good. The river market is nearby, too.",
-                "translationZh": "听起来不错。河边市场也在附近。"
-              },
-              {
-                "speaker": "Guest B",
-                "text": "Thanks for the tip. What are you doing?",
-                "translationZh": "谢谢建议。你打算做什么？"
-              },
-              {
-                "speaker": "Guest A",
-                "text": "I have a work meeting, but I'm free this evening.",
-                "translationZh": "我有工作会议，但今晚有空。"
-              },
-              {
-                "speaker": "Guest B",
-                "text": "Enjoy your day.",
-                "translationZh": "祝你今天过得愉快。"
-              },
-              {
-                "speaker": "Guest A",
-                "text": "You, too.",
-                "translationZh": "你也是。"
-              }
+              {"speaker": "Guest A", "text": "Good morning. It looks like a beautiful day.", "translationZh": "早上好。看起来今天会是个好天气。"},
+              {"speaker": "Guest B", "text": "It does. I'm glad the rain stopped.", "translationZh": "是的。很高兴雨停了。"},
+              {"speaker": "Guest A", "text": "Do you have any plans for today?", "translationZh": "你今天有什么计划吗？"},
+              {"speaker": "Guest B", "text": "I'm planning to visit the science museum, then walk by the river.", "translationZh": "我打算参观科学博物馆，然后沿河散步。"},
+              {"speaker": "Guest A", "text": "That sounds good. The river market is nearby, too.", "translationZh": "听起来不错。河边市场也在附近。"},
+              {"speaker": "Guest B", "text": "Thanks for the tip. What are you doing?", "translationZh": "谢谢建议。你打算做什么？"},
+              {"speaker": "Guest A", "text": "I have a work meeting, but I'm free this evening.", "translationZh": "我有工作会议，但今晚有空。"},
+              {"speaker": "Guest B", "text": "Enjoy your day.", "translationZh": "祝你今天过得愉快。"},
+              {"speaker": "Guest A", "text": "You, too.", "translationZh": "你也是。"}
             ],
             "checks": [
-              {
-                "id": "w4d24-l1",
-                "skill": "gist",
-                "promptZh": "两人主要在聊什么？",
-                "options": [
-                  "房间问题",
-                  "天气和当天计划",
-                  "航班延误"
-                ],
-                "correctOptionIndex": 1,
-                "rationaleZh": "对话围绕天气、博物馆、散步和工作安排。"
-              },
-              {
-                "id": "w4d24-l2",
-                "skill": "detail",
-                "promptZh": "Guest B 打算去哪里？",
-                "options": [
-                  "科学博物馆和河边",
-                  "机场和市场",
-                  "酒店健身房"
-                ],
-                "correctOptionIndex": 0,
-                "rationaleZh": "visit the science museum, then walk by the river。"
-              },
-              {
-                "id": "w4d24-l3",
-                "skill": "detail",
-                "promptZh": "Guest A 什么时候有空？",
-                "options": [
-                  "今天上午",
-                  "今天下午",
-                  "今天晚上"
-                ],
-                "correctOptionIndex": 2,
-                "rationaleZh": "Guest A 说 free this evening。"
-              }
+              {"id": "w4d24-l1", "skill": "gist", "promptZh": "两人主要在聊什么？", "options": ["房间问题", "天气和当天计划", "航班延误"], "correctOptionIndex": 1, "rationaleZh": "对话围绕天气、博物馆、散步和工作安排。"},
+              {"id": "w4d24-l2", "skill": "detail", "promptZh": "Guest B 打算去哪里？", "options": ["科学博物馆和河边", "机场和市场", "酒店健身房"], "correctOptionIndex": 0, "rationaleZh": "visit the science museum, then walk by the river。"},
+              {"id": "w4d24-l3", "skill": "detail", "promptZh": "Guest A 什么时候有空？", "options": ["今天上午", "今天下午", "今天晚上"], "correctOptionIndex": 2, "rationaleZh": "Guest A 说 free this evening。"}
             ]
           }
         },
@@ -972,16 +418,8 @@
             "minimumSeconds": 90,
             "maximumSeconds": 720
           },
-          "tags": [
-            "scene:integrated-travel",
-            "week:4",
-            "day:24",
-            "task:fixed-response",
-            "focus:small-talk"
-          ],
-          "prerequisiteUnitIds": [
-            "st4w-w4d23-speaking"
-          ],
+          "tags": ["scene:integrated-travel", "week:4", "day:24", "task:fixed-response", "focus:small-talk"],
+          "prerequisiteUnitIds": ["st4w-w4d23-speaking"],
           "activity": {
             "type": "fixed-response",
             "instructionsZh": "每个回答控制在一到两句，并给对方结束空间。",
@@ -992,15 +430,8 @@
                 "partnerLine": "The weather is great today.",
                 "modelAnswer": "It is. I'm planning to visit the park.",
                 "modelAnswerTranslationZh": "是啊。我打算去公园。",
-                "acceptedAnswers": [
-                  "It is. I'm planning to visit the park.",
-                  "Yes, it's beautiful. I'm going to the park.",
-                  "It is nice. I plan to visit the park."
-                ],
-                "requiredConcepts": [
-                  "weather-agreement",
-                  "park-plan"
-                ]
+                "acceptedAnswers": ["It is. I'm planning to visit the park.", "Yes, it's beautiful. I'm going to the park.", "It is nice. I plan to visit the park."],
+                "requiredConcepts": ["weather-agreement", "park-plan"]
               },
               {
                 "id": "w4d24-s2",
@@ -1008,14 +439,8 @@
                 "partnerLine": "I'm free after lunch.",
                 "modelAnswer": "What are your plans for this afternoon?",
                 "modelAnswerTranslationZh": "你今天下午有什么计划？",
-                "acceptedAnswers": [
-                  "What are your plans for this afternoon?",
-                  "What are you doing this afternoon?",
-                  "Do you have plans this afternoon?"
-                ],
-                "requiredConcepts": [
-                  "afternoon-plan-question"
-                ]
+                "acceptedAnswers": ["What are your plans for this afternoon?", "What are you doing this afternoon?", "Do you have plans this afternoon?"],
+                "requiredConcepts": ["afternoon-plan-question"]
               },
               {
                 "id": "w4d24-s3",
@@ -1023,15 +448,8 @@
                 "partnerLine": "This neighborhood has some good places.",
                 "modelAnswer": "Could you recommend a nearby café?",
                 "modelAnswerTranslationZh": "你能推荐一家附近的咖啡馆吗？",
-                "acceptedAnswers": [
-                  "Could you recommend a nearby café?",
-                  "Do you know a good café nearby?",
-                  "What nearby café do you recommend?"
-                ],
-                "requiredConcepts": [
-                  "recommendation",
-                  "nearby-cafe"
-                ]
+                "acceptedAnswers": ["Could you recommend a nearby café?", "Do you know a good café nearby?", "What nearby café do you recommend?"],
+                "requiredConcepts": ["recommendation", "nearby-cafe"]
               },
               {
                 "id": "w4d24-s4",
@@ -1039,77 +457,24 @@
                 "partnerLine": "Try the café across from the park.",
                 "modelAnswer": "Thanks for the recommendation. Have a good day!",
                 "modelAnswerTranslationZh": "谢谢你的推荐。祝你今天愉快！",
-                "acceptedAnswers": [
-                  "Thanks for the recommendation. Have a good day!",
-                  "Thank you. Enjoy your day!",
-                  "That sounds good. Thanks, and have a good day."
-                ],
-                "requiredConcepts": [
-                  "thanks",
-                  "polite-close"
-                ]
+                "acceptedAnswers": ["Thanks for the recommendation. Have a good day!", "Thank you. Enjoy your day!", "That sounds good. Thanks, and have a good day."],
+                "requiredConcepts": ["thanks", "polite-close"]
               }
             ]
           }
         }
       ],
       "sceneQuiz": [
-        {
-          "id": "w4d24-q1",
-          "domain": "vocabulary",
-          "format": "single-choice",
-          "promptZh": "请别人推荐时使用哪个动词？",
-          "options": [
-            "recommend",
-            "remove",
-            "refund"
-          ],
-          "correctOptionIndex": 0,
-          "rationaleZh": "recommend 表示推荐。"
-        },
-        {
-          "id": "w4d24-q2",
-          "domain": "listening",
-          "format": "single-choice",
-          "audioText": "I'm free in the morning, but I have a tour this afternoon.",
-          "promptZh": "说话人什么时候有空？",
-          "options": [
-            "上午",
-            "下午",
-            "晚上"
-          ],
-          "correctOptionIndex": 0,
-          "rationaleZh": "明确说 free in the morning。"
-        },
-        {
-          "id": "w4d24-q3",
-          "domain": "speaking",
-          "format": "fixed-response",
-          "promptZh": "说明你今晚计划去河边散步。",
-          "modelAnswer": "I'm planning to walk by the river this evening.",
-          "modelAnswerTranslationZh": "我今晚打算去河边散步。",
-          "acceptedAnswers": [
-            "I'm planning to walk by the river this evening.",
-            "I plan to take a walk by the river tonight.",
-            "I'm going for a walk by the river this evening."
-          ],
-          "requiredConcepts": [
-            "river-walk",
-            "evening"
-          ]
-        }
+        {"id": "w4d24-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "请别人推荐时使用哪个动词？", "options": ["recommend", "remove", "refund"], "correctOptionIndex": 0, "rationaleZh": "recommend 表示推荐。"},
+        {"id": "w4d24-q2", "domain": "listening", "format": "single-choice", "audioText": "I'm free in the morning, but I have a tour this afternoon.", "promptZh": "说话人什么时候有空？", "options": ["上午", "下午", "晚上"], "correctOptionIndex": 0, "rationaleZh": "明确说 free in the morning。"},
+        {"id": "w4d24-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "说明你今晚计划去河边散步。", "modelAnswer": "I'm planning to walk by the river this evening.", "modelAnswerTranslationZh": "我今晚打算去河边散步。", "acceptedAnswers": ["I'm planning to walk by the river this evening.", "I plan to take a walk by the river tonight.", "I'm going for a walk by the river this evening."], "requiredConcepts": ["river-walk", "evening"]}
       ]
     },
     {
       "lessonId": "w4d25-integrated-arrival",
       "recommendedDay": 25,
       "titleZh": "综合任务一：抵达机场并入住酒店",
-      "sceneIds": [
-        "airport",
-        "directions-and-transport",
-        "hotel",
-        "integrated-travel"
-      ],
+      "sceneIds": ["airport", "directions-and-transport", "hotel", "integrated-travel"],
       "observableObjectives": [
         "从航站楼找到正确交通并确认车费。",
         "完成入住并报告一个房间问题。"
@@ -1134,60 +499,17 @@
             "minimumSeconds": 90,
             "maximumSeconds": 600
           },
-          "tags": [
-            "scene:integrated-travel",
-            "week:4",
-            "day:25",
-            "focus:arrival-to-hotel",
-            "capstone:part-1"
-          ],
-          "prerequisiteUnitIds": [
-            "st4w-w4d24-vocabulary"
-          ],
+          "tags": ["scene:integrated-travel", "week:4", "day:25", "focus:arrival-to-hotel", "capstone:part-1"],
+          "prerequisiteUnitIds": ["st4w-w4d24-vocabulary"],
           "activity": {
             "type": "vocabulary-review",
             "instructionsZh": "用流程词把机场、交通和酒店语言连成顺序。",
-            "reviewItemIds": [
-              "w4d22-v4",
-              "w2d13-v4",
-              "w2d13-v6",
-              "w3d17-v1",
-              "w3d17-v4",
-              "w3d18-v4"
-            ],
+            "reviewItemIds": ["w4d22-v4", "w2d13-v4", "w2d13-v6", "w3d17-v1", "w3d17-v4", "w3d18-v4"],
             "items": [
-              {
-                "id": "w4d25-v1",
-                "term": "terminal",
-                "partOfSpeech": "noun",
-                "meaningZh": "航站楼",
-                "exampleEn": "The shuttle leaves from terminal two.",
-                "exampleZh": "班车从二号航站楼出发。"
-              },
-              {
-                "id": "w4d25-v2",
-                "term": "shuttle",
-                "partOfSpeech": "noun",
-                "meaningZh": "接驳车",
-                "exampleEn": "The hotel shuttle is free.",
-                "exampleZh": "酒店接驳车免费。"
-              },
-              {
-                "id": "w4d25-v3",
-                "term": "front desk",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "前台",
-                "exampleEn": "Ask the front desk for a key card.",
-                "exampleZh": "向前台索取房卡。"
-              },
-              {
-                "id": "w4d25-v4",
-                "term": "confirm",
-                "partOfSpeech": "verb",
-                "meaningZh": "确认",
-                "exampleEn": "Let me confirm the hotel address.",
-                "exampleZh": "让我确认一下酒店地址。"
-              }
+              {"id": "w4d25-v1", "term": "terminal", "partOfSpeech": "noun", "meaningZh": "航站楼", "exampleEn": "The shuttle leaves from terminal two.", "exampleZh": "班车从二号航站楼出发。"},
+              {"id": "w4d25-v2", "term": "shuttle", "partOfSpeech": "noun", "meaningZh": "接驳车", "exampleEn": "The hotel shuttle is free.", "exampleZh": "酒店接驳车免费。"},
+              {"id": "w4d25-v3", "term": "front desk", "partOfSpeech": "noun phrase", "meaningZh": "前台", "exampleEn": "Ask the front desk for a key card.", "exampleZh": "向前台索取房卡。"},
+              {"id": "w4d25-v4", "term": "confirm", "partOfSpeech": "verb", "meaningZh": "确认", "exampleEn": "Let me confirm the hotel address.", "exampleZh": "让我确认一下酒店地址。"}
             ]
           }
         },
@@ -1210,114 +532,28 @@
             "minimumSeconds": 150,
             "maximumSeconds": 900
           },
-          "tags": [
-            "scene:integrated-travel",
-            "week:4",
-            "day:25",
-            "skill:sequence",
-            "skill:detail",
-            "skill:inference",
-            "capstone:part-1"
-          ],
-          "prerequisiteUnitIds": [
-            "st4w-w4d24-listening"
-          ],
+          "tags": ["scene:integrated-travel", "week:4", "day:25", "skill:sequence", "skill:detail", "skill:inference", "capstone:part-1"],
+          "prerequisiteUnitIds": ["st4w-w4d24-listening"],
           "activity": {
             "type": "listening-narrative",
             "titleZh": "从航班抵达到进入房间",
-            "tts": {
-              "locale": "en-US",
-              "defaultRate": 1
-            },
+            "tts": {"locale": "en-US", "defaultRate": 1},
             "transcript": [
-              {
-                "speaker": "Narrator",
-                "text": "Min arrives on flight 305 at terminal two and follows the signs to baggage claim.",
-                "translationZh": "Min 乘 305 航班抵达二号航站楼，并跟随标志前往行李提取处。"
-              },
-              {
-                "speaker": "Traveler",
-                "text": "Excuse me, where is the hotel shuttle pickup?",
-                "translationZh": "打扰一下，酒店接驳车上车点在哪里？"
-              },
-              {
-                "speaker": "Staff",
-                "text": "Outside door seven. The River Hotel shuttle comes every thirty minutes.",
-                "translationZh": "在七号门外。River Hotel 接驳车每三十分钟一班。"
-              },
-              {
-                "speaker": "Traveler",
-                "text": "Is there a fare?",
-                "translationZh": "需要车费吗？"
-              },
-              {
-                "speaker": "Staff",
-                "text": "No, it's free for hotel guests.",
-                "translationZh": "不需要，对酒店住客免费。"
-              },
-              {
-                "speaker": "Narrator",
-                "text": "At the hotel, Min checks in under the name Zhou and receives room 624.",
-                "translationZh": "到酒店后，Min 用 Zhou 的姓名入住，拿到 624 房。"
-              },
-              {
-                "speaker": "Traveler",
-                "text": "Is breakfast included, and what time is checkout?",
-                "translationZh": "早餐包含吗？几点退房？"
-              },
-              {
-                "speaker": "Clerk",
-                "text": "Breakfast is included. Checkout is at eleven.",
-                "translationZh": "早餐包含。十一点退房。"
-              },
-              {
-                "speaker": "Narrator",
-                "text": "In the room, Min discovers that the Wi-Fi does not connect and calls the front desk.",
-                "translationZh": "进入房间后，Min 发现 Wi-Fi 连不上，于是打电话给前台。"
-              },
-              {
-                "speaker": "Traveler",
-                "text": "Hi, this is room 624. I can't connect to the Wi-Fi.",
-                "translationZh": "你好，这里是 624 房。我连不上 Wi-Fi。"
-              }
+              {"speaker": "Narrator", "text": "Min arrives on flight 305 at terminal two and follows the signs to baggage claim.", "translationZh": "Min 乘 305 航班抵达二号航站楼，并跟随标志前往行李提取处。"},
+              {"speaker": "Traveler", "text": "Excuse me, where is the hotel shuttle pickup?", "translationZh": "打扰一下，酒店接驳车上车点在哪里？"},
+              {"speaker": "Staff", "text": "Outside door seven. The River Hotel shuttle comes every thirty minutes.", "translationZh": "在七号门外。River Hotel 接驳车每三十分钟一班。"},
+              {"speaker": "Traveler", "text": "Is there a fare?", "translationZh": "需要车费吗？"},
+              {"speaker": "Staff", "text": "No, it's free for hotel guests.", "translationZh": "不需要，对酒店住客免费。"},
+              {"speaker": "Narrator", "text": "At the hotel, Min checks in under the name Zhou and receives room 624.", "translationZh": "到酒店后，Min 用 Zhou 的姓名入住，拿到 624 房。"},
+              {"speaker": "Traveler", "text": "Is breakfast included, and what time is checkout?", "translationZh": "早餐包含吗？几点退房？"},
+              {"speaker": "Clerk", "text": "Breakfast is included. Checkout is at eleven.", "translationZh": "早餐包含。十一点退房。"},
+              {"speaker": "Narrator", "text": "In the room, Min discovers that the Wi-Fi does not connect and calls the front desk.", "translationZh": "进入房间后，Min 发现 Wi-Fi 连不上，于是打电话给前台。"},
+              {"speaker": "Traveler", "text": "Hi, this is room 624. I can't connect to the Wi-Fi.", "translationZh": "你好，这里是 624 房。我连不上 Wi-Fi。"}
             ],
             "checks": [
-              {
-                "id": "w4d25-l1",
-                "skill": "detail",
-                "promptZh": "接驳车在哪里上车？",
-                "options": [
-                  "二号门内",
-                  "七号门外",
-                  "行李转盘七旁"
-                ],
-                "correctOptionIndex": 1,
-                "rationaleZh": "工作人员说 Outside door seven。"
-              },
-              {
-                "id": "w4d25-l2",
-                "skill": "detail",
-                "promptZh": "接驳车车费是多少？",
-                "options": [
-                  "免费",
-                  "$7",
-                  "$30"
-                ],
-                "correctOptionIndex": 0,
-                "rationaleZh": "酒店住客免费。"
-              },
-              {
-                "id": "w4d25-l3",
-                "skill": "detail",
-                "promptZh": "房间出了什么问题？",
-                "options": [
-                  "空调不工作",
-                  "Wi-Fi 连不上",
-                  "房卡丢失"
-                ],
-                "correctOptionIndex": 1,
-                "rationaleZh": "Min 说 can't connect to the Wi-Fi。"
-              }
+              {"id": "w4d25-l1", "skill": "detail", "promptZh": "接驳车在哪里上车？", "options": ["二号门内", "七号门外", "行李转盘七旁"], "correctOptionIndex": 1, "rationaleZh": "工作人员说 Outside door seven。"},
+              {"id": "w4d25-l2", "skill": "detail", "promptZh": "接驳车车费是多少？", "options": ["免费", "$7", "$30"], "correctOptionIndex": 0, "rationaleZh": "酒店住客免费。"},
+              {"id": "w4d25-l3", "skill": "detail", "promptZh": "房间出了什么问题？", "options": ["空调不工作", "Wi-Fi 连不上", "房卡丢失"], "correctOptionIndex": 1, "rationaleZh": "Min 说 can't connect to the Wi-Fi。"}
             ]
           }
         },
@@ -1340,16 +576,8 @@
             "minimumSeconds": 90,
             "maximumSeconds": 720
           },
-          "tags": [
-            "scene:integrated-travel",
-            "week:4",
-            "day:25",
-            "task:guided-roleplay",
-            "capstone:part-1"
-          ],
-          "prerequisiteUnitIds": [
-            "st4w-w4d24-speaking"
-          ],
+          "tags": ["scene:integrated-travel", "week:4", "day:25", "task:guided-roleplay", "capstone:part-1"],
+          "prerequisiteUnitIds": ["st4w-w4d24-speaking"],
           "activity": {
             "type": "guided-roleplay",
             "instructionsZh": "依次处理抵达、交通、入住和设施问题。",
@@ -1360,16 +588,8 @@
                 "partnerLine": "Welcome to arrivals. How can I help?",
                 "modelAnswer": "Where is the River Hotel shuttle pickup, and how much is the fare?",
                 "modelAnswerTranslationZh": "River Hotel 的接驳车在哪里上车，车费多少钱？",
-                "acceptedAnswers": [
-                  "Where is the River Hotel shuttle pickup, and how much is the fare?",
-                  "Where do I get the River Hotel shuttle? Is it free?",
-                  "Could you tell me the hotel shuttle pickup location and fare?"
-                ],
-                "requiredConcepts": [
-                  "River-Hotel",
-                  "shuttle-pickup",
-                  "fare-question"
-                ]
+                "acceptedAnswers": ["Where is the River Hotel shuttle pickup, and how much is the fare?", "Where do I get the River Hotel shuttle? Is it free?", "Could you tell me the hotel shuttle pickup location and fare?"],
+                "requiredConcepts": ["River-Hotel", "shuttle-pickup", "fare-question"]
               },
               {
                 "id": "w4d25-s2",
@@ -1377,16 +597,8 @@
                 "partnerLine": "Where would you like to go?",
                 "modelAnswer": "Please take me to the main entrance of the River Hotel. Let me confirm: 18 Pine Street?",
                 "modelAnswerTranslationZh": "请送我到 River Hotel 的正门。我确认一下：地址是 Pine Street 18号，对吗？",
-                "acceptedAnswers": [
-                  "Please take me to the main entrance of the River Hotel. Let me confirm: 18 Pine Street?",
-                  "River Hotel, main entrance, please. The address is 18 Pine Street, right?",
-                  "Please drop me off at the River Hotel at 18 Pine Street."
-                ],
-                "requiredConcepts": [
-                  "River-Hotel",
-                  "main-entrance",
-                  "18-Pine-Street"
-                ]
+                "acceptedAnswers": ["Please take me to the main entrance of the River Hotel. Let me confirm: 18 Pine Street?", "River Hotel, main entrance, please. The address is 18 Pine Street, right?", "Please drop me off at the River Hotel at 18 Pine Street."],
+                "requiredConcepts": ["River-Hotel", "main-entrance", "18-Pine-Street"]
               },
               {
                 "id": "w4d25-s3",
@@ -1394,16 +606,8 @@
                 "partnerLine": "Welcome to the hotel.",
                 "modelAnswer": "I have a reservation under Zhou. Is breakfast included, and what time is checkout?",
                 "modelAnswerTranslationZh": "我在 Zhou 名下有预订。包含早餐吗？几点退房？",
-                "acceptedAnswers": [
-                  "I have a reservation under Zhou. Is breakfast included, and what time is checkout?",
-                  "I'm checking in under Zhou. Could you confirm breakfast and checkout time?",
-                  "The reservation is under Zhou. Does it include breakfast, and when is checkout?"
-                ],
-                "requiredConcepts": [
-                  "Zhou",
-                  "breakfast",
-                  "checkout-time"
-                ]
+                "acceptedAnswers": ["I have a reservation under Zhou. Is breakfast included, and what time is checkout?", "I'm checking in under Zhou. Could you confirm breakfast and checkout time?", "The reservation is under Zhou. Does it include breakfast, and when is checkout?"],
+                "requiredConcepts": ["Zhou", "breakfast", "checkout-time"]
               },
               {
                 "id": "w4d25-s4",
@@ -1411,77 +615,24 @@
                 "partnerLine": "Front desk. How can I help?",
                 "modelAnswer": "Hi, this is room 624. I can't connect to the Wi-Fi.",
                 "modelAnswerTranslationZh": "你好，我是 624 房的客人。我连不上 Wi-Fi。",
-                "acceptedAnswers": [
-                  "Hi, this is room 624. I can't connect to the Wi-Fi.",
-                  "The Wi-Fi isn't working in room 624.",
-                  "I'm in room 624, and I need help with the Wi-Fi."
-                ],
-                "requiredConcepts": [
-                  "room-624",
-                  "wifi-problem"
-                ]
+                "acceptedAnswers": ["Hi, this is room 624. I can't connect to the Wi-Fi.", "The Wi-Fi isn't working in room 624.", "I'm in room 624, and I need help with the Wi-Fi."],
+                "requiredConcepts": ["room-624", "wifi-problem"]
               }
             ]
           }
         }
       ],
       "sceneQuiz": [
-        {
-          "id": "w4d25-q1",
-          "domain": "vocabulary",
-          "format": "single-choice",
-          "promptZh": "机场到酒店的“shuttle”通常是什么？",
-          "options": [
-            "接驳车",
-            "行李转盘",
-            "房卡"
-          ],
-          "correctOptionIndex": 0,
-          "rationaleZh": "shuttle 指往返固定地点的接驳交通。"
-        },
-        {
-          "id": "w4d25-q2",
-          "domain": "listening",
-          "format": "single-choice",
-          "audioText": "Take the free shuttle outside door four. It leaves every twenty minutes and stops at the hotel's north entrance.",
-          "promptZh": "哪项信息正确？",
-          "options": [
-            "四号门外上车，每二十分钟一班，酒店北门下车",
-            "北门上车，四号门下车，收费二十美元",
-            "二十号门外上车，只到酒店正门"
-          ],
-          "correctOptionIndex": 0,
-          "rationaleZh": "三个细节分别是 outside door four、every twenty minutes、north entrance。"
-        },
-        {
-          "id": "w4d25-q3",
-          "domain": "speaking",
-          "format": "fixed-response",
-          "promptZh": "完成入住核心句：预订在 Wu 名下，询问退房时间。",
-          "modelAnswer": "I have a reservation under Wu. What time is checkout?",
-          "modelAnswerTranslationZh": "我在 Wu 名下有预订。几点退房？",
-          "acceptedAnswers": [
-            "I have a reservation under Wu. What time is checkout?",
-            "I'm checking in under Wu. When do I need to check out?",
-            "The reservation is under Wu. Could you tell me the checkout time?"
-          ],
-          "requiredConcepts": [
-            "Wu",
-            "checkout-time"
-          ]
-        }
+        {"id": "w4d25-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "机场到酒店的“shuttle”通常是什么？", "options": ["接驳车", "行李转盘", "房卡"], "correctOptionIndex": 0, "rationaleZh": "shuttle 指往返固定地点的接驳交通。"},
+        {"id": "w4d25-q2", "domain": "listening", "format": "single-choice", "audioText": "Take the free shuttle outside door four. It leaves every twenty minutes and stops at the hotel's north entrance.", "promptZh": "哪项信息正确？", "options": ["四号门外上车，每二十分钟一班，酒店北门下车", "北门上车，四号门下车，收费二十美元", "二十号门外上车，只到酒店正门"], "correctOptionIndex": 0, "rationaleZh": "三个细节分别是 outside door four、every twenty minutes、north entrance。"},
+        {"id": "w4d25-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "完成入住核心句：预订在 Wu 名下，询问退房时间。", "modelAnswer": "I have a reservation under Wu. What time is checkout?", "modelAnswerTranslationZh": "我在 Wu 名下有预订。几点退房？", "acceptedAnswers": ["I have a reservation under Wu. What time is checkout?", "I'm checking in under Wu. When do I need to check out?", "The reservation is under Wu. Could you tell me the checkout time?"], "requiredConcepts": ["Wu", "checkout-time"]}
       ]
     },
     {
       "lessonId": "w4d26-integrated-city-day",
       "recommendedDay": 26,
       "titleZh": "综合任务二：城市出行、用餐与购物",
-      "sceneIds": [
-        "directions-and-transport",
-        "restaurant",
-        "shopping-and-payment",
-        "integrated-travel"
-      ],
+      "sceneIds": ["directions-and-transport", "restaurant", "shopping-and-payment", "integrated-travel"],
       "observableObjectives": [
         "根据路线和公交信息抵达目的地。",
         "处理点餐减配、付款和换货三个连续意图。"
@@ -1506,60 +657,17 @@
             "minimumSeconds": 90,
             "maximumSeconds": 600
           },
-          "tags": [
-            "scene:integrated-travel",
-            "week:4",
-            "day:26",
-            "focus:city-day",
-            "capstone:part-2"
-          ],
-          "prerequisiteUnitIds": [
-            "st4w-w4d25-vocabulary"
-          ],
+          "tags": ["scene:integrated-travel", "week:4", "day:26", "focus:city-day", "capstone:part-2"],
+          "prerequisiteUnitIds": ["st4w-w4d25-vocabulary"],
           "activity": {
             "type": "vocabulary-review",
             "instructionsZh": "看到意图后快速选择所属场景词，不新增孤立难词。",
-            "reviewItemIds": [
-              "w2d11-v1",
-              "w2d12-v5",
-              "w2d9-v4",
-              "w2d10-v3",
-              "w3d15-v3",
-              "w3d16-v6"
-            ],
+            "reviewItemIds": ["w2d11-v1", "w2d12-v5", "w2d9-v4", "w2d10-v3", "w3d15-v3", "w3d16-v6"],
             "items": [
-              {
-                "id": "w4d26-v1",
-                "term": "route",
-                "partOfSpeech": "noun",
-                "meaningZh": "路线",
-                "exampleEn": "This route goes downtown.",
-                "exampleZh": "这条路线去市中心。"
-              },
-              {
-                "id": "w4d26-v2",
-                "term": "option",
-                "partOfSpeech": "noun",
-                "meaningZh": "选择；选项",
-                "exampleEn": "Is there another option?",
-                "exampleZh": "有其他选择吗？"
-              },
-              {
-                "id": "w4d26-v3",
-                "term": "correct",
-                "partOfSpeech": "adjective",
-                "meaningZh": "正确的；更正后的",
-                "exampleEn": "This is the correct size.",
-                "exampleZh": "这是正确的尺码。"
-              },
-              {
-                "id": "w4d26-v4",
-                "term": "nearby",
-                "partOfSpeech": "adjective",
-                "meaningZh": "附近的",
-                "exampleEn": "Let's find a nearby restaurant.",
-                "exampleZh": "我们找一家附近的餐厅吧。"
-              }
+              {"id": "w4d26-v1", "term": "route", "partOfSpeech": "noun", "meaningZh": "路线", "exampleEn": "This route goes downtown.", "exampleZh": "这条路线去市中心。"},
+              {"id": "w4d26-v2", "term": "option", "partOfSpeech": "noun", "meaningZh": "选择；选项", "exampleEn": "Is there another option?", "exampleZh": "有其他选择吗？"},
+              {"id": "w4d26-v3", "term": "correct", "partOfSpeech": "adjective", "meaningZh": "正确的；更正后的", "exampleEn": "This is the correct size.", "exampleZh": "这是正确的尺码。"},
+              {"id": "w4d26-v4", "term": "nearby", "partOfSpeech": "adjective", "meaningZh": "附近的", "exampleEn": "Let's find a nearby restaurant.", "exampleZh": "我们找一家附近的餐厅吧。"}
             ]
           }
         },
@@ -1582,109 +690,27 @@
             "minimumSeconds": 150,
             "maximumSeconds": 900
           },
-          "tags": [
-            "scene:integrated-travel",
-            "week:4",
-            "day:26",
-            "skill:sequence",
-            "skill:detail",
-            "skill:inference",
-            "capstone:part-2"
-          ],
-          "prerequisiteUnitIds": [
-            "st4w-w4d25-listening"
-          ],
+          "tags": ["scene:integrated-travel", "week:4", "day:26", "skill:sequence", "skill:detail", "skill:inference", "capstone:part-2"],
+          "prerequisiteUnitIds": ["st4w-w4d25-listening"],
           "activity": {
             "type": "listening-narrative",
             "titleZh": "博物馆、午餐和换鞋",
-            "tts": {
-              "locale": "en-US",
-              "defaultRate": 1
-            },
+            "tts": {"locale": "en-US", "defaultRate": 1},
             "transcript": [
-              {
-                "speaker": "Friend",
-                "text": "The museum is across from Central Park, but the Green Line is closed today.",
-                "translationZh": "博物馆在中央公园对面，但绿线今天停运。"
-              },
-              {
-                "speaker": "Traveler",
-                "text": "Could we take the number twelve bus instead?",
-                "translationZh": "我们可以改坐 12 路公交吗？"
-              },
-              {
-                "speaker": "Friend",
-                "text": "Yes. Get off at the fourth stop and walk one block east.",
-                "translationZh": "可以。在第四站下车，然后向东走一个街区。"
-              },
-              {
-                "speaker": "Narrator",
-                "text": "After the museum, they choose a nearby restaurant.",
-                "translationZh": "参观博物馆后，他们选择附近一家餐厅。"
-              },
-              {
-                "speaker": "Traveler",
-                "text": "I'd like the chicken salad without cheese. I'm allergic to peanuts.",
-                "translationZh": "我想要鸡肉沙拉，不加奶酪。我对花生过敏。"
-              },
-              {
-                "speaker": "Server",
-                "text": "The dressing has peanuts, so I'll bring a different one.",
-                "translationZh": "这款沙拉酱含花生，所以我会换一种。"
-              },
-              {
-                "speaker": "Narrator",
-                "text": "Later, the traveler returns shoes that are too small.",
-                "translationZh": "之后，旅客退换一双太小的鞋。"
-              },
-              {
-                "speaker": "Traveler",
-                "text": "I have the receipt. Could I exchange these for a size nine?",
-                "translationZh": "我有收据。可以换成九码吗？"
-              },
-              {
-                "speaker": "Clerk",
-                "text": "Yes. We have size nine in black, and the price is the same.",
-                "translationZh": "可以。黑色有九码，价格一样。"
-              }
+              {"speaker": "Friend", "text": "The museum is across from Central Park, but the Green Line is closed today.", "translationZh": "博物馆在中央公园对面，但绿线今天停运。"},
+              {"speaker": "Traveler", "text": "Could we take the number twelve bus instead?", "translationZh": "我们可以改坐 12 路公交吗？"},
+              {"speaker": "Friend", "text": "Yes. Get off at the fourth stop and walk one block east.", "translationZh": "可以。在第四站下车，然后向东走一个街区。"},
+              {"speaker": "Narrator", "text": "After the museum, they choose a nearby restaurant.", "translationZh": "参观博物馆后，他们选择附近一家餐厅。"},
+              {"speaker": "Traveler", "text": "I'd like the chicken salad without cheese. I'm allergic to peanuts.", "translationZh": "我想要鸡肉沙拉，不加奶酪。我对花生过敏。"},
+              {"speaker": "Server", "text": "The dressing has peanuts, so I'll bring a different one.", "translationZh": "这款沙拉酱含花生，所以我会换一种。"},
+              {"speaker": "Narrator", "text": "Later, the traveler returns shoes that are too small.", "translationZh": "之后，旅客退换一双太小的鞋。"},
+              {"speaker": "Traveler", "text": "I have the receipt. Could I exchange these for a size nine?", "translationZh": "我有收据。可以换成九码吗？"},
+              {"speaker": "Clerk", "text": "Yes. We have size nine in black, and the price is the same.", "translationZh": "可以。黑色有九码，价格一样。"}
             ],
             "checks": [
-              {
-                "id": "w4d26-l1",
-                "skill": "detail",
-                "promptZh": "为什么不坐绿线？",
-                "options": [
-                  "太贵",
-                  "今天停运",
-                  "需要换乘"
-                ],
-                "correctOptionIndex": 1,
-                "rationaleZh": "开头说 Green Line is closed today。"
-              },
-              {
-                "id": "w4d26-l2",
-                "skill": "inference",
-                "promptZh": "服务员为什么换沙拉酱？",
-                "options": [
-                  "客人觉得太辣",
-                  "原沙拉酱含花生",
-                  "餐厅没有奶酪"
-                ],
-                "correctOptionIndex": 1,
-                "rationaleZh": "客人有花生过敏，原 dressing has peanuts。"
-              },
-              {
-                "id": "w4d26-l3",
-                "skill": "detail",
-                "promptZh": "鞋要换成什么？",
-                "options": [
-                  "黑色九码",
-                  "蓝色八码",
-                  "黑色八码"
-                ],
-                "correctOptionIndex": 0,
-                "rationaleZh": "店员有 size nine in black。"
-              }
+              {"id": "w4d26-l1", "skill": "detail", "promptZh": "为什么不坐绿线？", "options": ["太贵", "今天停运", "需要换乘"], "correctOptionIndex": 1, "rationaleZh": "开头说 Green Line is closed today。"},
+              {"id": "w4d26-l2", "skill": "inference", "promptZh": "服务员为什么换沙拉酱？", "options": ["客人觉得太辣", "原沙拉酱含花生", "餐厅没有奶酪"], "correctOptionIndex": 1, "rationaleZh": "客人有花生过敏，原 dressing has peanuts。"},
+              {"id": "w4d26-l3", "skill": "detail", "promptZh": "鞋要换成什么？", "options": ["黑色九码", "蓝色八码", "黑色八码"], "correctOptionIndex": 0, "rationaleZh": "店员有 size nine in black。"}
             ]
           }
         },
@@ -1707,16 +733,8 @@
             "minimumSeconds": 90,
             "maximumSeconds": 720
           },
-          "tags": [
-            "scene:integrated-travel",
-            "week:4",
-            "day:26",
-            "task:guided-roleplay",
-            "capstone:part-2"
-          ],
-          "prerequisiteUnitIds": [
-            "st4w-w4d25-speaking"
-          ],
+          "tags": ["scene:integrated-travel", "week:4", "day:26", "task:guided-roleplay", "capstone:part-2"],
+          "prerequisiteUnitIds": ["st4w-w4d25-speaking"],
           "activity": {
             "type": "guided-roleplay",
             "instructionsZh": "出现阻碍时提出一个清楚的替代方案。",
@@ -1727,15 +745,8 @@
                 "partnerLine": "The subway isn't running today.",
                 "modelAnswer": "Could I take the bus instead? Which route goes downtown?",
                 "modelAnswerTranslationZh": "我可以改坐公交车吗？哪条线路去市中心？",
-                "acceptedAnswers": [
-                  "Could I take the bus instead? Which route goes downtown?",
-                  "Is there a bus option? I need to go downtown.",
-                  "Could we use a bus instead of the subway?"
-                ],
-                "requiredConcepts": [
-                  "bus-alternative",
-                  "downtown"
-                ]
+                "acceptedAnswers": ["Could I take the bus instead? Which route goes downtown?", "Is there a bus option? I need to go downtown.", "Could we use a bus instead of the subway?"],
+                "requiredConcepts": ["bus-alternative", "downtown"]
               },
               {
                 "id": "w4d26-s2",
@@ -1743,16 +754,8 @@
                 "partnerLine": "Get off at the fourth stop and turn left.",
                 "modelAnswer": "Let me confirm: the fourth stop, then left?",
                 "modelAnswerTranslationZh": "我确认一下：在第四站下车，然后左转，对吗？",
-                "acceptedAnswers": [
-                  "Let me confirm: the fourth stop, then left?",
-                  "I get off at stop four and turn left, right?",
-                  "Fourth stop, then a left turn, correct?"
-                ],
-                "requiredConcepts": [
-                  "fourth-stop",
-                  "left",
-                  "confirmation"
-                ]
+                "acceptedAnswers": ["Let me confirm: the fourth stop, then left?", "I get off at stop four and turn left, right?", "Fourth stop, then a left turn, correct?"],
+                "requiredConcepts": ["fourth-stop", "left", "confirmation"]
               },
               {
                 "id": "w4d26-s3",
@@ -1760,16 +763,8 @@
                 "partnerLine": "What can I get for you?",
                 "modelAnswer": "I'd like the beef burger without onions. I'm allergic to peanuts.",
                 "modelAnswerTranslationZh": "我想要牛肉汉堡，不加洋葱。我对花生过敏。",
-                "acceptedAnswers": [
-                  "I'd like the beef burger without onions. I'm allergic to peanuts.",
-                  "A beef burger, no onions, please. I have a peanut allergy.",
-                  "Can I get the beef burger without onions? Also, I'm allergic to peanuts."
-                ],
-                "requiredConcepts": [
-                  "beef-burger",
-                  "without-onions",
-                  "peanut-allergy"
-                ]
+                "acceptedAnswers": ["I'd like the beef burger without onions. I'm allergic to peanuts.", "A beef burger, no onions, please. I have a peanut allergy.", "Can I get the beef burger without onions? Also, I'm allergic to peanuts."],
+                "requiredConcepts": ["beef-burger", "without-onions", "peanut-allergy"]
               },
               {
                 "id": "w4d26-s4",
@@ -1777,81 +772,24 @@
                 "partnerLine": "What's wrong with the shoes?",
                 "modelAnswer": "They're too small. I have the receipt. Could I exchange them for black shoes in size nine?",
                 "modelAnswerTranslationZh": "它们太小了。我有收据。可以把它们换成九码的黑色鞋吗？",
-                "acceptedAnswers": [
-                  "They're too small. I have the receipt. Could I exchange them for black shoes in size nine?",
-                  "These brown shoes are too small. Can I exchange them for a black size nine? Here's the receipt.",
-                  "I'd like to exchange these for black shoes, size nine. I have my receipt."
-                ],
-                "requiredConcepts": [
-                  "too-small",
-                  "receipt",
-                  "exchange",
-                  "black-size-nine"
-                ]
+                "acceptedAnswers": ["They're too small. I have the receipt. Could I exchange them for black shoes in size nine?", "These brown shoes are too small. Can I exchange them for a black size nine? Here's the receipt.", "I'd like to exchange these for black shoes, size nine. I have my receipt."],
+                "requiredConcepts": ["too-small", "receipt", "exchange", "black-size-nine"]
               }
             ]
           }
         }
       ],
       "sceneQuiz": [
-        {
-          "id": "w4d26-q1",
-          "domain": "vocabulary",
-          "format": "single-choice",
-          "promptZh": "当原方案不可用时，哪个词可引出替代方案？",
-          "options": [
-            "instead",
-            "receipt",
-            "boarding"
-          ],
-          "correctOptionIndex": 0,
-          "rationaleZh": "instead 表示改用另一个方案。"
-        },
-        {
-          "id": "w4d26-q2",
-          "domain": "listening",
-          "format": "single-choice",
-          "audioText": "Take bus eight for five stops. The café is across from the final stop, and the store is one block farther.",
-          "promptZh": "哪项路线正确？",
-          "options": [
-            "坐 5 路 8 站，商店在终点",
-            "坐 8 路 5 站，咖啡店在终点对面",
-            "坐 8 路 1 站，咖啡店在商店对面"
-          ],
-          "correctOptionIndex": 1,
-          "rationaleZh": "bus eight、for five stops、café across from the final stop。"
-        },
-        {
-          "id": "w4d26-q3",
-          "domain": "speaking",
-          "format": "fixed-response",
-          "promptZh": "原配菜含花生。说明过敏，并请服务员确认沙拉是否适合。",
-          "modelAnswer": "I'm allergic to peanuts. Could you check whether the salad is safe for me?",
-          "modelAnswerTranslationZh": "我对花生过敏。你能确认一下这份沙拉对我是否安全吗？",
-          "acceptedAnswers": [
-            "I'm allergic to peanuts. Could you check whether the salad is safe for me?",
-            "I have a peanut allergy. Is there a salad your kitchen can confirm is safe for me?",
-            "The side has peanuts, and I'm allergic. Could you help me choose another option?"
-          ],
-          "requiredConcepts": [
-            "peanut-allergy",
-            "staff-confirmation",
-            "alternative"
-          ]
-        }
+        {"id": "w4d26-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "当原方案不可用时，哪个词可引出替代方案？", "options": ["instead", "receipt", "boarding"], "correctOptionIndex": 0, "rationaleZh": "instead 表示改用另一个方案。"},
+        {"id": "w4d26-q2", "domain": "listening", "format": "single-choice", "audioText": "Take bus eight for five stops. The café is across from the final stop, and the store is one block farther.", "promptZh": "哪项路线正确？", "options": ["坐 5 路 8 站，商店在终点", "坐 8 路 5 站，咖啡店在终点对面", "坐 8 路 1 站，咖啡店在商店对面"], "correctOptionIndex": 1, "rationaleZh": "bus eight、for five stops、café across from the final stop。"},
+        {"id": "w4d26-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "原配菜含花生。说明过敏，并请服务员确认沙拉是否适合。", "modelAnswer": "I'm allergic to peanuts. Could you check whether the salad is safe for me?", "modelAnswerTranslationZh": "我对花生过敏。你能确认一下这份沙拉对我是否安全吗？", "acceptedAnswers": ["I'm allergic to peanuts. Could you check whether the salad is safe for me?", "I have a peanut allergy. Is there a salad your kitchen can confirm is safe for me?", "The side has peanuts, and I'm allergic. Could you help me choose another option?"], "requiredConcepts": ["peanut-allergy", "staff-confirmation", "alternative"]}
       ]
     },
     {
       "lessonId": "w4d27-integrated-return-trip",
       "recommendedDay": 27,
       "titleZh": "综合任务三：处理变更并完成返程",
-      "sceneIds": [
-        "hotel",
-        "directions-and-transport",
-        "airport",
-        "simple-help",
-        "integrated-travel"
-      ],
+      "sceneIds": ["hotel", "directions-and-transport", "airport", "simple-help", "integrated-travel"],
       "observableObjectives": [
         "处理退房、交通变更和航班延误。",
         "在找不到护照时提供地点与物品信息并请求帮助。"
@@ -1876,60 +814,17 @@
             "minimumSeconds": 90,
             "maximumSeconds": 600
           },
-          "tags": [
-            "scene:integrated-travel",
-            "week:4",
-            "day:27",
-            "focus:return-trip",
-            "capstone:part-3"
-          ],
-          "prerequisiteUnitIds": [
-            "st4w-w4d26-vocabulary"
-          ],
+          "tags": ["scene:integrated-travel", "week:4", "day:27", "focus:return-trip", "capstone:part-3"],
+          "prerequisiteUnitIds": ["st4w-w4d26-vocabulary"],
           "activity": {
             "type": "vocabulary-review",
             "instructionsZh": "将 change、delayed、missing 等状态词与具体对象搭配。",
-            "reviewItemIds": [
-              "w3d17-v2",
-              "w2d13-v5",
-              "w3d20-v6",
-              "w3d20-v4",
-              "w4d22-v6",
-              "w4d23-v7"
-            ],
+            "reviewItemIds": ["w3d17-v2", "w2d13-v5", "w3d20-v6", "w3d20-v4", "w4d22-v6", "w4d23-v7"],
             "items": [
-              {
-                "id": "w4d27-v1",
-                "term": "cancel",
-                "partOfSpeech": "verb",
-                "meaningZh": "取消",
-                "exampleEn": "The hotel canceled the shuttle.",
-                "exampleZh": "酒店取消了接驳车。"
-              },
-              {
-                "id": "w4d27-v2",
-                "term": "reschedule",
-                "partOfSpeech": "verb",
-                "meaningZh": "重新安排时间",
-                "exampleEn": "Can I reschedule the ride?",
-                "exampleZh": "我可以重新安排车辆时间吗？"
-              },
-              {
-                "id": "w4d27-v3",
-                "term": "last seen",
-                "partOfSpeech": "phrase",
-                "meaningZh": "最后一次看到",
-                "exampleEn": "It was last seen at the front desk.",
-                "exampleZh": "最后一次看到它是在前台。"
-              },
-              {
-                "id": "w4d27-v4",
-                "term": "information desk",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "问讯台",
-                "exampleEn": "Report the missing item at the information desk.",
-                "exampleZh": "到问讯台报告丢失物品。"
-              }
+              {"id": "w4d27-v1", "term": "cancel", "partOfSpeech": "verb", "meaningZh": "取消", "exampleEn": "The hotel canceled the shuttle.", "exampleZh": "酒店取消了接驳车。"},
+              {"id": "w4d27-v2", "term": "reschedule", "partOfSpeech": "verb", "meaningZh": "重新安排时间", "exampleEn": "Can I reschedule the ride?", "exampleZh": "我可以重新安排车辆时间吗？"},
+              {"id": "w4d27-v3", "term": "last seen", "partOfSpeech": "phrase", "meaningZh": "最后一次看到", "exampleEn": "It was last seen at the front desk.", "exampleZh": "最后一次看到它是在前台。"},
+              {"id": "w4d27-v4", "term": "information desk", "partOfSpeech": "noun phrase", "meaningZh": "问讯台", "exampleEn": "Report the missing item at the information desk.", "exampleZh": "到问讯台报告丢失物品。"}
             ]
           }
         },
@@ -1952,109 +847,27 @@
             "minimumSeconds": 150,
             "maximumSeconds": 900
           },
-          "tags": [
-            "scene:integrated-travel",
-            "week:4",
-            "day:27",
-            "skill:sequence",
-            "skill:detail",
-            "skill:inference",
-            "capstone:part-3"
-          ],
-          "prerequisiteUnitIds": [
-            "st4w-w4d26-listening"
-          ],
+          "tags": ["scene:integrated-travel", "week:4", "day:27", "skill:sequence", "skill:detail", "skill:inference", "capstone:part-3"],
+          "prerequisiteUnitIds": ["st4w-w4d26-listening"],
           "activity": {
             "type": "listening-narrative",
             "titleZh": "返程日的连续变更",
-            "tts": {
-              "locale": "en-US",
-              "defaultRate": 1
-            },
+            "tts": {"locale": "en-US", "defaultRate": 1},
             "transcript": [
-              {
-                "speaker": "Narrator",
-                "text": "At eleven, Ana checks out and asks for the airport shuttle.",
-                "translationZh": "十一点，Ana 退房并询问机场接驳车。"
-              },
-              {
-                "speaker": "Clerk",
-                "text": "The noon shuttle was canceled. The next one leaves at one thirty.",
-                "translationZh": "中午的接驳车取消了。下一班一点半出发。"
-              },
-              {
-                "speaker": "Traveler",
-                "text": "My flight is at four. Could you call a taxi instead?",
-                "translationZh": "我的航班四点。你可以改为帮我叫出租车吗？"
-              },
-              {
-                "speaker": "Narrator",
-                "text": "At the airport, Ana notices that her passport is missing.",
-                "translationZh": "到机场后，Ana 发现护照不见了。"
-              },
-              {
-                "speaker": "Traveler",
-                "text": "I can't find my passport. I last saw it at the hotel front desk.",
-                "translationZh": "我找不到护照了。我最后在酒店前台看到它。"
-              },
-              {
-                "speaker": "Agent",
-                "text": "Please contact the hotel now and report the missing passport at the information desk.",
-                "translationZh": "请立即联系酒店，并在问讯台报告护照丢失。"
-              },
-              {
-                "speaker": "Narrator",
-                "text": "The hotel finds the passport and sends it with a driver.",
-                "translationZh": "酒店找到护照并让司机送过来。"
-              },
-              {
-                "speaker": "Announcement",
-                "text": "Flight 718 is delayed until five ten. Boarding will begin at gate A12 at four thirty.",
-                "translationZh": "718 航班延误到五点十分。四点半在 A12 登机口开始登机。"
-              },
-              {
-                "speaker": "Traveler",
-                "text": "Let me confirm: gate A12, boarding at four thirty, departure at five ten.",
-                "translationZh": "让我确认：A12 登机口，四点半登机，五点十分出发。"
-              }
+              {"speaker": "Narrator", "text": "At eleven, Ana checks out and asks for the airport shuttle.", "translationZh": "十一点，Ana 退房并询问机场接驳车。"},
+              {"speaker": "Clerk", "text": "The noon shuttle was canceled. The next one leaves at one thirty.", "translationZh": "中午的接驳车取消了。下一班一点半出发。"},
+              {"speaker": "Traveler", "text": "My flight is at four. Could you call a taxi instead?", "translationZh": "我的航班四点。你可以改为帮我叫出租车吗？"},
+              {"speaker": "Narrator", "text": "At the airport, Ana notices that her passport is missing.", "translationZh": "到机场后，Ana 发现护照不见了。"},
+              {"speaker": "Traveler", "text": "I can't find my passport. I last saw it at the hotel front desk.", "translationZh": "我找不到护照了。我最后在酒店前台看到它。"},
+              {"speaker": "Agent", "text": "Please contact the hotel now and report the missing passport at the information desk.", "translationZh": "请立即联系酒店，并在问讯台报告护照丢失。"},
+              {"speaker": "Narrator", "text": "The hotel finds the passport and sends it with a driver.", "translationZh": "酒店找到护照并让司机送过来。"},
+              {"speaker": "Announcement", "text": "Flight 718 is delayed until five ten. Boarding will begin at gate A12 at four thirty.", "translationZh": "718 航班延误到五点十分。四点半在 A12 登机口开始登机。"},
+              {"speaker": "Traveler", "text": "Let me confirm: gate A12, boarding at four thirty, departure at five ten.", "translationZh": "让我确认：A12 登机口，四点半登机，五点十分出发。"}
             ],
             "checks": [
-              {
-                "id": "w4d27-l1",
-                "skill": "detail",
-                "promptZh": "为什么改叫出租车？",
-                "options": [
-                  "接驳车取消且下一班太晚",
-                  "出租车免费",
-                  "航班已经取消"
-                ],
-                "correctOptionIndex": 0,
-                "rationaleZh": "中午接驳车取消，下一班 1:30，而航班 4:00。"
-              },
-              {
-                "id": "w4d27-l2",
-                "skill": "detail",
-                "promptZh": "护照最后在哪里出现？",
-                "options": [
-                  "机场安检",
-                  "酒店前台",
-                  "出租车上"
-                ],
-                "correctOptionIndex": 1,
-                "rationaleZh": "Ana 说 last saw it at the hotel front desk。"
-              },
-              {
-                "id": "w4d27-l3",
-                "skill": "detail",
-                "promptZh": "更新后的航班信息是什么？",
-                "options": [
-                  "A12，4:30 登机，5:10 出发",
-                  "A10，4:12 登机，5:30 出发",
-                  "A12，5:10 登机，4:30 出发"
-                ],
-                "correctOptionIndex": 0,
-                "rationaleZh": "广播与 Ana 的复述都确认了三个信息。"
-              }
+              {"id": "w4d27-l1", "skill": "detail", "promptZh": "为什么改叫出租车？", "options": ["接驳车取消且下一班太晚", "出租车免费", "航班已经取消"], "correctOptionIndex": 0, "rationaleZh": "中午接驳车取消，下一班 1:30，而航班 4:00。"},
+              {"id": "w4d27-l2", "skill": "detail", "promptZh": "护照最后在哪里出现？", "options": ["机场安检", "酒店前台", "出租车上"], "correctOptionIndex": 1, "rationaleZh": "Ana 说 last saw it at the hotel front desk。"},
+              {"id": "w4d27-l3", "skill": "detail", "promptZh": "更新后的航班信息是什么？", "options": ["A12，4:30 登机，5:10 出发", "A10，4:12 登机，5:30 出发", "A12，5:10 登机，4:30 出发"], "correctOptionIndex": 0, "rationaleZh": "广播与 Ana 的复述都确认了三个信息。"}
             ]
           }
         },
@@ -2077,16 +890,8 @@
             "minimumSeconds": 90,
             "maximumSeconds": 720
           },
-          "tags": [
-            "scene:integrated-travel",
-            "week:4",
-            "day:27",
-            "task:guided-roleplay",
-            "capstone:part-3"
-          ],
-          "prerequisiteUnitIds": [
-            "st4w-w4d26-speaking"
-          ],
+          "tags": ["scene:integrated-travel", "week:4", "day:27", "task:guided-roleplay", "capstone:part-3"],
+          "prerequisiteUnitIds": ["st4w-w4d26-speaking"],
           "activity": {
             "type": "guided-roleplay",
             "instructionsZh": "在每个变更点主动确认新方案。",
@@ -2097,15 +902,8 @@
                 "partnerLine": "The next shuttle leaves at one thirty.",
                 "modelAnswer": "My flight is at four. Could you call a taxi instead?",
                 "modelAnswerTranslationZh": "我的航班是四点。可以改为帮我叫一辆出租车吗？",
-                "acceptedAnswers": [
-                  "My flight is at four. Could you call a taxi instead?",
-                  "One thirty is too late for my four o'clock flight. Could you get me a taxi?",
-                  "Could we use a taxi instead? My flight leaves at four."
-                ],
-                "requiredConcepts": [
-                  "flight-4:00",
-                  "taxi-alternative"
-                ]
+                "acceptedAnswers": ["My flight is at four. Could you call a taxi instead?", "One thirty is too late for my four o'clock flight. Could you get me a taxi?", "Could we use a taxi instead? My flight leaves at four."],
+                "requiredConcepts": ["flight-4:00", "taxi-alternative"]
               },
               {
                 "id": "w4d27-s2",
@@ -2113,15 +911,8 @@
                 "partnerLine": "What item is missing, and where did you last see it?",
                 "modelAnswer": "My passport is missing. I last saw it at the hotel front desk.",
                 "modelAnswerTranslationZh": "我的护照不见了。我最后一次看到它是在酒店前台。",
-                "acceptedAnswers": [
-                  "My passport is missing. I last saw it at the hotel front desk.",
-                  "I can't find my passport. It was at the hotel front desk.",
-                  "I lost my passport, and the front desk was the last place I saw it."
-                ],
-                "requiredConcepts": [
-                  "missing-passport",
-                  "hotel-front-desk"
-                ]
+                "acceptedAnswers": ["My passport is missing. I last saw it at the hotel front desk.", "I can't find my passport. It was at the hotel front desk.", "I lost my passport, and the front desk was the last place I saw it."],
+                "requiredConcepts": ["missing-passport", "hotel-front-desk"]
               },
               {
                 "id": "w4d27-s3",
@@ -2129,15 +920,8 @@
                 "partnerLine": "How can I help with the missing passport?",
                 "modelAnswer": "Could you help me contact the hotel right away?",
                 "modelAnswerTranslationZh": "你能帮我马上联系酒店吗？",
-                "acceptedAnswers": [
-                  "Could you help me contact the hotel right away?",
-                  "Please call the hotel now.",
-                  "I need help contacting my hotel immediately."
-                ],
-                "requiredConcepts": [
-                  "contact-hotel",
-                  "immediate"
-                ]
+                "acceptedAnswers": ["Could you help me contact the hotel right away?", "Please call the hotel now.", "I need help contacting my hotel immediately."],
+                "requiredConcepts": ["contact-hotel", "immediate"]
               },
               {
                 "id": "w4d27-s4",
@@ -2145,86 +929,24 @@
                 "partnerLine": "Your flight has a new schedule.",
                 "modelAnswer": "Let me confirm: gate A12, boarding at four thirty, and departure at five ten?",
                 "modelAnswerTranslationZh": "我确认一下：登机口是 A12，四点半登机，五点十分起飞，对吗？",
-                "acceptedAnswers": [
-                  "Let me confirm: gate A12, boarding at four thirty, and departure at five ten?",
-                  "The new gate is A12, we board at 4:30, and leave at 5:10, right?",
-                  "A12, boarding 4:30, departure 5:10, correct?"
-                ],
-                "requiredConcepts": [
-                  "gate-A12",
-                  "4:30",
-                  "5:10",
-                  "confirmation"
-                ]
+                "acceptedAnswers": ["Let me confirm: gate A12, boarding at four thirty, and departure at five ten?", "The new gate is A12, we board at 4:30, and leave at 5:10, right?", "A12, boarding 4:30, departure 5:10, correct?"],
+                "requiredConcepts": ["gate-A12", "4:30", "5:10", "confirmation"]
               }
             ]
           }
         }
       ],
       "sceneQuiz": [
-        {
-          "id": "w4d27-q1",
-          "domain": "vocabulary",
-          "format": "single-choice",
-          "promptZh": "“The shuttle was canceled.”是什么意思？",
-          "options": [
-            "接驳车改时间",
-            "接驳车取消",
-            "接驳车已到"
-          ],
-          "correctOptionIndex": 1,
-          "rationaleZh": "canceled 表示取消。"
-        },
-        {
-          "id": "w4d27-q2",
-          "domain": "listening",
-          "format": "single-choice",
-          "audioText": "The two o'clock train was canceled. Take the bus at two twenty from stop six instead.",
-          "promptZh": "替代方案是什么？",
-          "options": [
-            "2:00 坐火车",
-            "2:20 在 6 号站坐公交",
-            "6:20 坐公交"
-          ],
-          "correctOptionIndex": 1,
-          "rationaleZh": "bus at two twenty from stop six instead。"
-        },
-        {
-          "id": "w4d27-q3",
-          "domain": "speaking",
-          "format": "fixed-response",
-          "promptZh": "报告黑色护照夹丢失，最后在安检处见到。",
-          "modelAnswer": "My black passport holder is missing. I last saw it at security.",
-          "modelAnswerTranslationZh": "我的黑色护照夹不见了。我最后一次看到它是在安检处。",
-          "acceptedAnswers": [
-            "My black passport holder is missing. I last saw it at security.",
-            "I lost a black passport holder near security.",
-            "I can't find my black passport holder. It was last at security."
-          ],
-          "requiredConcepts": [
-            "black-passport-holder",
-            "security",
-            "missing"
-          ]
-        }
+        {"id": "w4d27-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "“The shuttle was canceled.”是什么意思？", "options": ["接驳车改时间", "接驳车取消", "接驳车已到"], "correctOptionIndex": 1, "rationaleZh": "canceled 表示取消。"},
+        {"id": "w4d27-q2", "domain": "listening", "format": "single-choice", "audioText": "The two o'clock train was canceled. Take the bus at two twenty from stop six instead.", "promptZh": "替代方案是什么？", "options": ["2:00 坐火车", "2:20 在 6 号站坐公交", "6:20 坐公交"], "correctOptionIndex": 1, "rationaleZh": "bus at two twenty from stop six instead。"},
+        {"id": "w4d27-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "报告黑色护照夹丢失，最后在安检处见到。", "modelAnswer": "My black passport holder is missing. I last saw it at security.", "modelAnswerTranslationZh": "我的黑色护照夹不见了。我最后一次看到它是在安检处。", "acceptedAnswers": ["My black passport holder is missing. I last saw it at security.", "I lost a black passport holder near security.", "I can't find my black passport holder. It was last at security."], "requiredConcepts": ["black-passport-holder", "security", "missing"]}
       ]
     },
     {
       "lessonId": "w4d28-course-capstone",
       "recommendedDay": 28,
       "titleZh": "结课任务：完整旅行日与关键求助",
-      "sceneIds": [
-        "introductions",
-        "numbers-and-time",
-        "basic-needs",
-        "restaurant",
-        "directions-and-transport",
-        "shopping-and-payment",
-        "hotel",
-        "airport",
-        "simple-help",
-        "integrated-travel"
-      ],
+      "sceneIds": ["introductions", "numbers-and-time", "basic-needs", "restaurant", "directions-and-transport", "shopping-and-payment", "hotel", "airport", "simple-help", "integrated-travel"],
       "observableObjectives": [
         "听完综合旅行脚本后识别主旨、顺序和至少三个关键细节。",
         "在固定角色任务中完成确认、替代、纠错和求助。",
@@ -2241,25 +963,17 @@
             "schemaVersion": 1,
             "contentType": "vocabulary-review-v1",
             "fixedSeconds": 15,
-            "itemCount": 180,
+            "itemCount": 19,
             "secondsPerItem": 12,
             "activeAudioSeconds": 0,
             "expectedAudioPlaythroughs": 0,
-            "interactionStepCount": 360,
+            "interactionStepCount": 38,
             "secondsPerInteractionStep": 3,
             "minimumSeconds": 90,
             "maximumSeconds": 600
           },
-          "tags": [
-            "scene:integrated-travel",
-            "week:4",
-            "day:28",
-            "focus:full-review",
-            "checkpoint:course"
-          ],
-          "prerequisiteUnitIds": [
-            "st4w-w4d27-vocabulary"
-          ],
+          "tags": ["scene:integrated-travel", "week:4", "day:28", "focus:full-review", "checkpoint:course"],
+          "prerequisiteUnitIds": ["st4w-w4d27-vocabulary"],
           "activity": {
             "type": "vocabulary-review",
             "instructionsZh": "按沟通意图检索语言，不再背孤立列表。",
@@ -2276,1495 +990,11 @@
               "w4d23-v7"
             ],
             "items": [
-              {
-                "id": "w4d28-v1",
-                "term": "confirm",
-                "partOfSpeech": "verb",
-                "meaningZh": "确认",
-                "exampleEn": "Confirm the gate and time.",
-                "exampleZh": "确认登机口和时间。"
-              },
-              {
-                "id": "w4d28-v2",
-                "term": "instead",
-                "partOfSpeech": "adverb",
-                "meaningZh": "改为；代替",
-                "exampleEn": "Let's take the bus instead.",
-                "exampleZh": "我们改坐公交吧。"
-              },
-              {
-                "id": "w4d28-v3",
-                "term": "correct",
-                "partOfSpeech": "verb",
-                "meaningZh": "更正",
-                "exampleEn": "Could you correct the charge?",
-                "exampleZh": "你可以更正这项收费吗？"
-              },
-              {
-                "id": "w4d28-v4",
-                "term": "urgent",
-                "partOfSpeech": "adjective",
-                "meaningZh": "紧急的",
-                "exampleEn": "This is urgent. I need help now.",
-                "exampleZh": "情况紧急。我现在需要帮助。"
-              },
-              {
-                "id": "w4d28-v5",
-                "term": "available",
-                "partOfSpeech": "adjective",
-                "meaningZh": "可用的；有空的",
-                "exampleEn": "Is another room available?",
-                "exampleZh": "还有其他房间可用吗？"
-              },
-              {
-                "id": "r17v-p1-01",
-                "term": "hello",
-                "partOfSpeech": "interjection",
-                "meaningZh": "你好",
-                "exampleEn": "Hello, I need help.",
-                "exampleZh": "你好，我需要帮助。",
-                "growthDifficultyLevel": 0.5
-              },
-              {
-                "id": "r17v-p1-02",
-                "term": "goodbye",
-                "partOfSpeech": "interjection",
-                "meaningZh": "再见",
-                "exampleEn": "Goodbye and thank you.",
-                "exampleZh": "再见，谢谢。",
-                "growthDifficultyLevel": 0.5
-              },
-              {
-                "id": "r17v-p1-03",
-              "term": "pardon",
-                "partOfSpeech": "adverb",
-              "meaningZh": "对不起；请再说一遍",
-              "exampleEn": "Pardon, where is the taxi stand?",
-              "exampleZh": "请问，出租车站在哪里？",
-                "growthDifficultyLevel": 0.5
-              },
-              {
-                "id": "r17v-p1-04",
-                "term": "thanks",
-                "partOfSpeech": "interjection",
-                "meaningZh": "谢谢",
-                "exampleEn": "Thanks for your help.",
-                "exampleZh": "谢谢你的帮助。",
-                "growthDifficultyLevel": 0.5
-              },
-              {
-                "id": "r17v-p1-05",
-                "term": "yes",
-                "partOfSpeech": "adverb",
-                "meaningZh": "是；好的",
-                "exampleEn": "Yes, that is correct.",
-                "exampleZh": "是的，那是对的。",
-                "growthDifficultyLevel": 0.5
-              },
-              {
-                "id": "r17v-p1-06",
-                "term": "no",
-                "partOfSpeech": "adverb",
-                "meaningZh": "不；没有",
-                "exampleEn": "No, I do not understand.",
-                "exampleZh": "不，我不明白。",
-                "growthDifficultyLevel": 0.5
-              },
-              {
-                "id": "r17v-p1-07",
-                "term": "help",
-                "partOfSpeech": "noun",
-                "meaningZh": "帮助",
-                "exampleEn": "I need help, please.",
-                "exampleZh": "请帮帮我。",
-                "growthDifficultyLevel": 0.5
-              },
-              {
-                "id": "r17v-p1-08",
-                "term": "water",
-                "partOfSpeech": "noun",
-                "meaningZh": "水",
-                "exampleEn": "Can I have water?",
-                "exampleZh": "我可以要水吗？",
-                "growthDifficultyLevel": 0.5
-              },
-              {
-                "id": "r17v-p1-09",
-                "term": "food",
-                "partOfSpeech": "noun",
-                "meaningZh": "食物",
-                "exampleEn": "Where is the food court?",
-                "exampleZh": "美食广场在哪里？",
-                "growthDifficultyLevel": 0.5
-              },
-              {
-                "id": "r17v-p1-10",
-                "term": "taxi",
-                "partOfSpeech": "noun",
-                "meaningZh": "出租车",
-                "exampleEn": "The taxi is outside.",
-                "exampleZh": "出租车在外面。",
-                "growthDifficultyLevel": 0.5
-              },
-              {
-                "id": "r17v-p1-11",
-                "term": "hotel",
-                "partOfSpeech": "noun",
-                "meaningZh": "酒店",
-                "exampleEn": "My hotel is nearby.",
-                "exampleZh": "我的酒店在附近。",
-                "growthDifficultyLevel": 0.5
-              },
-              {
-                "id": "r17v-p1-12",
-                "term": "airport",
-                "partOfSpeech": "noun",
-                "meaningZh": "机场",
-                "exampleEn": "We are going to the airport.",
-                "exampleZh": "我们正去机场。",
-                "growthDifficultyLevel": 0.5
-              },
-              {
-                "id": "r17v-p1-13",
-              "term": "travel card",
-                "partOfSpeech": "noun",
-              "meaningZh": "交通卡",
-              "exampleEn": "Can I use this travel card?",
-              "exampleZh": "我可以用这张交通卡吗？",
-                "growthDifficultyLevel": 0.5
-              },
-              {
-                "id": "r17v-p1-14",
-                "term": "bag",
-                "partOfSpeech": "noun",
-                "meaningZh": "包",
-                "exampleEn": "This is my bag.",
-                "exampleZh": "这是我的包。",
-                "growthDifficultyLevel": 0.5
-              },
-              {
-                "id": "r17v-p1-15",
-                "term": "map",
-                "partOfSpeech": "noun",
-                "meaningZh": "地图",
-                "exampleEn": "Can I see a map?",
-                "exampleZh": "我可以看一下地图吗？",
-                "growthDifficultyLevel": 0.5
-              },
-              {
-                "id": "r17v-p2-01",
-              "term": "identity document",
-                "partOfSpeech": "noun",
-              "meaningZh": "身份证明文件",
-              "exampleEn": "This is my identity document.",
-              "exampleZh": "这是我的身份证明文件。",
-                "growthDifficultyLevel": 1
-              },
-              {
-                "id": "r17v-p2-02",
-                "term": "phone",
-                "partOfSpeech": "noun",
-                "meaningZh": "手机；电话",
-                "exampleEn": "My phone is charging.",
-                "exampleZh": "我的手机在充电。",
-                "growthDifficultyLevel": 1
-              },
-              {
-                "id": "r17v-p2-03",
-                "term": "address",
-                "partOfSpeech": "noun",
-                "meaningZh": "地址",
-                "exampleEn": "This is the hotel address.",
-                "exampleZh": "这是酒店地址。",
-                "growthDifficultyLevel": 1
-              },
-              {
-                "id": "r17v-p2-04",
-              "term": "washroom",
-                "partOfSpeech": "noun",
-              "meaningZh": "洗手间",
-              "exampleEn": "Where is the washroom?",
-                "exampleZh": "洗手间在哪里？",
-                "growthDifficultyLevel": 1
-              },
-              {
-                "id": "r17v-p2-05",
-              "term": "proof of payment",
-                "partOfSpeech": "noun",
-              "meaningZh": "付款凭证",
-              "exampleEn": "Please keep the proof of payment.",
-              "exampleZh": "请保留付款凭证。",
-                "growthDifficultyLevel": 1
-              },
-              {
-                "id": "r17v-p2-06",
-              "term": "price list",
-                "partOfSpeech": "noun",
-              "meaningZh": "价目表",
-              "exampleEn": "May I see the price list?",
-              "exampleZh": "我可以看看价目表吗？",
-                "growthDifficultyLevel": 1
-              },
-              {
-                "id": "r17v-p2-07",
-              "term": "booking code",
-                "partOfSpeech": "noun",
-              "meaningZh": "预订编号",
-              "exampleEn": "Here is my booking code.",
-              "exampleZh": "这是我的预订编号。",
-                "growthDifficultyLevel": 1
-              },
-              {
-                "id": "r17v-p3-01",
-                "term": "luggage",
-                "partOfSpeech": "noun",
-                "meaningZh": "行李",
-                "exampleEn": "My luggage is missing.",
-                "exampleZh": "我的行李不见了。",
-                "growthDifficultyLevel": 1.5
-              },
-              {
-                "id": "r17v-p3-02",
-              "term": "gate pass",
-                "partOfSpeech": "noun phrase",
-              "meaningZh": "登机通行证",
-              "exampleEn": "Show your gate pass here.",
-              "exampleZh": "请在这里出示登机通行证。",
-                "growthDifficultyLevel": 1.5
-              },
-              {
-                "id": "r17v-p3-03",
-              "term": "train track",
-                "partOfSpeech": "noun",
-              "meaningZh": "列车轨道",
-              "exampleEn": "Which train track does it leave from?",
-              "exampleZh": "列车从哪条轨道出发？",
-                "growthDifficultyLevel": 1.5
-              },
-              {
-                "id": "r17v-p3-04",
-                "term": "departure",
-                "partOfSpeech": "noun",
-                "meaningZh": "出发；离境",
-                "exampleEn": "Check the departure time.",
-                "exampleZh": "查看出发时间。",
-                "growthDifficultyLevel": 1.5
-              },
-              {
-                "id": "r17v-p3-05",
-              "term": "landing time",
-                "partOfSpeech": "noun",
-              "meaningZh": "落地时间",
-              "exampleEn": "What is the landing time?",
-              "exampleZh": "落地时间是什么时候？",
-                "growthDifficultyLevel": 1.5
-              },
-              {
-                "id": "r17v-p3-06",
-                "term": "currency",
-                "partOfSpeech": "noun",
-                "meaningZh": "货币",
-                "exampleEn": "Where can I exchange currency?",
-                "exampleZh": "哪里可以兑换货币？",
-                "growthDifficultyLevel": 1.5
-              },
-              {
-                "id": "r17v-j1-01",
-              "term": "metered rate",
-                "partOfSpeech": "noun",
-              "meaningZh": "按计价器收费的价格",
-              "exampleEn": "Is this a metered rate?",
-              "exampleZh": "这是按计价器收费吗？",
-                "growthDifficultyLevel": 3.5
-              },
-              {
-                "id": "r17v-j1-02",
-              "term": "directions",
-                "partOfSpeech": "noun",
-              "meaningZh": "路线指引",
-              "exampleEn": "Could you give me directions?",
-              "exampleZh": "你可以告诉我怎么走吗？",
-                "growthDifficultyLevel": 3.5
-              },
-              {
-                "id": "r17v-j1-03",
-                "term": "destination",
-                "partOfSpeech": "noun",
-                "meaningZh": "目的地",
-                "exampleEn": "My destination is downtown.",
-                "exampleZh": "我的目的地是市中心。",
-                "growthDifficultyLevel": 3.5
-              },
-              {
-                "id": "r17v-j1-04",
-                "term": "departure board",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "出发信息屏",
-                "exampleEn": "Check the departure board.",
-                "exampleZh": "查看出发信息屏。",
-                "growthDifficultyLevel": 3.5
-              },
-              {
-                "id": "r17v-j1-05",
-                "term": "arrival hall",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "到达大厅",
-                "exampleEn": "Meet me in the arrival hall.",
-                "exampleZh": "在到达大厅见我。",
-                "growthDifficultyLevel": 3.5
-              },
-              {
-                "id": "r17v-j1-06",
-              "term": "seat assignment",
-                "partOfSpeech": "noun phrase",
-              "meaningZh": "座位分配",
-              "exampleEn": "Can I change my seat assignment?",
-              "exampleZh": "我可以更换座位分配吗？",
-                "growthDifficultyLevel": 3.5
-              },
-              {
-                "id": "r17v-j1-07",
-                "term": "window seat",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "靠窗座位",
-                "exampleEn": "Is a window seat available?",
-                "exampleZh": "有靠窗座位吗？",
-                "growthDifficultyLevel": 3.5
-              },
-              {
-                "id": "r17v-j1-08",
-              "term": "cabin baggage",
-                "partOfSpeech": "noun",
-              "meaningZh": "客舱随身行李",
-              "exampleEn": "Where should I put my cabin baggage?",
-              "exampleZh": "我的随身行李应该放在哪里？",
-                "growthDifficultyLevel": 3.5
-              },
-              {
-                "id": "r17v-j1-09",
-                "term": "checked baggage",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "托运行李",
-                "exampleEn": "Where is checked baggage?",
-                "exampleZh": "托运行李在哪里？",
-                "growthDifficultyLevel": 3.5
-              },
-              {
-                "id": "r17v-j1-10",
-                "term": "gate agent",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "登机口工作人员",
-                "exampleEn": "Ask the gate agent.",
-                "exampleZh": "问登机口工作人员。",
-                "growthDifficultyLevel": 3.5
-              },
-              {
-                "id": "r17v-j2-01",
-                "term": "itinerary",
-                "partOfSpeech": "noun",
-                "meaningZh": "行程单",
-                "exampleEn": "Please check my itinerary.",
-                "exampleZh": "请查看我的行程单。",
-                "growthDifficultyLevel": 4
-              },
-              {
-                "id": "r17v-j2-02",
-              "term": "onward flight",
-                "partOfSpeech": "noun",
-              "meaningZh": "后续航班",
-              "exampleEn": "Where does my onward flight leave from?",
-              "exampleZh": "我的后续航班从哪里出发？",
-                "growthDifficultyLevel": 4
-              },
-              {
-                "id": "r17v-j2-03",
-              "term": "interchange",
-                "partOfSpeech": "noun",
-              "meaningZh": "换乘站",
-              "exampleEn": "Is this the right interchange?",
-              "exampleZh": "这是正确的换乘站吗？",
-                "growthDifficultyLevel": 4
-              },
-              {
-                "id": "r17v-j2-04",
-                "term": "surcharge",
-                "partOfSpeech": "noun",
-                "meaningZh": "附加费",
-                "exampleEn": "Why is there a surcharge?",
-                "exampleZh": "为什么有附加费？",
-                "growthDifficultyLevel": 4
-              },
-              {
-                "id": "r17v-j2-05",
-                "term": "refundable",
-                "partOfSpeech": "adjective",
-                "meaningZh": "可退款的",
-                "exampleEn": "Is this ticket refundable?",
-                "exampleZh": "这张票可以退款吗？",
-                "growthDifficultyLevel": 4
-              },
-              {
-                "id": "r17v-j2-06",
-                "term": "nonrefundable",
-                "partOfSpeech": "adjective",
-                "meaningZh": "不可退款的",
-                "exampleEn": "The fare is nonrefundable.",
-                "exampleZh": "该票价不可退款。",
-                "growthDifficultyLevel": 4
-              },
-              {
-                "id": "r17v-j2-07",
-                "term": "delay",
-                "partOfSpeech": "noun",
-                "meaningZh": "延误",
-                "exampleEn": "How long is the delay?",
-                "exampleZh": "延误多久？",
-                "growthDifficultyLevel": 4
-              },
-              {
-                "id": "r17v-j2-08",
-                "term": "cancellation",
-                "partOfSpeech": "noun",
-                "meaningZh": "取消",
-                "exampleEn": "The flight cancellation was announced.",
-                "exampleZh": "航班取消已公布。",
-                "growthDifficultyLevel": 4
-              },
-              {
-                "id": "r17v-j2-09",
-                "term": "congestion",
-                "partOfSpeech": "noun",
-                "meaningZh": "拥堵",
-                "exampleEn": "Traffic congestion is heavy.",
-                "exampleZh": "交通拥堵严重。",
-                "growthDifficultyLevel": 4
-              },
-              {
-                "id": "r17v-j2-10",
-                "term": "detour",
-                "partOfSpeech": "noun",
-                "meaningZh": "绕行路线",
-                "exampleEn": "The driver took a detour.",
-                "exampleZh": "司机走了绕行路线。",
-                "growthDifficultyLevel": 4
-              },
-              {
-                "id": "r17v-j2-11",
-                "term": "accessible",
-                "partOfSpeech": "adjective",
-                "meaningZh": "无障碍的；可进入的",
-                "exampleEn": "Is the entrance accessible?",
-                "exampleZh": "入口无障碍吗？",
-                "growthDifficultyLevel": 4
-              },
-              {
-                "id": "r17v-j2-12",
-                "term": "wheelchair",
-                "partOfSpeech": "noun",
-                "meaningZh": "轮椅",
-                "exampleEn": "I need a wheelchair.",
-                "exampleZh": "我需要轮椅。",
-                "growthDifficultyLevel": 4
-              },
-              {
-                "id": "r17v-j2-13",
-                "term": "dietary",
-                "partOfSpeech": "adjective",
-                "meaningZh": "饮食方面的",
-                "exampleEn": "I have dietary needs.",
-                "exampleZh": "我有饮食方面的需求。",
-                "growthDifficultyLevel": 4
-              },
-              {
-                "id": "r17v-j2-14",
-                "term": "vegetarian",
-                "partOfSpeech": "adjective",
-                "meaningZh": "素食的",
-                "exampleEn": "Do you have vegetarian meals?",
-                "exampleZh": "你们有素食餐吗？",
-                "growthDifficultyLevel": 4
-              },
-              {
-                "id": "r17v-j2-15",
-                "term": "outlet",
-                "partOfSpeech": "noun",
-                "meaningZh": "插座",
-                "exampleEn": "Is there an outlet nearby?",
-                "exampleZh": "附近有插座吗？",
-                "growthDifficultyLevel": 4
-              },
-              {
-                "id": "r17v-j2-16",
-                "term": "charger",
-                "partOfSpeech": "noun",
-                "meaningZh": "充电器",
-                "exampleEn": "I forgot my charger.",
-                "exampleZh": "我忘了带充电器。",
-                "growthDifficultyLevel": 4
-              },
-              {
-                "id": "r17v-j3-01",
-                "term": "baggage allowance",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "行李限额",
-                "exampleEn": "What is my baggage allowance?",
-                "exampleZh": "我的行李限额是多少？",
-                "growthDifficultyLevel": 4.5
-              },
-              {
-                "id": "r17v-j3-02",
-                "term": "customs declaration",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "海关申报",
-                "exampleEn": "I need a customs declaration form.",
-                "exampleZh": "我需要海关申报表。",
-                "growthDifficultyLevel": 4.5
-              },
-              {
-                "id": "r17v-j3-03",
-                "term": "immigration officer",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "移民官员",
-                "exampleEn": "The immigration officer asked a question.",
-                "exampleZh": "移民官员问了一个问题。",
-                "growthDifficultyLevel": 4.5
-              },
-              {
-                "id": "r17v-j3-04",
-                "term": "layover",
-                "partOfSpeech": "noun",
-                "meaningZh": "中途停留；转机等待",
-                "exampleEn": "My layover is two hours.",
-                "exampleZh": "我的转机等待是两小时。",
-                "growthDifficultyLevel": 4.5
-              },
-              {
-                "id": "r17v-j3-05",
-              "term": "departure concourse",
-                "partOfSpeech": "noun",
-              "meaningZh": "出发候机区",
-              "exampleEn": "Where is the departure concourse?",
-              "exampleZh": "出发候机区在哪里？",
-                "growthDifficultyLevel": 4.5
-              },
-              {
-                "id": "r17v-j3-06",
-                "term": "security checkpoint",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "安检口",
-                "exampleEn": "The security checkpoint is ahead.",
-                "exampleZh": "安检口在前面。",
-                "growthDifficultyLevel": 4.5
-              },
-              {
-                "id": "r17v-j3-07",
-                "term": "travel insurance",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "旅行保险",
-                "exampleEn": "I bought travel insurance.",
-                "exampleZh": "我买了旅行保险。",
-                "growthDifficultyLevel": 4.5
-              },
-              {
-                "id": "r17v-j3-08",
-                "term": "coverage",
-                "partOfSpeech": "noun",
-                "meaningZh": "保障范围",
-                "exampleEn": "Does the coverage include delays?",
-                "exampleZh": "保障范围包括延误吗？",
-                "growthDifficultyLevel": 4.5
-              },
-              {
-                "id": "r17v-j3-09",
-                "term": "deductible",
-                "partOfSpeech": "noun",
-                "meaningZh": "免赔额",
-                "exampleEn": "What is the deductible?",
-                "exampleZh": "免赔额是多少？",
-                "growthDifficultyLevel": 4.5
-              },
-              {
-                "id": "r17v-j3-10",
-                "term": "emergency contact",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "紧急联系人",
-                "exampleEn": "Add an emergency contact.",
-                "exampleZh": "添加紧急联系人。",
-                "growthDifficultyLevel": 4.5
-              },
-              {
-                "id": "r17v-j3-11",
-                "term": "prescription",
-                "partOfSpeech": "noun",
-                "meaningZh": "处方",
-                "exampleEn": "I need to refill my prescription.",
-                "exampleZh": "我需要续配处方药。",
-                "growthDifficultyLevel": 4.5
-              },
-              {
-                "id": "r17v-j3-12",
-                "term": "pharmacist",
-                "partOfSpeech": "noun",
-                "meaningZh": "药剂师",
-                "exampleEn": "Ask the pharmacist first.",
-                "exampleZh": "先问药剂师。",
-                "growthDifficultyLevel": 4.5
-              },
-              {
-                "id": "r17v-j3-13",
-                "term": "lost property",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "失物招领",
-                "exampleEn": "Where is lost property?",
-                "exampleZh": "失物招领处在哪里？",
-                "growthDifficultyLevel": 4.5
-              },
-              {
-                "id": "r17v-j3-14",
-                "term": "replacement",
-                "partOfSpeech": "noun",
-                "meaningZh": "替换品；补发",
-                "exampleEn": "Can I get a replacement?",
-                "exampleZh": "我可以获得补发吗？",
-                "growthDifficultyLevel": 4.5
-              },
-              {
-                "id": "r17v-j3-15",
-                "term": "authorization",
-                "partOfSpeech": "noun",
-                "meaningZh": "授权",
-                "exampleEn": "The card needs authorization.",
-                "exampleZh": "这张卡需要授权。",
-                "growthDifficultyLevel": 4.5
-              },
-              {
-                "id": "r17v-j3-16",
-                "term": "confirmation number",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "确认号码",
-                "exampleEn": "Here is my confirmation number.",
-                "exampleZh": "这是我的确认号码。",
-                "growthDifficultyLevel": 4.5
-              },
-              {
-                "id": "r17v-s1-01",
-                "term": "accommodation",
-                "partOfSpeech": "noun",
-                "meaningZh": "住宿",
-                "exampleEn": "I need accommodation tonight.",
-                "exampleZh": "我今晚需要住宿。",
-                "growthDifficultyLevel": 5
-              },
-              {
-                "id": "r17v-s1-02",
-                "term": "overbooked",
-                "partOfSpeech": "adjective",
-                "meaningZh": "超额预订的",
-                "exampleEn": "The hotel is overbooked.",
-                "exampleZh": "酒店超额预订了。",
-                "growthDifficultyLevel": 5
-              },
-              {
-                "id": "r17v-s1-03",
-                "term": "compensation",
-                "partOfSpeech": "noun",
-                "meaningZh": "赔偿；补偿",
-                "exampleEn": "Can I request compensation?",
-                "exampleZh": "我可以申请补偿吗？",
-                "growthDifficultyLevel": 5
-              },
-              {
-                "id": "r17v-s1-04",
-                "term": "reimbursement",
-                "partOfSpeech": "noun",
-                "meaningZh": "报销；偿还",
-                "exampleEn": "Keep receipts for reimbursement.",
-                "exampleZh": "保留收据以便报销。",
-                "growthDifficultyLevel": 5
-              },
-              {
-                "id": "r17v-s1-05",
-                "term": "dispute",
-                "partOfSpeech": "noun",
-                "meaningZh": "争议",
-                "exampleEn": "I need to dispute this charge.",
-                "exampleZh": "我需要对这笔收费提出争议。",
-                "growthDifficultyLevel": 5
-              },
-              {
-                "id": "r17v-s1-06",
-                "term": "fraud",
-                "partOfSpeech": "noun",
-                "meaningZh": "欺诈",
-                "exampleEn": "I suspect card fraud.",
-                "exampleZh": "我怀疑发生了银行卡欺诈。",
-                "growthDifficultyLevel": 5
-              },
-              {
-                "id": "r17v-s1-07",
-                "term": "suspicious",
-                "partOfSpeech": "adjective",
-                "meaningZh": "可疑的",
-                "exampleEn": "This message looks suspicious.",
-                "exampleZh": "这条消息看起来可疑。",
-                "growthDifficultyLevel": 5
-              },
-              {
-                "id": "r17v-s1-08",
-                "term": "evacuation",
-                "partOfSpeech": "noun",
-                "meaningZh": "疏散",
-                "exampleEn": "Follow the evacuation signs.",
-                "exampleZh": "遵循疏散标志。",
-                "growthDifficultyLevel": 5
-              },
-              {
-                "id": "r17v-s1-09",
-                "term": "consulate",
-                "partOfSpeech": "noun",
-                "meaningZh": "领事馆",
-                "exampleEn": "Call your consulate.",
-                "exampleZh": "联系你的领事馆。",
-                "growthDifficultyLevel": 5
-              },
-              {
-                "id": "r17v-s1-10",
-                "term": "embassy",
-                "partOfSpeech": "noun",
-                "meaningZh": "大使馆",
-                "exampleEn": "The embassy can advise you.",
-                "exampleZh": "大使馆可以为你提供建议。",
-                "growthDifficultyLevel": 5
-              },
-              {
-                "id": "r17v-s1-11",
-                "term": "itinerary change",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "行程变更",
-                "exampleEn": "I need an itinerary change.",
-                "exampleZh": "我需要变更行程。",
-                "growthDifficultyLevel": 5
-              },
-              {
-                "id": "r17v-s2-01",
-                "term": "entry requirement",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "入境要求",
-                "exampleEn": "Check the entry requirement.",
-                "exampleZh": "查看入境要求。",
-                "growthDifficultyLevel": 5.5
-              },
-              {
-                "id": "r17v-s2-02",
-                "term": "visa waiver",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "免签计划",
-                "exampleEn": "I travel under a visa waiver.",
-                "exampleZh": "我通过免签计划旅行。",
-                "growthDifficultyLevel": 5.5
-              },
-              {
-                "id": "r17v-s2-03",
-                "term": "biometric",
-                "partOfSpeech": "adjective",
-                "meaningZh": "生物识别的",
-                "exampleEn": "Use the biometric gate.",
-                "exampleZh": "使用生物识别闸机。",
-                "growthDifficultyLevel": 5.5
-              },
-              {
-                "id": "r17v-s2-04",
-                "term": "quarantine",
-                "partOfSpeech": "noun",
-                "meaningZh": "隔离",
-                "exampleEn": "Is quarantine required?",
-                "exampleZh": "需要隔离吗？",
-                "growthDifficultyLevel": 5.5
-              },
-              {
-                "id": "r17v-s2-05",
-                "term": "travel advisory",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "旅行警示",
-                "exampleEn": "Read the travel advisory.",
-                "exampleZh": "阅读旅行警示。",
-                "growthDifficultyLevel": 5.5
-              },
-              {
-                "id": "r17v-s2-06",
-                "term": "local regulation",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "当地规定",
-                "exampleEn": "Follow local regulations.",
-                "exampleZh": "遵守当地规定。",
-                "growthDifficultyLevel": 5.5
-              },
-              {
-                "id": "r17v-s2-07",
-                "term": "liability",
-                "partOfSpeech": "noun",
-                "meaningZh": "责任",
-                "exampleEn": "Who accepts liability?",
-                "exampleZh": "谁承担责任？",
-                "growthDifficultyLevel": 5.5
-              },
-              {
-                "id": "r17v-s2-08",
-                "term": "waiver",
-                "partOfSpeech": "noun",
-                "meaningZh": "弃权书；豁免",
-                "exampleEn": "Please sign the waiver.",
-                "exampleZh": "请签署豁免书。",
-                "growthDifficultyLevel": 5.5
-              },
-              {
-                "id": "r17v-s2-09",
-                "term": "itinerary disruption",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "行程中断",
-                "exampleEn": "Report the itinerary disruption.",
-                "exampleZh": "报告行程中断。",
-                "growthDifficultyLevel": 5.5
-              },
-              {
-                "id": "r17v-s2-10",
-                "term": "cancellation policy",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "取消政策",
-                "exampleEn": "Explain the cancellation policy.",
-                "exampleZh": "解释取消政策。",
-                "growthDifficultyLevel": 5.5
-              },
-              {
-                "id": "r17v-s2-11",
-                "term": "service disruption",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "服务中断",
-                "exampleEn": "There is a service disruption.",
-                "exampleZh": "发生了服务中断。",
-                "growthDifficultyLevel": 5.5
-              },
-              {
-                "id": "r17v-s2-12",
-                "term": "force majeure",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "不可抗力",
-                "exampleEn": "The delay was force majeure.",
-                "exampleZh": "延误属于不可抗力。",
-                "growthDifficultyLevel": 5.5
-              },
-              {
-                "id": "r17v-s2-13",
-                "term": "travel document",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "旅行证件",
-                "exampleEn": "Present your travel document.",
-                "exampleZh": "出示你的旅行证件。",
-                "growthDifficultyLevel": 5.5
-              },
-              {
-                "id": "r17v-s2-14",
-                "term": "documentation",
-                "partOfSpeech": "noun",
-                "meaningZh": "证明文件",
-                "exampleEn": "Bring all documentation.",
-                "exampleZh": "带齐所有证明文件。",
-                "growthDifficultyLevel": 5.5
-              },
-              {
-                "id": "r17v-s2-15",
-                "term": "medical clearance",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "医疗许可",
-                "exampleEn": "A medical clearance is needed.",
-                "exampleZh": "需要医疗许可。",
-                "growthDifficultyLevel": 5.5
-              },
-              {
-                "id": "r17v-s2-16",
-                "term": "mobility assistance",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "行动协助",
-                "exampleEn": "Request mobility assistance early.",
-                "exampleZh": "请提前申请行动协助。",
-                "growthDifficultyLevel": 5.5
-              },
-              {
-                "id": "r17v-s2-17",
-                "term": "special assistance",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "特殊协助",
-                "exampleEn": "I requested special assistance.",
-                "exampleZh": "我申请了特殊协助。",
-                "growthDifficultyLevel": 5.5
-              },
-              {
-                "id": "r17v-s2-18",
-                "term": "interpreter",
-                "partOfSpeech": "noun",
-                "meaningZh": "口译员",
-                "exampleEn": "Can I speak to an interpreter?",
-                "exampleZh": "我可以和口译员交谈吗？",
-                "growthDifficultyLevel": 5.5
-              },
-              {
-                "id": "r17v-s2-19",
-                "term": "translation service",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "翻译服务",
-                "exampleEn": "Is a translation service available?",
-                "exampleZh": "有翻译服务吗？",
-                "growthDifficultyLevel": 5.5
-              },
-              {
-                "id": "r17v-s2-20",
-                "term": "incident report",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "事件报告",
-                "exampleEn": "File an incident report.",
-                "exampleZh": "提交事件报告。",
-                "growthDifficultyLevel": 5.5
-              },
-              {
-                "id": "r17v-s3-01",
-                "term": "claim number",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "索赔编号",
-                "exampleEn": "Write down the claim number.",
-                "exampleZh": "记下索赔编号。",
-                "growthDifficultyLevel": 6
-              },
-              {
-                "id": "r17v-s3-02",
-                "term": "compensation claim",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "补偿申请",
-                "exampleEn": "Submit a compensation claim.",
-                "exampleZh": "提交补偿申请。",
-                "growthDifficultyLevel": 6
-              },
-              {
-                "id": "r17v-s3-03",
-                "term": "reimbursement request",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "报销请求",
-                "exampleEn": "Send a reimbursement request.",
-                "exampleZh": "发送报销请求。",
-                "growthDifficultyLevel": 6
-              },
-              {
-                "id": "r17v-s3-04",
-                "term": "consumer protection",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "消费者保护",
-                "exampleEn": "Ask about consumer protection.",
-                "exampleZh": "咨询消费者保护。",
-                "growthDifficultyLevel": 6
-              },
-              {
-                "id": "r17v-s3-05",
-                "term": "chargeback",
-                "partOfSpeech": "noun",
-                "meaningZh": "拒付；退单",
-                "exampleEn": "Request a chargeback from the bank.",
-                "exampleZh": "向银行申请拒付。",
-                "growthDifficultyLevel": 6
-              },
-              {
-                "id": "r17v-s3-06",
-                "term": "unauthorized transaction",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "未经授权的交易",
-                "exampleEn": "Report an unauthorized transaction.",
-                "exampleZh": "报告未经授权的交易。",
-                "growthDifficultyLevel": 6
-              },
-              {
-                "id": "r17v-s3-07",
-                "term": "identity theft",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "身份盗用",
-                "exampleEn": "Protect yourself from identity theft.",
-                "exampleZh": "防范身份盗用。",
-                "growthDifficultyLevel": 6
-              },
-              {
-                "id": "r17v-s3-08",
-                "term": "data roaming",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "数据漫游",
-                "exampleEn": "Turn off data roaming.",
-                "exampleZh": "关闭数据漫游。",
-                "growthDifficultyLevel": 6
-              },
-              {
-                "id": "r17v-s3-09",
-                "term": "network coverage",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "网络覆盖",
-                "exampleEn": "Is there network coverage here?",
-                "exampleZh": "这里有网络覆盖吗？",
-                "growthDifficultyLevel": 6
-              },
-              {
-                "id": "r17v-s3-10",
-                "term": "international dialing",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "国际拨号",
-                "exampleEn": "How do I use international dialing?",
-                "exampleZh": "如何使用国际拨号？",
-                "growthDifficultyLevel": 6
-              },
-              {
-                "id": "r17v-s3-11",
-                "term": "emergency services",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "紧急服务",
-                "exampleEn": "Call emergency services now.",
-                "exampleZh": "现在呼叫紧急服务。",
-                "growthDifficultyLevel": 6
-              },
-              {
-                "id": "r17v-s3-12",
-                "term": "medical facility",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "医疗机构",
-                "exampleEn": "Find the nearest medical facility.",
-                "exampleZh": "寻找最近的医疗机构。",
-                "growthDifficultyLevel": 6
-              },
-              {
-                "id": "r17v-s3-13",
-                "term": "urgent care",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "急诊门诊",
-                "exampleEn": "We need urgent care.",
-                "exampleZh": "我们需要急诊门诊。",
-                "growthDifficultyLevel": 6
-              },
-              {
-                "id": "r17v-s3-14",
-                "term": "adverse reaction",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "不良反应",
-                "exampleEn": "I had an adverse reaction.",
-                "exampleZh": "我出现了不良反应。",
-                "growthDifficultyLevel": 6
-              },
-              {
-                "id": "r17v-s3-15",
-                "term": "medication dosage",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "药物剂量",
-                "exampleEn": "Confirm the medication dosage.",
-                "exampleZh": "确认药物剂量。",
-                "growthDifficultyLevel": 6
-              },
-              {
-                "id": "r17v-s3-16",
-                "term": "insurance provider",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "保险公司",
-                "exampleEn": "Contact the insurance provider.",
-                "exampleZh": "联系保险公司。",
-                "growthDifficultyLevel": 6
-              },
-              {
-                "id": "r17v-s3-17",
-                "term": "policy exclusion",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "保单除外条款",
-                "exampleEn": "Read each policy exclusion.",
-                "exampleZh": "阅读每项保单除外条款。",
-                "growthDifficultyLevel": 6
-              },
-              {
-                "id": "r17v-s3-18",
-                "term": "preauthorization",
-                "partOfSpeech": "noun",
-                "meaningZh": "预授权",
-                "exampleEn": "The clinic needs preauthorization.",
-                "exampleZh": "诊所需要预授权。",
-                "growthDifficultyLevel": 6
-              },
-              {
-                "id": "r17v-s3-19",
-                "term": "travel companion",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "同行旅伴",
-                "exampleEn": "My travel companion is waiting.",
-                "exampleZh": "我的同行旅伴在等。",
-                "growthDifficultyLevel": 6
-              },
-              {
-                "id": "r17v-s3-20",
-                "term": "welfare check",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "安全状况确认",
-                "exampleEn": "Request a welfare check.",
-                "exampleZh": "请求安全状况确认。",
-                "growthDifficultyLevel": 6
-              },
-              {
-                "id": "r17v-c4-01",
-                "term": "contingency plan",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "应急预案",
-                "exampleEn": "Review the contingency plan.",
-                "exampleZh": "查看应急预案。",
-                "growthDifficultyLevel": 7
-              },
-              {
-                "id": "r17v-c4-02",
-                "term": "operational delay",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "运营延误",
-                "exampleEn": "An operational delay was reported.",
-                "exampleZh": "已报告运营延误。",
-                "growthDifficultyLevel": 7
-              },
-              {
-                "id": "r17v-c4-03",
-                "term": "connecting itinerary",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "联程行程",
-                "exampleEn": "Protect my connecting itinerary.",
-                "exampleZh": "保障我的联程行程。",
-                "growthDifficultyLevel": 7
-              },
-              {
-                "id": "r17v-c4-04",
-                "term": "carrier responsibility",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "承运人责任",
-                "exampleEn": "Explain carrier responsibility.",
-                "exampleZh": "解释承运人责任。",
-                "growthDifficultyLevel": 7
-              },
-              {
-                "id": "r17v-c4-05",
-                "term": "passenger rights",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "乘客权益",
-                "exampleEn": "What are my passenger rights?",
-                "exampleZh": "我的乘客权益是什么？",
-                "growthDifficultyLevel": 7
-              },
-              {
-                "id": "r17v-c4-06",
-                "term": "formal complaint",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "正式投诉",
-                "exampleEn": "I want to file a formal complaint.",
-                "exampleZh": "我想提交正式投诉。",
-                "growthDifficultyLevel": 7
-              },
-              {
-                "id": "r17v-c4-07",
-                "term": "supporting evidence",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "支持证据",
-                "exampleEn": "Attach supporting evidence.",
-                "exampleZh": "附上支持证据。",
-                "growthDifficultyLevel": 7
-              },
-              {
-                "id": "r17v-c4-08",
-                "term": "written confirmation",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "书面确认",
-                "exampleEn": "Please send written confirmation.",
-                "exampleZh": "请发送书面确认。",
-                "growthDifficultyLevel": 7
-              },
-              {
-                "id": "r17v-c4-09",
-                "term": "settlement",
-                "partOfSpeech": "noun",
-                "meaningZh": "和解；结算",
-                "exampleEn": "I will review the settlement.",
-                "exampleZh": "我会查看和解方案。",
-                "growthDifficultyLevel": 7
-              },
-              {
-                "id": "r17v-c4-10",
-                "term": "escalation",
-                "partOfSpeech": "noun",
-                "meaningZh": "升级处理",
-                "exampleEn": "I request an escalation.",
-                "exampleZh": "我请求升级处理。",
-                "growthDifficultyLevel": 7
-              },
-              {
-                "id": "r17v-c4-11",
-                "term": "supervisory staff",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "主管人员",
-                "exampleEn": "May I speak to supervisory staff?",
-                "exampleZh": "我可以与主管人员交谈吗？",
-                "growthDifficultyLevel": 7
-              },
-              {
-                "id": "r17v-c4-12",
-                "term": "travel disruption",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "旅行受阻",
-                "exampleEn": "The travel disruption is serious.",
-                "exampleZh": "旅行受阻情况严重。",
-                "growthDifficultyLevel": 7
-              },
-              {
-                "id": "r17v-c4-13",
-                "term": "booking reference",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "预订编号",
-                "exampleEn": "Quote your booking reference.",
-                "exampleZh": "报出你的预订编号。",
-                "growthDifficultyLevel": 7
-              },
-              {
-                "id": "r17v-c4-14",
-                "term": "cancellation fee",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "取消费用",
-                "exampleEn": "Why is there a cancellation fee?",
-                "exampleZh": "为什么有取消费用？",
-                "growthDifficultyLevel": 7
-              },
-              {
-                "id": "r17v-c4-15",
-                "term": "fare difference",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "票价差额",
-                "exampleEn": "Who pays the fare difference?",
-                "exampleZh": "谁支付票价差额？",
-                "growthDifficultyLevel": 7
-              },
-              {
-                "id": "r17v-c4-16",
-                "term": "service desk",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "服务台",
-                "exampleEn": "Find the service desk.",
-                "exampleZh": "找到服务台。",
-                "growthDifficultyLevel": 7
-              },
-              {
-                "id": "r17v-c4-17",
-                "term": "accessibility requirement",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "无障碍需求",
-                "exampleEn": "Record my accessibility requirement.",
-                "exampleZh": "记录我的无障碍需求。",
-                "growthDifficultyLevel": 7
-              },
-              {
-                "id": "r17v-c4-18",
-                "term": "dietary restriction",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "饮食限制",
-                "exampleEn": "Note my dietary restriction.",
-                "exampleZh": "记录我的饮食限制。",
-                "growthDifficultyLevel": 7
-              },
-              {
-                "id": "r17v-c4-19",
-                "term": "medical emergency",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "医疗紧急情况",
-                "exampleEn": "This is a medical emergency.",
-                "exampleZh": "这是医疗紧急情况。",
-                "growthDifficultyLevel": 7
-              },
-              {
-                "id": "r17v-c4-20",
-                "term": "safety concern",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "安全隐患",
-                "exampleEn": "Report a safety concern.",
-                "exampleZh": "报告安全隐患。",
-                "growthDifficultyLevel": 7
-              },
-              {
-                "id": "r17v-c6-01",
-                "term": "repatriation",
-                "partOfSpeech": "noun",
-                "meaningZh": "遣返；送返",
-                "exampleEn": "Insurance may cover repatriation.",
-                "exampleZh": "保险可能涵盖送返。",
-                "growthDifficultyLevel": 8
-              },
-              {
-                "id": "r17v-c6-02",
-                "term": "consular assistance",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "领事协助",
-                "exampleEn": "Request consular assistance.",
-                "exampleZh": "请求领事协助。",
-                "growthDifficultyLevel": 8
-              },
-              {
-                "id": "r17v-c6-03",
-                "term": "emergency evacuation",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "紧急撤离",
-                "exampleEn": "Emergency evacuation is underway.",
-                "exampleZh": "紧急撤离正在进行。",
-                "growthDifficultyLevel": 8
-              },
-              {
-                "id": "r17v-c6-04",
-                "term": "legal guardian",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "法定监护人",
-                "exampleEn": "Contact the legal guardian.",
-                "exampleZh": "联系法定监护人。",
-                "growthDifficultyLevel": 8
-              },
-              {
-                "id": "r17v-c6-05",
-                "term": "emergency authorization",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "紧急授权",
-                "exampleEn": "We need emergency authorization.",
-                "exampleZh": "我们需要紧急授权。",
-                "growthDifficultyLevel": 8
-              },
-              {
-                "id": "r17v-c6-06",
-                "term": "medical repatriation",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "医疗送返",
-                "exampleEn": "Arrange medical repatriation.",
-                "exampleZh": "安排医疗送返。",
-                "growthDifficultyLevel": 8
-              },
-              {
-                "id": "r17v-c6-07",
-                "term": "travel credential",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "旅行证件",
-                "exampleEn": "Replace the travel credential.",
-                "exampleZh": "补办旅行证件。",
-                "growthDifficultyLevel": 8
-              },
-              {
-                "id": "r17v-c6-08",
-                "term": "border control",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "边境管制",
-                "exampleEn": "Proceed to border control.",
-                "exampleZh": "前往边境管制处。",
-                "growthDifficultyLevel": 8
-              },
-              {
-                "id": "r17v-c6-09",
-                "term": "entry clearance",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "入境许可",
-                "exampleEn": "Wait for entry clearance.",
-                "exampleZh": "等待入境许可。",
-                "growthDifficultyLevel": 8
-              },
-              {
-                "id": "r17v-c6-10",
-                "term": "customs inspection",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "海关检查",
-                "exampleEn": "Your bag needs customs inspection.",
-                "exampleZh": "你的包需要海关检查。",
-                "growthDifficultyLevel": 8
-              },
-              {
-                "id": "r17v-c6-11",
-                "term": "declaration form",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "申报表",
-                "exampleEn": "Complete the declaration form.",
-                "exampleZh": "填写申报表。",
-                "growthDifficultyLevel": 8
-              },
-              {
-                "id": "r17v-c6-12",
-                "term": "restricted item",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "受限物品",
-                "exampleEn": "Declare each restricted item.",
-                "exampleZh": "申报每件受限物品。",
-                "growthDifficultyLevel": 8
-              },
-              {
-                "id": "r17v-c6-13",
-                "term": "prohibited item",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "违禁物品",
-                "exampleEn": "Do not carry a prohibited item.",
-                "exampleZh": "不要携带违禁物品。",
-                "growthDifficultyLevel": 8
-              },
-              {
-                "id": "r17v-c6-14",
-                "term": "lost travel document",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "遗失旅行证件",
-                "exampleEn": "Report a lost travel document.",
-                "exampleZh": "报告遗失旅行证件。",
-                "growthDifficultyLevel": 8
-              },
-              {
-                "id": "r17v-c6-15",
-                "term": "temporary passport",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "临时护照",
-                "exampleEn": "Apply for a temporary passport.",
-                "exampleZh": "申请临时护照。",
-                "growthDifficultyLevel": 8
-              },
-              {
-                "id": "r17v-c6-16",
-                "term": "crisis hotline",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "危机热线",
-                "exampleEn": "Call the crisis hotline.",
-                "exampleZh": "拨打危机热线。",
-                "growthDifficultyLevel": 8
-              },
-              {
-                "id": "r17v-c6-17",
-                "term": "incident documentation",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "事件文件记录",
-                "exampleEn": "Keep incident documentation.",
-                "exampleZh": "保留事件文件记录。",
-                "growthDifficultyLevel": 8
-              },
-              {
-                "id": "r17v-c6-18",
-                "term": "insurance settlement",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "保险理赔结算",
-                "exampleEn": "Review the insurance settlement.",
-                "exampleZh": "查看保险理赔结算。",
-                "growthDifficultyLevel": 8
-              },
-              {
-                "id": "r17v-c6-19",
-                "term": "emergency accommodation",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "紧急住宿",
-                "exampleEn": "Find emergency accommodation.",
-                "exampleZh": "寻找紧急住宿。",
-                "growthDifficultyLevel": 8
-              },
-              {
-                "id": "r17v-c6-20",
-                "term": "onward travel",
-                "partOfSpeech": "noun phrase",
-                "meaningZh": "后续行程",
-                "exampleEn": "Arrange onward travel.",
-                "exampleZh": "安排后续行程。",
-                "growthDifficultyLevel": 8
-              }
+              {"id": "w4d28-v1", "term": "confirm", "partOfSpeech": "verb", "meaningZh": "确认", "exampleEn": "Confirm the gate and time.", "exampleZh": "确认登机口和时间。"},
+              {"id": "w4d28-v2", "term": "instead", "partOfSpeech": "adverb", "meaningZh": "改为；代替", "exampleEn": "Let's take the bus instead.", "exampleZh": "我们改坐公交吧。"},
+              {"id": "w4d28-v3", "term": "correct", "partOfSpeech": "verb", "meaningZh": "更正", "exampleEn": "Could you correct the charge?", "exampleZh": "你可以更正这项收费吗？"},
+              {"id": "w4d28-v4", "term": "urgent", "partOfSpeech": "adjective", "meaningZh": "紧急的", "exampleEn": "This is urgent. I need help now.", "exampleZh": "情况紧急。我现在需要帮助。"},
+              {"id": "w4d28-v5", "term": "available", "partOfSpeech": "adjective", "meaningZh": "可用的；有空的", "exampleEn": "Is another room available?", "exampleZh": "还有其他房间可用吗？"}
             ]
           }
         },
@@ -3787,142 +1017,32 @@
             "minimumSeconds": 150,
             "maximumSeconds": 900
           },
-          "tags": [
-            "scene:integrated-travel",
-            "week:4",
-            "day:28",
-            "skill:gist",
-            "skill:sequence",
-            "skill:detail",
-            "skill:inference",
-            "checkpoint:course"
-          ],
-          "prerequisiteUnitIds": [
-            "st4w-w4d27-listening"
-          ],
+          "tags": ["scene:integrated-travel", "week:4", "day:28", "skill:gist", "skill:sequence", "skill:detail", "skill:inference", "checkpoint:course"],
+          "prerequisiteUnitIds": ["st4w-w4d27-listening"],
           "activity": {
             "type": "listening-narrative",
             "titleZh": "一个有变更的完整旅行日",
-            "tts": {
-              "locale": "en-US",
-              "defaultRate": 1
-            },
+            "tts": {"locale": "en-US", "defaultRate": 1},
             "transcript": [
-              {
-                "speaker": "Narrator",
-                "text": "Sam checks out of room 407 at eleven and asks the front desk to store one suitcase until two.",
-                "translationZh": "Sam 十一点从 407 房退房，请前台保管一个行李箱到两点。"
-              },
-              {
-                "speaker": "Traveler",
-                "text": "Could you recommend a nearby lunch place before I leave?",
-                "translationZh": "离开前，你可以推荐附近吃午饭的地方吗？"
-              },
-              {
-                "speaker": "Clerk",
-                "text": "Try Pine Café across from the library. Take bus six for three stops.",
-                "translationZh": "试试图书馆对面的 Pine Café。坐 6 路公交三站。"
-              },
-              {
-                "speaker": "Narrator",
-                "text": "At the café, Sam orders a turkey sandwich without cheese and tells the server about a peanut allergy.",
-                "translationZh": "在咖啡店，Sam 点了不加奶酪的火鸡三明治，并告诉服务员自己对花生过敏。"
-              },
-              {
-                "speaker": "Server",
-                "text": "The bread is safe, but the cookie contains peanuts. Would you like fruit instead?",
-                "translationZh": "面包没问题，但饼干含花生。要改成水果吗？"
-              },
-              {
-                "speaker": "Traveler",
-                "text": "Yes, fruit instead, please. And could I get the check by one thirty?",
-                "translationZh": "好的，请改成水果。我可以在一点半前拿到账单吗？"
-              },
-              {
-                "speaker": "Narrator",
-                "text": "Back at the hotel, Sam picks up the suitcase and takes a taxi to the airport.",
-                "translationZh": "回到酒店后，Sam 取了行李箱，坐出租车去机场。"
-              },
-              {
-                "speaker": "Driver",
-                "text": "Traffic is heavy. The usual entrance is closed, so I'll use terminal two drop-off.",
-                "translationZh": "交通拥堵。常用入口关闭了，所以我会使用二号航站楼下客区。"
-              },
-              {
-                "speaker": "Traveler",
-                "text": "That's fine. My flight leaves at five forty.",
-                "translationZh": "可以。我的航班五点四十起飞。"
-              },
-              {
-                "speaker": "Announcement",
-                "text": "Flight 905 to Phoenix will board at gate B16 instead of B12. Boarding begins at five.",
-                "translationZh": "飞往菲尼克斯的 905 航班将在 B16 而不是 B12 登机。五点开始登机。"
-              },
-              {
-                "speaker": "Narrator",
-                "text": "At the gate, another traveler feels dizzy. Sam tells the gate agent the person is awake and sitting near B16.",
-                "translationZh": "在登机口，另一名旅客头晕。Sam 告诉登机口工作人员，此人清醒，坐在 B16 附近。"
-              },
-              {
-                "speaker": "Traveler",
-                "text": "We need help near gate B16. The traveler feels dizzy but is awake.",
-                "translationZh": "我们在 B16 登机口附近需要帮助。这名旅客头晕，但人清醒。"
-              },
-              {
-                "speaker": "Agent",
-                "text": "Stay with the traveler. Medical staff are on the way.",
-                "translationZh": "请陪着这名旅客。医疗人员正在赶来。"
-              }
+              {"speaker": "Narrator", "text": "Sam checks out of room 407 at eleven and asks the front desk to store one suitcase until two.", "translationZh": "Sam 十一点从 407 房退房，请前台保管一个行李箱到两点。"},
+              {"speaker": "Traveler", "text": "Could you recommend a nearby lunch place before I leave?", "translationZh": "离开前，你可以推荐附近吃午饭的地方吗？"},
+              {"speaker": "Clerk", "text": "Try Pine Café across from the library. Take bus six for three stops.", "translationZh": "试试图书馆对面的 Pine Café。坐 6 路公交三站。"},
+              {"speaker": "Narrator", "text": "At the café, Sam orders a turkey sandwich without cheese and tells the server about a peanut allergy.", "translationZh": "在咖啡店，Sam 点了不加奶酪的火鸡三明治，并告诉服务员自己对花生过敏。"},
+              {"speaker": "Server", "text": "The bread is safe, but the cookie contains peanuts. Would you like fruit instead?", "translationZh": "面包没问题，但饼干含花生。要改成水果吗？"},
+              {"speaker": "Traveler", "text": "Yes, fruit instead, please. And could I get the check by one thirty?", "translationZh": "好的，请改成水果。我可以在一点半前拿到账单吗？"},
+              {"speaker": "Narrator", "text": "Back at the hotel, Sam picks up the suitcase and takes a taxi to the airport.", "translationZh": "回到酒店后，Sam 取了行李箱，坐出租车去机场。"},
+              {"speaker": "Driver", "text": "Traffic is heavy. The usual entrance is closed, so I'll use terminal two drop-off.", "translationZh": "交通拥堵。常用入口关闭了，所以我会使用二号航站楼下客区。"},
+              {"speaker": "Traveler", "text": "That's fine. My flight leaves at five forty.", "translationZh": "可以。我的航班五点四十起飞。"},
+              {"speaker": "Announcement", "text": "Flight 905 to Phoenix will board at gate B16 instead of B12. Boarding begins at five.", "translationZh": "飞往菲尼克斯的 905 航班将在 B16 而不是 B12 登机。五点开始登机。"},
+              {"speaker": "Narrator", "text": "At the gate, another traveler feels dizzy. Sam tells the gate agent the person is awake and sitting near B16.", "translationZh": "在登机口，另一名旅客头晕。Sam 告诉登机口工作人员，此人清醒，坐在 B16 附近。"},
+              {"speaker": "Traveler", "text": "We need help near gate B16. The traveler feels dizzy but is awake.", "translationZh": "我们在 B16 登机口附近需要帮助。这名旅客头晕，但人清醒。"},
+              {"speaker": "Agent", "text": "Stay with the traveler. Medical staff are on the way.", "translationZh": "请陪着这名旅客。医疗人员正在赶来。"}
             ],
             "checks": [
-              {
-                "id": "w4d28-l1",
-                "skill": "sequence",
-                "promptZh": "正确顺序是什么？",
-                "options": [
-                  "退房—午餐—取行李—机场",
-                  "午餐—退房—机场—取行李",
-                  "退房—机场—午餐—取行李"
-                ],
-                "correctOptionIndex": 0,
-                "rationaleZh": "脚本依次发生退房、午餐、回酒店取行李、去机场。"
-              },
-              {
-                "id": "w4d28-l2",
-                "skill": "detail",
-                "promptZh": "午餐配菜为什么换成水果？",
-                "options": [
-                  "水果免费",
-                  "饼干含花生",
-                  "三明治没有奶酪"
-                ],
-                "correctOptionIndex": 1,
-                "rationaleZh": "cookie contains peanuts，与已声明的花生过敏冲突。"
-              },
-              {
-                "id": "w4d28-l3",
-                "skill": "detail",
-                "promptZh": "最新登机信息是什么？",
-                "options": [
-                  "B12，5:40 登机",
-                  "B16，5:00 登机",
-                  "B16，5:40 登机"
-                ],
-                "correctOptionIndex": 1,
-                "rationaleZh": "gate B16，boarding begins at five；5:40 是起飞时间。"
-              },
-              {
-                "id": "w4d28-l4",
-                "skill": "detail",
-                "promptZh": "需要帮助的旅客状况如何？",
-                "options": [
-                  "头晕但清醒",
-                  "失去意识",
-                  "脚踝受伤"
-                ],
-                "correctOptionIndex": 0,
-                "rationaleZh": "Sam 明确说 feels dizzy but is awake。"
-              }
+              {"id": "w4d28-l1", "skill": "sequence", "promptZh": "正确顺序是什么？", "options": ["退房—午餐—取行李—机场", "午餐—退房—机场—取行李", "退房—机场—午餐—取行李"], "correctOptionIndex": 0, "rationaleZh": "脚本依次发生退房、午餐、回酒店取行李、去机场。"},
+              {"id": "w4d28-l2", "skill": "detail", "promptZh": "午餐配菜为什么换成水果？", "options": ["水果免费", "饼干含花生", "三明治没有奶酪"], "correctOptionIndex": 1, "rationaleZh": "cookie contains peanuts，与已声明的花生过敏冲突。"},
+              {"id": "w4d28-l3", "skill": "detail", "promptZh": "最新登机信息是什么？", "options": ["B12，5:40 登机", "B16，5:00 登机", "B16，5:40 登机"], "correctOptionIndex": 1, "rationaleZh": "gate B16，boarding begins at five；5:40 是起飞时间。"},
+              {"id": "w4d28-l4", "skill": "detail", "promptZh": "需要帮助的旅客状况如何？", "options": ["头晕但清醒", "失去意识", "脚踝受伤"], "correctOptionIndex": 0, "rationaleZh": "Sam 明确说 feels dizzy but is awake。"}
             ]
           }
         },
@@ -3945,16 +1065,8 @@
             "minimumSeconds": 90,
             "maximumSeconds": 720
           },
-          "tags": [
-            "scene:integrated-travel",
-            "week:4",
-            "day:28",
-            "task:guided-roleplay",
-            "checkpoint:course"
-          ],
-          "prerequisiteUnitIds": [
-            "st4w-w4d27-speaking"
-          ],
+          "tags": ["scene:integrated-travel", "week:4", "day:28", "task:guided-roleplay", "checkpoint:course"],
+          "prerequisiteUnitIds": ["st4w-w4d27-speaking"],
           "activity": {
             "type": "guided-roleplay",
             "instructionsZh": "独立完成五个高频意图；只使用受控场景，不开放自由 AI 对话。",
@@ -3965,17 +1077,8 @@
                 "partnerLine": "Good morning. How can I help?",
                 "modelAnswer": "I'd like to check out of room 407. Could you store one suitcase until two p.m.?",
                 "modelAnswerTranslationZh": "我想从 407 房退房。可以帮我寄存一件行李到下午两点吗？",
-                "acceptedAnswers": [
-                  "I'd like to check out of room 407. Could you store one suitcase until two p.m.?",
-                  "I'm checking out of room 407. Can you hold one bag until two?",
-                  "Room 407 is checking out. Could I leave a suitcase here until 2:00?"
-                ],
-                "requiredConcepts": [
-                  "room-407",
-                  "check-out",
-                  "one-suitcase",
-                  "2:00-pm"
-                ]
+                "acceptedAnswers": ["I'd like to check out of room 407. Could you store one suitcase until two p.m.?", "I'm checking out of room 407. Can you hold one bag until two?", "Room 407 is checking out. Could I leave a suitcase here until 2:00?"],
+                "requiredConcepts": ["room-407", "check-out", "one-suitcase", "2:00-pm"]
               },
               {
                 "id": "w4d28-s2",
@@ -3983,16 +1086,8 @@
                 "partnerLine": "What would you like for lunch?",
                 "modelAnswer": "I'd like the turkey sandwich without cheese. I'm allergic to peanuts.",
                 "modelAnswerTranslationZh": "我想要火鸡三明治，不加奶酪。我对花生过敏。",
-                "acceptedAnswers": [
-                  "I'd like the turkey sandwich without cheese. I'm allergic to peanuts.",
-                  "A turkey sandwich, no cheese, please. I have a peanut allergy.",
-                  "Can I get the turkey sandwich without cheese? Also, I'm allergic to peanuts."
-                ],
-                "requiredConcepts": [
-                  "turkey-sandwich",
-                  "without-cheese",
-                  "peanut-allergy"
-                ]
+                "acceptedAnswers": ["I'd like the turkey sandwich without cheese. I'm allergic to peanuts.", "A turkey sandwich, no cheese, please. I have a peanut allergy.", "Can I get the turkey sandwich without cheese? Also, I'm allergic to peanuts."],
+                "requiredConcepts": ["turkey-sandwich", "without-cheese", "peanut-allergy"]
               },
               {
                 "id": "w4d28-s3",
@@ -4000,17 +1095,8 @@
                 "partnerLine": "The main airport entrance is closed.",
                 "modelAnswer": "Could you drop me off at terminal two instead? Let me confirm: terminal two drop-off?",
                 "modelAnswerTranslationZh": "可以改在二号航站楼让我下车吗？我确认一下：是二号航站楼下客区，对吗？",
-                "acceptedAnswers": [
-                  "Could you drop me off at terminal two instead? Let me confirm: terminal two drop-off?",
-                  "Please use terminal two drop-off instead. That's terminal two, right?",
-                  "Terminal two drop-off is fine. Could you take me there?"
-                ],
-                "requiredConcepts": [
-                  "terminal-two",
-                  "drop-off",
-                  "alternative",
-                  "confirmation"
-                ]
+                "acceptedAnswers": ["Could you drop me off at terminal two instead? Let me confirm: terminal two drop-off?", "Please use terminal two drop-off instead. That's terminal two, right?", "Terminal two drop-off is fine. Could you take me there?"],
+                "requiredConcepts": ["terminal-two", "drop-off", "alternative", "confirmation"]
               },
               {
                 "id": "w4d28-s4",
@@ -4018,17 +1104,8 @@
                 "partnerLine": "Your gate has changed.",
                 "modelAnswer": "Let me confirm: flight 905 is now at gate B16, and boarding starts at five?",
                 "modelAnswerTranslationZh": "我确认一下：905 航班现在在 B16 登机口，五点开始登机，对吗？",
-                "acceptedAnswers": [
-                  "Let me confirm: flight 905 is now at gate B16, and boarding starts at five?",
-                  "Flight 905, gate B16, boarding at five, correct?",
-                  "So I go to B16 and board at 5:00, right?"
-                ],
-                "requiredConcepts": [
-                  "flight-905",
-                  "gate-B16",
-                  "5:00",
-                  "confirmation"
-                ]
+                "acceptedAnswers": ["Let me confirm: flight 905 is now at gate B16, and boarding starts at five?", "Flight 905, gate B16, boarding at five, correct?", "So I go to B16 and board at 5:00, right?"],
+                "requiredConcepts": ["flight-905", "gate-B16", "5:00", "confirmation"]
               },
               {
                 "id": "w4d28-s5",
@@ -4036,81 +1113,17 @@
                 "partnerLine": "What is the emergency?",
                 "modelAnswer": "We need help near gate B16. A traveler feels dizzy but is awake.",
                 "modelAnswerTranslationZh": "B16 登机口附近有人需要帮助。一位旅客感到头晕，但意识清醒。",
-                "acceptedAnswers": [
-                  "We need help near gate B16. A traveler feels dizzy but is awake.",
-                  "Please send help to gate B16. Someone is dizzy, but they're awake.",
-                  "A traveler near B16 feels dizzy. They're awake, and we need help."
-                ],
-                "requiredConcepts": [
-                  "help-request",
-                  "gate-B16",
-                  "dizzy",
-                  "awake"
-                ]
+                "acceptedAnswers": ["We need help near gate B16. A traveler feels dizzy but is awake.", "Please send help to gate B16. Someone is dizzy, but they're awake.", "A traveler near B16 feels dizzy. They're awake, and we need help."],
+                "requiredConcepts": ["help-request", "gate-B16", "dizzy", "awake"]
               }
             ]
           }
         }
       ],
       "sceneQuiz": [
-        {
-          "id": "w4d28-q1",
-          "domain": "vocabulary",
-          "format": "intent-matching",
-          "promptZh": "将意图与表达匹配：确认 / 提替代 / 更正错误 / 紧急求助。",
-          "pairs": [
-            {
-              "intentZh": "确认",
-              "answer": "Let me confirm..."
-            },
-            {
-              "intentZh": "提替代",
-              "answer": "Could we ... instead?"
-            },
-            {
-              "intentZh": "更正错误",
-              "answer": "I think this is wrong."
-            },
-            {
-              "intentZh": "紧急求助",
-              "answer": "This is an emergency. We need help."
-            }
-          ],
-          "rationaleZh": "四种表达分别对应核对、替代、纠错和求助。"
-        },
-        {
-          "id": "w4d28-q2",
-          "domain": "listening",
-          "format": "single-choice",
-          "audioText": "Checkout is at noon. The airport shuttle was canceled, so take a taxi to terminal three. Your gate changed to C8, and boarding starts at four fifteen.",
-          "promptZh": "哪项完整信息正确？",
-          "options": [
-            "中午退房—出租车去三号航站楼—C8—4:15 登机",
-            "中午退房—接驳车去 C8—3:00 登机",
-            "下午退房—出租车去四号航站楼—C15"
-          ],
-          "correctOptionIndex": 0,
-          "rationaleZh": "四项信息均在音频中直接给出。"
-        },
-        {
-          "id": "w4d28-q3",
-          "domain": "speaking",
-          "format": "fixed-response",
-          "promptZh": "综合完成：报告护照丢失、最后在酒店前台见到，并请求立即联系酒店。",
-          "modelAnswer": "My passport is missing. I last saw it at the hotel front desk. Could you help me contact the hotel right away?",
-          "modelAnswerTranslationZh": "我的护照不见了。我最后一次看到它是在酒店前台。你能帮我马上联系酒店吗？",
-          "acceptedAnswers": [
-            "My passport is missing. I last saw it at the hotel front desk. Could you help me contact the hotel right away?",
-            "I can't find my passport. It was last at the hotel front desk. Please help me call the hotel now.",
-            "I lost my passport after leaving the hotel front desk. Could we contact the hotel immediately?"
-          ],
-          "requiredConcepts": [
-            "missing-passport",
-            "hotel-front-desk",
-            "contact-hotel",
-            "immediate"
-          ]
-        }
+        {"id": "w4d28-q1", "domain": "vocabulary", "format": "intent-matching", "promptZh": "将意图与表达匹配：确认 / 提替代 / 更正错误 / 紧急求助。", "pairs": [{"intentZh": "确认", "answer": "Let me confirm..."}, {"intentZh": "提替代", "answer": "Could we ... instead?"}, {"intentZh": "更正错误", "answer": "I think this is wrong."}, {"intentZh": "紧急求助", "answer": "This is an emergency. We need help."}], "rationaleZh": "四种表达分别对应核对、替代、纠错和求助。"},
+        {"id": "w4d28-q2", "domain": "listening", "format": "single-choice", "audioText": "Checkout is at noon. The airport shuttle was canceled, so take a taxi to terminal three. Your gate changed to C8, and boarding starts at four fifteen.", "promptZh": "哪项完整信息正确？", "options": ["中午退房—出租车去三号航站楼—C8—4:15 登机", "中午退房—接驳车去 C8—3:00 登机", "下午退房—出租车去四号航站楼—C15"], "correctOptionIndex": 0, "rationaleZh": "四项信息均在音频中直接给出。"},
+        {"id": "w4d28-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "综合完成：报告护照丢失、最后在酒店前台见到，并请求立即联系酒店。", "modelAnswer": "My passport is missing. I last saw it at the hotel front desk. Could you help me contact the hotel right away?", "modelAnswerTranslationZh": "我的护照不见了。我最后一次看到它是在酒店前台。你能帮我马上联系酒店吗？", "acceptedAnswers": ["My passport is missing. I last saw it at the hotel front desk. Could you help me contact the hotel right away?", "I can't find my passport. It was last at the hotel front desk. Please help me call the hotel now.", "I lost my passport after leaving the hotel front desk. Could we contact the hotel immediately?"], "requiredConcepts": ["missing-passport", "hotel-front-desk", "contact-hotel", "immediate"]}
       ]
     }
   ]

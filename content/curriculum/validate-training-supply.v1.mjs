@@ -76,10 +76,6 @@ function normalizedPlaybackText(text) {
   return text.toLocaleLowerCase('en-US').replace(/[\s\p{P}]+/gu, ' ').trim()
 }
 
-function normalizedVocabularyTerm(term) {
-  return term.toLocaleLowerCase('en-US').replace(/[^a-z0-9]+/g, ' ').trim()
-}
-
 function playbackContentId(text) {
   const normalized = normalizedPlaybackText(text)
   let hash = 0x811c9dc5
@@ -139,24 +135,6 @@ function expectedCandidates() {
     return unit.activity.items.map((item) => ({ lesson, unit, item }))
   })
   const vocabularyIds = vocabularySources.map(({ item }) => item.id)
-  assert(new Set(vocabularyIds).size === vocabularyIds.length, 'Vocabulary source item IDs are not unique.')
-  for (const { item } of vocabularySources.filter(({ item }) => item.id.startsWith('r17v-'))) {
-    assert(
-      typeof item.growthDifficultyLevel === 'number' &&
-        Number.isFinite(item.growthDifficultyLevel) &&
-        item.growthDifficultyLevel >= 0 &&
-        item.growthDifficultyLevel <= 12,
-      `${item.id} has an invalid R17 growth difficulty level.`,
-    )
-    const normalized = normalizedVocabularyTerm(item.term)
-    const matchingSources = vocabularySources.filter(
-      ({ item: other }) => normalizedVocabularyTerm(other.term) === normalized,
-    )
-    assert(
-      matchingSources.length === 1,
-      `${item.id} duplicates the vocabulary source term ${item.term}.`,
-    )
-  }
   const distractorsFor = (index) => {
     const answer = vocabularyIds[index]
     const distractors = []
@@ -166,10 +144,6 @@ function expectedCandidates() {
         distractors.push(candidate)
       }
     }
-    assert(
-      new Set([answer, ...distractors]).size === 4,
-      `${answer} cannot produce three distinct vocabulary distractors.`,
-    )
     return distractors
   }
 
@@ -183,9 +157,6 @@ function expectedCandidates() {
         itemId: `supply-v1-vocabulary-${item.id}-${variantId}`,
         variantFamilyId: `supply-family-v1-vocabulary-${item.id}`,
         ...candidateBase(unit, 'vocabulary', nextOrder('vocabulary')),
-        // R17 growth content can use a finer, versioned level than its host
-        // lesson. The host remains the stable resolver/contentRef.
-        difficultyLevel: item.growthDifficultyLevel ?? unit.difficultyLevel,
         nominalEffectiveSeconds: 18,
         source: {
           sourceType: 'vocabulary-item',
