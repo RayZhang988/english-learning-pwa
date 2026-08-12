@@ -8,6 +8,10 @@ const items = lessons.flatMap((lesson) => lesson.learningUnits
   .flatMap((unit) => unit.activity.items))
 const batch = items.filter((item) => item.id.startsWith('r17-daily-k1a-'))
 const normalize = (value) => value.toLocaleLowerCase('en-US').replace(/[^a-z0-9]+/g, ' ').trim()
+// A combined Chinese gloss is rejected by default: it can hide two separately
+// testable concepts behind one answer. Add a row here only for an explicitly
+// reviewed Chinese synonym pair, never for different travel concepts.
+const allowedChineseSynonymMeaningWhitelist = new Map()
 
 assert.equal(batch.length, 75)
 assert.equal(new Set(batch.map((item) => item.id)).size, 75)
@@ -17,6 +21,10 @@ for (const item of batch) {
   assert.equal(item.growthDifficultyLevel, 0, `${item.id} is not kindergarten difficulty.`)
   assert.match(item.dailyKnowledgeId, /^daily-knowledge-v1:k1a:[0-9]{3}$/)
   assert.ok(item.term.trim() && item.meaningZh.trim() && item.partOfSpeech.trim())
+  assert.ok(
+    !/[；;/／]/u.test(item.meaningZh) || allowedChineseSynonymMeaningWhitelist.has(item.id),
+    `${item.id} combines Chinese concepts without an explicit reviewed synonym whitelist.`,
+  )
   assert.ok(normalize(item.exampleEn).includes(normalize(item.term)), `${item.id} example does not contain its target.`)
   assert.ok(item.exampleZh.trim())
   assert.ok(!('sceneKnowledgeId' in item) && !('sceneId' in item), `${item.id} leaks a scene identity.`)
