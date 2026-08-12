@@ -506,6 +506,11 @@ export interface LearningEngineState {
   readonly recentTrainingItemIds?: Readonly<Record<string, readonly string[]>>
   /** Durable R11 scene callback deduplication, independent from review state. */
   readonly sceneTrainingAcknowledgementIds?: readonly string[]
+  /**
+   * Additive R17 growth ledger. It is independent of daily-plan completion,
+   * wrong-answer review and training-test data.
+   */
+  readonly growth?: import('./growth.ts').GrowthState
 }
 
 /** Stable, opaque identity resolved by the content owner (05). */

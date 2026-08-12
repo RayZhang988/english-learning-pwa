@@ -1,5 +1,6 @@
 import type { NamespaceStore } from '../storage/index.ts'
 import type { LearningEngineState } from './contracts.ts'
+import { assertGrowthState } from './growth.ts'
 
 export const LEARNING_ENGINE_STORAGE_NAMESPACE = 'learning.engine'
 export const LEARNING_ENGINE_STORAGE_SCHEMA_VERSION = 1
@@ -215,6 +216,10 @@ function assertLearningEngineState(
       ))
   ) {
     throw new TypeError('sceneTrainingAcknowledgementIds is invalid')
+  }
+  const growth = (value as Record<string, unknown>).growth
+  if (growth !== undefined) {
+    assertGrowthState(growth)
   }
 }
 

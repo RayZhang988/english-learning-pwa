@@ -200,6 +200,24 @@ export {
   updateWrongAnswerReviewRoundSnapshot,
   wrongAnswerRecordId,
 } from './wrong-answer-library.ts'
+export {
+  applyGrowthTrainingCompleted,
+  applyGrowthEvent,
+  assertGrowthState,
+  createGrowthState,
+  getGrowthEligibility,
+  startGrowthUpgradeTest,
+  submitGrowthUpgradeAnswer,
+  migrateGrowthState,
+} from './growth.ts'
+export type {
+  DomainGrowthState,
+  GrowthEligibility,
+  GrowthEvent,
+  GrowthState,
+  GrowthTrainingSession,
+  GrowthUpgradeTestSnapshot,
+} from './growth.ts'
 export type {
   ApplyWrongAnswerEvidenceResult,
   StartWrongAnswerReviewRoundInput,
