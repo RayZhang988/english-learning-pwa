@@ -7,10 +7,25 @@ const writeMode = process.argv.includes('--write')
 const supplyPath = 'content/curriculum/training-supply-index.v1.json'
 const sceneIndexPath = 'content/curriculum/scene-vocabulary-question-bank-index.v1.json'
 const outputPath = 'content/curriculum/review-content-index.v1.json'
+const shardDirectory = 'content/curriculum/review-content-index.v1'
 
 const absolute = (relative) => path.join(root, relative)
 const readJson = (relative) => JSON.parse(fs.readFileSync(absolute(relative), 'utf8'))
 const assert = (condition, message) => { if (!condition) throw new Error(message) }
+
+function loadSupply() {
+  const root = readJson(supplyPath)
+  if (root.schemaVersion === 1 && Array.isArray(root.candidates)) return root
+  assert(root.schemaVersion === 2 && root.documentType === 'continuous-training-supply-manifest' && Array.isArray(root.shards), 'Training supply manifest is invalid.')
+  const candidates = root.shards.flatMap((descriptor) => {
+    assert(descriptor && typeof descriptor.path === 'string' && typeof descriptor.candidateCount === 'number', 'Training supply manifest shard is invalid.')
+    const shard = readJson(descriptor.path)
+    assert(shard.schemaVersion === 1 && shard.documentType === 'continuous-training-supply-shard' && Array.isArray(shard.candidates) && shard.candidates.length === descriptor.candidateCount, `${descriptor.path} is invalid.`)
+    return shard.candidates
+  })
+  assert(candidates.length === root.totals?.allCandidates, 'Training supply manifest count does not match shards.')
+  return { ...root, candidates }
+}
 
 function canonical(value) {
   if (Array.isArray(value)) return value.map(canonical)
@@ -27,6 +42,19 @@ function fingerprint(value) {
   }
   return `review-content-v1-${(hash >>> 0).toString(16).padStart(8, '0')}`
 }
+
+function shardRank(value) {
+  let hash = 0x811c9dc5
+  for (const character of `review-content-v2-shard|${value}`) {
+    hash ^= character.charCodeAt(0)
+    hash = Math.imul(hash, 0x01000193)
+  }
+  return hash >>> 0
+}
+
+function shardDigest(value) { return `fnv1a32-${shardRank(JSON.stringify(value)).toString(16).padStart(8, '0')}` }
+
+function shardPath(name) { return `${shardDirectory}/${name}.json` }
 
 /** IDs locate a released source; they are not scored content.  Removing them
  * here is what permits byte-for-byte equivalent questions from later banks to
@@ -146,7 +174,7 @@ function sceneEntry(questionId, maps) {
 
 function expectedIndex() {
   const maps = sourceMaps()
-  const supply = readJson(supplyPath)
+  const supply = loadSupply()
   const packageIndex = readJson('content/curriculum/package-index.v1.json')
   assert(packageIndex.reviewContentIndexFile === outputPath, 'Package index does not publish the review-content index.')
   assert(packageIndex.reviewContentIndexSchemaFile === 'content/curriculum/review-content-index.schema.v1.json', 'Package index does not publish the review-content schema.')
@@ -208,13 +236,61 @@ function expectedIndex() {
   }
 }
 
+function shardedReview(index) {
+  const groups = new Map()
+  for (const [alias, entry] of Object.entries(index.aliases)) {
+    const source = entry.source
+    let name
+    if (source.kind === 'daily-supply' && entry.domain === 'vocabulary') name = `vocabulary-${String(shardRank(source.itemId) % 16).padStart(2, '0')}`
+    else if (source.kind === 'daily-supply') name = entry.domain
+    else name = `scene-vocabulary-${String(shardRank(alias) % 4).padStart(2, '0')}`
+    if (!groups.has(name)) groups.set(name, {})
+    groups.get(name)[alias] = entry
+  }
+  const shards = [...groups.entries()].sort(([left], [right]) => left.localeCompare(right)).map(([name, aliases]) => {
+    const document = { schemaVersion: 1, documentType: 'review-content-index-shard', contentVersion: '1.1.0', shard: name, aliasCount: Object.keys(aliases).length, aliases }
+    return { path: shardPath(name), shard: name, aliasCount: document.aliasCount, digest: shardDigest(document), document }
+  })
+  return {
+    manifest: {
+      schemaVersion: 2,
+      documentType: 'review-content-index-manifest',
+      contentVersion: '1.1.0',
+      identityVersion: index.identityVersion,
+      totals: index.totals,
+      shardPolicy: { algorithm: 'daily vocabulary FNV-1a-32 stable item id modulo 16; scene aliases modulo 4; listening and speaking by domain', maximumRecommendedBytes: 768000 },
+      shards: shards.map(({ path, shard, aliasCount, digest }) => ({ path, shard, aliasCount, digest })),
+    },
+    shards,
+  }
+}
+
+function loadReleasedReview() {
+  const root = readJson(outputPath)
+  if (root.schemaVersion === 1 && root.documentType === 'review-content-index') return root
+  assert(root.schemaVersion === 2 && root.documentType === 'review-content-index-manifest' && Array.isArray(root.shards), 'Review index manifest is invalid.')
+  const aliases = {}
+  for (const descriptor of root.shards) {
+    const shard = readJson(descriptor.path)
+    assert(shard.schemaVersion === 1 && shard.documentType === 'review-content-index-shard' && shard.shard === descriptor.shard && shard.aliasCount === descriptor.aliasCount && shardDigest(shard) === descriptor.digest && Object.keys(shard.aliases).length === descriptor.aliasCount, `${descriptor.path} is invalid.`)
+    for (const [alias, entry] of Object.entries(shard.aliases)) { assert(!aliases[alias], `Duplicate review alias ${alias}`); aliases[alias] = entry }
+  }
+  assert(Object.keys(aliases).length === root.totals.allAliases, 'Review index shard count is incomplete.')
+  return { schemaVersion: 1, documentType: 'review-content-index', contentVersion: '1.0.0', aliases }
+}
+
 const expected = expectedIndex()
 // This production resource is precached for offline wrong-answer review. Keep
 // its deterministic content compact so a growing legitimate course does not
 // cross Workbox's 2 MiB per-asset ceiling merely because of indentation.
-if (writeMode) fs.writeFileSync(absolute(outputPath), `${JSON.stringify(expected)}\n`)
+if (writeMode) {
+  const released = shardedReview(expected)
+  fs.mkdirSync(absolute(shardDirectory), { recursive: true })
+  fs.writeFileSync(absolute(outputPath), `${JSON.stringify(released.manifest)}\n`)
+  for (const shard of released.shards) fs.writeFileSync(absolute(shard.path), `${JSON.stringify(shard.document)}\n`)
+}
 else {
-  const actual = readJson(outputPath)
-  assert(JSON.stringify(actual) === JSON.stringify(expected), `${outputPath} has drifted; run node ${path.relative(root, fileURLToPath(import.meta.url))} --write`)
+  const actual = loadReleasedReview()
+  assert(JSON.stringify(canonical(actual.aliases)) === JSON.stringify(canonical(expected.aliases)), `${outputPath} has drifted; run node ${path.relative(root, fileURLToPath(import.meta.url))} --write`)
 }
 console.log(`review-content index valid: ${expected.totals.allAliases} aliases, ${expected.totals.uniqueCanonicalContents} canonical contents, ${expected.totals.crossSourceSharedCanonicalContents} shared`)

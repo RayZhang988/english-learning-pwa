@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import reviewIndex from '../../../content/curriculum/review-content-index.v1.json'
-import trainingSupplyIndex from '../../../content/curriculum/training-supply-index.v1.json'
+import { loadReleasedReviewContentIndex } from '../../app/review-content-test-fixtures.ts'
+import trainingSupplyIndex from '../../../content/curriculum/training-supply-index.v1/listening.json'
 import packageIndex from '../../../content/curriculum/package-index.v1.json'
 import manifest from '../../../content/curriculum/survival-travel-american-4w.v1.json'
 import extensionIndex from '../../../content/curriculum/listening-exercise-extension-index.v1.json'
@@ -21,6 +21,7 @@ const catalog = createListeningCatalog({ packageIndex, manifest, extensionIndex,
   lessonsByPath: Object.fromEntries(packageIndex.lessonFiles.map((path, index) => [path, [week1, week2, week3, week4][index]! ])),
   exerciseBundlesByPath: { [extensionIndex.exerciseBundleFiles[0]!]: exercises }, bilingualChoiceOptions })
 const candidates = trainingSupplyIndex.candidates as readonly Record<string, unknown>[]
+const reviewIndex = await loadReleasedReviewContentIndex()
 const aliases = Object.entries(reviewIndex.aliases as unknown as Record<string, { reviewContentId: string; originalQuestionType: string; domain: string; source: { itemId: string } }>)
   .filter(([key, value]) => key.startsWith('daily:') && value.domain === 'listening')
 

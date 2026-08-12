@@ -2,6 +2,7 @@
 
 import { readFile } from 'node:fs/promises'
 import type { LearningTask } from '../../learning-engine/index.ts'
+import { loadReleasedTrainingSupplyIndex } from '../../app/training-supply-index.ts'
 import type {
   VocabularyContentDocuments,
   VocabularyTrainingUnit,
@@ -33,7 +34,11 @@ export async function loadActualVocabularyDocuments(): Promise<VocabularyContent
     manifest: await readJson(index.manifestFile),
     lessonsByPath,
     trainingSupplyIndex: index.trainingSupplyIndexFile
-      ? await readJson(index.trainingSupplyIndexFile)
+      ? await loadReleasedTrainingSupplyIndex(
+        index.trainingSupplyIndexFile,
+        'vocabulary',
+        readJson,
+      )
       : undefined,
   }
 }

@@ -1,7 +1,24 @@
 import packageIndex from '../../../content/curriculum/package-index.v1.json'
 import manifest from '../../../content/curriculum/survival-travel-american-4w.v1.json'
 import extensionIndex from '../../../content/curriculum/listening-exercise-extension-index.v1.json'
-import trainingSupplyIndex from '../../../content/curriculum/training-supply-index.v1.json'
+import listeningSupply from '../../../content/curriculum/training-supply-index.v1/listening.json'
+import speakingSupply from '../../../content/curriculum/training-supply-index.v1/speaking.json'
+import vocabulary00 from '../../../content/curriculum/training-supply-index.v1/vocabulary-00.json'
+import vocabulary01 from '../../../content/curriculum/training-supply-index.v1/vocabulary-01.json'
+import vocabulary02 from '../../../content/curriculum/training-supply-index.v1/vocabulary-02.json'
+import vocabulary03 from '../../../content/curriculum/training-supply-index.v1/vocabulary-03.json'
+import vocabulary04 from '../../../content/curriculum/training-supply-index.v1/vocabulary-04.json'
+import vocabulary05 from '../../../content/curriculum/training-supply-index.v1/vocabulary-05.json'
+import vocabulary06 from '../../../content/curriculum/training-supply-index.v1/vocabulary-06.json'
+import vocabulary07 from '../../../content/curriculum/training-supply-index.v1/vocabulary-07.json'
+import vocabulary08 from '../../../content/curriculum/training-supply-index.v1/vocabulary-08.json'
+import vocabulary09 from '../../../content/curriculum/training-supply-index.v1/vocabulary-09.json'
+import vocabulary10 from '../../../content/curriculum/training-supply-index.v1/vocabulary-10.json'
+import vocabulary11 from '../../../content/curriculum/training-supply-index.v1/vocabulary-11.json'
+import vocabulary12 from '../../../content/curriculum/training-supply-index.v1/vocabulary-12.json'
+import vocabulary13 from '../../../content/curriculum/training-supply-index.v1/vocabulary-13.json'
+import vocabulary14 from '../../../content/curriculum/training-supply-index.v1/vocabulary-14.json'
+import vocabulary15 from '../../../content/curriculum/training-supply-index.v1/vocabulary-15.json'
 import exercises from '../../../content/lessons/survival-travel-american-4w/listening-exercises.v1.json'
 import bilingualChoiceOptions from '../../../content/lessons/survival-travel-american-4w/listening-choice-bilingual-options.v1.json'
 import week1 from '../../../content/lessons/survival-travel-american-4w/week-1.v1.json'
@@ -19,6 +36,18 @@ import type {
   NamespaceStore,
   StoredRecord,
 } from '../../../src/storage/index.ts'
+
+const trainingSupplyIndex = {
+  schemaVersion: 1,
+  documentType: 'continuous-training-supply-index',
+  candidates: [
+    ...vocabulary00.candidates, ...vocabulary01.candidates, ...vocabulary02.candidates, ...vocabulary03.candidates,
+    ...vocabulary04.candidates, ...vocabulary05.candidates, ...vocabulary06.candidates, ...vocabulary07.candidates,
+    ...vocabulary08.candidates, ...vocabulary09.candidates, ...vocabulary10.candidates, ...vocabulary11.candidates,
+    ...vocabulary12.candidates, ...vocabulary13.candidates, ...vocabulary14.candidates, ...vocabulary15.candidates,
+    ...listeningSupply.candidates, ...speakingSupply.candidates,
+  ],
+}
 
 export class MemoryNamespaceStore implements NamespaceStore {
   readonly records = new Map<string, StoredRecord<unknown>>()

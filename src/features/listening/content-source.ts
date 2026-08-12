@@ -6,6 +6,7 @@ import {
 } from '../../pwa/index.ts'
 import { createListeningCatalog } from './content.ts'
 import { ListeningError } from './errors.ts'
+import { loadReleasedTrainingSupplyIndex } from '../../app/training-supply-index.ts'
 import type {
   ListeningCatalog,
   ListeningContentDocuments,
@@ -61,6 +62,10 @@ const CURRENT_ASSET_URLS: Readonly<Record<string, string>> = {
     ).href,
   [TRAINING_SUPPLY_INDEX_PATH]: new URL(
     '../../../content/curriculum/training-supply-index.v1.json',
+    import.meta.url,
+  ).href,
+  'content/curriculum/training-supply-index.v1/listening.json': new URL(
+    '../../../content/curriculum/training-supply-index.v1/listening.json',
     import.meta.url,
   ).href,
 }
@@ -230,7 +235,11 @@ export class CurrentListeningContentSource
       signal,
     )
     const trainingSupplyIndex = coreFiles.trainingSupplyIndexFile
-      ? await this.readJson(coreFiles.trainingSupplyIndexFile, signal)
+      ? await loadReleasedTrainingSupplyIndex(
+        coreFiles.trainingSupplyIndexFile,
+        'listening',
+        (path) => this.readJson(path, signal),
+      )
       : undefined
 
     const documents: ListeningContentDocuments = {

@@ -22,6 +22,7 @@ import { VocabularySessionRepository } from './repository.ts'
 import { VocabularyTrainingRuntime } from './runtime.ts'
 import type { VocabularySupplyProvider } from './supply.ts'
 import type { VocabularySupplyItem } from './types.ts'
+import { loadReleasedReviewContentIndex } from '../../app/review-content-test-fixtures.ts'
 import {
   loadActualVocabularyDocuments,
   vocabularyTaskFor,
@@ -199,7 +200,7 @@ describe('vocabulary training runtime', () => {
   })
 
   it('durably replays one failed daily wrong-answer evidence with the same identity', async () => {
-    const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments()); const item = (catalog.trainingSupplyIndex as { candidates: VocabularySupplyItem[] }).candidates.find((candidate) => candidate.domain === 'vocabulary')!; const index = JSON.parse(await (await import('node:fs/promises')).readFile(new URL('../../../content/curriculum/review-content-index.v1.json', import.meta.url), 'utf8')) as ReviewContentIndex
+    const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments()); const item = (catalog.trainingSupplyIndex as { candidates: VocabularySupplyItem[] }).candidates.find((candidate) => candidate.domain === 'vocabulary')!; const index = await loadReleasedReviewContentIndex() as ReviewContentIndex
     let state = createWrongAnswerLibraryState(); const seen: string[] = []; let fail = true
     const wrongSink: WrongAnswerEvidenceSink = { async publish(evidence: WrongAnswerEvidence) { seen.push(evidence.eventId); if (fail) { fail = false; throw new Error('wrong sink failed') }; state = applyWrongAnswerEvidence(state, evidence).state } }
     const store = new MemoryNamespaceStore(); const task = vocabularyTaskFor(catalog.units[0], { trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } }); const provider: VocabularySupplyProvider = { async next(request) { return { schemaVersion: 1, requestId: request.requestId, status: 'item', item, nextCursor: item.itemId } } }

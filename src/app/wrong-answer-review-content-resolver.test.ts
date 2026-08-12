@@ -1,26 +1,18 @@
 import { readFile } from 'node:fs/promises'
 import { describe, expect, it } from 'vitest'
-import { createListeningCatalog } from '../features/listening/index.ts'
-import { createSpeakingCatalog } from '../features/speaking/index.ts'
-import { createSceneVocabularyQuestionBank, createVocabularyCatalog } from '../features/vocabulary/index.ts'
+import { createSceneVocabularyQuestionBank } from '../features/vocabulary/index.ts'
 import type { WrongAnswerRecord } from '../learning-engine/index.ts'
-import type { ProductionReviewContentIndex } from './review-content-source.ts'
 import { ProductionWrongAnswerReviewContentResolver } from './wrong-answer-review-content-resolver.ts'
+import { releasedCatalogs } from '../../tests/qa/fixtures/production-course.ts'
+import { loadReleasedReviewContentIndex } from './review-content-test-fixtures.ts'
 
 const root = new URL('../../', import.meta.url)
 async function json(path: string): Promise<unknown> { return JSON.parse(await readFile(new URL(path, root), 'utf8')) as unknown }
 
 describe('R13-D production review resolver coverage', () => {
   it('resolves every one of the 3222 released aliases without probing answers', async () => {
-    const packageIndex = await json('content/curriculum/package-index.v1.json') as { lessonFiles: readonly string[] }
-    const manifest = await json('content/curriculum/survival-travel-american-4w.v1.json')
-    const trainingSupplyIndex = await json('content/curriculum/training-supply-index.v1.json')
-    const extensionIndex = await json('content/curriculum/listening-exercise-extension-index.v1.json') as { exerciseBundleFiles: readonly string[] }
-    const lessonsByPath = Object.fromEntries(await Promise.all(packageIndex.lessonFiles.map(async (path) => [path, await json(path)] as const)))
-    const vocabulary = createVocabularyCatalog({ packageIndex, manifest, trainingSupplyIndex, lessonsByPath } as never)
-    const listening = createListeningCatalog({ packageIndex, manifest, extensionIndex, trainingSupplyIndex, lessonsByPath, exerciseBundlesByPath: { [extensionIndex.exerciseBundleFiles[0]!]: await json('content/lessons/survival-travel-american-4w/listening-exercises.v1.json') }, bilingualChoiceOptions: await json('content/lessons/survival-travel-american-4w/listening-choice-bilingual-options.v1.json') } as never)
-    const speaking = createSpeakingCatalog({ packageIndex, manifest, trainingSupplyIndex, lessonsByPath } as never)
-    const index = await json('content/curriculum/review-content-index.v1.json') as ProductionReviewContentIndex
+    const { vocabulary, listening, speaking } = releasedCatalogs()
+    const index = await loadReleasedReviewContentIndex()
     const scene = createSceneVocabularyQuestionBank(await json('content/lessons/survival-travel-american-4w/scene-vocabulary-questions.v1.json'))
     const resolver = new ProductionWrongAnswerReviewContentResolver({ index: { load: async () => index }, vocabulary: { load: async () => vocabulary }, sceneVocabulary: { load: async () => scene }, listening: { load: async () => listening }, speaking: { load: async () => speaking } })
     const aliases = Object.values(index.aliases)

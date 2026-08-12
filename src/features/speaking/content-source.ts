@@ -6,6 +6,7 @@ import {
 } from '../../pwa/index.ts'
 import { createSpeakingCatalog } from './content.ts'
 import { SpeakingError } from './errors.ts'
+import { loadReleasedTrainingSupplyIndex } from '../../app/training-supply-index.ts'
 import type {
   SpeakingCatalog,
   SpeakingContentDocuments,
@@ -23,6 +24,10 @@ const CURRENT_ASSET_URLS: Readonly<Record<string, string>> = {
   ).href,
   'content/curriculum/training-supply-index.v1.json': new URL(
     '../../../content/curriculum/training-supply-index.v1.json',
+    import.meta.url,
+  ).href,
+  'content/curriculum/training-supply-index.v1/speaking.json': new URL(
+    '../../../content/curriculum/training-supply-index.v1/speaking.json',
     import.meta.url,
   ).href,
   'content/curriculum/survival-travel-american-4w.v1.json': new URL(
@@ -152,7 +157,11 @@ export class CurrentSpeakingContentSource
     const files = readPackageIndex(packageIndex)
     const manifest = await this.readJson(files.manifestFile, signal)
     const trainingSupplyIndex = files.trainingSupplyIndexFile
-      ? await this.readJson(files.trainingSupplyIndexFile, signal)
+      ? await loadReleasedTrainingSupplyIndex(
+        files.trainingSupplyIndexFile,
+        'speaking',
+        (path) => this.readJson(path, signal),
+      )
       : undefined
     const lessonsByPath: Record<string, unknown> = {}
     for (const path of files.lessonFiles) {

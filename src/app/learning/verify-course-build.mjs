@@ -74,6 +74,19 @@ const courseAssetFiles = expectedCourseAssets.map(
   },
 )
 
+const shardedCourseAssets = files.filter((fileName) =>
+  (fileName.startsWith('assets/vocabulary-') ||
+    fileName.startsWith('assets/listening-') ||
+    fileName.startsWith('assets/speaking-') ||
+    fileName.startsWith('assets/scene-vocabulary-')) &&
+  fileName.endsWith('.json'),
+)
+assert.ok(
+  shardedCourseAssets.length >= 40,
+  `Expected all supply/review shards to be emitted, found ${shardedCourseAssets.length}.`,
+)
+courseAssetFiles.push(...shardedCourseAssets)
+
 const packageIndexAssetFile = courseAssetFiles.find((fileName) =>
   fileName.startsWith('content/curriculum/package-index.v1-'),
 )

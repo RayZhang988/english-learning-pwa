@@ -6,6 +6,7 @@ import {
 } from '../../pwa/index.ts'
 import { createVocabularyCatalog } from './content.ts'
 import { VocabularyError } from './errors.ts'
+import { loadReleasedTrainingSupplyIndex } from '../../app/training-supply-index.ts'
 import type {
   VocabularyCatalog,
   VocabularyContentDocuments,
@@ -16,6 +17,13 @@ export const VOCABULARY_CONTENT_PACKAGE_ID =
 export const VOCABULARY_CONTENT_PACKAGE_VERSION = '1.0.0'
 
 const PACKAGE_INDEX_PATH = 'content/curriculum/package-index.v1.json'
+const SUPPLY_SHARD_ASSET_URLS: Readonly<Record<string, string>> = Object.fromEntries(
+  Array.from({ length: 16 }, (_, bucket) => {
+    const suffix = String(bucket).padStart(2, '0')
+    const path = `content/curriculum/training-supply-index.v1/vocabulary-${suffix}.json`
+    return [path, new URL(`../../../content/curriculum/training-supply-index.v1/vocabulary-${suffix}.json`, import.meta.url).href]
+  }),
+)
 const CURRENT_PACKAGE_ASSET_URLS: Readonly<Record<string, string>> = {
   [PACKAGE_INDEX_PATH]: new URL(
     '../../../content/curriculum/package-index.v1.json',
@@ -29,6 +37,7 @@ const CURRENT_PACKAGE_ASSET_URLS: Readonly<Record<string, string>> = {
     '../../../content/curriculum/training-supply-index.v1.json',
     import.meta.url,
   ).href,
+  ...SUPPLY_SHARD_ASSET_URLS,
   'content/lessons/survival-travel-american-4w/week-1.v1.json': new URL(
     '../../../content/lessons/survival-travel-american-4w/week-1.v1.json',
     import.meta.url,
@@ -168,7 +177,11 @@ export class CurrentVocabularyContentSource
       manifest,
       lessonsByPath,
       trainingSupplyIndex: packageFiles.trainingSupplyIndexFile
-        ? await this.readJson(packageFiles.trainingSupplyIndexFile, signal)
+        ? await loadReleasedTrainingSupplyIndex(
+          packageFiles.trainingSupplyIndexFile,
+          'vocabulary',
+          (path) => this.readJson(path, signal),
+        )
         : undefined,
     }
     return createVocabularyCatalog(documents)

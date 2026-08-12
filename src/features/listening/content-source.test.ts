@@ -66,7 +66,7 @@ describe('current listening content source', () => {
 
     expect(installed.packageId).toBe(LISTENING_CONTENT_PACKAGE_ID)
     expect(installed.version).toBe(LISTENING_CONTENT_PACKAGE_VERSION)
-    expect(installed.assets).toHaveLength(10)
-    expect(new Set(installed.assets.map((asset) => asset.url)).size).toBe(10)
+    expect(installed.assets).toHaveLength(11)
+    expect(new Set(installed.assets.map((asset) => asset.url)).size).toBe(11)
   })
 })

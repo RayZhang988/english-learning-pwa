@@ -6,6 +6,7 @@ const root = fileURLToPath(new URL('../../', import.meta.url))
 const writeMode = process.argv.includes('--write')
 const packageIndexPath = 'content/curriculum/package-index.v1.json'
 const supplyIndexPath = 'content/curriculum/training-supply-index.v1.json'
+const supplyShardDirectory = 'content/curriculum/training-supply-index.v1'
 const extensionIndexPath =
   'content/curriculum/listening-exercise-extension-index.v1.json'
 const durationRulesPath =
@@ -24,7 +25,12 @@ function readJson(relativePath) {
 function writeJson(relativePath, value) {
   // The released index is precached for offline training. Compact output keeps
   // growing valid course content under Workbox's per-asset cache limit.
-  fs.writeFileSync(absolute(relativePath), `${JSON.stringify(value)}\n`)
+  const target = absolute(relativePath)
+  fs.mkdirSync(path.dirname(target), { recursive: true })
+  const text = relativePath === packageIndexPath
+    ? JSON.stringify(value, null, 2)
+    : JSON.stringify(value)
+  fs.writeFileSync(target, `${text}\n`)
 }
 
 function assert(condition, message) {
@@ -35,6 +41,12 @@ function assert(condition, message) {
 
 function deepEqual(left, right) {
   return JSON.stringify(left) === JSON.stringify(right)
+}
+
+function canonical(value) {
+  if (Array.isArray(value)) return value.map(canonical)
+  if (value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort().map((key) => [key, canonical(value[key])]))
+  return value
 }
 
 function normalizedEnglishKnowledge(value) {
@@ -66,6 +78,94 @@ function deterministicRank(seed, value) {
     hash = Math.imul(hash, 0x01000193)
   }
   return hash >>> 0
+}
+
+// Keep the released resources small enough for offline precache.  This is
+// deliberately based on the stable item id rather than insertion order, so
+// adding a later course batch never changes an existing item's shard.
+function shardBucket(itemId, count = 16) {
+  return deterministicRank('training-supply-v2-shard', itemId) % count
+}
+
+function digest(value) {
+  return `fnv1a32-${deterministicRank('training-supply-v2-digest', JSON.stringify(value)).toString(16).padStart(8, '0')}`
+}
+
+function supplyShardPath(domain, bucket = null) {
+  const suffix = bucket === null ? domain : `${domain}-${String(bucket).padStart(2, '0')}`
+  return `${supplyShardDirectory}/${suffix}.json`
+}
+
+function shardedSupply(expected) {
+  const groups = []
+  for (let bucket = 0; bucket < 16; bucket += 1) {
+    const candidates = expected.candidates.filter((candidate) => candidate.domain === 'vocabulary' && shardBucket(candidate.itemId) === bucket)
+    if (candidates.length) groups.push({ domain: 'vocabulary', bucket, candidates })
+  }
+  for (const domain of ['listening', 'speaking']) {
+    const candidates = expected.candidates.filter((candidate) => candidate.domain === domain)
+    groups.push({ domain, bucket: null, candidates })
+  }
+  const shards = groups.map(({ domain, bucket, candidates }) => {
+    const document = {
+      schemaVersion: 1,
+      documentType: 'continuous-training-supply-shard',
+      supplyVersion: '1.3.0',
+      domain,
+      bucket,
+      candidateCount: candidates.length,
+      candidates,
+    }
+    return { path: supplyShardPath(domain, bucket), domain, bucket, candidateCount: candidates.length, digest: digest(document), document }
+  })
+  const manifest = {
+    schemaVersion: 2,
+    documentType: 'continuous-training-supply-manifest',
+    supplyVersion: '1.3.0',
+    baseCourseId: expected.baseCourseId,
+    basePackageVersion: expected.basePackageVersion,
+    basePackageIndex: expected.basePackageIndex,
+    targetLocale: expected.targetLocale,
+    supplyPolicy: expected.supplyPolicy,
+    capacityPolicy: expected.capacityPolicy,
+    totals: expected.totals,
+    shardPolicy: { algorithm: 'fnv1a32(stable item id) modulo 16 for vocabulary; one shard per other domain', maximumRecommendedBytes: 768000 },
+    shards: shards.map(({ path, domain, bucket, candidateCount, digest: shardDigest }) => ({ path, domain, bucket, candidateCount, digest: shardDigest })),
+  }
+  return { manifest, shards }
+}
+
+function loadReleasedSupply() {
+  const root = readJson(supplyIndexPath)
+  if (root.schemaVersion === 1 && Array.isArray(root.candidates)) return root
+  assert(root.schemaVersion === 2 && root.documentType === 'continuous-training-supply-manifest' && Array.isArray(root.shards), 'Training supply manifest is invalid.')
+  const shards = root.shards.map((descriptor) => {
+    assert(descriptor && typeof descriptor.path === 'string' && typeof descriptor.digest === 'string', 'Training supply manifest has invalid shard metadata.')
+    const shard = readJson(descriptor.path)
+    assert(shard.schemaVersion === 1 && shard.documentType === 'continuous-training-supply-shard' && Array.isArray(shard.candidates), `${descriptor.path} is invalid.`)
+    assert(shard.domain === descriptor.domain && shard.bucket === descriptor.bucket && shard.candidateCount === descriptor.candidateCount && digest(shard) === descriptor.digest, `${descriptor.path} failed integrity validation.`)
+    return shard
+  })
+  const candidates = shards.flatMap((shard) => shard.candidates).sort((left, right) =>
+    domains.indexOf(left.domain) - domains.indexOf(right.domain) ||
+    left.supplyOrder - right.supplyOrder ||
+    left.itemId.localeCompare(right.itemId),
+  )
+  assert(candidates.length === root.totals.allCandidates, 'Training supply shard count does not match manifest.')
+  assert(new Set(candidates.map((candidate) => candidate.itemId)).size === candidates.length, 'Training supply shards contain duplicate item ids.')
+  return {
+    schemaVersion: 1,
+    documentType: 'continuous-training-supply-index',
+    supplyVersion: '1.3.0',
+    baseCourseId: root.baseCourseId,
+    basePackageVersion: root.basePackageVersion,
+    basePackageIndex: root.basePackageIndex,
+    targetLocale: root.targetLocale,
+    supplyPolicy: root.supplyPolicy,
+    capacityPolicy: root.capacityPolicy,
+    totals: root.totals,
+    candidates,
+  }
 }
 
 function vocabularyDifficulty(source) {
@@ -374,7 +474,7 @@ function expectedIndex() {
   return {
     schemaVersion: 1,
     documentType: 'continuous-training-supply-index',
-    supplyVersion: '1.2.0',
+    supplyVersion: '1.3.0',
     baseCourseId: packageIndex.courseId,
     basePackageVersion: packageIndex.packageVersion,
     basePackageIndex: packageIndexPath,
@@ -714,15 +814,17 @@ assertVocabularyDistractorPolicy()
 const expected = expectedIndex()
 const vocabularyQuestionFaceCount = assertVocabularyQuestionFaces(expected)
 if (writeMode) {
-  writeJson(supplyIndexPath, expected)
+  const released = shardedSupply(expected)
+  writeJson(supplyIndexPath, released.manifest)
+  for (const shard of released.shards) writeJson(shard.path, shard.document)
   packageIndex.trainingSupplyTotals = expected.totals
   writeJson(packageIndexPath, packageIndex)
-  console.log(JSON.stringify({ mode: 'write', supplyIndexPath, totals: expected.totals, vocabularyQuestionFaces: vocabularyQuestionFaceCount, vocabularyQuestionFaceConflicts: 0 }, null, 2))
+  console.log(JSON.stringify({ mode: 'write', supplyIndexPath, shards: released.shards.map(({ path, candidateCount }) => ({ path, candidateCount })), totals: expected.totals, vocabularyQuestionFaces: vocabularyQuestionFaceCount, vocabularyQuestionFaceConflicts: 0 }, null, 2))
   process.exit(0)
 }
 
-const observed = readJson(supplyIndexPath)
-assert(deepEqual(observed, expected), 'Training supply index has drifted from released content facts.')
+const observed = loadReleasedSupply()
+assert(deepEqual(canonical(observed), canonical(expected)), 'Training supply index has drifted from released content facts.')
 assertSelectionContract(observed)
 assertExhaustionContract(observed)
 assertExtraTrainingPriorityContract(observed)

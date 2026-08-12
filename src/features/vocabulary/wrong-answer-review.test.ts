@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { readFile } from 'node:fs/promises'
+import { loadReleasedReviewContentIndex } from '../../app/review-content-test-fixtures.ts'
 import { createVocabularyCatalog } from './content.ts'
 import { loadActualVocabularyDocuments } from './test-fixtures.ts'
 import { createSceneVocabularyQuestionBank } from './scene-vocabulary-practice.ts'
@@ -30,10 +31,9 @@ describe('R13-D vocabulary review content', () => {
   })
   it('strictly resolves every released 05 daily and scene alias against released sources', async () => {
     const root = new URL('../../../', import.meta.url)
-    const releasedIndex = JSON.parse(await readFile(new URL('content/curriculum/review-content-index.v1.json', root), 'utf8')) as typeof index
-    const supplyIndex = JSON.parse(await readFile(new URL('content/curriculum/training-supply-index.v1.json', root), 'utf8')) as { candidates: readonly VocabularySupplyItem[] }
+    const releasedIndex = await loadReleasedReviewContentIndex() as typeof index
     const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
-    const daily = supplyIndex.candidates.filter((candidate) => candidate.domain === 'vocabulary')
+    const daily = (catalog.trainingSupplyIndex as { candidates: readonly VocabularySupplyItem[] }).candidates.filter((candidate) => candidate.domain === 'vocabulary')
     expect(daily).toHaveLength(2235)
     for (const candidate of daily) {
       const resolved = resolveDailyVocabularyReviewContent(releasedIndex, candidate, catalog)

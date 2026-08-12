@@ -69,7 +69,7 @@ describe('current vocabulary content source', () => {
 
     expect(installed.packageId).toBe(VOCABULARY_CONTENT_PACKAGE_ID)
     expect(installed.version).toBe(VOCABULARY_CONTENT_PACKAGE_VERSION)
-    expect(installed.assets).toHaveLength(7)
-    expect(new Set(installed.assets.map((asset) => asset.url)).size).toBe(7)
+    expect(installed.assets).toHaveLength(23)
+    expect(new Set(installed.assets.map((asset) => asset.url)).size).toBe(23)
   })
 })

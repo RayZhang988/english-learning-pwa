@@ -1,10 +1,10 @@
-import { readFile } from 'node:fs/promises'
 import { describe, expect, it, vi } from 'vitest'
 import type { WrongAnswerEvidence } from '../learning-engine/index.ts'
 import type { ProductionReviewContentIndex } from './review-content-source.ts'
 import { ProductionWrongAnswerEvidencePorts } from './wrong-answer-evidence-production.ts'
+import { loadReleasedReviewContentIndex } from './review-content-test-fixtures.ts'
 
-async function index(): Promise<ProductionReviewContentIndex> { return JSON.parse(await readFile(new URL('../../content/curriculum/review-content-index.v1.json', import.meta.url), 'utf8')) as ProductionReviewContentIndex }
+async function index(): Promise<ProductionReviewContentIndex> { return loadReleasedReviewContentIndex() }
 const evidence = (source: WrongAnswerEvidence['source']): WrongAnswerEvidence => ({ schemaVersion: 1, eventId: `e-${source}`, reviewContentId: 'r', originalQuestionType: 'choice', domain: 'vocabulary', source, outcome: 'incorrect', formallyScored: true, occurredAt: '2026-08-10T00:00:00.000Z' })
 
 describe('01 unified wrong-answer producer composition', () => {
