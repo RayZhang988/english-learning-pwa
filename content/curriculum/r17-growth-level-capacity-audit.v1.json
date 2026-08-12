@@ -5,7 +5,7 @@
   "source": {
     "supplyPath": "content/curriculum/training-supply-index.v1.json",
     "supplyVersion": "1.2.0",
-    "totalPublishedCandidates": 864
+    "totalPublishedCandidates": 1347
   },
   "scope": {
     "included": "Only published continuous daily/R6 learn-mode candidates with a stable itemId and scoreable source identity.",
@@ -159,12 +159,12 @@
   },
   "domains": {
     "vocabulary": {
-      "uniqueScorableItemCount": 489,
-      "uniqueSourcePromptCount": 163,
+      "uniqueScorableItemCount": 972,
+      "uniqueSourcePromptCount": 324,
       "questionTypes": {
-        "example-gap-choice": 163,
-        "meaning-to-term-choice": 163,
-        "term-to-meaning-choice": 163
+        "example-gap-choice": 324,
+        "meaning-to-term-choice": 324,
+        "term-to-meaning-choice": 324
       },
       "levels": [
         {
@@ -195,19 +195,19 @@
           "minimumDifficulty": 0.5,
           "maximumDifficultyExclusive": 1,
           "isUpgradeTarget": true,
-          "uniqueScorableItemCount": 15,
-          "uniqueSourcePromptCount": 5,
+          "uniqueScorableItemCount": 60,
+          "uniqueSourcePromptCount": 20,
           "questionTypes": {
-            "example-gap-choice": 5,
-            "meaning-to-term-choice": 5,
-            "term-to-meaning-choice": 5
+            "example-gap-choice": 20,
+            "meaning-to-term-choice": 20,
+            "term-to-meaning-choice": 20
           },
           "missingQuestionTypes": [],
           "minimumUpgradeTestCapacity": 10,
           "recommendedShortTermDedupCapacity": 20,
-          "missingForUpgradeTest": 5,
-          "missingForRecommendedDedup": 15,
-          "status": "blocked"
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 0,
+          "status": "recommended-capacity-met"
         },
         {
           "ordinal": 2,
@@ -216,19 +216,19 @@
           "minimumDifficulty": 1,
           "maximumDifficultyExclusive": 1.5,
           "isUpgradeTarget": true,
-          "uniqueScorableItemCount": 39,
-          "uniqueSourcePromptCount": 13,
+          "uniqueScorableItemCount": 60,
+          "uniqueSourcePromptCount": 20,
           "questionTypes": {
-            "example-gap-choice": 13,
-            "meaning-to-term-choice": 13,
-            "term-to-meaning-choice": 13
+            "example-gap-choice": 20,
+            "meaning-to-term-choice": 20,
+            "term-to-meaning-choice": 20
           },
           "missingQuestionTypes": [],
           "minimumUpgradeTestCapacity": 10,
           "recommendedShortTermDedupCapacity": 20,
           "missingForUpgradeTest": 0,
-          "missingForRecommendedDedup": 7,
-          "status": "minimum-only"
+          "missingForRecommendedDedup": 0,
+          "status": "recommended-capacity-met"
         },
         {
           "ordinal": 3,
@@ -237,19 +237,19 @@
           "minimumDifficulty": 1.5,
           "maximumDifficultyExclusive": 2,
           "isUpgradeTarget": true,
-          "uniqueScorableItemCount": 42,
-          "uniqueSourcePromptCount": 14,
+          "uniqueScorableItemCount": 60,
+          "uniqueSourcePromptCount": 20,
           "questionTypes": {
-            "example-gap-choice": 14,
-            "meaning-to-term-choice": 14,
-            "term-to-meaning-choice": 14
+            "example-gap-choice": 20,
+            "meaning-to-term-choice": 20,
+            "term-to-meaning-choice": 20
           },
           "missingQuestionTypes": [],
           "minimumUpgradeTestCapacity": 10,
           "recommendedShortTermDedupCapacity": 20,
           "missingForUpgradeTest": 0,
-          "missingForRecommendedDedup": 6,
-          "status": "minimum-only"
+          "missingForRecommendedDedup": 0,
+          "status": "recommended-capacity-met"
         },
         {
           "ordinal": 4,
@@ -321,19 +321,19 @@
           "minimumDifficulty": 3.5,
           "maximumDifficultyExclusive": 4,
           "isUpgradeTarget": true,
-          "uniqueScorableItemCount": 30,
-          "uniqueSourcePromptCount": 10,
+          "uniqueScorableItemCount": 60,
+          "uniqueSourcePromptCount": 20,
           "questionTypes": {
-            "example-gap-choice": 10,
-            "meaning-to-term-choice": 10,
-            "term-to-meaning-choice": 10
+            "example-gap-choice": 20,
+            "meaning-to-term-choice": 20,
+            "term-to-meaning-choice": 20
           },
           "missingQuestionTypes": [],
           "minimumUpgradeTestCapacity": 10,
           "recommendedShortTermDedupCapacity": 20,
           "missingForUpgradeTest": 0,
-          "missingForRecommendedDedup": 10,
-          "status": "minimum-only"
+          "missingForRecommendedDedup": 0,
+          "status": "recommended-capacity-met"
         },
         {
           "ordinal": 8,
@@ -342,19 +342,19 @@
           "minimumDifficulty": 4,
           "maximumDifficultyExclusive": 4.5,
           "isUpgradeTarget": true,
-          "uniqueScorableItemCount": 12,
-          "uniqueSourcePromptCount": 4,
+          "uniqueScorableItemCount": 60,
+          "uniqueSourcePromptCount": 20,
           "questionTypes": {
-            "example-gap-choice": 4,
-            "meaning-to-term-choice": 4,
-            "term-to-meaning-choice": 4
+            "example-gap-choice": 20,
+            "meaning-to-term-choice": 20,
+            "term-to-meaning-choice": 20
           },
           "missingQuestionTypes": [],
           "minimumUpgradeTestCapacity": 10,
           "recommendedShortTermDedupCapacity": 20,
-          "missingForUpgradeTest": 6,
-          "missingForRecommendedDedup": 16,
-          "status": "blocked"
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 0,
+          "status": "recommended-capacity-met"
         },
         {
           "ordinal": 9,
@@ -363,19 +363,19 @@
           "minimumDifficulty": 4.5,
           "maximumDifficultyExclusive": 5,
           "isUpgradeTarget": true,
-          "uniqueScorableItemCount": 12,
-          "uniqueSourcePromptCount": 4,
+          "uniqueScorableItemCount": 60,
+          "uniqueSourcePromptCount": 20,
           "questionTypes": {
-            "example-gap-choice": 4,
-            "meaning-to-term-choice": 4,
-            "term-to-meaning-choice": 4
+            "example-gap-choice": 20,
+            "meaning-to-term-choice": 20,
+            "term-to-meaning-choice": 20
           },
           "missingQuestionTypes": [],
           "minimumUpgradeTestCapacity": 10,
           "recommendedShortTermDedupCapacity": 20,
-          "missingForUpgradeTest": 6,
-          "missingForRecommendedDedup": 16,
-          "status": "blocked"
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 0,
+          "status": "recommended-capacity-met"
         },
         {
           "ordinal": 10,
@@ -384,19 +384,19 @@
           "minimumDifficulty": 5,
           "maximumDifficultyExclusive": 5.5,
           "isUpgradeTarget": true,
-          "uniqueScorableItemCount": 27,
-          "uniqueSourcePromptCount": 9,
+          "uniqueScorableItemCount": 60,
+          "uniqueSourcePromptCount": 20,
           "questionTypes": {
-            "example-gap-choice": 9,
-            "meaning-to-term-choice": 9,
-            "term-to-meaning-choice": 9
+            "example-gap-choice": 20,
+            "meaning-to-term-choice": 20,
+            "term-to-meaning-choice": 20
           },
           "missingQuestionTypes": [],
           "minimumUpgradeTestCapacity": 10,
           "recommendedShortTermDedupCapacity": 20,
-          "missingForUpgradeTest": 1,
-          "missingForRecommendedDedup": 11,
-          "status": "blocked"
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 0,
+          "status": "recommended-capacity-met"
         },
         {
           "ordinal": 11,
@@ -405,19 +405,19 @@
           "minimumDifficulty": 5.5,
           "maximumDifficultyExclusive": 6,
           "isUpgradeTarget": true,
-          "uniqueScorableItemCount": 0,
-          "uniqueSourcePromptCount": 0,
-          "questionTypes": {},
-          "missingQuestionTypes": [
-            "term-to-meaning-choice",
-            "meaning-to-term-choice",
-            "example-gap-choice"
-          ],
+          "uniqueScorableItemCount": 60,
+          "uniqueSourcePromptCount": 20,
+          "questionTypes": {
+            "example-gap-choice": 20,
+            "meaning-to-term-choice": 20,
+            "term-to-meaning-choice": 20
+          },
+          "missingQuestionTypes": [],
           "minimumUpgradeTestCapacity": 10,
           "recommendedShortTermDedupCapacity": 20,
-          "missingForUpgradeTest": 10,
-          "missingForRecommendedDedup": 20,
-          "status": "blocked"
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 0,
+          "status": "recommended-capacity-met"
         },
         {
           "ordinal": 12,
@@ -426,19 +426,19 @@
           "minimumDifficulty": 6,
           "maximumDifficultyExclusive": 7,
           "isUpgradeTarget": true,
-          "uniqueScorableItemCount": 0,
-          "uniqueSourcePromptCount": 0,
-          "questionTypes": {},
-          "missingQuestionTypes": [
-            "term-to-meaning-choice",
-            "meaning-to-term-choice",
-            "example-gap-choice"
-          ],
+          "uniqueScorableItemCount": 60,
+          "uniqueSourcePromptCount": 20,
+          "questionTypes": {
+            "example-gap-choice": 20,
+            "meaning-to-term-choice": 20,
+            "term-to-meaning-choice": 20
+          },
+          "missingQuestionTypes": [],
           "minimumUpgradeTestCapacity": 10,
           "recommendedShortTermDedupCapacity": 20,
-          "missingForUpgradeTest": 10,
-          "missingForRecommendedDedup": 20,
-          "status": "blocked"
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 0,
+          "status": "recommended-capacity-met"
         },
         {
           "ordinal": 13,
@@ -447,19 +447,19 @@
           "minimumDifficulty": 7,
           "maximumDifficultyExclusive": 8,
           "isUpgradeTarget": true,
-          "uniqueScorableItemCount": 0,
-          "uniqueSourcePromptCount": 0,
-          "questionTypes": {},
-          "missingQuestionTypes": [
-            "term-to-meaning-choice",
-            "meaning-to-term-choice",
-            "example-gap-choice"
-          ],
+          "uniqueScorableItemCount": 60,
+          "uniqueSourcePromptCount": 20,
+          "questionTypes": {
+            "example-gap-choice": 20,
+            "meaning-to-term-choice": 20,
+            "term-to-meaning-choice": 20
+          },
+          "missingQuestionTypes": [],
           "minimumUpgradeTestCapacity": 10,
           "recommendedShortTermDedupCapacity": 20,
-          "missingForUpgradeTest": 10,
-          "missingForRecommendedDedup": 20,
-          "status": "blocked"
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 0,
+          "status": "recommended-capacity-met"
         },
         {
           "ordinal": 14,
@@ -468,19 +468,19 @@
           "minimumDifficulty": 8,
           "maximumDifficultyExclusive": null,
           "isUpgradeTarget": true,
-          "uniqueScorableItemCount": 0,
-          "uniqueSourcePromptCount": 0,
-          "questionTypes": {},
-          "missingQuestionTypes": [
-            "term-to-meaning-choice",
-            "meaning-to-term-choice",
-            "example-gap-choice"
-          ],
+          "uniqueScorableItemCount": 60,
+          "uniqueSourcePromptCount": 20,
+          "questionTypes": {
+            "example-gap-choice": 20,
+            "meaning-to-term-choice": 20,
+            "term-to-meaning-choice": 20
+          },
+          "missingQuestionTypes": [],
           "minimumUpgradeTestCapacity": 10,
           "recommendedShortTermDedupCapacity": 20,
-          "missingForUpgradeTest": 10,
-          "missingForRecommendedDedup": 20,
-          "status": "blocked"
+          "missingForUpgradeTest": 0,
+          "missingForRecommendedDedup": 0,
+          "status": "recommended-capacity-met"
         }
       ]
     },
