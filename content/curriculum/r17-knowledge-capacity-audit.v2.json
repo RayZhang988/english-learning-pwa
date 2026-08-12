@@ -5,7 +5,7 @@
   "source": {
     "packageIndexPath": "content/curriculum/package-index.v1.json",
     "sceneIndexPath": "content/curriculum/scene-vocabulary-question-bank-index.v1.json",
-    "dailyVocabularySourceCount": 1208,
+    "dailyVocabularySourceCount": 1264,
     "sceneQuestionCount": 612
   },
   "identityBoundary": {
@@ -43,8 +43,8 @@
     "rule": "Only daily vocabulary capacity is calculated by this audit. Listening and speaking remain in R17 scope but are not expanded by this vocabulary capacity batch."
   },
   "current": {
-    "dailyKnowledgePointCount": 1203,
-    "dailyLexicalFormCount": 1189,
+    "dailyKnowledgePointCount": 1259,
+    "dailyLexicalFormCount": 1245,
     "sceneQuestionCount": 612,
     "sceneLexicalFormCount": 554,
     "sceneIndependentKnowledgeCount": 573,
@@ -442,9 +442,9 @@
         "labelZh": "五年级",
         "minimumDifficulty": 2.5,
         "maximumDifficultyExclusive": 3,
-        "currentDailyKnowledgePoints": 144,
+        "currentDailyKnowledgePoints": 200,
         "targetDailyKnowledgePoints": 200,
-        "missingDailyKnowledgePoints": 56
+        "missingDailyKnowledgePoints": 0
       },
       {
         "ordinal": 6,
@@ -15684,6 +15684,510 @@
       "lexicalForm": "i need to know whom to call if the shuttle does not arrive",
       "meaningZh": "我需要知道接驳车没来时该打给谁。",
       "dailyKnowledgeId": "daily-knowledge-v1:phrase:1c971014",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-001",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you explain the difference between a refund and a travel credit",
+      "meaningZh": "您能解释退款和旅行抵用金的区别吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:9a7cb2f0",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-002",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i need to know whether the credit expires before i can use it",
+      "meaningZh": "我需要知道抵用金是否会在我使用前过期。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:2b182e79",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-003",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you reissue the ticket under the corrected name",
+      "meaningZh": "您能以更正后的姓名重新出票吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:5b96e0e3",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-004",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i would prefer to keep the same itinerary if possible",
+      "meaningZh": "如果可以，我更希望保留相同行程。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:ba1b4ada",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-005",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you tell me which airport has the shorter transfer time",
+      "meaningZh": "您能告诉我哪个机场的转机时间更短吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:993189cc",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-006",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i need confirmation that my request was added to the reservation",
+      "meaningZh": "我需要确认我的请求已添加到预订中。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:cd3802b6",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-007",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you explain why the luggage delivery estimate changed",
+      "meaningZh": "您能解释为什么行李递送预计时间变了吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:44f0316f",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-008",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i need to know whether i can buy essentials while my bag is missing",
+      "meaningZh": "我需要知道行李丢失期间是否可以购买必需品。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:67db323a",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-009",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you provide a written record of the baggage report",
+      "meaningZh": "您能提供行李报告的书面记录吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:951ddc67",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-010",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i would accept a room change if you can move my luggage",
+      "meaningZh": "如果您能搬运行李，我可以接受换房。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:ccf1a86b",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-011",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you waive the charge because the room was not usable",
+      "meaningZh": "因为房间不能使用，您能免除收费吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:99711b13",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-012",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i need to know whether the hotel can hold my reservation after a flight delay",
+      "meaningZh": "我需要知道航班延误后酒店是否能保留我的预订。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:59582045",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-013",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you arrange transportation if the shuttle service has ended",
+      "meaningZh": "如果班车服务结束，您能安排交通吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:5fe46afe",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-014",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i would prefer breakfast to be packed because i leave early",
+      "meaningZh": "因为我早走，我更希望早餐打包。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:bdc4d47c",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-015",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you explain whether the room rate changes on the weekend",
+      "meaningZh": "您能解释周末房价是否会变化吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:9d861467",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-016",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i need a copy of the policy before i agree to the charge",
+      "meaningZh": "同意收费前我需要一份政策副本。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:0c425238",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-017",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you ask the manager to review the incorrect charge",
+      "meaningZh": "您能请经理审核错误收费吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:4e5d3622",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-018",
+      "lexicalKind": "phrase",
+      "lexicalForm": "the replacement meal still does not meet the allergy request",
+      "meaningZh": "更换的餐点仍不符合过敏要求。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:964e925a",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-019",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you tell me which dishes can be prepared without dairy",
+      "meaningZh": "您能告诉我哪些菜可以不含乳制品吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:1295628e",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-020",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i would like to choose a quieter table even if it takes longer",
+      "meaningZh": "即使需要等更久，我也想选安静一点的桌子。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:088c5e4b",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-021",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you split the payment between cash and a card",
+      "meaningZh": "您能把付款分成现金和银行卡吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:65548432",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-022",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i need to know whether a service charge is optional",
+      "meaningZh": "我需要知道服务费是否可选。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:5d6ac581",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-023",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you explain why the reservation was canceled without notice",
+      "meaningZh": "您能解释为什么预订未经通知就被取消了吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:598f3a8d",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-024",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i need another option because the accessible entrance is closed",
+      "meaningZh": "因为无障碍入口关闭，我需要另一个选项。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:d0ee319e",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-025",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you tell me whether the elevator is working at this station",
+      "meaningZh": "您能告诉我这个车站的电梯是否正常吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:54f9d6ef",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-026",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i would rather change trains than wait for an hour",
+      "meaningZh": "我宁愿换乘火车，也不想等一个小时。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:8fb37079",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-027",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you confirm whether my transfer requires a new ticket",
+      "meaningZh": "您能确认我的换乘是否需要新票吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:2bbcd5c8",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-028",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i need to know how far the taxi stand is from this exit",
+      "meaningZh": "我需要知道出租车站离这个出口有多远。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:e2ff5b8a",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-029",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you explain why the ride estimate increased",
+      "meaningZh": "您能解释为什么车费预估增加了吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:ab9f02d4",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-030",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i would prefer a driver who can help with the stroller",
+      "meaningZh": "我更希望司机能帮忙搬婴儿车。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:949c4938",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-031",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you change the pickup location to the main entrance",
+      "meaningZh": "您能把接车地点改到主入口吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:d4d36f8b",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-032",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i need to know whether the ferry operates in bad weather",
+      "meaningZh": "我需要知道渡轮在恶劣天气下是否运营。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:156e8ecf",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-033",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you tell me if there is a reduced price for a return ticket",
+      "meaningZh": "您能告诉我往返票是否有优惠价吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:ce6614d9",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-034",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i would choose the guided visit if it includes admission",
+      "meaningZh": "如果包含门票，我会选择导览参观。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:7c4653d3",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-035",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you explain the rule about bringing a camera inside",
+      "meaningZh": "您能解释携带相机进入的规定吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:dc79689e",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-036",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i need to know whether the exhibit is suitable for young children",
+      "meaningZh": "我需要知道展览是否适合幼儿。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:3ce6655b",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-037",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you reserve a wheelchair for the tour",
+      "meaningZh": "您能为旅行团预留轮椅吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:4759917c",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-038",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i need an alternative date because the attraction is sold out",
+      "meaningZh": "因为景点售罄，我需要另一个日期。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:fd0172e4",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-039",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you explain whether the ticket can be transferred to another person",
+      "meaningZh": "您能解释门票是否可以转给别人吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:7e1e418d",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-040",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i would prefer a store that can deliver the purchase to my hotel",
+      "meaningZh": "我更希望商店能把购买的商品送到酒店。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:17ebb166",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-041",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you check whether the price is the same online and in store",
+      "meaningZh": "您能确认线上和店内价格是否相同吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:df0e5d8d",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-042",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i need to know what happens if the package arrives after i leave",
+      "meaningZh": "我需要知道包裹在我离开后到达会怎样。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:94bb5662",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-043",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you provide a receipt with the tax listed separately",
+      "meaningZh": "您能提供税费单列的收据吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:17819435",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-044",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i need to ask whether the medication can be carried on the plane",
+      "meaningZh": "我需要询问药物是否可以带上飞机。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:0b90d9ef",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-045",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you explain how to get a refill while traveling",
+      "meaningZh": "您能解释旅行期间如何续配药吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:1eed5d75",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-046",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i would prefer a pharmacy that stays open late",
+      "meaningZh": "我更希望药店营业到较晚。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:0364653a",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-047",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you help me describe the symptoms to the nurse",
+      "meaningZh": "您能帮我向护士描述症状吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:94771d1f",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-048",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i need to know whether my insurance requires approval first",
+      "meaningZh": "我需要知道我的保险是否需要先批准。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:652bd306",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-049",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you contact the clinic to confirm the appointment time",
+      "meaningZh": "您能联系诊所确认预约时间吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:aab10492",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-050",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i need a temporary phone number until my sim card is replaced",
+      "meaningZh": "电话卡补发前我需要一个临时号码。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:211b7610",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-051",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you explain whether this charger supports fast charging",
+      "meaningZh": "您能解释这个充电器是否支持快速充电吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:fec1238a",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-052",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i would prefer a plan that lets me add data only when needed",
+      "meaningZh": "我更想要只在需要时加流量的套餐。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:f394d1a3",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-053",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you reset the account after you verify my identity",
+      "meaningZh": "您核实身份后能重置账户吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:82780439",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-054",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i need to know whether the building has an accessible restroom",
+      "meaningZh": "我需要知道这栋楼是否有无障碍洗手间。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:a1e80e3d",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-055",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you give me a landmark that i can share with the driver",
+      "meaningZh": "您能给我一个可以告诉司机的地标吗？",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:ebf39ad4",
+      "difficultyLevel": 2.5,
+      "levelId": "primary-5"
+    },
+    {
+      "sourceItemId": "r17-daily-p5c-056",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i would rather meet somewhere indoors because of the heat",
+      "meaningZh": "因为天气炎热，我宁愿在室内见面。",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:85821326",
       "difficultyLevel": 2.5,
       "levelId": "primary-5"
     },
