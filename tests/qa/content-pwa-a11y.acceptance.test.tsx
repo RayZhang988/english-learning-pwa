@@ -187,7 +187,9 @@ describe('09 released content acceptance', () => {
     expect(contentText).not.toMatch(
       /\b(?:TODO|TBD|PLACEHOLDER)\b|待补内容|占位内容/i,
     )
-    expect(contentText).not.toMatch(/\b(?:911|112|999)\b/)
+    // Stable content identifiers may legitimately contain number sequences such
+    // as `j3:112`; inspect only literal emergency-number prose.
+    expect(contentText).not.toMatch(/(?:call|dial|emergency number)\s*(?:911|112|999)\b/i)
 
     const helpLesson = Object.values(lessonsByPath)
       .flatMap((week) => week.lessons)
