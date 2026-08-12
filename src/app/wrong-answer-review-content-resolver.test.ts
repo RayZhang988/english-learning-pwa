@@ -10,13 +10,13 @@ const root = new URL('../../', import.meta.url)
 async function json(path: string): Promise<unknown> { return JSON.parse(await readFile(new URL(path, root), 'utf8')) as unknown }
 
 describe('R13-D production review resolver coverage', () => {
-  it('resolves every one of the 3594 released aliases without probing answers', async () => {
+  it('resolves every one of the 3780 released aliases without probing answers', async () => {
     const { vocabulary, listening, speaking } = releasedCatalogs()
     const index = await loadReleasedReviewContentIndex()
     const scene = createSceneVocabularyQuestionBank(await json('content/lessons/survival-travel-american-4w/scene-vocabulary-questions.v1.json'))
     const resolver = new ProductionWrongAnswerReviewContentResolver({ index: { load: async () => index }, vocabulary: { load: async () => vocabulary }, sceneVocabulary: { load: async () => scene }, listening: { load: async () => listening }, speaking: { load: async () => speaking } })
     const aliases = Object.values(index.aliases)
-    expect(aliases).toHaveLength(3594)
+    expect(aliases).toHaveLength(3780)
     const counts = { vocabulary: 0, listening: 0, speaking: 0 }
     for (const alias of aliases) {
       const record: WrongAnswerRecord = { schemaVersion: 1, recordId: `${alias.reviewContentId}::${alias.originalQuestionType}`, reviewContentId: alias.reviewContentId, originalQuestionType: alias.originalQuestionType, domain: alias.domain, status: 'active', incorrectCount: 1, consecutiveReviewCorrect: 0, lastIncorrectAt: '2026-08-10T00:00:00.000Z', lastReviewAttemptAt: null, movedToHistoryAt: null, lastSource: 'daily-training', sources: ['daily-training'] }
@@ -37,6 +37,6 @@ describe('R13-D production review resolver coverage', () => {
       if (resolved.kind === 'speaking') expect(resolved.prompt.modelAnswerTranslationZh.trim().length).toBeGreaterThan(0)
       counts[alias.domain] += 1
     }
-    expect(counts).toEqual({ vocabulary: 3219, listening: 253, speaking: 122 })
+    expect(counts).toEqual({ vocabulary: 3405, listening: 253, speaking: 122 })
   })
 })
