@@ -9336,6 +9336,556 @@
                 "exampleZh": "上午的旅行团会更不拥挤吗？",
                 "growthDifficultyLevel": 2,
                 "dailyKnowledgeId": "daily-knowledge-v1:p4a:055"
+              },
+              {
+                "id": "r17-daily-p4b-001",
+                "term": "Could you check if the fare includes checked baggage?",
+                "meaningZh": "您能确认票价是否包含托运行李吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you check if the fare includes checked baggage?",
+                "exampleZh": "您能确认票价是否包含托运行李吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:001"
+              },
+              {
+                "id": "r17-daily-p4b-002",
+                "term": "I need to cancel the second part of my trip.",
+                "meaningZh": "我需要取消行程的第二部分。",
+                "partOfSpeech": "statement",
+                "exampleEn": "I need to cancel the second part of my trip.",
+                "exampleZh": "我需要取消行程的第二部分。",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:002"
+              },
+              {
+                "id": "r17-daily-p4b-003",
+                "term": "Could you issue a new itinerary after the change?",
+                "meaningZh": "变更后您能签发新行程单吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you issue a new itinerary after the change?",
+                "exampleZh": "变更后您能签发新行程单吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:003"
+              },
+              {
+                "id": "r17-daily-p4b-004",
+                "term": "Is there a charge if I change airports?",
+                "meaningZh": "如果更换机场会收费吗？",
+                "partOfSpeech": "question",
+                "exampleEn": "Is there a charge if I change airports?",
+                "exampleZh": "如果更换机场会收费吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:004"
+              },
+              {
+                "id": "r17-daily-p4b-005",
+                "term": "Could you check whether my passport is still valid for entry?",
+                "meaningZh": "您能确认我的护照是否仍可用于入境吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you check whether my passport is still valid for entry?",
+                "exampleZh": "您能确认我的护照是否仍可用于入境吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:005"
+              },
+              {
+                "id": "r17-daily-p4b-006",
+                "term": "I need extra time because I use a wheelchair.",
+                "meaningZh": "因为我使用轮椅，我需要额外时间。",
+                "partOfSpeech": "statement",
+                "exampleEn": "I need extra time because I use a wheelchair.",
+                "exampleZh": "因为我使用轮椅，我需要额外时间。",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:006"
+              },
+              {
+                "id": "r17-daily-p4b-007",
+                "term": "Could you arrange assistance at the arrival gate?",
+                "meaningZh": "您能在到达登机口安排协助吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you arrange assistance at the arrival gate?",
+                "exampleZh": "您能在到达登机口安排协助吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:007"
+              },
+              {
+                "id": "r17-daily-p4b-008",
+                "term": "Will the hotel accept a late arrival?",
+                "meaningZh": "酒店会接受晚到吗？",
+                "partOfSpeech": "question",
+                "exampleEn": "Will the hotel accept a late arrival?",
+                "exampleZh": "酒店会接受晚到吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:008"
+              },
+              {
+                "id": "r17-daily-p4b-009",
+                "term": "Could you note that I need a non-smoking room?",
+                "meaningZh": "您能注明我需要无烟房吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you note that I need a non-smoking room?",
+                "exampleZh": "您能注明我需要无烟房吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:009"
+              },
+              {
+                "id": "r17-daily-p4b-010",
+                "term": "The water pressure is too low to take a shower.",
+                "meaningZh": "水压太低，无法洗澡。",
+                "partOfSpeech": "complaint",
+                "exampleEn": "The water pressure is too low to take a shower.",
+                "exampleZh": "水压太低，无法洗澡。",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:010"
+              },
+              {
+                "id": "r17-daily-p4b-011",
+                "term": "Could you send maintenance before I leave?",
+                "meaningZh": "我离开前您能派维修人员来吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you send maintenance before I leave?",
+                "exampleZh": "我离开前您能派维修人员来吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:011"
+              },
+              {
+                "id": "r17-daily-p4b-012",
+                "term": "Is there a quiet area where I can work?",
+                "meaningZh": "有我可以安静工作的区域吗？",
+                "partOfSpeech": "question",
+                "exampleEn": "Is there a quiet area where I can work?",
+                "exampleZh": "有我可以安静工作的区域吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:012"
+              },
+              {
+                "id": "r17-daily-p4b-013",
+                "term": "Could you extend my parking reservation by one day?",
+                "meaningZh": "您能把我的停车预订延长一天吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you extend my parking reservation by one day?",
+                "exampleZh": "您能把我的停车预订延长一天吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:013"
+              },
+              {
+                "id": "r17-daily-p4b-014",
+                "term": "I need to check out early because of an emergency.",
+                "meaningZh": "因为紧急情况，我需要提前退房。",
+                "partOfSpeech": "statement",
+                "exampleEn": "I need to check out early because of an emergency.",
+                "exampleZh": "因为紧急情况，我需要提前退房。",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:014"
+              },
+              {
+                "id": "r17-daily-p4b-015",
+                "term": "Could you waive the late checkout fee this time?",
+                "meaningZh": "这次您能免除延迟退房费吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you waive the late checkout fee this time?",
+                "exampleZh": "这次您能免除延迟退房费吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:015"
+              },
+              {
+                "id": "r17-daily-p4b-016",
+                "term": "Does the breakfast area open before six?",
+                "meaningZh": "早餐区六点前开放吗？",
+                "partOfSpeech": "question",
+                "exampleEn": "Does the breakfast area open before six?",
+                "exampleZh": "早餐区六点前开放吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:016"
+              },
+              {
+                "id": "r17-daily-p4b-017",
+                "term": "Could you tell me which ingredients are raw?",
+                "meaningZh": "您能告诉我哪些食材是生的吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you tell me which ingredients are raw?",
+                "exampleZh": "您能告诉我哪些食材是生的吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:017"
+              },
+              {
+                "id": "r17-daily-p4b-018",
+                "term": "I need a table that is easier to reach with a stroller.",
+                "meaningZh": "我需要一张更方便推婴儿车到达的桌子。",
+                "partOfSpeech": "statement",
+                "exampleEn": "I need a table that is easier to reach with a stroller.",
+                "exampleZh": "我需要一张更方便推婴儿车到达的桌子。",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:018"
+              },
+              {
+                "id": "r17-daily-p4b-019",
+                "term": "Could you replace the order if it was prepared incorrectly?",
+                "meaningZh": "如果订单做错了，您能更换吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you replace the order if it was prepared incorrectly?",
+                "exampleZh": "如果订单做错了，您能更换吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:019"
+              },
+              {
+                "id": "r17-daily-p4b-020",
+                "term": "The menu price is different from the bill.",
+                "meaningZh": "菜单价格和账单不同。",
+                "partOfSpeech": "complaint",
+                "exampleEn": "The menu price is different from the bill.",
+                "exampleZh": "菜单价格和账单不同。",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:020"
+              },
+              {
+                "id": "r17-daily-p4b-021",
+                "term": "Could you remove the item I did not order?",
+                "meaningZh": "您能移除我没有点的项目吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you remove the item I did not order?",
+                "exampleZh": "您能移除我没有点的项目吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:021"
+              },
+              {
+                "id": "r17-daily-p4b-022",
+                "term": "Can I pay separately if we share the meal?",
+                "meaningZh": "如果我们分享餐点，可以分开付款吗？",
+                "partOfSpeech": "question",
+                "exampleEn": "Can I pay separately if we share the meal?",
+                "exampleZh": "如果我们分享餐点，可以分开付款吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:022"
+              },
+              {
+                "id": "r17-daily-p4b-023",
+                "term": "Could you recommend a restaurant with outdoor seating?",
+                "meaningZh": "您能推荐有户外座位的餐厅吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you recommend a restaurant with outdoor seating?",
+                "exampleZh": "您能推荐有户外座位的餐厅吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:023"
+              },
+              {
+                "id": "r17-daily-p4b-024",
+                "term": "Which train is more reliable during rush hour?",
+                "meaningZh": "高峰时段哪趟火车更可靠？",
+                "partOfSpeech": "question",
+                "exampleEn": "Which train is more reliable during rush hour?",
+                "exampleZh": "高峰时段哪趟火车更可靠？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:024"
+              },
+              {
+                "id": "r17-daily-p4b-025",
+                "term": "Could you tell me where the elevator connects to the platform?",
+                "meaningZh": "您能告诉我电梯通往哪个站台吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you tell me where the elevator connects to the platform?",
+                "exampleZh": "您能告诉我电梯通往哪个站台吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:025"
+              },
+              {
+                "id": "r17-daily-p4b-026",
+                "term": "I need to leave earlier if the weather gets worse.",
+                "meaningZh": "如果天气变差，我需要更早离开。",
+                "partOfSpeech": "statement",
+                "exampleEn": "I need to leave earlier if the weather gets worse.",
+                "exampleZh": "如果天气变差，我需要更早离开。",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:026"
+              },
+              {
+                "id": "r17-daily-p4b-027",
+                "term": "Could you estimate how long the walk will take?",
+                "meaningZh": "您能估计步行需要多久吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you estimate how long the walk will take?",
+                "exampleZh": "您能估计步行需要多久吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:027"
+              },
+              {
+                "id": "r17-daily-p4b-028",
+                "term": "Does this bus stop near the public library?",
+                "meaningZh": "这辆公交在公共图书馆附近停吗？",
+                "partOfSpeech": "question",
+                "exampleEn": "Does this bus stop near the public library?",
+                "exampleZh": "这辆公交在公共图书馆附近停吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:028"
+              },
+              {
+                "id": "r17-daily-p4b-029",
+                "term": "Could you wait at the entrance while I get my bags?",
+                "meaningZh": "我拿行李时您能在入口等吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you wait at the entrance while I get my bags?",
+                "exampleZh": "我拿行李时您能在入口等吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:029"
+              },
+              {
+                "id": "r17-daily-p4b-030",
+                "term": "I need a ride that can fit two large suitcases.",
+                "meaningZh": "我需要能放下两个大行李箱的车。",
+                "partOfSpeech": "statement",
+                "exampleEn": "I need a ride that can fit two large suitcases.",
+                "exampleZh": "我需要能放下两个大行李箱的车。",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:030"
+              },
+              {
+                "id": "r17-daily-p4b-031",
+                "term": "Could you explain the difference between these passes?",
+                "meaningZh": "您能解释这两种通票的区别吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you explain the difference between these passes?",
+                "exampleZh": "您能解释这两种通票的区别吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:031"
+              },
+              {
+                "id": "r17-daily-p4b-032",
+                "term": "Is there a refund if the attraction closes early?",
+                "meaningZh": "如果景点提前关闭，可以退款吗？",
+                "partOfSpeech": "question",
+                "exampleEn": "Is there a refund if the attraction closes early?",
+                "exampleZh": "如果景点提前关闭，可以退款吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:032"
+              },
+              {
+                "id": "r17-daily-p4b-033",
+                "term": "Could you hold my place while I use the restroom?",
+                "meaningZh": "我去洗手间时您能帮我保留位置吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you hold my place while I use the restroom?",
+                "exampleZh": "我去洗手间时您能帮我保留位置吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:033"
+              },
+              {
+                "id": "r17-daily-p4b-034",
+                "term": "I need to buy a ticket for the child traveling with me.",
+                "meaningZh": "我需要为与我同行的儿童买票。",
+                "partOfSpeech": "statement",
+                "exampleEn": "I need to buy a ticket for the child traveling with me.",
+                "exampleZh": "我需要为与我同行的儿童买票。",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:034"
+              },
+              {
+                "id": "r17-daily-p4b-035",
+                "term": "Could you tell me whether children enter free?",
+                "meaningZh": "您能告诉我儿童是否免费入场吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you tell me whether children enter free?",
+                "exampleZh": "您能告诉我儿童是否免费入场吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:035"
+              },
+              {
+                "id": "r17-daily-p4b-036",
+                "term": "Can I return this gift without a receipt?",
+                "meaningZh": "没有收据我可以退这份礼物吗？",
+                "partOfSpeech": "question",
+                "exampleEn": "Can I return this gift without a receipt?",
+                "exampleZh": "没有收据我可以退这份礼物吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:036"
+              },
+              {
+                "id": "r17-daily-p4b-037",
+                "term": "Could you wrap this so it is easier to carry?",
+                "meaningZh": "您能包装一下让它更容易携带吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you wrap this so it is easier to carry?",
+                "exampleZh": "您能包装一下让它更容易携带吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:037"
+              },
+              {
+                "id": "r17-daily-p4b-038",
+                "term": "I need an adapter because my plug does not fit.",
+                "meaningZh": "因为插头不合适，我需要转换插头。",
+                "partOfSpeech": "statement",
+                "exampleEn": "I need an adapter because my plug does not fit.",
+                "exampleZh": "因为插头不合适，我需要转换插头。",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:038"
+              },
+              {
+                "id": "r17-daily-p4b-039",
+                "term": "Could you check whether this store accepts contactless payment?",
+                "meaningZh": "您能确认这家店是否接受非接触付款吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you check whether this store accepts contactless payment?",
+                "exampleZh": "您能确认这家店是否接受非接触付款吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:039"
+              },
+              {
+                "id": "r17-daily-p4b-040",
+                "term": "Can I use this card if I enter my PIN?",
+                "meaningZh": "如果输入密码，我可以使用这张卡吗？",
+                "partOfSpeech": "question",
+                "exampleEn": "Can I use this card if I enter my PIN?",
+                "exampleZh": "如果输入密码，我可以使用这张卡吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:040"
+              },
+              {
+                "id": "r17-daily-p4b-041",
+                "term": "Could you direct me to an ATM that is open now?",
+                "meaningZh": "您能告诉我现在营业的自动取款机在哪里吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you direct me to an ATM that is open now?",
+                "exampleZh": "您能告诉我现在营业的自动取款机在哪里吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:041"
+              },
+              {
+                "id": "r17-daily-p4b-042",
+                "term": "I need to exchange money before the bank closes.",
+                "meaningZh": "银行关闭前我需要换钱。",
+                "partOfSpeech": "statement",
+                "exampleEn": "I need to exchange money before the bank closes.",
+                "exampleZh": "银行关闭前我需要换钱。",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:042"
+              },
+              {
+                "id": "r17-daily-p4b-043",
+                "term": "Could you tell me whether this medicine needs a prescription?",
+                "meaningZh": "您能告诉我这个药是否需要处方吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you tell me whether this medicine needs a prescription?",
+                "exampleZh": "您能告诉我这个药是否需要处方吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:043"
+              },
+              {
+                "id": "r17-daily-p4b-044",
+                "term": "I need to see a doctor if the pain gets worse.",
+                "meaningZh": "如果疼痛加剧，我需要看医生。",
+                "partOfSpeech": "statement",
+                "exampleEn": "I need to see a doctor if the pain gets worse.",
+                "exampleZh": "如果疼痛加剧，我需要看医生。",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:044"
+              },
+              {
+                "id": "r17-daily-p4b-045",
+                "term": "Could you write the dosage in simple English?",
+                "meaningZh": "您能用简单英语写下剂量吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you write the dosage in simple English?",
+                "exampleZh": "您能用简单英语写下剂量吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:045"
+              },
+              {
+                "id": "r17-daily-p4b-046",
+                "term": "Is there a clinic that accepts walk-in patients?",
+                "meaningZh": "有接受直接就诊患者的诊所吗？",
+                "partOfSpeech": "question",
+                "exampleEn": "Is there a clinic that accepts walk-in patients?",
+                "exampleZh": "有接受直接就诊患者的诊所吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:046"
+              },
+              {
+                "id": "r17-daily-p4b-047",
+                "term": "Could you help me call my travel insurance company?",
+                "meaningZh": "您能帮我联系旅行保险公司吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you help me call my travel insurance company?",
+                "exampleZh": "您能帮我联系旅行保险公司吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:047"
+              },
+              {
+                "id": "r17-daily-p4b-048",
+                "term": "I need a place to sit while I wait for help.",
+                "meaningZh": "我等待帮助时需要一个坐的地方。",
+                "partOfSpeech": "statement",
+                "exampleEn": "I need a place to sit while I wait for help.",
+                "exampleZh": "我等待帮助时需要一个坐的地方。",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:048"
+              },
+              {
+                "id": "r17-daily-p4b-049",
+                "term": "Could you give me a landmark near the meeting point?",
+                "meaningZh": "您能告诉我集合地点附近的地标吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you give me a landmark near the meeting point?",
+                "exampleZh": "您能告诉我集合地点附近的地标吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:049"
+              },
+              {
+                "id": "r17-daily-p4b-050",
+                "term": "I need to update my family about the delay.",
+                "meaningZh": "我需要告诉家人延误的情况。",
+                "partOfSpeech": "statement",
+                "exampleEn": "I need to update my family about the delay.",
+                "exampleZh": "我需要告诉家人延误的情况。",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:050"
+              },
+              {
+                "id": "r17-daily-p4b-051",
+                "term": "Could you help me find a place with free Wi-Fi?",
+                "meaningZh": "您能帮我找有免费无线网络的地方吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you help me find a place with free Wi-Fi?",
+                "exampleZh": "您能帮我找有免费无线网络的地方吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:051"
+              },
+              {
+                "id": "r17-daily-p4b-052",
+                "term": "Will this data plan work in another state?",
+                "meaningZh": "这个流量套餐在另一个州能用吗？",
+                "partOfSpeech": "question",
+                "exampleEn": "Will this data plan work in another state?",
+                "exampleZh": "这个流量套餐在另一个州能用吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:052"
+              },
+              {
+                "id": "r17-daily-p4b-053",
+                "term": "Could you send the instructions to my email address?",
+                "meaningZh": "您能把说明发送到我的邮箱吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you send the instructions to my email address?",
+                "exampleZh": "您能把说明发送到我的邮箱吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:053"
+              },
+              {
+                "id": "r17-daily-p4b-054",
+                "term": "I need to reset my password before I can connect.",
+                "meaningZh": "我需要重设密码才能连接。",
+                "partOfSpeech": "statement",
+                "exampleEn": "I need to reset my password before I can connect.",
+                "exampleZh": "我需要重设密码才能连接。",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:054"
+              },
+              {
+                "id": "r17-daily-p4b-055",
+                "term": "Could you verify the time zone for my flight?",
+                "meaningZh": "您能确认我航班所在的时区吗？",
+                "partOfSpeech": "request",
+                "exampleEn": "Could you verify the time zone for my flight?",
+                "exampleZh": "您能确认我航班所在的时区吗？",
+                "growthDifficultyLevel": 2,
+                "dailyKnowledgeId": "daily-knowledge-v1:p4b:055"
               }
             ]
           }

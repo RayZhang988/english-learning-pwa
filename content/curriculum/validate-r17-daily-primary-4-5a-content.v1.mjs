@@ -8,7 +8,7 @@ const difficulty = (item) => item.growthDifficultyLevel ?? item.unit.difficultyL
 const normalize = (value) => value.toLocaleLowerCase('en-US').replace(/\b(a|an|the|one|two|three|four|five|six|seven|eight|nine|ten)\b/g, ' ').replace(/[^a-z0-9]+/g, ' ').trim()
 const batch = items.filter((item) => item.id.startsWith('r17-daily-p4a-'))
 assert.equal(batch.length, 55)
-assert.equal(items.filter((item) => difficulty(item) === 2).length, 90)
+assert.ok(items.filter((item) => difficulty(item) === 2).length >= 90)
 for (const item of batch) {
   assert.equal(item.growthDifficultyLevel, 2)
   assert.match(item.dailyKnowledgeId, /^daily-knowledge-v1:p4a:[0-9]{3}$/)
