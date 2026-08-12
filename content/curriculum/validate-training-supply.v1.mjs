@@ -308,6 +308,14 @@ function candidateBase(unit, domain, order) {
 
 function expectedCandidates() {
   const candidates = []
+  // Once a vocabulary question has been released, its three distractors are
+  // part of its scored question.  Re-ranking against later content would
+  // silently change the wrong-answer identity of an unchanged source item.
+  const releasedDistractors = new Map(
+    loadReleasedSupply().candidates
+      .filter((candidate) => candidate.domain === 'vocabulary' && candidate.source?.sourceType === 'vocabulary-item')
+      .map((candidate) => [candidate.itemId, candidate.source.distractorItemIds]),
+  )
   const orders = Object.fromEntries(domains.map((domain) => [domain, 0]))
   const nextOrder = (domain) => {
     orders[domain] += 1
@@ -317,8 +325,11 @@ function expectedCandidates() {
     const unit = unitByDomain(lesson, 'vocabulary')
     return unit.activity.items.map((item) => ({ lesson, unit, item }))
   })
-  const distractorsFor = (index) => {
+  const distractorsFor = (index, variantId) => {
     const answer = vocabularySources[index]
+    const itemId = `supply-v1-vocabulary-${answer.item.id}-${variantId}`
+    const prior = releasedDistractors.get(itemId)
+    if (prior) return prior
     return selectVocabularyDistractors(answer, vocabularySources).map(({ item }) => item.id)
   }
 
@@ -338,7 +349,7 @@ function expectedCandidates() {
           sourceType: 'vocabulary-item',
           sourceId: item.id,
           variantId,
-          distractorItemIds: distractorsFor(index),
+          distractorItemIds: distractorsFor(index, variantId),
         },
       })
     }
