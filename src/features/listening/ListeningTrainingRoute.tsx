@@ -103,13 +103,25 @@ export function listeningRuntimeRouteIdentity(
   }
 }
 
+export function sameListeningSupplyRound(
+  left: TrainingSupplyRound | undefined,
+  right: TrainingSupplyRound | undefined,
+): boolean {
+  return left === right || (
+    left !== undefined && right !== undefined &&
+    left.seed === right.seed &&
+    left.order.length === right.order.length &&
+    left.order.every((itemId, index) => itemId === right.order[index])
+  )
+}
+
 export function hasListeningRuntimeRouteIdentityChanged(
   previous: ListeningRuntimeRouteIdentity,
   next: ListeningRuntimeRouteIdentity,
 ): boolean {
   return previous.timingSessionFactory !== next.timingSessionFactory ||
     previous.supplyProvider !== next.supplyProvider ||
-    previous.supplyRound !== next.supplyRound ||
+    !sameListeningSupplyRound(previous.supplyRound, next.supplyRound) ||
     previous.trainingBudgetStatus !== next.trainingBudgetStatus ||
     previous.reviewIdentityForItem !== next.reviewIdentityForItem ||
     previous.publishWrongAnswerEvidence !== next.publishWrongAnswerEvidence

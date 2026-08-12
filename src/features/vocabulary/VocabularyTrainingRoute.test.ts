@@ -4,7 +4,10 @@ import { createTrainingSupplyRound } from '../../learning-engine/index.ts'
 import type { NamespaceStore, StoredRecord } from '../../storage/index.ts'
 import { createVocabularyCatalog } from './content.ts'
 import { VocabularySessionRepository } from './repository.ts'
-import { createVocabularyTrainingRouteRuntime } from './VocabularyTrainingRoute.tsx'
+import {
+  createVocabularyTrainingRouteRuntime,
+  sameVocabularySupplyRound,
+} from './VocabularyTrainingRoute.tsx'
 import { loadActualVocabularyDocuments, vocabularyTaskFor } from './test-fixtures.ts'
 import type { ReviewContentIndex, WrongAnswerEvidenceSink } from './wrong-answer-review.ts'
 import type { VocabularySupplyProvider } from './supply.ts'
@@ -19,6 +22,19 @@ class MemoryStore implements NamespaceStore {
 }
 
 describe('VocabularyTrainingRoute QA-011 ports', () => {
+  it('keeps runtime identity for a cloned persisted supply round', () => {
+    const round = createTrainingSupplyRound({
+      seed: 'same-round',
+      candidateItemIds: ['vocabulary-a', 'vocabulary-b'],
+      shortTermExcludedItemIds: [],
+    })
+
+    expect(
+      sameVocabularySupplyRound(round, { ...round, order: [...round.order] }),
+    ).toBe(true)
+    expect(sameVocabularySupplyRound(round, { ...round, seed: 'new-round' })).toBe(false)
+  })
+
   it('forwards budget ports into a continuous stream and leaves old calls unchanged', async () => {
     const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
     const source = createStaticDataSource(catalog)

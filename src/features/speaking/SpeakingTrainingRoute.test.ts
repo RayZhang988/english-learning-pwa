@@ -19,6 +19,7 @@ import type {
 } from './types.ts'
 import {
   createSpeakingTrainingRouteRuntime,
+  sameSpeakingSupplyRound,
   sameSpeakingWrongAnswerEvidencePort,
   toSpeakingTrainingRuntimeOptions,
 } from './SpeakingTrainingRoute.tsx'
@@ -57,6 +58,19 @@ const microphonePermission = {
 }
 
 describe('SpeakingTrainingRoute wrong-answer injection', () => {
+  it('keeps runtime identity for a cloned persisted supply round', () => {
+    const round = createTrainingSupplyRound({
+      seed: 'same-round',
+      candidateItemIds: ['prompt-a', 'prompt-b'],
+      shortTermExcludedItemIds: [],
+    })
+
+    expect(
+      sameSpeakingSupplyRound(round, { ...round, order: [...round.order] }),
+    ).toBe(true)
+    expect(sameSpeakingSupplyRound(round, { ...round, seed: 'new-round' })).toBe(false)
+  })
+
   it('passes the exact resolver/sink port through unchanged', () => {
     const port = { resolver: { resolveItem: () => ({ reviewContentId: 'a', originalQuestionType: 'prompt', domain: 'speaking' as const, source: { kind: 'daily-supply' as const, itemId: 'i', sourceId: 's', contentRef: 'c' } }), resolvePrompt: () => ({ reviewContentId: 'a', originalQuestionType: 'prompt', domain: 'speaking' as const, source: { kind: 'daily-supply' as const, itemId: 'i', sourceId: 's', contentRef: 'c' } }) }, sink: { publishWrongAnswerEvidence: async () => undefined } }
     expect(toSpeakingTrainingRuntimeOptions({ ...base, wrongAnswerEvidence: port }, network).wrongAnswerEvidence).toBe(port)

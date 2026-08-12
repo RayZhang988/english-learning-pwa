@@ -20,6 +20,7 @@ import {
   hasListeningRuntimeRouteIdentityChanged,
   listeningRuntimeOptionsFromRouteProps,
   listeningRuntimeRouteIdentity,
+  sameListeningSupplyRound,
   type ListeningTrainingRouteProps,
 } from './ListeningTrainingRoute.tsx'
 
@@ -58,6 +59,21 @@ const networkStatus = {
   current: () => 'online' as const,
   subscribe: () => () => undefined,
 }
+
+describe('ListeningTrainingRoute R11 runtime identity', () => {
+  it('keeps runtime identity for a cloned persisted supply round', () => {
+    const round = createTrainingSupplyRound({
+      seed: 'same-round',
+      candidateItemIds: ['listening-a', 'listening-b'],
+      shortTermExcludedItemIds: [],
+    })
+
+    expect(
+      sameListeningSupplyRound(round, { ...round, order: [...round.order] }),
+    ).toBe(true)
+    expect(sameListeningSupplyRound(round, { ...round, seed: 'new-round' })).toBe(false)
+  })
+})
 
 const availableSpeech: ListeningSpeechPort = {
   capabilities: () => ({

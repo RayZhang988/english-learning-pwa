@@ -129,6 +129,20 @@ export function sameSpeakingWrongAnswerEvidencePort(
   )
 }
 
+/** A repository refresh clones this value. Preserve the live runtime when
+ * its ordered round has not actually changed. */
+export function sameSpeakingSupplyRound(
+  left: TrainingSupplyRound | undefined,
+  right: TrainingSupplyRound | undefined,
+): boolean {
+  return left === right || (
+    left !== undefined && right !== undefined &&
+    left.seed === right.seed &&
+    left.order.length === right.order.length &&
+    left.order.every((itemId, index) => itemId === right.order[index])
+  )
+}
+
 export function SpeakingTrainingRoute(
   props: SpeakingTrainingRouteProps,
 ) {
@@ -164,7 +178,7 @@ export function SpeakingTrainingRoute(
     runtimeRef.current?.key !== runtimeKey ||
     runtimeRef.current.timingSessionFactory !==
       props.timingSessionFactory ||
-    runtimeRef.current.supplyRound !== props.supplyRound ||
+    !sameSpeakingSupplyRound(runtimeRef.current.supplyRound, props.supplyRound) ||
     !sameSpeakingWrongAnswerEvidencePort(
       runtimeRef.current.wrongAnswerEvidence,
       props.wrongAnswerEvidence,

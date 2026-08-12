@@ -95,6 +95,18 @@ export function createVocabularyTrainingRouteRuntime(
   })
 }
 
+export function sameVocabularySupplyRound(
+  left: TrainingSupplyRound | undefined,
+  right: TrainingSupplyRound | undefined,
+): boolean {
+  return left === right || (
+    left !== undefined && right !== undefined &&
+    left.seed === right.seed &&
+    left.order.length === right.order.length &&
+    left.order.every((itemId, index) => itemId === right.order[index])
+  )
+}
+
 export function VocabularyTrainingRoute(
   props: VocabularyTrainingRouteProps,
 ) {
@@ -140,7 +152,7 @@ export function VocabularyTrainingRoute(
     runtimeRef.current?.key !== runtimeKey ||
     runtimeRef.current.timingSessionFactory !== props.timingSessionFactory ||
     runtimeRef.current.supplyProvider !== props.supplyProvider ||
-    runtimeRef.current.supplyRound !== props.supplyRound ||
+    !sameVocabularySupplyRound(runtimeRef.current.supplyRound, props.supplyRound) ||
     runtimeRef.current.trainingBudgetStatus !== props.trainingBudgetStatus
     || runtimeRef.current.wrongAnswerReview !== props.wrongAnswerReview
   ) {
