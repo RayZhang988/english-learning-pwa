@@ -88,7 +88,7 @@ const sceneQuestions = sceneBank.scenes.flatMap((scene) =>
   scene.questions.map((question) => ({ ...question, sceneId: scene.sceneId, categoryId: scene.categoryId })),
 )
 
-if (vocabularyItems.length !== 745) fail(`expected 745 daily vocabulary sources after primary-2 3C, got ${vocabularyItems.length}`)
+if (vocabularyItems.length !== 807) fail(`expected 807 daily vocabulary sources after primary-3 4A, got ${vocabularyItems.length}`)
 if (sceneQuestions.length !== 612) fail(`expected 612 current scene questions, got ${sceneQuestions.length}`)
 if (sceneBank.scenes.length !== 18) fail(`expected 18 scenes, got ${sceneBank.scenes.length}`)
 
