@@ -1,0 +1,31 @@
+import assert from 'node:assert/strict'
+import fs from 'node:fs'
+
+const auditPath = 'content/curriculum/r17-knowledge-capacity-audit.v2.json'
+const audit = JSON.parse(fs.readFileSync(auditPath, 'utf8'))
+
+assert.equal(audit.schemaVersion, 2)
+assert.equal(audit.documentType, 'r17-unified-knowledge-capacity-audit')
+assert.equal(audit.capacityTargets.dailyKnowledgePoints, 3000)
+assert.equal(audit.capacityTargets.sceneVocabularyRecords, 3300)
+assert.equal(audit.current.sceneQuestionCount, 612)
+assert.equal(audit.current.sceneLexicalFormCount, 554)
+assert.equal(audit.current.sceneCanonicalKnowledgeCount, 573)
+assert.equal(audit.current.sceneAmbiguousLexicalFormCount, 19)
+assert.equal(audit.source.dailyVocabularySourceCount, 163)
+assert.equal(audit.current.dailyKnowledgePointCount, 158)
+assert.equal(audit.sceneCapacity.coreSceneCount, 6)
+assert.equal(audit.sceneCapacity.standardSceneCount, 12)
+assert.equal(audit.sceneCapacity.targetRecordCount, 3300)
+assert.equal(audit.sceneQuestionMappings.length, 612)
+assert.equal(new Set(audit.sceneQuestionMappings.map((row) => row.questionId)).size, 612)
+assert(audit.sceneQuestionMappings.every((row) => row.canonicalKnowledgeId.startsWith('travel-knowledge-v1:')))
+assert.equal(audit.levelCapacity.levels.length, 15)
+assert(audit.levelCapacity.levels.every((level) => level.missingDailyKnowledgePoints >= 0))
+assert.equal(audit.levelCapacity.levels.reduce((total, level) => total + level.currentDailyKnowledgePoints, 0), 158)
+assert.equal(audit.levelCapacity.levels.reduce((total, level) => total + level.targetDailyKnowledgePoints, 0), 3000)
+assert.equal(audit.sceneCapacity.scenes.length, 18)
+assert.equal(audit.sceneCapacity.scenes.reduce((total, scene) => total + scene.targetRecordCount, 0), 3300)
+assert(audit.batchPlan.batches.length > 0)
+
+console.log('R17 unified knowledge capacity audit verified')
