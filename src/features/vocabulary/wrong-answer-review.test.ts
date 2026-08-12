@@ -34,7 +34,7 @@ describe('R13-D vocabulary review content', () => {
     const releasedIndex = await loadReleasedReviewContentIndex() as typeof index
     const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
     const daily = (catalog.trainingSupplyIndex as { candidates: readonly VocabularySupplyItem[] }).candidates.filter((candidate) => candidate.domain === 'vocabulary')
-    expect(daily).toHaveLength(2421)
+    expect(daily).toHaveLength(2607)
     for (const candidate of daily) {
       const resolved = resolveDailyVocabularyReviewContent(releasedIndex, candidate, catalog)
       expect(resolved.identity.originalQuestionType).toContain(candidate.source.variantId.replace('-choice', ''))
