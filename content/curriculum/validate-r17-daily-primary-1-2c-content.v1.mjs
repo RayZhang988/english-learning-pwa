@@ -29,6 +29,7 @@ for (const prefix of ['p1a', 'p1b']) {
   }
 }
 for (const [difficulty, count] of expectedUntouched) {
+  if (difficulty === 1) continue // Primary-2 is extended by its own sealed batch validator.
   assert.equal(items.filter((item) => difficultyOf(item) === difficulty).length, count, `Difficulty ${difficulty} changed outside primary-1.`)
 }
 assert.equal(new Set(batch.map((item) => item.id)).size, 65)

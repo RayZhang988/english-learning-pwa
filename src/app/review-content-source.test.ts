@@ -8,7 +8,7 @@ async function released(): Promise<Record<string, unknown>> {
 function fetchValue(value: unknown) { return vi.fn(async () => ({ ok: true, json: async () => value }) as Response) }
 
 describe('production R13-D review index source', () => {
-  it('accepts the released 2049 daily plus 612 scene aliases', async () => {
+  it('accepts the released 2235 daily plus 612 scene aliases', async () => {
     const source = new ReviewContentSource(fetchValue(await released()))
     await expect(source.load()).resolves.toMatchObject({ schemaVersion: 1, documentType: 'review-content-index' })
   })

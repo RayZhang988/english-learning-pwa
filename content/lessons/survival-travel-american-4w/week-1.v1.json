@@ -27,11 +27,11 @@
             "schemaVersion": 1,
             "contentType": "vocabulary-set-v1",
             "fixedSeconds": 15,
-            "itemCount": 401,
+            "itemCount": 463,
             "secondsPerItem": 12,
             "activeAudioSeconds": 0,
             "expectedAudioPlaythroughs": 0,
-            "interactionStepCount": 802,
+            "interactionStepCount": 926,
             "secondsPerInteractionStep": 3,
             "minimumSeconds": 90,
             "maximumSeconds": 600
@@ -4036,6 +4036,626 @@
                 "exampleZh": "我可以用信用卡付款吗？",
                 "growthDifficultyLevel": 0.5,
                 "dailyKnowledgeId": "daily-knowledge-v1:p1c:065"
+              },
+              {
+                "id": "r17-daily-p2a-001",
+                "term": "I'd like to check in",
+                "meaningZh": "我想办理值机",
+                "partOfSpeech": "airport request",
+                "exampleEn": "I'd like to check in for my flight.",
+                "exampleZh": "我想为我的航班办理值机。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:001"
+              },
+              {
+                "id": "r17-daily-p2a-002",
+                "term": "here is my passport",
+                "meaningZh": "这是我的护照",
+                "partOfSpeech": "airport statement",
+                "exampleEn": "Here is my passport and boarding pass.",
+                "exampleZh": "这是我的护照和登机牌。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:002"
+              },
+              {
+                "id": "r17-daily-p2a-003",
+                "term": "I have a checked bag",
+                "meaningZh": "我有托运行李",
+                "partOfSpeech": "airport statement",
+                "exampleEn": "I have a checked bag for this flight.",
+                "exampleZh": "我这趟航班有托运行李。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:003"
+              },
+              {
+                "id": "r17-daily-p2a-004",
+                "term": "where do I drop my bag",
+                "meaningZh": "我在哪里托运行李",
+                "partOfSpeech": "airport question",
+                "exampleEn": "Where do I drop my bag after check-in?",
+                "exampleZh": "办完值机后我在哪里托运行李？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:004"
+              },
+              {
+                "id": "r17-daily-p2a-005",
+                "term": "can I change my seat",
+                "meaningZh": "我能换座位吗",
+                "partOfSpeech": "airport request",
+                "exampleEn": "Can I change my seat before boarding?",
+                "exampleZh": "登机前我能换座位吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:005"
+              },
+              {
+                "id": "r17-daily-p2a-006",
+                "term": "is my flight on time",
+                "meaningZh": "我的航班准点吗",
+                "partOfSpeech": "airport question",
+                "exampleEn": "Is my flight on time today?",
+                "exampleZh": "我的航班今天准点吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:006"
+              },
+              {
+                "id": "r17-daily-p2a-007",
+                "term": "which gate should I use",
+                "meaningZh": "我该去哪个登机口",
+                "partOfSpeech": "airport question",
+                "exampleEn": "Which gate should I use for this flight?",
+                "exampleZh": "这趟航班我该去哪个登机口？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:007"
+              },
+              {
+                "id": "r17-daily-p2a-008",
+                "term": "when does boarding begin",
+                "meaningZh": "什么时候开始登机",
+                "partOfSpeech": "airport question",
+                "exampleEn": "When does boarding begin?",
+                "exampleZh": "什么时候开始登机？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:008"
+              },
+              {
+                "id": "r17-daily-p2a-009",
+                "term": "my flight is delayed",
+                "meaningZh": "我的航班延误了",
+                "partOfSpeech": "airport statement",
+                "exampleEn": "My flight is delayed by an hour.",
+                "exampleZh": "我的航班延误了一小时。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:009"
+              },
+              {
+                "id": "r17-daily-p2a-010",
+                "term": "I missed my connection",
+                "meaningZh": "我错过了转机",
+                "partOfSpeech": "airport statement",
+                "exampleEn": "I missed my connection in Chicago.",
+                "exampleZh": "我在芝加哥错过了转机。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:010"
+              },
+              {
+                "id": "r17-daily-p2a-011",
+                "term": "I'd like to check in at the hotel",
+                "meaningZh": "我想在酒店办理入住",
+                "partOfSpeech": "hotel request",
+                "exampleEn": "I'd like to check in at the hotel now.",
+                "exampleZh": "我现在想在酒店办理入住。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:011"
+              },
+              {
+                "id": "r17-daily-p2a-012",
+                "term": "I have a reservation",
+                "meaningZh": "我有预订",
+                "partOfSpeech": "hotel statement",
+                "exampleEn": "I have a reservation under my name.",
+                "exampleZh": "我有一个用我名字预订的房间。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:012"
+              },
+              {
+                "id": "r17-daily-p2a-013",
+                "term": "is breakfast included",
+                "meaningZh": "含早餐吗",
+                "partOfSpeech": "hotel question",
+                "exampleEn": "Is breakfast included with this room?",
+                "exampleZh": "这个房间含早餐吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:013"
+              },
+              {
+                "id": "r17-daily-p2a-014",
+                "term": "could you call a taxi",
+                "meaningZh": "你能叫一辆出租车吗",
+                "partOfSpeech": "hotel request",
+                "exampleEn": "Could you call a taxi for me?",
+                "exampleZh": "你能帮我叫一辆出租车吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:014"
+              },
+              {
+                "id": "r17-daily-p2a-015",
+                "term": "can you store my luggage",
+                "meaningZh": "你能寄存我的行李吗",
+                "partOfSpeech": "hotel request",
+                "exampleEn": "Can you store my luggage until tonight?",
+                "exampleZh": "你能帮我把行李寄存到今晚吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:015"
+              },
+              {
+                "id": "r17-daily-p2a-016",
+                "term": "the room is too noisy",
+                "meaningZh": "房间太吵了",
+                "partOfSpeech": "hotel problem",
+                "exampleEn": "The room is too noisy at night.",
+                "exampleZh": "房间晚上太吵了。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:016"
+              },
+              {
+                "id": "r17-daily-p2a-017",
+                "term": "the air conditioner is not working",
+                "meaningZh": "空调坏了",
+                "partOfSpeech": "hotel problem",
+                "exampleEn": "The air conditioner is not working in my room.",
+                "exampleZh": "我房间的空调坏了。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:017"
+              },
+              {
+                "id": "r17-daily-p2a-018",
+                "term": "could you send someone up",
+                "meaningZh": "你能派人上来吗",
+                "partOfSpeech": "hotel request",
+                "exampleEn": "Could you send someone up to my room?",
+                "exampleZh": "你能派人到我房间来吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:018"
+              },
+              {
+                "id": "r17-daily-p2a-019",
+                "term": "I need a late check-out",
+                "meaningZh": "我需要延迟退房",
+                "partOfSpeech": "hotel request",
+                "exampleEn": "I need a late check-out tomorrow.",
+                "exampleZh": "我明天需要延迟退房。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:019"
+              },
+              {
+                "id": "r17-daily-p2a-020",
+                "term": "can I get another key",
+                "meaningZh": "我能再要一张房卡吗",
+                "partOfSpeech": "hotel request",
+                "exampleEn": "Can I get another key for the room?",
+                "exampleZh": "我能再要一张房间卡吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:020"
+              },
+              {
+                "id": "r17-daily-p2a-021",
+                "term": "which bus goes downtown",
+                "meaningZh": "哪辆公交车去市中心",
+                "partOfSpeech": "transport question",
+                "exampleEn": "Which bus goes downtown from here?",
+                "exampleZh": "从这里哪辆公交车去市中心？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:021"
+              },
+              {
+                "id": "r17-daily-p2a-022",
+                "term": "does this train stop at",
+                "meaningZh": "这趟火车停靠……吗",
+                "partOfSpeech": "transport question",
+                "exampleEn": "Does this train stop at the airport?",
+                "exampleZh": "这趟火车停靠机场吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:022"
+              },
+              {
+                "id": "r17-daily-p2a-023",
+                "term": "how many stops is it",
+                "meaningZh": "有几站",
+                "partOfSpeech": "transport question",
+                "exampleEn": "How many stops is it to the museum?",
+                "exampleZh": "到博物馆有几站？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:023"
+              },
+              {
+                "id": "r17-daily-p2a-024",
+                "term": "where should I transfer",
+                "meaningZh": "我该在哪里换乘",
+                "partOfSpeech": "transport question",
+                "exampleEn": "Where should I transfer to the subway?",
+                "exampleZh": "我该在哪里换乘地铁？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:024"
+              },
+              {
+                "id": "r17-daily-p2a-025",
+                "term": "I need to get off here",
+                "meaningZh": "我要在这里下车",
+                "partOfSpeech": "transport statement",
+                "exampleEn": "I need to get off here, please.",
+                "exampleZh": "请让我在这里下车。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:025"
+              },
+              {
+                "id": "r17-daily-p2a-026",
+                "term": "is this seat taken",
+                "meaningZh": "这个座位有人吗",
+                "partOfSpeech": "transport question",
+                "exampleEn": "Is this seat taken?",
+                "exampleZh": "这个座位有人吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:026"
+              },
+              {
+                "id": "r17-daily-p2a-027",
+                "term": "how long does the ride take",
+                "meaningZh": "车程要多久",
+                "partOfSpeech": "transport question",
+                "exampleEn": "How long does the ride take to the hotel?",
+                "exampleZh": "到酒店车程要多久？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:027"
+              },
+              {
+                "id": "r17-daily-p2a-028",
+                "term": "can I pay on the bus",
+                "meaningZh": "我能在公交车上付费吗",
+                "partOfSpeech": "transport question",
+                "exampleEn": "Can I pay on the bus with cash?",
+                "exampleZh": "我能在公交车上用现金付费吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:028"
+              },
+              {
+                "id": "r17-daily-p2a-029",
+                "term": "I bought the wrong ticket",
+                "meaningZh": "我买错票了",
+                "partOfSpeech": "transport problem",
+                "exampleEn": "I bought the wrong ticket by mistake.",
+                "exampleZh": "我不小心买错票了。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:029"
+              },
+              {
+                "id": "r17-daily-p2a-030",
+                "term": "when is the next train",
+                "meaningZh": "下一班火车什么时候来",
+                "partOfSpeech": "transport question",
+                "exampleEn": "When is the next train to Boston?",
+                "exampleZh": "去波士顿的下一班火车什么时候来？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:030"
+              },
+              {
+                "id": "r17-daily-p2a-031",
+                "term": "could we have a table for two",
+                "meaningZh": "我们能要一张两人桌吗",
+                "partOfSpeech": "restaurant request",
+                "exampleEn": "Could we have a table for two, please?",
+                "exampleZh": "我们能要一张两人桌吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:031"
+              },
+              {
+                "id": "r17-daily-p2a-032",
+                "term": "I'd like to order",
+                "meaningZh": "我想点餐",
+                "partOfSpeech": "restaurant request",
+                "exampleEn": "I'd like to order the chicken.",
+                "exampleZh": "我想点鸡肉。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:032"
+              },
+              {
+                "id": "r17-daily-p2a-033",
+                "term": "what do you recommend",
+                "meaningZh": "你推荐什么",
+                "partOfSpeech": "restaurant question",
+                "exampleEn": "What do you recommend for lunch?",
+                "exampleZh": "午餐你推荐什么？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:033"
+              },
+              {
+                "id": "r17-daily-p2a-034",
+                "term": "does this contain nuts",
+                "meaningZh": "这个含坚果吗",
+                "partOfSpeech": "restaurant question",
+                "exampleEn": "Does this contain nuts or dairy?",
+                "exampleZh": "这个含坚果或乳制品吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:034"
+              },
+              {
+                "id": "r17-daily-p2a-035",
+                "term": "could I have it without cheese",
+                "meaningZh": "我能不要奶酪吗",
+                "partOfSpeech": "restaurant request",
+                "exampleEn": "Could I have it without cheese, please?",
+                "exampleZh": "我能不要奶酪吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:035"
+              },
+              {
+                "id": "r17-daily-p2a-036",
+                "term": "I ordered the soup",
+                "meaningZh": "我点的是汤",
+                "partOfSpeech": "restaurant statement",
+                "exampleEn": "I ordered the soup, not the salad.",
+                "exampleZh": "我点的是汤，不是沙拉。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:036"
+              },
+              {
+                "id": "r17-daily-p2a-037",
+                "term": "this is not what I ordered",
+                "meaningZh": "这不是我点的",
+                "partOfSpeech": "restaurant problem",
+                "exampleEn": "This is not what I ordered.",
+                "exampleZh": "这不是我点的。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:037"
+              },
+              {
+                "id": "r17-daily-p2a-038",
+                "term": "could we split the bill",
+                "meaningZh": "我们能分开结账吗",
+                "partOfSpeech": "restaurant request",
+                "exampleEn": "Could we split the bill?",
+                "exampleZh": "我们能分开结账吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:038"
+              },
+              {
+                "id": "r17-daily-p2a-039",
+                "term": "can I pay separately",
+                "meaningZh": "我能单独付款吗",
+                "partOfSpeech": "restaurant question",
+                "exampleEn": "Can I pay separately by card?",
+                "exampleZh": "我能单独刷卡付款吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:039"
+              },
+              {
+                "id": "r17-daily-p2a-040",
+                "term": "is service included",
+                "meaningZh": "包含服务费吗",
+                "partOfSpeech": "restaurant question",
+                "exampleEn": "Is service included in the bill?",
+                "exampleZh": "账单里包含服务费吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:040"
+              },
+              {
+                "id": "r17-daily-p2a-041",
+                "term": "I'd like to return this",
+                "meaningZh": "我想退这个",
+                "partOfSpeech": "shopping request",
+                "exampleEn": "I'd like to return this item.",
+                "exampleZh": "我想退这个商品。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:041"
+              },
+              {
+                "id": "r17-daily-p2a-042",
+                "term": "do you have this in my size",
+                "meaningZh": "你们有我的尺码吗",
+                "partOfSpeech": "shopping question",
+                "exampleEn": "Do you have this in my size?",
+                "exampleZh": "你们有我的尺码吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:042"
+              },
+              {
+                "id": "r17-daily-p2a-043",
+                "term": "can I get a refund",
+                "meaningZh": "我能退款吗",
+                "partOfSpeech": "shopping question",
+                "exampleEn": "Can I get a refund for this?",
+                "exampleZh": "这个我能退款吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:043"
+              },
+              {
+                "id": "r17-daily-p2a-044",
+                "term": "I paid by card",
+                "meaningZh": "我是刷卡付款的",
+                "partOfSpeech": "shopping statement",
+                "exampleEn": "I paid by card yesterday.",
+                "exampleZh": "我昨天是刷卡付款的。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:044"
+              },
+              {
+                "id": "r17-daily-p2a-045",
+                "term": "could you print a receipt",
+                "meaningZh": "你能打印收据吗",
+                "partOfSpeech": "shopping request",
+                "exampleEn": "Could you print a receipt for me?",
+                "exampleZh": "你能帮我打印一张收据吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:045"
+              },
+              {
+                "id": "r17-daily-p2a-046",
+                "term": "this item is damaged",
+                "meaningZh": "这个商品坏了",
+                "partOfSpeech": "shopping problem",
+                "exampleEn": "This item is damaged inside the box.",
+                "exampleZh": "这个商品在盒子里就坏了。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:046"
+              },
+              {
+                "id": "r17-daily-p2a-047",
+                "term": "can I exchange it for another size",
+                "meaningZh": "我能换成另一个尺码吗",
+                "partOfSpeech": "shopping request",
+                "exampleEn": "Can I exchange it for another size?",
+                "exampleZh": "我能换成另一个尺码吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:047"
+              },
+              {
+                "id": "r17-daily-p2a-048",
+                "term": "is there a fitting room",
+                "meaningZh": "有试衣间吗",
+                "partOfSpeech": "shopping question",
+                "exampleEn": "Is there a fitting room nearby?",
+                "exampleZh": "附近有试衣间吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:048"
+              },
+              {
+                "id": "r17-daily-p2a-049",
+                "term": "can I try this on",
+                "meaningZh": "我能试穿这个吗",
+                "partOfSpeech": "shopping question",
+                "exampleEn": "Can I try this on before I buy it?",
+                "exampleZh": "我买之前能试穿这个吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:049"
+              },
+              {
+                "id": "r17-daily-p2a-050",
+                "term": "this price is wrong",
+                "meaningZh": "这个价格不对",
+                "partOfSpeech": "shopping problem",
+                "exampleEn": "I think this price is wrong.",
+                "exampleZh": "我觉得这个价格不对。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:050"
+              },
+              {
+                "id": "r17-daily-p2a-051",
+                "term": "I need something for a headache",
+                "meaningZh": "我需要治疗头痛的药",
+                "partOfSpeech": "medical request",
+                "exampleEn": "I need something for a headache.",
+                "exampleZh": "我需要治疗头痛的药。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:051"
+              },
+              {
+                "id": "r17-daily-p2a-052",
+                "term": "where is the nearest pharmacy",
+                "meaningZh": "最近的药店在哪里",
+                "partOfSpeech": "medical question",
+                "exampleEn": "Where is the nearest pharmacy?",
+                "exampleZh": "最近的药店在哪里？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:052"
+              },
+              {
+                "id": "r17-daily-p2a-053",
+                "term": "I have a fever",
+                "meaningZh": "我发烧了",
+                "partOfSpeech": "medical statement",
+                "exampleEn": "I have a fever today.",
+                "exampleZh": "我今天发烧了。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:053"
+              },
+              {
+                "id": "r17-daily-p2a-054",
+                "term": "I need to see a doctor",
+                "meaningZh": "我需要看医生",
+                "partOfSpeech": "medical statement",
+                "exampleEn": "I need to see a doctor soon.",
+                "exampleZh": "我需要尽快看医生。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:054"
+              },
+              {
+                "id": "r17-daily-p2a-055",
+                "term": "do I need an appointment",
+                "meaningZh": "我需要预约吗",
+                "partOfSpeech": "medical question",
+                "exampleEn": "Do I need an appointment first?",
+                "exampleZh": "我需要先预约吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:055"
+              },
+              {
+                "id": "r17-daily-p2a-056",
+                "term": "is this medicine safe",
+                "meaningZh": "这个药安全吗",
+                "partOfSpeech": "medical question",
+                "exampleEn": "Is this medicine safe for adults?",
+                "exampleZh": "这个药对成年人安全吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:056"
+              },
+              {
+                "id": "r17-daily-p2a-057",
+                "term": "can you help me connect to Wi-Fi",
+                "meaningZh": "你能帮我连接无线网络吗",
+                "partOfSpeech": "connection request",
+                "exampleEn": "Can you help me connect to Wi-Fi?",
+                "exampleZh": "你能帮我连接无线网络吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:057"
+              },
+              {
+                "id": "r17-daily-p2a-058",
+                "term": "the Wi-Fi will not connect",
+                "meaningZh": "无线网络连不上",
+                "partOfSpeech": "connection problem",
+                "exampleEn": "The Wi-Fi will not connect on my phone.",
+                "exampleZh": "我的手机连不上无线网络。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:058"
+              },
+              {
+                "id": "r17-daily-p2a-059",
+                "term": "my phone has no signal",
+                "meaningZh": "我的手机没有信号",
+                "partOfSpeech": "connection problem",
+                "exampleEn": "My phone has no signal here.",
+                "exampleZh": "我的手机在这里没有信号。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:059"
+              },
+              {
+                "id": "r17-daily-p2a-060",
+                "term": "where can I charge my phone",
+                "meaningZh": "我在哪里能给手机充电",
+                "partOfSpeech": "connection question",
+                "exampleEn": "Where can I charge my phone?",
+                "exampleZh": "我在哪里能给手机充电？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:060"
+              },
+              {
+                "id": "r17-daily-p2a-061",
+                "term": "can I use your phone",
+                "meaningZh": "我能用一下你的手机吗",
+                "partOfSpeech": "connection request",
+                "exampleEn": "Can I use your phone for a call?",
+                "exampleZh": "我能用一下你的手机打电话吗？",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:061"
+              },
+              {
+                "id": "r17-daily-p2a-062",
+                "term": "I need to make an international call",
+                "meaningZh": "我需要打国际电话",
+                "partOfSpeech": "connection statement",
+                "exampleEn": "I need to make an international call tonight.",
+                "exampleZh": "我今晚需要打国际电话。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2a:062"
               }
             ]
           }

@@ -22,7 +22,9 @@ function readJson(relativePath) {
 }
 
 function writeJson(relativePath, value) {
-  fs.writeFileSync(absolute(relativePath), `${JSON.stringify(value, null, 2)}\n`)
+  // The released index is precached for offline training. Compact output keeps
+  // growing valid course content under Workbox's per-asset cache limit.
+  fs.writeFileSync(absolute(relativePath), `${JSON.stringify(value)}\n`)
 }
 
 function assert(condition, message) {

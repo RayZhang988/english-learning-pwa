@@ -5,7 +5,7 @@
   "source": {
     "packageIndexPath": "content/curriculum/package-index.v1.json",
     "sceneIndexPath": "content/curriculum/scene-vocabulary-question-bank-index.v1.json",
-    "dailyVocabularySourceCount": 558,
+    "dailyVocabularySourceCount": 620,
     "sceneQuestionCount": 612
   },
   "identityBoundary": {
@@ -43,8 +43,8 @@
     "rule": "Only daily vocabulary capacity is calculated by this audit. Listening and speaking remain in R17 scope but are not expanded by this vocabulary capacity batch."
   },
   "current": {
-    "dailyKnowledgePointCount": 553,
-    "dailyLexicalFormCount": 539,
+    "dailyKnowledgePointCount": 615,
+    "dailyLexicalFormCount": 601,
     "sceneQuestionCount": 612,
     "sceneLexicalFormCount": 554,
     "sceneIndependentKnowledgeCount": 573,
@@ -412,9 +412,9 @@
         "labelZh": "二年级",
         "minimumDifficulty": 1,
         "maximumDifficultyExclusive": 1.5,
-        "currentDailyKnowledgePoints": 13,
+        "currentDailyKnowledgePoints": 75,
         "targetDailyKnowledgePoints": 200,
-        "missingDailyKnowledgePoints": 187
+        "missingDailyKnowledgePoints": 125
       },
       {
         "ordinal": 3,
@@ -9836,6 +9836,564 @@
       "dailyKnowledgeId": "daily-knowledge-v1:phrase:4c622d5e",
       "difficultyLevel": 0.5,
       "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-001",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i d like to check in",
+      "meaningZh": "我想办理值机",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:f197b8df",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-002",
+      "lexicalKind": "phrase",
+      "lexicalForm": "here is my passport",
+      "meaningZh": "这是我的护照",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:69527dbf",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-003",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i have a checked bag",
+      "meaningZh": "我有托运行李",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:54b30e6a",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-004",
+      "lexicalKind": "phrase",
+      "lexicalForm": "where do i drop my bag",
+      "meaningZh": "我在哪里托运行李",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:08a5f14a",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-005",
+      "lexicalKind": "phrase",
+      "lexicalForm": "can i change my seat",
+      "meaningZh": "我能换座位吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:de18a8f2",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-006",
+      "lexicalKind": "phrase",
+      "lexicalForm": "is my flight on time",
+      "meaningZh": "我的航班准点吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:309b5c95",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-007",
+      "lexicalKind": "phrase",
+      "lexicalForm": "which gate should i use",
+      "meaningZh": "我该去哪个登机口",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:d2b15ce3",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-008",
+      "lexicalKind": "phrase",
+      "lexicalForm": "when does boarding begin",
+      "meaningZh": "什么时候开始登机",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:d86d9b10",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-009",
+      "lexicalKind": "phrase",
+      "lexicalForm": "my flight is delayed",
+      "meaningZh": "我的航班延误了",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:63d16ebc",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-010",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i missed my connection",
+      "meaningZh": "我错过了转机",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:4b73ffcc",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-011",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i d like to check in at the hotel",
+      "meaningZh": "我想在酒店办理入住",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:eeb65242",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-012",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i have a reservation",
+      "meaningZh": "我有预订",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:c77e4a8d",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-013",
+      "lexicalKind": "phrase",
+      "lexicalForm": "is breakfast included",
+      "meaningZh": "含早餐吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:fcdaf871",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-014",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you call a taxi",
+      "meaningZh": "你能叫一辆出租车吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:80f9af72",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-015",
+      "lexicalKind": "phrase",
+      "lexicalForm": "can you store my luggage",
+      "meaningZh": "你能寄存我的行李吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:8c027fde",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-016",
+      "lexicalKind": "phrase",
+      "lexicalForm": "the room is too noisy",
+      "meaningZh": "房间太吵了",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:fd6e58ad",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-017",
+      "lexicalKind": "phrase",
+      "lexicalForm": "the air conditioner is not working",
+      "meaningZh": "空调坏了",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:16b2ccbe",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-018",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you send someone up",
+      "meaningZh": "你能派人上来吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:4db9071d",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-019",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i need a late check out",
+      "meaningZh": "我需要延迟退房",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:b4363457",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-020",
+      "lexicalKind": "phrase",
+      "lexicalForm": "can i get another key",
+      "meaningZh": "我能再要一张房卡吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:ce590ffb",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-021",
+      "lexicalKind": "phrase",
+      "lexicalForm": "which bus goes downtown",
+      "meaningZh": "哪辆公交车去市中心",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:95b714e1",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-022",
+      "lexicalKind": "phrase",
+      "lexicalForm": "does this train stop at",
+      "meaningZh": "这趟火车停靠……吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:0df5ee25",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-023",
+      "lexicalKind": "phrase",
+      "lexicalForm": "how many stops is it",
+      "meaningZh": "有几站",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:80162c84",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-024",
+      "lexicalKind": "phrase",
+      "lexicalForm": "where should i transfer",
+      "meaningZh": "我该在哪里换乘",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:2230b385",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-025",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i need to get off here",
+      "meaningZh": "我要在这里下车",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:410e6ebc",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-026",
+      "lexicalKind": "phrase",
+      "lexicalForm": "is this seat taken",
+      "meaningZh": "这个座位有人吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:4b20e0ba",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-027",
+      "lexicalKind": "phrase",
+      "lexicalForm": "how long does the ride take",
+      "meaningZh": "车程要多久",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:96649187",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-028",
+      "lexicalKind": "phrase",
+      "lexicalForm": "can i pay on the bus",
+      "meaningZh": "我能在公交车上付费吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:e7d9aa7a",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-029",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i bought the wrong ticket",
+      "meaningZh": "我买错票了",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:fad7d551",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-030",
+      "lexicalKind": "phrase",
+      "lexicalForm": "when is the next train",
+      "meaningZh": "下一班火车什么时候来",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:18e96ce0",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-031",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could we have a table for two",
+      "meaningZh": "我们能要一张两人桌吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:09050cde",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-032",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i d like to order",
+      "meaningZh": "我想点餐",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:cf6b04fd",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-033",
+      "lexicalKind": "phrase",
+      "lexicalForm": "what do you recommend",
+      "meaningZh": "你推荐什么",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:5c724121",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-034",
+      "lexicalKind": "phrase",
+      "lexicalForm": "does this contain nuts",
+      "meaningZh": "这个含坚果吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:5d562d4b",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-035",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could i have it without cheese",
+      "meaningZh": "我能不要奶酪吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:881a518a",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-036",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i ordered the soup",
+      "meaningZh": "我点的是汤",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:46fdee80",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-037",
+      "lexicalKind": "phrase",
+      "lexicalForm": "this is not what i ordered",
+      "meaningZh": "这不是我点的",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:47987189",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-038",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could we split the bill",
+      "meaningZh": "我们能分开结账吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:3f47a316",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-039",
+      "lexicalKind": "phrase",
+      "lexicalForm": "can i pay separately",
+      "meaningZh": "我能单独付款吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:b5713578",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-040",
+      "lexicalKind": "phrase",
+      "lexicalForm": "is service included",
+      "meaningZh": "包含服务费吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:ff3a97ec",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-041",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i d like to return this",
+      "meaningZh": "我想退这个",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:236b5941",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-042",
+      "lexicalKind": "phrase",
+      "lexicalForm": "do you have this in my size",
+      "meaningZh": "你们有我的尺码吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:a6cde839",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-043",
+      "lexicalKind": "phrase",
+      "lexicalForm": "can i get a refund",
+      "meaningZh": "我能退款吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:64bd3e18",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-044",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i paid by card",
+      "meaningZh": "我是刷卡付款的",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:fa559fe5",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-045",
+      "lexicalKind": "phrase",
+      "lexicalForm": "could you print a receipt",
+      "meaningZh": "你能打印收据吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:6e0a1520",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-046",
+      "lexicalKind": "phrase",
+      "lexicalForm": "this item is damaged",
+      "meaningZh": "这个商品坏了",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:07c2a7f2",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-047",
+      "lexicalKind": "phrase",
+      "lexicalForm": "can i exchange it for another size",
+      "meaningZh": "我能换成另一个尺码吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:29acb6d1",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-048",
+      "lexicalKind": "phrase",
+      "lexicalForm": "is there a fitting room",
+      "meaningZh": "有试衣间吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:910dedf0",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-049",
+      "lexicalKind": "phrase",
+      "lexicalForm": "can i try this on",
+      "meaningZh": "我能试穿这个吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:6250baac",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-050",
+      "lexicalKind": "phrase",
+      "lexicalForm": "this price is wrong",
+      "meaningZh": "这个价格不对",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:628021a1",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-051",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i need something for a headache",
+      "meaningZh": "我需要治疗头痛的药",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:9295927f",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-052",
+      "lexicalKind": "phrase",
+      "lexicalForm": "where is the nearest pharmacy",
+      "meaningZh": "最近的药店在哪里",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:b9279519",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-053",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i have a fever",
+      "meaningZh": "我发烧了",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:fd9e045a",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-054",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i need to see a doctor",
+      "meaningZh": "我需要看医生",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:daa62c0f",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-055",
+      "lexicalKind": "phrase",
+      "lexicalForm": "do i need an appointment",
+      "meaningZh": "我需要预约吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:d1969c18",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-056",
+      "lexicalKind": "phrase",
+      "lexicalForm": "is this medicine safe",
+      "meaningZh": "这个药安全吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:c9b9f80c",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-057",
+      "lexicalKind": "phrase",
+      "lexicalForm": "can you help me connect to wi fi",
+      "meaningZh": "你能帮我连接无线网络吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:eb29328d",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-058",
+      "lexicalKind": "phrase",
+      "lexicalForm": "the wi fi will not connect",
+      "meaningZh": "无线网络连不上",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:8260e14d",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-059",
+      "lexicalKind": "phrase",
+      "lexicalForm": "my phone has no signal",
+      "meaningZh": "我的手机没有信号",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:1d7ce8f8",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-060",
+      "lexicalKind": "phrase",
+      "lexicalForm": "where can i charge my phone",
+      "meaningZh": "我在哪里能给手机充电",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:f7505f2f",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-061",
+      "lexicalKind": "phrase",
+      "lexicalForm": "can i use your phone",
+      "meaningZh": "我能用一下你的手机吗",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:978d1b2f",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
+    },
+    {
+      "sourceItemId": "r17-daily-p2a-062",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i need to make an international call",
+      "meaningZh": "我需要打国际电话",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:5f7d5085",
+      "difficultyLevel": 1,
+      "levelId": "primary-2"
     },
     {
       "sourceItemId": "w1d1-v1",
