@@ -35,6 +35,87 @@ function deepEqual(left, right) {
   return JSON.stringify(left) === JSON.stringify(right)
 }
 
+function normalizedEnglishKnowledge(value) {
+  return value.toLocaleLowerCase('en-US')
+    .replace(/\b(a|an|the|one|two|three|four|five|six|seven|eight|nine|ten)\b/g, ' ')
+    .replace(/[^a-z0-9]+/g, ' ').trim()
+}
+
+function normalizedChineseKnowledge(value) {
+  return value.replace(/\s+/g, '').trim()
+}
+
+// Explicitly reviewed equivalences that must never appear together as answers.
+const equivalentEnglishKnowledgeGroups = [
+  ['restroom', 'bathroom'],
+  ['takeout', 'to take away'],
+]
+
+function equivalentEnglishKnowledge(left, right) {
+  const a = normalizedEnglishKnowledge(left)
+  const b = normalizedEnglishKnowledge(right)
+  return a === b || equivalentEnglishKnowledgeGroups.some((group) => group.includes(a) && group.includes(b))
+}
+
+function deterministicRank(seed, value) {
+  let hash = 0x811c9dc5
+  for (const character of `${seed}|${value}`) {
+    hash ^= character.charCodeAt(0)
+    hash = Math.imul(hash, 0x01000193)
+  }
+  return hash >>> 0
+}
+
+function vocabularyDifficulty(source) {
+  return source.item.growthDifficultyLevel ?? source.unit.difficultyLevel
+}
+
+function vocabularyType(source) {
+  return source.item.partOfSpeech.trim().toLocaleLowerCase('en-US')
+}
+
+export function selectVocabularyDistractors(answer, sources) {
+  const candidates = sources
+    .filter((candidate) => candidate.item.id !== answer.item.id)
+    .filter((candidate) => !equivalentEnglishKnowledge(candidate.item.term, answer.item.term))
+    .filter((candidate) => normalizedChineseKnowledge(candidate.item.meaningZh) !== normalizedChineseKnowledge(answer.item.meaningZh))
+    .sort((left, right) => {
+      const leftDifficultyPenalty = vocabularyDifficulty(left) === vocabularyDifficulty(answer) ? 0 : 1
+      const rightDifficultyPenalty = vocabularyDifficulty(right) === vocabularyDifficulty(answer) ? 0 : 1
+      if (leftDifficultyPenalty !== rightDifficultyPenalty) return leftDifficultyPenalty - rightDifficultyPenalty
+      const leftTypePenalty = vocabularyType(left) === vocabularyType(answer) ? 0 : 1
+      const rightTypePenalty = vocabularyType(right) === vocabularyType(answer) ? 0 : 1
+      if (leftTypePenalty !== rightTypePenalty) return leftTypePenalty - rightTypePenalty
+      return deterministicRank(answer.item.id, left.item.id) - deterministicRank(answer.item.id, right.item.id) || left.item.id.localeCompare(right.item.id)
+    })
+  assert(candidates.length >= 3, `${answer.item.id} has fewer than three non-conflicting vocabulary distractors.`)
+  return candidates.slice(0, 3)
+}
+
+function assertVocabularyDistractorPolicy() {
+  const source = (id, term, meaningZh, partOfSpeech = 'noun', difficultyLevel = 0.5) => ({ item: { id, term, meaningZh, partOfSpeech }, unit: { difficultyLevel } })
+  const answer = source('answer', 'a room key', '房间钥匙', 'noun phrase')
+  const eligible = source('eligible', 'hotel key', '酒店钥匙', 'noun phrase')
+  const result = selectVocabularyDistractors(answer, [
+    answer,
+    source('same-english', 'room key', '另一含义', 'noun phrase'),
+    source('same-chinese', 'door key', '房间钥匙', 'noun phrase'),
+    source('article-variant', 'the room key', '房门钥匙', 'noun phrase'),
+    eligible,
+    source('same-level-same-type', 'hotel lobby', '酒店大堂', 'noun phrase'),
+    source('same-level-other-type', 'wait', '等待', 'verb'),
+    source('other-level-same-type', 'travel document', '旅行证件', 'noun phrase', 1),
+  ])
+  assert(result.every((candidate) => !['same-english', 'same-chinese', 'article-variant'].includes(candidate.item.id)), 'Distractor policy did not reject duplicate or article-variant knowledge.')
+  assert(result[0]?.item.id === 'eligible' || result[0]?.item.id === 'same-level-same-type', 'Distractor policy did not prefer same-level same-type candidates.')
+  assert(deepEqual(result, selectVocabularyDistractors(answer, [answer, eligible, source('same-level-same-type', 'hotel lobby', '酒店大堂', 'noun phrase'), source('same-level-other-type', 'wait', '等待', 'verb'), source('other-level-same-type', 'travel document', '旅行证件', 'noun phrase', 1)])), 'Distractor policy is not deterministic.')
+  let insufficient = false
+  try { selectVocabularyDistractors(answer, [answer, eligible, source('same-chinese', 'door key', '房间钥匙')]) } catch (error) { insufficient = String(error).includes('fewer than three') }
+  assert(insufficient, 'Distractor policy did not hard-fail when fewer than three safe candidates exist.')
+  const restroom = source('restroom-answer', 'restroom', '洗手间')
+  assert(!selectVocabularyDistractors(restroom, [restroom, source('bathroom', 'bathroom', '卫生间'), eligible, source('safe-a', 'hotel lobby', '酒店大堂'), source('safe-b', 'bus ticket', '公交车票')]).some((candidate) => candidate.item.id === 'bathroom'), 'Distractor policy did not reject an explicit equivalent group.')
+}
+
 function regexMatches(text, pattern) {
   return text.match(new RegExp(pattern, 'g')) ?? []
 }
@@ -134,17 +215,9 @@ function expectedCandidates() {
     const unit = unitByDomain(lesson, 'vocabulary')
     return unit.activity.items.map((item) => ({ lesson, unit, item }))
   })
-  const vocabularyIds = vocabularySources.map(({ item }) => item.id)
   const distractorsFor = (index) => {
-    const answer = vocabularyIds[index]
-    const distractors = []
-    for (let offset = 1; distractors.length < 3; offset += 1) {
-      const candidate = vocabularyIds[(index + offset) % vocabularyIds.length]
-      if (candidate !== answer) {
-        distractors.push(candidate)
-      }
-    }
-    return distractors
+    const answer = vocabularySources[index]
+    return selectVocabularyDistractors(answer, vocabularySources).map(({ item }) => item.id)
   }
 
   for (const [index, { unit, item }] of vocabularySources.entries()) {
@@ -357,6 +430,31 @@ function expectedIndex() {
     },
     candidates,
   }
+}
+
+function assertVocabularyQuestionFaces(index) {
+  const sourceItems = new Map(lessons.flatMap((lesson) => {
+    const unit = unitByDomain(lesson, 'vocabulary')
+    return unit.activity.items.map((item) => [item.id, item])
+  }))
+  const vocabularyCandidates = index.candidates.filter((candidate) => candidate.domain === 'vocabulary')
+  for (const candidate of vocabularyCandidates) {
+    const answer = sourceItems.get(candidate.source.sourceId)
+    const distractors = candidate.source.distractorItemIds.map((id) => sourceItems.get(id))
+    assert(answer && distractors.every(Boolean), `${candidate.itemId} cannot resolve its vocabulary options.`)
+    assert(candidate.source.distractorItemIds.length === 3, `${candidate.itemId} does not have exactly three distractors.`)
+    assert(new Set(candidate.source.distractorItemIds).size === 3, `${candidate.itemId} repeats a distractor identity.`)
+    const options = [answer, ...distractors]
+    for (let left = 0; left < options.length; left += 1) {
+      for (let right = left + 1; right < options.length; right += 1) {
+        const a = options[left]
+        const b = options[right]
+        assert(!equivalentEnglishKnowledge(a.term, b.term), `${candidate.itemId} has equivalent English options: ${a.term} / ${b.term}.`)
+        assert(normalizedChineseKnowledge(a.meaningZh) !== normalizedChineseKnowledge(b.meaningZh), `${candidate.itemId} has equivalent Chinese options: ${a.meaningZh} / ${b.meaningZh}.`)
+      }
+    }
+  }
+  return vocabularyCandidates.length
 }
 
 function assertSelectionContract(index) {
@@ -610,12 +708,14 @@ function assertExtraTrainingPriorityContract(index) {
   }
 }
 
+assertVocabularyDistractorPolicy()
 const expected = expectedIndex()
+const vocabularyQuestionFaceCount = assertVocabularyQuestionFaces(expected)
 if (writeMode) {
   writeJson(supplyIndexPath, expected)
   packageIndex.trainingSupplyTotals = expected.totals
   writeJson(packageIndexPath, packageIndex)
-  console.log(JSON.stringify({ mode: 'write', supplyIndexPath, totals: expected.totals }, null, 2))
+  console.log(JSON.stringify({ mode: 'write', supplyIndexPath, totals: expected.totals, vocabularyQuestionFaces: vocabularyQuestionFaceCount, vocabularyQuestionFaceConflicts: 0 }, null, 2))
   process.exit(0)
 }
 
@@ -631,4 +731,4 @@ assert(
   'Package index does not expose the training supply schema.',
 )
 assert(deepEqual(packageIndex.trainingSupplyTotals, observed.totals), 'Package index supply totals have drifted.')
-console.log(JSON.stringify({ schemaVersion: 1, totals: observed.totals, capacityByTargetDifficulty: observed.capacityPolicy.capacityByTargetDifficulty, selectionChecks: 'passed' }, null, 2))
+console.log(JSON.stringify({ schemaVersion: 1, totals: observed.totals, capacityByTargetDifficulty: observed.capacityPolicy.capacityByTargetDifficulty, selectionChecks: 'passed', vocabularyQuestionFaces: vocabularyQuestionFaceCount, vocabularyQuestionFaceConflicts: 0 }, null, 2))
