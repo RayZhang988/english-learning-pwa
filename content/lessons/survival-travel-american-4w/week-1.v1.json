@@ -27,11 +27,11 @@
             "schemaVersion": 1,
             "contentType": "vocabulary-set-v1",
             "fixedSeconds": 15,
-            "itemCount": 525,
+            "itemCount": 588,
             "secondsPerItem": 12,
             "activeAudioSeconds": 0,
             "expectedAudioPlaythroughs": 0,
-            "interactionStepCount": 1050,
+            "interactionStepCount": 1176,
             "secondsPerInteractionStep": 3,
             "minimumSeconds": 90,
             "maximumSeconds": 600
@@ -5276,6 +5276,636 @@
                 "exampleZh": "我的充电器坏了。",
                 "growthDifficultyLevel": 1,
                 "dailyKnowledgeId": "daily-knowledge-v1:p2b:062"
+              },
+              {
+                "id": "r17-daily-p2c-001",
+                "term": "where is the airline desk",
+                "meaningZh": "航空公司柜台在哪里",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Where is the airline desk.",
+                "exampleZh": "航空公司柜台在哪里。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:001"
+              },
+              {
+                "id": "r17-daily-p2c-002",
+                "term": "can I check this bag",
+                "meaningZh": "我能托运这个包吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Can I check this bag.",
+                "exampleZh": "我能托运这个包吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:002"
+              },
+              {
+                "id": "r17-daily-p2c-003",
+                "term": "my boarding pass is missing",
+                "meaningZh": "我的登机牌不见了",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "My boarding pass is missing.",
+                "exampleZh": "我的登机牌不见了。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:003"
+              },
+              {
+                "id": "r17-daily-p2c-004",
+                "term": "where is baggage claim",
+                "meaningZh": "行李提取处在哪里",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Where is baggage claim.",
+                "exampleZh": "行李提取处在哪里。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:004"
+              },
+              {
+                "id": "r17-daily-p2c-005",
+                "term": "I need to change my flight",
+                "meaningZh": "我需要改签航班",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "I need to change my flight.",
+                "exampleZh": "我需要改签航班。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:005"
+              },
+              {
+                "id": "r17-daily-p2c-006",
+                "term": "is this the departure gate",
+                "meaningZh": "这是出发登机口吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Is this the departure gate.",
+                "exampleZh": "这是出发登机口吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:006"
+              },
+              {
+                "id": "r17-daily-p2c-007",
+                "term": "can you print my boarding pass",
+                "meaningZh": "你能打印我的登机牌吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Can you print my boarding pass.",
+                "exampleZh": "你能打印我的登机牌吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:007"
+              },
+              {
+                "id": "r17-daily-p2c-008",
+                "term": "my flight leaves tonight",
+                "meaningZh": "我的航班今晚起飞",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "My flight leaves tonight.",
+                "exampleZh": "我的航班今晚起飞。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:008"
+              },
+              {
+                "id": "r17-daily-p2c-009",
+                "term": "where can I charge my laptop",
+                "meaningZh": "我在哪里能给电脑充电",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Where can I charge my laptop.",
+                "exampleZh": "我在哪里能给电脑充电。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:009"
+              },
+              {
+                "id": "r17-daily-p2c-010",
+                "term": "is there a flight to Denver",
+                "meaningZh": "有去丹佛的航班吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Is there a flight to Denver.",
+                "exampleZh": "有去丹佛的航班吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:010"
+              },
+              {
+                "id": "r17-daily-p2c-011",
+                "term": "could you check my reservation",
+                "meaningZh": "你能查一下我的预订吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Could you check my reservation.",
+                "exampleZh": "你能查一下我的预订吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:011"
+              },
+              {
+                "id": "r17-daily-p2c-012",
+                "term": "I need a room on a higher floor",
+                "meaningZh": "我需要高一点楼层的房间",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "I need a room on a higher floor.",
+                "exampleZh": "我需要高一点楼层的房间。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:012"
+              },
+              {
+                "id": "r17-daily-p2c-013",
+                "term": "can I pay for the room now",
+                "meaningZh": "我现在能付房费吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Can I pay for the room now.",
+                "exampleZh": "我现在能付房费吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:013"
+              },
+              {
+                "id": "r17-daily-p2c-014",
+                "term": "the light in my room is broken",
+                "meaningZh": "我房间的灯坏了",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "The light in my room is broken.",
+                "exampleZh": "我房间的灯坏了。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:014"
+              },
+              {
+                "id": "r17-daily-p2c-015",
+                "term": "could you bring some soap",
+                "meaningZh": "你能拿一些肥皂来吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Could you bring some soap.",
+                "exampleZh": "你能拿一些肥皂来吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:015"
+              },
+              {
+                "id": "r17-daily-p2c-016",
+                "term": "is there a laundry service",
+                "meaningZh": "有洗衣服务吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Is there a laundry service.",
+                "exampleZh": "有洗衣服务吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:016"
+              },
+              {
+                "id": "r17-daily-p2c-017",
+                "term": "my room has no hot water",
+                "meaningZh": "我的房间没有热水",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "My room has no hot water.",
+                "exampleZh": "我的房间没有热水。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:017"
+              },
+              {
+                "id": "r17-daily-p2c-018",
+                "term": "can you call a doctor",
+                "meaningZh": "你能叫医生吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Can you call a doctor.",
+                "exampleZh": "你能叫医生吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:018"
+              },
+              {
+                "id": "r17-daily-p2c-019",
+                "term": "where can I leave my bags",
+                "meaningZh": "我能把包放在哪里",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Where can I leave my bags.",
+                "exampleZh": "我能把包放在哪里。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:019"
+              },
+              {
+                "id": "r17-daily-p2c-020",
+                "term": "I need an extra blanket",
+                "meaningZh": "我需要一条额外毛毯",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "I need an extra blanket.",
+                "exampleZh": "我需要一条额外毛毯。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:020"
+              },
+              {
+                "id": "r17-daily-p2c-021",
+                "term": "which platform is for this train",
+                "meaningZh": "这趟火车是哪个站台",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Which platform is for this train.",
+                "exampleZh": "这趟火车是哪个站台。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:021"
+              },
+              {
+                "id": "r17-daily-p2c-022",
+                "term": "can I transfer at the next stop",
+                "meaningZh": "我能在下一站换乘吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Can I transfer at the next stop.",
+                "exampleZh": "我能在下一站换乘吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:022"
+              },
+              {
+                "id": "r17-daily-p2c-023",
+                "term": "does this ticket work on the subway",
+                "meaningZh": "这张票能坐地铁吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Does this ticket work on the subway.",
+                "exampleZh": "这张票能坐地铁吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:023"
+              },
+              {
+                "id": "r17-daily-p2c-024",
+                "term": "where do I buy a metro card",
+                "meaningZh": "我在哪里可以买地铁卡",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Where do I buy a metro card.",
+                "exampleZh": "我在哪里可以买地铁卡。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:024"
+              },
+              {
+                "id": "r17-daily-p2c-025",
+                "term": "is the station open now",
+                "meaningZh": "车站现在开门吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Is the station open now.",
+                "exampleZh": "车站现在开门吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:025"
+              },
+              {
+                "id": "r17-daily-p2c-026",
+                "term": "how much is a taxi to the hotel",
+                "meaningZh": "打车去酒店多少钱",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "How much is a taxi to the hotel.",
+                "exampleZh": "打车去酒店多少钱。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:026"
+              },
+              {
+                "id": "r17-daily-p2c-027",
+                "term": "please stop at this address",
+                "meaningZh": "请在这个地址停车",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Please stop at this address.",
+                "exampleZh": "请在这个地址停车。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:027"
+              },
+              {
+                "id": "r17-daily-p2c-028",
+                "term": "can you show me the route",
+                "meaningZh": "你能给我看路线吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Can you show me the route.",
+                "exampleZh": "你能给我看路线吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:028"
+              },
+              {
+                "id": "r17-daily-p2c-029",
+                "term": "I need to catch the last bus",
+                "meaningZh": "我需要赶末班公交车",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "I need to catch the last bus.",
+                "exampleZh": "我需要赶末班公交车。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:029"
+              },
+              {
+                "id": "r17-daily-p2c-030",
+                "term": "is there a seat near the door",
+                "meaningZh": "门边有座位吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Is there a seat near the door.",
+                "exampleZh": "门边有座位吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:030"
+              },
+              {
+                "id": "r17-daily-p2c-031",
+                "term": "can I see the drink menu",
+                "meaningZh": "我能看饮料单吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Can I see the drink menu.",
+                "exampleZh": "我能看饮料单吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:031"
+              },
+              {
+                "id": "r17-daily-p2c-032",
+                "term": "I would like the same dish",
+                "meaningZh": "我想要同样的菜",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "I would like the same dish.",
+                "exampleZh": "我想要同样的菜。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:032"
+              },
+              {
+                "id": "r17-daily-p2c-033",
+                "term": "could you heat this up",
+                "meaningZh": "你能加热一下这个吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Could you heat this up.",
+                "exampleZh": "你能加热一下这个吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:033"
+              },
+              {
+                "id": "r17-daily-p2c-034",
+                "term": "is there any meat in this",
+                "meaningZh": "这里面有肉吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Is there any meat in this.",
+                "exampleZh": "这里面有肉吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:034"
+              },
+              {
+                "id": "r17-daily-p2c-035",
+                "term": "I need a table outside",
+                "meaningZh": "我需要一张室外的桌子",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "I need a table outside.",
+                "exampleZh": "我需要一张室外的桌子。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:035"
+              },
+              {
+                "id": "r17-daily-p2c-036",
+                "term": "can we sit somewhere quieter",
+                "meaningZh": "我们能坐安静一点的地方吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Can we sit somewhere quieter.",
+                "exampleZh": "我们能坐安静一点的地方吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:036"
+              },
+              {
+                "id": "r17-daily-p2c-037",
+                "term": "this food is too salty",
+                "meaningZh": "这道菜太咸了",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "This food is too salty.",
+                "exampleZh": "这道菜太咸了。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:037"
+              },
+              {
+                "id": "r17-daily-p2c-038",
+                "term": "could I get another fork",
+                "meaningZh": "我能再要一把叉子吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Could I get another fork.",
+                "exampleZh": "我能再要一把叉子吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:038"
+              },
+              {
+                "id": "r17-daily-p2c-039",
+                "term": "we would like to pay now",
+                "meaningZh": "我们现在想付款",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "We would like to pay now.",
+                "exampleZh": "我们现在想付款。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:039"
+              },
+              {
+                "id": "r17-daily-p2c-040",
+                "term": "can I have the receipt please",
+                "meaningZh": "请给我收据好吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Can I have the receipt please.",
+                "exampleZh": "请给我收据好吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:040"
+              },
+              {
+                "id": "r17-daily-p2c-041",
+                "term": "where can I return this item",
+                "meaningZh": "我在哪里能退这个商品",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Where can I return this item.",
+                "exampleZh": "我在哪里能退这个商品。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:041"
+              },
+              {
+                "id": "r17-daily-p2c-042",
+                "term": "I would like a different color",
+                "meaningZh": "我想要另一种颜色",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "I would like a different color.",
+                "exampleZh": "我想要另一种颜色。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:042"
+              },
+              {
+                "id": "r17-daily-p2c-043",
+                "term": "can you check if this is on sale",
+                "meaningZh": "你能查一下这个是否打折吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Can you check if this is on sale.",
+                "exampleZh": "你能查一下这个是否打折吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:043"
+              },
+              {
+                "id": "r17-daily-p2c-044",
+                "term": "this is missing a part",
+                "meaningZh": "这个少了一个部件",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "This is missing a part.",
+                "exampleZh": "这个少了一个部件。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:044"
+              },
+              {
+                "id": "r17-daily-p2c-045",
+                "term": "can I get a larger bag",
+                "meaningZh": "我能要一个大一点的袋子吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Can I get a larger bag.",
+                "exampleZh": "我能要一个大一点的袋子吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:045"
+              },
+              {
+                "id": "r17-daily-p2c-046",
+                "term": "I need help at the checkout",
+                "meaningZh": "我在收银台需要帮助",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "I need help at the checkout.",
+                "exampleZh": "我在收银台需要帮助。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:046"
+              },
+              {
+                "id": "r17-daily-p2c-047",
+                "term": "can you hold this for me",
+                "meaningZh": "你能帮我留着这个吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Can you hold this for me.",
+                "exampleZh": "你能帮我留着这个吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:047"
+              },
+              {
+                "id": "r17-daily-p2c-048",
+                "term": "where is the nearest store",
+                "meaningZh": "最近的商店在哪里",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Where is the nearest store.",
+                "exampleZh": "最近的商店在哪里。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:048"
+              },
+              {
+                "id": "r17-daily-p2c-049",
+                "term": "I need to cancel this order",
+                "meaningZh": "我需要取消这个订单",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "I need to cancel this order.",
+                "exampleZh": "我需要取消这个订单。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:049"
+              },
+              {
+                "id": "r17-daily-p2c-050",
+                "term": "can I pay in cash",
+                "meaningZh": "我能用现金付款吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Can I pay in cash.",
+                "exampleZh": "我能用现金付款吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:050"
+              },
+              {
+                "id": "r17-daily-p2c-051",
+                "term": "I have a rash on my arm",
+                "meaningZh": "我胳膊上起疹子了",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "I have a rash on my arm.",
+                "exampleZh": "我胳膊上起疹子了。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:051"
+              },
+              {
+                "id": "r17-daily-p2c-052",
+                "term": "my head hurts a lot",
+                "meaningZh": "我头很疼",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "My head hurts a lot.",
+                "exampleZh": "我头很疼。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:052"
+              },
+              {
+                "id": "r17-daily-p2c-053",
+                "term": "I need something for a cold",
+                "meaningZh": "我需要治感冒的药",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "I need something for a cold.",
+                "exampleZh": "我需要治感冒的药。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:053"
+              },
+              {
+                "id": "r17-daily-p2c-054",
+                "term": "can you write down the medicine name",
+                "meaningZh": "你能写下药名吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Can you write down the medicine name.",
+                "exampleZh": "你能写下药名吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:054"
+              },
+              {
+                "id": "r17-daily-p2c-055",
+                "term": "how much does this medicine cost",
+                "meaningZh": "这个药多少钱",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "How much does this medicine cost.",
+                "exampleZh": "这个药多少钱。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:055"
+              },
+              {
+                "id": "r17-daily-p2c-056",
+                "term": "I need to rest for a while",
+                "meaningZh": "我需要休息一会儿",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "I need to rest for a while.",
+                "exampleZh": "我需要休息一会儿。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:056"
+              },
+              {
+                "id": "r17-daily-p2c-057",
+                "term": "where is the nearest clinic",
+                "meaningZh": "最近的诊所在哪里",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Where is the nearest clinic.",
+                "exampleZh": "最近的诊所在哪里。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:057"
+              },
+              {
+                "id": "r17-daily-p2c-058",
+                "term": "I feel dizzy today",
+                "meaningZh": "我今天头晕",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "I feel dizzy today.",
+                "exampleZh": "我今天头晕。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:058"
+              },
+              {
+                "id": "r17-daily-p2c-059",
+                "term": "can you help me activate this SIM card",
+                "meaningZh": "你能帮我激活这张电话卡吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Can you help me activate this SIM card.",
+                "exampleZh": "你能帮我激活这张电话卡吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:059"
+              },
+              {
+                "id": "r17-daily-p2c-060",
+                "term": "my phone cannot make calls",
+                "meaningZh": "我的手机不能打电话",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "My phone cannot make calls.",
+                "exampleZh": "我的手机不能打电话。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:060"
+              },
+              {
+                "id": "r17-daily-p2c-061",
+                "term": "where can I find free Wi-Fi",
+                "meaningZh": "我在哪里能找到免费无线网络",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Where can I find free Wi-Fi.",
+                "exampleZh": "我在哪里能找到免费无线网络。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:061"
+              },
+              {
+                "id": "r17-daily-p2c-062",
+                "term": "can you send me the address",
+                "meaningZh": "你能把地址发给我吗",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "Can you send me the address.",
+                "exampleZh": "你能把地址发给我吗。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:062"
+              },
+              {
+                "id": "r17-daily-p2c-063",
+                "term": "my phone is almost out of battery",
+                "meaningZh": "我的手机快没电了",
+                "partOfSpeech": "travel sentence",
+                "exampleEn": "My phone is almost out of battery.",
+                "exampleZh": "我的手机快没电了。",
+                "growthDifficultyLevel": 1,
+                "dailyKnowledgeId": "daily-knowledge-v1:p2c:063"
               }
             ]
           }
