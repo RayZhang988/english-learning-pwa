@@ -32,7 +32,8 @@
     "content/curriculum/validate-listening-bilingual-options.v1.mjs",
     "content/curriculum/validate-keyword-dictation-guidance.v1.mjs",
     "content/curriculum/validate-speaking-translations.v1.mjs",
-    "content/curriculum/generate-review-content-index.v1.mjs"
+    "content/curriculum/generate-review-content-index.v1.mjs",
+    "content/curriculum/validate-review-content-identity-lock.v1.mjs"
   ],
   "mediaAssets": [],
   "totals": {

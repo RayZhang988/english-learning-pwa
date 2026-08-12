@@ -8,6 +8,7 @@ const supplyPath = 'content/curriculum/training-supply-index.v1.json'
 const sceneIndexPath = 'content/curriculum/scene-vocabulary-question-bank-index.v1.json'
 const outputPath = 'content/curriculum/review-content-index.v1.json'
 const shardDirectory = 'content/curriculum/review-content-index.v1'
+const identityLockPath = 'content/curriculum/review-content-identity-lock.v1.json'
 
 const absolute = (relative) => path.join(root, relative)
 const readJson = (relative) => JSON.parse(fs.readFileSync(absolute(relative), 'utf8'))
@@ -109,6 +110,12 @@ function sourceMaps() {
   return { vocabulary, listeningExtension, listeningCore, listeningQuiz, speakingPrompt, speakingQuiz, sceneVocabulary, sceneIndex, sceneBank }
 }
 
+function identityLock() {
+  const lock = readJson(identityLockPath)
+  assert(lock.schemaVersion === 1 && lock.documentType === 'review-content-identity-lock' && lock.aliases && typeof lock.aliases === 'object', 'Review identity lock is invalid.')
+  return lock.aliases
+}
+
 function dailyEntry(candidate, maps) {
   const source = candidate.source
   let originalQuestionType
@@ -175,6 +182,7 @@ function sceneEntry(questionId, maps) {
 function expectedIndex() {
   const maps = sourceMaps()
   const supply = loadSupply()
+  const lockedIdentities = identityLock()
   const packageIndex = readJson('content/curriculum/package-index.v1.json')
   assert(packageIndex.reviewContentIndexFile === outputPath, 'Package index does not publish the review-content index.')
   assert(packageIndex.reviewContentIndexSchemaFile === 'content/curriculum/review-content-index.schema.v1.json', 'Package index does not publish the review-content schema.')
@@ -192,6 +200,11 @@ function expectedIndex() {
   const fingerprintPayloads = new Map()
   for (const entry of entries) {
     const alias = entry.source.kind === 'daily-supply' ? `daily:${entry.source.itemId}` : `scene:${entry.source.bankId}@${entry.source.contentVersion}:${entry.source.questionId}`
+    const locked = lockedIdentities[alias]
+    if (locked) {
+      assert(locked.scoredFingerprint === entry.reviewContentId, `Scored content changed for locked review alias ${alias}; create an explicit reviewed migration before changing its identity.`)
+      entry.reviewContentId = locked.reviewContentId
+    }
     assert(!aliases[alias], `Duplicate review alias ${alias}`)
     aliases[alias] = { reviewContentId: entry.reviewContentId, originalQuestionType: entry.originalQuestionType, domain: entry.domain, source: entry.source }
     const key = `${entry.reviewContentId}::${entry.originalQuestionType}`
