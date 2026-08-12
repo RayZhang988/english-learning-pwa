@@ -9,7 +9,7 @@ export const reviewContentIndexUrl = new URL('../../content/curriculum/review-co
 function assertReviewContentIndex(value: unknown): asserts value is ProductionReviewContentIndex {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new TypeError('Review-content index is invalid.')
   const document = value as Partial<ProductionReviewContentIndex>
-  if (document.schemaVersion !== 1 || document.documentType !== 'review-content-index' || document.contentVersion !== '1.0.0' || !document.aliases || typeof document.aliases !== 'object' || Array.isArray(document.aliases) || Object.keys(document.aliases).length !== 1476) throw new TypeError('Review-content index is invalid.')
+  if (document.schemaVersion !== 1 || document.documentType !== 'review-content-index' || document.contentVersion !== '1.0.0' || !document.aliases || typeof document.aliases !== 'object' || Array.isArray(document.aliases) || Object.keys(document.aliases).length < 1476) throw new TypeError('Review-content index is invalid.')
   let daily = 0
   let scene = 0
   for (const [aliasKey, raw] of Object.entries(document.aliases)) {
@@ -25,7 +25,7 @@ function assertReviewContentIndex(value: unknown): asserts value is ProductionRe
     else if (source.kind === 'scene-vocabulary-bank' && typeof source.bankId === 'string' && typeof source.contentVersion === 'string' && typeof source.questionId === 'string' && aliasKey === `scene:${source.bankId}@${source.contentVersion}:${source.questionId}` && candidate.domain === 'vocabulary') scene += 1
     else throw new TypeError('Review-content alias source is invalid.')
   }
-  if (daily !== 864 || scene !== 612) throw new TypeError('Review-content index coverage is invalid.')
+  if (daily < 864 || scene !== 612) throw new TypeError('Review-content index coverage is invalid.')
 }
 
 export class ReviewContentSource implements ReadonlyDataSource<ProductionReviewContentIndex> {

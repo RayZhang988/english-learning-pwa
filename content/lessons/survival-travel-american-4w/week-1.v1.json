@@ -9,7 +9,9 @@
       "lessonId": "w1d1-first-meeting",
       "recommendedDay": 1,
       "titleZh": "第一次见面",
-      "sceneIds": ["introductions"],
+      "sceneIds": [
+        "introductions"
+      ],
       "observableObjectives": [
         "回应问候并说出自己的姓名。",
         "说明自己来自哪里以及是来旅行的。"
@@ -25,26 +27,816 @@
             "schemaVersion": 1,
             "contentType": "vocabulary-set-v1",
             "fixedSeconds": 15,
-            "itemCount": 6,
+            "itemCount": 81,
             "secondsPerItem": 12,
             "activeAudioSeconds": 0,
             "expectedAudioPlaythroughs": 0,
-            "interactionStepCount": 12,
+            "interactionStepCount": 162,
             "secondsPerInteractionStep": 3,
             "minimumSeconds": 90,
             "maximumSeconds": 600
           },
-          "tags": ["scene:introductions", "week:1", "day:1", "focus:greetings"],
+          "tags": [
+            "scene:introductions",
+            "week:1",
+            "day:1",
+            "focus:greetings"
+          ],
           "prerequisiteUnitIds": [],
           "activity": {
             "type": "vocabulary-set",
             "instructionsZh": "先理解词义，再用例句完成一次自我介绍。",
             "items": [
-              {"id": "w1d1-v1", "term": "hi", "partOfSpeech": "interjection", "meaningZh": "嗨；你好", "exampleEn": "Hi, I'm Emma.", "exampleZh": "你好，我是 Emma。"},
-              {"id": "w1d1-v2", "term": "name", "partOfSpeech": "noun", "meaningZh": "姓名", "exampleEn": "My name is Kai.", "exampleZh": "我叫 Kai。"},
-              {"id": "w1d1-v3", "term": "from", "partOfSpeech": "preposition", "meaningZh": "来自", "exampleEn": "I'm from Beijing.", "exampleZh": "我来自北京。"},
-              {"id": "w1d1-v4", "term": "nice to meet you", "partOfSpeech": "phrase", "meaningZh": "很高兴认识你", "exampleEn": "Nice to meet you, Kai.", "exampleZh": "很高兴认识你，Kai。"},
-              {"id": "w1d1-v5", "term": "visit", "partOfSpeech": "verb", "meaningZh": "访问；旅行", "exampleEn": "I'm visiting Boston.", "exampleZh": "我正在波士顿旅行。"}
+              {
+                "id": "w1d1-v1",
+                "term": "hi",
+                "partOfSpeech": "interjection",
+                "meaningZh": "嗨；你好",
+                "exampleEn": "Hi, I'm Emma.",
+                "exampleZh": "你好，我是 Emma。"
+              },
+              {
+                "id": "w1d1-v2",
+                "term": "name",
+                "partOfSpeech": "noun",
+                "meaningZh": "姓名",
+                "exampleEn": "My name is Kai.",
+                "exampleZh": "我叫 Kai。"
+              },
+              {
+                "id": "w1d1-v3",
+                "term": "from",
+                "partOfSpeech": "preposition",
+                "meaningZh": "来自",
+                "exampleEn": "I'm from Beijing.",
+                "exampleZh": "我来自北京。"
+              },
+              {
+                "id": "w1d1-v4",
+                "term": "nice to meet you",
+                "partOfSpeech": "phrase",
+                "meaningZh": "很高兴认识你",
+                "exampleEn": "Nice to meet you, Kai.",
+                "exampleZh": "很高兴认识你，Kai。"
+              },
+              {
+                "id": "w1d1-v5",
+                "term": "visit",
+                "partOfSpeech": "verb",
+                "meaningZh": "访问；旅行",
+                "exampleEn": "I'm visiting Boston.",
+                "exampleZh": "我正在波士顿旅行。"
+              },
+              {
+                "id": "r17-daily-k1a-001",
+                "term": "hello",
+                "partOfSpeech": "interjection",
+                "meaningZh": "你好",
+                "exampleEn": "Hello, can you help me?",
+                "exampleZh": "你好，你能帮我吗？",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:001"
+              },
+              {
+                "id": "r17-daily-k1a-002",
+                "term": "goodbye",
+                "partOfSpeech": "interjection",
+                "meaningZh": "再见",
+                "exampleEn": "Goodbye, thank you.",
+                "exampleZh": "再见，谢谢你。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:002"
+              },
+              {
+                "id": "r17-daily-k1a-003",
+                "term": "welcome",
+                "partOfSpeech": "interjection",
+                "meaningZh": "欢迎",
+                "exampleEn": "Welcome to our hotel.",
+                "exampleZh": "欢迎来到我们的酒店。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:003"
+              },
+              {
+                "id": "r17-daily-k1a-004",
+                "term": "thank you",
+                "partOfSpeech": "politeness phrase",
+                "meaningZh": "谢谢",
+                "exampleEn": "Thank you for your help.",
+                "exampleZh": "谢谢你的帮助。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:004"
+              },
+              {
+                "id": "r17-daily-k1a-005",
+                "term": "sorry",
+                "partOfSpeech": "interjection",
+                "meaningZh": "对不起",
+                "exampleEn": "Sorry, I am late.",
+                "exampleZh": "对不起，我迟到了。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:005"
+              },
+              {
+                "id": "r17-daily-k1a-006",
+                "term": "excuse me",
+                "partOfSpeech": "politeness phrase",
+                "meaningZh": "劳驾；打扰一下",
+                "exampleEn": "Excuse me, where is the hotel?",
+                "exampleZh": "打扰一下，酒店在哪里？",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:006"
+              },
+              {
+                "id": "r17-daily-k1a-007",
+                "term": "yes",
+                "partOfSpeech": "response word",
+                "meaningZh": "是；好的",
+                "exampleEn": "Yes, this is my bag.",
+                "exampleZh": "是的，这是我的包。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:007"
+              },
+              {
+                "id": "r17-daily-k1a-008",
+                "term": "no",
+                "partOfSpeech": "response word",
+                "meaningZh": "不；没有",
+                "exampleEn": "No, I do not understand.",
+                "exampleZh": "不，我不明白。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:008"
+              },
+              {
+                "id": "r17-daily-k1a-009",
+                "term": "help",
+                "partOfSpeech": "noun",
+                "meaningZh": "帮助",
+                "exampleEn": "I need help, please.",
+                "exampleZh": "请帮帮我。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:009"
+              },
+              {
+                "id": "r17-daily-k1a-010",
+                "term": "my name is",
+                "partOfSpeech": "practical phrase",
+                "meaningZh": "我的名字是",
+                "exampleEn": "My name is Lin.",
+                "exampleZh": "我的名字是林。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:010"
+              },
+              {
+                "id": "r17-daily-k1a-011",
+                "term": "friend",
+                "partOfSpeech": "noun",
+                "meaningZh": "朋友",
+                "exampleEn": "My friend is here.",
+                "exampleZh": "我的朋友在这里。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:011"
+              },
+              {
+                "id": "r17-daily-k1a-012",
+                "term": "family",
+                "partOfSpeech": "noun",
+                "meaningZh": "家人",
+                "exampleEn": "My family is waiting.",
+                "exampleZh": "我的家人在等候。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:012"
+              },
+              {
+                "id": "r17-daily-k1a-013",
+                "term": "child",
+                "partOfSpeech": "noun",
+                "meaningZh": "孩子",
+                "exampleEn": "The child is with me.",
+                "exampleZh": "孩子和我在一起。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:013"
+              },
+              {
+                "id": "r17-daily-k1a-014",
+                "term": "man",
+                "partOfSpeech": "noun",
+                "meaningZh": "男人",
+                "exampleEn": "The man works here.",
+                "exampleZh": "那位男士在这里工作。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:014"
+              },
+              {
+                "id": "r17-daily-k1a-015",
+                "term": "woman",
+                "partOfSpeech": "noun",
+                "meaningZh": "女人",
+                "exampleEn": "The woman can help us.",
+                "exampleZh": "那位女士能帮助我们。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:015"
+              },
+              {
+                "id": "r17-daily-k1a-016",
+                "term": "one",
+                "partOfSpeech": "number",
+                "meaningZh": "一",
+                "exampleEn": "I need one ticket.",
+                "exampleZh": "我需要一张票。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:016"
+              },
+              {
+                "id": "r17-daily-k1a-017",
+                "term": "two",
+                "partOfSpeech": "number",
+                "meaningZh": "二",
+                "exampleEn": "We need two rooms.",
+                "exampleZh": "我们需要两间房。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:017"
+              },
+              {
+                "id": "r17-daily-k1a-018",
+                "term": "three",
+                "partOfSpeech": "number",
+                "meaningZh": "三",
+                "exampleEn": "Table three is ready.",
+                "exampleZh": "三号桌准备好了。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:018"
+              },
+              {
+                "id": "r17-daily-k1a-019",
+                "term": "four",
+                "partOfSpeech": "number",
+                "meaningZh": "四",
+                "exampleEn": "Gate four is open.",
+                "exampleZh": "四号登机口开放了。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:019"
+              },
+              {
+                "id": "r17-daily-k1a-020",
+                "term": "five",
+                "partOfSpeech": "number",
+                "meaningZh": "五",
+                "exampleEn": "It is five dollars.",
+                "exampleZh": "这是五美元。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:020"
+              },
+              {
+                "id": "r17-daily-k1a-021",
+                "term": "noon",
+                "partOfSpeech": "time word",
+                "meaningZh": "中午",
+                "exampleEn": "We eat at noon.",
+                "exampleZh": "我们中午吃饭。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:021"
+              },
+              {
+                "id": "r17-daily-k1a-022",
+                "term": "evening",
+                "partOfSpeech": "time word",
+                "meaningZh": "傍晚",
+                "exampleEn": "Good evening.",
+                "exampleZh": "晚上好。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:022"
+              },
+              {
+                "id": "r17-daily-k1a-023",
+                "term": "now",
+                "partOfSpeech": "time word",
+                "meaningZh": "现在",
+                "exampleEn": "I need a taxi now.",
+                "exampleZh": "我现在需要出租车。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:023"
+              },
+              {
+                "id": "r17-daily-k1a-024",
+                "term": "morning",
+                "partOfSpeech": "time word",
+                "meaningZh": "早上",
+                "exampleEn": "Good morning.",
+                "exampleZh": "早上好。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:024"
+              },
+              {
+                "id": "r17-daily-k1a-025",
+                "term": "night",
+                "partOfSpeech": "time word",
+                "meaningZh": "夜晚",
+                "exampleEn": "The hotel is open at night.",
+                "exampleZh": "酒店夜晚营业。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:025"
+              },
+              {
+                "id": "r17-daily-k1a-026",
+                "term": "here",
+                "partOfSpeech": "place word",
+                "meaningZh": "这里",
+                "exampleEn": "Wait here, please.",
+                "exampleZh": "请在这里等。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:026"
+              },
+              {
+                "id": "r17-daily-k1a-027",
+                "term": "there",
+                "partOfSpeech": "place word",
+                "meaningZh": "那里",
+                "exampleEn": "The bus stop is there.",
+                "exampleZh": "公交车站在那里。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:027"
+              },
+              {
+                "id": "r17-daily-k1a-028",
+                "term": "map",
+                "partOfSpeech": "noun",
+                "meaningZh": "地图",
+                "exampleEn": "Can I see a map?",
+                "exampleZh": "我可以看地图吗？",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:028"
+              },
+              {
+                "id": "r17-daily-k1a-029",
+                "term": "corner",
+                "partOfSpeech": "noun",
+                "meaningZh": "街角",
+                "exampleEn": "The shop is on the corner.",
+                "exampleZh": "商店在街角。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:029"
+              },
+              {
+                "id": "r17-daily-k1a-030",
+                "term": "crosswalk",
+                "partOfSpeech": "noun",
+                "meaningZh": "人行横道",
+                "exampleEn": "Use the crosswalk here.",
+                "exampleZh": "在这里走人行横道。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:030"
+              },
+              {
+                "id": "r17-daily-k1a-031",
+                "term": "near",
+                "partOfSpeech": "adjective",
+                "meaningZh": "近的",
+                "exampleEn": "Is the station near?",
+                "exampleZh": "车站近吗？",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:031"
+              },
+              {
+                "id": "r17-daily-k1a-032",
+                "term": "far",
+                "partOfSpeech": "adjective",
+                "meaningZh": "远的",
+                "exampleEn": "Is the airport far?",
+                "exampleZh": "机场远吗？",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:032"
+              },
+              {
+                "id": "r17-daily-k1a-033",
+                "term": "up",
+                "partOfSpeech": "direction word",
+                "meaningZh": "向上",
+                "exampleEn": "Go up the stairs.",
+                "exampleZh": "上楼梯。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:033"
+              },
+              {
+                "id": "r17-daily-k1a-034",
+                "term": "down",
+                "partOfSpeech": "direction word",
+                "meaningZh": "向下",
+                "exampleEn": "Go down one floor.",
+                "exampleZh": "下一层楼。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:034"
+              },
+              {
+                "id": "r17-daily-k1a-035",
+                "term": "stop",
+                "partOfSpeech": "verb",
+                "meaningZh": "停；车站",
+                "exampleEn": "Please stop here.",
+                "exampleZh": "请在这里停。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:035"
+              },
+              {
+                "id": "r17-daily-k1a-036",
+                "term": "go",
+                "partOfSpeech": "verb",
+                "meaningZh": "去；走",
+                "exampleEn": "Go to the hotel.",
+                "exampleZh": "去酒店。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:036"
+              },
+              {
+                "id": "r17-daily-k1a-037",
+                "term": "walk",
+                "partOfSpeech": "verb",
+                "meaningZh": "走路",
+                "exampleEn": "Can we walk there?",
+                "exampleZh": "我们可以走过去吗？",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:037"
+              },
+              {
+                "id": "r17-daily-k1a-038",
+                "term": "taxi",
+                "partOfSpeech": "noun",
+                "meaningZh": "出租车",
+                "exampleEn": "The taxi is outside.",
+                "exampleZh": "出租车在外面。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:038"
+              },
+              {
+                "id": "r17-daily-k1a-039",
+                "term": "bus",
+                "partOfSpeech": "noun",
+                "meaningZh": "公交车",
+                "exampleEn": "The bus is late.",
+                "exampleZh": "公交车晚点了。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:039"
+              },
+              {
+                "id": "r17-daily-k1a-040",
+                "term": "train",
+                "partOfSpeech": "noun",
+                "meaningZh": "火车",
+                "exampleEn": "The train leaves now.",
+                "exampleZh": "火车现在出发。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:040"
+              },
+              {
+                "id": "r17-daily-k1a-041",
+                "term": "car",
+                "partOfSpeech": "noun",
+                "meaningZh": "汽车",
+                "exampleEn": "The car is waiting.",
+                "exampleZh": "车在等候。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:041"
+              },
+              {
+                "id": "r17-daily-k1a-042",
+                "term": "bicycle",
+                "partOfSpeech": "noun",
+                "meaningZh": "自行车",
+                "exampleEn": "The bicycle is for rent.",
+                "exampleZh": "这辆自行车可以租。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:042"
+              },
+              {
+                "id": "r17-daily-k1a-043",
+                "term": "subway",
+                "partOfSpeech": "noun",
+                "meaningZh": "地铁",
+                "exampleEn": "The subway is downstairs.",
+                "exampleZh": "地铁在楼下。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:043"
+              },
+              {
+                "id": "r17-daily-k1a-044",
+                "term": "airport",
+                "partOfSpeech": "noun",
+                "meaningZh": "机场",
+                "exampleEn": "We are at the airport.",
+                "exampleZh": "我们在机场。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:044"
+              },
+              {
+                "id": "r17-daily-k1a-045",
+                "term": "hotel",
+                "partOfSpeech": "noun",
+                "meaningZh": "酒店",
+                "exampleEn": "Our hotel is nearby.",
+                "exampleZh": "我们的酒店在附近。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:045"
+              },
+              {
+                "id": "r17-daily-k1a-046",
+                "term": "room",
+                "partOfSpeech": "noun",
+                "meaningZh": "房间",
+                "exampleEn": "This is my room.",
+                "exampleZh": "这是我的房间。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:046"
+              },
+              {
+                "id": "r17-daily-k1a-047",
+                "term": "key",
+                "partOfSpeech": "noun",
+                "meaningZh": "钥匙；房卡",
+                "exampleEn": "Here is your room key.",
+                "exampleZh": "这是你的房间钥匙。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:047"
+              },
+              {
+                "id": "r17-daily-k1a-048",
+                "term": "bed",
+                "partOfSpeech": "noun",
+                "meaningZh": "床",
+                "exampleEn": "The bed is clean.",
+                "exampleZh": "床很干净。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:048"
+              },
+              {
+                "id": "r17-daily-k1a-049",
+                "term": "door",
+                "partOfSpeech": "noun",
+                "meaningZh": "门",
+                "exampleEn": "Please close the door.",
+                "exampleZh": "请关门。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:049"
+              },
+              {
+                "id": "r17-daily-k1a-050",
+                "term": "water",
+                "partOfSpeech": "noun",
+                "meaningZh": "水",
+                "exampleEn": "Can I have water?",
+                "exampleZh": "我可以要水吗？",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:050"
+              },
+              {
+                "id": "r17-daily-k1a-051",
+                "term": "food",
+                "partOfSpeech": "noun",
+                "meaningZh": "食物",
+                "exampleEn": "The food is good.",
+                "exampleZh": "食物很好。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:051"
+              },
+              {
+                "id": "r17-daily-k1a-052",
+                "term": "spoon",
+                "partOfSpeech": "noun",
+                "meaningZh": "勺子",
+                "exampleEn": "May I have a spoon?",
+                "exampleZh": "我可以要一把勺子吗？",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:052"
+              },
+              {
+                "id": "r17-daily-k1a-053",
+                "term": "table",
+                "partOfSpeech": "noun",
+                "meaningZh": "桌子",
+                "exampleEn": "Our table is ready.",
+                "exampleZh": "我们的桌子准备好了。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:053"
+              },
+              {
+                "id": "r17-daily-k1a-054",
+                "term": "eat",
+                "partOfSpeech": "verb",
+                "meaningZh": "吃",
+                "exampleEn": "We want to eat.",
+                "exampleZh": "我们想吃饭。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:054"
+              },
+              {
+                "id": "r17-daily-k1a-055",
+                "term": "drink",
+                "partOfSpeech": "verb",
+                "meaningZh": "喝",
+                "exampleEn": "I want to drink water.",
+                "exampleZh": "我想喝水。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:055"
+              },
+              {
+                "id": "r17-daily-k1a-056",
+                "term": "shop",
+                "partOfSpeech": "noun",
+                "meaningZh": "商店",
+                "exampleEn": "The shop is open.",
+                "exampleZh": "商店开着。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:056"
+              },
+              {
+                "id": "r17-daily-k1a-057",
+                "term": "money",
+                "partOfSpeech": "noun",
+                "meaningZh": "钱",
+                "exampleEn": "I need money for the bus.",
+                "exampleZh": "我坐公交车需要钱。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:057"
+              },
+              {
+                "id": "r17-daily-k1a-058",
+                "term": "wallet",
+                "partOfSpeech": "noun",
+                "meaningZh": "钱包",
+                "exampleEn": "My wallet is in my bag.",
+                "exampleZh": "我的钱包在包里。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:058"
+              },
+              {
+                "id": "r17-daily-k1a-059",
+                "term": "card",
+                "partOfSpeech": "noun",
+                "meaningZh": "卡",
+                "exampleEn": "Can I pay by card?",
+                "exampleZh": "我可以刷卡吗？",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:059"
+              },
+              {
+                "id": "r17-daily-k1a-060",
+                "term": "cheap",
+                "partOfSpeech": "adjective",
+                "meaningZh": "便宜的",
+                "exampleEn": "Is this cheap?",
+                "exampleZh": "这个便宜吗？",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:060"
+              },
+              {
+                "id": "r17-daily-k1a-061",
+                "term": "buy",
+                "partOfSpeech": "verb",
+                "meaningZh": "买",
+                "exampleEn": "I want to buy this.",
+                "exampleZh": "我想买这个。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:061"
+              },
+              {
+                "id": "r17-daily-k1a-062",
+                "term": "small",
+                "partOfSpeech": "adjective",
+                "meaningZh": "小的",
+                "exampleEn": "I need a small bag.",
+                "exampleZh": "我需要一个小包。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:062"
+              },
+              {
+                "id": "r17-daily-k1a-063",
+                "term": "big",
+                "partOfSpeech": "adjective",
+                "meaningZh": "大的",
+                "exampleEn": "This suitcase is big.",
+                "exampleZh": "这个行李箱很大。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:063"
+              },
+              {
+                "id": "r17-daily-k1a-064",
+                "term": "lost",
+                "partOfSpeech": "adjective",
+                "meaningZh": "丢失的",
+                "exampleEn": "My phone is lost.",
+                "exampleZh": "我的手机丢了。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:064"
+              },
+              {
+                "id": "r17-daily-k1a-065",
+                "term": "phone",
+                "partOfSpeech": "noun",
+                "meaningZh": "手机；电话",
+                "exampleEn": "My phone is here.",
+                "exampleZh": "我的手机在这里。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:065"
+              },
+              {
+                "id": "r17-daily-k1a-066",
+                "term": "police",
+                "partOfSpeech": "noun",
+                "meaningZh": "警察",
+                "exampleEn": "Please call the police.",
+                "exampleZh": "请叫警察。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:066"
+              },
+              {
+                "id": "r17-daily-k1a-067",
+                "term": "doctor",
+                "partOfSpeech": "noun",
+                "meaningZh": "医生",
+                "exampleEn": "I need a doctor.",
+                "exampleZh": "我需要医生。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:067"
+              },
+              {
+                "id": "r17-daily-k1a-068",
+                "term": "hurt",
+                "partOfSpeech": "adjective",
+                "meaningZh": "受伤；疼",
+                "exampleEn": "My leg hurts.",
+                "exampleZh": "我的腿疼。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:068"
+              },
+              {
+                "id": "r17-daily-k1a-069",
+                "term": "sick",
+                "partOfSpeech": "adjective",
+                "meaningZh": "生病的",
+                "exampleEn": "I feel sick.",
+                "exampleZh": "我觉得不舒服。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:069"
+              },
+              {
+                "id": "r17-daily-k1a-070",
+                "term": "safe",
+                "partOfSpeech": "adjective",
+                "meaningZh": "安全的",
+                "exampleEn": "Is this area safe?",
+                "exampleZh": "这个地方安全吗？",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:070"
+              },
+              {
+                "id": "r17-daily-k1a-071",
+                "term": "danger",
+                "partOfSpeech": "noun",
+                "meaningZh": "危险",
+                "exampleEn": "There is danger ahead.",
+                "exampleZh": "前面有危险。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:071"
+              },
+              {
+                "id": "r17-daily-k1a-072",
+                "term": "ambulance",
+                "partOfSpeech": "noun",
+                "meaningZh": "救护车",
+                "exampleEn": "Please call an ambulance.",
+                "exampleZh": "请叫救护车。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:072"
+              },
+              {
+                "id": "r17-daily-k1a-073",
+                "term": "bathroom",
+                "partOfSpeech": "noun",
+                "meaningZh": "洗手间",
+                "exampleEn": "Where is the bathroom?",
+                "exampleZh": "洗手间在哪里？",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:073"
+              },
+              {
+                "id": "r17-daily-k1a-074",
+                "term": "open",
+                "partOfSpeech": "adjective",
+                "meaningZh": "打开；营业",
+                "exampleEn": "Is the store open?",
+                "exampleZh": "商店开着吗？",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:074"
+              },
+              {
+                "id": "r17-daily-k1a-075",
+                "term": "closed",
+                "partOfSpeech": "adjective",
+                "meaningZh": "关闭的",
+                "exampleEn": "The door is closed.",
+                "exampleZh": "门关着。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1a:075"
+              }
             ]
           }
         },
@@ -67,23 +859,85 @@
             "minimumSeconds": 150,
             "maximumSeconds": 900
           },
-          "tags": ["scene:introductions", "week:1", "day:1", "skill:gist", "skill:detail"],
+          "tags": [
+            "scene:introductions",
+            "week:1",
+            "day:1",
+            "skill:gist",
+            "skill:detail"
+          ],
           "prerequisiteUnitIds": [],
           "activity": {
             "type": "listening-dialogue",
             "titleZh": "酒店大堂里的问候",
-            "tts": {"locale": "en-US", "defaultRate": 0.9},
+            "tts": {
+              "locale": "en-US",
+              "defaultRate": 0.9
+            },
             "transcript": [
-              {"speaker": "Maya", "text": "Hi, I'm Maya.", "translationZh": "你好，我是 Maya。"},
-              {"speaker": "Leo", "text": "Hi, Maya. I'm Leo. Nice to meet you.", "translationZh": "你好，Maya。我是 Leo。很高兴认识你。"},
-              {"speaker": "Maya", "text": "Nice to meet you, too. Where are you from?", "translationZh": "我也很高兴认识你。你来自哪里？"},
-              {"speaker": "Leo", "text": "I'm from Shanghai. I'm visiting Boston this week.", "translationZh": "我来自上海。这周我在波士顿旅行。"},
-              {"speaker": "Maya", "text": "Welcome to Boston!", "translationZh": "欢迎来到波士顿！"}
+              {
+                "speaker": "Maya",
+                "text": "Hi, I'm Maya.",
+                "translationZh": "你好，我是 Maya。"
+              },
+              {
+                "speaker": "Leo",
+                "text": "Hi, Maya. I'm Leo. Nice to meet you.",
+                "translationZh": "你好，Maya。我是 Leo。很高兴认识你。"
+              },
+              {
+                "speaker": "Maya",
+                "text": "Nice to meet you, too. Where are you from?",
+                "translationZh": "我也很高兴认识你。你来自哪里？"
+              },
+              {
+                "speaker": "Leo",
+                "text": "I'm from Shanghai. I'm visiting Boston this week.",
+                "translationZh": "我来自上海。这周我在波士顿旅行。"
+              },
+              {
+                "speaker": "Maya",
+                "text": "Welcome to Boston!",
+                "translationZh": "欢迎来到波士顿！"
+              }
             ],
             "checks": [
-              {"id": "w1d1-l1", "skill": "gist", "promptZh": "两人在做什么？", "options": ["第一次见面并互相介绍", "在餐厅点餐", "讨论航班"], "correctOptionIndex": 0, "rationaleZh": "双方交换姓名，Leo 说明自己来自哪里。"},
-              {"id": "w1d1-l2", "skill": "detail", "promptZh": "Leo 来自哪里？", "options": ["Boston", "Shanghai", "Chicago"], "correctOptionIndex": 1, "rationaleZh": "Leo 说“I’m from Shanghai.”"},
-              {"id": "w1d1-l3", "skill": "detail", "promptZh": "Leo 这周在哪里旅行？", "options": ["Boston", "Shanghai", "Seattle"], "correctOptionIndex": 0, "rationaleZh": "他说“I’m visiting Boston this week.”"}
+              {
+                "id": "w1d1-l1",
+                "skill": "gist",
+                "promptZh": "两人在做什么？",
+                "options": [
+                  "第一次见面并互相介绍",
+                  "在餐厅点餐",
+                  "讨论航班"
+                ],
+                "correctOptionIndex": 0,
+                "rationaleZh": "双方交换姓名，Leo 说明自己来自哪里。"
+              },
+              {
+                "id": "w1d1-l2",
+                "skill": "detail",
+                "promptZh": "Leo 来自哪里？",
+                "options": [
+                  "Boston",
+                  "Shanghai",
+                  "Chicago"
+                ],
+                "correctOptionIndex": 1,
+                "rationaleZh": "Leo 说“I’m from Shanghai.”"
+              },
+              {
+                "id": "w1d1-l3",
+                "skill": "detail",
+                "promptZh": "Leo 这周在哪里旅行？",
+                "options": [
+                  "Boston",
+                  "Shanghai",
+                  "Seattle"
+                ],
+                "correctOptionIndex": 0,
+                "rationaleZh": "他说“I’m visiting Boston this week.”"
+              }
             ]
           }
         },
@@ -106,7 +960,12 @@
             "minimumSeconds": 90,
             "maximumSeconds": 720
           },
-          "tags": ["scene:introductions", "week:1", "day:1", "task:fixed-response"],
+          "tags": [
+            "scene:introductions",
+            "week:1",
+            "day:1",
+            "task:fixed-response"
+          ],
           "prerequisiteUnitIds": [],
           "activity": {
             "type": "fixed-response",
@@ -118,8 +977,15 @@
                 "partnerLine": "Hi, I'm Maya.",
                 "modelAnswer": "Hi, Maya. I'm Lin.",
                 "modelAnswerTranslationZh": "你好，Maya。我是 Lin。",
-                "acceptedAnswers": ["Hi, Maya. I'm Lin.", "Hello, Maya. I'm Lin.", "Nice to meet you, Maya. I'm Lin."],
-                "requiredConcepts": ["greeting", "speaker-name"]
+                "acceptedAnswers": [
+                  "Hi, Maya. I'm Lin.",
+                  "Hello, Maya. I'm Lin.",
+                  "Nice to meet you, Maya. I'm Lin."
+                ],
+                "requiredConcepts": [
+                  "greeting",
+                  "speaker-name"
+                ]
               },
               {
                 "id": "w1d1-s2",
@@ -127,8 +993,14 @@
                 "partnerLine": "Where are you from?",
                 "modelAnswer": "I'm from Shanghai.",
                 "modelAnswerTranslationZh": "我来自上海。",
-                "acceptedAnswers": ["I'm from Shanghai.", "I am from Shanghai."],
-                "requiredConcepts": ["from", "Shanghai"]
+                "acceptedAnswers": [
+                  "I'm from Shanghai.",
+                  "I am from Shanghai."
+                ],
+                "requiredConcepts": [
+                  "from",
+                  "Shanghai"
+                ]
               },
               {
                 "id": "w1d1-s3",
@@ -136,24 +1008,73 @@
                 "partnerLine": "Do you live here?",
                 "modelAnswer": "No, I'm visiting New York.",
                 "modelAnswerTranslationZh": "不，我正在纽约旅行。",
-                "acceptedAnswers": ["No, I'm visiting New York.", "No. I'm here on vacation.", "No, I'm a visitor."],
-                "requiredConcepts": ["not-local", "visit"]
+                "acceptedAnswers": [
+                  "No, I'm visiting New York.",
+                  "No. I'm here on vacation.",
+                  "No, I'm a visitor."
+                ],
+                "requiredConcepts": [
+                  "not-local",
+                  "visit"
+                ]
               }
             ]
           }
         }
       ],
       "sceneQuiz": [
-        {"id": "w1d1-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "哪一句表示“我来自北京”？", "options": ["I'm Beijing.", "I'm from Beijing.", "I visit from Beijing."], "correctOptionIndex": 1, "rationaleZh": "表示来源使用 be from。"},
-        {"id": "w1d1-q2", "domain": "listening", "format": "single-choice", "audioText": "Hi, I'm Nora. I'm visiting Chicago.", "promptZh": "Nora 在哪里旅行？", "options": ["Chicago", "Boston", "New York"], "correctOptionIndex": 0, "rationaleZh": "visiting 后面的地点是 Chicago。"},
-        {"id": "w1d1-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "对方说“Nice to meet you.” 请回应。", "modelAnswer": "Nice to meet you, too.", "modelAnswerTranslationZh": "我也很高兴认识你。", "acceptedAnswers": ["Nice to meet you, too.", "You, too.", "It's nice to meet you, too."], "requiredConcepts": ["polite-response"]}
+        {
+          "id": "w1d1-q1",
+          "domain": "vocabulary",
+          "format": "single-choice",
+          "promptZh": "哪一句表示“我来自北京”？",
+          "options": [
+            "I'm Beijing.",
+            "I'm from Beijing.",
+            "I visit from Beijing."
+          ],
+          "correctOptionIndex": 1,
+          "rationaleZh": "表示来源使用 be from。"
+        },
+        {
+          "id": "w1d1-q2",
+          "domain": "listening",
+          "format": "single-choice",
+          "audioText": "Hi, I'm Nora. I'm visiting Chicago.",
+          "promptZh": "Nora 在哪里旅行？",
+          "options": [
+            "Chicago",
+            "Boston",
+            "New York"
+          ],
+          "correctOptionIndex": 0,
+          "rationaleZh": "visiting 后面的地点是 Chicago。"
+        },
+        {
+          "id": "w1d1-q3",
+          "domain": "speaking",
+          "format": "fixed-response",
+          "promptZh": "对方说“Nice to meet you.” 请回应。",
+          "modelAnswer": "Nice to meet you, too.",
+          "modelAnswerTranslationZh": "我也很高兴认识你。",
+          "acceptedAnswers": [
+            "Nice to meet you, too.",
+            "You, too.",
+            "It's nice to meet you, too."
+          ],
+          "requiredConcepts": [
+            "polite-response"
+          ]
+        }
       ]
     },
     {
       "lessonId": "w1d2-personal-information",
       "recommendedDay": 2,
       "titleZh": "姓名拼写与联系方式",
-      "sceneIds": ["introductions"],
+      "sceneIds": [
+        "introductions"
+      ],
       "observableObjectives": [
         "询问并确认名字的拼写。",
         "提供电话号码或电子邮箱地址。"
@@ -178,18 +1099,67 @@
             "minimumSeconds": 90,
             "maximumSeconds": 600
           },
-          "tags": ["scene:introductions", "week:1", "day:2", "focus:contact-information"],
-          "prerequisiteUnitIds": ["st4w-w1d1-vocabulary"],
+          "tags": [
+            "scene:introductions",
+            "week:1",
+            "day:2",
+            "focus:contact-information"
+          ],
+          "prerequisiteUnitIds": [
+            "st4w-w1d1-vocabulary"
+          ],
           "activity": {
             "type": "vocabulary-set",
             "instructionsZh": "区分名、姓和两种联系方式。",
             "items": [
-              {"id": "w1d2-v1", "term": "first name", "partOfSpeech": "noun phrase", "meaningZh": "名", "exampleEn": "My first name is Rui.", "exampleZh": "我的名是 Rui。"},
-              {"id": "w1d2-v2", "term": "last name", "partOfSpeech": "noun phrase", "meaningZh": "姓", "exampleEn": "My last name is Wang.", "exampleZh": "我姓 Wang。"},
-              {"id": "w1d2-v3", "term": "spell", "partOfSpeech": "verb", "meaningZh": "拼写", "exampleEn": "Could you spell Wang?", "exampleZh": "你可以拼一下 Wang 吗？"},
-              {"id": "w1d2-v4", "term": "phone number", "partOfSpeech": "noun phrase", "meaningZh": "电话号码", "exampleEn": "My phone number is 555-0162.", "exampleZh": "我的电话号码是 555-0162。"},
-              {"id": "w1d2-v5", "term": "email address", "partOfSpeech": "noun phrase", "meaningZh": "电子邮箱地址", "exampleEn": "Please enter your email address.", "exampleZh": "请输入你的电子邮箱地址。"},
-              {"id": "w1d2-v6", "term": "again", "partOfSpeech": "adverb", "meaningZh": "再一次", "exampleEn": "Could you say that again?", "exampleZh": "你可以再说一次吗？"}
+              {
+                "id": "w1d2-v1",
+                "term": "first name",
+                "partOfSpeech": "noun phrase",
+                "meaningZh": "名",
+                "exampleEn": "My first name is Rui.",
+                "exampleZh": "我的名是 Rui。"
+              },
+              {
+                "id": "w1d2-v2",
+                "term": "last name",
+                "partOfSpeech": "noun phrase",
+                "meaningZh": "姓",
+                "exampleEn": "My last name is Wang.",
+                "exampleZh": "我姓 Wang。"
+              },
+              {
+                "id": "w1d2-v3",
+                "term": "spell",
+                "partOfSpeech": "verb",
+                "meaningZh": "拼写",
+                "exampleEn": "Could you spell Wang?",
+                "exampleZh": "你可以拼一下 Wang 吗？"
+              },
+              {
+                "id": "w1d2-v4",
+                "term": "phone number",
+                "partOfSpeech": "noun phrase",
+                "meaningZh": "电话号码",
+                "exampleEn": "My phone number is 555-0162.",
+                "exampleZh": "我的电话号码是 555-0162。"
+              },
+              {
+                "id": "w1d2-v5",
+                "term": "email address",
+                "partOfSpeech": "noun phrase",
+                "meaningZh": "电子邮箱地址",
+                "exampleEn": "Please enter your email address.",
+                "exampleZh": "请输入你的电子邮箱地址。"
+              },
+              {
+                "id": "w1d2-v6",
+                "term": "again",
+                "partOfSpeech": "adverb",
+                "meaningZh": "再一次",
+                "exampleEn": "Could you say that again?",
+                "exampleZh": "你可以再说一次吗？"
+              }
             ]
           }
         },
@@ -212,26 +1182,102 @@
             "minimumSeconds": 150,
             "maximumSeconds": 900
           },
-          "tags": ["scene:introductions", "week:1", "day:2", "skill:detail", "focus:spelling"],
-          "prerequisiteUnitIds": ["st4w-w1d1-listening"],
+          "tags": [
+            "scene:introductions",
+            "week:1",
+            "day:2",
+            "skill:detail",
+            "focus:spelling"
+          ],
+          "prerequisiteUnitIds": [
+            "st4w-w1d1-listening"
+          ],
           "activity": {
             "type": "listening-dialogue",
             "titleZh": "填写活动登记表",
-            "tts": {"locale": "en-US", "defaultRate": 0.9},
+            "tts": {
+              "locale": "en-US",
+              "defaultRate": 0.9
+            },
             "transcript": [
-              {"speaker": "Staff", "text": "What's your first name?", "translationZh": "你的名是什么？"},
-              {"speaker": "Guest", "text": "Jia.", "translationZh": "Jia。"},
-              {"speaker": "Staff", "text": "Could you spell that, please?", "translationZh": "可以拼一下吗？"},
-              {"speaker": "Guest", "text": "J-I-A.", "translationZh": "J-I-A。"},
-              {"speaker": "Staff", "text": "And your last name?", "translationZh": "你的姓呢？"},
-              {"speaker": "Guest", "text": "Sun. S-U-N.", "translationZh": "Sun。S-U-N。"},
-              {"speaker": "Staff", "text": "Thank you. What's your phone number?", "translationZh": "谢谢。你的电话号码是多少？"},
-              {"speaker": "Guest", "text": "It's 555-0184.", "translationZh": "是 555-0184。"}
+              {
+                "speaker": "Staff",
+                "text": "What's your first name?",
+                "translationZh": "你的名是什么？"
+              },
+              {
+                "speaker": "Guest",
+                "text": "Jia.",
+                "translationZh": "Jia。"
+              },
+              {
+                "speaker": "Staff",
+                "text": "Could you spell that, please?",
+                "translationZh": "可以拼一下吗？"
+              },
+              {
+                "speaker": "Guest",
+                "text": "J-I-A.",
+                "translationZh": "J-I-A。"
+              },
+              {
+                "speaker": "Staff",
+                "text": "And your last name?",
+                "translationZh": "你的姓呢？"
+              },
+              {
+                "speaker": "Guest",
+                "text": "Sun. S-U-N.",
+                "translationZh": "Sun。S-U-N。"
+              },
+              {
+                "speaker": "Staff",
+                "text": "Thank you. What's your phone number?",
+                "translationZh": "谢谢。你的电话号码是多少？"
+              },
+              {
+                "speaker": "Guest",
+                "text": "It's 555-0184.",
+                "translationZh": "是 555-0184。"
+              }
             ],
             "checks": [
-              {"id": "w1d2-l1", "skill": "detail", "promptZh": "客人的名怎么拼？", "options": ["G-I-A", "J-I-A", "J-A-I"], "correctOptionIndex": 1, "rationaleZh": "客人逐字母说 J-I-A。"},
-              {"id": "w1d2-l2", "skill": "detail", "promptZh": "客人的姓是什么？", "options": ["Sun", "Song", "Sung"], "correctOptionIndex": 0, "rationaleZh": "客人说“Sun. S-U-N.”"},
-              {"id": "w1d2-l3", "skill": "detail", "promptZh": "电话号码最后两位是什么？", "options": ["48", "84", "18"], "correctOptionIndex": 1, "rationaleZh": "电话号码是 555-0184。"}
+              {
+                "id": "w1d2-l1",
+                "skill": "detail",
+                "promptZh": "客人的名怎么拼？",
+                "options": [
+                  "G-I-A",
+                  "J-I-A",
+                  "J-A-I"
+                ],
+                "correctOptionIndex": 1,
+                "rationaleZh": "客人逐字母说 J-I-A。"
+              },
+              {
+                "id": "w1d2-l2",
+                "skill": "detail",
+                "promptZh": "客人的姓是什么？",
+                "options": [
+                  "Sun",
+                  "Song",
+                  "Sung"
+                ],
+                "correctOptionIndex": 0,
+                "rationaleZh": "客人说“Sun. S-U-N.”"
+              },
+              {
+                "id": "w1d2-l3",
+                "skill": "detail",
+                "promptZh": "电话号码最后两位是什么？",
+                "options": [
+                  "48",
+                  "84",
+                  "18"
+                ],
+                "correctOptionIndex": 1,
+                "rationaleZh": "电话号码是 555-0184。"
+              }
             ]
           }
         },
@@ -254,8 +1300,16 @@
             "minimumSeconds": 90,
             "maximumSeconds": 720
           },
-          "tags": ["scene:introductions", "week:1", "day:2", "task:fixed-response", "focus:spelling"],
-          "prerequisiteUnitIds": ["st4w-w1d1-speaking"],
+          "tags": [
+            "scene:introductions",
+            "week:1",
+            "day:2",
+            "task:fixed-response",
+            "focus:spelling"
+          ],
+          "prerequisiteUnitIds": [
+            "st4w-w1d1-speaking"
+          ],
           "activity": {
             "type": "fixed-response",
             "instructionsZh": "口头提供个人信息；示例信息均为虚构。",
@@ -266,8 +1320,15 @@
                 "partnerLine": "Could you spell your last name?",
                 "modelAnswer": "Sure. It's L-I.",
                 "modelAnswerTranslationZh": "当然。是 L-I。",
-                "acceptedAnswers": ["Sure. It's L-I.", "L-I.", "My last name is Li, L-I."],
-                "requiredConcepts": ["L", "I"]
+                "acceptedAnswers": [
+                  "Sure. It's L-I.",
+                  "L-I.",
+                  "My last name is Li, L-I."
+                ],
+                "requiredConcepts": [
+                  "L",
+                  "I"
+                ]
               },
               {
                 "id": "w1d2-s2",
@@ -275,8 +1336,14 @@
                 "partnerLine": "What's your phone number?",
                 "modelAnswer": "My phone number is 555-0136.",
                 "modelAnswerTranslationZh": "我的电话号码是 555-0136。",
-                "acceptedAnswers": ["My phone number is 555-0136.", "It's 555-0136.", "555-0136."],
-                "requiredConcepts": ["555-0136"]
+                "acceptedAnswers": [
+                  "My phone number is 555-0136.",
+                  "It's 555-0136.",
+                  "555-0136."
+                ],
+                "requiredConcepts": [
+                  "555-0136"
+                ]
               },
               {
                 "id": "w1d2-s3",
@@ -284,24 +1351,73 @@
                 "partnerLine": "My email address is maya@example.com.",
                 "modelAnswer": "Could you say that again, please?",
                 "modelAnswerTranslationZh": "请你再说一遍好吗？",
-                "acceptedAnswers": ["Could you say that again, please?", "Could you repeat that, please?", "Sorry, what was the email address?"],
-                "requiredConcepts": ["repeat-request"]
+                "acceptedAnswers": [
+                  "Could you say that again, please?",
+                  "Could you repeat that, please?",
+                  "Sorry, what was the email address?"
+                ],
+                "requiredConcepts": [
+                  "repeat-request"
+                ]
               }
             ]
           }
         }
       ],
       "sceneQuiz": [
-        {"id": "w1d2-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "表格中的“last name”要求填写什么？", "options": ["名字", "姓", "电话号码"], "correctOptionIndex": 1, "rationaleZh": "美式表格中 last name 指姓。"},
-        {"id": "w1d2-q2", "domain": "listening", "format": "single-choice", "audioText": "My name is Bea. That's B-E-A.", "promptZh": "名字怎么拼？", "options": ["B-E-A", "B-I-A", "P-E-A"], "correctOptionIndex": 0, "rationaleZh": "说话人明确拼为 B-E-A。"},
-        {"id": "w1d2-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "请对方拼一下姓名。", "modelAnswer": "Could you spell your name, please?", "modelAnswerTranslationZh": "请你拼一下你的名字好吗？", "acceptedAnswers": ["Could you spell your name, please?", "How do you spell your name?", "Can you spell that, please?"], "requiredConcepts": ["spell", "name"]}
+        {
+          "id": "w1d2-q1",
+          "domain": "vocabulary",
+          "format": "single-choice",
+          "promptZh": "表格中的“last name”要求填写什么？",
+          "options": [
+            "名字",
+            "姓",
+            "电话号码"
+          ],
+          "correctOptionIndex": 1,
+          "rationaleZh": "美式表格中 last name 指姓。"
+        },
+        {
+          "id": "w1d2-q2",
+          "domain": "listening",
+          "format": "single-choice",
+          "audioText": "My name is Bea. That's B-E-A.",
+          "promptZh": "名字怎么拼？",
+          "options": [
+            "B-E-A",
+            "B-I-A",
+            "P-E-A"
+          ],
+          "correctOptionIndex": 0,
+          "rationaleZh": "说话人明确拼为 B-E-A。"
+        },
+        {
+          "id": "w1d2-q3",
+          "domain": "speaking",
+          "format": "fixed-response",
+          "promptZh": "请对方拼一下姓名。",
+          "modelAnswer": "Could you spell your name, please?",
+          "modelAnswerTranslationZh": "请你拼一下你的名字好吗？",
+          "acceptedAnswers": [
+            "Could you spell your name, please?",
+            "How do you spell your name?",
+            "Can you spell that, please?"
+          ],
+          "requiredConcepts": [
+            "spell",
+            "name"
+          ]
+        }
       ]
     },
     {
       "lessonId": "w1d3-numbers-and-prices",
       "recommendedDay": 3,
       "titleZh": "数字与价格",
-      "sceneIds": ["numbers-and-time"],
+      "sceneIds": [
+        "numbers-and-time"
+      ],
       "observableObjectives": [
         "听辨容易混淆的十几和几十。",
         "询问并确认简单美元金额。"
@@ -326,19 +1442,76 @@
             "minimumSeconds": 90,
             "maximumSeconds": 600
           },
-          "tags": ["scene:numbers-and-time", "week:1", "day:3", "focus:numbers", "focus:prices"],
-          "prerequisiteUnitIds": ["st4w-w1d2-vocabulary"],
+          "tags": [
+            "scene:numbers-and-time",
+            "week:1",
+            "day:3",
+            "focus:numbers",
+            "focus:prices"
+          ],
+          "prerequisiteUnitIds": [
+            "st4w-w1d2-vocabulary"
+          ],
           "activity": {
             "type": "vocabulary-set",
             "instructionsZh": "重点对比 fifteen/fifty 和 thirteen/thirty 的重音。",
             "items": [
-              {"id": "w1d3-v1", "term": "zero", "partOfSpeech": "number", "meaningZh": "零", "exampleEn": "The room number is two-zero-eight.", "exampleZh": "房间号是 208。"},
-              {"id": "w1d3-v2", "term": "fifteen", "partOfSpeech": "number", "meaningZh": "十五", "exampleEn": "The ticket is fifteen dollars.", "exampleZh": "票价是十五美元。"},
-              {"id": "w1d3-v3", "term": "fifty", "partOfSpeech": "number", "meaningZh": "五十", "exampleEn": "The bag is fifty dollars.", "exampleZh": "这个包五十美元。"},
-              {"id": "w1d3-v4", "term": "hundred", "partOfSpeech": "number", "meaningZh": "一百", "exampleEn": "The room is one hundred dollars a night.", "exampleZh": "房间每晚一百美元。"},
-              {"id": "w1d3-v5", "term": "dollar", "partOfSpeech": "noun", "meaningZh": "美元", "exampleEn": "It costs one dollar.", "exampleZh": "它一美元。"},
-              {"id": "w1d3-v6", "term": "cent", "partOfSpeech": "noun", "meaningZh": "美分", "exampleEn": "It's ninety-nine cents.", "exampleZh": "它是九十九美分。"},
-              {"id": "w1d3-v7", "term": "price", "partOfSpeech": "noun", "meaningZh": "价格", "exampleEn": "Is that the final price?", "exampleZh": "那是最终价格吗？"}
+              {
+                "id": "w1d3-v1",
+                "term": "zero",
+                "partOfSpeech": "number",
+                "meaningZh": "零",
+                "exampleEn": "The room number is two-zero-eight.",
+                "exampleZh": "房间号是 208。"
+              },
+              {
+                "id": "w1d3-v2",
+                "term": "fifteen",
+                "partOfSpeech": "number",
+                "meaningZh": "十五",
+                "exampleEn": "The ticket is fifteen dollars.",
+                "exampleZh": "票价是十五美元。"
+              },
+              {
+                "id": "w1d3-v3",
+                "term": "fifty",
+                "partOfSpeech": "number",
+                "meaningZh": "五十",
+                "exampleEn": "The bag is fifty dollars.",
+                "exampleZh": "这个包五十美元。"
+              },
+              {
+                "id": "w1d3-v4",
+                "term": "hundred",
+                "partOfSpeech": "number",
+                "meaningZh": "一百",
+                "exampleEn": "The room is one hundred dollars a night.",
+                "exampleZh": "房间每晚一百美元。"
+              },
+              {
+                "id": "w1d3-v5",
+                "term": "dollar",
+                "partOfSpeech": "noun",
+                "meaningZh": "美元",
+                "exampleEn": "It costs one dollar.",
+                "exampleZh": "它一美元。"
+              },
+              {
+                "id": "w1d3-v6",
+                "term": "cent",
+                "partOfSpeech": "noun",
+                "meaningZh": "美分",
+                "exampleEn": "It's ninety-nine cents.",
+                "exampleZh": "它是九十九美分。"
+              },
+              {
+                "id": "w1d3-v7",
+                "term": "price",
+                "partOfSpeech": "noun",
+                "meaningZh": "价格",
+                "exampleEn": "Is that the final price?",
+                "exampleZh": "那是最终价格吗？"
+              }
             ]
           }
         },
@@ -361,25 +1534,97 @@
             "minimumSeconds": 150,
             "maximumSeconds": 900
           },
-          "tags": ["scene:numbers-and-time", "week:1", "day:3", "skill:detail", "focus:prices"],
-          "prerequisiteUnitIds": ["st4w-w1d2-listening"],
+          "tags": [
+            "scene:numbers-and-time",
+            "week:1",
+            "day:3",
+            "skill:detail",
+            "focus:prices"
+          ],
+          "prerequisiteUnitIds": [
+            "st4w-w1d2-listening"
+          ],
           "activity": {
             "type": "listening-dialogue",
             "titleZh": "纪念品店的价格",
-            "tts": {"locale": "en-US", "defaultRate": 0.9},
+            "tts": {
+              "locale": "en-US",
+              "defaultRate": 0.9
+            },
             "transcript": [
-              {"speaker": "Customer", "text": "How much is this postcard?", "translationZh": "这张明信片多少钱？"},
-              {"speaker": "Clerk", "text": "It's one dollar and fifty cents.", "translationZh": "一美元五十美分。"},
-              {"speaker": "Customer", "text": "And the blue hat?", "translationZh": "那顶蓝帽子呢？"},
-              {"speaker": "Clerk", "text": "That's fifteen dollars.", "translationZh": "十五美元。"},
-              {"speaker": "Customer", "text": "Fifty dollars?", "translationZh": "五十美元？"},
-              {"speaker": "Clerk", "text": "No, fifteen: one-five.", "translationZh": "不，是十五：一五。"},
-              {"speaker": "Customer", "text": "Got it. I'll take the postcard.", "translationZh": "明白了。我要明信片。"}
+              {
+                "speaker": "Customer",
+                "text": "How much is this postcard?",
+                "translationZh": "这张明信片多少钱？"
+              },
+              {
+                "speaker": "Clerk",
+                "text": "It's one dollar and fifty cents.",
+                "translationZh": "一美元五十美分。"
+              },
+              {
+                "speaker": "Customer",
+                "text": "And the blue hat?",
+                "translationZh": "那顶蓝帽子呢？"
+              },
+              {
+                "speaker": "Clerk",
+                "text": "That's fifteen dollars.",
+                "translationZh": "十五美元。"
+              },
+              {
+                "speaker": "Customer",
+                "text": "Fifty dollars?",
+                "translationZh": "五十美元？"
+              },
+              {
+                "speaker": "Clerk",
+                "text": "No, fifteen: one-five.",
+                "translationZh": "不，是十五：一五。"
+              },
+              {
+                "speaker": "Customer",
+                "text": "Got it. I'll take the postcard.",
+                "translationZh": "明白了。我要明信片。"
+              }
             ],
             "checks": [
-              {"id": "w1d3-l1", "skill": "detail", "promptZh": "明信片多少钱？", "options": ["$1.15", "$1.50", "$15.00"], "correctOptionIndex": 1, "rationaleZh": "店员说 one dollar and fifty cents。"},
-              {"id": "w1d3-l2", "skill": "detail", "promptZh": "蓝帽子多少钱？", "options": ["$15", "$50", "$51"], "correctOptionIndex": 0, "rationaleZh": "店员澄清 fifteen，数字为 one-five。"},
-              {"id": "w1d3-l3", "skill": "gist", "promptZh": "顾客最后买了什么？", "options": ["帽子", "明信片", "帽子和明信片"], "correctOptionIndex": 1, "rationaleZh": "顾客说“I’ll take the postcard.”"}
+              {
+                "id": "w1d3-l1",
+                "skill": "detail",
+                "promptZh": "明信片多少钱？",
+                "options": [
+                  "$1.15",
+                  "$1.50",
+                  "$15.00"
+                ],
+                "correctOptionIndex": 1,
+                "rationaleZh": "店员说 one dollar and fifty cents。"
+              },
+              {
+                "id": "w1d3-l2",
+                "skill": "detail",
+                "promptZh": "蓝帽子多少钱？",
+                "options": [
+                  "$15",
+                  "$50",
+                  "$51"
+                ],
+                "correctOptionIndex": 0,
+                "rationaleZh": "店员澄清 fifteen，数字为 one-five。"
+              },
+              {
+                "id": "w1d3-l3",
+                "skill": "gist",
+                "promptZh": "顾客最后买了什么？",
+                "options": [
+                  "帽子",
+                  "明信片",
+                  "帽子和明信片"
+                ],
+                "correctOptionIndex": 1,
+                "rationaleZh": "顾客说“I’ll take the postcard.”"
+              }
             ]
           }
         },
@@ -402,8 +1647,16 @@
             "minimumSeconds": 90,
             "maximumSeconds": 720
           },
-          "tags": ["scene:numbers-and-time", "week:1", "day:3", "task:fixed-response", "focus:confirmation"],
-          "prerequisiteUnitIds": ["st4w-w1d2-speaking"],
+          "tags": [
+            "scene:numbers-and-time",
+            "week:1",
+            "day:3",
+            "task:fixed-response",
+            "focus:confirmation"
+          ],
+          "prerequisiteUnitIds": [
+            "st4w-w1d2-speaking"
+          ],
           "activity": {
             "type": "fixed-response",
             "instructionsZh": "把金额说完整；不确定时主动确认。",
@@ -414,8 +1667,15 @@
                 "partnerLine": "Can I help you?",
                 "modelAnswer": "How much is this ticket?",
                 "modelAnswerTranslationZh": "这张票多少钱？",
-                "acceptedAnswers": ["How much is this ticket?", "What's the price of this ticket?", "How much does this ticket cost?"],
-                "requiredConcepts": ["price-question", "ticket"]
+                "acceptedAnswers": [
+                  "How much is this ticket?",
+                  "What's the price of this ticket?",
+                  "How much does this ticket cost?"
+                ],
+                "requiredConcepts": [
+                  "price-question",
+                  "ticket"
+                ]
               },
               {
                 "id": "w1d3-s2",
@@ -423,8 +1683,14 @@
                 "partnerLine": "How much is it?",
                 "modelAnswer": "It's twelve dollars and fifty cents.",
                 "modelAnswerTranslationZh": "十二美元五十美分。",
-                "acceptedAnswers": ["It's twelve dollars and fifty cents.", "It's twelve fifty.", "Twelve dollars and fifty cents."],
-                "requiredConcepts": ["12.50"]
+                "acceptedAnswers": [
+                  "It's twelve dollars and fifty cents.",
+                  "It's twelve fifty.",
+                  "Twelve dollars and fifty cents."
+                ],
+                "requiredConcepts": [
+                  "12.50"
+                ]
               },
               {
                 "id": "w1d3-s3",
@@ -432,24 +1698,72 @@
                 "partnerLine": "It's fifty dollars.",
                 "modelAnswer": "Is that fifteen or fifty dollars?",
                 "modelAnswerTranslationZh": "是十五美元还是五十美元？",
-                "acceptedAnswers": ["Is that fifteen or fifty dollars?", "Did you say fifteen or fifty?", "Sorry, was that fifty dollars?"],
-                "requiredConcepts": ["number-confirmation"]
+                "acceptedAnswers": [
+                  "Is that fifteen or fifty dollars?",
+                  "Did you say fifteen or fifty?",
+                  "Sorry, was that fifty dollars?"
+                ],
+                "requiredConcepts": [
+                  "number-confirmation"
+                ]
               }
             ]
           }
         }
       ],
       "sceneQuiz": [
-        {"id": "w1d3-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "“ninety-nine cents”是多少钱？", "options": ["$0.99", "$9.90", "$99.00"], "correctOptionIndex": 0, "rationaleZh": "一美元等于一百美分，99 cents 是 $0.99。"},
-        {"id": "w1d3-q2", "domain": "listening", "format": "single-choice", "audioText": "Your total is thirty dollars and thirteen cents.", "promptZh": "总价是多少？", "options": ["$13.30", "$30.13", "$30.30"], "correctOptionIndex": 1, "rationaleZh": "thirty dollars and thirteen cents 是 $30.13。"},
-        {"id": "w1d3-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "询问这件物品的价格。", "modelAnswer": "How much is this?", "modelAnswerTranslationZh": "这个多少钱？", "acceptedAnswers": ["How much is this?", "How much does this cost?", "What's the price of this?"], "requiredConcepts": ["price-question"]}
+        {
+          "id": "w1d3-q1",
+          "domain": "vocabulary",
+          "format": "single-choice",
+          "promptZh": "“ninety-nine cents”是多少钱？",
+          "options": [
+            "$0.99",
+            "$9.90",
+            "$99.00"
+          ],
+          "correctOptionIndex": 0,
+          "rationaleZh": "一美元等于一百美分，99 cents 是 $0.99。"
+        },
+        {
+          "id": "w1d3-q2",
+          "domain": "listening",
+          "format": "single-choice",
+          "audioText": "Your total is thirty dollars and thirteen cents.",
+          "promptZh": "总价是多少？",
+          "options": [
+            "$13.30",
+            "$30.13",
+            "$30.30"
+          ],
+          "correctOptionIndex": 1,
+          "rationaleZh": "thirty dollars and thirteen cents 是 $30.13。"
+        },
+        {
+          "id": "w1d3-q3",
+          "domain": "speaking",
+          "format": "fixed-response",
+          "promptZh": "询问这件物品的价格。",
+          "modelAnswer": "How much is this?",
+          "modelAnswerTranslationZh": "这个多少钱？",
+          "acceptedAnswers": [
+            "How much is this?",
+            "How much does this cost?",
+            "What's the price of this?"
+          ],
+          "requiredConcepts": [
+            "price-question"
+          ]
+        }
       ]
     },
     {
       "lessonId": "w1d4-time-and-plans",
       "recommendedDay": 4,
       "titleZh": "时间与简单安排",
-      "sceneIds": ["numbers-and-time"],
+      "sceneIds": [
+        "numbers-and-time"
+      ],
       "observableObjectives": [
         "询问并听懂常见时间。",
         "约定今天或明天的会面时间。"
@@ -474,19 +1788,75 @@
             "minimumSeconds": 90,
             "maximumSeconds": 600
           },
-          "tags": ["scene:numbers-and-time", "week:1", "day:4", "focus:time"],
-          "prerequisiteUnitIds": ["st4w-w1d3-vocabulary"],
+          "tags": [
+            "scene:numbers-and-time",
+            "week:1",
+            "day:4",
+            "focus:time"
+          ],
+          "prerequisiteUnitIds": [
+            "st4w-w1d3-vocabulary"
+          ],
           "activity": {
             "type": "vocabulary-set",
             "instructionsZh": "用 day part 和具体时间组成安排。",
             "items": [
-              {"id": "w1d4-v1", "term": "today", "partOfSpeech": "adverb", "meaningZh": "今天", "exampleEn": "The museum is open today.", "exampleZh": "博物馆今天开放。"},
-              {"id": "w1d4-v2", "term": "tomorrow", "partOfSpeech": "adverb", "meaningZh": "明天", "exampleEn": "Let's meet tomorrow.", "exampleZh": "我们明天见吧。"},
-              {"id": "w1d4-v3", "term": "morning", "partOfSpeech": "noun", "meaningZh": "早上；上午", "exampleEn": "Breakfast is in the morning.", "exampleZh": "早餐在早上。"},
-              {"id": "w1d4-v4", "term": "afternoon", "partOfSpeech": "noun", "meaningZh": "下午", "exampleEn": "The tour starts this afternoon.", "exampleZh": "旅行团今天下午出发。"},
-              {"id": "w1d4-v5", "term": "evening", "partOfSpeech": "noun", "meaningZh": "晚上", "exampleEn": "I'm free this evening.", "exampleZh": "我今晚有空。"},
-              {"id": "w1d4-v6", "term": "o'clock", "partOfSpeech": "adverb", "meaningZh": "整点", "exampleEn": "The store opens at nine o'clock.", "exampleZh": "商店九点开门。"},
-              {"id": "w1d4-v7", "term": "around", "partOfSpeech": "preposition", "meaningZh": "大约", "exampleEn": "I'll arrive around six.", "exampleZh": "我大约六点到。"}
+              {
+                "id": "w1d4-v1",
+                "term": "today",
+                "partOfSpeech": "adverb",
+                "meaningZh": "今天",
+                "exampleEn": "The museum is open today.",
+                "exampleZh": "博物馆今天开放。"
+              },
+              {
+                "id": "w1d4-v2",
+                "term": "tomorrow",
+                "partOfSpeech": "adverb",
+                "meaningZh": "明天",
+                "exampleEn": "Let's meet tomorrow.",
+                "exampleZh": "我们明天见吧。"
+              },
+              {
+                "id": "w1d4-v3",
+                "term": "morning",
+                "partOfSpeech": "noun",
+                "meaningZh": "早上；上午",
+                "exampleEn": "Breakfast is in the morning.",
+                "exampleZh": "早餐在早上。"
+              },
+              {
+                "id": "w1d4-v4",
+                "term": "afternoon",
+                "partOfSpeech": "noun",
+                "meaningZh": "下午",
+                "exampleEn": "The tour starts this afternoon.",
+                "exampleZh": "旅行团今天下午出发。"
+              },
+              {
+                "id": "w1d4-v5",
+                "term": "evening",
+                "partOfSpeech": "noun",
+                "meaningZh": "晚上",
+                "exampleEn": "I'm free this evening.",
+                "exampleZh": "我今晚有空。"
+              },
+              {
+                "id": "w1d4-v6",
+                "term": "o'clock",
+                "partOfSpeech": "adverb",
+                "meaningZh": "整点",
+                "exampleEn": "The store opens at nine o'clock.",
+                "exampleZh": "商店九点开门。"
+              },
+              {
+                "id": "w1d4-v7",
+                "term": "around",
+                "partOfSpeech": "preposition",
+                "meaningZh": "大约",
+                "exampleEn": "I'll arrive around six.",
+                "exampleZh": "我大约六点到。"
+              }
             ]
           }
         },
@@ -509,24 +1879,92 @@
             "minimumSeconds": 150,
             "maximumSeconds": 900
           },
-          "tags": ["scene:numbers-and-time", "week:1", "day:4", "skill:detail", "focus:schedule"],
-          "prerequisiteUnitIds": ["st4w-w1d3-listening"],
+          "tags": [
+            "scene:numbers-and-time",
+            "week:1",
+            "day:4",
+            "skill:detail",
+            "focus:schedule"
+          ],
+          "prerequisiteUnitIds": [
+            "st4w-w1d3-listening"
+          ],
           "activity": {
             "type": "listening-dialogue",
             "titleZh": "约好参观博物馆",
-            "tts": {"locale": "en-US", "defaultRate": 0.92},
+            "tts": {
+              "locale": "en-US",
+              "defaultRate": 0.92
+            },
             "transcript": [
-              {"speaker": "Ava", "text": "Are you free tomorrow morning?", "translationZh": "你明天上午有空吗？"},
-              {"speaker": "Noah", "text": "Yes. What are you planning?", "translationZh": "有。你有什么计划？"},
-              {"speaker": "Ava", "text": "The art museum opens at ten.", "translationZh": "艺术博物馆十点开门。"},
-              {"speaker": "Noah", "text": "Let's meet at nine thirty and get coffee first.", "translationZh": "我们九点半见，先喝杯咖啡吧。"},
-              {"speaker": "Ava", "text": "Sounds good. I'll meet you in the hotel lobby.", "translationZh": "好。我们在酒店大堂见。"},
-              {"speaker": "Noah", "text": "Great. See you tomorrow at nine thirty.", "translationZh": "好。明天九点半见。"}
+              {
+                "speaker": "Ava",
+                "text": "Are you free tomorrow morning?",
+                "translationZh": "你明天上午有空吗？"
+              },
+              {
+                "speaker": "Noah",
+                "text": "Yes. What are you planning?",
+                "translationZh": "有。你有什么计划？"
+              },
+              {
+                "speaker": "Ava",
+                "text": "The art museum opens at ten.",
+                "translationZh": "艺术博物馆十点开门。"
+              },
+              {
+                "speaker": "Noah",
+                "text": "Let's meet at nine thirty and get coffee first.",
+                "translationZh": "我们九点半见，先喝杯咖啡吧。"
+              },
+              {
+                "speaker": "Ava",
+                "text": "Sounds good. I'll meet you in the hotel lobby.",
+                "translationZh": "好。我们在酒店大堂见。"
+              },
+              {
+                "speaker": "Noah",
+                "text": "Great. See you tomorrow at nine thirty.",
+                "translationZh": "好。明天九点半见。"
+              }
             ],
             "checks": [
-              {"id": "w1d4-l1", "skill": "detail", "promptZh": "博物馆几点开门？", "options": ["9:00", "9:30", "10:00"], "correctOptionIndex": 2, "rationaleZh": "Ava 说博物馆 at ten 开门。"},
-              {"id": "w1d4-l2", "skill": "detail", "promptZh": "两人几点见面？", "options": ["9:30", "10:00", "10:30"], "correctOptionIndex": 0, "rationaleZh": "Noah 提议 at nine thirty 见面。"},
-              {"id": "w1d4-l3", "skill": "detail", "promptZh": "两人在哪里见面？", "options": ["博物馆门口", "酒店大堂", "咖啡店"], "correctOptionIndex": 1, "rationaleZh": "Ava 说在 hotel lobby 见。"}
+              {
+                "id": "w1d4-l1",
+                "skill": "detail",
+                "promptZh": "博物馆几点开门？",
+                "options": [
+                  "9:00",
+                  "9:30",
+                  "10:00"
+                ],
+                "correctOptionIndex": 2,
+                "rationaleZh": "Ava 说博物馆 at ten 开门。"
+              },
+              {
+                "id": "w1d4-l2",
+                "skill": "detail",
+                "promptZh": "两人几点见面？",
+                "options": [
+                  "9:30",
+                  "10:00",
+                  "10:30"
+                ],
+                "correctOptionIndex": 0,
+                "rationaleZh": "Noah 提议 at nine thirty 见面。"
+              },
+              {
+                "id": "w1d4-l3",
+                "skill": "detail",
+                "promptZh": "两人在哪里见面？",
+                "options": [
+                  "博物馆门口",
+                  "酒店大堂",
+                  "咖啡店"
+                ],
+                "correctOptionIndex": 1,
+                "rationaleZh": "Ava 说在 hotel lobby 见。"
+              }
             ]
           }
         },
@@ -549,8 +1987,16 @@
             "minimumSeconds": 90,
             "maximumSeconds": 720
           },
-          "tags": ["scene:numbers-and-time", "week:1", "day:4", "task:fixed-response", "focus:schedule"],
-          "prerequisiteUnitIds": ["st4w-w1d3-speaking"],
+          "tags": [
+            "scene:numbers-and-time",
+            "week:1",
+            "day:4",
+            "task:fixed-response",
+            "focus:schedule"
+          ],
+          "prerequisiteUnitIds": [
+            "st4w-w1d3-speaking"
+          ],
           "activity": {
             "type": "fixed-response",
             "instructionsZh": "用 at + 时间，避免漏掉具体时点。",
@@ -561,8 +2007,15 @@
                 "partnerLine": "Breakfast is downstairs.",
                 "modelAnswer": "What time does breakfast start?",
                 "modelAnswerTranslationZh": "早餐几点开始？",
-                "acceptedAnswers": ["What time does breakfast start?", "What time is breakfast?", "When does breakfast start?"],
-                "requiredConcepts": ["breakfast", "time-question"]
+                "acceptedAnswers": [
+                  "What time does breakfast start?",
+                  "What time is breakfast?",
+                  "When does breakfast start?"
+                ],
+                "requiredConcepts": [
+                  "breakfast",
+                  "time-question"
+                ]
               },
               {
                 "id": "w1d4-s2",
@@ -570,8 +2023,15 @@
                 "partnerLine": "When should we meet?",
                 "modelAnswer": "Let's meet tomorrow morning at nine.",
                 "modelAnswerTranslationZh": "我们明天上午九点见吧。",
-                "acceptedAnswers": ["Let's meet tomorrow morning at nine.", "How about tomorrow at nine in the morning?", "Let's meet at nine tomorrow morning."],
-                "requiredConcepts": ["tomorrow", "9:00"]
+                "acceptedAnswers": [
+                  "Let's meet tomorrow morning at nine.",
+                  "How about tomorrow at nine in the morning?",
+                  "Let's meet at nine tomorrow morning."
+                ],
+                "requiredConcepts": [
+                  "tomorrow",
+                  "9:00"
+                ]
               },
               {
                 "id": "w1d4-s3",
@@ -579,24 +2039,73 @@
                 "partnerLine": "The train leaves at six fifteen.",
                 "modelAnswer": "Let me confirm: it leaves at six fifteen?",
                 "modelAnswerTranslationZh": "我确认一下：它是六点十五分出发吗？",
-                "acceptedAnswers": ["Let me confirm: it leaves at six fifteen?", "Did you say six fifteen?", "So the train leaves at 6:15, right?"],
-                "requiredConcepts": ["6:15", "confirmation"]
+                "acceptedAnswers": [
+                  "Let me confirm: it leaves at six fifteen?",
+                  "Did you say six fifteen?",
+                  "So the train leaves at 6:15, right?"
+                ],
+                "requiredConcepts": [
+                  "6:15",
+                  "confirmation"
+                ]
               }
             ]
           }
         }
       ],
       "sceneQuiz": [
-        {"id": "w1d4-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "“this evening”通常指什么时间？", "options": ["今天上午", "今天下午", "今天晚上"], "correctOptionIndex": 2, "rationaleZh": "evening 指晚上。"},
-        {"id": "w1d4-q2", "domain": "listening", "format": "single-choice", "audioText": "The tour starts at a quarter after two this afternoon.", "promptZh": "旅行团几点出发？", "options": ["2:15 p.m.", "2:30 p.m.", "1:45 p.m."], "correctOptionIndex": 0, "rationaleZh": "a quarter after two 是 2:15。"},
-        {"id": "w1d4-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "询问活动几点开始。", "modelAnswer": "What time does it start?", "modelAnswerTranslationZh": "它几点开始？", "acceptedAnswers": ["What time does it start?", "When does it start?", "What time is the event?"], "requiredConcepts": ["start-time-question"]}
+        {
+          "id": "w1d4-q1",
+          "domain": "vocabulary",
+          "format": "single-choice",
+          "promptZh": "“this evening”通常指什么时间？",
+          "options": [
+            "今天上午",
+            "今天下午",
+            "今天晚上"
+          ],
+          "correctOptionIndex": 2,
+          "rationaleZh": "evening 指晚上。"
+        },
+        {
+          "id": "w1d4-q2",
+          "domain": "listening",
+          "format": "single-choice",
+          "audioText": "The tour starts at a quarter after two this afternoon.",
+          "promptZh": "旅行团几点出发？",
+          "options": [
+            "2:15 p.m.",
+            "2:30 p.m.",
+            "1:45 p.m."
+          ],
+          "correctOptionIndex": 0,
+          "rationaleZh": "a quarter after two 是 2:15。"
+        },
+        {
+          "id": "w1d4-q3",
+          "domain": "speaking",
+          "format": "fixed-response",
+          "promptZh": "询问活动几点开始。",
+          "modelAnswer": "What time does it start?",
+          "modelAnswerTranslationZh": "它几点开始？",
+          "acceptedAnswers": [
+            "What time does it start?",
+            "When does it start?",
+            "What time is the event?"
+          ],
+          "requiredConcepts": [
+            "start-time-question"
+          ]
+        }
       ]
     },
     {
       "lessonId": "w1d5-basic-needs",
       "recommendedDay": 5,
       "titleZh": "基本需求与没听懂时的补救",
-      "sceneIds": ["basic-needs"],
+      "sceneIds": [
+        "basic-needs"
+      ],
       "observableObjectives": [
         "礼貌请求水、洗手间或帮助。",
         "请求对方慢一点或重复。"
@@ -621,19 +2130,76 @@
             "minimumSeconds": 90,
             "maximumSeconds": 600
           },
-          "tags": ["scene:basic-needs", "week:1", "day:5", "focus:politeness", "focus:repair"],
-          "prerequisiteUnitIds": ["st4w-w1d4-vocabulary"],
+          "tags": [
+            "scene:basic-needs",
+            "week:1",
+            "day:5",
+            "focus:politeness",
+            "focus:repair"
+          ],
+          "prerequisiteUnitIds": [
+            "st4w-w1d4-vocabulary"
+          ],
           "activity": {
             "type": "vocabulary-set",
             "instructionsZh": "把礼貌开场和具体需求连起来。",
             "items": [
-              {"id": "w1d5-v1", "term": "excuse me", "partOfSpeech": "phrase", "meaningZh": "打扰一下；劳驾", "exampleEn": "Excuse me, where is the restroom?", "exampleZh": "打扰一下，洗手间在哪里？"},
-              {"id": "w1d5-v2", "term": "please", "partOfSpeech": "adverb", "meaningZh": "请", "exampleEn": "Some water, please.", "exampleZh": "请给我一些水。"},
-              {"id": "w1d5-v3", "term": "need", "partOfSpeech": "verb", "meaningZh": "需要", "exampleEn": "I need some help.", "exampleZh": "我需要帮助。"},
-              {"id": "w1d5-v4", "term": "restroom", "partOfSpeech": "noun", "meaningZh": "洗手间", "exampleEn": "The restroom is near the elevator.", "exampleZh": "洗手间在电梯附近。"},
-              {"id": "w1d5-v5", "term": "repeat", "partOfSpeech": "verb", "meaningZh": "重复", "exampleEn": "Could you repeat that?", "exampleZh": "你可以重复一下吗？"},
-              {"id": "w1d5-v6", "term": "slowly", "partOfSpeech": "adverb", "meaningZh": "慢慢地", "exampleEn": "Please speak more slowly.", "exampleZh": "请说慢一点。"},
-              {"id": "w1d5-v7", "term": "understand", "partOfSpeech": "verb", "meaningZh": "理解", "exampleEn": "Sorry, I don't understand.", "exampleZh": "抱歉，我没听懂。"}
+              {
+                "id": "w1d5-v1",
+                "term": "excuse me",
+                "partOfSpeech": "phrase",
+                "meaningZh": "打扰一下；劳驾",
+                "exampleEn": "Excuse me, where is the restroom?",
+                "exampleZh": "打扰一下，洗手间在哪里？"
+              },
+              {
+                "id": "w1d5-v2",
+                "term": "please",
+                "partOfSpeech": "adverb",
+                "meaningZh": "请",
+                "exampleEn": "Some water, please.",
+                "exampleZh": "请给我一些水。"
+              },
+              {
+                "id": "w1d5-v3",
+                "term": "need",
+                "partOfSpeech": "verb",
+                "meaningZh": "需要",
+                "exampleEn": "I need some help.",
+                "exampleZh": "我需要帮助。"
+              },
+              {
+                "id": "w1d5-v4",
+                "term": "restroom",
+                "partOfSpeech": "noun",
+                "meaningZh": "洗手间",
+                "exampleEn": "The restroom is near the elevator.",
+                "exampleZh": "洗手间在电梯附近。"
+              },
+              {
+                "id": "w1d5-v5",
+                "term": "repeat",
+                "partOfSpeech": "verb",
+                "meaningZh": "重复",
+                "exampleEn": "Could you repeat that?",
+                "exampleZh": "你可以重复一下吗？"
+              },
+              {
+                "id": "w1d5-v6",
+                "term": "slowly",
+                "partOfSpeech": "adverb",
+                "meaningZh": "慢慢地",
+                "exampleEn": "Please speak more slowly.",
+                "exampleZh": "请说慢一点。"
+              },
+              {
+                "id": "w1d5-v7",
+                "term": "understand",
+                "partOfSpeech": "verb",
+                "meaningZh": "理解",
+                "exampleEn": "Sorry, I don't understand.",
+                "exampleZh": "抱歉，我没听懂。"
+              }
             ]
           }
         },
@@ -656,24 +2222,92 @@
             "minimumSeconds": 150,
             "maximumSeconds": 900
           },
-          "tags": ["scene:basic-needs", "week:1", "day:5", "skill:detail", "focus:directions"],
-          "prerequisiteUnitIds": ["st4w-w1d4-listening"],
+          "tags": [
+            "scene:basic-needs",
+            "week:1",
+            "day:5",
+            "skill:detail",
+            "focus:directions"
+          ],
+          "prerequisiteUnitIds": [
+            "st4w-w1d4-listening"
+          ],
           "activity": {
             "type": "listening-dialogue",
             "titleZh": "在游客中心寻求帮助",
-            "tts": {"locale": "en-US", "defaultRate": 0.92},
+            "tts": {
+              "locale": "en-US",
+              "defaultRate": 0.92
+            },
             "transcript": [
-              {"speaker": "Visitor", "text": "Excuse me, where is the restroom?", "translationZh": "打扰一下，洗手间在哪里？"},
-              {"speaker": "Staff", "text": "It's past the front desk, next to the elevator.", "translationZh": "经过前台，在电梯旁边。"},
-              {"speaker": "Visitor", "text": "Sorry, could you say that again, more slowly?", "translationZh": "抱歉，可以慢一点再说一次吗？"},
-              {"speaker": "Staff", "text": "Of course. Go past the front desk. It's next to the elevator.", "translationZh": "当然。经过前台。它在电梯旁边。"},
-              {"speaker": "Visitor", "text": "I understand now. Thank you.", "translationZh": "我现在明白了。谢谢。"},
-              {"speaker": "Staff", "text": "You're welcome.", "translationZh": "不客气。"}
+              {
+                "speaker": "Visitor",
+                "text": "Excuse me, where is the restroom?",
+                "translationZh": "打扰一下，洗手间在哪里？"
+              },
+              {
+                "speaker": "Staff",
+                "text": "It's past the front desk, next to the elevator.",
+                "translationZh": "经过前台，在电梯旁边。"
+              },
+              {
+                "speaker": "Visitor",
+                "text": "Sorry, could you say that again, more slowly?",
+                "translationZh": "抱歉，可以慢一点再说一次吗？"
+              },
+              {
+                "speaker": "Staff",
+                "text": "Of course. Go past the front desk. It's next to the elevator.",
+                "translationZh": "当然。经过前台。它在电梯旁边。"
+              },
+              {
+                "speaker": "Visitor",
+                "text": "I understand now. Thank you.",
+                "translationZh": "我现在明白了。谢谢。"
+              },
+              {
+                "speaker": "Staff",
+                "text": "You're welcome.",
+                "translationZh": "不客气。"
+              }
             ],
             "checks": [
-              {"id": "w1d5-l1", "skill": "gist", "promptZh": "访客需要什么？", "options": ["寻找洗手间", "购买门票", "给手机充电"], "correctOptionIndex": 0, "rationaleZh": "访客开头询问 restroom 在哪里。"},
-              {"id": "w1d5-l2", "skill": "detail", "promptZh": "洗手间靠近什么？", "options": ["电梯", "入口", "咖啡店"], "correctOptionIndex": 0, "rationaleZh": "工作人员两次说 next to the elevator。"},
-              {"id": "w1d5-l3", "skill": "inference", "promptZh": "工作人员为什么重复路线？", "options": ["访客没听清", "路线改变了", "工作人员说错了"], "correctOptionIndex": 0, "rationaleZh": "访客明确请求“say that again, more slowly”。"}
+              {
+                "id": "w1d5-l1",
+                "skill": "gist",
+                "promptZh": "访客需要什么？",
+                "options": [
+                  "寻找洗手间",
+                  "购买门票",
+                  "给手机充电"
+                ],
+                "correctOptionIndex": 0,
+                "rationaleZh": "访客开头询问 restroom 在哪里。"
+              },
+              {
+                "id": "w1d5-l2",
+                "skill": "detail",
+                "promptZh": "洗手间靠近什么？",
+                "options": [
+                  "电梯",
+                  "入口",
+                  "咖啡店"
+                ],
+                "correctOptionIndex": 0,
+                "rationaleZh": "工作人员两次说 next to the elevator。"
+              },
+              {
+                "id": "w1d5-l3",
+                "skill": "inference",
+                "promptZh": "工作人员为什么重复路线？",
+                "options": [
+                  "访客没听清",
+                  "路线改变了",
+                  "工作人员说错了"
+                ],
+                "correctOptionIndex": 0,
+                "rationaleZh": "访客明确请求“say that again, more slowly”。"
+              }
             ]
           }
         },
@@ -696,8 +2330,16 @@
             "minimumSeconds": 90,
             "maximumSeconds": 720
           },
-          "tags": ["scene:basic-needs", "week:1", "day:5", "task:fixed-response", "focus:repair"],
-          "prerequisiteUnitIds": ["st4w-w1d4-speaking"],
+          "tags": [
+            "scene:basic-needs",
+            "week:1",
+            "day:5",
+            "task:fixed-response",
+            "focus:repair"
+          ],
+          "prerequisiteUnitIds": [
+            "st4w-w1d4-speaking"
+          ],
           "activity": {
             "type": "fixed-response",
             "instructionsZh": "优先传达意图，不要为了复杂语法拖延。",
@@ -708,8 +2350,15 @@
                 "partnerLine": "Can I help you?",
                 "modelAnswer": "Excuse me, where is the restroom?",
                 "modelAnswerTranslationZh": "打扰一下，洗手间在哪里？",
-                "acceptedAnswers": ["Excuse me, where is the restroom?", "Could you tell me where the restroom is?", "Where's the restroom, please?"],
-                "requiredConcepts": ["restroom", "location-question"]
+                "acceptedAnswers": [
+                  "Excuse me, where is the restroom?",
+                  "Could you tell me where the restroom is?",
+                  "Where's the restroom, please?"
+                ],
+                "requiredConcepts": [
+                  "restroom",
+                  "location-question"
+                ]
               },
               {
                 "id": "w1d5-s2",
@@ -717,8 +2366,15 @@
                 "partnerLine": "What do you need?",
                 "modelAnswer": "Could I have some water, please?",
                 "modelAnswerTranslationZh": "请给我一些水好吗？",
-                "acceptedAnswers": ["Could I have some water, please?", "Can I get some water, please?", "Some water, please."],
-                "requiredConcepts": ["water", "polite-request"]
+                "acceptedAnswers": [
+                  "Could I have some water, please?",
+                  "Can I get some water, please?",
+                  "Some water, please."
+                ],
+                "requiredConcepts": [
+                  "water",
+                  "polite-request"
+                ]
               },
               {
                 "id": "w1d5-s3",
@@ -726,24 +2382,73 @@
                 "partnerLine": "Take the escalator past the information desk.",
                 "modelAnswer": "Sorry, I don't understand. Could you speak more slowly?",
                 "modelAnswerTranslationZh": "对不起，我没听懂。你能说慢一点吗？",
-                "acceptedAnswers": ["Sorry, I don't understand. Could you speak more slowly?", "Could you say that again, more slowly?", "Sorry, could you speak more slowly?"],
-                "requiredConcepts": ["repair", "slowly"]
+                "acceptedAnswers": [
+                  "Sorry, I don't understand. Could you speak more slowly?",
+                  "Could you say that again, more slowly?",
+                  "Sorry, could you speak more slowly?"
+                ],
+                "requiredConcepts": [
+                  "repair",
+                  "slowly"
+                ]
               }
             ]
           }
         }
       ],
       "sceneQuiz": [
-        {"id": "w1d5-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "向陌生人提问时，哪种开场最合适？", "options": ["Excuse me.", "Give me that.", "Hey, you."], "correctOptionIndex": 0, "rationaleZh": "Excuse me 是中性、常用的礼貌开场。"},
-        {"id": "w1d5-q2", "domain": "listening", "format": "single-choice", "audioText": "The restroom is across from the front desk.", "promptZh": "洗手间在哪里？", "options": ["前台里面", "前台对面", "前台后面"], "correctOptionIndex": 1, "rationaleZh": "across from 表示在……对面。"},
-        {"id": "w1d5-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "请对方再说一遍。", "modelAnswer": "Could you say that again, please?", "modelAnswerTranslationZh": "请你再说一遍好吗？", "acceptedAnswers": ["Could you say that again, please?", "Could you repeat that, please?", "Sorry, can you say that again?"], "requiredConcepts": ["repeat-request"]}
+        {
+          "id": "w1d5-q1",
+          "domain": "vocabulary",
+          "format": "single-choice",
+          "promptZh": "向陌生人提问时，哪种开场最合适？",
+          "options": [
+            "Excuse me.",
+            "Give me that.",
+            "Hey, you."
+          ],
+          "correctOptionIndex": 0,
+          "rationaleZh": "Excuse me 是中性、常用的礼貌开场。"
+        },
+        {
+          "id": "w1d5-q2",
+          "domain": "listening",
+          "format": "single-choice",
+          "audioText": "The restroom is across from the front desk.",
+          "promptZh": "洗手间在哪里？",
+          "options": [
+            "前台里面",
+            "前台对面",
+            "前台后面"
+          ],
+          "correctOptionIndex": 1,
+          "rationaleZh": "across from 表示在……对面。"
+        },
+        {
+          "id": "w1d5-q3",
+          "domain": "speaking",
+          "format": "fixed-response",
+          "promptZh": "请对方再说一遍。",
+          "modelAnswer": "Could you say that again, please?",
+          "modelAnswerTranslationZh": "请你再说一遍好吗？",
+          "acceptedAnswers": [
+            "Could you say that again, please?",
+            "Could you repeat that, please?",
+            "Sorry, can you say that again?"
+          ],
+          "requiredConcepts": [
+            "repeat-request"
+          ]
+        }
       ]
     },
     {
       "lessonId": "w1d6-coffee-counter",
       "recommendedDay": 6,
       "titleZh": "咖啡店柜台点单",
-      "sceneIds": ["restaurant"],
+      "sceneIds": [
+        "restaurant"
+      ],
       "observableObjectives": [
         "点一杯指定大小的饮料。",
         "说明堂食或外带，并做一个简单减配。"
@@ -768,19 +2473,75 @@
             "minimumSeconds": 90,
             "maximumSeconds": 600
           },
-          "tags": ["scene:restaurant", "week:1", "day:6", "focus:counter-order"],
-          "prerequisiteUnitIds": ["st4w-w1d5-vocabulary"],
+          "tags": [
+            "scene:restaurant",
+            "week:1",
+            "day:6",
+            "focus:counter-order"
+          ],
+          "prerequisiteUnitIds": [
+            "st4w-w1d5-vocabulary"
+          ],
           "activity": {
             "type": "vocabulary-set",
             "instructionsZh": "把大小、商品和服务方式组合成点单。",
             "items": [
-              {"id": "w1d6-v1", "term": "order", "partOfSpeech": "verb", "meaningZh": "点单", "exampleEn": "I'd like to order a coffee.", "exampleZh": "我想点一杯咖啡。"},
-              {"id": "w1d6-v2", "term": "small", "partOfSpeech": "adjective", "meaningZh": "小杯；小份", "exampleEn": "I'd like a small tea.", "exampleZh": "我想要一小杯茶。"},
-              {"id": "w1d6-v3", "term": "medium", "partOfSpeech": "adjective", "meaningZh": "中杯；中份", "exampleEn": "A medium coffee, please.", "exampleZh": "请给我一杯中杯咖啡。"},
-              {"id": "w1d6-v4", "term": "large", "partOfSpeech": "adjective", "meaningZh": "大杯；大份", "exampleEn": "The large is four dollars.", "exampleZh": "大杯四美元。"},
-              {"id": "w1d6-v5", "term": "dine in", "partOfSpeech": "phrase", "meaningZh": "堂食", "exampleEn": "We decided to dine in.", "exampleZh": "我们决定在店里吃。"},
-              {"id": "w1d6-v6", "term": "takeout", "partOfSpeech": "noun", "meaningZh": "外带", "exampleEn": "This order is for takeout.", "exampleZh": "这个订单是外带。"},
-              {"id": "w1d6-v7", "term": "without", "partOfSpeech": "preposition", "meaningZh": "不加；不带", "exampleEn": "A sandwich without cheese, please.", "exampleZh": "请给我一个不加奶酪的三明治。"}
+              {
+                "id": "w1d6-v1",
+                "term": "order",
+                "partOfSpeech": "verb",
+                "meaningZh": "点单",
+                "exampleEn": "I'd like to order a coffee.",
+                "exampleZh": "我想点一杯咖啡。"
+              },
+              {
+                "id": "w1d6-v2",
+                "term": "small",
+                "partOfSpeech": "adjective",
+                "meaningZh": "小杯；小份",
+                "exampleEn": "I'd like a small tea.",
+                "exampleZh": "我想要一小杯茶。"
+              },
+              {
+                "id": "w1d6-v3",
+                "term": "medium",
+                "partOfSpeech": "adjective",
+                "meaningZh": "中杯；中份",
+                "exampleEn": "A medium coffee, please.",
+                "exampleZh": "请给我一杯中杯咖啡。"
+              },
+              {
+                "id": "w1d6-v4",
+                "term": "large",
+                "partOfSpeech": "adjective",
+                "meaningZh": "大杯；大份",
+                "exampleEn": "The large is four dollars.",
+                "exampleZh": "大杯四美元。"
+              },
+              {
+                "id": "w1d6-v5",
+                "term": "dine in",
+                "partOfSpeech": "phrase",
+                "meaningZh": "堂食",
+                "exampleEn": "We decided to dine in.",
+                "exampleZh": "我们决定在店里吃。"
+              },
+              {
+                "id": "w1d6-v6",
+                "term": "takeout",
+                "partOfSpeech": "noun",
+                "meaningZh": "外带",
+                "exampleEn": "This order is for takeout.",
+                "exampleZh": "这个订单是外带。"
+              },
+              {
+                "id": "w1d6-v7",
+                "term": "without",
+                "partOfSpeech": "preposition",
+                "meaningZh": "不加；不带",
+                "exampleEn": "A sandwich without cheese, please.",
+                "exampleZh": "请给我一个不加奶酪的三明治。"
+              }
             ]
           }
         },
@@ -803,25 +2564,97 @@
             "minimumSeconds": 150,
             "maximumSeconds": 900
           },
-          "tags": ["scene:restaurant", "week:1", "day:6", "skill:detail", "focus:counter-order"],
-          "prerequisiteUnitIds": ["st4w-w1d5-listening"],
+          "tags": [
+            "scene:restaurant",
+            "week:1",
+            "day:6",
+            "skill:detail",
+            "focus:counter-order"
+          ],
+          "prerequisiteUnitIds": [
+            "st4w-w1d5-listening"
+          ],
           "activity": {
             "type": "listening-dialogue",
             "titleZh": "咖啡和早餐三明治",
-            "tts": {"locale": "en-US", "defaultRate": 0.94},
+            "tts": {
+              "locale": "en-US",
+              "defaultRate": 0.94
+            },
             "transcript": [
-              {"speaker": "Barista", "text": "Good morning. What can I get for you?", "translationZh": "早上好。您想要什么？"},
-              {"speaker": "Customer", "text": "I'd like a medium coffee and a breakfast sandwich, please.", "translationZh": "我想要一杯中杯咖啡和一个早餐三明治。"},
-              {"speaker": "Barista", "text": "Would you like milk in the coffee?", "translationZh": "咖啡里要加牛奶吗？"},
-              {"speaker": "Customer", "text": "Yes, please. And could I get the sandwich without cheese?", "translationZh": "好的。三明治可以不加奶酪吗？"},
-              {"speaker": "Barista", "text": "Sure. Is that for here or to go?", "translationZh": "可以。是在这里吃还是带走？"},
-              {"speaker": "Customer", "text": "To go, please.", "translationZh": "带走，谢谢。"},
-              {"speaker": "Barista", "text": "Your total is eight dollars and twenty-five cents.", "translationZh": "总共八美元二十五美分。"}
+              {
+                "speaker": "Barista",
+                "text": "Good morning. What can I get for you?",
+                "translationZh": "早上好。您想要什么？"
+              },
+              {
+                "speaker": "Customer",
+                "text": "I'd like a medium coffee and a breakfast sandwich, please.",
+                "translationZh": "我想要一杯中杯咖啡和一个早餐三明治。"
+              },
+              {
+                "speaker": "Barista",
+                "text": "Would you like milk in the coffee?",
+                "translationZh": "咖啡里要加牛奶吗？"
+              },
+              {
+                "speaker": "Customer",
+                "text": "Yes, please. And could I get the sandwich without cheese?",
+                "translationZh": "好的。三明治可以不加奶酪吗？"
+              },
+              {
+                "speaker": "Barista",
+                "text": "Sure. Is that for here or to go?",
+                "translationZh": "可以。是在这里吃还是带走？"
+              },
+              {
+                "speaker": "Customer",
+                "text": "To go, please.",
+                "translationZh": "带走，谢谢。"
+              },
+              {
+                "speaker": "Barista",
+                "text": "Your total is eight dollars and twenty-five cents.",
+                "translationZh": "总共八美元二十五美分。"
+              }
             ],
             "checks": [
-              {"id": "w1d6-l1", "skill": "detail", "promptZh": "顾客要多大的咖啡？", "options": ["小杯", "中杯", "大杯"], "correctOptionIndex": 1, "rationaleZh": "顾客说 a medium coffee。"},
-              {"id": "w1d6-l2", "skill": "detail", "promptZh": "三明治不要加什么？", "options": ["鸡蛋", "奶酪", "面包"], "correctOptionIndex": 1, "rationaleZh": "顾客说 without cheese。"},
-              {"id": "w1d6-l3", "skill": "detail", "promptZh": "顾客选择堂食还是外带？", "options": ["堂食", "外带", "没有说明"], "correctOptionIndex": 1, "rationaleZh": "顾客回答“To go, please.”"}
+              {
+                "id": "w1d6-l1",
+                "skill": "detail",
+                "promptZh": "顾客要多大的咖啡？",
+                "options": [
+                  "小杯",
+                  "中杯",
+                  "大杯"
+                ],
+                "correctOptionIndex": 1,
+                "rationaleZh": "顾客说 a medium coffee。"
+              },
+              {
+                "id": "w1d6-l2",
+                "skill": "detail",
+                "promptZh": "三明治不要加什么？",
+                "options": [
+                  "鸡蛋",
+                  "奶酪",
+                  "面包"
+                ],
+                "correctOptionIndex": 1,
+                "rationaleZh": "顾客说 without cheese。"
+              },
+              {
+                "id": "w1d6-l3",
+                "skill": "detail",
+                "promptZh": "顾客选择堂食还是外带？",
+                "options": [
+                  "堂食",
+                  "外带",
+                  "没有说明"
+                ],
+                "correctOptionIndex": 1,
+                "rationaleZh": "顾客回答“To go, please.”"
+              }
             ]
           }
         },
@@ -844,8 +2677,16 @@
             "minimumSeconds": 90,
             "maximumSeconds": 720
           },
-          "tags": ["scene:restaurant", "week:1", "day:6", "task:fixed-response", "focus:counter-order"],
-          "prerequisiteUnitIds": ["st4w-w1d5-speaking"],
+          "tags": [
+            "scene:restaurant",
+            "week:1",
+            "day:6",
+            "task:fixed-response",
+            "focus:counter-order"
+          ],
+          "prerequisiteUnitIds": [
+            "st4w-w1d5-speaking"
+          ],
           "activity": {
             "type": "fixed-response",
             "instructionsZh": "用 I'd like 或 Can I get 完成固定点单。",
@@ -856,8 +2697,15 @@
                 "partnerLine": "What can I get for you?",
                 "modelAnswer": "I'd like a small coffee, please.",
                 "modelAnswerTranslationZh": "我想要一杯小杯咖啡。",
-                "acceptedAnswers": ["I'd like a small coffee, please.", "Can I get a small coffee, please?", "A small coffee, please."],
-                "requiredConcepts": ["small", "coffee"]
+                "acceptedAnswers": [
+                  "I'd like a small coffee, please.",
+                  "Can I get a small coffee, please?",
+                  "A small coffee, please."
+                ],
+                "requiredConcepts": [
+                  "small",
+                  "coffee"
+                ]
               },
               {
                 "id": "w1d6-s2",
@@ -865,8 +2713,14 @@
                 "partnerLine": "Is that for here or to go?",
                 "modelAnswer": "To go, please.",
                 "modelAnswerTranslationZh": "请打包带走。",
-                "acceptedAnswers": ["To go, please.", "It's to go.", "Takeout, please."],
-                "requiredConcepts": ["takeout"]
+                "acceptedAnswers": [
+                  "To go, please.",
+                  "It's to go.",
+                  "Takeout, please."
+                ],
+                "requiredConcepts": [
+                  "takeout"
+                ]
               },
               {
                 "id": "w1d6-s3",
@@ -874,24 +2728,79 @@
                 "partnerLine": "Anything else?",
                 "modelAnswer": "Could I get the sandwich without onions?",
                 "modelAnswerTranslationZh": "三明治可以不加洋葱吗？",
-                "acceptedAnswers": ["Could I get the sandwich without onions?", "No onions on the sandwich, please.", "I'd like the sandwich without onions."],
-                "requiredConcepts": ["sandwich", "without-onions"]
+                "acceptedAnswers": [
+                  "Could I get the sandwich without onions?",
+                  "No onions on the sandwich, please.",
+                  "I'd like the sandwich without onions."
+                ],
+                "requiredConcepts": [
+                  "sandwich",
+                  "without-onions"
+                ]
               }
             ]
           }
         }
       ],
       "sceneQuiz": [
-        {"id": "w1d6-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "美式柜台对话中“to go”通常表示什么？", "options": ["在店里吃", "外带", "稍后再来"], "correctOptionIndex": 1, "rationaleZh": "to go 是常见美式外带表达。"},
-        {"id": "w1d6-q2", "domain": "listening", "format": "single-choice", "audioText": "A large iced tea, no sugar, for here.", "promptZh": "这份订单是什么？", "options": ["大杯无糖冰茶，堂食", "小杯甜冰茶，外带", "大杯热茶，外带"], "correctOptionIndex": 0, "rationaleZh": "large、no sugar、for here 分别对应大杯、无糖、堂食。"},
-        {"id": "w1d6-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "点一杯中杯茶，堂食。", "modelAnswer": "I'd like a medium tea for here, please.", "modelAnswerTranslationZh": "我想要一杯中杯茶，在这里喝。", "acceptedAnswers": ["I'd like a medium tea for here, please.", "Can I get a medium tea for here?", "A medium tea, for here, please."], "requiredConcepts": ["medium", "tea", "dine-in"]}
+        {
+          "id": "w1d6-q1",
+          "domain": "vocabulary",
+          "format": "single-choice",
+          "promptZh": "美式柜台对话中“to go”通常表示什么？",
+          "options": [
+            "在店里吃",
+            "外带",
+            "稍后再来"
+          ],
+          "correctOptionIndex": 1,
+          "rationaleZh": "to go 是常见美式外带表达。"
+        },
+        {
+          "id": "w1d6-q2",
+          "domain": "listening",
+          "format": "single-choice",
+          "audioText": "A large iced tea, no sugar, for here.",
+          "promptZh": "这份订单是什么？",
+          "options": [
+            "大杯无糖冰茶，堂食",
+            "小杯甜冰茶，外带",
+            "大杯热茶，外带"
+          ],
+          "correctOptionIndex": 0,
+          "rationaleZh": "large、no sugar、for here 分别对应大杯、无糖、堂食。"
+        },
+        {
+          "id": "w1d6-q3",
+          "domain": "speaking",
+          "format": "fixed-response",
+          "promptZh": "点一杯中杯茶，堂食。",
+          "modelAnswer": "I'd like a medium tea for here, please.",
+          "modelAnswerTranslationZh": "我想要一杯中杯茶，在这里喝。",
+          "acceptedAnswers": [
+            "I'd like a medium tea for here, please.",
+            "Can I get a medium tea for here?",
+            "A medium tea, for here, please."
+          ],
+          "requiredConcepts": [
+            "medium",
+            "tea",
+            "dine-in"
+          ]
+        }
       ]
     },
     {
       "lessonId": "w1d7-week-one-checkpoint",
       "recommendedDay": 7,
       "titleZh": "第一周综合检查：见面并约咖啡",
-      "sceneIds": ["introductions", "numbers-and-time", "basic-needs", "restaurant", "integrated-travel"],
+      "sceneIds": [
+        "introductions",
+        "numbers-and-time",
+        "basic-needs",
+        "restaurant",
+        "integrated-travel"
+      ],
       "observableObjectives": [
         "完成从自我介绍到约定时间的连续交流。",
         "在咖啡店下单，并在没听清价格时主动确认。"
@@ -916,16 +2825,52 @@
             "minimumSeconds": 90,
             "maximumSeconds": 600
           },
-          "tags": ["scene:integrated-travel", "week:1", "day:7", "focus:review", "checkpoint:week-1"],
-          "prerequisiteUnitIds": ["st4w-w1d6-vocabulary"],
+          "tags": [
+            "scene:integrated-travel",
+            "week:1",
+            "day:7",
+            "focus:review",
+            "checkpoint:week-1"
+          ],
+          "prerequisiteUnitIds": [
+            "st4w-w1d6-vocabulary"
+          ],
           "activity": {
             "type": "vocabulary-review",
             "instructionsZh": "不引入大批新词，用已学词完成意图分类和句子重组。",
-            "reviewItemIds": ["w1d1-v4", "w1d2-v3", "w1d3-v5", "w1d4-v2", "w1d5-v6", "w1d6-v6"],
+            "reviewItemIds": [
+              "w1d1-v4",
+              "w1d2-v3",
+              "w1d3-v5",
+              "w1d4-v2",
+              "w1d5-v6",
+              "w1d6-v6"
+            ],
             "items": [
-              {"id": "w1d7-v1", "term": "confirm", "partOfSpeech": "verb", "meaningZh": "确认", "exampleEn": "Let me confirm the time.", "exampleZh": "让我确认一下时间。"},
-              {"id": "w1d7-v2", "term": "meet", "partOfSpeech": "verb", "meaningZh": "见面", "exampleEn": "Let's meet at the café.", "exampleZh": "我们在咖啡店见吧。"},
-              {"id": "w1d7-v3", "term": "plan", "partOfSpeech": "noun", "meaningZh": "计划", "exampleEn": "What's the plan for tomorrow?", "exampleZh": "明天有什么计划？"}
+              {
+                "id": "w1d7-v1",
+                "term": "confirm",
+                "partOfSpeech": "verb",
+                "meaningZh": "确认",
+                "exampleEn": "Let me confirm the time.",
+                "exampleZh": "让我确认一下时间。"
+              },
+              {
+                "id": "w1d7-v2",
+                "term": "meet",
+                "partOfSpeech": "verb",
+                "meaningZh": "见面",
+                "exampleEn": "Let's meet at the café.",
+                "exampleZh": "我们在咖啡店见吧。"
+              },
+              {
+                "id": "w1d7-v3",
+                "term": "plan",
+                "partOfSpeech": "noun",
+                "meaningZh": "计划",
+                "exampleEn": "What's the plan for tomorrow?",
+                "exampleZh": "明天有什么计划？"
+              }
             ]
           }
         },
@@ -948,26 +2893,103 @@
             "minimumSeconds": 150,
             "maximumSeconds": 900
           },
-          "tags": ["scene:integrated-travel", "week:1", "day:7", "skill:gist", "skill:detail", "checkpoint:week-1"],
-          "prerequisiteUnitIds": ["st4w-w1d6-listening"],
+          "tags": [
+            "scene:integrated-travel",
+            "week:1",
+            "day:7",
+            "skill:gist",
+            "skill:detail",
+            "checkpoint:week-1"
+          ],
+          "prerequisiteUnitIds": [
+            "st4w-w1d6-listening"
+          ],
           "activity": {
             "type": "listening-dialogue",
             "titleZh": "新朋友约第二天喝咖啡",
-            "tts": {"locale": "en-US", "defaultRate": 0.95},
+            "tts": {
+              "locale": "en-US",
+              "defaultRate": 0.95
+            },
             "transcript": [
-              {"speaker": "Nina", "text": "Hi, I don't think we've met. I'm Nina.", "translationZh": "你好，我想我们还没见过。我是 Nina。"},
-              {"speaker": "Bo", "text": "Hi, Nina. I'm Bo. I'm visiting from Chengdu.", "translationZh": "你好，Nina。我是 Bo。我从成都来旅行。"},
-              {"speaker": "Nina", "text": "Nice to meet you. Are you free tomorrow morning?", "translationZh": "很高兴认识你。你明天上午有空吗？"},
-              {"speaker": "Bo", "text": "Yes. I have a tour at eleven, but I'm free before that.", "translationZh": "有。我十一点有旅行团，但之前有空。"},
-              {"speaker": "Nina", "text": "Let's meet at the lobby café at nine thirty.", "translationZh": "我们九点半在大堂咖啡店见吧。"},
-              {"speaker": "Bo", "text": "Sorry, did you say nine thirteen or nine thirty?", "translationZh": "抱歉，你说的是九点十三还是九点半？"},
-              {"speaker": "Nina", "text": "Nine thirty. That's nine-three-zero.", "translationZh": "九点半。数字是九三零。"},
-              {"speaker": "Bo", "text": "Got it. See you tomorrow.", "translationZh": "明白了。明天见。"}
+              {
+                "speaker": "Nina",
+                "text": "Hi, I don't think we've met. I'm Nina.",
+                "translationZh": "你好，我想我们还没见过。我是 Nina。"
+              },
+              {
+                "speaker": "Bo",
+                "text": "Hi, Nina. I'm Bo. I'm visiting from Chengdu.",
+                "translationZh": "你好，Nina。我是 Bo。我从成都来旅行。"
+              },
+              {
+                "speaker": "Nina",
+                "text": "Nice to meet you. Are you free tomorrow morning?",
+                "translationZh": "很高兴认识你。你明天上午有空吗？"
+              },
+              {
+                "speaker": "Bo",
+                "text": "Yes. I have a tour at eleven, but I'm free before that.",
+                "translationZh": "有。我十一点有旅行团，但之前有空。"
+              },
+              {
+                "speaker": "Nina",
+                "text": "Let's meet at the lobby café at nine thirty.",
+                "translationZh": "我们九点半在大堂咖啡店见吧。"
+              },
+              {
+                "speaker": "Bo",
+                "text": "Sorry, did you say nine thirteen or nine thirty?",
+                "translationZh": "抱歉，你说的是九点十三还是九点半？"
+              },
+              {
+                "speaker": "Nina",
+                "text": "Nine thirty. That's nine-three-zero.",
+                "translationZh": "九点半。数字是九三零。"
+              },
+              {
+                "speaker": "Bo",
+                "text": "Got it. See you tomorrow.",
+                "translationZh": "明白了。明天见。"
+              }
             ],
             "checks": [
-              {"id": "w1d7-l1", "skill": "gist", "promptZh": "两人最终做了什么安排？", "options": ["今晚吃饭", "明早喝咖啡", "明天下午参观博物馆"], "correctOptionIndex": 1, "rationaleZh": "两人约在明早九点半于大堂咖啡店见。"},
-              {"id": "w1d7-l2", "skill": "detail", "promptZh": "Bo 几点有旅行团？", "options": ["9:30", "10:00", "11:00"], "correctOptionIndex": 2, "rationaleZh": "Bo 说“I have a tour at eleven.”"},
-              {"id": "w1d7-l3", "skill": "detail", "promptZh": "两人约几点见？", "options": ["9:13", "9:30", "11:30"], "correctOptionIndex": 1, "rationaleZh": "Nina 用 nine-three-zero 再次确认 9:30。"}
+              {
+                "id": "w1d7-l1",
+                "skill": "gist",
+                "promptZh": "两人最终做了什么安排？",
+                "options": [
+                  "今晚吃饭",
+                  "明早喝咖啡",
+                  "明天下午参观博物馆"
+                ],
+                "correctOptionIndex": 1,
+                "rationaleZh": "两人约在明早九点半于大堂咖啡店见。"
+              },
+              {
+                "id": "w1d7-l2",
+                "skill": "detail",
+                "promptZh": "Bo 几点有旅行团？",
+                "options": [
+                  "9:30",
+                  "10:00",
+                  "11:00"
+                ],
+                "correctOptionIndex": 2,
+                "rationaleZh": "Bo 说“I have a tour at eleven.”"
+              },
+              {
+                "id": "w1d7-l3",
+                "skill": "detail",
+                "promptZh": "两人约几点见？",
+                "options": [
+                  "9:13",
+                  "9:30",
+                  "11:30"
+                ],
+                "correctOptionIndex": 1,
+                "rationaleZh": "Nina 用 nine-three-zero 再次确认 9:30。"
+              }
             ]
           }
         },
@@ -990,8 +3012,16 @@
             "minimumSeconds": 90,
             "maximumSeconds": 720
           },
-          "tags": ["scene:integrated-travel", "week:1", "day:7", "task:guided-roleplay", "checkpoint:week-1"],
-          "prerequisiteUnitIds": ["st4w-w1d6-speaking"],
+          "tags": [
+            "scene:integrated-travel",
+            "week:1",
+            "day:7",
+            "task:guided-roleplay",
+            "checkpoint:week-1"
+          ],
+          "prerequisiteUnitIds": [
+            "st4w-w1d6-speaking"
+          ],
           "activity": {
             "type": "guided-roleplay",
             "instructionsZh": "按顺序完成四个意图，不要求开放式扩写。",
@@ -1002,8 +3032,15 @@
                 "partnerLine": "Hi, I'm Jordan. What's your name?",
                 "modelAnswer": "Hi, Jordan. I'm Mei. I'm from Hangzhou.",
                 "modelAnswerTranslationZh": "你好，Jordan。我是 Mei。我来自杭州。",
-                "acceptedAnswers": ["Hi, Jordan. I'm Mei. I'm from Hangzhou.", "My name is Mei, and I'm from Hangzhou.", "I'm Mei. Nice to meet you. I'm from Hangzhou."],
-                "requiredConcepts": ["Mei", "Hangzhou"]
+                "acceptedAnswers": [
+                  "Hi, Jordan. I'm Mei. I'm from Hangzhou.",
+                  "My name is Mei, and I'm from Hangzhou.",
+                  "I'm Mei. Nice to meet you. I'm from Hangzhou."
+                ],
+                "requiredConcepts": [
+                  "Mei",
+                  "Hangzhou"
+                ]
               },
               {
                 "id": "w1d7-s2",
@@ -1011,8 +3048,16 @@
                 "partnerLine": "Are you free tomorrow?",
                 "modelAnswer": "Yes. Let's get coffee tomorrow morning at ten.",
                 "modelAnswerTranslationZh": "好啊。我们明天上午十点去喝咖啡吧。",
-                "acceptedAnswers": ["Yes. Let's get coffee tomorrow morning at ten.", "How about coffee at ten tomorrow morning?", "I'm free. Let's meet for coffee at ten."],
-                "requiredConcepts": ["coffee", "tomorrow", "10:00"]
+                "acceptedAnswers": [
+                  "Yes. Let's get coffee tomorrow morning at ten.",
+                  "How about coffee at ten tomorrow morning?",
+                  "I'm free. Let's meet for coffee at ten."
+                ],
+                "requiredConcepts": [
+                  "coffee",
+                  "tomorrow",
+                  "10:00"
+                ]
               },
               {
                 "id": "w1d7-s3",
@@ -1020,8 +3065,16 @@
                 "partnerLine": "What can I get for you?",
                 "modelAnswer": "I'd like a medium coffee to go, please.",
                 "modelAnswerTranslationZh": "我想要一杯中杯咖啡，打包带走。",
-                "acceptedAnswers": ["I'd like a medium coffee to go, please.", "Can I get a medium coffee to go?", "A medium coffee, to go, please."],
-                "requiredConcepts": ["medium", "coffee", "takeout"]
+                "acceptedAnswers": [
+                  "I'd like a medium coffee to go, please.",
+                  "Can I get a medium coffee to go?",
+                  "A medium coffee, to go, please."
+                ],
+                "requiredConcepts": [
+                  "medium",
+                  "coffee",
+                  "takeout"
+                ]
               },
               {
                 "id": "w1d7-s4",
@@ -1029,17 +3082,66 @@
                 "partnerLine": "Your total is four seventy-five.",
                 "modelAnswer": "Sorry, could you repeat the total, please?",
                 "modelAnswerTranslationZh": "对不起，请你再说一遍总金额好吗？",
-                "acceptedAnswers": ["Sorry, could you repeat the total, please?", "Could you say the price again, please?", "Sorry, how much is it?"],
-                "requiredConcepts": ["repeat-request", "price"]
+                "acceptedAnswers": [
+                  "Sorry, could you repeat the total, please?",
+                  "Could you say the price again, please?",
+                  "Sorry, how much is it?"
+                ],
+                "requiredConcepts": [
+                  "repeat-request",
+                  "price"
+                ]
               }
             ]
           }
         }
       ],
       "sceneQuiz": [
-        {"id": "w1d7-q1", "domain": "vocabulary", "format": "single-choice", "promptZh": "哪组表达按“问候—介绍—回应”排列正确？", "options": ["Hi. / I'm Mei. / Nice to meet you.", "Check. / Fifty. / Tomorrow.", "Restroom. / Large. / Email."], "correctOptionIndex": 0, "rationaleZh": "第一组能组成自然的初次见面流程。"},
-        {"id": "w1d7-q2", "domain": "listening", "format": "single-choice", "audioText": "Let's meet tomorrow at ten fifteen in the lobby. The café opens at ten.", "promptZh": "见面时间和地点是什么？", "options": ["明天 10:00，在咖啡店", "明天 10:15，在大堂", "今天 10:15，在大堂"], "correctOptionIndex": 1, "rationaleZh": "meet tomorrow at ten fifteen in the lobby。"},
-        {"id": "w1d7-q3", "domain": "speaking", "format": "fixed-response", "promptZh": "完成三项信息：你叫 Yun，来自南京，正在西雅图旅行。", "modelAnswer": "Hi, I'm Yun. I'm from Nanjing, and I'm visiting Seattle.", "modelAnswerTranslationZh": "你好，我是 Yun。我来自南京，正在西雅图旅行。", "acceptedAnswers": ["Hi, I'm Yun. I'm from Nanjing, and I'm visiting Seattle.", "My name is Yun. I'm from Nanjing. I'm visiting Seattle.", "I'm Yun from Nanjing, and I'm here visiting Seattle."], "requiredConcepts": ["Yun", "Nanjing", "Seattle"]}
+        {
+          "id": "w1d7-q1",
+          "domain": "vocabulary",
+          "format": "single-choice",
+          "promptZh": "哪组表达按“问候—介绍—回应”排列正确？",
+          "options": [
+            "Hi. / I'm Mei. / Nice to meet you.",
+            "Check. / Fifty. / Tomorrow.",
+            "Restroom. / Large. / Email."
+          ],
+          "correctOptionIndex": 0,
+          "rationaleZh": "第一组能组成自然的初次见面流程。"
+        },
+        {
+          "id": "w1d7-q2",
+          "domain": "listening",
+          "format": "single-choice",
+          "audioText": "Let's meet tomorrow at ten fifteen in the lobby. The café opens at ten.",
+          "promptZh": "见面时间和地点是什么？",
+          "options": [
+            "明天 10:00，在咖啡店",
+            "明天 10:15，在大堂",
+            "今天 10:15，在大堂"
+          ],
+          "correctOptionIndex": 1,
+          "rationaleZh": "meet tomorrow at ten fifteen in the lobby。"
+        },
+        {
+          "id": "w1d7-q3",
+          "domain": "speaking",
+          "format": "fixed-response",
+          "promptZh": "完成三项信息：你叫 Yun，来自南京，正在西雅图旅行。",
+          "modelAnswer": "Hi, I'm Yun. I'm from Nanjing, and I'm visiting Seattle.",
+          "modelAnswerTranslationZh": "你好，我是 Yun。我来自南京，正在西雅图旅行。",
+          "acceptedAnswers": [
+            "Hi, I'm Yun. I'm from Nanjing, and I'm visiting Seattle.",
+            "My name is Yun. I'm from Nanjing. I'm visiting Seattle.",
+            "I'm Yun from Nanjing, and I'm here visiting Seattle."
+          ],
+          "requiredConcepts": [
+            "Yun",
+            "Nanjing",
+            "Seattle"
+          ]
+        }
       ]
     }
   ]

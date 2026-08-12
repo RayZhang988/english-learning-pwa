@@ -157,6 +157,7 @@ function expectedCandidates() {
         itemId: `supply-v1-vocabulary-${item.id}-${variantId}`,
         variantFamilyId: `supply-family-v1-vocabulary-${item.id}`,
         ...candidateBase(unit, 'vocabulary', nextOrder('vocabulary')),
+        difficultyLevel: item.growthDifficultyLevel ?? unit.difficultyLevel,
         nominalEffectiveSeconds: 18,
         source: {
           sourceType: 'vocabulary-item',

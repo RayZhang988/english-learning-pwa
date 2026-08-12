@@ -88,7 +88,7 @@ const sceneQuestions = sceneBank.scenes.flatMap((scene) =>
   scene.questions.map((question) => ({ ...question, sceneId: scene.sceneId, categoryId: scene.categoryId })),
 )
 
-if (vocabularyItems.length !== 163) fail(`expected 163 current daily vocabulary sources, got ${vocabularyItems.length}`)
+if (vocabularyItems.length !== 238) fail(`expected 238 daily vocabulary sources after 1A, got ${vocabularyItems.length}`)
 if (sceneQuestions.length !== 612) fail(`expected 612 current scene questions, got ${sceneQuestions.length}`)
 if (sceneBank.scenes.length !== 18) fail(`expected 18 scenes, got ${sceneBank.scenes.length}`)
 
@@ -130,8 +130,8 @@ const dailyMappings = vocabularyItems
     lexicalForm: normalizedEnglish(item.term),
     meaningZh: item.meaningZh,
     dailyKnowledgeId: identityId('daily-knowledge-v1', { english: item.term, meaningZh: item.meaningZh }),
-    difficultyLevel: item.unit.difficultyLevel,
-    levelId: levelFor(item.unit.difficultyLevel).id,
+    difficultyLevel: item.growthDifficultyLevel ?? item.unit.difficultyLevel,
+    levelId: levelFor(item.growthDifficultyLevel ?? item.unit.difficultyLevel).id,
   }))
   .sort((left, right) => left.sourceItemId.localeCompare(right.sourceItemId))
 const dailyCanonicalMappings = [...dailyMappings]
