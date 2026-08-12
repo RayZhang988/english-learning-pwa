@@ -27,11 +27,11 @@
             "schemaVersion": 1,
             "contentType": "vocabulary-set-v1",
             "fixedSeconds": 15,
-            "itemCount": 206,
+            "itemCount": 271,
             "secondsPerItem": 12,
             "activeAudioSeconds": 0,
             "expectedAudioPlaythroughs": 0,
-            "interactionStepCount": 412,
+            "interactionStepCount": 542,
             "secondsPerInteractionStep": 3,
             "minimumSeconds": 90,
             "maximumSeconds": 600
@@ -2086,6 +2086,656 @@
                 "exampleZh": "不要在这里跑。",
                 "growthDifficultyLevel": 0,
                 "dailyKnowledgeId": "daily-knowledge-v1:k1c:050"
+              },
+              {
+                "id": "r17-daily-p1a-001",
+                "term": "could you help me",
+                "meaningZh": "你能帮我吗",
+                "partOfSpeech": "request phrase",
+                "exampleEn": "Could you help me with this bag?",
+                "exampleZh": "你能帮我拿这个包吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:001"
+              },
+              {
+                "id": "r17-daily-p1a-002",
+                "term": "could you repeat that",
+                "meaningZh": "你能重复一下吗",
+                "partOfSpeech": "request phrase",
+                "exampleEn": "Could you repeat that more slowly?",
+                "exampleZh": "你能慢一点重复一下吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:002"
+              },
+              {
+                "id": "r17-daily-p1a-003",
+                "term": "please speak slowly",
+                "meaningZh": "请说慢一点",
+                "partOfSpeech": "request phrase",
+                "exampleEn": "Please speak slowly for me.",
+                "exampleZh": "请对我说慢一点。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:003"
+              },
+              {
+                "id": "r17-daily-p1a-004",
+                "term": "where is the restroom",
+                "meaningZh": "洗手间在哪里",
+                "partOfSpeech": "question phrase",
+                "exampleEn": "Excuse me, where is the restroom?",
+                "exampleZh": "劳驾，洗手间在哪里？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:004"
+              },
+              {
+                "id": "r17-daily-p1a-005",
+                "term": "where is the elevator",
+                "meaningZh": "电梯在哪里",
+                "partOfSpeech": "question phrase",
+                "exampleEn": "Where is the elevator for the hotel rooms?",
+                "exampleZh": "酒店房间的电梯在哪里？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:005"
+              },
+              {
+                "id": "r17-daily-p1a-006",
+                "term": "where is the taxi stand",
+                "meaningZh": "出租车候车点在哪里",
+                "partOfSpeech": "question phrase",
+                "exampleEn": "Where is the taxi stand outside?",
+                "exampleZh": "外面的出租车候车点在哪里？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:006"
+              },
+              {
+                "id": "r17-daily-p1a-007",
+                "term": "how do I get there",
+                "meaningZh": "我怎么去那里",
+                "partOfSpeech": "question phrase",
+                "exampleEn": "How do I get there by bus?",
+                "exampleZh": "我怎么坐公交车去那里？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:007"
+              },
+              {
+                "id": "r17-daily-p1a-008",
+                "term": "I am looking for",
+                "meaningZh": "我在找",
+                "partOfSpeech": "request phrase",
+                "exampleEn": "I am looking for the hotel.",
+                "exampleZh": "我在找这家酒店。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:008"
+              },
+              {
+                "id": "r17-daily-p1a-009",
+                "term": "I need to go to",
+                "meaningZh": "我需要去",
+                "partOfSpeech": "request phrase",
+                "exampleEn": "I need to go to the airport.",
+                "exampleZh": "我需要去机场。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:009"
+              },
+              {
+                "id": "r17-daily-p1a-010",
+                "term": "I have a question",
+                "meaningZh": "我有一个问题",
+                "partOfSpeech": "statement phrase",
+                "exampleEn": "I have a question about the ticket.",
+                "exampleZh": "我有一个关于票的问题。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:010"
+              },
+              {
+                "id": "r17-daily-p1a-011",
+                "term": "can you show me",
+                "meaningZh": "你能给我看吗",
+                "partOfSpeech": "request phrase",
+                "exampleEn": "Can you show me the way?",
+                "exampleZh": "你能给我指路吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:011"
+              },
+              {
+                "id": "r17-daily-p1a-012",
+                "term": "can you write it down",
+                "meaningZh": "你能写下来吗",
+                "partOfSpeech": "request phrase",
+                "exampleEn": "Can you write it down for me?",
+                "exampleZh": "你能帮我写下来吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:012"
+              },
+              {
+                "id": "r17-daily-p1a-013",
+                "term": "please wait a moment",
+                "meaningZh": "请稍等",
+                "partOfSpeech": "request phrase",
+                "exampleEn": "Please wait a moment by the door.",
+                "exampleZh": "请在门边稍等。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:013"
+              },
+              {
+                "id": "r17-daily-p1a-014",
+                "term": "just a minute",
+                "meaningZh": "等一下",
+                "partOfSpeech": "time phrase",
+                "exampleEn": "Just a minute, please.",
+                "exampleZh": "请等一下。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:014"
+              },
+              {
+                "id": "r17-daily-p1a-015",
+                "term": "I don't know",
+                "meaningZh": "我不知道",
+                "partOfSpeech": "statement phrase",
+                "exampleEn": "I don't know the room number.",
+                "exampleZh": "我不知道房间号。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:015"
+              },
+              {
+                "id": "r17-daily-p1a-016",
+                "term": "I don't understand",
+                "meaningZh": "我不明白",
+                "partOfSpeech": "statement phrase",
+                "exampleEn": "I don't understand this sign.",
+                "exampleZh": "我不明白这个标志。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:016"
+              },
+              {
+                "id": "r17-daily-p1a-017",
+                "term": "I am sorry",
+                "meaningZh": "我很抱歉",
+                "partOfSpeech": "statement phrase",
+                "exampleEn": "I am sorry, I am late.",
+                "exampleZh": "我很抱歉，我迟到了。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:017"
+              },
+              {
+                "id": "r17-daily-p1a-018",
+                "term": "thank you very much",
+                "meaningZh": "非常感谢",
+                "partOfSpeech": "politeness phrase",
+                "exampleEn": "Thank you very much for your help.",
+                "exampleZh": "非常感谢你的帮助。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:018"
+              },
+              {
+                "id": "r17-daily-p1a-019",
+                "term": "you are welcome",
+                "meaningZh": "不客气",
+                "partOfSpeech": "politeness phrase",
+                "exampleEn": "You are welcome. Have a good day.",
+                "exampleZh": "不客气。祝你今天愉快。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:019"
+              },
+              {
+                "id": "r17-daily-p1a-020",
+                "term": "after you",
+                "meaningZh": "您先请",
+                "partOfSpeech": "politeness phrase",
+                "exampleEn": "After you, please.",
+                "exampleZh": "您先请。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:020"
+              },
+              {
+                "id": "r17-daily-p1a-021",
+                "term": "this way please",
+                "meaningZh": "请这边走",
+                "partOfSpeech": "direction phrase",
+                "exampleEn": "This way please, the bus is here.",
+                "exampleZh": "请这边走，公交车在这里。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:021"
+              },
+              {
+                "id": "r17-daily-p1a-022",
+                "term": "right here",
+                "meaningZh": "就在这里",
+                "partOfSpeech": "place phrase",
+                "exampleEn": "The ticket machine is right here.",
+                "exampleZh": "售票机就在这里。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:022"
+              },
+              {
+                "id": "r17-daily-p1a-023",
+                "term": "over there",
+                "meaningZh": "在那边",
+                "partOfSpeech": "place phrase",
+                "exampleEn": "The hotel entrance is over there.",
+                "exampleZh": "酒店入口在那边。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:023"
+              },
+              {
+                "id": "r17-daily-p1a-024",
+                "term": "next door",
+                "meaningZh": "隔壁",
+                "partOfSpeech": "place phrase",
+                "exampleEn": "The pharmacy is next door.",
+                "exampleZh": "药店在隔壁。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:024"
+              },
+              {
+                "id": "r17-daily-p1a-025",
+                "term": "near the entrance",
+                "meaningZh": "靠近入口",
+                "partOfSpeech": "place phrase",
+                "exampleEn": "Please wait near the entrance.",
+                "exampleZh": "请在入口附近等候。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:025"
+              },
+              {
+                "id": "r17-daily-p1a-026",
+                "term": "at the corner",
+                "meaningZh": "在拐角处",
+                "partOfSpeech": "place phrase",
+                "exampleEn": "The bank is at the corner.",
+                "exampleZh": "银行在拐角处。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:026"
+              },
+              {
+                "id": "r17-daily-p1a-027",
+                "term": "on this floor",
+                "meaningZh": "在这一层",
+                "partOfSpeech": "place phrase",
+                "exampleEn": "The restaurant is on this floor.",
+                "exampleZh": "餐厅在这一层。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:027"
+              },
+              {
+                "id": "r17-daily-p1a-028",
+                "term": "on the first floor",
+                "meaningZh": "在一楼",
+                "partOfSpeech": "place phrase",
+                "exampleEn": "The lobby is on the first floor.",
+                "exampleZh": "大堂在一楼。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:028"
+              },
+              {
+                "id": "r17-daily-p1a-029",
+                "term": "hotel guest",
+                "meaningZh": "酒店住客",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Every hotel guest needs a room number.",
+                "exampleZh": "每位酒店住客都需要房间号。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:029"
+              },
+              {
+                "id": "r17-daily-p1a-030",
+                "term": "room service",
+                "meaningZh": "客房服务",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Room service brings food to the room.",
+                "exampleZh": "客房服务把食物送到房间。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:030"
+              },
+              {
+                "id": "r17-daily-p1a-031",
+                "term": "air conditioning",
+                "meaningZh": "空调",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "The air conditioning is too cold.",
+                "exampleZh": "空调太冷了。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:031"
+              },
+              {
+                "id": "r17-daily-p1a-032",
+                "term": "Wi-Fi password",
+                "meaningZh": "无线网络密码",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "What is the Wi-Fi password?",
+                "exampleZh": "无线网络密码是什么？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:032"
+              },
+              {
+                "id": "r17-daily-p1a-033",
+                "term": "wake-up call",
+                "meaningZh": "叫醒服务",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I need a wake-up call at seven.",
+                "exampleZh": "我需要七点的叫醒服务。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:033"
+              },
+              {
+                "id": "r17-daily-p1a-034",
+                "term": "extra blanket",
+                "meaningZh": "额外毛毯",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Could I have an extra blanket?",
+                "exampleZh": "我能要一条额外毛毯吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:034"
+              },
+              {
+                "id": "r17-daily-p1a-035",
+                "term": "clean towel",
+                "meaningZh": "干净毛巾",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Please bring a clean towel.",
+                "exampleZh": "请拿一条干净毛巾来。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:035"
+              },
+              {
+                "id": "r17-daily-p1a-036",
+                "term": "reservation number",
+                "meaningZh": "预订号码",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "My reservation number is on this email.",
+                "exampleZh": "我的预订号码在这封邮件里。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:036"
+              },
+              {
+                "id": "r17-daily-p1a-037",
+                "term": "confirmation number",
+                "meaningZh": "确认号码",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Please show your confirmation number.",
+                "exampleZh": "请出示你的确认号码。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:037"
+              },
+              {
+                "id": "r17-daily-p1a-038",
+                "term": "single bed",
+                "meaningZh": "单人床",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "This room has a single bed.",
+                "exampleZh": "这个房间有一张单人床。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:038"
+              },
+              {
+                "id": "r17-daily-p1a-039",
+                "term": "double bed",
+                "meaningZh": "双人床",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "We need a double bed.",
+                "exampleZh": "我们需要一张双人床。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:039"
+              },
+              {
+                "id": "r17-daily-p1a-040",
+                "term": "breakfast included",
+                "meaningZh": "含早餐",
+                "partOfSpeech": "hotel phrase",
+                "exampleEn": "Is breakfast included in the room price?",
+                "exampleZh": "房价里含早餐吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:040"
+              },
+              {
+                "id": "r17-daily-p1a-041",
+                "term": "cold drink",
+                "meaningZh": "冷饮",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I would like a cold drink.",
+                "exampleZh": "我想要一杯冷饮。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:041"
+              },
+              {
+                "id": "r17-daily-p1a-042",
+                "term": "hot meal",
+                "meaningZh": "热餐",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Do you have a hot meal?",
+                "exampleZh": "你们有热餐吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:042"
+              },
+              {
+                "id": "r17-daily-p1a-043",
+                "term": "vegetarian option",
+                "meaningZh": "素食选项",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Is there a vegetarian option?",
+                "exampleZh": "有素食选项吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:043"
+              },
+              {
+                "id": "r17-daily-p1a-044",
+                "term": "no onions",
+                "meaningZh": "不要洋葱",
+                "partOfSpeech": "food request",
+                "exampleEn": "No onions, please.",
+                "exampleZh": "请不要洋葱。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:044"
+              },
+              {
+                "id": "r17-daily-p1a-045",
+                "term": "with ice",
+                "meaningZh": "加冰",
+                "partOfSpeech": "food request",
+                "exampleEn": "Water with ice, please.",
+                "exampleZh": "请给我加冰的水。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:045"
+              },
+              {
+                "id": "r17-daily-p1a-046",
+                "term": "without sugar",
+                "meaningZh": "不加糖",
+                "partOfSpeech": "food request",
+                "exampleEn": "Coffee without sugar, please.",
+                "exampleZh": "请给我不加糖的咖啡。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:046"
+              },
+              {
+                "id": "r17-daily-p1a-047",
+                "term": "small coffee",
+                "meaningZh": "小杯咖啡",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I would like a small coffee.",
+                "exampleZh": "我想要一杯小咖啡。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:047"
+              },
+              {
+                "id": "r17-daily-p1a-048",
+                "term": "table by the window",
+                "meaningZh": "靠窗的桌子",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Can we have a table by the window?",
+                "exampleZh": "我们能坐靠窗的桌子吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:048"
+              },
+              {
+                "id": "r17-daily-p1a-049",
+                "term": "to take away",
+                "meaningZh": "带走",
+                "partOfSpeech": "food phrase",
+                "exampleEn": "I would like this to take away.",
+                "exampleZh": "我想把这个带走。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:049"
+              },
+              {
+                "id": "r17-daily-p1a-050",
+                "term": "the bill please",
+                "meaningZh": "请给我账单",
+                "partOfSpeech": "restaurant request",
+                "exampleEn": "The bill please, when you are ready.",
+                "exampleZh": "方便时请给我账单。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:050"
+              },
+              {
+                "id": "r17-daily-p1a-051",
+                "term": "cash only",
+                "meaningZh": "只收现金",
+                "partOfSpeech": "payment phrase",
+                "exampleEn": "This small shop is cash only.",
+                "exampleZh": "这家小店只收现金。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:051"
+              },
+              {
+                "id": "r17-daily-p1a-052",
+                "term": "exact amount",
+                "meaningZh": "准确金额",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Please pay the exact amount.",
+                "exampleZh": "请支付准确金额。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:052"
+              },
+              {
+                "id": "r17-daily-p1a-053",
+                "term": "small bills",
+                "meaningZh": "小面额纸币",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Do you have small bills?",
+                "exampleZh": "你有小面额纸币吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:053"
+              },
+              {
+                "id": "r17-daily-p1a-054",
+                "term": "change please",
+                "meaningZh": "请找零",
+                "partOfSpeech": "payment request",
+                "exampleEn": "Change please, if you have it.",
+                "exampleZh": "如果有的话，请找零。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:054"
+              },
+              {
+                "id": "r17-daily-p1a-055",
+                "term": "price list",
+                "meaningZh": "价目表",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "The price list is by the counter.",
+                "exampleZh": "价目表在柜台旁边。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:055"
+              },
+              {
+                "id": "r17-daily-p1a-056",
+                "term": "sale price",
+                "meaningZh": "促销价",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Is this the sale price?",
+                "exampleZh": "这是促销价吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:056"
+              },
+              {
+                "id": "r17-daily-p1a-057",
+                "term": "store clerk",
+                "meaningZh": "店员",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "The store clerk can help you.",
+                "exampleZh": "店员可以帮你。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:057"
+              },
+              {
+                "id": "r17-daily-p1a-058",
+                "term": "shopping bag",
+                "meaningZh": "购物袋",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I need a shopping bag.",
+                "exampleZh": "我需要一个购物袋。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:058"
+              },
+              {
+                "id": "r17-daily-p1a-059",
+                "term": "return policy",
+                "meaningZh": "退货规定",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Please read the return policy.",
+                "exampleZh": "请阅读退货规定。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:059"
+              },
+              {
+                "id": "r17-daily-p1a-060",
+                "term": "bus ticket",
+                "meaningZh": "公交车票",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Buy a bus ticket here.",
+                "exampleZh": "在这里买公交车票。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:060"
+              },
+              {
+                "id": "r17-daily-p1a-061",
+                "term": "taxi ride",
+                "meaningZh": "出租车行程",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "The taxi ride takes ten minutes.",
+                "exampleZh": "出租车行程要十分钟。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:061"
+              },
+              {
+                "id": "r17-daily-p1a-062",
+                "term": "airport shuttle",
+                "meaningZh": "机场接驳车",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "The airport shuttle stops here.",
+                "exampleZh": "机场接驳车在这里停。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:062"
+              },
+              {
+                "id": "r17-daily-p1a-063",
+                "term": "elevator button",
+                "meaningZh": "电梯按钮",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Press the elevator button.",
+                "exampleZh": "按电梯按钮。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:063"
+              },
+              {
+                "id": "r17-daily-p1a-064",
+                "term": "phone charger",
+                "meaningZh": "手机充电器",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "My phone charger is missing.",
+                "exampleZh": "我的手机充电器不见了。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:064"
+              },
+              {
+                "id": "r17-daily-p1a-065",
+                "term": "power adapter",
+                "meaningZh": "电源转换插头",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I need a power adapter.",
+                "exampleZh": "我需要一个电源转换插头。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1a:065"
               }
             ]
           }

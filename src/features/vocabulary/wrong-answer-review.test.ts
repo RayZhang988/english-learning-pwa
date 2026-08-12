@@ -34,7 +34,7 @@ describe('R13-D vocabulary review content', () => {
     const supplyIndex = JSON.parse(await readFile(new URL('content/curriculum/training-supply-index.v1.json', root), 'utf8')) as { candidates: readonly VocabularySupplyItem[] }
     const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
     const daily = supplyIndex.candidates.filter((candidate) => candidate.domain === 'vocabulary')
-    expect(daily).toHaveLength(1089)
+    expect(daily).toHaveLength(1284)
     for (const candidate of daily) {
       const resolved = resolveDailyVocabularyReviewContent(releasedIndex, candidate, catalog)
       expect(resolved.identity.originalQuestionType).toContain(candidate.source.variantId.replace('-choice', ''))
