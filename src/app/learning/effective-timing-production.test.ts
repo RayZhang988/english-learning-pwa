@@ -70,6 +70,29 @@ function task(): LearningTask {
 }
 
 describe('ProductionEffectiveTimingSessionFactory', () => {
+  it('creates a fresh timing clock when a training task actually starts', async () => {
+    const snapshots = new MemorySnapshotStore()
+    let createdClocks = 0
+    const factory = new ProductionEffectiveTimingSessionFactory({
+      resolveTask() {
+        return { task: task(), localDate: '2026-08-12' }
+      },
+      eventSink: new NoopEventSink(),
+      snapshotStore: snapshots,
+      lifecycle: new ManualLifecycle(),
+      createClock() {
+        createdClocks += 1
+        return undefined
+      },
+    })
+
+    expect(createdClocks).toBe(0)
+    const session = await factory.create(task().taskId, 'vocabulary')
+
+    expect(createdClocks).toBe(1)
+    await session.dispose()
+  })
+
   it('resolves the real task identity and deduplicates concurrent route mounts', async () => {
     const snapshots = new MemorySnapshotStore()
     const resolvedTask = task()

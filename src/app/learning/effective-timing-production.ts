@@ -39,6 +39,8 @@ export interface ProductionEffectiveTimingSessionFactoryOptions {
   readonly snapshotStore: EffectiveTimingSnapshotStore
   readonly lifecycle: TimingLifecyclePort
   readonly clock?: EffectiveTimingClock
+  /** Creates a clock when a task enters training, rather than at app boot. */
+  readonly createClock?: () => EffectiveTimingClock | undefined
   readonly scheduler?: EffectiveTimingScheduler
   readonly interactionIdleClockSeconds?: number
   readonly maximumActiveClockSeconds?: number
@@ -95,7 +97,7 @@ export class ProductionEffectiveTimingSessionFactory {
       eventSink: this.#options.eventSink,
       snapshotStore: this.#options.snapshotStore,
       lifecycle: this.#options.lifecycle,
-      clock: this.#options.clock,
+      clock: this.#options.createClock?.() ?? this.#options.clock,
       scheduler: this.#options.scheduler,
       interactionIdleClockSeconds:
         this.#options.interactionIdleClockSeconds,
@@ -125,7 +127,7 @@ const productionTimingSnapshots =
 
 export const productionEffectiveTimingSessions =
   new ProductionEffectiveTimingSessionFactory({
-    clock: createTrainingTimingClock(),
+    createClock: createTrainingTimingClock,
     scheduler: createTrainingTimingScheduler(),
     interactionIdleClockSeconds:
       trainingTestMode.enabled ? 45 * trainingTestMode.timeScale : undefined,
