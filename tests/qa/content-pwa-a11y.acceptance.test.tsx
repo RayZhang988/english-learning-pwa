@@ -84,19 +84,19 @@ describe('09 released content acceptance', () => {
       units.every((unit) => unit.durationBaseline !== undefined),
     ).toBe(true)
     expect(firstDaySeconds).toEqual({
-      vocabulary: 123,
+      vocabulary: 600,
       listening: 252,
       speaking: 181,
     })
     expect(baselineSeconds.reduce((sum, value) => sum + value, 0)).toBe(
-      18_844,
+      19_321,
     )
     expect(packageIndex.durationBaselineTotals).toEqual({
       learningUnits: 84,
-      vocabularySeconds: 4_740,
+      vocabularySeconds: 5_217,
       listeningSeconds: 8_516,
       speakingSeconds: 5_588,
-      allUnitsSeconds: 18_844,
+      allUnitsSeconds: 19_321,
     })
     expect(
       lessons.every(
@@ -111,7 +111,7 @@ describe('09 released content acceptance', () => {
           ) !== 2_700,
       ),
     ).toBe(true)
-    expect(18_844 / 28 / 60).toBeCloseTo(11.2, 1)
+    expect(19_321 / 28 / 60).toBeCloseTo(11.5, 1)
     expect(new Set(units.map((unit) => unit.learningUnitId)).size).toBe(
       84,
     )

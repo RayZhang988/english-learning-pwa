@@ -5,7 +5,7 @@
   "source": {
     "packageIndexPath": "content/curriculum/package-index.v1.json",
     "sceneIndexPath": "content/curriculum/scene-vocabulary-question-bank-index.v1.json",
-    "dailyVocabularySourceCount": 428,
+    "dailyVocabularySourceCount": 493,
     "sceneQuestionCount": 612
   },
   "identityBoundary": {
@@ -43,14 +43,14 @@
     "rule": "Only daily vocabulary capacity is calculated by this audit. Listening and speaking remain in R17 scope but are not expanded by this vocabulary capacity batch."
   },
   "current": {
-    "dailyKnowledgePointCount": 423,
-    "dailyLexicalFormCount": 409,
+    "dailyKnowledgePointCount": 488,
+    "dailyLexicalFormCount": 474,
     "sceneQuestionCount": 612,
     "sceneLexicalFormCount": 554,
     "sceneIndependentKnowledgeCount": 573,
     "sceneAmbiguousLexicalFormCount": 19,
-    "dailySourceRecordsIntersectingSceneLexicalForms": 120,
-    "dailySceneLexicalFormIntersectionCount": 113,
+    "dailySourceRecordsIntersectingSceneLexicalForms": 128,
+    "dailySceneLexicalFormIntersectionCount": 121,
     "dailySceneLexicalFormIntersection": [
       "across from",
       "address",
@@ -69,6 +69,7 @@
       "boarding",
       "boarding pass",
       "bus",
+      "bus stop",
       "cancel",
       "card",
       "carousel",
@@ -104,8 +105,11 @@
       "gate",
       "handle",
       "headache",
+      "hot water",
       "information desk",
       "key card",
+      "kids menu",
+      "laundry room",
       "line",
       "lobby",
       "lock",
@@ -124,6 +128,7 @@
       "pickup",
       "platform",
       "police",
+      "power outlet",
       "price",
       "receipt",
       "recommend",
@@ -133,7 +138,9 @@
       "restroom",
       "return",
       "return policy",
+      "room number",
       "route",
+      "running late",
       "safe",
       "security",
       "server",
@@ -144,6 +151,7 @@
       "soap",
       "station",
       "stomachache",
+      "store credit",
       "straight",
       "subway",
       "suitcase",
@@ -384,9 +392,9 @@
         "labelZh": "一年级",
         "minimumDifficulty": 0.5,
         "maximumDifficultyExclusive": 1,
-        "currentDailyKnowledgePoints": 70,
+        "currentDailyKnowledgePoints": 135,
         "targetDailyKnowledgePoints": 200,
-        "missingDailyKnowledgePoints": 130
+        "missingDailyKnowledgePoints": 65
       },
       {
         "ordinal": 2,
@@ -8646,6 +8654,591 @@
       "lexicalForm": "power adapter",
       "meaningZh": "电源转换插头",
       "dailyKnowledgeId": "daily-knowledge-v1:phrase:80282f9e",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-001",
+      "lexicalKind": "phrase",
+      "lexicalForm": "what time is it",
+      "meaningZh": "几点了",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:7caf883e",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-002",
+      "lexicalKind": "phrase",
+      "lexicalForm": "what time does it open",
+      "meaningZh": "几点开门",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:ff696785",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-003",
+      "lexicalKind": "phrase",
+      "lexicalForm": "what time does it close",
+      "meaningZh": "几点关门",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:0d458412",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-004",
+      "lexicalKind": "phrase",
+      "lexicalForm": "change the time",
+      "meaningZh": "改时间",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:ac11f7e2",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-005",
+      "lexicalKind": "phrase",
+      "lexicalForm": "a later time",
+      "meaningZh": "晚一点的时间",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:0c992830",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-006",
+      "lexicalKind": "phrase",
+      "lexicalForm": "an earlier time",
+      "meaningZh": "早一点的时间",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:809609a7",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-007",
+      "lexicalKind": "phrase",
+      "lexicalForm": "next available time",
+      "meaningZh": "下一个可用时间",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:52248ea2",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-008",
+      "lexicalKind": "phrase",
+      "lexicalForm": "running late",
+      "meaningZh": "要迟到了",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:f1072a0a",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-009",
+      "lexicalKind": "phrase",
+      "lexicalForm": "be there soon",
+      "meaningZh": "很快到",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:5efd12c6",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-010",
+      "lexicalKind": "phrase",
+      "lexicalForm": "same day",
+      "meaningZh": "当天",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:af3d0e37",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-011",
+      "lexicalKind": "phrase",
+      "lexicalForm": "hotel entrance",
+      "meaningZh": "酒店入口",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:ed911240",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-012",
+      "lexicalKind": "phrase",
+      "lexicalForm": "room number",
+      "meaningZh": "房间号",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:0a3b8c7b",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-013",
+      "lexicalKind": "phrase",
+      "lexicalForm": "bathroom light",
+      "meaningZh": "浴室灯",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:437dae46",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-014",
+      "lexicalKind": "phrase",
+      "lexicalForm": "hot water",
+      "meaningZh": "热水",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:9e4b5ba4",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-015",
+      "lexicalKind": "phrase",
+      "lexicalForm": "no hot water",
+      "meaningZh": "没有热水",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:a5d448f9",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-016",
+      "lexicalKind": "phrase",
+      "lexicalForm": "broken shower",
+      "meaningZh": "坏掉的淋浴",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:cc7a173d",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-017",
+      "lexicalKind": "phrase",
+      "lexicalForm": "hotel map",
+      "meaningZh": "酒店地图",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:a1a9c260",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-018",
+      "lexicalKind": "phrase",
+      "lexicalForm": "laundry room",
+      "meaningZh": "洗衣房",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:b8d4a102",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-019",
+      "lexicalKind": "phrase",
+      "lexicalForm": "ice machine",
+      "meaningZh": "制冰机",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:f6266b0d",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-020",
+      "lexicalKind": "phrase",
+      "lexicalForm": "swimming pool",
+      "meaningZh": "游泳池",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:ab1e85d9",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-021",
+      "lexicalKind": "phrase",
+      "lexicalForm": "hotel gym",
+      "meaningZh": "酒店健身房",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:6c39efb2",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-022",
+      "lexicalKind": "phrase",
+      "lexicalForm": "quiet room",
+      "meaningZh": "安静的房间",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:6b312bff",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-023",
+      "lexicalKind": "phrase",
+      "lexicalForm": "train station",
+      "meaningZh": "火车站",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:671c846d",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-024",
+      "lexicalKind": "phrase",
+      "lexicalForm": "bus stop",
+      "meaningZh": "公交车站",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:4779fe80",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-025",
+      "lexicalKind": "phrase",
+      "lexicalForm": "platform number",
+      "meaningZh": "站台号",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:81ace3c9",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-026",
+      "lexicalKind": "phrase",
+      "lexicalForm": "ticket machine",
+      "meaningZh": "售票机",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:eedc8bc4",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-027",
+      "lexicalKind": "phrase",
+      "lexicalForm": "ticket office",
+      "meaningZh": "售票处",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:3d74e105",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-028",
+      "lexicalKind": "phrase",
+      "lexicalForm": "transfer ticket",
+      "meaningZh": "换乘票",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:2aa9df34",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-029",
+      "lexicalKind": "phrase",
+      "lexicalForm": "next stop",
+      "meaningZh": "下一站",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:d522f2aa",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-030",
+      "lexicalKind": "phrase",
+      "lexicalForm": "last stop",
+      "meaningZh": "终点站",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:ad148ce1",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-031",
+      "lexicalKind": "phrase",
+      "lexicalForm": "train schedule",
+      "meaningZh": "火车时刻表",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:52224658",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-032",
+      "lexicalKind": "phrase",
+      "lexicalForm": "missed bus",
+      "meaningZh": "错过的公交车",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:f6b76860",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-033",
+      "lexicalKind": "phrase",
+      "lexicalForm": "bus pass",
+      "meaningZh": "公交卡",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:c4c5e59d",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-034",
+      "lexicalKind": "phrase",
+      "lexicalForm": "boarding time",
+      "meaningZh": "登机时间",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:5c85853d",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-035",
+      "lexicalKind": "phrase",
+      "lexicalForm": "food allergy",
+      "meaningZh": "食物过敏",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:097a7591",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-036",
+      "lexicalKind": "phrase",
+      "lexicalForm": "i am allergic to",
+      "meaningZh": "我对……过敏",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:07e25d2c",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-037",
+      "lexicalKind": "phrase",
+      "lexicalForm": "no dairy",
+      "meaningZh": "不要乳制品",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:44f23c37",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-038",
+      "lexicalKind": "phrase",
+      "lexicalForm": "no nuts",
+      "meaningZh": "不要坚果",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:3067e8ce",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-039",
+      "lexicalKind": "phrase",
+      "lexicalForm": "not spicy",
+      "meaningZh": "不辣",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:209a1244",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-040",
+      "lexicalKind": "phrase",
+      "lexicalForm": "mild flavor",
+      "meaningZh": "清淡口味",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:1b217e0f",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-041",
+      "lexicalKind": "phrase",
+      "lexicalForm": "extra sauce",
+      "meaningZh": "额外酱汁",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:f35b9593",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-042",
+      "lexicalKind": "phrase",
+      "lexicalForm": "less salt",
+      "meaningZh": "少盐",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:03b9544d",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-043",
+      "lexicalKind": "phrase",
+      "lexicalForm": "still water",
+      "meaningZh": "不含气泡的水",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:b0b63d01",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-044",
+      "lexicalKind": "phrase",
+      "lexicalForm": "sparkling water",
+      "meaningZh": "气泡水",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:35c19a80",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-045",
+      "lexicalKind": "phrase",
+      "lexicalForm": "kids menu",
+      "meaningZh": "儿童菜单",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:11138a36",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-046",
+      "lexicalKind": "phrase",
+      "lexicalForm": "my size",
+      "meaningZh": "我的尺码",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:9c164f88",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-047",
+      "lexicalKind": "phrase",
+      "lexicalForm": "larger size",
+      "meaningZh": "大一点的尺码",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:ec588906",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-048",
+      "lexicalKind": "phrase",
+      "lexicalForm": "smaller size",
+      "meaningZh": "小一点的尺码",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:90f52eb7",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-049",
+      "lexicalKind": "phrase",
+      "lexicalForm": "different size",
+      "meaningZh": "不同的尺码",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:33dd4451",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-050",
+      "lexicalKind": "phrase",
+      "lexicalForm": "wrong size",
+      "meaningZh": "不合适的尺码",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:a26d198f",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-051",
+      "lexicalKind": "phrase",
+      "lexicalForm": "exchange this",
+      "meaningZh": "换这个",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:b6310eed",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-052",
+      "lexicalKind": "phrase",
+      "lexicalForm": "store credit",
+      "meaningZh": "店内额度",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:1268c8ca",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-053",
+      "lexicalKind": "phrase",
+      "lexicalForm": "gift receipt",
+      "meaningZh": "礼品收据",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:8558fe92",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-054",
+      "lexicalKind": "phrase",
+      "lexicalForm": "open box",
+      "meaningZh": "已开封的盒子",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:bb45380d",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-055",
+      "lexicalKind": "phrase",
+      "lexicalForm": "damaged item",
+      "meaningZh": "损坏的商品",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:a3fe9978",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-056",
+      "lexicalKind": "phrase",
+      "lexicalForm": "free wi fi",
+      "meaningZh": "免费无线网络",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:7c976fbc",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-057",
+      "lexicalKind": "phrase",
+      "lexicalForm": "wi fi signal",
+      "meaningZh": "无线网络信号",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:ebebd446",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-058",
+      "lexicalKind": "phrase",
+      "lexicalForm": "mobile data",
+      "meaningZh": "手机流量",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:4ef196f6",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-059",
+      "lexicalKind": "phrase",
+      "lexicalForm": "data plan",
+      "meaningZh": "流量套餐",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:e3cca707",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-060",
+      "lexicalKind": "phrase",
+      "lexicalForm": "phone signal",
+      "meaningZh": "手机信号",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:76a69352",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-061",
+      "lexicalKind": "phrase",
+      "lexicalForm": "local sim card",
+      "meaningZh": "本地电话卡",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:70c55c82",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-062",
+      "lexicalKind": "phrase",
+      "lexicalForm": "charging cable",
+      "meaningZh": "充电线",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:8ff7f840",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-063",
+      "lexicalKind": "phrase",
+      "lexicalForm": "power outlet",
+      "meaningZh": "电源插座",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:9722f5e7",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-064",
+      "lexicalKind": "phrase",
+      "lexicalForm": "call home",
+      "meaningZh": "给家里打电话",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:c0ad75d8",
+      "difficultyLevel": 0.5,
+      "levelId": "primary-1"
+    },
+    {
+      "sourceItemId": "r17-daily-p1b-065",
+      "lexicalKind": "phrase",
+      "lexicalForm": "send a message",
+      "meaningZh": "发消息",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:3cf57169",
       "difficultyLevel": 0.5,
       "levelId": "primary-1"
     },

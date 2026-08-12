@@ -206,7 +206,10 @@ function expectedIndex() {
 }
 
 const expected = expectedIndex()
-if (writeMode) fs.writeFileSync(absolute(outputPath), `${JSON.stringify(expected, null, 2)}\n`)
+// This production resource is precached for offline wrong-answer review. Keep
+// its deterministic content compact so a growing legitimate course does not
+// cross Workbox's 2 MiB per-asset ceiling merely because of indentation.
+if (writeMode) fs.writeFileSync(absolute(outputPath), `${JSON.stringify(expected)}\n`)
 else {
   const actual = readJson(outputPath)
   assert(JSON.stringify(actual) === JSON.stringify(expected), `${outputPath} has drifted; run node ${path.relative(root, fileURLToPath(import.meta.url))} --write`)

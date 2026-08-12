@@ -20,7 +20,7 @@ const isLocalPreview = ['127.0.0.1', 'localhost'].includes(
   baseUrl.hostname,
 )
 const expectedFirstDaySeconds = {
-  vocabulary: 123,
+  vocabulary: 600,
   listening: 252,
   speaking: 181,
 }
@@ -259,7 +259,7 @@ async function createFirstDayPlan(observedAsset) {
       runtime.activePlan.plan.plannedSeconds,
       estimates.reduce((total, seconds) => total + seconds, 0),
     )
-    assert.equal(runtime.activePlan.plan.plannedSeconds, 556)
+    assert.equal(runtime.activePlan.plan.plannedSeconds, 1033)
     assert.equal(
       tasks.every(
         (task) =>

@@ -27,11 +27,11 @@
             "schemaVersion": 1,
             "contentType": "vocabulary-set-v1",
             "fixedSeconds": 15,
-            "itemCount": 271,
+            "itemCount": 336,
             "secondsPerItem": 12,
             "activeAudioSeconds": 0,
             "expectedAudioPlaythroughs": 0,
-            "interactionStepCount": 542,
+            "interactionStepCount": 672,
             "secondsPerInteractionStep": 3,
             "minimumSeconds": 90,
             "maximumSeconds": 600
@@ -2736,6 +2736,656 @@
                 "exampleZh": "我需要一个电源转换插头。",
                 "growthDifficultyLevel": 0.5,
                 "dailyKnowledgeId": "daily-knowledge-v1:p1a:065"
+              },
+              {
+                "id": "r17-daily-p1b-001",
+                "term": "what time is it",
+                "meaningZh": "几点了",
+                "partOfSpeech": "question phrase",
+                "exampleEn": "Excuse me, what time is it?",
+                "exampleZh": "劳驾，现在几点了？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:001"
+              },
+              {
+                "id": "r17-daily-p1b-002",
+                "term": "what time does it open",
+                "meaningZh": "几点开门",
+                "partOfSpeech": "question phrase",
+                "exampleEn": "What time does it open tomorrow?",
+                "exampleZh": "它明天几点开门？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:002"
+              },
+              {
+                "id": "r17-daily-p1b-003",
+                "term": "what time does it close",
+                "meaningZh": "几点关门",
+                "partOfSpeech": "question phrase",
+                "exampleEn": "What time does it close tonight?",
+                "exampleZh": "它今晚几点关门？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:003"
+              },
+              {
+                "id": "r17-daily-p1b-004",
+                "term": "change the time",
+                "meaningZh": "改时间",
+                "partOfSpeech": "request phrase",
+                "exampleEn": "Can I change the time?",
+                "exampleZh": "我能改一下时间吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:004"
+              },
+              {
+                "id": "r17-daily-p1b-005",
+                "term": "a later time",
+                "meaningZh": "晚一点的时间",
+                "partOfSpeech": "time phrase",
+                "exampleEn": "Do you have a later time?",
+                "exampleZh": "你们有晚一点的时间吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:005"
+              },
+              {
+                "id": "r17-daily-p1b-006",
+                "term": "an earlier time",
+                "meaningZh": "早一点的时间",
+                "partOfSpeech": "time phrase",
+                "exampleEn": "Is there an earlier time?",
+                "exampleZh": "有早一点的时间吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:006"
+              },
+              {
+                "id": "r17-daily-p1b-007",
+                "term": "next available time",
+                "meaningZh": "下一个可用时间",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "What is the next available time?",
+                "exampleZh": "下一个可用时间是什么时候？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:007"
+              },
+              {
+                "id": "r17-daily-p1b-008",
+                "term": "running late",
+                "meaningZh": "要迟到了",
+                "partOfSpeech": "status phrase",
+                "exampleEn": "I am running late for my tour.",
+                "exampleZh": "我的旅行团要迟到了。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:008"
+              },
+              {
+                "id": "r17-daily-p1b-009",
+                "term": "be there soon",
+                "meaningZh": "很快到",
+                "partOfSpeech": "status phrase",
+                "exampleEn": "I will be there soon.",
+                "exampleZh": "我很快就到。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:009"
+              },
+              {
+                "id": "r17-daily-p1b-010",
+                "term": "same day",
+                "meaningZh": "当天",
+                "partOfSpeech": "time phrase",
+                "exampleEn": "Can I get a same day ticket?",
+                "exampleZh": "我能买当天的票吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:010"
+              },
+              {
+                "id": "r17-daily-p1b-011",
+                "term": "hotel entrance",
+                "meaningZh": "酒店入口",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Meet me at the hotel entrance.",
+                "exampleZh": "在酒店入口见我。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:011"
+              },
+              {
+                "id": "r17-daily-p1b-012",
+                "term": "room number",
+                "meaningZh": "房间号",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Please tell me your room number.",
+                "exampleZh": "请告诉我你的房间号。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:012"
+              },
+              {
+                "id": "r17-daily-p1b-013",
+                "term": "bathroom light",
+                "meaningZh": "浴室灯",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "The bathroom light is off.",
+                "exampleZh": "浴室灯没亮。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:013"
+              },
+              {
+                "id": "r17-daily-p1b-014",
+                "term": "hot water",
+                "meaningZh": "热水",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Is there hot water in the room?",
+                "exampleZh": "房间里有热水吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:014"
+              },
+              {
+                "id": "r17-daily-p1b-015",
+                "term": "no hot water",
+                "meaningZh": "没有热水",
+                "partOfSpeech": "hotel problem",
+                "exampleEn": "There is no hot water in my room.",
+                "exampleZh": "我的房间没有热水。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:015"
+              },
+              {
+                "id": "r17-daily-p1b-016",
+                "term": "broken shower",
+                "meaningZh": "坏掉的淋浴",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "The broken shower needs help.",
+                "exampleZh": "坏掉的淋浴需要处理。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:016"
+              },
+              {
+                "id": "r17-daily-p1b-017",
+                "term": "hotel map",
+                "meaningZh": "酒店地图",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "May I have a hotel map?",
+                "exampleZh": "我可以要一张酒店地图吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:017"
+              },
+              {
+                "id": "r17-daily-p1b-018",
+                "term": "laundry room",
+                "meaningZh": "洗衣房",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Where is the laundry room?",
+                "exampleZh": "洗衣房在哪里？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:018"
+              },
+              {
+                "id": "r17-daily-p1b-019",
+                "term": "ice machine",
+                "meaningZh": "制冰机",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "The ice machine is near the lobby.",
+                "exampleZh": "制冰机在大堂附近。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:019"
+              },
+              {
+                "id": "r17-daily-p1b-020",
+                "term": "swimming pool",
+                "meaningZh": "游泳池",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Is the swimming pool open now?",
+                "exampleZh": "游泳池现在开放吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:020"
+              },
+              {
+                "id": "r17-daily-p1b-021",
+                "term": "hotel gym",
+                "meaningZh": "酒店健身房",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "The hotel gym is on this floor.",
+                "exampleZh": "酒店健身房在这一层。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:021"
+              },
+              {
+                "id": "r17-daily-p1b-022",
+                "term": "quiet room",
+                "meaningZh": "安静的房间",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Could I have a quiet room?",
+                "exampleZh": "我能要一间安静的房间吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:022"
+              },
+              {
+                "id": "r17-daily-p1b-023",
+                "term": "train station",
+                "meaningZh": "火车站",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "The train station is straight ahead.",
+                "exampleZh": "火车站就在前面。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:023"
+              },
+              {
+                "id": "r17-daily-p1b-024",
+                "term": "bus stop",
+                "meaningZh": "公交车站",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Is this the bus stop?",
+                "exampleZh": "这是公交车站吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:024"
+              },
+              {
+                "id": "r17-daily-p1b-025",
+                "term": "platform number",
+                "meaningZh": "站台号",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Check the platform number first.",
+                "exampleZh": "先看一下站台号。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:025"
+              },
+              {
+                "id": "r17-daily-p1b-026",
+                "term": "ticket machine",
+                "meaningZh": "售票机",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "The ticket machine takes cards.",
+                "exampleZh": "售票机可以刷卡。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:026"
+              },
+              {
+                "id": "r17-daily-p1b-027",
+                "term": "ticket office",
+                "meaningZh": "售票处",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "The ticket office is closed now.",
+                "exampleZh": "售票处现在关门了。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:027"
+              },
+              {
+                "id": "r17-daily-p1b-028",
+                "term": "transfer ticket",
+                "meaningZh": "换乘票",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Do I need a transfer ticket?",
+                "exampleZh": "我需要换乘票吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:028"
+              },
+              {
+                "id": "r17-daily-p1b-029",
+                "term": "next stop",
+                "meaningZh": "下一站",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "What is the next stop?",
+                "exampleZh": "下一站是哪里？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:029"
+              },
+              {
+                "id": "r17-daily-p1b-030",
+                "term": "last stop",
+                "meaningZh": "终点站",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "This is the last stop.",
+                "exampleZh": "这里是终点站。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:030"
+              },
+              {
+                "id": "r17-daily-p1b-031",
+                "term": "train schedule",
+                "meaningZh": "火车时刻表",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "The train schedule is on the wall.",
+                "exampleZh": "火车时刻表在墙上。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:031"
+              },
+              {
+                "id": "r17-daily-p1b-032",
+                "term": "missed bus",
+                "meaningZh": "错过的公交车",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I missed the bus this morning.",
+                "exampleZh": "我今天早上错过公交车了。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:032"
+              },
+              {
+                "id": "r17-daily-p1b-033",
+                "term": "bus pass",
+                "meaningZh": "公交卡",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Where can I buy a bus pass?",
+                "exampleZh": "我在哪里可以买公交卡？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:033"
+              },
+              {
+                "id": "r17-daily-p1b-034",
+                "term": "boarding time",
+                "meaningZh": "登机时间",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "What is the boarding time?",
+                "exampleZh": "登机时间是什么时候？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:034"
+              },
+              {
+                "id": "r17-daily-p1b-035",
+                "term": "food allergy",
+                "meaningZh": "食物过敏",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I have a food allergy.",
+                "exampleZh": "我有食物过敏。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:035"
+              },
+              {
+                "id": "r17-daily-p1b-036",
+                "term": "I am allergic to",
+                "meaningZh": "我对……过敏",
+                "partOfSpeech": "statement phrase",
+                "exampleEn": "I am allergic to nuts.",
+                "exampleZh": "我对坚果过敏。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:036"
+              },
+              {
+                "id": "r17-daily-p1b-037",
+                "term": "no dairy",
+                "meaningZh": "不要乳制品",
+                "partOfSpeech": "food request",
+                "exampleEn": "No dairy, please.",
+                "exampleZh": "请不要乳制品。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:037"
+              },
+              {
+                "id": "r17-daily-p1b-038",
+                "term": "no nuts",
+                "meaningZh": "不要坚果",
+                "partOfSpeech": "food request",
+                "exampleEn": "No nuts in my meal, please.",
+                "exampleZh": "我的餐里请不要坚果。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:038"
+              },
+              {
+                "id": "r17-daily-p1b-039",
+                "term": "not spicy",
+                "meaningZh": "不辣",
+                "partOfSpeech": "food request",
+                "exampleEn": "Not spicy, please.",
+                "exampleZh": "请不要辣。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:039"
+              },
+              {
+                "id": "r17-daily-p1b-040",
+                "term": "mild flavor",
+                "meaningZh": "清淡口味",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I would like a mild flavor.",
+                "exampleZh": "我想要清淡口味。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:040"
+              },
+              {
+                "id": "r17-daily-p1b-041",
+                "term": "extra sauce",
+                "meaningZh": "额外酱汁",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Can I have extra sauce?",
+                "exampleZh": "我能要额外酱汁吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:041"
+              },
+              {
+                "id": "r17-daily-p1b-042",
+                "term": "less salt",
+                "meaningZh": "少盐",
+                "partOfSpeech": "food request",
+                "exampleEn": "Less salt, please.",
+                "exampleZh": "请少放盐。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:042"
+              },
+              {
+                "id": "r17-daily-p1b-043",
+                "term": "still water",
+                "meaningZh": "不含气泡的水",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Still water, please.",
+                "exampleZh": "请给我不含气泡的水。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:043"
+              },
+              {
+                "id": "r17-daily-p1b-044",
+                "term": "sparkling water",
+                "meaningZh": "气泡水",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Do you have sparkling water?",
+                "exampleZh": "你们有气泡水吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:044"
+              },
+              {
+                "id": "r17-daily-p1b-045",
+                "term": "kids menu",
+                "meaningZh": "儿童菜单",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "May I see the kids menu?",
+                "exampleZh": "我可以看儿童菜单吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:045"
+              },
+              {
+                "id": "r17-daily-p1b-046",
+                "term": "my size",
+                "meaningZh": "我的尺码",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Do you have my size?",
+                "exampleZh": "你们有我的尺码吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:046"
+              },
+              {
+                "id": "r17-daily-p1b-047",
+                "term": "larger size",
+                "meaningZh": "大一点的尺码",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I need a larger size.",
+                "exampleZh": "我需要大一点的尺码。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:047"
+              },
+              {
+                "id": "r17-daily-p1b-048",
+                "term": "smaller size",
+                "meaningZh": "小一点的尺码",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Do you have a smaller size?",
+                "exampleZh": "你们有小一点的尺码吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:048"
+              },
+              {
+                "id": "r17-daily-p1b-049",
+                "term": "different size",
+                "meaningZh": "不同的尺码",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Can I try a different size?",
+                "exampleZh": "我能试一下不同的尺码吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:049"
+              },
+              {
+                "id": "r17-daily-p1b-050",
+                "term": "wrong size",
+                "meaningZh": "不合适的尺码",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "This is the wrong size for me.",
+                "exampleZh": "这个尺码不适合我。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:050"
+              },
+              {
+                "id": "r17-daily-p1b-051",
+                "term": "exchange this",
+                "meaningZh": "换这个",
+                "partOfSpeech": "request phrase",
+                "exampleEn": "Can I exchange this?",
+                "exampleZh": "我能换这个吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:051"
+              },
+              {
+                "id": "r17-daily-p1b-052",
+                "term": "store credit",
+                "meaningZh": "店内额度",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Can I get store credit?",
+                "exampleZh": "我能换成店内额度吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:052"
+              },
+              {
+                "id": "r17-daily-p1b-053",
+                "term": "gift receipt",
+                "meaningZh": "礼品收据",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Do you need the gift receipt?",
+                "exampleZh": "你需要礼品收据吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:053"
+              },
+              {
+                "id": "r17-daily-p1b-054",
+                "term": "open box",
+                "meaningZh": "已开封的盒子",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "This is an open box item.",
+                "exampleZh": "这是已开封的商品。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:054"
+              },
+              {
+                "id": "r17-daily-p1b-055",
+                "term": "damaged item",
+                "meaningZh": "损坏的商品",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I received a damaged item.",
+                "exampleZh": "我收到了一件损坏的商品。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:055"
+              },
+              {
+                "id": "r17-daily-p1b-056",
+                "term": "free Wi-Fi",
+                "meaningZh": "免费无线网络",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Is the free Wi-Fi working?",
+                "exampleZh": "免费无线网络能用吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:056"
+              },
+              {
+                "id": "r17-daily-p1b-057",
+                "term": "Wi-Fi signal",
+                "meaningZh": "无线网络信号",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "The Wi-Fi signal is weak here.",
+                "exampleZh": "这里的无线网络信号很弱。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:057"
+              },
+              {
+                "id": "r17-daily-p1b-058",
+                "term": "mobile data",
+                "meaningZh": "手机流量",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I need more mobile data.",
+                "exampleZh": "我需要更多手机流量。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:058"
+              },
+              {
+                "id": "r17-daily-p1b-059",
+                "term": "data plan",
+                "meaningZh": "流量套餐",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Which data plan is best?",
+                "exampleZh": "哪个流量套餐最好？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:059"
+              },
+              {
+                "id": "r17-daily-p1b-060",
+                "term": "phone signal",
+                "meaningZh": "手机信号",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I have no phone signal here.",
+                "exampleZh": "我在这里没有手机信号。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:060"
+              },
+              {
+                "id": "r17-daily-p1b-061",
+                "term": "local SIM card",
+                "meaningZh": "本地电话卡",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I need a local SIM card.",
+                "exampleZh": "我需要一张本地电话卡。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:061"
+              },
+              {
+                "id": "r17-daily-p1b-062",
+                "term": "charging cable",
+                "meaningZh": "充电线",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Do you sell a charging cable?",
+                "exampleZh": "你们卖充电线吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:062"
+              },
+              {
+                "id": "r17-daily-p1b-063",
+                "term": "power outlet",
+                "meaningZh": "电源插座",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Is there a power outlet nearby?",
+                "exampleZh": "附近有电源插座吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:063"
+              },
+              {
+                "id": "r17-daily-p1b-064",
+                "term": "call home",
+                "meaningZh": "给家里打电话",
+                "partOfSpeech": "verb phrase",
+                "exampleEn": "I want to call home tonight.",
+                "exampleZh": "我今晚想给家里打电话。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:064"
+              },
+              {
+                "id": "r17-daily-p1b-065",
+                "term": "send a message",
+                "meaningZh": "发消息",
+                "partOfSpeech": "verb phrase",
+                "exampleEn": "Can I send a message here?",
+                "exampleZh": "我能在这里发消息吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1b:065"
               }
             ]
           }

@@ -72,10 +72,13 @@ describe('vocabulary session state machine', () => {
     )
     const unit = catalog.units[0]
     const questions = buildVocabularyQuestions(unit)
+    const startedAt = Date.parse('2026-07-24T00:00:00.000Z')
+    const at = (offsetSeconds: number) =>
+      new Date(startedAt + offsetSeconds * 1000).toISOString()
     let session = createVocabularySession(
       vocabularyTaskFor(unit),
       questions,
-      '2026-07-24T00:00:00.000Z',
+      at(0),
     )
 
     for (let index = 0; index < questions.length; index += 1) {
@@ -89,15 +92,15 @@ describe('vocabulary session state machine', () => {
       session = selectVocabularyOption(
         session,
         selectedOptionId,
-        `2026-07-24T00:00:${String(index * 2 + 1).padStart(2, '0')}.000Z`,
+        at(index * 3 + 1),
       )
       session = submitVocabularyAnswer(
         session,
-        `2026-07-24T00:00:${String(index * 2 + 2).padStart(2, '0')}.000Z`,
+        at(index * 3 + 2),
       )
       session = advanceVocabularySession(
         session,
-        `2026-07-24T00:00:${String(index * 2 + 3).padStart(2, '0')}.000Z`,
+        at(index * 3 + 3),
       )
     }
 
