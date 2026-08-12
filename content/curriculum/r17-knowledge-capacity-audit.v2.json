@@ -5,7 +5,7 @@
   "source": {
     "packageIndexPath": "content/curriculum/package-index.v1.json",
     "sceneIndexPath": "content/curriculum/scene-vocabulary-question-bank-index.v1.json",
-    "dailyVocabularySourceCount": 238,
+    "dailyVocabularySourceCount": 313,
     "sceneQuestionCount": 612
   },
   "identityBoundary": {
@@ -43,23 +43,26 @@
     "rule": "Only daily vocabulary capacity is calculated by this audit. Listening and speaking remain in R17 scope but are not expanded by this vocabulary capacity batch."
   },
   "current": {
-    "dailyKnowledgePointCount": 233,
-    "dailyLexicalFormCount": 219,
+    "dailyKnowledgePointCount": 308,
+    "dailyLexicalFormCount": 294,
     "sceneQuestionCount": 612,
     "sceneLexicalFormCount": 554,
     "sceneIndependentKnowledgeCount": 573,
     "sceneAmbiguousLexicalFormCount": 19,
-    "dailySourceRecordsIntersectingSceneLexicalForms": 90,
-    "dailySceneLexicalFormIntersectionCount": 83,
+    "dailySourceRecordsIntersectingSceneLexicalForms": 103,
+    "dailySceneLexicalFormIntersectionCount": 96,
     "dailySceneLexicalFormIntersection": [
       "across from",
+      "address",
       "air conditioner",
       "aisle seat",
       "ambulance",
       "appetizer",
       "arrival",
       "baggage tag",
+      "black",
       "blanket",
+      "blue",
       "board",
       "boarding",
       "boarding pass",
@@ -72,6 +75,7 @@
       "change",
       "check",
       "check in",
+      "cold",
       "connection",
       "corner",
       "correct",
@@ -83,23 +87,29 @@
       "drop off",
       "elevator",
       "emergency",
+      "enter",
       "exchange",
       "fare",
+      "find",
       "fitting room",
       "floor",
       "front desk",
       "gate",
+      "handle",
       "information desk",
       "key card",
       "line",
       "lobby",
+      "lock",
       "lost",
+      "luggage",
       "map",
       "menu",
       "missing",
       "nearby",
       "open",
       "passport",
+      "pay",
       "pharmacy",
       "pickup",
       "platform",
@@ -116,6 +126,7 @@
       "safe",
       "security",
       "server",
+      "show",
       "shuttle",
       "size",
       "small",
@@ -134,7 +145,9 @@
       "tray",
       "try on",
       "wait",
-      "wi fi"
+      "wet",
+      "wi fi",
+      "zipper"
     ]
   },
   "sceneCapacity": {
@@ -344,9 +357,9 @@
         "labelZh": "幼儿园",
         "minimumDifficulty": 0,
         "maximumDifficultyExclusive": 0.5,
-        "currentDailyKnowledgePoints": 75,
+        "currentDailyKnowledgePoints": 150,
         "targetDailyKnowledgePoints": 200,
-        "missingDailyKnowledgePoints": 125
+        "missingDailyKnowledgePoints": 50
       },
       {
         "ordinal": 1,
@@ -6906,6 +6919,681 @@
       "lexicalForm": "closed",
       "meaningZh": "关闭的",
       "dailyKnowledgeId": "daily-knowledge-v1:word:e1e1c471",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-001",
+      "lexicalKind": "word",
+      "lexicalForm": "enter",
+      "meaningZh": "进入",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:0cb8c137",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-002",
+      "lexicalKind": "word",
+      "lexicalForm": "leave",
+      "meaningZh": "离开",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:2a645d67",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-003",
+      "lexicalKind": "word",
+      "lexicalForm": "come",
+      "meaningZh": "来",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:8f796366",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-004",
+      "lexicalKind": "word",
+      "lexicalForm": "sit",
+      "meaningZh": "坐",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:8e3a99eb",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-005",
+      "lexicalKind": "word",
+      "lexicalForm": "stand",
+      "meaningZh": "站立",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:699882d5",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-006",
+      "lexicalKind": "word",
+      "lexicalForm": "start",
+      "meaningZh": "开始",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:037b9930",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-007",
+      "lexicalKind": "phrase",
+      "lexicalForm": "turn on",
+      "meaningZh": "打开电源",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:4d4a169f",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-008",
+      "lexicalKind": "phrase",
+      "lexicalForm": "turn off",
+      "meaningZh": "关闭电源",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:93750be8",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-009",
+      "lexicalKind": "word",
+      "lexicalForm": "put",
+      "meaningZh": "放",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:ce2a2c38",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-010",
+      "lexicalKind": "word",
+      "lexicalForm": "take",
+      "meaningZh": "拿",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:e0951233",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-011",
+      "lexicalKind": "word",
+      "lexicalForm": "give",
+      "meaningZh": "给",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:a10bb7fb",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-012",
+      "lexicalKind": "word",
+      "lexicalForm": "show",
+      "meaningZh": "出示",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:a976159c",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-013",
+      "lexicalKind": "word",
+      "lexicalForm": "look",
+      "meaningZh": "看",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:282344cf",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-014",
+      "lexicalKind": "word",
+      "lexicalForm": "listen",
+      "meaningZh": "听",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:c00d3a26",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-015",
+      "lexicalKind": "word",
+      "lexicalForm": "say",
+      "meaningZh": "说",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:0043d7a0",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-016",
+      "lexicalKind": "word",
+      "lexicalForm": "tell",
+      "meaningZh": "告诉",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:8d1aee1b",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-017",
+      "lexicalKind": "word",
+      "lexicalForm": "ask",
+      "meaningZh": "询问",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:0034f202",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-018",
+      "lexicalKind": "word",
+      "lexicalForm": "call",
+      "meaningZh": "打电话",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:88102e6a",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-019",
+      "lexicalKind": "word",
+      "lexicalForm": "use",
+      "meaningZh": "使用",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:350ff877",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-020",
+      "lexicalKind": "word",
+      "lexicalForm": "carry",
+      "meaningZh": "携带",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:5ce86894",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-021",
+      "lexicalKind": "word",
+      "lexicalForm": "hold",
+      "meaningZh": "拿着",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:bec6c3eb",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-022",
+      "lexicalKind": "word",
+      "lexicalForm": "find",
+      "meaningZh": "找到",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:1ac82c1c",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-023",
+      "lexicalKind": "word",
+      "lexicalForm": "choose",
+      "meaningZh": "选择",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:c5d7006a",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-024",
+      "lexicalKind": "word",
+      "lexicalForm": "pay",
+      "meaningZh": "付款",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:9fab3371",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-025",
+      "lexicalKind": "word",
+      "lexicalForm": "keep",
+      "meaningZh": "保管",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:66e422b6",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-026",
+      "lexicalKind": "word",
+      "lexicalForm": "bring",
+      "meaningZh": "带来",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:faffbf84",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-027",
+      "lexicalKind": "word",
+      "lexicalForm": "wear",
+      "meaningZh": "穿",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:39895e3b",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-028",
+      "lexicalKind": "word",
+      "lexicalForm": "wash",
+      "meaningZh": "洗",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:c06fc853",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-029",
+      "lexicalKind": "word",
+      "lexicalForm": "want",
+      "meaningZh": "想要",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:b6b1e8fd",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-030",
+      "lexicalKind": "word",
+      "lexicalForm": "can",
+      "meaningZh": "可以",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:2b2cf33b",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-031",
+      "lexicalKind": "phrase",
+      "lexicalForm": "can t",
+      "meaningZh": "不能",
+      "dailyKnowledgeId": "daily-knowledge-v1:phrase:ab97b909",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-032",
+      "lexicalKind": "word",
+      "lexicalForm": "sunny",
+      "meaningZh": "晴朗的",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:04f77c5f",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-033",
+      "lexicalKind": "word",
+      "lexicalForm": "rainy",
+      "meaningZh": "下雨的",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:7946a02b",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-034",
+      "lexicalKind": "word",
+      "lexicalForm": "cloudy",
+      "meaningZh": "多云的",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:e589a126",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-035",
+      "lexicalKind": "word",
+      "lexicalForm": "windy",
+      "meaningZh": "有风的",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:922aa95b",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-036",
+      "lexicalKind": "word",
+      "lexicalForm": "hot",
+      "meaningZh": "热的",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:c70a3651",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-037",
+      "lexicalKind": "word",
+      "lexicalForm": "cold",
+      "meaningZh": "冷的",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:750af4ba",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-038",
+      "lexicalKind": "word",
+      "lexicalForm": "warm",
+      "meaningZh": "温暖的",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:48646e1d",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-039",
+      "lexicalKind": "word",
+      "lexicalForm": "cool",
+      "meaningZh": "凉爽的",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:798c5752",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-040",
+      "lexicalKind": "word",
+      "lexicalForm": "coat",
+      "meaningZh": "外套",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:42333a19",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-041",
+      "lexicalKind": "word",
+      "lexicalForm": "jacket",
+      "meaningZh": "夹克",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:7f82234d",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-042",
+      "lexicalKind": "word",
+      "lexicalForm": "shirt",
+      "meaningZh": "衬衫",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:078763e8",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-043",
+      "lexicalKind": "word",
+      "lexicalForm": "pants",
+      "meaningZh": "裤子",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:3930490b",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-044",
+      "lexicalKind": "word",
+      "lexicalForm": "shoes",
+      "meaningZh": "鞋子",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:2b371bd6",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-045",
+      "lexicalKind": "word",
+      "lexicalForm": "socks",
+      "meaningZh": "袜子",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:aa68db56",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-046",
+      "lexicalKind": "word",
+      "lexicalForm": "hat",
+      "meaningZh": "帽子",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:7db1b76f",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-047",
+      "lexicalKind": "word",
+      "lexicalForm": "umbrella",
+      "meaningZh": "雨伞",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:8322d8f5",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-048",
+      "lexicalKind": "word",
+      "lexicalForm": "red",
+      "meaningZh": "红色",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:622374fc",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-049",
+      "lexicalKind": "word",
+      "lexicalForm": "blue",
+      "meaningZh": "蓝色",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:30f43ff8",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-050",
+      "lexicalKind": "word",
+      "lexicalForm": "yellow",
+      "meaningZh": "黄色",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:d3960f79",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-051",
+      "lexicalKind": "word",
+      "lexicalForm": "green",
+      "meaningZh": "绿色",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:c344f50d",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-052",
+      "lexicalKind": "word",
+      "lexicalForm": "black",
+      "meaningZh": "黑色",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:cc998acb",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-053",
+      "lexicalKind": "word",
+      "lexicalForm": "white",
+      "meaningZh": "白色",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:c4d4c881",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-054",
+      "lexicalKind": "word",
+      "lexicalForm": "wet",
+      "meaningZh": "湿的",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:6f8abb7a",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-055",
+      "lexicalKind": "word",
+      "lexicalForm": "dry",
+      "meaningZh": "干的",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:0a149d48",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-056",
+      "lexicalKind": "word",
+      "lexicalForm": "mother",
+      "meaningZh": "母亲",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:303bd62d",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-057",
+      "lexicalKind": "word",
+      "lexicalForm": "father",
+      "meaningZh": "父亲",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:e8304269",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-058",
+      "lexicalKind": "word",
+      "lexicalForm": "baby",
+      "meaningZh": "婴儿",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:059f81ba",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-059",
+      "lexicalKind": "word",
+      "lexicalForm": "boy",
+      "meaningZh": "男孩",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:30355bf7",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-060",
+      "lexicalKind": "word",
+      "lexicalForm": "girl",
+      "meaningZh": "女孩",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:a337b049",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-061",
+      "lexicalKind": "word",
+      "lexicalForm": "husband",
+      "meaningZh": "丈夫",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:3ea4da8d",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-062",
+      "lexicalKind": "word",
+      "lexicalForm": "wife",
+      "meaningZh": "妻子",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:464fcaa3",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-063",
+      "lexicalKind": "word",
+      "lexicalForm": "grandma",
+      "meaningZh": "祖母",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:4e77d104",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-064",
+      "lexicalKind": "word",
+      "lexicalForm": "grandpa",
+      "meaningZh": "祖父",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:aad6a8b6",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-065",
+      "lexicalKind": "word",
+      "lexicalForm": "group",
+      "meaningZh": "团队",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:602b4b0b",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-066",
+      "lexicalKind": "word",
+      "lexicalForm": "alone",
+      "meaningZh": "独自",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:ee0ec532",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-067",
+      "lexicalKind": "word",
+      "lexicalForm": "together",
+      "meaningZh": "一起",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:82980934",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-068",
+      "lexicalKind": "word",
+      "lexicalForm": "photo",
+      "meaningZh": "照片",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:d13b3d1b",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-069",
+      "lexicalKind": "word",
+      "lexicalForm": "address",
+      "meaningZh": "地址",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:f671c8d5",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-070",
+      "lexicalKind": "word",
+      "lexicalForm": "bag",
+      "meaningZh": "包",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:71b71db6",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-071",
+      "lexicalKind": "word",
+      "lexicalForm": "luggage",
+      "meaningZh": "行李",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:93685d7f",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-072",
+      "lexicalKind": "word",
+      "lexicalForm": "lock",
+      "meaningZh": "锁",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:9e374801",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-073",
+      "lexicalKind": "word",
+      "lexicalForm": "zipper",
+      "meaningZh": "拉链",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:ba4941ee",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-074",
+      "lexicalKind": "word",
+      "lexicalForm": "handle",
+      "meaningZh": "把手",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:96b534ba",
+      "difficultyLevel": 0,
+      "levelId": "kindergarten"
+    },
+    {
+      "sourceItemId": "r17-daily-k1b-075",
+      "lexicalKind": "word",
+      "lexicalForm": "pocket",
+      "meaningZh": "口袋",
+      "dailyKnowledgeId": "daily-knowledge-v1:word:55306ab7",
       "difficultyLevel": 0,
       "levelId": "kindergarten"
     },

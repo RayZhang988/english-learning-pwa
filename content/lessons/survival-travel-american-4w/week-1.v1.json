@@ -27,11 +27,11 @@
             "schemaVersion": 1,
             "contentType": "vocabulary-set-v1",
             "fixedSeconds": 15,
-            "itemCount": 81,
+            "itemCount": 156,
             "secondsPerItem": 12,
             "activeAudioSeconds": 0,
             "expectedAudioPlaythroughs": 0,
-            "interactionStepCount": 162,
+            "interactionStepCount": 312,
             "secondsPerInteractionStep": 3,
             "minimumSeconds": 90,
             "maximumSeconds": 600
@@ -836,6 +836,756 @@
                 "exampleZh": "门关着。",
                 "growthDifficultyLevel": 0,
                 "dailyKnowledgeId": "daily-knowledge-v1:k1a:075"
+              },
+              {
+                "id": "r17-daily-k1b-001",
+                "term": "enter",
+                "partOfSpeech": "verb",
+                "meaningZh": "进入",
+                "exampleEn": "Please enter here.",
+                "exampleZh": "请从这里进入。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:001"
+              },
+              {
+                "id": "r17-daily-k1b-002",
+                "term": "leave",
+                "partOfSpeech": "verb",
+                "meaningZh": "离开",
+                "exampleEn": "We leave the hotel now.",
+                "exampleZh": "我们现在离开酒店。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:002"
+              },
+              {
+                "id": "r17-daily-k1b-003",
+                "term": "come",
+                "partOfSpeech": "verb",
+                "meaningZh": "来",
+                "exampleEn": "Please come with me.",
+                "exampleZh": "请跟我来。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:003"
+              },
+              {
+                "id": "r17-daily-k1b-004",
+                "term": "sit",
+                "partOfSpeech": "verb",
+                "meaningZh": "坐",
+                "exampleEn": "Please sit here.",
+                "exampleZh": "请坐在这里。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:004"
+              },
+              {
+                "id": "r17-daily-k1b-005",
+                "term": "stand",
+                "partOfSpeech": "verb",
+                "meaningZh": "站立",
+                "exampleEn": "Please stand in line.",
+                "exampleZh": "请站在队伍里。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:005"
+              },
+              {
+                "id": "r17-daily-k1b-006",
+                "term": "start",
+                "partOfSpeech": "verb",
+                "meaningZh": "开始",
+                "exampleEn": "The tour starts now.",
+                "exampleZh": "旅行团现在开始。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:006"
+              },
+              {
+                "id": "r17-daily-k1b-007",
+                "term": "turn on",
+                "partOfSpeech": "phrasal verb",
+                "meaningZh": "打开电源",
+                "exampleEn": "Turn on the light, please.",
+                "exampleZh": "请打开灯。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:007"
+              },
+              {
+                "id": "r17-daily-k1b-008",
+                "term": "turn off",
+                "partOfSpeech": "phrasal verb",
+                "meaningZh": "关闭电源",
+                "exampleEn": "Turn off the TV, please.",
+                "exampleZh": "请关闭电视。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:008"
+              },
+              {
+                "id": "r17-daily-k1b-009",
+                "term": "put",
+                "partOfSpeech": "verb",
+                "meaningZh": "放",
+                "exampleEn": "Put your bag here.",
+                "exampleZh": "把你的包放在这里。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:009"
+              },
+              {
+                "id": "r17-daily-k1b-010",
+                "term": "take",
+                "partOfSpeech": "verb",
+                "meaningZh": "拿",
+                "exampleEn": "Take this map.",
+                "exampleZh": "拿这张地图。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:010"
+              },
+              {
+                "id": "r17-daily-k1b-011",
+                "term": "give",
+                "partOfSpeech": "verb",
+                "meaningZh": "给",
+                "exampleEn": "Give me the key, please.",
+                "exampleZh": "请把钥匙给我。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:011"
+              },
+              {
+                "id": "r17-daily-k1b-012",
+                "term": "show",
+                "partOfSpeech": "verb",
+                "meaningZh": "出示",
+                "exampleEn": "Show your passport here.",
+                "exampleZh": "请在这里出示护照。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:012"
+              },
+              {
+                "id": "r17-daily-k1b-013",
+                "term": "look",
+                "partOfSpeech": "verb",
+                "meaningZh": "看",
+                "exampleEn": "Look at the sign.",
+                "exampleZh": "看这个标志。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:013"
+              },
+              {
+                "id": "r17-daily-k1b-014",
+                "term": "listen",
+                "partOfSpeech": "verb",
+                "meaningZh": "听",
+                "exampleEn": "Listen to the guide.",
+                "exampleZh": "听导游说。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:014"
+              },
+              {
+                "id": "r17-daily-k1b-015",
+                "term": "say",
+                "partOfSpeech": "verb",
+                "meaningZh": "说",
+                "exampleEn": "Say your name slowly.",
+                "exampleZh": "慢慢说你的名字。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:015"
+              },
+              {
+                "id": "r17-daily-k1b-016",
+                "term": "tell",
+                "partOfSpeech": "verb",
+                "meaningZh": "告诉",
+                "exampleEn": "Tell me the gate number.",
+                "exampleZh": "告诉我登机口号码。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:016"
+              },
+              {
+                "id": "r17-daily-k1b-017",
+                "term": "ask",
+                "partOfSpeech": "verb",
+                "meaningZh": "询问",
+                "exampleEn": "Ask the hotel staff.",
+                "exampleZh": "询问酒店工作人员。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:017"
+              },
+              {
+                "id": "r17-daily-k1b-018",
+                "term": "call",
+                "partOfSpeech": "verb",
+                "meaningZh": "打电话",
+                "exampleEn": "Call a taxi, please.",
+                "exampleZh": "请叫一辆出租车。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:018"
+              },
+              {
+                "id": "r17-daily-k1b-019",
+                "term": "use",
+                "partOfSpeech": "verb",
+                "meaningZh": "使用",
+                "exampleEn": "Use this card.",
+                "exampleZh": "使用这张卡。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:019"
+              },
+              {
+                "id": "r17-daily-k1b-020",
+                "term": "carry",
+                "partOfSpeech": "verb",
+                "meaningZh": "携带",
+                "exampleEn": "Carry your bag with you.",
+                "exampleZh": "随身携带你的包。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:020"
+              },
+              {
+                "id": "r17-daily-k1b-021",
+                "term": "hold",
+                "partOfSpeech": "verb",
+                "meaningZh": "拿着",
+                "exampleEn": "Hold my hand.",
+                "exampleZh": "拿着我的手。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:021"
+              },
+              {
+                "id": "r17-daily-k1b-022",
+                "term": "find",
+                "partOfSpeech": "verb",
+                "meaningZh": "找到",
+                "exampleEn": "Can you find the station?",
+                "exampleZh": "你能找到车站吗？",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:022"
+              },
+              {
+                "id": "r17-daily-k1b-023",
+                "term": "choose",
+                "partOfSpeech": "verb",
+                "meaningZh": "选择",
+                "exampleEn": "Choose a seat.",
+                "exampleZh": "选择一个座位。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:023"
+              },
+              {
+                "id": "r17-daily-k1b-024",
+                "term": "pay",
+                "partOfSpeech": "verb",
+                "meaningZh": "付款",
+                "exampleEn": "Pay here, please.",
+                "exampleZh": "请在这里付款。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:024"
+              },
+              {
+                "id": "r17-daily-k1b-025",
+                "term": "keep",
+                "partOfSpeech": "verb",
+                "meaningZh": "保管",
+                "exampleEn": "Keep your passport safe.",
+                "exampleZh": "保管好你的护照。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:025"
+              },
+              {
+                "id": "r17-daily-k1b-026",
+                "term": "bring",
+                "partOfSpeech": "verb",
+                "meaningZh": "带来",
+                "exampleEn": "Bring your ID, please.",
+                "exampleZh": "请带上你的证件。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:026"
+              },
+              {
+                "id": "r17-daily-k1b-027",
+                "term": "wear",
+                "partOfSpeech": "verb",
+                "meaningZh": "穿",
+                "exampleEn": "Wear your coat.",
+                "exampleZh": "穿上你的外套。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:027"
+              },
+              {
+                "id": "r17-daily-k1b-028",
+                "term": "wash",
+                "partOfSpeech": "verb",
+                "meaningZh": "洗",
+                "exampleEn": "Wash your hands.",
+                "exampleZh": "洗手。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:028"
+              },
+              {
+                "id": "r17-daily-k1b-029",
+                "term": "want",
+                "partOfSpeech": "verb",
+                "meaningZh": "想要",
+                "exampleEn": "I want some water.",
+                "exampleZh": "我想要一些水。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:029"
+              },
+              {
+                "id": "r17-daily-k1b-030",
+                "term": "can",
+                "partOfSpeech": "modal verb",
+                "meaningZh": "可以",
+                "exampleEn": "You can sit here.",
+                "exampleZh": "你可以坐在这里。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:030"
+              },
+              {
+                "id": "r17-daily-k1b-031",
+                "term": "can't",
+                "partOfSpeech": "modal verb",
+                "meaningZh": "不能",
+                "exampleEn": "I can't find my bag.",
+                "exampleZh": "我找不到我的包。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:031"
+              },
+              {
+                "id": "r17-daily-k1b-032",
+                "term": "sunny",
+                "partOfSpeech": "adjective",
+                "meaningZh": "晴朗的",
+                "exampleEn": "It is sunny today.",
+                "exampleZh": "今天是晴天。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:032"
+              },
+              {
+                "id": "r17-daily-k1b-033",
+                "term": "rainy",
+                "partOfSpeech": "adjective",
+                "meaningZh": "下雨的",
+                "exampleEn": "It is rainy today.",
+                "exampleZh": "今天在下雨。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:033"
+              },
+              {
+                "id": "r17-daily-k1b-034",
+                "term": "cloudy",
+                "partOfSpeech": "adjective",
+                "meaningZh": "多云的",
+                "exampleEn": "It is cloudy today.",
+                "exampleZh": "今天多云。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:034"
+              },
+              {
+                "id": "r17-daily-k1b-035",
+                "term": "windy",
+                "partOfSpeech": "adjective",
+                "meaningZh": "有风的",
+                "exampleEn": "It is windy outside.",
+                "exampleZh": "外面有风。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:035"
+              },
+              {
+                "id": "r17-daily-k1b-036",
+                "term": "hot",
+                "partOfSpeech": "adjective",
+                "meaningZh": "热的",
+                "exampleEn": "The bus is hot.",
+                "exampleZh": "公交车里很热。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:036"
+              },
+              {
+                "id": "r17-daily-k1b-037",
+                "term": "cold",
+                "partOfSpeech": "adjective",
+                "meaningZh": "冷的",
+                "exampleEn": "The water is cold.",
+                "exampleZh": "水很冷。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:037"
+              },
+              {
+                "id": "r17-daily-k1b-038",
+                "term": "warm",
+                "partOfSpeech": "adjective",
+                "meaningZh": "温暖的",
+                "exampleEn": "The room is warm.",
+                "exampleZh": "房间很温暖。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:038"
+              },
+              {
+                "id": "r17-daily-k1b-039",
+                "term": "cool",
+                "partOfSpeech": "adjective",
+                "meaningZh": "凉爽的",
+                "exampleEn": "The room is cool.",
+                "exampleZh": "房间很凉爽。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:039"
+              },
+              {
+                "id": "r17-daily-k1b-040",
+                "term": "coat",
+                "partOfSpeech": "noun",
+                "meaningZh": "外套",
+                "exampleEn": "My coat is on the chair.",
+                "exampleZh": "我的外套在椅子上。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:040"
+              },
+              {
+                "id": "r17-daily-k1b-041",
+                "term": "jacket",
+                "partOfSpeech": "noun",
+                "meaningZh": "夹克",
+                "exampleEn": "This jacket is mine.",
+                "exampleZh": "这件夹克是我的。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:041"
+              },
+              {
+                "id": "r17-daily-k1b-042",
+                "term": "shirt",
+                "partOfSpeech": "noun",
+                "meaningZh": "衬衫",
+                "exampleEn": "This shirt is clean.",
+                "exampleZh": "这件衬衫很干净。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:042"
+              },
+              {
+                "id": "r17-daily-k1b-043",
+                "term": "pants",
+                "partOfSpeech": "noun",
+                "meaningZh": "裤子",
+                "exampleEn": "These pants are blue.",
+                "exampleZh": "这条裤子是蓝色的。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:043"
+              },
+              {
+                "id": "r17-daily-k1b-044",
+                "term": "shoes",
+                "partOfSpeech": "noun",
+                "meaningZh": "鞋子",
+                "exampleEn": "My shoes are wet.",
+                "exampleZh": "我的鞋子湿了。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:044"
+              },
+              {
+                "id": "r17-daily-k1b-045",
+                "term": "socks",
+                "partOfSpeech": "noun",
+                "meaningZh": "袜子",
+                "exampleEn": "I need dry socks.",
+                "exampleZh": "我需要干袜子。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:045"
+              },
+              {
+                "id": "r17-daily-k1b-046",
+                "term": "hat",
+                "partOfSpeech": "noun",
+                "meaningZh": "帽子",
+                "exampleEn": "Put on your hat.",
+                "exampleZh": "戴上你的帽子。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:046"
+              },
+              {
+                "id": "r17-daily-k1b-047",
+                "term": "umbrella",
+                "partOfSpeech": "noun",
+                "meaningZh": "雨伞",
+                "exampleEn": "Take an umbrella.",
+                "exampleZh": "带一把雨伞。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:047"
+              },
+              {
+                "id": "r17-daily-k1b-048",
+                "term": "red",
+                "partOfSpeech": "color word",
+                "meaningZh": "红色",
+                "exampleEn": "The red bus is here.",
+                "exampleZh": "红色公交车在这里。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:048"
+              },
+              {
+                "id": "r17-daily-k1b-049",
+                "term": "blue",
+                "partOfSpeech": "color word",
+                "meaningZh": "蓝色",
+                "exampleEn": "My bag is blue.",
+                "exampleZh": "我的包是蓝色的。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:049"
+              },
+              {
+                "id": "r17-daily-k1b-050",
+                "term": "yellow",
+                "partOfSpeech": "color word",
+                "meaningZh": "黄色",
+                "exampleEn": "The taxi is yellow.",
+                "exampleZh": "出租车是黄色的。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:050"
+              },
+              {
+                "id": "r17-daily-k1b-051",
+                "term": "green",
+                "partOfSpeech": "color word",
+                "meaningZh": "绿色",
+                "exampleEn": "The green light is on.",
+                "exampleZh": "绿灯亮着。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:051"
+              },
+              {
+                "id": "r17-daily-k1b-052",
+                "term": "black",
+                "partOfSpeech": "color word",
+                "meaningZh": "黑色",
+                "exampleEn": "My suitcase is black.",
+                "exampleZh": "我的行李箱是黑色的。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:052"
+              },
+              {
+                "id": "r17-daily-k1b-053",
+                "term": "white",
+                "partOfSpeech": "color word",
+                "meaningZh": "白色",
+                "exampleEn": "The door is white.",
+                "exampleZh": "门是白色的。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:053"
+              },
+              {
+                "id": "r17-daily-k1b-054",
+                "term": "wet",
+                "partOfSpeech": "adjective",
+                "meaningZh": "湿的",
+                "exampleEn": "My clothes are wet.",
+                "exampleZh": "我的衣服湿了。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:054"
+              },
+              {
+                "id": "r17-daily-k1b-055",
+                "term": "dry",
+                "partOfSpeech": "adjective",
+                "meaningZh": "干的",
+                "exampleEn": "The towel is dry.",
+                "exampleZh": "毛巾是干的。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:055"
+              },
+              {
+                "id": "r17-daily-k1b-056",
+                "term": "mother",
+                "partOfSpeech": "noun",
+                "meaningZh": "母亲",
+                "exampleEn": "My mother is with me.",
+                "exampleZh": "我妈妈和我在一起。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:056"
+              },
+              {
+                "id": "r17-daily-k1b-057",
+                "term": "father",
+                "partOfSpeech": "noun",
+                "meaningZh": "父亲",
+                "exampleEn": "My father is waiting.",
+                "exampleZh": "我爸爸在等候。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:057"
+              },
+              {
+                "id": "r17-daily-k1b-058",
+                "term": "baby",
+                "partOfSpeech": "noun",
+                "meaningZh": "婴儿",
+                "exampleEn": "The baby is asleep.",
+                "exampleZh": "婴儿睡着了。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:058"
+              },
+              {
+                "id": "r17-daily-k1b-059",
+                "term": "boy",
+                "partOfSpeech": "noun",
+                "meaningZh": "男孩",
+                "exampleEn": "The boy is with his family.",
+                "exampleZh": "男孩和家人在一起。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:059"
+              },
+              {
+                "id": "r17-daily-k1b-060",
+                "term": "girl",
+                "partOfSpeech": "noun",
+                "meaningZh": "女孩",
+                "exampleEn": "The girl has a ticket.",
+                "exampleZh": "女孩有一张票。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:060"
+              },
+              {
+                "id": "r17-daily-k1b-061",
+                "term": "husband",
+                "partOfSpeech": "noun",
+                "meaningZh": "丈夫",
+                "exampleEn": "My husband is here.",
+                "exampleZh": "我丈夫在这里。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:061"
+              },
+              {
+                "id": "r17-daily-k1b-062",
+                "term": "wife",
+                "partOfSpeech": "noun",
+                "meaningZh": "妻子",
+                "exampleEn": "My wife needs help.",
+                "exampleZh": "我妻子需要帮助。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:062"
+              },
+              {
+                "id": "r17-daily-k1b-063",
+                "term": "grandma",
+                "partOfSpeech": "noun",
+                "meaningZh": "祖母",
+                "exampleEn": "My grandma needs a seat.",
+                "exampleZh": "我祖母需要一个座位。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:063"
+              },
+              {
+                "id": "r17-daily-k1b-064",
+                "term": "grandpa",
+                "partOfSpeech": "noun",
+                "meaningZh": "祖父",
+                "exampleEn": "My grandpa walks slowly.",
+                "exampleZh": "我祖父走得很慢。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:064"
+              },
+              {
+                "id": "r17-daily-k1b-065",
+                "term": "group",
+                "partOfSpeech": "noun",
+                "meaningZh": "团队",
+                "exampleEn": "Our group is ready.",
+                "exampleZh": "我们的团队准备好了。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:065"
+              },
+              {
+                "id": "r17-daily-k1b-066",
+                "term": "alone",
+                "partOfSpeech": "adverb",
+                "meaningZh": "独自",
+                "exampleEn": "I am traveling alone.",
+                "exampleZh": "我独自旅行。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:066"
+              },
+              {
+                "id": "r17-daily-k1b-067",
+                "term": "together",
+                "partOfSpeech": "adverb",
+                "meaningZh": "一起",
+                "exampleEn": "We travel together.",
+                "exampleZh": "我们一起旅行。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:067"
+              },
+              {
+                "id": "r17-daily-k1b-068",
+                "term": "photo",
+                "partOfSpeech": "noun",
+                "meaningZh": "照片",
+                "exampleEn": "This photo is for my ID.",
+                "exampleZh": "这张照片用于我的证件。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:068"
+              },
+              {
+                "id": "r17-daily-k1b-069",
+                "term": "address",
+                "partOfSpeech": "noun",
+                "meaningZh": "地址",
+                "exampleEn": "Write the hotel address.",
+                "exampleZh": "写下酒店地址。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:069"
+              },
+              {
+                "id": "r17-daily-k1b-070",
+                "term": "bag",
+                "partOfSpeech": "noun",
+                "meaningZh": "包",
+                "exampleEn": "My bag is heavy.",
+                "exampleZh": "我的包很重。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:070"
+              },
+              {
+                "id": "r17-daily-k1b-071",
+                "term": "luggage",
+                "partOfSpeech": "noun",
+                "meaningZh": "行李",
+                "exampleEn": "My luggage is here.",
+                "exampleZh": "我的行李在这里。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:071"
+              },
+              {
+                "id": "r17-daily-k1b-072",
+                "term": "lock",
+                "partOfSpeech": "noun",
+                "meaningZh": "锁",
+                "exampleEn": "The lock is on my bag.",
+                "exampleZh": "锁在我的包上。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:072"
+              },
+              {
+                "id": "r17-daily-k1b-073",
+                "term": "zipper",
+                "partOfSpeech": "noun",
+                "meaningZh": "拉链",
+                "exampleEn": "The zipper is broken.",
+                "exampleZh": "拉链坏了。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:073"
+              },
+              {
+                "id": "r17-daily-k1b-074",
+                "term": "handle",
+                "partOfSpeech": "noun",
+                "meaningZh": "把手",
+                "exampleEn": "Hold the suitcase handle.",
+                "exampleZh": "抓住行李箱把手。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:074"
+              },
+              {
+                "id": "r17-daily-k1b-075",
+                "term": "pocket",
+                "partOfSpeech": "noun",
+                "meaningZh": "口袋",
+                "exampleEn": "My phone is in my pocket.",
+                "exampleZh": "我的电话在口袋里。",
+                "growthDifficultyLevel": 0,
+                "dailyKnowledgeId": "daily-knowledge-v1:k1b:075"
               }
             ]
           }

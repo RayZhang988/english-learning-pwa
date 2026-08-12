@@ -1,7 +1,7 @@
 # R13-D 统一错题内容身份索引（v1）
 
 唯一入口是 `review-content-index.v1.json`；生成与严格漂移校验器是
-`generate-review-content-index.v1.mjs`。索引覆盖 864 个日常供应 `itemId` 和 612 个场景
+`generate-review-content-index.v1.mjs`。索引覆盖当前发布的日常供应 `itemId` 和 612 个场景
 词汇 `bankId@contentVersion/questionId`。消费者不得根据展示文字、`variantFamilyId` 或
 `playbackContentId` 临时猜测身份。
 
