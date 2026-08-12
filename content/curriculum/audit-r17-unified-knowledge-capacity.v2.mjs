@@ -60,10 +60,10 @@ function fingerprint(value) {
   return (hash >>> 0).toString(16).padStart(8, '0')
 }
 
-function knowledgeId({ english, meaningZh }) {
+function identityId(namespace, { english, meaningZh }) {
   const form = normalizedEnglish(english)
   const sense = normalizedChinese(meaningZh)
-  return `travel-knowledge-v1:${lexicalKind(english)}:${fingerprint(`${form}|${sense}`)}`
+  return `${namespace}:${lexicalKind(english)}:${fingerprint(`${form}|${sense}`)}`
 }
 
 function levelFor(difficulty) {
@@ -118,10 +118,10 @@ const sceneQuestionMappings = sceneQuestions
     lexicalKind: lexicalKind(question.targetText),
     lexicalForm: normalizedEnglish(question.targetText),
     meaningZh: question.correctMeaningZh,
-    canonicalKnowledgeId: knowledgeId({ english: question.targetText, meaningZh: question.correctMeaningZh }),
+    sceneKnowledgeId: identityId('scene-knowledge-v1', { english: question.targetText, meaningZh: question.correctMeaningZh }),
   }))
   .sort((left, right) => left.questionId.localeCompare(right.questionId))
-const sceneCanonicalKnowledgeCount = new Set(sceneQuestionMappings.map((row) => row.canonicalKnowledgeId)).size
+const sceneIndependentKnowledgeCount = new Set(sceneQuestionMappings.map((row) => row.sceneKnowledgeId)).size
 
 const dailyMappings = vocabularyItems
   .map((item) => ({
@@ -129,7 +129,7 @@ const dailyMappings = vocabularyItems
     lexicalKind: lexicalKind(item.term),
     lexicalForm: normalizedEnglish(item.term),
     meaningZh: item.meaningZh,
-    canonicalKnowledgeId: knowledgeId({ english: item.term, meaningZh: item.meaningZh }),
+    dailyKnowledgeId: identityId('daily-knowledge-v1', { english: item.term, meaningZh: item.meaningZh }),
     difficultyLevel: item.unit.difficultyLevel,
     levelId: levelFor(item.unit.difficultyLevel).id,
   }))
@@ -139,7 +139,7 @@ const dailyCanonicalMappings = [...dailyMappings]
     left.difficultyLevel - right.difficultyLevel || left.sourceItemId.localeCompare(right.sourceItemId),
   )
   .filter((row, index, rows) =>
-    rows.findIndex((candidate) => candidate.canonicalKnowledgeId === row.canonicalKnowledgeId) === index,
+    rows.findIndex((candidate) => candidate.dailyKnowledgeId === row.dailyKnowledgeId) === index,
   )
 const dailyForms = new Set(dailyMappings.map((row) => row.lexicalForm))
 const sceneForms = new Set(sceneQuestionMappings.map((row) => row.lexicalForm))
@@ -150,9 +150,9 @@ const levelCapacity = levels.map((level) => {
   const target = Math.floor(DAILY_TARGET / levels.length)
   return {
     ...level,
-    currentDailyKnowledgePoints: new Set(current.map((row) => row.canonicalKnowledgeId)).size,
+    currentDailyKnowledgePoints: new Set(current.map((row) => row.dailyKnowledgeId)).size,
     targetDailyKnowledgePoints: target,
-    missingDailyKnowledgePoints: Math.max(0, target - new Set(current.map((row) => row.canonicalKnowledgeId)).size),
+    missingDailyKnowledgePoints: Math.max(0, target - new Set(current.map((row) => row.dailyKnowledgeId)).size),
   }
 })
 
@@ -160,7 +160,7 @@ const sceneCapacityRows = sceneBank.scenes.map((scene) => {
   const targetRecordCount = coreSceneIds.has(scene.sceneId) ? 250 : 150
   const currentRecordCount = scene.questions.length
   const currentCanonicalKnowledgeCount = new Set(
-    sceneQuestionMappings.filter((row) => row.sceneId === scene.sceneId).map((row) => row.canonicalKnowledgeId),
+    sceneQuestionMappings.filter((row) => row.sceneId === scene.sceneId).map((row) => row.sceneKnowledgeId),
   ).size
   return {
     sceneId: scene.sceneId,
@@ -168,7 +168,7 @@ const sceneCapacityRows = sceneBank.scenes.map((scene) => {
     categoryId: scene.categoryId,
     tier: coreSceneIds.has(scene.sceneId) ? 'core-250' : 'standard-150',
     currentRecordCount,
-    currentCanonicalKnowledgeCount,
+    currentIndependentKnowledgeCount: currentCanonicalKnowledgeCount,
     targetRecordCount,
     missingRecordCount: targetRecordCount - currentRecordCount,
   }
@@ -176,30 +176,40 @@ const sceneCapacityRows = sceneBank.scenes.map((scene) => {
 
 const audit = {
   schemaVersion: 2,
-  documentType: 'r17-unified-knowledge-capacity-audit',
+  documentType: 'r17-independent-content-capacity-audit',
   auditVersion: '2.0.0',
   source: { packageIndexPath, sceneIndexPath, dailyVocabularySourceCount: vocabularyItems.length, sceneQuestionCount: sceneQuestions.length },
-  canonicalKnowledgeIdentity: {
-    version: 'travel-knowledge-v1',
-    rule: 'A canonical identity is an FNV-1a fingerprint of normalized English lexical form plus normalized Chinese sense, prefixed by lexical kind word|phrase. Same text with different senses must not merge; the same knowledge point may have many daily or scene references.',
+  identityBoundary: {
+    dailyIdentityVersion: 'daily-knowledge-v1',
+    sceneIdentityVersion: 'scene-knowledge-v1',
+    rule: 'Daily vocabulary and scene vocabulary are fully independent content spaces. They use distinct identity namespaces, separate progress, scores and mastery evidence. The same text is permitted in both spaces but never creates a shared reference.',
+    sharedProgressOrMastery: false,
+    sceneParticipatesInR17Growth: false,
+    lexicalOverlapCreatesReference: false,
+    wrongAnswerHandling: 'The unified wrong-answer library may retain a source label for traceability only; it does not merge content identities or mastery.',
     lexicalNormalization: 'lowercase en-US; punctuation and whitespace collapsed',
     phraseRule: 'A normalized English value containing a space is a phrase; otherwise it is a word.',
-    crossSurfaceRule: 'A scene record may carry its own example, sentence and scene reference while pointing to the same canonical knowledge identity as daily training.',
-    migrationRule: 'Existing scene targetText+correctMeaningZh is used as the safe source identity. Lexical-form counts remain separately reported for planning only.',
+    homographRule: 'Same normalized English form with different Chinese senses is split within its own namespace. Across namespaces, matching text or sense remains independent.',
+    migrationRule: 'Existing daily term+meaningZh and scene targetText+correctMeaningZh are mapped independently. Lexical overlap is reported only as a content-planning statistic.',
   },
   capacityTargets: {
     dailyKnowledgePoints: DAILY_TARGET,
     sceneVocabularyRecords: SCENE_TARGET,
     coreSceneRecordTarget: 250,
     standardSceneRecordTarget: 150,
-    planningRule: 'Daily and scene capacity may overlap by canonical identity. Scene record targets measure scene-specific usage records, not inflated global unique knowledge points.',
+    planningRule: 'Daily and scene targets are independently counted. Textual overlap does not reduce either target or create a shared identity.',
+  },
+  r17Scope: {
+    includedDomains: ['daily-vocabulary', 'daily-listening', 'daily-speaking'],
+    excluded: ['all scene-training records', 'scene progress', 'scene scores', 'scene mastery evidence'],
+    rule: 'Only daily vocabulary capacity is calculated by this audit. Listening and speaking remain in R17 scope but are not expanded by this vocabulary capacity batch.',
   },
   current: {
     dailyKnowledgePointCount: dailyCanonicalMappings.length,
     dailyLexicalFormCount: dailyForms.size,
     sceneQuestionCount: sceneQuestions.length,
     sceneLexicalFormCount: sceneForms.size,
-    sceneCanonicalKnowledgeCount,
+    sceneIndependentKnowledgeCount,
     sceneAmbiguousLexicalFormCount: ambiguousSceneForms.length,
     dailySourceRecordsIntersectingSceneLexicalForms: dailyMappings.filter((row) => sceneForms.has(row.lexicalForm)).length,
     dailySceneLexicalFormIntersectionCount: overlapForms.length,
@@ -224,17 +234,17 @@ const audit = {
   dailySourceMappings: dailyMappings,
   batchPlan: {
     batches: [
-      { id: 'daily-vocabulary-foundation', scope: 'daily vocabulary', targetRecords: 600, acceptance: 'canonical identity, travel relevance and 15-level mapping validated before each batch' },
-      { id: 'daily-vocabulary-growth', scope: 'daily vocabulary', targetRecords: 1200, acceptance: 'same as foundation; no duplicate canonical identity' },
+      { id: 'daily-vocabulary-foundation', scope: 'daily vocabulary', targetRecords: 600, acceptance: 'daily identity, travel relevance and 15-level mapping validated before each batch' },
+      { id: 'daily-vocabulary-growth', scope: 'daily vocabulary', targetRecords: 1200, acceptance: 'same as foundation; no duplicate daily identity' },
       { id: 'daily-vocabulary-advanced-travel', scope: 'daily vocabulary', targetRecords: 1200, acceptance: 'risk handling, complex travel communication and advanced travel administration remain non-academic' },
-      { id: 'scene-core-six', scope: 'airport/public transport/hotel/restaurant/shopping/medical-pharmacy', targetRecords: 1500, acceptance: '250 records per core scene; canonical references may overlap daily training' },
+      { id: 'scene-core-six', scope: 'airport/public transport/hotel/restaurant/shopping/medical-pharmacy', targetRecords: 1500, acceptance: '250 records per core scene; identities and progress remain scene-only' },
       { id: 'scene-standard-twelve', scope: 'remaining 12 travel scenes', targetRecords: 1800, acceptance: '150 records per scene; scene progress remains independent' },
     ],
-    sequencing: 'Audit each batch before content generation; do not claim a scene record is a new global knowledge point unless its canonical identity is new.',
+    sequencing: 'Audit each batch before content generation; never use scene capacity to satisfy daily R17 capacity, or vice versa.',
   },
   gates: {
     travelRelevance: 'Every new word or practical phrase must be usable in travel, transit, accommodation, food, shopping, connectivity, safety, medical or travel administration.',
-    homographSafety: 'Same normalized English form with different Chinese senses must be flagged and split by canonical identity.',
+    homographSafety: 'Same normalized English form with different Chinese senses must be flagged and split within its own namespace.',
     noArtificialInflation: 'Inflection, capitalization, punctuation, spelling variants and alternate question surfaces do not count as a new knowledge point.',
   },
 }
@@ -244,4 +254,4 @@ const absoluteOutput = path.join(root, outputPath)
 if (writeMode) fs.writeFileSync(absoluteOutput, serialized)
 else if (fs.readFileSync(absoluteOutput, 'utf8') !== serialized) fail(`${outputPath} is stale; run node ${fileURLToPath(import.meta.url)} --write`)
 
-console.log(`R17 unified knowledge audit verified: ${audit.current.dailyKnowledgePointCount} daily canonical points; ${audit.current.sceneQuestionCount} scene records; ${audit.current.sceneLexicalFormCount} lexical forms; ${audit.current.sceneCanonicalKnowledgeCount} safe canonical points`)
+console.log(`R17 independent-content audit verified: ${audit.current.dailyKnowledgePointCount} daily points; ${audit.current.sceneQuestionCount} scene records; ${audit.current.sceneLexicalFormCount} scene lexical forms; ${audit.current.sceneIndependentKnowledgeCount} independent scene points`)
