@@ -69,7 +69,7 @@ describe('vocabulary course integration', () => {
         ).toBe(true)
       }
     }
-  })
+  }, 15_000)
 
   it('accepts dynamic task duration metadata without treating it as course identity', async () => {
     const catalog = createVocabularyCatalog(
