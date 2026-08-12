@@ -56,10 +56,10 @@
   "trainingSupplyIndexFile": "content/curriculum/training-supply-index.v1.json",
   "trainingSupplyIndexSchemaFile": "content/curriculum/training-supply-index.schema.v1.json",
   "trainingSupplyTotals": {
-    "vocabularyCandidates": 1479,
+    "vocabularyCandidates": 1674,
     "listeningCandidates": 253,
     "speakingCandidates": 122,
-    "allCandidates": 1854
+    "allCandidates": 2049
   },
   "reviewContentIndexFile": "content/curriculum/review-content-index.v1.json",
   "reviewContentIndexSchemaFile": "content/curriculum/review-content-index.schema.v1.json",

@@ -27,11 +27,11 @@
             "schemaVersion": 1,
             "contentType": "vocabulary-set-v1",
             "fixedSeconds": 15,
-            "itemCount": 336,
+            "itemCount": 401,
             "secondsPerItem": 12,
             "activeAudioSeconds": 0,
             "expectedAudioPlaythroughs": 0,
-            "interactionStepCount": 672,
+            "interactionStepCount": 802,
             "secondsPerInteractionStep": 3,
             "minimumSeconds": 90,
             "maximumSeconds": 600
@@ -3386,6 +3386,656 @@
                 "exampleZh": "我能在这里发消息吗？",
                 "growthDifficultyLevel": 0.5,
                 "dailyKnowledgeId": "daily-knowledge-v1:p1b:065"
+              },
+              {
+                "id": "r17-daily-p1c-001",
+                "term": "check-in counter",
+                "meaningZh": "值机柜台",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "The check-in counter is on the left.",
+                "exampleZh": "值机柜台在左边。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:001"
+              },
+              {
+                "id": "r17-daily-p1c-002",
+                "term": "flight number",
+                "meaningZh": "航班号",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Please check your flight number.",
+                "exampleZh": "请查看你的航班号。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:002"
+              },
+              {
+                "id": "r17-daily-p1c-003",
+                "term": "departure board",
+                "meaningZh": "出发信息牌",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "The departure board is near the gate.",
+                "exampleZh": "出发信息牌在登机口附近。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:003"
+              },
+              {
+                "id": "r17-daily-p1c-004",
+                "term": "travel document",
+                "meaningZh": "旅行证件",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Keep your travel document ready.",
+                "exampleZh": "请准备好旅行证件。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:004"
+              },
+              {
+                "id": "r17-daily-p1c-005",
+                "term": "security line",
+                "meaningZh": "安检队伍",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "The security line is long today.",
+                "exampleZh": "今天安检队伍很长。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:005"
+              },
+              {
+                "id": "r17-daily-p1c-006",
+                "term": "security check",
+                "meaningZh": "安检",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "The security check is downstairs.",
+                "exampleZh": "安检在楼下。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:006"
+              },
+              {
+                "id": "r17-daily-p1c-007",
+                "term": "boarding group",
+                "meaningZh": "登机组别",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "What is my boarding group?",
+                "exampleZh": "我的登机组别是什么？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:007"
+              },
+              {
+                "id": "r17-daily-p1c-008",
+                "term": "window seat",
+                "meaningZh": "靠窗座位",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I would like a window seat.",
+                "exampleZh": "我想要一个靠窗座位。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:008"
+              },
+              {
+                "id": "r17-daily-p1c-009",
+                "term": "lost passport",
+                "meaningZh": "丢失的护照",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I need help with a lost passport.",
+                "exampleZh": "我的护照丢了，需要帮助。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:009"
+              },
+              {
+                "id": "r17-daily-p1c-010",
+                "term": "flight information",
+                "meaningZh": "航班信息",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Where can I get flight information?",
+                "exampleZh": "我在哪里可以获得航班信息？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:010"
+              },
+              {
+                "id": "r17-daily-p1c-011",
+                "term": "airport staff",
+                "meaningZh": "机场工作人员",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Ask an airport staff member.",
+                "exampleZh": "问一下机场工作人员。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:011"
+              },
+              {
+                "id": "r17-daily-p1c-012",
+                "term": "extra pillow",
+                "meaningZh": "额外枕头",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Could I have an extra pillow?",
+                "exampleZh": "我能要一个额外枕头吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:012"
+              },
+              {
+                "id": "r17-daily-p1c-013",
+                "term": "room cleaning",
+                "meaningZh": "房间清洁",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Room cleaning is in the morning.",
+                "exampleZh": "房间清洁在早上。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:013"
+              },
+              {
+                "id": "r17-daily-p1c-014",
+                "term": "do not disturb",
+                "meaningZh": "请勿打扰",
+                "partOfSpeech": "hotel phrase",
+                "exampleEn": "Please put up the do not disturb sign.",
+                "exampleZh": "请挂上请勿打扰的牌子。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:014"
+              },
+              {
+                "id": "r17-daily-p1c-015",
+                "term": "late arrival",
+                "meaningZh": "晚到",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I have a late arrival tonight.",
+                "exampleZh": "我今晚会晚到。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:015"
+              },
+              {
+                "id": "r17-daily-p1c-016",
+                "term": "early check-in",
+                "meaningZh": "提前入住",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Is early check-in possible?",
+                "exampleZh": "可以提前入住吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:016"
+              },
+              {
+                "id": "r17-daily-p1c-017",
+                "term": "luggage storage",
+                "meaningZh": "行李寄存",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Do you have luggage storage?",
+                "exampleZh": "你们有行李寄存吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:017"
+              },
+              {
+                "id": "r17-daily-p1c-018",
+                "term": "hotel address",
+                "meaningZh": "酒店地址",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Please write down the hotel address.",
+                "exampleZh": "请写下酒店地址。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:018"
+              },
+              {
+                "id": "r17-daily-p1c-019",
+                "term": "guest elevator",
+                "meaningZh": "住客电梯",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Use the guest elevator for the rooms.",
+                "exampleZh": "去房间请用住客电梯。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:019"
+              },
+              {
+                "id": "r17-daily-p1c-020",
+                "term": "room phone",
+                "meaningZh": "房间电话",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "The room phone is by the bed.",
+                "exampleZh": "房间电话在床边。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:020"
+              },
+              {
+                "id": "r17-daily-p1c-021",
+                "term": "hotel parking",
+                "meaningZh": "酒店停车场",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Is hotel parking free?",
+                "exampleZh": "酒店停车场免费吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:021"
+              },
+              {
+                "id": "r17-daily-p1c-022",
+                "term": "subway map",
+                "meaningZh": "地铁地图",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I need a subway map.",
+                "exampleZh": "我需要一张地铁地图。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:022"
+              },
+              {
+                "id": "r17-daily-p1c-023",
+                "term": "subway entrance",
+                "meaningZh": "地铁入口",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "The subway entrance is across the street.",
+                "exampleZh": "地铁入口在马路对面。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:023"
+              },
+              {
+                "id": "r17-daily-p1c-024",
+                "term": "fare card",
+                "meaningZh": "交通卡",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Can I use a fare card here?",
+                "exampleZh": "我可以在这里用交通卡吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:024"
+              },
+              {
+                "id": "r17-daily-p1c-025",
+                "term": "ticket price",
+                "meaningZh": "票价",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "What is the ticket price?",
+                "exampleZh": "票价是多少？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:025"
+              },
+              {
+                "id": "r17-daily-p1c-026",
+                "term": "service delay",
+                "meaningZh": "服务延误",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "There is a service delay on this line.",
+                "exampleZh": "这条线路有服务延误。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:026"
+              },
+              {
+                "id": "r17-daily-p1c-027",
+                "term": "seat available",
+                "meaningZh": "有空座位",
+                "partOfSpeech": "status phrase",
+                "exampleEn": "Is there a seat available?",
+                "exampleZh": "有空座位吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:027"
+              },
+              {
+                "id": "r17-daily-p1c-028",
+                "term": "exit sign",
+                "meaningZh": "出口标志",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Follow the exit sign.",
+                "exampleZh": "跟着出口标志走。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:028"
+              },
+              {
+                "id": "r17-daily-p1c-029",
+                "term": "walking distance",
+                "meaningZh": "步行距离",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Is the hotel within walking distance?",
+                "exampleZh": "酒店在步行距离内吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:029"
+              },
+              {
+                "id": "r17-daily-p1c-030",
+                "term": "transfer station",
+                "meaningZh": "换乘站",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "This is the transfer station.",
+                "exampleZh": "这里是换乘站。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:030"
+              },
+              {
+                "id": "r17-daily-p1c-031",
+                "term": "I feel sick",
+                "meaningZh": "我感觉不舒服",
+                "partOfSpeech": "statement phrase",
+                "exampleEn": "I feel sick after the ride.",
+                "exampleZh": "坐完车后我感觉不舒服。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:031"
+              },
+              {
+                "id": "r17-daily-p1c-032",
+                "term": "I need a doctor",
+                "meaningZh": "我需要医生",
+                "partOfSpeech": "statement phrase",
+                "exampleEn": "I need a doctor, please.",
+                "exampleZh": "请帮我找医生。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:032"
+              },
+              {
+                "id": "r17-daily-p1c-033",
+                "term": "pain medicine",
+                "meaningZh": "止痛药",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Do you have pain medicine?",
+                "exampleZh": "你们有止痛药吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:033"
+              },
+              {
+                "id": "r17-daily-p1c-034",
+                "term": "medicine label",
+                "meaningZh": "药品标签",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Please read the medicine label.",
+                "exampleZh": "请看一下药品标签。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:034"
+              },
+              {
+                "id": "r17-daily-p1c-035",
+                "term": "sore throat",
+                "meaningZh": "喉咙痛",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I have a sore throat.",
+                "exampleZh": "我喉咙痛。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:035"
+              },
+              {
+                "id": "r17-daily-p1c-036",
+                "term": "stomach pain",
+                "meaningZh": "胃痛",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I have stomach pain today.",
+                "exampleZh": "我今天胃痛。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:036"
+              },
+              {
+                "id": "r17-daily-p1c-037",
+                "term": "fever medicine",
+                "meaningZh": "退烧药",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I need fever medicine.",
+                "exampleZh": "我需要退烧药。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:037"
+              },
+              {
+                "id": "r17-daily-p1c-038",
+                "term": "medical clinic",
+                "meaningZh": "诊所",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "The medical clinic is open now.",
+                "exampleZh": "诊所现在开门。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:038"
+              },
+              {
+                "id": "r17-daily-p1c-039",
+                "term": "emergency room",
+                "meaningZh": "急诊室",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Where is the emergency room?",
+                "exampleZh": "急诊室在哪里？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:039"
+              },
+              {
+                "id": "r17-daily-p1c-040",
+                "term": "health insurance",
+                "meaningZh": "医疗保险",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Do you take my health insurance?",
+                "exampleZh": "你们接受我的医疗保险吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:040"
+              },
+              {
+                "id": "r17-daily-p1c-041",
+                "term": "I am lost",
+                "meaningZh": "我迷路了",
+                "partOfSpeech": "statement phrase",
+                "exampleEn": "I am lost near the station.",
+                "exampleZh": "我在车站附近迷路了。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:041"
+              },
+              {
+                "id": "r17-daily-p1c-042",
+                "term": "lost phone",
+                "meaningZh": "丢失的手机",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I need help with a lost phone.",
+                "exampleZh": "我的手机丢了，需要帮助。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:042"
+              },
+              {
+                "id": "r17-daily-p1c-043",
+                "term": "lost bag",
+                "meaningZh": "丢失的包",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Have you seen my lost bag?",
+                "exampleZh": "你见过我丢失的包吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:043"
+              },
+              {
+                "id": "r17-daily-p1c-044",
+                "term": "help desk",
+                "meaningZh": "服务台",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "The help desk is by the entrance.",
+                "exampleZh": "服务台在入口旁边。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:044"
+              },
+              {
+                "id": "r17-daily-p1c-045",
+                "term": "police station",
+                "meaningZh": "警察局",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Where is the police station?",
+                "exampleZh": "警察局在哪里？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:045"
+              },
+              {
+                "id": "r17-daily-p1c-046",
+                "term": "safe place",
+                "meaningZh": "安全的地方",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Please show me a safe place.",
+                "exampleZh": "请带我去一个安全的地方。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:046"
+              },
+              {
+                "id": "r17-daily-p1c-047",
+                "term": "call the police",
+                "meaningZh": "报警",
+                "partOfSpeech": "request phrase",
+                "exampleEn": "Please call the police.",
+                "exampleZh": "请报警。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:047"
+              },
+              {
+                "id": "r17-daily-p1c-048",
+                "term": "need help",
+                "meaningZh": "需要帮助",
+                "partOfSpeech": "request phrase",
+                "exampleEn": "I need help with my bag.",
+                "exampleZh": "我的包需要帮助处理。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:048"
+              },
+              {
+                "id": "r17-daily-p1c-049",
+                "term": "show me on the map",
+                "meaningZh": "在地图上给我指一下",
+                "partOfSpeech": "request phrase",
+                "exampleEn": "Can you show me on the map?",
+                "exampleZh": "你能在地图上给我指一下吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:049"
+              },
+              {
+                "id": "r17-daily-p1c-050",
+                "term": "my address",
+                "meaningZh": "我的地址",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "This is my address.",
+                "exampleZh": "这是我的地址。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:050"
+              },
+              {
+                "id": "r17-daily-p1c-051",
+                "term": "hotel name",
+                "meaningZh": "酒店名称",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "What is the hotel name?",
+                "exampleZh": "酒店名称是什么？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:051"
+              },
+              {
+                "id": "r17-daily-p1c-052",
+                "term": "meet here",
+                "meaningZh": "在这里见面",
+                "partOfSpeech": "request phrase",
+                "exampleEn": "Let us meet here at noon.",
+                "exampleZh": "我们中午在这里见面。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:052"
+              },
+              {
+                "id": "r17-daily-p1c-053",
+                "term": "phone battery",
+                "meaningZh": "手机电池",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "My phone battery is low.",
+                "exampleZh": "我的手机电池快没电了。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:053"
+              },
+              {
+                "id": "r17-daily-p1c-054",
+                "term": "battery low",
+                "meaningZh": "电量低",
+                "partOfSpeech": "status phrase",
+                "exampleEn": "My phone says battery low.",
+                "exampleZh": "我的手机显示电量低。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:054"
+              },
+              {
+                "id": "r17-daily-p1c-055",
+                "term": "charging station",
+                "meaningZh": "充电站",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Where is the charging station?",
+                "exampleZh": "充电站在哪里？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:055"
+              },
+              {
+                "id": "r17-daily-p1c-056",
+                "term": "internet connection",
+                "meaningZh": "网络连接",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "The internet connection is slow.",
+                "exampleZh": "网络连接很慢。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:056"
+              },
+              {
+                "id": "r17-daily-p1c-057",
+                "term": "Wi-Fi network",
+                "meaningZh": "无线网络",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Which Wi-Fi network should I use?",
+                "exampleZh": "我该用哪个无线网络？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:057"
+              },
+              {
+                "id": "r17-daily-p1c-058",
+                "term": "phone call",
+                "meaningZh": "电话",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I need to make a phone call.",
+                "exampleZh": "我需要打一个电话。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:058"
+              },
+              {
+                "id": "r17-daily-p1c-059",
+                "term": "text message",
+                "meaningZh": "短信",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I sent a text message.",
+                "exampleZh": "我发了一条短信。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:059"
+              },
+              {
+                "id": "r17-daily-p1c-060",
+                "term": "keep the receipt",
+                "meaningZh": "保留收据",
+                "partOfSpeech": "request phrase",
+                "exampleEn": "Please keep the receipt.",
+                "exampleZh": "请保留收据。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:060"
+              },
+              {
+                "id": "r17-daily-p1c-061",
+                "term": "refund request",
+                "meaningZh": "退款申请",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "I would like a refund request form.",
+                "exampleZh": "我想要一张退款申请表。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:061"
+              },
+              {
+                "id": "r17-daily-p1c-062",
+                "term": "money back",
+                "meaningZh": "退款",
+                "partOfSpeech": "payment phrase",
+                "exampleEn": "Can I get my money back?",
+                "exampleZh": "我能拿回退款吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:062"
+              },
+              {
+                "id": "r17-daily-p1c-063",
+                "term": "return this item",
+                "meaningZh": "退还这件商品",
+                "partOfSpeech": "verb phrase",
+                "exampleEn": "I want to return this item.",
+                "exampleZh": "我想退还这件商品。",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:063"
+              },
+              {
+                "id": "r17-daily-p1c-064",
+                "term": "proof of payment",
+                "meaningZh": "付款凭证",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Do you need proof of payment?",
+                "exampleZh": "你需要付款凭证吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:064"
+              },
+              {
+                "id": "r17-daily-p1c-065",
+                "term": "credit card",
+                "meaningZh": "信用卡",
+                "partOfSpeech": "noun phrase",
+                "exampleEn": "Can I pay by credit card?",
+                "exampleZh": "我可以用信用卡付款吗？",
+                "growthDifficultyLevel": 0.5,
+                "dailyKnowledgeId": "daily-knowledge-v1:p1c:065"
               }
             ]
           }
