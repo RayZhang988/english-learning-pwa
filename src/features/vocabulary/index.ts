@@ -32,6 +32,12 @@ export {
   judgeVocabularyAnswer,
 } from './questions.ts'
 export {
+  createVocabularyGrowthUpgradeAdapter,
+  type VocabularyGrowthUpgradeAdapter,
+  type VocabularyGrowthUpgradeQuestionView,
+  type VocabularyGrowthUpgradeSubmission,
+} from './growth-upgrade.ts'
+export {
   VOCABULARY_STORAGE_NAMESPACE,
   VOCABULARY_STORAGE_SCHEMA_VERSION,
   VocabularySessionRepository,
