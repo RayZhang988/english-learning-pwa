@@ -72,7 +72,7 @@ describe('vocabulary course integration', () => {
   // R17 expands the released vocabulary corpus through the senior-school and
   // university levels. Building every question variant remains intentional,
   // but no longer fits the pre-expansion 15-second test budget on CI/macOS.
-  }, 60_000)
+  }, 180_000)
 
   it('accepts dynamic task duration metadata without treating it as course identity', async () => {
     const catalog = createVocabularyCatalog(

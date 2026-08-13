@@ -38,5 +38,8 @@ describe('R13-D production review resolver coverage', () => {
       counts[alias.domain] += 1
     }
     expect(counts).toEqual({ vocabulary: 9627, listening: 1013, speaking: 900 })
-  }, 30_000)
+  // R17 expands the production catalogs resolved for every alias.  Shared CI
+  // runners are substantially slower than a development Mac for this complete
+  // coverage pass, so retain exhaustive validation with a realistic budget.
+  }, 180_000)
 })
