@@ -39,7 +39,7 @@ describe('speaking content catalog', () => {
     ).toHaveLength(7)
     expect(
       catalog.units.flatMap((unit) => unit.prompts),
-    ).toHaveLength(94)
+    ).toHaveLength(872)
     expect(
       catalog.units.flatMap((unit) => unit.scenePrompts),
     ).toHaveLength(28)

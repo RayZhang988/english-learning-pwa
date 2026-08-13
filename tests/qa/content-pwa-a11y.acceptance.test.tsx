@@ -154,7 +154,7 @@ describe('09 released content acceptance', () => {
     expect(catalogs.speaking.units).toHaveLength(28)
     expect(
       catalogs.speaking.units.flatMap((unit) => unit.prompts),
-    ).toHaveLength(94)
+    ).toHaveLength(872)
 
     const listeningQuestions = catalogs.listening.units.flatMap(
       (unit) => unit.questions,

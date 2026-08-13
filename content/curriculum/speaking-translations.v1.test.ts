@@ -47,8 +47,8 @@ describe('R16 published speaking target translations', () => {
   it('covers every formal speaking prompt with a non-empty model-answer translation', () => {
     const candidates = loadSpeakingTranslationCandidates()
 
-    expect(candidates).toHaveLength(122)
-    expect(new Set(candidates.map((candidate) => candidate.id)).size).toBe(122)
+    expect(candidates).toHaveLength(900)
+    expect(new Set(candidates.map((candidate) => candidate.id)).size).toBe(900)
     for (const candidate of candidates) {
       expect(candidate.modelAnswer).toEqual(expect.any(String))
       expect(candidate.modelAnswerTranslationZh).toEqual(expect.any(String))

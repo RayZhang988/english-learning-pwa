@@ -421,6 +421,7 @@ function expectedCandidates() {
         itemId: `supply-v1-speaking-${prompt.id}`,
         variantFamilyId: `supply-family-v1-speaking-${unit.learningUnitId}`,
         ...candidateBase(unit, 'speaking', nextOrder('speaking')),
+        difficultyLevel: prompt.growthDifficultyLevel ?? unit.difficultyLevel,
         nominalEffectiveSeconds: 52,
         source: {
           sourceType: 'speaking-prompt',

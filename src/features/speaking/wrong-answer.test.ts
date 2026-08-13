@@ -17,11 +17,11 @@ import {
 const index = await loadReleasedReviewContentIndex()
 
 describe('speaking wrong-answer boundary', () => {
-  it('accepts all 122 published speaking aliases and rejects identity guessing', () => {
+  it('accepts all 900 published speaking aliases and rejects identity guessing', () => {
     const resolver = new SpeakingWrongAnswerContentResolver(index)
     const aliases = Object.values(index.aliases)
       .filter((entry) => entry.domain === 'speaking') as unknown as Array<{ source: { itemId: string; sourceId: string; contentRef: string } }>
-    expect(aliases).toHaveLength(122)
+    expect(aliases).toHaveLength(900)
     for (const alias of aliases) {
       expect(resolver.resolveItem({ itemId: alias.source.itemId, source: { sourceType: alias.source.itemId.includes('-q') ? 'speaking-scene-quiz' : 'speaking-prompt', sourceId: alias.source.sourceId, variantId: alias.source.itemId.includes('-q') ? 'scene-fixed-response' : 'activity-prompt' }, contentRef: alias.source.contentRef } as never).reviewContentId).toMatch(/^review-content-v1-/)
     }

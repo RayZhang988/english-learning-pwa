@@ -6087,6 +6087,441 @@
                   "not-local",
                   "visit"
                 ]
+              },
+              {
+                "id": "r17-speaking-l01-001",
+                "growthDifficultyLevel": 0,
+                "cueZh": "请说出这个简单旅行回答。主题是“登机牌”。",
+                "partnerLine": "Please say this simple travel answer. Topic: a boarding pass.",
+                "modelAnswer": "I need a boarding pass.",
+                "modelAnswerTranslationZh": "示范表达：登机牌。",
+                "acceptedAnswers": [
+                  "I need a boarding pass."
+                ],
+                "requiredConcepts": [
+                  "a-boarding-pass",
+                  "level-1"
+                ]
+              },
+              {
+                "id": "r17-speaking-l01-029",
+                "growthDifficultyLevel": 0,
+                "cueZh": "请说出这个简单旅行回答。主题是“餐费账单”。",
+                "partnerLine": "Please say this simple travel answer. Topic: a meal bill.",
+                "modelAnswer": "I need a meal bill.",
+                "modelAnswerTranslationZh": "示范表达：餐费账单。",
+                "acceptedAnswers": [
+                  "I need a meal bill."
+                ],
+                "requiredConcepts": [
+                  "a-meal-bill",
+                  "level-1"
+                ]
+              },
+              {
+                "id": "r17-speaking-l01-057",
+                "growthDifficultyLevel": 0,
+                "cueZh": "请说出这个简单旅行回答。主题是“书面确认”。",
+                "partnerLine": "Please say this simple travel answer. Topic: a written confirmation.",
+                "modelAnswer": "I need a written confirmation.",
+                "modelAnswerTranslationZh": "示范表达：书面确认。",
+                "acceptedAnswers": [
+                  "I need a written confirmation."
+                ],
+                "requiredConcepts": [
+                  "a-written-confirmation",
+                  "level-1"
+                ]
+              },
+              {
+                "id": "r17-speaking-l02-018",
+                "growthDifficultyLevel": 0.5,
+                "cueZh": "请用这个简短旅行短语回答。主题是“酒店收据”。",
+                "partnerLine": "Answer with this short travel phrase. Topic: a hotel receipt.",
+                "modelAnswer": "I need a hotel receipt, please.",
+                "modelAnswerTranslationZh": "示范表达：酒店收据。",
+                "acceptedAnswers": [
+                  "I need a hotel receipt, please."
+                ],
+                "requiredConcepts": [
+                  "a-hotel-receipt",
+                  "level-2"
+                ]
+              },
+              {
+                "id": "r17-speaking-l02-046",
+                "growthDifficultyLevel": 0.5,
+                "cueZh": "请用这个简短旅行短语回答。主题是“取消政策”。",
+                "partnerLine": "Answer with this short travel phrase. Topic: a cancellation policy.",
+                "modelAnswer": "I need a cancellation policy, please.",
+                "modelAnswerTranslationZh": "示范表达：取消政策。",
+                "acceptedAnswers": [
+                  "I need a cancellation policy, please."
+                ],
+                "requiredConcepts": [
+                  "a-cancellation-policy",
+                  "level-2"
+                ]
+              },
+              {
+                "id": "r17-speaking-l03-007",
+                "growthDifficultyLevel": 1,
+                "cueZh": "请对工作人员说出这个完整回答。主题是“损坏的行李”。",
+                "partnerLine": "Give the staff this complete answer. Topic: a damaged bag.",
+                "modelAnswer": "I would like a damaged bag, please.",
+                "modelAnswerTranslationZh": "示范表达：损坏的行李。",
+                "acceptedAnswers": [
+                  "I would like a damaged bag, please."
+                ],
+                "requiredConcepts": [
+                  "a-damaged-bag",
+                  "level-3"
+                ]
+              },
+              {
+                "id": "r17-speaking-l03-035",
+                "growthDifficultyLevel": 1,
+                "cueZh": "请对工作人员说出这个完整回答。主题是“货币兑换”。",
+                "partnerLine": "Give the staff this complete answer. Topic: a currency exchange.",
+                "modelAnswer": "I would like a currency exchange, please.",
+                "modelAnswerTranslationZh": "示范表达：货币兑换。",
+                "acceptedAnswers": [
+                  "I would like a currency exchange, please."
+                ],
+                "requiredConcepts": [
+                  "a-currency-exchange",
+                  "level-3"
+                ]
+              },
+              {
+                "id": "r17-speaking-l04-024",
+                "growthDifficultyLevel": 1.5,
+                "cueZh": "请提出这个明确请求。主题是“租车”。",
+                "partnerLine": "Make this clear request. Topic: a rental car.",
+                "modelAnswer": "Could you help me with a rental car?",
+                "modelAnswerTranslationZh": "示范表达：租车。",
+                "acceptedAnswers": [
+                  "Could you help me with a rental car?"
+                ],
+                "requiredConcepts": [
+                  "a-rental-car",
+                  "level-4"
+                ]
+              },
+              {
+                "id": "r17-speaking-l04-052",
+                "growthDifficultyLevel": 1.5,
+                "cueZh": "请提出这个明确请求。主题是“行程冲突”。",
+                "partnerLine": "Make this clear request. Topic: a schedule conflict.",
+                "modelAnswer": "Could you help me with a schedule conflict?",
+                "modelAnswerTranslationZh": "示范表达：行程冲突。",
+                "acceptedAnswers": [
+                  "Could you help me with a schedule conflict?"
+                ],
+                "requiredConcepts": [
+                  "a-schedule-conflict",
+                  "level-4"
+                ]
+              },
+              {
+                "id": "r17-speaking-l05-013",
+                "growthDifficultyLevel": 2,
+                "cueZh": "请礼貌说明这个旅行需求。主题是“延迟退房”。",
+                "partnerLine": "Explain this travel need politely. Topic: a late checkout.",
+                "modelAnswer": "I need help with a late checkout because it affects my trip.",
+                "modelAnswerTranslationZh": "示范表达：延迟退房。",
+                "acceptedAnswers": [
+                  "I need help with a late checkout because it affects my trip."
+                ],
+                "requiredConcepts": [
+                  "a-late-checkout",
+                  "level-5"
+                ]
+              },
+              {
+                "id": "r17-speaking-l05-041",
+                "growthDifficultyLevel": 2,
+                "cueZh": "请礼貌说明这个旅行需求。主题是“药房订单”。",
+                "partnerLine": "Explain this travel need politely. Topic: a pharmacy order.",
+                "modelAnswer": "I need help with a pharmacy order because it affects my trip.",
+                "modelAnswerTranslationZh": "示范表达：药房订单。",
+                "acceptedAnswers": [
+                  "I need help with a pharmacy order because it affects my trip."
+                ],
+                "requiredConcepts": [
+                  "a-pharmacy-order",
+                  "level-5"
+                ]
+              },
+              {
+                "id": "r17-speaking-l06-002",
+                "growthDifficultyLevel": 2.5,
+                "cueZh": "请确认这个旅行细节。主题是“登机口变更”。",
+                "partnerLine": "Confirm this travel detail. Topic: a gate change.",
+                "modelAnswer": "Could you confirm a gate change before I continue?",
+                "modelAnswerTranslationZh": "示范表达：登机口变更。",
+                "acceptedAnswers": [
+                  "Could you confirm a gate change before I continue?"
+                ],
+                "requiredConcepts": [
+                  "a-gate-change",
+                  "level-6"
+                ]
+              },
+              {
+                "id": "r17-speaking-l06-030",
+                "growthDifficultyLevel": 2.5,
+                "cueZh": "请确认这个旅行细节。主题是“餐点替换”。",
+                "partnerLine": "Confirm this travel detail. Topic: a food substitution.",
+                "modelAnswer": "Could you confirm a food substitution before I continue?",
+                "modelAnswerTranslationZh": "示范表达：餐点替换。",
+                "acceptedAnswers": [
+                  "Could you confirm a food substitution before I continue?"
+                ],
+                "requiredConcepts": [
+                  "a-food-substitution",
+                  "level-6"
+                ]
+              },
+              {
+                "id": "r17-speaking-l07-019",
+                "growthDifficultyLevel": 3,
+                "cueZh": "请说明问题并请求帮助。主题是“机场接驳车”。",
+                "partnerLine": "Describe the problem and ask for help. Topic: an airport shuttle.",
+                "modelAnswer": "There is a problem with an airport shuttle, and I need help.",
+                "modelAnswerTranslationZh": "示范表达：机场接驳车。",
+                "acceptedAnswers": [
+                  "There is a problem with an airport shuttle, and I need help."
+                ],
+                "requiredConcepts": [
+                  "an-airport-shuttle",
+                  "level-7"
+                ]
+              },
+              {
+                "id": "r17-speaking-l08-008",
+                "growthDifficultyLevel": 3.5,
+                "cueZh": "请说明偏好并询问可选方案。主题是“护照问题”。",
+                "partnerLine": "State your preference and ask for an option. Topic: a passport problem.",
+                "modelAnswer": "I prefer a passport problem; could you offer an available option?",
+                "modelAnswerTranslationZh": "示范表达：护照问题。",
+                "acceptedAnswers": [
+                  "I prefer a passport problem; could you offer an available option?"
+                ],
+                "requiredConcepts": [
+                  "a-passport-problem",
+                  "level-8"
+                ]
+              },
+              {
+                "id": "r17-speaking-l09-025",
+                "growthDifficultyLevel": 4,
+                "cueZh": "请说明变化并请求解决方案。主题是“停车费”。",
+                "partnerLine": "Explain the change and request a solution. Topic: a parking fee.",
+                "modelAnswer": "Because of a parking fee, I need a practical solution today.",
+                "modelAnswerTranslationZh": "示范表达：停车费。",
+                "acceptedAnswers": [
+                  "Because of a parking fee, I need a practical solution today."
+                ],
+                "requiredConcepts": [
+                  "a-parking-fee",
+                  "level-9"
+                ]
+              },
+              {
+                "id": "r17-speaking-l09-053",
+                "growthDifficultyLevel": 4,
+                "cueZh": "请说明变化并请求解决方案。主题是“天气警报”。",
+                "partnerLine": "Explain the change and request a solution. Topic: a weather warning.",
+                "modelAnswer": "Because of a weather warning, I need a practical solution today.",
+                "modelAnswerTranslationZh": "示范表达：天气警报。",
+                "acceptedAnswers": [
+                  "Because of a weather warning, I need a practical solution today."
+                ],
+                "requiredConcepts": [
+                  "a-weather-warning",
+                  "level-9"
+                ]
+              },
+              {
+                "id": "r17-speaking-l10-014",
+                "growthDifficultyLevel": 4.5,
+                "cueZh": "请礼貌投诉并请求处理。主题是“房间钥匙”。",
+                "partnerLine": "Make a polite complaint and request action. Topic: a room key.",
+                "modelAnswer": "I am concerned about a room key; could you please review it?",
+                "modelAnswerTranslationZh": "示范表达：房间钥匙。",
+                "acceptedAnswers": [
+                  "I am concerned about a room key; could you please review it?"
+                ],
+                "requiredConcepts": [
+                  "a-room-key",
+                  "level-10"
+                ]
+              },
+              {
+                "id": "r17-speaking-l10-042",
+                "growthDifficultyLevel": 4.5,
+                "cueZh": "请礼貌投诉并请求处理。主题是“紧急联系人”。",
+                "partnerLine": "Make a polite complaint and request action. Topic: an emergency contact.",
+                "modelAnswer": "I am concerned about an emergency contact; could you please review it?",
+                "modelAnswerTranslationZh": "示范表达：紧急联系人。",
+                "acceptedAnswers": [
+                  "I am concerned about an emergency contact; could you please review it?"
+                ],
+                "requiredConcepts": [
+                  "an-emergency-contact",
+                  "level-10"
+                ]
+              },
+              {
+                "id": "r17-speaking-l11-003",
+                "growthDifficultyLevel": 5,
+                "cueZh": "请澄清政策与下一步。主题是“航班延误”。",
+                "partnerLine": "Clarify the policy and your next step. Topic: a delayed flight.",
+                "modelAnswer": "Please explain how a delayed flight applies before I decide what to do.",
+                "modelAnswerTranslationZh": "示范表达：航班延误。",
+                "acceptedAnswers": [
+                  "Please explain how a delayed flight applies before I decide what to do."
+                ],
+                "requiredConcepts": [
+                  "a-delayed-flight",
+                  "level-11"
+                ]
+              },
+              {
+                "id": "r17-speaking-l11-031",
+                "growthDifficultyLevel": 5,
+                "cueZh": "请澄清政策与下一步。主题是“衣服尺码”。",
+                "partnerLine": "Clarify the policy and your next step. Topic: a clothing size.",
+                "modelAnswer": "Please explain how a clothing size applies before I decide what to do.",
+                "modelAnswerTranslationZh": "示范表达：衣服尺码。",
+                "acceptedAnswers": [
+                  "Please explain how a clothing size applies before I decide what to do."
+                ],
+                "requiredConcepts": [
+                  "a-clothing-size",
+                  "level-11"
+                ]
+              },
+              {
+                "id": "r17-speaking-l12-020",
+                "growthDifficultyLevel": 5.5,
+                "cueZh": "请清楚描述安全或服务问题。主题是“出租车费用”。",
+                "partnerLine": "Describe a safety or service issue clearly. Topic: a taxi fare.",
+                "modelAnswer": "I need assistance with a taxi fare, and I can provide the details.",
+                "modelAnswerTranslationZh": "示范表达：出租车费用。",
+                "acceptedAnswers": [
+                  "I need assistance with a taxi fare, and I can provide the details."
+                ],
+                "requiredConcepts": [
+                  "a-taxi-fare",
+                  "level-12"
+                ]
+              },
+              {
+                "id": "r17-speaking-l12-048",
+                "growthDifficultyLevel": 5.5,
+                "cueZh": "请清楚描述安全或服务问题。主题是“无障碍入口”。",
+                "partnerLine": "Describe a safety or service issue clearly. Topic: an accessible entrance.",
+                "modelAnswer": "I need assistance with an accessible entrance, and I can provide the details.",
+                "modelAnswerTranslationZh": "示范表达：无障碍入口。",
+                "acceptedAnswers": [
+                  "I need assistance with an accessible entrance, and I can provide the details."
+                ],
+                "requiredConcepts": [
+                  "an-accessible-entrance",
+                  "level-12"
+                ]
+              },
+              {
+                "id": "r17-speaking-l13-009",
+                "growthDifficultyLevel": 6,
+                "cueZh": "请解释原因并请求替代方案。主题是“签证问题”。",
+                "partnerLine": "Explain the reason and request an alternative. Topic: a visa question.",
+                "modelAnswer": "Since a visa question has changed, I would like to discuss an alternative.",
+                "modelAnswerTranslationZh": "示范表达：签证问题。",
+                "acceptedAnswers": [
+                  "Since a visa question has changed, I would like to discuss an alternative."
+                ],
+                "requiredConcepts": [
+                  "a-visa-question",
+                  "level-13"
+                ]
+              },
+              {
+                "id": "r17-speaking-l13-037",
+                "growthDifficultyLevel": 6,
+                "cueZh": "请解释原因并请求替代方案。主题是“电话套餐”。",
+                "partnerLine": "Explain the reason and request an alternative. Topic: a phone plan.",
+                "modelAnswer": "Since a phone plan has changed, I would like to discuss an alternative.",
+                "modelAnswerTranslationZh": "示范表达：电话套餐。",
+                "acceptedAnswers": [
+                  "Since a phone plan has changed, I would like to discuss an alternative."
+                ],
+                "requiredConcepts": [
+                  "a-phone-plan",
+                  "level-13"
+                ]
+              },
+              {
+                "id": "r17-speaking-l14-026",
+                "growthDifficultyLevel": 7,
+                "cueZh": "请请求有记录的解决方案。主题是“行车路线”。",
+                "partnerLine": "Request a documented resolution. Topic: a driving direction.",
+                "modelAnswer": "Please confirm in writing how a driving direction will be resolved.",
+                "modelAnswerTranslationZh": "示范表达：行车路线。",
+                "acceptedAnswers": [
+                  "Please confirm in writing how a driving direction will be resolved."
+                ],
+                "requiredConcepts": [
+                  "a-driving-direction",
+                  "level-14"
+                ]
+              },
+              {
+                "id": "r17-speaking-l14-054",
+                "growthDifficultyLevel": 7,
+                "cueZh": "请请求有记录的解决方案。主题是“疏散通知”。",
+                "partnerLine": "Request a documented resolution. Topic: an evacuation notice.",
+                "modelAnswer": "Please confirm in writing how an evacuation notice will be resolved.",
+                "modelAnswerTranslationZh": "示范表达：疏散通知。",
+                "acceptedAnswers": [
+                  "Please confirm in writing how an evacuation notice will be resolved."
+                ],
+                "requiredConcepts": [
+                  "an-evacuation-notice",
+                  "level-14"
+                ]
+              },
+              {
+                "id": "r17-speaking-l15-015",
+                "growthDifficultyLevel": 8,
+                "cueZh": "请协商一个复杂旅行解决方案。主题是“嘈杂的房间”。",
+                "partnerLine": "Negotiate a complex travel solution. Topic: a noisy room.",
+                "modelAnswer": "Given a noisy room, I need to confirm the safest available arrangement.",
+                "modelAnswerTranslationZh": "示范表达：嘈杂的房间。",
+                "acceptedAnswers": [
+                  "Given a noisy room, I need to confirm the safest available arrangement."
+                ],
+                "requiredConcepts": [
+                  "a-noisy-room",
+                  "level-15"
+                ]
+              },
+              {
+                "id": "r17-speaking-l15-043",
+                "growthDifficultyLevel": 8,
+                "cueZh": "请协商一个复杂旅行解决方案。主题是“警方报告”。",
+                "partnerLine": "Negotiate a complex travel solution. Topic: a police report.",
+                "modelAnswer": "Given a police report, I need to confirm the safest available arrangement.",
+                "modelAnswerTranslationZh": "示范表达：警方报告。",
+                "acceptedAnswers": [
+                  "Given a police report, I need to confirm the safest available arrangement."
+                ],
+                "requiredConcepts": [
+                  "a-police-report",
+                  "level-15"
+                ]
               }
             ]
           }
@@ -6428,6 +6863,426 @@
                 ],
                 "requiredConcepts": [
                   "repeat-request"
+                ]
+              },
+              {
+                "id": "r17-speaking-l01-002",
+                "growthDifficultyLevel": 0,
+                "cueZh": "请说出这个简单旅行回答。主题是“登机口变更”。",
+                "partnerLine": "Please say this simple travel answer. Topic: a gate change.",
+                "modelAnswer": "I need a gate change.",
+                "modelAnswerTranslationZh": "示范表达：登机口变更。",
+                "acceptedAnswers": [
+                  "I need a gate change."
+                ],
+                "requiredConcepts": [
+                  "a-gate-change",
+                  "level-1"
+                ]
+              },
+              {
+                "id": "r17-speaking-l01-030",
+                "growthDifficultyLevel": 0,
+                "cueZh": "请说出这个简单旅行回答。主题是“餐点替换”。",
+                "partnerLine": "Please say this simple travel answer. Topic: a food substitution.",
+                "modelAnswer": "I need a food substitution.",
+                "modelAnswerTranslationZh": "示范表达：餐点替换。",
+                "acceptedAnswers": [
+                  "I need a food substitution."
+                ],
+                "requiredConcepts": [
+                  "a-food-substitution",
+                  "level-1"
+                ]
+              },
+              {
+                "id": "r17-speaking-l01-058",
+                "growthDifficultyLevel": 0,
+                "cueZh": "请说出这个简单旅行回答。主题是“客服案件”。",
+                "partnerLine": "Please say this simple travel answer. Topic: a customer service case.",
+                "modelAnswer": "I need a customer service case.",
+                "modelAnswerTranslationZh": "示范表达：客服案件。",
+                "acceptedAnswers": [
+                  "I need a customer service case."
+                ],
+                "requiredConcepts": [
+                  "a-customer-service-case",
+                  "level-1"
+                ]
+              },
+              {
+                "id": "r17-speaking-l02-019",
+                "growthDifficultyLevel": 0.5,
+                "cueZh": "请用这个简短旅行短语回答。主题是“机场接驳车”。",
+                "partnerLine": "Answer with this short travel phrase. Topic: an airport shuttle.",
+                "modelAnswer": "I need an airport shuttle, please.",
+                "modelAnswerTranslationZh": "示范表达：机场接驳车。",
+                "acceptedAnswers": [
+                  "I need an airport shuttle, please."
+                ],
+                "requiredConcepts": [
+                  "an-airport-shuttle",
+                  "level-2"
+                ]
+              },
+              {
+                "id": "r17-speaking-l02-047",
+                "growthDifficultyLevel": 0.5,
+                "cueZh": "请用这个简短旅行短语回答。主题是“预订修改”。",
+                "partnerLine": "Answer with this short travel phrase. Topic: a booking amendment.",
+                "modelAnswer": "I need a booking amendment, please.",
+                "modelAnswerTranslationZh": "示范表达：预订修改。",
+                "acceptedAnswers": [
+                  "I need a booking amendment, please."
+                ],
+                "requiredConcepts": [
+                  "a-booking-amendment",
+                  "level-2"
+                ]
+              },
+              {
+                "id": "r17-speaking-l03-008",
+                "growthDifficultyLevel": 1,
+                "cueZh": "请对工作人员说出这个完整回答。主题是“护照问题”。",
+                "partnerLine": "Give the staff this complete answer. Topic: a passport problem.",
+                "modelAnswer": "I would like a passport problem, please.",
+                "modelAnswerTranslationZh": "示范表达：护照问题。",
+                "acceptedAnswers": [
+                  "I would like a passport problem, please."
+                ],
+                "requiredConcepts": [
+                  "a-passport-problem",
+                  "level-3"
+                ]
+              },
+              {
+                "id": "r17-speaking-l03-036",
+                "growthDifficultyLevel": 1,
+                "cueZh": "请对工作人员说出这个完整回答。主题是“银行卡问题”。",
+                "partnerLine": "Give the staff this complete answer. Topic: a bank card issue.",
+                "modelAnswer": "I would like a bank card issue, please.",
+                "modelAnswerTranslationZh": "示范表达：银行卡问题。",
+                "acceptedAnswers": [
+                  "I would like a bank card issue, please."
+                ],
+                "requiredConcepts": [
+                  "a-bank-card-issue",
+                  "level-3"
+                ]
+              },
+              {
+                "id": "r17-speaking-l04-025",
+                "growthDifficultyLevel": 1.5,
+                "cueZh": "请提出这个明确请求。主题是“停车费”。",
+                "partnerLine": "Make this clear request. Topic: a parking fee.",
+                "modelAnswer": "Could you help me with a parking fee?",
+                "modelAnswerTranslationZh": "示范表达：停车费。",
+                "acceptedAnswers": [
+                  "Could you help me with a parking fee?"
+                ],
+                "requiredConcepts": [
+                  "a-parking-fee",
+                  "level-4"
+                ]
+              },
+              {
+                "id": "r17-speaking-l05-014",
+                "growthDifficultyLevel": 2,
+                "cueZh": "请礼貌说明这个旅行需求。主题是“房间钥匙”。",
+                "partnerLine": "Explain this travel need politely. Topic: a room key.",
+                "modelAnswer": "I need help with a room key because it affects my trip.",
+                "modelAnswerTranslationZh": "示范表达：房间钥匙。",
+                "acceptedAnswers": [
+                  "I need help with a room key because it affects my trip."
+                ],
+                "requiredConcepts": [
+                  "a-room-key",
+                  "level-5"
+                ]
+              },
+              {
+                "id": "r17-speaking-l05-042",
+                "growthDifficultyLevel": 2,
+                "cueZh": "请礼貌说明这个旅行需求。主题是“紧急联系人”。",
+                "partnerLine": "Explain this travel need politely. Topic: an emergency contact.",
+                "modelAnswer": "I need help with an emergency contact because it affects my trip.",
+                "modelAnswerTranslationZh": "示范表达：紧急联系人。",
+                "acceptedAnswers": [
+                  "I need help with an emergency contact because it affects my trip."
+                ],
+                "requiredConcepts": [
+                  "an-emergency-contact",
+                  "level-5"
+                ]
+              },
+              {
+                "id": "r17-speaking-l06-003",
+                "growthDifficultyLevel": 2.5,
+                "cueZh": "请确认这个旅行细节。主题是“航班延误”。",
+                "partnerLine": "Confirm this travel detail. Topic: a delayed flight.",
+                "modelAnswer": "Could you confirm a delayed flight before I continue?",
+                "modelAnswerTranslationZh": "示范表达：航班延误。",
+                "acceptedAnswers": [
+                  "Could you confirm a delayed flight before I continue?"
+                ],
+                "requiredConcepts": [
+                  "a-delayed-flight",
+                  "level-6"
+                ]
+              },
+              {
+                "id": "r17-speaking-l06-031",
+                "growthDifficultyLevel": 2.5,
+                "cueZh": "请确认这个旅行细节。主题是“衣服尺码”。",
+                "partnerLine": "Confirm this travel detail. Topic: a clothing size.",
+                "modelAnswer": "Could you confirm a clothing size before I continue?",
+                "modelAnswerTranslationZh": "示范表达：衣服尺码。",
+                "acceptedAnswers": [
+                  "Could you confirm a clothing size before I continue?"
+                ],
+                "requiredConcepts": [
+                  "a-clothing-size",
+                  "level-6"
+                ]
+              },
+              {
+                "id": "r17-speaking-l07-020",
+                "growthDifficultyLevel": 3,
+                "cueZh": "请说明问题并请求帮助。主题是“出租车费用”。",
+                "partnerLine": "Describe the problem and ask for help. Topic: a taxi fare.",
+                "modelAnswer": "There is a problem with a taxi fare, and I need help.",
+                "modelAnswerTranslationZh": "示范表达：出租车费用。",
+                "acceptedAnswers": [
+                  "There is a problem with a taxi fare, and I need help."
+                ],
+                "requiredConcepts": [
+                  "a-taxi-fare",
+                  "level-7"
+                ]
+              },
+              {
+                "id": "r17-speaking-l08-009",
+                "growthDifficultyLevel": 3.5,
+                "cueZh": "请说明偏好并询问可选方案。主题是“签证问题”。",
+                "partnerLine": "State your preference and ask for an option. Topic: a visa question.",
+                "modelAnswer": "I prefer a visa question; could you offer an available option?",
+                "modelAnswerTranslationZh": "示范表达：签证问题。",
+                "acceptedAnswers": [
+                  "I prefer a visa question; could you offer an available option?"
+                ],
+                "requiredConcepts": [
+                  "a-visa-question",
+                  "level-8"
+                ]
+              },
+              {
+                "id": "r17-speaking-l09-026",
+                "growthDifficultyLevel": 4,
+                "cueZh": "请说明变化并请求解决方案。主题是“行车路线”。",
+                "partnerLine": "Explain the change and request a solution. Topic: a driving direction.",
+                "modelAnswer": "Because of a driving direction, I need a practical solution today.",
+                "modelAnswerTranslationZh": "示范表达：行车路线。",
+                "acceptedAnswers": [
+                  "Because of a driving direction, I need a practical solution today."
+                ],
+                "requiredConcepts": [
+                  "a-driving-direction",
+                  "level-9"
+                ]
+              },
+              {
+                "id": "r17-speaking-l09-054",
+                "growthDifficultyLevel": 4,
+                "cueZh": "请说明变化并请求解决方案。主题是“疏散通知”。",
+                "partnerLine": "Explain the change and request a solution. Topic: an evacuation notice.",
+                "modelAnswer": "Because of an evacuation notice, I need a practical solution today.",
+                "modelAnswerTranslationZh": "示范表达：疏散通知。",
+                "acceptedAnswers": [
+                  "Because of an evacuation notice, I need a practical solution today."
+                ],
+                "requiredConcepts": [
+                  "an-evacuation-notice",
+                  "level-9"
+                ]
+              },
+              {
+                "id": "r17-speaking-l10-015",
+                "growthDifficultyLevel": 4.5,
+                "cueZh": "请礼貌投诉并请求处理。主题是“嘈杂的房间”。",
+                "partnerLine": "Make a polite complaint and request action. Topic: a noisy room.",
+                "modelAnswer": "I am concerned about a noisy room; could you please review it?",
+                "modelAnswerTranslationZh": "示范表达：嘈杂的房间。",
+                "acceptedAnswers": [
+                  "I am concerned about a noisy room; could you please review it?"
+                ],
+                "requiredConcepts": [
+                  "a-noisy-room",
+                  "level-10"
+                ]
+              },
+              {
+                "id": "r17-speaking-l10-043",
+                "growthDifficultyLevel": 4.5,
+                "cueZh": "请礼貌投诉并请求处理。主题是“警方报告”。",
+                "partnerLine": "Make a polite complaint and request action. Topic: a police report.",
+                "modelAnswer": "I am concerned about a police report; could you please review it?",
+                "modelAnswerTranslationZh": "示范表达：警方报告。",
+                "acceptedAnswers": [
+                  "I am concerned about a police report; could you please review it?"
+                ],
+                "requiredConcepts": [
+                  "a-police-report",
+                  "level-10"
+                ]
+              },
+              {
+                "id": "r17-speaking-l11-004",
+                "growthDifficultyLevel": 5,
+                "cueZh": "请澄清政策与下一步。主题是“错过转机”。",
+                "partnerLine": "Clarify the policy and your next step. Topic: a missed connection.",
+                "modelAnswer": "Please explain how a missed connection applies before I decide what to do.",
+                "modelAnswerTranslationZh": "示范表达：错过转机。",
+                "acceptedAnswers": [
+                  "Please explain how a missed connection applies before I decide what to do."
+                ],
+                "requiredConcepts": [
+                  "a-missed-connection",
+                  "level-11"
+                ]
+              },
+              {
+                "id": "r17-speaking-l11-032",
+                "growthDifficultyLevel": 5,
+                "cueZh": "请澄清政策与下一步。主题是“退货请求”。",
+                "partnerLine": "Clarify the policy and your next step. Topic: a return request.",
+                "modelAnswer": "Please explain how a return request applies before I decide what to do.",
+                "modelAnswerTranslationZh": "示范表达：退货请求。",
+                "acceptedAnswers": [
+                  "Please explain how a return request applies before I decide what to do."
+                ],
+                "requiredConcepts": [
+                  "a-return-request",
+                  "level-11"
+                ]
+              },
+              {
+                "id": "r17-speaking-l12-021",
+                "growthDifficultyLevel": 5.5,
+                "cueZh": "请清楚描述安全或服务问题。主题是“火车站台”。",
+                "partnerLine": "Describe a safety or service issue clearly. Topic: a train platform.",
+                "modelAnswer": "I need assistance with a train platform, and I can provide the details.",
+                "modelAnswerTranslationZh": "示范表达：火车站台。",
+                "acceptedAnswers": [
+                  "I need assistance with a train platform, and I can provide the details."
+                ],
+                "requiredConcepts": [
+                  "a-train-platform",
+                  "level-12"
+                ]
+              },
+              {
+                "id": "r17-speaking-l12-049",
+                "growthDifficultyLevel": 5.5,
+                "cueZh": "请清楚描述安全或服务问题。主题是“行动辅助服务”。",
+                "partnerLine": "Describe a safety or service issue clearly. Topic: a mobility service.",
+                "modelAnswer": "I need assistance with a mobility service, and I can provide the details.",
+                "modelAnswerTranslationZh": "示范表达：行动辅助服务。",
+                "acceptedAnswers": [
+                  "I need assistance with a mobility service, and I can provide the details."
+                ],
+                "requiredConcepts": [
+                  "a-mobility-service",
+                  "level-12"
+                ]
+              },
+              {
+                "id": "r17-speaking-l13-010",
+                "growthDifficultyLevel": 6,
+                "cueZh": "请解释原因并请求替代方案。主题是“安检”。",
+                "partnerLine": "Explain the reason and request an alternative. Topic: a security check.",
+                "modelAnswer": "Since a security check has changed, I would like to discuss an alternative.",
+                "modelAnswerTranslationZh": "示范表达：安检。",
+                "acceptedAnswers": [
+                  "Since a security check has changed, I would like to discuss an alternative."
+                ],
+                "requiredConcepts": [
+                  "a-security-check",
+                  "level-13"
+                ]
+              },
+              {
+                "id": "r17-speaking-l13-038",
+                "growthDifficultyLevel": 6,
+                "cueZh": "请解释原因并请求替代方案。主题是“无线网络连接”。",
+                "partnerLine": "Explain the reason and request an alternative. Topic: a Wi-Fi connection.",
+                "modelAnswer": "Since a Wi-Fi connection has changed, I would like to discuss an alternative.",
+                "modelAnswerTranslationZh": "示范表达：无线网络连接。",
+                "acceptedAnswers": [
+                  "Since a Wi-Fi connection has changed, I would like to discuss an alternative."
+                ],
+                "requiredConcepts": [
+                  "a-Wi-Fi-connection",
+                  "level-13"
+                ]
+              },
+              {
+                "id": "r17-speaking-l14-027",
+                "growthDifficultyLevel": 7,
+                "cueZh": "请请求有记录的解决方案。主题是“餐厅座位”。",
+                "partnerLine": "Request a documented resolution. Topic: a restaurant table.",
+                "modelAnswer": "Please confirm in writing how a restaurant table will be resolved.",
+                "modelAnswerTranslationZh": "示范表达：餐厅座位。",
+                "acceptedAnswers": [
+                  "Please confirm in writing how a restaurant table will be resolved."
+                ],
+                "requiredConcepts": [
+                  "a-restaurant-table",
+                  "level-14"
+                ]
+              },
+              {
+                "id": "r17-speaking-l14-055",
+                "growthDifficultyLevel": 7,
+                "cueZh": "请请求有记录的解决方案。主题是“安全顾虑”。",
+                "partnerLine": "Request a documented resolution. Topic: a safety concern.",
+                "modelAnswer": "Please confirm in writing how a safety concern will be resolved.",
+                "modelAnswerTranslationZh": "示范表达：安全顾虑。",
+                "acceptedAnswers": [
+                  "Please confirm in writing how a safety concern will be resolved."
+                ],
+                "requiredConcepts": [
+                  "a-safety-concern",
+                  "level-14"
+                ]
+              },
+              {
+                "id": "r17-speaking-l15-016",
+                "growthDifficultyLevel": 8,
+                "cueZh": "请协商一个复杂旅行解决方案。主题是“损坏的淋浴设施”。",
+                "partnerLine": "Negotiate a complex travel solution. Topic: a broken shower.",
+                "modelAnswer": "Given a broken shower, I need to confirm the safest available arrangement.",
+                "modelAnswerTranslationZh": "示范表达：损坏的淋浴设施。",
+                "acceptedAnswers": [
+                  "Given a broken shower, I need to confirm the safest available arrangement."
+                ],
+                "requiredConcepts": [
+                  "a-broken-shower",
+                  "level-15"
+                ]
+              },
+              {
+                "id": "r17-speaking-l15-044",
+                "growthDifficultyLevel": 8,
+                "cueZh": "请协商一个复杂旅行解决方案。主题是“被盗的钱包”。",
+                "partnerLine": "Negotiate a complex travel solution. Topic: a stolen wallet.",
+                "modelAnswer": "Given a stolen wallet, I need to confirm the safest available arrangement.",
+                "modelAnswerTranslationZh": "示范表达：被盗的钱包。",
+                "acceptedAnswers": [
+                  "Given a stolen wallet, I need to confirm the safest available arrangement."
+                ],
+                "requiredConcepts": [
+                  "a-stolen-wallet",
+                  "level-15"
                 ]
               }
             ]
@@ -6775,6 +7630,411 @@
                 ],
                 "requiredConcepts": [
                   "number-confirmation"
+                ]
+              },
+              {
+                "id": "r17-speaking-l01-003",
+                "growthDifficultyLevel": 0,
+                "cueZh": "请说出这个简单旅行回答。主题是“航班延误”。",
+                "partnerLine": "Please say this simple travel answer. Topic: a delayed flight.",
+                "modelAnswer": "I need a delayed flight.",
+                "modelAnswerTranslationZh": "示范表达：航班延误。",
+                "acceptedAnswers": [
+                  "I need a delayed flight."
+                ],
+                "requiredConcepts": [
+                  "a-delayed-flight",
+                  "level-1"
+                ]
+              },
+              {
+                "id": "r17-speaking-l01-031",
+                "growthDifficultyLevel": 0,
+                "cueZh": "请说出这个简单旅行回答。主题是“衣服尺码”。",
+                "partnerLine": "Please say this simple travel answer. Topic: a clothing size.",
+                "modelAnswer": "I need a clothing size.",
+                "modelAnswerTranslationZh": "示范表达：衣服尺码。",
+                "acceptedAnswers": [
+                  "I need a clothing size."
+                ],
+                "requiredConcepts": [
+                  "a-clothing-size",
+                  "level-1"
+                ]
+              },
+              {
+                "id": "r17-speaking-l01-059",
+                "growthDifficultyLevel": 0,
+                "cueZh": "请说出这个简单旅行回答。主题是“政策例外”。",
+                "partnerLine": "Please say this simple travel answer. Topic: a policy exception.",
+                "modelAnswer": "I need a policy exception.",
+                "modelAnswerTranslationZh": "示范表达：政策例外。",
+                "acceptedAnswers": [
+                  "I need a policy exception."
+                ],
+                "requiredConcepts": [
+                  "a-policy-exception",
+                  "level-1"
+                ]
+              },
+              {
+                "id": "r17-speaking-l02-020",
+                "growthDifficultyLevel": 0.5,
+                "cueZh": "请用这个简短旅行短语回答。主题是“出租车费用”。",
+                "partnerLine": "Answer with this short travel phrase. Topic: a taxi fare.",
+                "modelAnswer": "I need a taxi fare, please.",
+                "modelAnswerTranslationZh": "示范表达：出租车费用。",
+                "acceptedAnswers": [
+                  "I need a taxi fare, please."
+                ],
+                "requiredConcepts": [
+                  "a-taxi-fare",
+                  "level-2"
+                ]
+              },
+              {
+                "id": "r17-speaking-l02-048",
+                "growthDifficultyLevel": 0.5,
+                "cueZh": "请用这个简短旅行短语回答。主题是“无障碍入口”。",
+                "partnerLine": "Answer with this short travel phrase. Topic: an accessible entrance.",
+                "modelAnswer": "I need an accessible entrance, please.",
+                "modelAnswerTranslationZh": "示范表达：无障碍入口。",
+                "acceptedAnswers": [
+                  "I need an accessible entrance, please."
+                ],
+                "requiredConcepts": [
+                  "an-accessible-entrance",
+                  "level-2"
+                ]
+              },
+              {
+                "id": "r17-speaking-l03-009",
+                "growthDifficultyLevel": 1,
+                "cueZh": "请对工作人员说出这个完整回答。主题是“签证问题”。",
+                "partnerLine": "Give the staff this complete answer. Topic: a visa question.",
+                "modelAnswer": "I would like a visa question, please.",
+                "modelAnswerTranslationZh": "示范表达：签证问题。",
+                "acceptedAnswers": [
+                  "I would like a visa question, please."
+                ],
+                "requiredConcepts": [
+                  "a-visa-question",
+                  "level-3"
+                ]
+              },
+              {
+                "id": "r17-speaking-l03-037",
+                "growthDifficultyLevel": 1,
+                "cueZh": "请对工作人员说出这个完整回答。主题是“电话套餐”。",
+                "partnerLine": "Give the staff this complete answer. Topic: a phone plan.",
+                "modelAnswer": "I would like a phone plan, please.",
+                "modelAnswerTranslationZh": "示范表达：电话套餐。",
+                "acceptedAnswers": [
+                  "I would like a phone plan, please."
+                ],
+                "requiredConcepts": [
+                  "a-phone-plan",
+                  "level-3"
+                ]
+              },
+              {
+                "id": "r17-speaking-l04-026",
+                "growthDifficultyLevel": 1.5,
+                "cueZh": "请提出这个明确请求。主题是“行车路线”。",
+                "partnerLine": "Make this clear request. Topic: a driving direction.",
+                "modelAnswer": "Could you help me with a driving direction?",
+                "modelAnswerTranslationZh": "示范表达：行车路线。",
+                "acceptedAnswers": [
+                  "Could you help me with a driving direction?"
+                ],
+                "requiredConcepts": [
+                  "a-driving-direction",
+                  "level-4"
+                ]
+              },
+              {
+                "id": "r17-speaking-l05-015",
+                "growthDifficultyLevel": 2,
+                "cueZh": "请礼貌说明这个旅行需求。主题是“嘈杂的房间”。",
+                "partnerLine": "Explain this travel need politely. Topic: a noisy room.",
+                "modelAnswer": "I need help with a noisy room because it affects my trip.",
+                "modelAnswerTranslationZh": "示范表达：嘈杂的房间。",
+                "acceptedAnswers": [
+                  "I need help with a noisy room because it affects my trip."
+                ],
+                "requiredConcepts": [
+                  "a-noisy-room",
+                  "level-5"
+                ]
+              },
+              {
+                "id": "r17-speaking-l05-043",
+                "growthDifficultyLevel": 2,
+                "cueZh": "请礼貌说明这个旅行需求。主题是“警方报告”。",
+                "partnerLine": "Explain this travel need politely. Topic: a police report.",
+                "modelAnswer": "I need help with a police report because it affects my trip.",
+                "modelAnswerTranslationZh": "示范表达：警方报告。",
+                "acceptedAnswers": [
+                  "I need help with a police report because it affects my trip."
+                ],
+                "requiredConcepts": [
+                  "a-police-report",
+                  "level-5"
+                ]
+              },
+              {
+                "id": "r17-speaking-l06-004",
+                "growthDifficultyLevel": 2.5,
+                "cueZh": "请确认这个旅行细节。主题是“错过转机”。",
+                "partnerLine": "Confirm this travel detail. Topic: a missed connection.",
+                "modelAnswer": "Could you confirm a missed connection before I continue?",
+                "modelAnswerTranslationZh": "示范表达：错过转机。",
+                "acceptedAnswers": [
+                  "Could you confirm a missed connection before I continue?"
+                ],
+                "requiredConcepts": [
+                  "a-missed-connection",
+                  "level-6"
+                ]
+              },
+              {
+                "id": "r17-speaking-l06-032",
+                "growthDifficultyLevel": 2.5,
+                "cueZh": "请确认这个旅行细节。主题是“退货请求”。",
+                "partnerLine": "Confirm this travel detail. Topic: a return request.",
+                "modelAnswer": "Could you confirm a return request before I continue?",
+                "modelAnswerTranslationZh": "示范表达：退货请求。",
+                "acceptedAnswers": [
+                  "Could you confirm a return request before I continue?"
+                ],
+                "requiredConcepts": [
+                  "a-return-request",
+                  "level-6"
+                ]
+              },
+              {
+                "id": "r17-speaking-l07-021",
+                "growthDifficultyLevel": 3,
+                "cueZh": "请说明问题并请求帮助。主题是“火车站台”。",
+                "partnerLine": "Describe the problem and ask for help. Topic: a train platform.",
+                "modelAnswer": "There is a problem with a train platform, and I need help.",
+                "modelAnswerTranslationZh": "示范表达：火车站台。",
+                "acceptedAnswers": [
+                  "There is a problem with a train platform, and I need help."
+                ],
+                "requiredConcepts": [
+                  "a-train-platform",
+                  "level-7"
+                ]
+              },
+              {
+                "id": "r17-speaking-l08-010",
+                "growthDifficultyLevel": 3.5,
+                "cueZh": "请说明偏好并询问可选方案。主题是“安检”。",
+                "partnerLine": "State your preference and ask for an option. Topic: a security check.",
+                "modelAnswer": "I prefer a security check; could you offer an available option?",
+                "modelAnswerTranslationZh": "示范表达：安检。",
+                "acceptedAnswers": [
+                  "I prefer a security check; could you offer an available option?"
+                ],
+                "requiredConcepts": [
+                  "a-security-check",
+                  "level-8"
+                ]
+              },
+              {
+                "id": "r17-speaking-l09-027",
+                "growthDifficultyLevel": 4,
+                "cueZh": "请说明变化并请求解决方案。主题是“餐厅座位”。",
+                "partnerLine": "Explain the change and request a solution. Topic: a restaurant table.",
+                "modelAnswer": "Because of a restaurant table, I need a practical solution today.",
+                "modelAnswerTranslationZh": "示范表达：餐厅座位。",
+                "acceptedAnswers": [
+                  "Because of a restaurant table, I need a practical solution today."
+                ],
+                "requiredConcepts": [
+                  "a-restaurant-table",
+                  "level-9"
+                ]
+              },
+              {
+                "id": "r17-speaking-l09-055",
+                "growthDifficultyLevel": 4,
+                "cueZh": "请说明变化并请求解决方案。主题是“安全顾虑”。",
+                "partnerLine": "Explain the change and request a solution. Topic: a safety concern.",
+                "modelAnswer": "Because of a safety concern, I need a practical solution today.",
+                "modelAnswerTranslationZh": "示范表达：安全顾虑。",
+                "acceptedAnswers": [
+                  "Because of a safety concern, I need a practical solution today."
+                ],
+                "requiredConcepts": [
+                  "a-safety-concern",
+                  "level-9"
+                ]
+              },
+              {
+                "id": "r17-speaking-l10-016",
+                "growthDifficultyLevel": 4.5,
+                "cueZh": "请礼貌投诉并请求处理。主题是“损坏的淋浴设施”。",
+                "partnerLine": "Make a polite complaint and request action. Topic: a broken shower.",
+                "modelAnswer": "I am concerned about a broken shower; could you please review it?",
+                "modelAnswerTranslationZh": "示范表达：损坏的淋浴设施。",
+                "acceptedAnswers": [
+                  "I am concerned about a broken shower; could you please review it?"
+                ],
+                "requiredConcepts": [
+                  "a-broken-shower",
+                  "level-10"
+                ]
+              },
+              {
+                "id": "r17-speaking-l10-044",
+                "growthDifficultyLevel": 4.5,
+                "cueZh": "请礼貌投诉并请求处理。主题是“被盗的钱包”。",
+                "partnerLine": "Make a polite complaint and request action. Topic: a stolen wallet.",
+                "modelAnswer": "I am concerned about a stolen wallet; could you please review it?",
+                "modelAnswerTranslationZh": "示范表达：被盗的钱包。",
+                "acceptedAnswers": [
+                  "I am concerned about a stolen wallet; could you please review it?"
+                ],
+                "requiredConcepts": [
+                  "a-stolen-wallet",
+                  "level-10"
+                ]
+              },
+              {
+                "id": "r17-speaking-l11-005",
+                "growthDifficultyLevel": 5,
+                "cueZh": "请澄清政策与下一步。主题是“行李额度”。",
+                "partnerLine": "Clarify the policy and your next step. Topic: a baggage allowance.",
+                "modelAnswer": "Please explain how a baggage allowance applies before I decide what to do.",
+                "modelAnswerTranslationZh": "示范表达：行李额度。",
+                "acceptedAnswers": [
+                  "Please explain how a baggage allowance applies before I decide what to do."
+                ],
+                "requiredConcepts": [
+                  "a-baggage-allowance",
+                  "level-11"
+                ]
+              },
+              {
+                "id": "r17-speaking-l11-033",
+                "growthDifficultyLevel": 5,
+                "cueZh": "请澄清政策与下一步。主题是“退款状态”。",
+                "partnerLine": "Clarify the policy and your next step. Topic: a refund status.",
+                "modelAnswer": "Please explain how a refund status applies before I decide what to do.",
+                "modelAnswerTranslationZh": "示范表达：退款状态。",
+                "acceptedAnswers": [
+                  "Please explain how a refund status applies before I decide what to do."
+                ],
+                "requiredConcepts": [
+                  "a-refund-status",
+                  "level-11"
+                ]
+              },
+              {
+                "id": "r17-speaking-l12-022",
+                "growthDifficultyLevel": 5.5,
+                "cueZh": "请清楚描述安全或服务问题。主题是“公交换乘”。",
+                "partnerLine": "Describe a safety or service issue clearly. Topic: a bus transfer.",
+                "modelAnswer": "I need assistance with a bus transfer, and I can provide the details.",
+                "modelAnswerTranslationZh": "示范表达：公交换乘。",
+                "acceptedAnswers": [
+                  "I need assistance with a bus transfer, and I can provide the details."
+                ],
+                "requiredConcepts": [
+                  "a-bus-transfer",
+                  "level-12"
+                ]
+              },
+              {
+                "id": "r17-speaking-l13-011",
+                "growthDifficultyLevel": 6,
+                "cueZh": "请解释原因并请求替代方案。主题是“酒店预订”。",
+                "partnerLine": "Explain the reason and request an alternative. Topic: a hotel reservation.",
+                "modelAnswer": "Since a hotel reservation has changed, I would like to discuss an alternative.",
+                "modelAnswerTranslationZh": "示范表达：酒店预订。",
+                "acceptedAnswers": [
+                  "Since a hotel reservation has changed, I would like to discuss an alternative."
+                ],
+                "requiredConcepts": [
+                  "a-hotel-reservation",
+                  "level-13"
+                ]
+              },
+              {
+                "id": "r17-speaking-l13-039",
+                "growthDifficultyLevel": 6,
+                "cueZh": "请解释原因并请求替代方案。主题是“充电线”。",
+                "partnerLine": "Explain the reason and request an alternative. Topic: a charging cable.",
+                "modelAnswer": "Since a charging cable has changed, I would like to discuss an alternative.",
+                "modelAnswerTranslationZh": "示范表达：充电线。",
+                "acceptedAnswers": [
+                  "Since a charging cable has changed, I would like to discuss an alternative."
+                ],
+                "requiredConcepts": [
+                  "a-charging-cable",
+                  "level-13"
+                ]
+              },
+              {
+                "id": "r17-speaking-l14-028",
+                "growthDifficultyLevel": 7,
+                "cueZh": "请请求有记录的解决方案。主题是“菜单过敏信息”。",
+                "partnerLine": "Request a documented resolution. Topic: a menu allergy.",
+                "modelAnswer": "Please confirm in writing how a menu allergy will be resolved.",
+                "modelAnswerTranslationZh": "示范表达：菜单过敏信息。",
+                "acceptedAnswers": [
+                  "Please confirm in writing how a menu allergy will be resolved."
+                ],
+                "requiredConcepts": [
+                  "a-menu-allergy",
+                  "level-14"
+                ]
+              },
+              {
+                "id": "r17-speaking-l14-056",
+                "growthDifficultyLevel": 7,
+                "cueZh": "请请求有记录的解决方案。主题是“服务费”。",
+                "partnerLine": "Request a documented resolution. Topic: a service charge.",
+                "modelAnswer": "Please confirm in writing how a service charge will be resolved.",
+                "modelAnswerTranslationZh": "示范表达：服务费。",
+                "acceptedAnswers": [
+                  "Please confirm in writing how a service charge will be resolved."
+                ],
+                "requiredConcepts": [
+                  "a-service-charge",
+                  "level-14"
+                ]
+              },
+              {
+                "id": "r17-speaking-l15-017",
+                "growthDifficultyLevel": 8,
+                "cueZh": "请协商一个复杂旅行解决方案。主题是“换房”。",
+                "partnerLine": "Negotiate a complex travel solution. Topic: a room change.",
+                "modelAnswer": "Given a room change, I need to confirm the safest available arrangement.",
+                "modelAnswerTranslationZh": "示范表达：换房。",
+                "acceptedAnswers": [
+                  "Given a room change, I need to confirm the safest available arrangement."
+                ],
+                "requiredConcepts": [
+                  "a-room-change",
+                  "level-15"
+                ]
+              },
+              {
+                "id": "r17-speaking-l15-045",
+                "growthDifficultyLevel": 8,
+                "cueZh": "请协商一个复杂旅行解决方案。主题是“旅行保险理赔”。",
+                "partnerLine": "Negotiate a complex travel solution. Topic: a travel insurance claim.",
+                "modelAnswer": "Given a travel insurance claim, I need to confirm the safest available arrangement.",
+                "modelAnswerTranslationZh": "示范表达：旅行保险理赔。",
+                "acceptedAnswers": [
+                  "Given a travel insurance claim, I need to confirm the safest available arrangement."
+                ],
+                "requiredConcepts": [
+                  "a-travel-insurance-claim",
+                  "level-15"
                 ]
               }
             ]
@@ -29718,6 +30978,396 @@
                   "6:15",
                   "confirmation"
                 ]
+              },
+              {
+                "id": "r17-speaking-l01-004",
+                "growthDifficultyLevel": 0,
+                "cueZh": "请说出这个简单旅行回答。主题是“错过转机”。",
+                "partnerLine": "Please say this simple travel answer. Topic: a missed connection.",
+                "modelAnswer": "I need a missed connection.",
+                "modelAnswerTranslationZh": "示范表达：错过转机。",
+                "acceptedAnswers": [
+                  "I need a missed connection."
+                ],
+                "requiredConcepts": [
+                  "a-missed-connection",
+                  "level-1"
+                ]
+              },
+              {
+                "id": "r17-speaking-l01-032",
+                "growthDifficultyLevel": 0,
+                "cueZh": "请说出这个简单旅行回答。主题是“退货请求”。",
+                "partnerLine": "Please say this simple travel answer. Topic: a return request.",
+                "modelAnswer": "I need a return request.",
+                "modelAnswerTranslationZh": "示范表达：退货请求。",
+                "acceptedAnswers": [
+                  "I need a return request."
+                ],
+                "requiredConcepts": [
+                  "a-return-request",
+                  "level-1"
+                ]
+              },
+              {
+                "id": "r17-speaking-l01-060",
+                "growthDifficultyLevel": 0,
+                "cueZh": "请说出这个简单旅行回答。主题是“修改后的行程”。",
+                "partnerLine": "Please say this simple travel answer. Topic: a revised itinerary.",
+                "modelAnswer": "I need a revised itinerary.",
+                "modelAnswerTranslationZh": "示范表达：修改后的行程。",
+                "acceptedAnswers": [
+                  "I need a revised itinerary."
+                ],
+                "requiredConcepts": [
+                  "a-revised-itinerary",
+                  "level-1"
+                ]
+              },
+              {
+                "id": "r17-speaking-l02-021",
+                "growthDifficultyLevel": 0.5,
+                "cueZh": "请用这个简短旅行短语回答。主题是“火车站台”。",
+                "partnerLine": "Answer with this short travel phrase. Topic: a train platform.",
+                "modelAnswer": "I need a train platform, please.",
+                "modelAnswerTranslationZh": "示范表达：火车站台。",
+                "acceptedAnswers": [
+                  "I need a train platform, please."
+                ],
+                "requiredConcepts": [
+                  "a-train-platform",
+                  "level-2"
+                ]
+              },
+              {
+                "id": "r17-speaking-l02-049",
+                "growthDifficultyLevel": 0.5,
+                "cueZh": "请用这个简短旅行短语回答。主题是“行动辅助服务”。",
+                "partnerLine": "Answer with this short travel phrase. Topic: a mobility service.",
+                "modelAnswer": "I need a mobility service, please.",
+                "modelAnswerTranslationZh": "示范表达：行动辅助服务。",
+                "acceptedAnswers": [
+                  "I need a mobility service, please."
+                ],
+                "requiredConcepts": [
+                  "a-mobility-service",
+                  "level-2"
+                ]
+              },
+              {
+                "id": "r17-speaking-l03-010",
+                "growthDifficultyLevel": 1,
+                "cueZh": "请对工作人员说出这个完整回答。主题是“安检”。",
+                "partnerLine": "Give the staff this complete answer. Topic: a security check.",
+                "modelAnswer": "I would like a security check, please.",
+                "modelAnswerTranslationZh": "示范表达：安检。",
+                "acceptedAnswers": [
+                  "I would like a security check, please."
+                ],
+                "requiredConcepts": [
+                  "a-security-check",
+                  "level-3"
+                ]
+              },
+              {
+                "id": "r17-speaking-l03-038",
+                "growthDifficultyLevel": 1,
+                "cueZh": "请对工作人员说出这个完整回答。主题是“无线网络连接”。",
+                "partnerLine": "Give the staff this complete answer. Topic: a Wi-Fi connection.",
+                "modelAnswer": "I would like a Wi-Fi connection, please.",
+                "modelAnswerTranslationZh": "示范表达：无线网络连接。",
+                "acceptedAnswers": [
+                  "I would like a Wi-Fi connection, please."
+                ],
+                "requiredConcepts": [
+                  "a-Wi-Fi-connection",
+                  "level-3"
+                ]
+              },
+              {
+                "id": "r17-speaking-l04-027",
+                "growthDifficultyLevel": 1.5,
+                "cueZh": "请提出这个明确请求。主题是“餐厅座位”。",
+                "partnerLine": "Make this clear request. Topic: a restaurant table.",
+                "modelAnswer": "Could you help me with a restaurant table?",
+                "modelAnswerTranslationZh": "示范表达：餐厅座位。",
+                "acceptedAnswers": [
+                  "Could you help me with a restaurant table?"
+                ],
+                "requiredConcepts": [
+                  "a-restaurant-table",
+                  "level-4"
+                ]
+              },
+              {
+                "id": "r17-speaking-l05-016",
+                "growthDifficultyLevel": 2,
+                "cueZh": "请礼貌说明这个旅行需求。主题是“损坏的淋浴设施”。",
+                "partnerLine": "Explain this travel need politely. Topic: a broken shower.",
+                "modelAnswer": "I need help with a broken shower because it affects my trip.",
+                "modelAnswerTranslationZh": "示范表达：损坏的淋浴设施。",
+                "acceptedAnswers": [
+                  "I need help with a broken shower because it affects my trip."
+                ],
+                "requiredConcepts": [
+                  "a-broken-shower",
+                  "level-5"
+                ]
+              },
+              {
+                "id": "r17-speaking-l06-005",
+                "growthDifficultyLevel": 2.5,
+                "cueZh": "请确认这个旅行细节。主题是“行李额度”。",
+                "partnerLine": "Confirm this travel detail. Topic: a baggage allowance.",
+                "modelAnswer": "Could you confirm a baggage allowance before I continue?",
+                "modelAnswerTranslationZh": "示范表达：行李额度。",
+                "acceptedAnswers": [
+                  "Could you confirm a baggage allowance before I continue?"
+                ],
+                "requiredConcepts": [
+                  "a-baggage-allowance",
+                  "level-6"
+                ]
+              },
+              {
+                "id": "r17-speaking-l06-033",
+                "growthDifficultyLevel": 2.5,
+                "cueZh": "请确认这个旅行细节。主题是“退款状态”。",
+                "partnerLine": "Confirm this travel detail. Topic: a refund status.",
+                "modelAnswer": "Could you confirm a refund status before I continue?",
+                "modelAnswerTranslationZh": "示范表达：退款状态。",
+                "acceptedAnswers": [
+                  "Could you confirm a refund status before I continue?"
+                ],
+                "requiredConcepts": [
+                  "a-refund-status",
+                  "level-6"
+                ]
+              },
+              {
+                "id": "r17-speaking-l07-022",
+                "growthDifficultyLevel": 3,
+                "cueZh": "请说明问题并请求帮助。主题是“公交换乘”。",
+                "partnerLine": "Describe the problem and ask for help. Topic: a bus transfer.",
+                "modelAnswer": "There is a problem with a bus transfer, and I need help.",
+                "modelAnswerTranslationZh": "示范表达：公交换乘。",
+                "acceptedAnswers": [
+                  "There is a problem with a bus transfer, and I need help."
+                ],
+                "requiredConcepts": [
+                  "a-bus-transfer",
+                  "level-7"
+                ]
+              },
+              {
+                "id": "r17-speaking-l08-011",
+                "growthDifficultyLevel": 3.5,
+                "cueZh": "请说明偏好并询问可选方案。主题是“酒店预订”。",
+                "partnerLine": "State your preference and ask for an option. Topic: a hotel reservation.",
+                "modelAnswer": "I prefer a hotel reservation; could you offer an available option?",
+                "modelAnswerTranslationZh": "示范表达：酒店预订。",
+                "acceptedAnswers": [
+                  "I prefer a hotel reservation; could you offer an available option?"
+                ],
+                "requiredConcepts": [
+                  "a-hotel-reservation",
+                  "level-8"
+                ]
+              },
+              {
+                "id": "r17-speaking-l09-028",
+                "growthDifficultyLevel": 4,
+                "cueZh": "请说明变化并请求解决方案。主题是“菜单过敏信息”。",
+                "partnerLine": "Explain the change and request a solution. Topic: a menu allergy.",
+                "modelAnswer": "Because of a menu allergy, I need a practical solution today.",
+                "modelAnswerTranslationZh": "示范表达：菜单过敏信息。",
+                "acceptedAnswers": [
+                  "Because of a menu allergy, I need a practical solution today."
+                ],
+                "requiredConcepts": [
+                  "a-menu-allergy",
+                  "level-9"
+                ]
+              },
+              {
+                "id": "r17-speaking-l10-017",
+                "growthDifficultyLevel": 4.5,
+                "cueZh": "请礼貌投诉并请求处理。主题是“换房”。",
+                "partnerLine": "Make a polite complaint and request action. Topic: a room change.",
+                "modelAnswer": "I am concerned about a room change; could you please review it?",
+                "modelAnswerTranslationZh": "示范表达：换房。",
+                "acceptedAnswers": [
+                  "I am concerned about a room change; could you please review it?"
+                ],
+                "requiredConcepts": [
+                  "a-room-change",
+                  "level-10"
+                ]
+              },
+              {
+                "id": "r17-speaking-l10-045",
+                "growthDifficultyLevel": 4.5,
+                "cueZh": "请礼貌投诉并请求处理。主题是“旅行保险理赔”。",
+                "partnerLine": "Make a polite complaint and request action. Topic: a travel insurance claim.",
+                "modelAnswer": "I am concerned about a travel insurance claim; could you please review it?",
+                "modelAnswerTranslationZh": "示范表达：旅行保险理赔。",
+                "acceptedAnswers": [
+                  "I am concerned about a travel insurance claim; could you please review it?"
+                ],
+                "requiredConcepts": [
+                  "a-travel-insurance-claim",
+                  "level-10"
+                ]
+              },
+              {
+                "id": "r17-speaking-l11-006",
+                "growthDifficultyLevel": 5,
+                "cueZh": "请澄清政策与下一步。主题是“遗失的行李箱”。",
+                "partnerLine": "Clarify the policy and your next step. Topic: a lost suitcase.",
+                "modelAnswer": "Please explain how a lost suitcase applies before I decide what to do.",
+                "modelAnswerTranslationZh": "示范表达：遗失的行李箱。",
+                "acceptedAnswers": [
+                  "Please explain how a lost suitcase applies before I decide what to do."
+                ],
+                "requiredConcepts": [
+                  "a-lost-suitcase",
+                  "level-11"
+                ]
+              },
+              {
+                "id": "r17-speaking-l11-034",
+                "growthDifficultyLevel": 5,
+                "cueZh": "请澄清政策与下一步。主题是“付款争议”。",
+                "partnerLine": "Clarify the policy and your next step. Topic: a payment dispute.",
+                "modelAnswer": "Please explain how a payment dispute applies before I decide what to do.",
+                "modelAnswerTranslationZh": "示范表达：付款争议。",
+                "acceptedAnswers": [
+                  "Please explain how a payment dispute applies before I decide what to do."
+                ],
+                "requiredConcepts": [
+                  "a-payment-dispute",
+                  "level-11"
+                ]
+              },
+              {
+                "id": "r17-speaking-l12-023",
+                "growthDifficultyLevel": 5.5,
+                "cueZh": "请清楚描述安全或服务问题。主题是“地铁票”。",
+                "partnerLine": "Describe a safety or service issue clearly. Topic: a subway ticket.",
+                "modelAnswer": "I need assistance with a subway ticket, and I can provide the details.",
+                "modelAnswerTranslationZh": "示范表达：地铁票。",
+                "acceptedAnswers": [
+                  "I need assistance with a subway ticket, and I can provide the details."
+                ],
+                "requiredConcepts": [
+                  "a-subway-ticket",
+                  "level-12"
+                ]
+              },
+              {
+                "id": "r17-speaking-l13-012",
+                "growthDifficultyLevel": 6,
+                "cueZh": "请解释原因并请求替代方案。主题是“提前入住”。",
+                "partnerLine": "Explain the reason and request an alternative. Topic: an early check-in.",
+                "modelAnswer": "Since an early check-in has changed, I would like to discuss an alternative.",
+                "modelAnswerTranslationZh": "示范表达：提前入住。",
+                "acceptedAnswers": [
+                  "Since an early check-in has changed, I would like to discuss an alternative."
+                ],
+                "requiredConcepts": [
+                  "an-early-check-in",
+                  "level-13"
+                ]
+              },
+              {
+                "id": "r17-speaking-l13-040",
+                "growthDifficultyLevel": 6,
+                "cueZh": "请解释原因并请求替代方案。主题是“医疗症状”。",
+                "partnerLine": "Explain the reason and request an alternative. Topic: a medical symptom.",
+                "modelAnswer": "Since a medical symptom has changed, I would like to discuss an alternative.",
+                "modelAnswerTranslationZh": "示范表达：医疗症状。",
+                "acceptedAnswers": [
+                  "Since a medical symptom has changed, I would like to discuss an alternative."
+                ],
+                "requiredConcepts": [
+                  "a-medical-symptom",
+                  "level-13"
+                ]
+              },
+              {
+                "id": "r17-speaking-l14-001",
+                "growthDifficultyLevel": 7,
+                "cueZh": "请请求有记录的解决方案。主题是“登机牌”。",
+                "partnerLine": "Request a documented resolution. Topic: a boarding pass.",
+                "modelAnswer": "Please confirm in writing how a boarding pass will be resolved.",
+                "modelAnswerTranslationZh": "示范表达：登机牌。",
+                "acceptedAnswers": [
+                  "Please confirm in writing how a boarding pass will be resolved."
+                ],
+                "requiredConcepts": [
+                  "a-boarding-pass",
+                  "level-14"
+                ]
+              },
+              {
+                "id": "r17-speaking-l14-029",
+                "growthDifficultyLevel": 7,
+                "cueZh": "请请求有记录的解决方案。主题是“餐费账单”。",
+                "partnerLine": "Request a documented resolution. Topic: a meal bill.",
+                "modelAnswer": "Please confirm in writing how a meal bill will be resolved.",
+                "modelAnswerTranslationZh": "示范表达：餐费账单。",
+                "acceptedAnswers": [
+                  "Please confirm in writing how a meal bill will be resolved."
+                ],
+                "requiredConcepts": [
+                  "a-meal-bill",
+                  "level-14"
+                ]
+              },
+              {
+                "id": "r17-speaking-l14-057",
+                "growthDifficultyLevel": 7,
+                "cueZh": "请请求有记录的解决方案。主题是“书面确认”。",
+                "partnerLine": "Request a documented resolution. Topic: a written confirmation.",
+                "modelAnswer": "Please confirm in writing how a written confirmation will be resolved.",
+                "modelAnswerTranslationZh": "示范表达：书面确认。",
+                "acceptedAnswers": [
+                  "Please confirm in writing how a written confirmation will be resolved."
+                ],
+                "requiredConcepts": [
+                  "a-written-confirmation",
+                  "level-14"
+                ]
+              },
+              {
+                "id": "r17-speaking-l15-018",
+                "growthDifficultyLevel": 8,
+                "cueZh": "请协商一个复杂旅行解决方案。主题是“酒店收据”。",
+                "partnerLine": "Negotiate a complex travel solution. Topic: a hotel receipt.",
+                "modelAnswer": "Given a hotel receipt, I need to confirm the safest available arrangement.",
+                "modelAnswerTranslationZh": "示范表达：酒店收据。",
+                "acceptedAnswers": [
+                  "Given a hotel receipt, I need to confirm the safest available arrangement."
+                ],
+                "requiredConcepts": [
+                  "a-hotel-receipt",
+                  "level-15"
+                ]
+              },
+              {
+                "id": "r17-speaking-l15-046",
+                "growthDifficultyLevel": 8,
+                "cueZh": "请协商一个复杂旅行解决方案。主题是“取消政策”。",
+                "partnerLine": "Negotiate a complex travel solution. Topic: a cancellation policy.",
+                "modelAnswer": "Given a cancellation policy, I need to confirm the safest available arrangement.",
+                "modelAnswerTranslationZh": "示范表达：取消政策。",
+                "acceptedAnswers": [
+                  "Given a cancellation policy, I need to confirm the safest available arrangement."
+                ],
+                "requiredConcepts": [
+                  "a-cancellation-policy",
+                  "level-15"
+                ]
               }
             ]
           }
@@ -30060,6 +31710,396 @@
                 "requiredConcepts": [
                   "repair",
                   "slowly"
+                ]
+              },
+              {
+                "id": "r17-speaking-l01-005",
+                "growthDifficultyLevel": 0,
+                "cueZh": "请说出这个简单旅行回答。主题是“行李额度”。",
+                "partnerLine": "Please say this simple travel answer. Topic: a baggage allowance.",
+                "modelAnswer": "I need a baggage allowance.",
+                "modelAnswerTranslationZh": "示范表达：行李额度。",
+                "acceptedAnswers": [
+                  "I need a baggage allowance."
+                ],
+                "requiredConcepts": [
+                  "a-baggage-allowance",
+                  "level-1"
+                ]
+              },
+              {
+                "id": "r17-speaking-l01-033",
+                "growthDifficultyLevel": 0,
+                "cueZh": "请说出这个简单旅行回答。主题是“退款状态”。",
+                "partnerLine": "Please say this simple travel answer. Topic: a refund status.",
+                "modelAnswer": "I need a refund status.",
+                "modelAnswerTranslationZh": "示范表达：退款状态。",
+                "acceptedAnswers": [
+                  "I need a refund status."
+                ],
+                "requiredConcepts": [
+                  "a-refund-status",
+                  "level-1"
+                ]
+              },
+              {
+                "id": "r17-speaking-l02-022",
+                "growthDifficultyLevel": 0.5,
+                "cueZh": "请用这个简短旅行短语回答。主题是“公交换乘”。",
+                "partnerLine": "Answer with this short travel phrase. Topic: a bus transfer.",
+                "modelAnswer": "I need a bus transfer, please.",
+                "modelAnswerTranslationZh": "示范表达：公交换乘。",
+                "acceptedAnswers": [
+                  "I need a bus transfer, please."
+                ],
+                "requiredConcepts": [
+                  "a-bus-transfer",
+                  "level-2"
+                ]
+              },
+              {
+                "id": "r17-speaking-l02-050",
+                "growthDifficultyLevel": 0.5,
+                "cueZh": "请用这个简短旅行短语回答。主题是“失物报告”。",
+                "partnerLine": "Answer with this short travel phrase. Topic: a lost property report.",
+                "modelAnswer": "I need a lost property report, please.",
+                "modelAnswerTranslationZh": "示范表达：失物报告。",
+                "acceptedAnswers": [
+                  "I need a lost property report, please."
+                ],
+                "requiredConcepts": [
+                  "a-lost-property-report",
+                  "level-2"
+                ]
+              },
+              {
+                "id": "r17-speaking-l03-011",
+                "growthDifficultyLevel": 1,
+                "cueZh": "请对工作人员说出这个完整回答。主题是“酒店预订”。",
+                "partnerLine": "Give the staff this complete answer. Topic: a hotel reservation.",
+                "modelAnswer": "I would like a hotel reservation, please.",
+                "modelAnswerTranslationZh": "示范表达：酒店预订。",
+                "acceptedAnswers": [
+                  "I would like a hotel reservation, please."
+                ],
+                "requiredConcepts": [
+                  "a-hotel-reservation",
+                  "level-3"
+                ]
+              },
+              {
+                "id": "r17-speaking-l03-039",
+                "growthDifficultyLevel": 1,
+                "cueZh": "请对工作人员说出这个完整回答。主题是“充电线”。",
+                "partnerLine": "Give the staff this complete answer. Topic: a charging cable.",
+                "modelAnswer": "I would like a charging cable, please.",
+                "modelAnswerTranslationZh": "示范表达：充电线。",
+                "acceptedAnswers": [
+                  "I would like a charging cable, please."
+                ],
+                "requiredConcepts": [
+                  "a-charging-cable",
+                  "level-3"
+                ]
+              },
+              {
+                "id": "r17-speaking-l04-028",
+                "growthDifficultyLevel": 1.5,
+                "cueZh": "请提出这个明确请求。主题是“菜单过敏信息”。",
+                "partnerLine": "Make this clear request. Topic: a menu allergy.",
+                "modelAnswer": "Could you help me with a menu allergy?",
+                "modelAnswerTranslationZh": "示范表达：菜单过敏信息。",
+                "acceptedAnswers": [
+                  "Could you help me with a menu allergy?"
+                ],
+                "requiredConcepts": [
+                  "a-menu-allergy",
+                  "level-4"
+                ]
+              },
+              {
+                "id": "r17-speaking-l05-017",
+                "growthDifficultyLevel": 2,
+                "cueZh": "请礼貌说明这个旅行需求。主题是“换房”。",
+                "partnerLine": "Explain this travel need politely. Topic: a room change.",
+                "modelAnswer": "I need help with a room change because it affects my trip.",
+                "modelAnswerTranslationZh": "示范表达：换房。",
+                "acceptedAnswers": [
+                  "I need help with a room change because it affects my trip."
+                ],
+                "requiredConcepts": [
+                  "a-room-change",
+                  "level-5"
+                ]
+              },
+              {
+                "id": "r17-speaking-l06-006",
+                "growthDifficultyLevel": 2.5,
+                "cueZh": "请确认这个旅行细节。主题是“遗失的行李箱”。",
+                "partnerLine": "Confirm this travel detail. Topic: a lost suitcase.",
+                "modelAnswer": "Could you confirm a lost suitcase before I continue?",
+                "modelAnswerTranslationZh": "示范表达：遗失的行李箱。",
+                "acceptedAnswers": [
+                  "Could you confirm a lost suitcase before I continue?"
+                ],
+                "requiredConcepts": [
+                  "a-lost-suitcase",
+                  "level-6"
+                ]
+              },
+              {
+                "id": "r17-speaking-l06-034",
+                "growthDifficultyLevel": 2.5,
+                "cueZh": "请确认这个旅行细节。主题是“付款争议”。",
+                "partnerLine": "Confirm this travel detail. Topic: a payment dispute.",
+                "modelAnswer": "Could you confirm a payment dispute before I continue?",
+                "modelAnswerTranslationZh": "示范表达：付款争议。",
+                "acceptedAnswers": [
+                  "Could you confirm a payment dispute before I continue?"
+                ],
+                "requiredConcepts": [
+                  "a-payment-dispute",
+                  "level-6"
+                ]
+              },
+              {
+                "id": "r17-speaking-l07-023",
+                "growthDifficultyLevel": 3,
+                "cueZh": "请说明问题并请求帮助。主题是“地铁票”。",
+                "partnerLine": "Describe the problem and ask for help. Topic: a subway ticket.",
+                "modelAnswer": "There is a problem with a subway ticket, and I need help.",
+                "modelAnswerTranslationZh": "示范表达：地铁票。",
+                "acceptedAnswers": [
+                  "There is a problem with a subway ticket, and I need help."
+                ],
+                "requiredConcepts": [
+                  "a-subway-ticket",
+                  "level-7"
+                ]
+              },
+              {
+                "id": "r17-speaking-l08-012",
+                "growthDifficultyLevel": 3.5,
+                "cueZh": "请说明偏好并询问可选方案。主题是“提前入住”。",
+                "partnerLine": "State your preference and ask for an option. Topic: an early check-in.",
+                "modelAnswer": "I prefer an early check-in; could you offer an available option?",
+                "modelAnswerTranslationZh": "示范表达：提前入住。",
+                "acceptedAnswers": [
+                  "I prefer an early check-in; could you offer an available option?"
+                ],
+                "requiredConcepts": [
+                  "an-early-check-in",
+                  "level-8"
+                ]
+              },
+              {
+                "id": "r17-speaking-l09-001",
+                "growthDifficultyLevel": 4,
+                "cueZh": "请说明变化并请求解决方案。主题是“登机牌”。",
+                "partnerLine": "Explain the change and request a solution. Topic: a boarding pass.",
+                "modelAnswer": "Because of a boarding pass, I need a practical solution today.",
+                "modelAnswerTranslationZh": "示范表达：登机牌。",
+                "acceptedAnswers": [
+                  "Because of a boarding pass, I need a practical solution today."
+                ],
+                "requiredConcepts": [
+                  "a-boarding-pass",
+                  "level-9"
+                ]
+              },
+              {
+                "id": "r17-speaking-l09-029",
+                "growthDifficultyLevel": 4,
+                "cueZh": "请说明变化并请求解决方案。主题是“餐费账单”。",
+                "partnerLine": "Explain the change and request a solution. Topic: a meal bill.",
+                "modelAnswer": "Because of a meal bill, I need a practical solution today.",
+                "modelAnswerTranslationZh": "示范表达：餐费账单。",
+                "acceptedAnswers": [
+                  "Because of a meal bill, I need a practical solution today."
+                ],
+                "requiredConcepts": [
+                  "a-meal-bill",
+                  "level-9"
+                ]
+              },
+              {
+                "id": "r17-speaking-l10-018",
+                "growthDifficultyLevel": 4.5,
+                "cueZh": "请礼貌投诉并请求处理。主题是“酒店收据”。",
+                "partnerLine": "Make a polite complaint and request action. Topic: a hotel receipt.",
+                "modelAnswer": "I am concerned about a hotel receipt; could you please review it?",
+                "modelAnswerTranslationZh": "示范表达：酒店收据。",
+                "acceptedAnswers": [
+                  "I am concerned about a hotel receipt; could you please review it?"
+                ],
+                "requiredConcepts": [
+                  "a-hotel-receipt",
+                  "level-10"
+                ]
+              },
+              {
+                "id": "r17-speaking-l10-046",
+                "growthDifficultyLevel": 4.5,
+                "cueZh": "请礼貌投诉并请求处理。主题是“取消政策”。",
+                "partnerLine": "Make a polite complaint and request action. Topic: a cancellation policy.",
+                "modelAnswer": "I am concerned about a cancellation policy; could you please review it?",
+                "modelAnswerTranslationZh": "示范表达：取消政策。",
+                "acceptedAnswers": [
+                  "I am concerned about a cancellation policy; could you please review it?"
+                ],
+                "requiredConcepts": [
+                  "a-cancellation-policy",
+                  "level-10"
+                ]
+              },
+              {
+                "id": "r17-speaking-l11-007",
+                "growthDifficultyLevel": 5,
+                "cueZh": "请澄清政策与下一步。主题是“损坏的行李”。",
+                "partnerLine": "Clarify the policy and your next step. Topic: a damaged bag.",
+                "modelAnswer": "Please explain how a damaged bag applies before I decide what to do.",
+                "modelAnswerTranslationZh": "示范表达：损坏的行李。",
+                "acceptedAnswers": [
+                  "Please explain how a damaged bag applies before I decide what to do."
+                ],
+                "requiredConcepts": [
+                  "a-damaged-bag",
+                  "level-11"
+                ]
+              },
+              {
+                "id": "r17-speaking-l11-035",
+                "growthDifficultyLevel": 5,
+                "cueZh": "请澄清政策与下一步。主题是“货币兑换”。",
+                "partnerLine": "Clarify the policy and your next step. Topic: a currency exchange.",
+                "modelAnswer": "Please explain how a currency exchange applies before I decide what to do.",
+                "modelAnswerTranslationZh": "示范表达：货币兑换。",
+                "acceptedAnswers": [
+                  "Please explain how a currency exchange applies before I decide what to do."
+                ],
+                "requiredConcepts": [
+                  "a-currency-exchange",
+                  "level-11"
+                ]
+              },
+              {
+                "id": "r17-speaking-l12-024",
+                "growthDifficultyLevel": 5.5,
+                "cueZh": "请清楚描述安全或服务问题。主题是“租车”。",
+                "partnerLine": "Describe a safety or service issue clearly. Topic: a rental car.",
+                "modelAnswer": "I need assistance with a rental car, and I can provide the details.",
+                "modelAnswerTranslationZh": "示范表达：租车。",
+                "acceptedAnswers": [
+                  "I need assistance with a rental car, and I can provide the details."
+                ],
+                "requiredConcepts": [
+                  "a-rental-car",
+                  "level-12"
+                ]
+              },
+              {
+                "id": "r17-speaking-l13-013",
+                "growthDifficultyLevel": 6,
+                "cueZh": "请解释原因并请求替代方案。主题是“延迟退房”。",
+                "partnerLine": "Explain the reason and request an alternative. Topic: a late checkout.",
+                "modelAnswer": "Since a late checkout has changed, I would like to discuss an alternative.",
+                "modelAnswerTranslationZh": "示范表达：延迟退房。",
+                "acceptedAnswers": [
+                  "Since a late checkout has changed, I would like to discuss an alternative."
+                ],
+                "requiredConcepts": [
+                  "a-late-checkout",
+                  "level-13"
+                ]
+              },
+              {
+                "id": "r17-speaking-l13-041",
+                "growthDifficultyLevel": 6,
+                "cueZh": "请解释原因并请求替代方案。主题是“药房订单”。",
+                "partnerLine": "Explain the reason and request an alternative. Topic: a pharmacy order.",
+                "modelAnswer": "Since a pharmacy order has changed, I would like to discuss an alternative.",
+                "modelAnswerTranslationZh": "示范表达：药房订单。",
+                "acceptedAnswers": [
+                  "Since a pharmacy order has changed, I would like to discuss an alternative."
+                ],
+                "requiredConcepts": [
+                  "a-pharmacy-order",
+                  "level-13"
+                ]
+              },
+              {
+                "id": "r17-speaking-l14-002",
+                "growthDifficultyLevel": 7,
+                "cueZh": "请请求有记录的解决方案。主题是“登机口变更”。",
+                "partnerLine": "Request a documented resolution. Topic: a gate change.",
+                "modelAnswer": "Please confirm in writing how a gate change will be resolved.",
+                "modelAnswerTranslationZh": "示范表达：登机口变更。",
+                "acceptedAnswers": [
+                  "Please confirm in writing how a gate change will be resolved."
+                ],
+                "requiredConcepts": [
+                  "a-gate-change",
+                  "level-14"
+                ]
+              },
+              {
+                "id": "r17-speaking-l14-030",
+                "growthDifficultyLevel": 7,
+                "cueZh": "请请求有记录的解决方案。主题是“餐点替换”。",
+                "partnerLine": "Request a documented resolution. Topic: a food substitution.",
+                "modelAnswer": "Please confirm in writing how a food substitution will be resolved.",
+                "modelAnswerTranslationZh": "示范表达：餐点替换。",
+                "acceptedAnswers": [
+                  "Please confirm in writing how a food substitution will be resolved."
+                ],
+                "requiredConcepts": [
+                  "a-food-substitution",
+                  "level-14"
+                ]
+              },
+              {
+                "id": "r17-speaking-l14-058",
+                "growthDifficultyLevel": 7,
+                "cueZh": "请请求有记录的解决方案。主题是“客服案件”。",
+                "partnerLine": "Request a documented resolution. Topic: a customer service case.",
+                "modelAnswer": "Please confirm in writing how a customer service case will be resolved.",
+                "modelAnswerTranslationZh": "示范表达：客服案件。",
+                "acceptedAnswers": [
+                  "Please confirm in writing how a customer service case will be resolved."
+                ],
+                "requiredConcepts": [
+                  "a-customer-service-case",
+                  "level-14"
+                ]
+              },
+              {
+                "id": "r17-speaking-l15-019",
+                "growthDifficultyLevel": 8,
+                "cueZh": "请协商一个复杂旅行解决方案。主题是“机场接驳车”。",
+                "partnerLine": "Negotiate a complex travel solution. Topic: an airport shuttle.",
+                "modelAnswer": "Given an airport shuttle, I need to confirm the safest available arrangement.",
+                "modelAnswerTranslationZh": "示范表达：机场接驳车。",
+                "acceptedAnswers": [
+                  "Given an airport shuttle, I need to confirm the safest available arrangement."
+                ],
+                "requiredConcepts": [
+                  "an-airport-shuttle",
+                  "level-15"
+                ]
+              },
+              {
+                "id": "r17-speaking-l15-047",
+                "growthDifficultyLevel": 8,
+                "cueZh": "请协商一个复杂旅行解决方案。主题是“预订修改”。",
+                "partnerLine": "Negotiate a complex travel solution. Topic: a booking amendment.",
+                "modelAnswer": "Given a booking amendment, I need to confirm the safest available arrangement.",
+                "modelAnswerTranslationZh": "示范表达：预订修改。",
+                "acceptedAnswers": [
+                  "Given a booking amendment, I need to confirm the safest available arrangement."
+                ],
+                "requiredConcepts": [
+                  "a-booking-amendment",
+                  "level-15"
                 ]
               }
             ]
@@ -30406,6 +32446,411 @@
                 "requiredConcepts": [
                   "sandwich",
                   "without-onions"
+                ]
+              },
+              {
+                "id": "r17-speaking-l01-006",
+                "growthDifficultyLevel": 0,
+                "cueZh": "请说出这个简单旅行回答。主题是“遗失的行李箱”。",
+                "partnerLine": "Please say this simple travel answer. Topic: a lost suitcase.",
+                "modelAnswer": "I need a lost suitcase.",
+                "modelAnswerTranslationZh": "示范表达：遗失的行李箱。",
+                "acceptedAnswers": [
+                  "I need a lost suitcase."
+                ],
+                "requiredConcepts": [
+                  "a-lost-suitcase",
+                  "level-1"
+                ]
+              },
+              {
+                "id": "r17-speaking-l01-034",
+                "growthDifficultyLevel": 0,
+                "cueZh": "请说出这个简单旅行回答。主题是“付款争议”。",
+                "partnerLine": "Please say this simple travel answer. Topic: a payment dispute.",
+                "modelAnswer": "I need a payment dispute.",
+                "modelAnswerTranslationZh": "示范表达：付款争议。",
+                "acceptedAnswers": [
+                  "I need a payment dispute."
+                ],
+                "requiredConcepts": [
+                  "a-payment-dispute",
+                  "level-1"
+                ]
+              },
+              {
+                "id": "r17-speaking-l02-023",
+                "growthDifficultyLevel": 0.5,
+                "cueZh": "请用这个简短旅行短语回答。主题是“地铁票”。",
+                "partnerLine": "Answer with this short travel phrase. Topic: a subway ticket.",
+                "modelAnswer": "I need a subway ticket, please.",
+                "modelAnswerTranslationZh": "示范表达：地铁票。",
+                "acceptedAnswers": [
+                  "I need a subway ticket, please."
+                ],
+                "requiredConcepts": [
+                  "a-subway-ticket",
+                  "level-2"
+                ]
+              },
+              {
+                "id": "r17-speaking-l02-051",
+                "growthDifficultyLevel": 0.5,
+                "cueZh": "请用这个简短旅行短语回答。主题是“旅行团取消”。",
+                "partnerLine": "Answer with this short travel phrase. Topic: a tour cancellation.",
+                "modelAnswer": "I need a tour cancellation, please.",
+                "modelAnswerTranslationZh": "示范表达：旅行团取消。",
+                "acceptedAnswers": [
+                  "I need a tour cancellation, please."
+                ],
+                "requiredConcepts": [
+                  "a-tour-cancellation",
+                  "level-2"
+                ]
+              },
+              {
+                "id": "r17-speaking-l03-012",
+                "growthDifficultyLevel": 1,
+                "cueZh": "请对工作人员说出这个完整回答。主题是“提前入住”。",
+                "partnerLine": "Give the staff this complete answer. Topic: an early check-in.",
+                "modelAnswer": "I would like an early check-in, please.",
+                "modelAnswerTranslationZh": "示范表达：提前入住。",
+                "acceptedAnswers": [
+                  "I would like an early check-in, please."
+                ],
+                "requiredConcepts": [
+                  "an-early-check-in",
+                  "level-3"
+                ]
+              },
+              {
+                "id": "r17-speaking-l03-040",
+                "growthDifficultyLevel": 1,
+                "cueZh": "请对工作人员说出这个完整回答。主题是“医疗症状”。",
+                "partnerLine": "Give the staff this complete answer. Topic: a medical symptom.",
+                "modelAnswer": "I would like a medical symptom, please.",
+                "modelAnswerTranslationZh": "示范表达：医疗症状。",
+                "acceptedAnswers": [
+                  "I would like a medical symptom, please."
+                ],
+                "requiredConcepts": [
+                  "a-medical-symptom",
+                  "level-3"
+                ]
+              },
+              {
+                "id": "r17-speaking-l04-001",
+                "growthDifficultyLevel": 1.5,
+                "cueZh": "请提出这个明确请求。主题是“登机牌”。",
+                "partnerLine": "Make this clear request. Topic: a boarding pass.",
+                "modelAnswer": "Could you help me with a boarding pass?",
+                "modelAnswerTranslationZh": "示范表达：登机牌。",
+                "acceptedAnswers": [
+                  "Could you help me with a boarding pass?"
+                ],
+                "requiredConcepts": [
+                  "a-boarding-pass",
+                  "level-4"
+                ]
+              },
+              {
+                "id": "r17-speaking-l04-029",
+                "growthDifficultyLevel": 1.5,
+                "cueZh": "请提出这个明确请求。主题是“餐费账单”。",
+                "partnerLine": "Make this clear request. Topic: a meal bill.",
+                "modelAnswer": "Could you help me with a meal bill?",
+                "modelAnswerTranslationZh": "示范表达：餐费账单。",
+                "acceptedAnswers": [
+                  "Could you help me with a meal bill?"
+                ],
+                "requiredConcepts": [
+                  "a-meal-bill",
+                  "level-4"
+                ]
+              },
+              {
+                "id": "r17-speaking-l05-018",
+                "growthDifficultyLevel": 2,
+                "cueZh": "请礼貌说明这个旅行需求。主题是“酒店收据”。",
+                "partnerLine": "Explain this travel need politely. Topic: a hotel receipt.",
+                "modelAnswer": "I need help with a hotel receipt because it affects my trip.",
+                "modelAnswerTranslationZh": "示范表达：酒店收据。",
+                "acceptedAnswers": [
+                  "I need help with a hotel receipt because it affects my trip."
+                ],
+                "requiredConcepts": [
+                  "a-hotel-receipt",
+                  "level-5"
+                ]
+              },
+              {
+                "id": "r17-speaking-l06-007",
+                "growthDifficultyLevel": 2.5,
+                "cueZh": "请确认这个旅行细节。主题是“损坏的行李”。",
+                "partnerLine": "Confirm this travel detail. Topic: a damaged bag.",
+                "modelAnswer": "Could you confirm a damaged bag before I continue?",
+                "modelAnswerTranslationZh": "示范表达：损坏的行李。",
+                "acceptedAnswers": [
+                  "Could you confirm a damaged bag before I continue?"
+                ],
+                "requiredConcepts": [
+                  "a-damaged-bag",
+                  "level-6"
+                ]
+              },
+              {
+                "id": "r17-speaking-l06-035",
+                "growthDifficultyLevel": 2.5,
+                "cueZh": "请确认这个旅行细节。主题是“货币兑换”。",
+                "partnerLine": "Confirm this travel detail. Topic: a currency exchange.",
+                "modelAnswer": "Could you confirm a currency exchange before I continue?",
+                "modelAnswerTranslationZh": "示范表达：货币兑换。",
+                "acceptedAnswers": [
+                  "Could you confirm a currency exchange before I continue?"
+                ],
+                "requiredConcepts": [
+                  "a-currency-exchange",
+                  "level-6"
+                ]
+              },
+              {
+                "id": "r17-speaking-l07-024",
+                "growthDifficultyLevel": 3,
+                "cueZh": "请说明问题并请求帮助。主题是“租车”。",
+                "partnerLine": "Describe the problem and ask for help. Topic: a rental car.",
+                "modelAnswer": "There is a problem with a rental car, and I need help.",
+                "modelAnswerTranslationZh": "示范表达：租车。",
+                "acceptedAnswers": [
+                  "There is a problem with a rental car, and I need help."
+                ],
+                "requiredConcepts": [
+                  "a-rental-car",
+                  "level-7"
+                ]
+              },
+              {
+                "id": "r17-speaking-l08-013",
+                "growthDifficultyLevel": 3.5,
+                "cueZh": "请说明偏好并询问可选方案。主题是“延迟退房”。",
+                "partnerLine": "State your preference and ask for an option. Topic: a late checkout.",
+                "modelAnswer": "I prefer a late checkout; could you offer an available option?",
+                "modelAnswerTranslationZh": "示范表达：延迟退房。",
+                "acceptedAnswers": [
+                  "I prefer a late checkout; could you offer an available option?"
+                ],
+                "requiredConcepts": [
+                  "a-late-checkout",
+                  "level-8"
+                ]
+              },
+              {
+                "id": "r17-speaking-l09-002",
+                "growthDifficultyLevel": 4,
+                "cueZh": "请说明变化并请求解决方案。主题是“登机口变更”。",
+                "partnerLine": "Explain the change and request a solution. Topic: a gate change.",
+                "modelAnswer": "Because of a gate change, I need a practical solution today.",
+                "modelAnswerTranslationZh": "示范表达：登机口变更。",
+                "acceptedAnswers": [
+                  "Because of a gate change, I need a practical solution today."
+                ],
+                "requiredConcepts": [
+                  "a-gate-change",
+                  "level-9"
+                ]
+              },
+              {
+                "id": "r17-speaking-l09-030",
+                "growthDifficultyLevel": 4,
+                "cueZh": "请说明变化并请求解决方案。主题是“餐点替换”。",
+                "partnerLine": "Explain the change and request a solution. Topic: a food substitution.",
+                "modelAnswer": "Because of a food substitution, I need a practical solution today.",
+                "modelAnswerTranslationZh": "示范表达：餐点替换。",
+                "acceptedAnswers": [
+                  "Because of a food substitution, I need a practical solution today."
+                ],
+                "requiredConcepts": [
+                  "a-food-substitution",
+                  "level-9"
+                ]
+              },
+              {
+                "id": "r17-speaking-l10-019",
+                "growthDifficultyLevel": 4.5,
+                "cueZh": "请礼貌投诉并请求处理。主题是“机场接驳车”。",
+                "partnerLine": "Make a polite complaint and request action. Topic: an airport shuttle.",
+                "modelAnswer": "I am concerned about an airport shuttle; could you please review it?",
+                "modelAnswerTranslationZh": "示范表达：机场接驳车。",
+                "acceptedAnswers": [
+                  "I am concerned about an airport shuttle; could you please review it?"
+                ],
+                "requiredConcepts": [
+                  "an-airport-shuttle",
+                  "level-10"
+                ]
+              },
+              {
+                "id": "r17-speaking-l10-047",
+                "growthDifficultyLevel": 4.5,
+                "cueZh": "请礼貌投诉并请求处理。主题是“预订修改”。",
+                "partnerLine": "Make a polite complaint and request action. Topic: a booking amendment.",
+                "modelAnswer": "I am concerned about a booking amendment; could you please review it?",
+                "modelAnswerTranslationZh": "示范表达：预订修改。",
+                "acceptedAnswers": [
+                  "I am concerned about a booking amendment; could you please review it?"
+                ],
+                "requiredConcepts": [
+                  "a-booking-amendment",
+                  "level-10"
+                ]
+              },
+              {
+                "id": "r17-speaking-l11-008",
+                "growthDifficultyLevel": 5,
+                "cueZh": "请澄清政策与下一步。主题是“护照问题”。",
+                "partnerLine": "Clarify the policy and your next step. Topic: a passport problem.",
+                "modelAnswer": "Please explain how a passport problem applies before I decide what to do.",
+                "modelAnswerTranslationZh": "示范表达：护照问题。",
+                "acceptedAnswers": [
+                  "Please explain how a passport problem applies before I decide what to do."
+                ],
+                "requiredConcepts": [
+                  "a-passport-problem",
+                  "level-11"
+                ]
+              },
+              {
+                "id": "r17-speaking-l11-036",
+                "growthDifficultyLevel": 5,
+                "cueZh": "请澄清政策与下一步。主题是“银行卡问题”。",
+                "partnerLine": "Clarify the policy and your next step. Topic: a bank card issue.",
+                "modelAnswer": "Please explain how a bank card issue applies before I decide what to do.",
+                "modelAnswerTranslationZh": "示范表达：银行卡问题。",
+                "acceptedAnswers": [
+                  "Please explain how a bank card issue applies before I decide what to do."
+                ],
+                "requiredConcepts": [
+                  "a-bank-card-issue",
+                  "level-11"
+                ]
+              },
+              {
+                "id": "r17-speaking-l12-025",
+                "growthDifficultyLevel": 5.5,
+                "cueZh": "请清楚描述安全或服务问题。主题是“停车费”。",
+                "partnerLine": "Describe a safety or service issue clearly. Topic: a parking fee.",
+                "modelAnswer": "I need assistance with a parking fee, and I can provide the details.",
+                "modelAnswerTranslationZh": "示范表达：停车费。",
+                "acceptedAnswers": [
+                  "I need assistance with a parking fee, and I can provide the details."
+                ],
+                "requiredConcepts": [
+                  "a-parking-fee",
+                  "level-12"
+                ]
+              },
+              {
+                "id": "r17-speaking-l13-014",
+                "growthDifficultyLevel": 6,
+                "cueZh": "请解释原因并请求替代方案。主题是“房间钥匙”。",
+                "partnerLine": "Explain the reason and request an alternative. Topic: a room key.",
+                "modelAnswer": "Since a room key has changed, I would like to discuss an alternative.",
+                "modelAnswerTranslationZh": "示范表达：房间钥匙。",
+                "acceptedAnswers": [
+                  "Since a room key has changed, I would like to discuss an alternative."
+                ],
+                "requiredConcepts": [
+                  "a-room-key",
+                  "level-13"
+                ]
+              },
+              {
+                "id": "r17-speaking-l13-042",
+                "growthDifficultyLevel": 6,
+                "cueZh": "请解释原因并请求替代方案。主题是“紧急联系人”。",
+                "partnerLine": "Explain the reason and request an alternative. Topic: an emergency contact.",
+                "modelAnswer": "Since an emergency contact has changed, I would like to discuss an alternative.",
+                "modelAnswerTranslationZh": "示范表达：紧急联系人。",
+                "acceptedAnswers": [
+                  "Since an emergency contact has changed, I would like to discuss an alternative."
+                ],
+                "requiredConcepts": [
+                  "an-emergency-contact",
+                  "level-13"
+                ]
+              },
+              {
+                "id": "r17-speaking-l14-003",
+                "growthDifficultyLevel": 7,
+                "cueZh": "请请求有记录的解决方案。主题是“航班延误”。",
+                "partnerLine": "Request a documented resolution. Topic: a delayed flight.",
+                "modelAnswer": "Please confirm in writing how a delayed flight will be resolved.",
+                "modelAnswerTranslationZh": "示范表达：航班延误。",
+                "acceptedAnswers": [
+                  "Please confirm in writing how a delayed flight will be resolved."
+                ],
+                "requiredConcepts": [
+                  "a-delayed-flight",
+                  "level-14"
+                ]
+              },
+              {
+                "id": "r17-speaking-l14-031",
+                "growthDifficultyLevel": 7,
+                "cueZh": "请请求有记录的解决方案。主题是“衣服尺码”。",
+                "partnerLine": "Request a documented resolution. Topic: a clothing size.",
+                "modelAnswer": "Please confirm in writing how a clothing size will be resolved.",
+                "modelAnswerTranslationZh": "示范表达：衣服尺码。",
+                "acceptedAnswers": [
+                  "Please confirm in writing how a clothing size will be resolved."
+                ],
+                "requiredConcepts": [
+                  "a-clothing-size",
+                  "level-14"
+                ]
+              },
+              {
+                "id": "r17-speaking-l14-059",
+                "growthDifficultyLevel": 7,
+                "cueZh": "请请求有记录的解决方案。主题是“政策例外”。",
+                "partnerLine": "Request a documented resolution. Topic: a policy exception.",
+                "modelAnswer": "Please confirm in writing how a policy exception will be resolved.",
+                "modelAnswerTranslationZh": "示范表达：政策例外。",
+                "acceptedAnswers": [
+                  "Please confirm in writing how a policy exception will be resolved."
+                ],
+                "requiredConcepts": [
+                  "a-policy-exception",
+                  "level-14"
+                ]
+              },
+              {
+                "id": "r17-speaking-l15-020",
+                "growthDifficultyLevel": 8,
+                "cueZh": "请协商一个复杂旅行解决方案。主题是“出租车费用”。",
+                "partnerLine": "Negotiate a complex travel solution. Topic: a taxi fare.",
+                "modelAnswer": "Given a taxi fare, I need to confirm the safest available arrangement.",
+                "modelAnswerTranslationZh": "示范表达：出租车费用。",
+                "acceptedAnswers": [
+                  "Given a taxi fare, I need to confirm the safest available arrangement."
+                ],
+                "requiredConcepts": [
+                  "a-taxi-fare",
+                  "level-15"
+                ]
+              },
+              {
+                "id": "r17-speaking-l15-048",
+                "growthDifficultyLevel": 8,
+                "cueZh": "请协商一个复杂旅行解决方案。主题是“无障碍入口”。",
+                "partnerLine": "Negotiate a complex travel solution. Topic: an accessible entrance.",
+                "modelAnswer": "Given an accessible entrance, I need to confirm the safest available arrangement.",
+                "modelAnswerTranslationZh": "示范表达：无障碍入口。",
+                "acceptedAnswers": [
+                  "Given an accessible entrance, I need to confirm the safest available arrangement."
+                ],
+                "requiredConcepts": [
+                  "an-accessible-entrance",
+                  "level-15"
                 ]
               }
             ]
@@ -30760,6 +33205,411 @@
                 "requiredConcepts": [
                   "repeat-request",
                   "price"
+                ]
+              },
+              {
+                "id": "r17-speaking-l01-007",
+                "growthDifficultyLevel": 0,
+                "cueZh": "请说出这个简单旅行回答。主题是“损坏的行李”。",
+                "partnerLine": "Please say this simple travel answer. Topic: a damaged bag.",
+                "modelAnswer": "I need a damaged bag.",
+                "modelAnswerTranslationZh": "示范表达：损坏的行李。",
+                "acceptedAnswers": [
+                  "I need a damaged bag."
+                ],
+                "requiredConcepts": [
+                  "a-damaged-bag",
+                  "level-1"
+                ]
+              },
+              {
+                "id": "r17-speaking-l01-035",
+                "growthDifficultyLevel": 0,
+                "cueZh": "请说出这个简单旅行回答。主题是“货币兑换”。",
+                "partnerLine": "Please say this simple travel answer. Topic: a currency exchange.",
+                "modelAnswer": "I need a currency exchange.",
+                "modelAnswerTranslationZh": "示范表达：货币兑换。",
+                "acceptedAnswers": [
+                  "I need a currency exchange."
+                ],
+                "requiredConcepts": [
+                  "a-currency-exchange",
+                  "level-1"
+                ]
+              },
+              {
+                "id": "r17-speaking-l02-024",
+                "growthDifficultyLevel": 0.5,
+                "cueZh": "请用这个简短旅行短语回答。主题是“租车”。",
+                "partnerLine": "Answer with this short travel phrase. Topic: a rental car.",
+                "modelAnswer": "I need a rental car, please.",
+                "modelAnswerTranslationZh": "示范表达：租车。",
+                "acceptedAnswers": [
+                  "I need a rental car, please."
+                ],
+                "requiredConcepts": [
+                  "a-rental-car",
+                  "level-2"
+                ]
+              },
+              {
+                "id": "r17-speaking-l02-052",
+                "growthDifficultyLevel": 0.5,
+                "cueZh": "请用这个简短旅行短语回答。主题是“行程冲突”。",
+                "partnerLine": "Answer with this short travel phrase. Topic: a schedule conflict.",
+                "modelAnswer": "I need a schedule conflict, please.",
+                "modelAnswerTranslationZh": "示范表达：行程冲突。",
+                "acceptedAnswers": [
+                  "I need a schedule conflict, please."
+                ],
+                "requiredConcepts": [
+                  "a-schedule-conflict",
+                  "level-2"
+                ]
+              },
+              {
+                "id": "r17-speaking-l03-013",
+                "growthDifficultyLevel": 1,
+                "cueZh": "请对工作人员说出这个完整回答。主题是“延迟退房”。",
+                "partnerLine": "Give the staff this complete answer. Topic: a late checkout.",
+                "modelAnswer": "I would like a late checkout, please.",
+                "modelAnswerTranslationZh": "示范表达：延迟退房。",
+                "acceptedAnswers": [
+                  "I would like a late checkout, please."
+                ],
+                "requiredConcepts": [
+                  "a-late-checkout",
+                  "level-3"
+                ]
+              },
+              {
+                "id": "r17-speaking-l03-041",
+                "growthDifficultyLevel": 1,
+                "cueZh": "请对工作人员说出这个完整回答。主题是“药房订单”。",
+                "partnerLine": "Give the staff this complete answer. Topic: a pharmacy order.",
+                "modelAnswer": "I would like a pharmacy order, please.",
+                "modelAnswerTranslationZh": "示范表达：药房订单。",
+                "acceptedAnswers": [
+                  "I would like a pharmacy order, please."
+                ],
+                "requiredConcepts": [
+                  "a-pharmacy-order",
+                  "level-3"
+                ]
+              },
+              {
+                "id": "r17-speaking-l04-002",
+                "growthDifficultyLevel": 1.5,
+                "cueZh": "请提出这个明确请求。主题是“登机口变更”。",
+                "partnerLine": "Make this clear request. Topic: a gate change.",
+                "modelAnswer": "Could you help me with a gate change?",
+                "modelAnswerTranslationZh": "示范表达：登机口变更。",
+                "acceptedAnswers": [
+                  "Could you help me with a gate change?"
+                ],
+                "requiredConcepts": [
+                  "a-gate-change",
+                  "level-4"
+                ]
+              },
+              {
+                "id": "r17-speaking-l04-030",
+                "growthDifficultyLevel": 1.5,
+                "cueZh": "请提出这个明确请求。主题是“餐点替换”。",
+                "partnerLine": "Make this clear request. Topic: a food substitution.",
+                "modelAnswer": "Could you help me with a food substitution?",
+                "modelAnswerTranslationZh": "示范表达：餐点替换。",
+                "acceptedAnswers": [
+                  "Could you help me with a food substitution?"
+                ],
+                "requiredConcepts": [
+                  "a-food-substitution",
+                  "level-4"
+                ]
+              },
+              {
+                "id": "r17-speaking-l05-019",
+                "growthDifficultyLevel": 2,
+                "cueZh": "请礼貌说明这个旅行需求。主题是“机场接驳车”。",
+                "partnerLine": "Explain this travel need politely. Topic: an airport shuttle.",
+                "modelAnswer": "I need help with an airport shuttle because it affects my trip.",
+                "modelAnswerTranslationZh": "示范表达：机场接驳车。",
+                "acceptedAnswers": [
+                  "I need help with an airport shuttle because it affects my trip."
+                ],
+                "requiredConcepts": [
+                  "an-airport-shuttle",
+                  "level-5"
+                ]
+              },
+              {
+                "id": "r17-speaking-l06-008",
+                "growthDifficultyLevel": 2.5,
+                "cueZh": "请确认这个旅行细节。主题是“护照问题”。",
+                "partnerLine": "Confirm this travel detail. Topic: a passport problem.",
+                "modelAnswer": "Could you confirm a passport problem before I continue?",
+                "modelAnswerTranslationZh": "示范表达：护照问题。",
+                "acceptedAnswers": [
+                  "Could you confirm a passport problem before I continue?"
+                ],
+                "requiredConcepts": [
+                  "a-passport-problem",
+                  "level-6"
+                ]
+              },
+              {
+                "id": "r17-speaking-l06-036",
+                "growthDifficultyLevel": 2.5,
+                "cueZh": "请确认这个旅行细节。主题是“银行卡问题”。",
+                "partnerLine": "Confirm this travel detail. Topic: a bank card issue.",
+                "modelAnswer": "Could you confirm a bank card issue before I continue?",
+                "modelAnswerTranslationZh": "示范表达：银行卡问题。",
+                "acceptedAnswers": [
+                  "Could you confirm a bank card issue before I continue?"
+                ],
+                "requiredConcepts": [
+                  "a-bank-card-issue",
+                  "level-6"
+                ]
+              },
+              {
+                "id": "r17-speaking-l07-025",
+                "growthDifficultyLevel": 3,
+                "cueZh": "请说明问题并请求帮助。主题是“停车费”。",
+                "partnerLine": "Describe the problem and ask for help. Topic: a parking fee.",
+                "modelAnswer": "There is a problem with a parking fee, and I need help.",
+                "modelAnswerTranslationZh": "示范表达：停车费。",
+                "acceptedAnswers": [
+                  "There is a problem with a parking fee, and I need help."
+                ],
+                "requiredConcepts": [
+                  "a-parking-fee",
+                  "level-7"
+                ]
+              },
+              {
+                "id": "r17-speaking-l08-014",
+                "growthDifficultyLevel": 3.5,
+                "cueZh": "请说明偏好并询问可选方案。主题是“房间钥匙”。",
+                "partnerLine": "State your preference and ask for an option. Topic: a room key.",
+                "modelAnswer": "I prefer a room key; could you offer an available option?",
+                "modelAnswerTranslationZh": "示范表达：房间钥匙。",
+                "acceptedAnswers": [
+                  "I prefer a room key; could you offer an available option?"
+                ],
+                "requiredConcepts": [
+                  "a-room-key",
+                  "level-8"
+                ]
+              },
+              {
+                "id": "r17-speaking-l09-003",
+                "growthDifficultyLevel": 4,
+                "cueZh": "请说明变化并请求解决方案。主题是“航班延误”。",
+                "partnerLine": "Explain the change and request a solution. Topic: a delayed flight.",
+                "modelAnswer": "Because of a delayed flight, I need a practical solution today.",
+                "modelAnswerTranslationZh": "示范表达：航班延误。",
+                "acceptedAnswers": [
+                  "Because of a delayed flight, I need a practical solution today."
+                ],
+                "requiredConcepts": [
+                  "a-delayed-flight",
+                  "level-9"
+                ]
+              },
+              {
+                "id": "r17-speaking-l09-031",
+                "growthDifficultyLevel": 4,
+                "cueZh": "请说明变化并请求解决方案。主题是“衣服尺码”。",
+                "partnerLine": "Explain the change and request a solution. Topic: a clothing size.",
+                "modelAnswer": "Because of a clothing size, I need a practical solution today.",
+                "modelAnswerTranslationZh": "示范表达：衣服尺码。",
+                "acceptedAnswers": [
+                  "Because of a clothing size, I need a practical solution today."
+                ],
+                "requiredConcepts": [
+                  "a-clothing-size",
+                  "level-9"
+                ]
+              },
+              {
+                "id": "r17-speaking-l10-020",
+                "growthDifficultyLevel": 4.5,
+                "cueZh": "请礼貌投诉并请求处理。主题是“出租车费用”。",
+                "partnerLine": "Make a polite complaint and request action. Topic: a taxi fare.",
+                "modelAnswer": "I am concerned about a taxi fare; could you please review it?",
+                "modelAnswerTranslationZh": "示范表达：出租车费用。",
+                "acceptedAnswers": [
+                  "I am concerned about a taxi fare; could you please review it?"
+                ],
+                "requiredConcepts": [
+                  "a-taxi-fare",
+                  "level-10"
+                ]
+              },
+              {
+                "id": "r17-speaking-l10-048",
+                "growthDifficultyLevel": 4.5,
+                "cueZh": "请礼貌投诉并请求处理。主题是“无障碍入口”。",
+                "partnerLine": "Make a polite complaint and request action. Topic: an accessible entrance.",
+                "modelAnswer": "I am concerned about an accessible entrance; could you please review it?",
+                "modelAnswerTranslationZh": "示范表达：无障碍入口。",
+                "acceptedAnswers": [
+                  "I am concerned about an accessible entrance; could you please review it?"
+                ],
+                "requiredConcepts": [
+                  "an-accessible-entrance",
+                  "level-10"
+                ]
+              },
+              {
+                "id": "r17-speaking-l11-009",
+                "growthDifficultyLevel": 5,
+                "cueZh": "请澄清政策与下一步。主题是“签证问题”。",
+                "partnerLine": "Clarify the policy and your next step. Topic: a visa question.",
+                "modelAnswer": "Please explain how a visa question applies before I decide what to do.",
+                "modelAnswerTranslationZh": "示范表达：签证问题。",
+                "acceptedAnswers": [
+                  "Please explain how a visa question applies before I decide what to do."
+                ],
+                "requiredConcepts": [
+                  "a-visa-question",
+                  "level-11"
+                ]
+              },
+              {
+                "id": "r17-speaking-l11-037",
+                "growthDifficultyLevel": 5,
+                "cueZh": "请澄清政策与下一步。主题是“电话套餐”。",
+                "partnerLine": "Clarify the policy and your next step. Topic: a phone plan.",
+                "modelAnswer": "Please explain how a phone plan applies before I decide what to do.",
+                "modelAnswerTranslationZh": "示范表达：电话套餐。",
+                "acceptedAnswers": [
+                  "Please explain how a phone plan applies before I decide what to do."
+                ],
+                "requiredConcepts": [
+                  "a-phone-plan",
+                  "level-11"
+                ]
+              },
+              {
+                "id": "r17-speaking-l12-026",
+                "growthDifficultyLevel": 5.5,
+                "cueZh": "请清楚描述安全或服务问题。主题是“行车路线”。",
+                "partnerLine": "Describe a safety or service issue clearly. Topic: a driving direction.",
+                "modelAnswer": "I need assistance with a driving direction, and I can provide the details.",
+                "modelAnswerTranslationZh": "示范表达：行车路线。",
+                "acceptedAnswers": [
+                  "I need assistance with a driving direction, and I can provide the details."
+                ],
+                "requiredConcepts": [
+                  "a-driving-direction",
+                  "level-12"
+                ]
+              },
+              {
+                "id": "r17-speaking-l13-015",
+                "growthDifficultyLevel": 6,
+                "cueZh": "请解释原因并请求替代方案。主题是“嘈杂的房间”。",
+                "partnerLine": "Explain the reason and request an alternative. Topic: a noisy room.",
+                "modelAnswer": "Since a noisy room has changed, I would like to discuss an alternative.",
+                "modelAnswerTranslationZh": "示范表达：嘈杂的房间。",
+                "acceptedAnswers": [
+                  "Since a noisy room has changed, I would like to discuss an alternative."
+                ],
+                "requiredConcepts": [
+                  "a-noisy-room",
+                  "level-13"
+                ]
+              },
+              {
+                "id": "r17-speaking-l13-043",
+                "growthDifficultyLevel": 6,
+                "cueZh": "请解释原因并请求替代方案。主题是“警方报告”。",
+                "partnerLine": "Explain the reason and request an alternative. Topic: a police report.",
+                "modelAnswer": "Since a police report has changed, I would like to discuss an alternative.",
+                "modelAnswerTranslationZh": "示范表达：警方报告。",
+                "acceptedAnswers": [
+                  "Since a police report has changed, I would like to discuss an alternative."
+                ],
+                "requiredConcepts": [
+                  "a-police-report",
+                  "level-13"
+                ]
+              },
+              {
+                "id": "r17-speaking-l14-004",
+                "growthDifficultyLevel": 7,
+                "cueZh": "请请求有记录的解决方案。主题是“错过转机”。",
+                "partnerLine": "Request a documented resolution. Topic: a missed connection.",
+                "modelAnswer": "Please confirm in writing how a missed connection will be resolved.",
+                "modelAnswerTranslationZh": "示范表达：错过转机。",
+                "acceptedAnswers": [
+                  "Please confirm in writing how a missed connection will be resolved."
+                ],
+                "requiredConcepts": [
+                  "a-missed-connection",
+                  "level-14"
+                ]
+              },
+              {
+                "id": "r17-speaking-l14-032",
+                "growthDifficultyLevel": 7,
+                "cueZh": "请请求有记录的解决方案。主题是“退货请求”。",
+                "partnerLine": "Request a documented resolution. Topic: a return request.",
+                "modelAnswer": "Please confirm in writing how a return request will be resolved.",
+                "modelAnswerTranslationZh": "示范表达：退货请求。",
+                "acceptedAnswers": [
+                  "Please confirm in writing how a return request will be resolved."
+                ],
+                "requiredConcepts": [
+                  "a-return-request",
+                  "level-14"
+                ]
+              },
+              {
+                "id": "r17-speaking-l14-060",
+                "growthDifficultyLevel": 7,
+                "cueZh": "请请求有记录的解决方案。主题是“修改后的行程”。",
+                "partnerLine": "Request a documented resolution. Topic: a revised itinerary.",
+                "modelAnswer": "Please confirm in writing how a revised itinerary will be resolved.",
+                "modelAnswerTranslationZh": "示范表达：修改后的行程。",
+                "acceptedAnswers": [
+                  "Please confirm in writing how a revised itinerary will be resolved."
+                ],
+                "requiredConcepts": [
+                  "a-revised-itinerary",
+                  "level-14"
+                ]
+              },
+              {
+                "id": "r17-speaking-l15-021",
+                "growthDifficultyLevel": 8,
+                "cueZh": "请协商一个复杂旅行解决方案。主题是“火车站台”。",
+                "partnerLine": "Negotiate a complex travel solution. Topic: a train platform.",
+                "modelAnswer": "Given a train platform, I need to confirm the safest available arrangement.",
+                "modelAnswerTranslationZh": "示范表达：火车站台。",
+                "acceptedAnswers": [
+                  "Given a train platform, I need to confirm the safest available arrangement."
+                ],
+                "requiredConcepts": [
+                  "a-train-platform",
+                  "level-15"
+                ]
+              },
+              {
+                "id": "r17-speaking-l15-049",
+                "growthDifficultyLevel": 8,
+                "cueZh": "请协商一个复杂旅行解决方案。主题是“行动辅助服务”。",
+                "partnerLine": "Negotiate a complex travel solution. Topic: a mobility service.",
+                "modelAnswer": "Given a mobility service, I need to confirm the safest available arrangement.",
+                "modelAnswerTranslationZh": "示范表达：行动辅助服务。",
+                "acceptedAnswers": [
+                  "Given a mobility service, I need to confirm the safest available arrangement."
+                ],
+                "requiredConcepts": [
+                  "a-mobility-service",
+                  "level-15"
                 ]
               }
             ]

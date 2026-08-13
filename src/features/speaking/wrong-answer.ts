@@ -38,7 +38,7 @@ export class SpeakingWrongAnswerContentResolver {
       if (this.byItemId.has(alias.source.itemId)) throw new TypeError('Duplicate speaking review alias.')
       this.byItemId.set(alias.source.itemId, alias)
     }
-    if (this.byItemId.size !== 122) throw new TypeError(`Speaking review index must contain exactly 122 aliases; got ${this.byItemId.size}.`)
+    if (this.byItemId.size !== 900) throw new TypeError(`Speaking review index must contain exactly 900 aliases; got ${this.byItemId.size}.`)
   }
   resolveItem(item: SpeakingSupplyItem): Alias {
     const alias = this.byItemId.get(item.itemId)

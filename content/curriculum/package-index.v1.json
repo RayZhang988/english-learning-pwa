@@ -59,8 +59,8 @@
   "trainingSupplyTotals": {
     "vocabularyCandidates": 9015,
     "listeningCandidates": 1013,
-    "speakingCandidates": 122,
-    "allCandidates": 10150
+    "speakingCandidates": 900,
+    "allCandidates": 10928
   },
   "reviewContentIndexFile": "content/curriculum/review-content-index.v1.json",
   "reviewContentIndexSchemaFile": "content/curriculum/review-content-index.schema.v1.json",

@@ -27,8 +27,8 @@ for (let week = 1; week <= 4; week += 1) {
   }
 }
 
-assert.equal(candidates.length, 122, 'Published speaking translation coverage must match all 122 supply candidates.')
-assert.equal(new Set(candidates.map(({ id }) => id)).size, 122, 'Published speaking translation identities must be unique.')
+assert.equal(candidates.length, 900, 'Published speaking translation coverage must match all supply candidates.')
+assert.equal(new Set(candidates.map(({ id }) => id)).size, 900, 'Published speaking translation identities must be unique.')
 
 for (const candidate of candidates) {
   assert.equal(typeof candidate.id, 'string', 'Speaking translation identity must be a string.')
@@ -48,7 +48,7 @@ for (const candidate of candidates) {
 
 const activityPrompts = candidates.filter(({ source }) => source === 'activity-prompt').length
 const sceneFixedResponses = candidates.filter(({ source }) => source === 'scene-fixed-response').length
-assert.equal(activityPrompts, 94)
+assert.equal(activityPrompts, 872)
 assert.equal(sceneFixedResponses, 28)
 
 console.log(
