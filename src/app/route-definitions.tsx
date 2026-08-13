@@ -12,6 +12,7 @@ import {
 import { SceneVocabularyPracticeRouteHost } from './scene-vocabulary-practice-route.tsx'
 import { WrongAnswerLibraryRouteHost, WrongAnswerReviewRouteHost } from './wrong-answer-library-routes.tsx'
 import { ListeningVoiceDiagnosticRouteHost } from './listening-voice-diagnostic-route.tsx'
+import { GrowthUpgradeRouteHost } from './learning/growth-upgrade-route-host.tsx'
 
 /** Route definitions stay importable in Node tests without constructing browser history. */
 export const appRoutes = [
@@ -28,6 +29,7 @@ export const appRoutes = [
         path: 'diagnostics/listening-voices',
         element: <ListeningVoiceDiagnosticRouteHost />,
       },
+      { path: 'progress/growth/:domain', element: <GrowthUpgradeRouteHost /> },
       {
         path: 'practice/wrong-answers',
         element: <WrongAnswerLibraryRouteHost />,

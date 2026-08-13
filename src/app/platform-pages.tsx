@@ -252,12 +252,7 @@ export function PlatformReadyPage() {
         const growth = state.engineState.growth?.domains[domain]
         if (!growth) return
         if (growth.upgradeTest) {
-          // Do not send the user to an unregistered route or fabricate a generic
-          // question. The domain route must resolve this stable item ID through
-          // its own existing scorer before the saved test can be resumed.
-          setRequestError(
-            new Error('升级测试顺序已保存，但当前版本尚未接入该专项的原题型解析。'),
-          )
+          navigate(`/progress/growth/${domain}`)
           return
         }
         void coordinator.growth.startUpgradeTest({
@@ -266,9 +261,7 @@ export function PlatformReadyPage() {
           seed: Math.floor(Math.random() * 0x7fffffff),
           startedAt: new Date().toISOString(),
         }).then(
-          () => setRequestError(
-            new Error('升级测试顺序已保存，但当前版本尚未接入该专项的原题型解析。'),
-          ),
+          () => navigate(`/progress/growth/${domain}`),
           (error) => setRequestError(error instanceof Error ? error : new Error('无法保存升级测试。')),
         )
       }}

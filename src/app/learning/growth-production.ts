@@ -140,6 +140,7 @@ export interface GrowthSpeakingMediaSession {
 
 export interface GrowthSpeakingMediaViewModel {
   readonly itemId: string
+  readonly prompt: SpeakingGrowthUpgradePromptView
   readonly status: SpeakingGrowthUpgradeMediaView['status']
   readonly recordingAvailable: boolean
   readonly referenceText: string | null
@@ -409,7 +410,7 @@ export class GrowthProductionCoordinator {
   }
 
   #toSpeakingMediaView(itemId: string, view: SpeakingGrowthUpgradeMediaView): GrowthSpeakingMediaViewModel {
-    return { itemId, status: view.status, recordingAvailable: view.recordingAvailable, referenceText: view.referenceText, recognition: view.recognition, submission: view.submission, message: view.message, busy: view.busy, retryable: view.retryable }
+    return { itemId, prompt: view.prompt, status: view.status, recordingAvailable: view.recordingAvailable, referenceText: view.referenceText, recognition: view.recognition, submission: view.submission, message: view.message, busy: view.busy, retryable: view.retryable }
   }
   #emitSpeakingMedia(context: ManagedSpeakingMedia): void {
     if (!context.view) return
