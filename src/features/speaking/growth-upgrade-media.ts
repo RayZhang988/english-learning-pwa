@@ -3,7 +3,7 @@ import { browserListeningSpeech } from '../listening/index.ts'
 import { type SpeakingGrowthUpgradeAdapter, type SpeakingGrowthUpgradePromptView, type SpeakingGrowthUpgradeSubmission } from './growth-upgrade.ts'
 import { browserSpeakingRecognition } from './recognition.ts'
 import { browserSpeakingRecorder } from './recording.ts'
-import type { SpeakingRecognitionHandle, SpeakingRecognitionPort, SpeakingRecording, SpeakingRecordingPort } from './types.ts'
+import type { SpeakingRecognitionHandle, SpeakingRecognitionOutcome, SpeakingRecognitionPort, SpeakingRecording, SpeakingRecordingPort } from './types.ts'
 
 export type SpeakingGrowthUpgradeMediaStatus =
   | 'idle' | 'requesting-permission' | 'capturing' | 'stopping'
@@ -15,6 +15,8 @@ export interface SpeakingGrowthUpgradeMediaView {
   readonly recordingAvailable: boolean
   readonly referenceText: string | null
   readonly submission: SpeakingGrowthUpgradeSubmission | null
+  /** The real recognition outcome for 01's atomic 04 checkpoint. */
+  readonly recognition: SpeakingRecognitionOutcome | null
   readonly message: string | null
   readonly busy: boolean
   readonly retryable: boolean
@@ -55,6 +57,7 @@ export class SpeakingGrowthUpgradeMediaSession {
   #status: SpeakingGrowthUpgradeMediaStatus = 'idle'
   #recording: SpeakingRecording | null = null
   #submission: SpeakingGrowthUpgradeSubmission | null = null
+  #recognitionOutcome: SpeakingRecognitionOutcome | null = null
   #message: string | null = null
   #handle: SpeakingRecognitionHandle | null = null
   #busy = false
@@ -92,6 +95,7 @@ export class SpeakingGrowthUpgradeMediaSession {
       recordingAvailable: this.#recording !== null,
       referenceText: this.#recording ? this.#prompt.referenceText : null,
       submission: this.#submission, message: this.#message,
+      recognition: this.#recognitionOutcome,
       busy: this.#busy, retryable: this.#status === 'unscorable' || this.#status === 'error',
     }
   }
@@ -127,6 +131,7 @@ export class SpeakingGrowthUpgradeMediaSession {
       this.#status = 'recognizing'; this.#emit()
       const recognition = handle ? await handle.result : { status: 'failed' as const, code: 'unavailable' as const, message: '当前设备无法识别语音；录音仍可回放。' }
       if (generation !== this.#generation || this.#disposed) return null
+      this.#recognitionOutcome = recognition
       if (recognition.status !== 'recognized') {
         this.#status = 'unscorable'; this.#message = recognition.message; this.#emit(); return null
       }
@@ -184,7 +189,7 @@ export class SpeakingGrowthUpgradeMediaSession {
     if (this.#busy) throw new TypeError('媒体操作仍在进行。')
     this.#speech.cancel(); this.#recorder.stopPlayback(); this.#handle?.abort(); this.#handle = null
     if (this.#recording) this.#recorder.discard(this.#recording)
-    this.#recording = null; this.#submission = null; this.#message = null; this.#status = 'idle'
+    this.#recording = null; this.#submission = null; this.#recognitionOutcome = null; this.#message = null; this.#status = 'idle'
     this.#prompt = await this.#resolve(false); this.#emit()
     return this.current()
   }

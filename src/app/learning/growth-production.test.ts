@@ -78,4 +78,18 @@ describe('GrowthProductionCoordinator', () => {
     expect(answer).toMatchObject({ advanced: true, feedback: { domain: 'vocabulary', submission: { correct: true } } })
     expect((await coordinator.upgradeSession('vocabulary')).index).toBe(1)
   })
+
+  it('keeps speaking recognition failures on the same saved item without adding a growth answer', async () => {
+    const { repository } = setup()
+    await repository.save(createLearningEngineState(abilityProfile(), '2026-08-13T00:00:00.000Z'))
+    const mediaView = { status: 'unscorable' as const, prompt: { itemId: 'unused', kind: 'fixed-response' as const, partnerLine: 'Hello', cueZh: '回答', referenceText: 'Hello', recording: { allowReferencePlaybackAfterRecording: true as const } }, recordingAvailable: true, referenceText: 'Hello', recognition: { status: 'failed' as const, code: 'no-speech' as const, message: 'No speech' }, submission: null, message: 'No speech', busy: false, retryable: true }
+    const coordinator = new GrowthProductionCoordinator({ engineStates: repository, sources: { vocabulary: { load: async () => ({ trainingSupplyIndex: index('vocabulary') }) }, listening: { load: async () => ({ trainingSupplyIndex: index('listening') }) }, speaking: { load: async () => ({ trainingSupplyIndex: index('speaking') }) } }, adapters: { vocabulary: {} as never, listening: {} as never, speaking: { resolve: async ({ itemId, recordingExists }) => ({ itemId, kind: 'fixed-response', partnerLine: 'Hello', cueZh: '回答', referenceText: recordingExists ? 'Hello' : null, recording: { allowReferencePlaybackAfterRecording: true } }), submit: async ({ itemId, recording }) => ({ itemId, scorable: false as const, correct: null, retryable: true as const, recording, contentMatch: { state: 'unscorable' as const, targetText: 'Hello', targetTranslationZh: '你好', message: 'No speech' } }) } }, createSpeakingMedia: () => ({ initialize: async () => mediaView, current: () => mediaView, subscribe: () => () => undefined, startRecording: async () => mediaView, stopRecording: async () => null, playRecording: async () => mediaView, playReference: async () => mediaView, retryRecognition: async () => null, recordAgain: async () => mediaView, dispose: () => undefined }) })
+    for (let number = 0; number < 5; number += 1) await coordinator.recordFormalSession({ eventId: `s-${number}`, source: 'daily-training', sessionId: `s-${number}`, domain: 'speaking', correctCount: 10, incorrectCount: 0, localDate: '2026-08-13', completedAt: `2026-08-13T03:0${number}:00.000Z` })
+    await coordinator.startUpgradeTest({ eventId: 'start-s', domain: 'speaking', seed: 5, startedAt: '2026-08-13T04:00:00.000Z' })
+    const media = await coordinator.speakingUpgradeMedia()
+    expect(media).toMatchObject({ status: 'unscorable', itemId: expect.any(String), retryable: true })
+    const stopped = await coordinator.stopSpeakingUpgradeRecording({ eventId: 'answer-s', answeredAt: '2026-08-13T04:01:00.000Z' })
+    expect(stopped.advanced).toBe(false)
+    expect((await coordinator.view('speaking')).activeTest?.index).toBe(0)
+  })
 })
