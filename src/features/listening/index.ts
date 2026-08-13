@@ -31,6 +31,13 @@ export {
   createListeningTrainingItemCompletedEvent,
 } from './events.ts'
 export { createListeningFeatureModule } from './feature-module.ts'
+export {
+  createListeningGrowthUpgradeAdapter,
+  type ListeningGrowthUpgradeAdapter,
+  type ListeningGrowthUpgradeQuestion,
+  type ListeningGrowthUpgradeQuestionView,
+  type ListeningGrowthUpgradeSubmission,
+} from './growth-upgrade.ts'
 export { ListeningSessionScreen } from './ListeningSessionScreen.tsx'
 export {
   ListeningTrainingRoute,
