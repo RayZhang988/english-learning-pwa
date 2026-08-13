@@ -1,5 +1,21 @@
 import type { ReadonlyDataSource } from '../../core/index.ts'
 import {
+  type VocabularyGrowthUpgradeAdapter,
+  type VocabularyGrowthUpgradeQuestionView,
+  type VocabularyGrowthUpgradeSubmission,
+} from '../../features/vocabulary/index.ts'
+import {
+  type ListeningGrowthUpgradeAdapter,
+  type ListeningGrowthUpgradeQuestion,
+  type ListeningGrowthUpgradeSubmission,
+} from '../../features/listening/index.ts'
+import {
+  type SpeakingGrowthUpgradeAdapter,
+  type SpeakingGrowthUpgradePromptView,
+  type SpeakingGrowthUpgradeSubmission,
+  type SpeakingRecognitionOutcome,
+} from '../../features/speaking/index.ts'
+import {
   applyGrowthTrainingCompleted,
   getGrowthEligibility,
   startGrowthUpgradeTest,
@@ -59,6 +75,54 @@ export interface GrowthDomainViewModel {
   } | null
 }
 
+/**
+ * The application boundary for the R17 ten-question test.  It deliberately
+ * contains only opaque, already-resolved domain payloads: UI renders them but
+ * never obtains a course answer key or reimplements a domain scorer.
+ */
+export type GrowthUpgradeQuestionPayload =
+  | { readonly domain: 'vocabulary'; readonly question: VocabularyGrowthUpgradeQuestionView }
+  | { readonly domain: 'listening'; readonly question: ListeningGrowthUpgradeQuestion }
+  | { readonly domain: 'speaking'; readonly question: SpeakingGrowthUpgradePromptView }
+
+export type GrowthUpgradeFeedback =
+  | { readonly domain: 'vocabulary'; readonly submission: VocabularyGrowthUpgradeSubmission }
+  | { readonly domain: 'listening'; readonly submission: ListeningGrowthUpgradeSubmission }
+  | { readonly domain: 'speaking'; readonly submission: SpeakingGrowthUpgradeSubmission }
+
+export interface GrowthUpgradeSessionViewModel {
+  readonly domain: AbilityDomain
+  readonly targetLevelOrdinal: number
+  readonly targetLevelLabel: string
+  readonly index: number
+  readonly total: 10
+  readonly itemId: string
+  readonly score: { readonly correctCount: number; readonly answeredCount: number }
+  /** Persisted opaque input for the current/last answered item. */
+  readonly draft: string | null
+  readonly question: GrowthUpgradeQuestionPayload
+  readonly feedback: GrowthUpgradeFeedback | null
+  readonly busy: boolean
+  readonly error: string | null
+  readonly retryable: boolean
+  readonly canExit: true
+}
+
+export type GrowthUpgradeSubmitInput =
+  | { readonly domain: 'vocabulary'; readonly selectedOptionId: string }
+  | { readonly domain: 'listening'; readonly response: string }
+  | {
+      readonly domain: 'speaking'
+      readonly recognition: SpeakingRecognitionOutcome
+      readonly recording: { readonly recordingId: string; readonly durationMs: number }
+    }
+
+export interface GrowthUpgradeAdapters {
+  readonly vocabulary: VocabularyGrowthUpgradeAdapter
+  readonly listening: ListeningGrowthUpgradeAdapter
+  readonly speaking: SpeakingGrowthUpgradeAdapter
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
@@ -114,11 +178,18 @@ export function toGrowthDomainViewModel(
 export class GrowthProductionCoordinator {
   readonly #engineStates: LearningEngineRepository
   readonly #sources: GrowthCandidateSources
+  readonly #adapters: GrowthUpgradeAdapters | null
   #queue: Promise<void> = Promise.resolve()
 
-  constructor(options: { readonly engineStates: LearningEngineRepository; readonly sources: GrowthCandidateSources }) {
+  constructor(options: {
+    readonly engineStates: LearningEngineRepository
+    readonly sources: GrowthCandidateSources
+    /** Optional only for legacy, read-only callers. Production must provide it. */
+    readonly adapters?: GrowthUpgradeAdapters
+  }) {
     this.#engineStates = options.engineStates
     this.#sources = options.sources
+    this.#adapters = options.adapters ?? null
   }
 
   async view(domain: AbilityDomain): Promise<GrowthDomainViewModel> {
@@ -156,6 +227,56 @@ export class GrowthProductionCoordinator {
     return this.#update((state) => ({ ...state, growth: submitGrowthUpgradeAnswer(state.growth!, input) }))
   }
 
+  /** Resolves exactly the already persisted item at the current test cursor. */
+  async upgradeSession(domain: AbilityDomain): Promise<GrowthUpgradeSessionViewModel> {
+    const state = await this.#requireState()
+    const test = state.growth!.domains[domain].upgradeTest
+    if (!test) throw new TypeError('No saved upgrade test is available.')
+    if (test.answers.length >= test.itemIds.length) throw new TypeError('Saved upgrade test has no remaining item.')
+    return this.#sessionView(state.growth!, domain, test.answers.length, null)
+  }
+
+  /**
+   * Scores through the owning domain adapter first, then appends precisely one
+   * 04 answer checkpoint.  Adapter scoring is stateless, so a failed save has
+   * no learning side effect and can safely be retried with the same event ID.
+   */
+  async submitUpgradeSessionAnswer(input: {
+    readonly eventId: string
+    readonly domain: AbilityDomain
+    readonly answer: GrowthUpgradeSubmitInput
+    readonly answeredAt: string
+  }): Promise<{ readonly state: LearningEngineState; readonly feedback: GrowthUpgradeFeedback; readonly advanced: boolean }> {
+    if (input.answer.domain !== input.domain) throw new TypeError('Growth answer domain does not match its session.')
+    const before = await this.#requireState()
+    const test = before.growth!.domains[input.domain].upgradeTest
+    if (!test) throw new TypeError('No saved upgrade test is available.')
+    const index = test.answers.length
+    const itemId = test.itemIds[index]
+    if (!itemId) throw new TypeError('Saved upgrade test has no remaining item.')
+    const level = before.growth!.domains[input.domain].currentLevelOrdinal + 1
+    const feedback = await this.#score(input.answer, itemId, level)
+    // Recognition failures are deliberately not a wrong answer and do not
+    // consume one of the ten saved positions.
+    if (feedback.domain === 'speaking' && !feedback.submission.scorable) {
+      return { state: before, feedback, advanced: false }
+    }
+    if (feedback.submission.correct === null) {
+      throw new TypeError('Unscorable growth answer cannot advance the test.')
+    }
+    const correct = feedback.submission.correct
+    const draft = JSON.stringify(input.answer)
+    const state = await this.submitUpgradeAnswer({
+      eventId: input.eventId,
+      domain: input.domain,
+      index,
+      correct,
+      draft,
+      answeredAt: input.answeredAt,
+    })
+    return { state, feedback, advanced: true }
+  }
+
   recoverCorruptGrowthOnly(): Promise<LearningEngineState> {
     return this.#engineStates.resetCorruptGrowthOnly()
   }
@@ -164,6 +285,43 @@ export class GrowthProductionCoordinator {
     const state = await this.#engineStates.load()
     if (!state?.growth) throw new TypeError('Growth state is unavailable.')
     return state
+  }
+
+  #requireAdapters(): GrowthUpgradeAdapters {
+    if (!this.#adapters) throw new TypeError('Growth domain adapters are not configured.')
+    return this.#adapters
+  }
+
+  async #sessionView(
+    growth: GrowthState,
+    domain: AbilityDomain,
+    index: number,
+    feedback: GrowthUpgradeFeedback | null,
+  ): Promise<GrowthUpgradeSessionViewModel> {
+    const test = growth.domains[domain].upgradeTest
+    if (!test) throw new TypeError('No saved upgrade test is available.')
+    const itemId = test.itemIds[index]
+    if (!itemId) throw new TypeError('Saved upgrade test has no remaining item.')
+    const level = growth.domains[domain].currentLevelOrdinal + 1
+    const adapters = this.#requireAdapters()
+    const question: GrowthUpgradeQuestionPayload = domain === 'vocabulary'
+      ? { domain, question: await adapters.vocabulary.resolve({ domain, itemId, expectedDifficultyLevel: R17_GROWTH_DIFFICULTIES[level]! }) }
+      : domain === 'listening'
+        ? { domain, question: await adapters.listening.resolve({ domain, itemId, expectedDifficultyLevel: R17_GROWTH_DIFFICULTIES[level]! }) }
+        : { domain, question: await adapters.speaking.resolve({ domain, itemId, expectedDifficultyLevel: R17_GROWTH_DIFFICULTIES[level]!, recordingExists: false }) }
+    return {
+      domain, targetLevelOrdinal: level, targetLevelLabel: R17_GROWTH_LEVEL_LABELS[level]!,
+      index, total: 10, itemId, score: test.score, draft: test.answers[index]?.draft ?? null,
+      question, feedback, busy: false, error: null, retryable: false, canExit: true,
+    }
+  }
+
+  async #score(answer: GrowthUpgradeSubmitInput, itemId: string, level: number): Promise<GrowthUpgradeFeedback> {
+    const adapters = this.#requireAdapters()
+    const expectedDifficultyLevel = R17_GROWTH_DIFFICULTIES[level]!
+    if (answer.domain === 'vocabulary') return { domain: 'vocabulary', submission: await adapters.vocabulary.submit({ domain: 'vocabulary', itemId, expectedDifficultyLevel, selectedOptionId: answer.selectedOptionId }) }
+    if (answer.domain === 'listening') return { domain: 'listening', submission: await adapters.listening.submit({ domain: 'listening', itemId, expectedDifficultyLevel, response: answer.response }) }
+    return { domain: 'speaking', submission: await adapters.speaking.submit({ domain: 'speaking', itemId, expectedDifficultyLevel, recognition: answer.recognition, recording: answer.recording }) }
   }
 
   #update(transform: (state: LearningEngineState) => LearningEngineState): Promise<LearningEngineState> {

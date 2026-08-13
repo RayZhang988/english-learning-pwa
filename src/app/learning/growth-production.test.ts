@@ -56,4 +56,26 @@ describe('GrowthProductionCoordinator', () => {
     const state = createLearningEngineState(abilityProfile(), '2026-08-13T00:00:00.000Z')
     expect(toGrowthDomainViewModel(state.growth!, 'speaking')).toMatchObject({ currentLevelLabel: '幼儿园', eligibility: 'ineligible', action: { disabled: true } })
   })
+
+  it('routes a persisted vocabulary item through its adapter and atomically advances only one answer', async () => {
+    const { repository } = setup()
+    const adapters = {
+      vocabulary: {
+        resolve: async ({ itemId }: { readonly itemId: string }) => ({ itemId, type: 'term-to-meaning' as const, instructionZh: '选择', prompt: 'hello', promptLocale: 'en-US' as const, partOfSpeech: null, options: [{ id: 'a', label: '你好' }] }),
+        submit: async ({ itemId }: { readonly itemId: string }) => ({ itemId, scorable: true as const, correct: true, feedback: { correct: true, title: '回答正确', description: 'ok', exampleEn: 'hello', explanationZh: '你好' } }),
+      },
+      listening: {} as never,
+      speaking: {} as never,
+    }
+    const source = (domain: 'vocabulary' | 'listening' | 'speaking') => ({ load: async () => ({ trainingSupplyIndex: index(domain) }) })
+    const coordinator = new GrowthProductionCoordinator({ engineStates: repository, sources: { vocabulary: source('vocabulary'), listening: source('listening'), speaking: source('speaking') }, adapters })
+    await repository.save(createLearningEngineState(abilityProfile(), '2026-08-13T00:00:00.000Z'))
+    for (let number = 0; number < 5; number += 1) await coordinator.recordFormalSession({ eventId: `v-${number}`, source: 'daily-training', sessionId: `v-${number}`, domain: 'vocabulary', correctCount: 10, incorrectCount: 0, localDate: '2026-08-13', completedAt: `2026-08-13T01:0${number}:00.000Z` })
+    await coordinator.startUpgradeTest({ eventId: 'start-v', domain: 'vocabulary', seed: 3, startedAt: '2026-08-13T02:00:00.000Z' })
+    const before = await coordinator.upgradeSession('vocabulary')
+    expect(before).toMatchObject({ index: 0, total: 10, question: { domain: 'vocabulary' } })
+    const answer = await coordinator.submitUpgradeSessionAnswer({ eventId: 'answer-v-0', domain: 'vocabulary', answer: { domain: 'vocabulary', selectedOptionId: 'a' }, answeredAt: '2026-08-13T02:01:00.000Z' })
+    expect(answer).toMatchObject({ advanced: true, feedback: { domain: 'vocabulary', submission: { correct: true } } })
+    expect((await coordinator.upgradeSession('vocabulary')).index).toBe(1)
+  })
 })

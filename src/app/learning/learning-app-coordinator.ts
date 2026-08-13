@@ -65,6 +65,15 @@ import {
   speakingContentSource,
 } from './training-production-resources.ts'
 import {
+  createVocabularyGrowthUpgradeAdapter,
+} from '../../features/vocabulary/index.ts'
+import {
+  createListeningGrowthUpgradeAdapter,
+} from '../../features/listening/index.ts'
+import {
+  createSpeakingGrowthUpgradeAdapter,
+} from '../../features/speaking/index.ts'
+import {
   trainingSupplyProviders,
 } from './training-production-resources.ts'
 import {
@@ -212,6 +221,11 @@ export class LearningAppCoordinator {
         vocabulary: vocabularyContentSource,
         listening: listeningContentSource,
         speaking: speakingContentSource,
+      },
+      adapters: {
+        vocabulary: createVocabularyGrowthUpgradeAdapter(vocabularyContentSource),
+        listening: createListeningGrowthUpgradeAdapter(listeningContentSource),
+        speaking: createSpeakingGrowthUpgradeAdapter(speakingContentSource),
       },
     })
     this.extraTraining = new ProductionExtraTrainingCoordinator({
