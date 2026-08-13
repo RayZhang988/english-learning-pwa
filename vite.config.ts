@@ -109,5 +109,10 @@ export default defineConfig({
   test: {
     environment: 'node',
     setupFiles: ['./src/test/setup.ts'],
+    // The R17 corpus is intentionally large. Running its JSON-heavy suites in
+    // parallel makes low-core CI runners contend for CPU and disk until
+    // unrelated 5-second interaction tests time out. Serial files keep each
+    // test's own timeout meaningful and remain well inside the workflow limit.
+    fileParallelism: false,
   },
 })
