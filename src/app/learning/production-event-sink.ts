@@ -6,6 +6,8 @@ import { AppError } from '../../core/index.ts'
 import {
   applyLearningAttempt,
   applyLearningEngineTrainingEvent,
+  applyGrowthTrainingCompleted,
+  createGrowthState,
   parseLearningEvent,
   recordDailyActivity,
   recordTaskDurationSample,
@@ -24,6 +26,7 @@ import {
   type ActivePlanRepository,
   createActiveLearningRuntime,
 } from './active-plan-repository.ts'
+import { trainingTestMode } from '../../config/training-test-mode.ts'
 
 const MAX_SKIP_HISTORY_ENTRIES = 500
 
@@ -151,14 +154,17 @@ export class ProductionLearningEventSink implements PlatformEventSink {
   readonly #activePlans: ActivePlanRepository
   readonly #engineStates: LearningEngineRepository
   readonly #listeners = new Set<LearningRuntimeUpdateListener>()
+  readonly #growthEvidenceEnabled: () => boolean
   #queue: Promise<void> = Promise.resolve()
 
   constructor(
     activePlans: ActivePlanRepository,
     engineStates: LearningEngineRepository,
+    options: { readonly growthEvidenceEnabled?: () => boolean } = {},
   ) {
     this.#activePlans = activePlans
     this.#engineStates = engineStates
+    this.#growthEvidenceEnabled = options.growthEvidenceEnabled ?? (() => !trainingTestMode.enabled)
   }
 
   subscribe(listener: LearningRuntimeUpdateListener): () => void {
@@ -267,6 +273,40 @@ export class ProductionLearningEventSink implements PlatformEventSink {
           (candidate) =>
             candidate.payload.taskId !== event.payload.taskId,
         )
+    }
+    // A required daily training block becomes one R17 formal session only at
+    // its real budget completion.  Attempts, unscorable fallbacks, review and
+    // trainingTest mode never enter this ledger.
+    if (
+      event.type === 'learning.training.budget.completed.v1' &&
+      this.#growthEvidenceEnabled()
+    ) {
+      const completed = progress.tasks.find(
+        (entry) => entry.task.taskId === event.payload.taskId,
+      )
+      const score = completed?.score
+      if (
+        completed?.status === 'completed' &&
+        completed.completionKind === 'scored' &&
+        score !== undefined &&
+        score.correctCount + score.incorrectCount > 0
+      ) {
+        const growth = nextEngineState.growth ?? createGrowthState()
+        nextEngineState = {
+          ...nextEngineState,
+          growth: applyGrowthTrainingCompleted(growth, {
+            eventId: `growth:daily:${event.id}`,
+            source: 'daily-training',
+            sessionId: `daily:${completed.task.planId}:${completed.task.taskId}`,
+            domain: completed.task.domain,
+            levelOrdinal: growth.domains[completed.task.domain].currentLevelOrdinal,
+            correctCount: score.correctCount,
+            incorrectCount: score.incorrectCount,
+            localDate: progress.plan.localDate,
+            completedAt: event.occurredAt,
+          }),
+        }
+      }
     }
     const activity = summarizePlanActivity(progress)
     nextEngineState = {

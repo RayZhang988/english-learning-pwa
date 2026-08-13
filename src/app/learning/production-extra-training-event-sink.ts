@@ -1,7 +1,9 @@
 import { AppError } from '../../core/index.ts'
 import {
   applyExtraTrainingAttempt,
+  applyGrowthTrainingCompleted,
   applyLearningEngineExtraTrainingEvent,
+  createGrowthState,
   parseExtraTrainingEvent,
   type ExtraTrainingEvent,
   type ExtraTrainingSession,
@@ -50,9 +52,14 @@ export class ProductionExtraTrainingEventSink
   readonly #listeners =
     new Set<ExtraTrainingEngineUpdateListener>()
   #queue: Promise<void> = Promise.resolve()
+  readonly #growthEvidenceEnabled: () => boolean
 
-  constructor(engineStates: LearningEngineRepository) {
+  constructor(
+    engineStates: LearningEngineRepository,
+    options: { readonly growthEvidenceEnabled?: () => boolean } = {},
+  ) {
     this.#engineStates = engineStates
+    this.#growthEvidenceEnabled = options.growthEvidenceEnabled ?? (() => true)
   }
 
   subscribe(
@@ -118,6 +125,46 @@ export class ProductionExtraTrainingEventSink
       nextEngineState = {
         ...transition.engineState,
         extraTraining: transition.extraTraining,
+      }
+    }
+    // R6 is open-ended. A user exit is the explicit formal-session boundary;
+    // it can be resumed later and a later exit becomes a distinct summary.
+    // Unscorable-only, failed and provider/device paths have no scored record.
+    if (
+      event.type === 'learning.extra-training.exited.v1' &&
+      this.#growthEvidenceEnabled()
+    ) {
+      const exited = nextEngineState.extraTraining?.sessions[session.sessionId]
+      const score = exited?.score
+      if (
+        exited?.status === 'paused' &&
+        exited.endReason === 'user-exited' &&
+        score !== undefined &&
+        score.correctCount + score.incorrectCount > 0
+      ) {
+        const growth = nextEngineState.growth ?? createGrowthState()
+        const prefix = `extra:${exited.sessionId}:`
+        const alreadyReported = growth.domains[exited.domain].sessions
+          .filter((entry) => entry.source === 'extra-training' && entry.sessionId.startsWith(prefix))
+          .reduce((total, entry) => ({ correct: total.correct + entry.correctCount, incorrect: total.incorrect + entry.incorrectCount }), { correct: 0, incorrect: 0 })
+        const correctCount = score.correctCount - alreadyReported.correct
+        const incorrectCount = score.incorrectCount - alreadyReported.incorrect
+        if (correctCount + incorrectCount > 0) {
+          nextEngineState = {
+            ...nextEngineState,
+            growth: applyGrowthTrainingCompleted(growth, {
+              eventId: `growth:extra:${event.id}`,
+              source: 'extra-training',
+              sessionId: `${prefix}${event.id}`,
+              domain: exited.domain,
+              levelOrdinal: growth.domains[exited.domain].currentLevelOrdinal,
+              correctCount,
+              incorrectCount,
+              localDate: exited.localDate,
+              completedAt: event.occurredAt,
+            }),
+          }
+        }
       }
     }
     await this.#engineStates.save(nextEngineState)

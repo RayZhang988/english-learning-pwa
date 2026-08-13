@@ -14,7 +14,7 @@ import {
   uniqueStrings,
 } from './utils.ts'
 import type { LearningAbilityProfile } from './contracts.ts'
-import { createGrowthState } from './growth.ts'
+import { createGrowthStateForProfile } from './growth.ts'
 
 export function createLearningEngineState(
   profile: LearningAbilityProfile,
@@ -25,7 +25,7 @@ export function createLearningEngineState(
     progress: createInitialProgressState(profile, initializedAt),
     reviewItems: {},
     recentTrainingItemIds: {},
-    growth: createGrowthState(),
+    growth: createGrowthStateForProfile(profile),
   }
 }
 

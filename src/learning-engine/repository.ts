@@ -1,9 +1,11 @@
 import type { NamespaceStore } from '../storage/index.ts'
 import type { LearningEngineState } from './contracts.ts'
-import { assertGrowthState, migrateGrowthState } from './growth.ts'
+import { assertGrowthState, createGrowthState, migrateGrowthState } from './growth.ts'
 
 export const LEARNING_ENGINE_STORAGE_NAMESPACE = 'learning.engine'
 export const LEARNING_ENGINE_STORAGE_SCHEMA_VERSION = 1
+export const LEARNING_ENGINE_GROWTH_CORRUPT_BACKUP_KEY =
+  'learning-engine-growth-corrupt-backup'
 export const LEARNING_ENGINE_STATE_KEY = 'current-state'
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -268,5 +270,31 @@ export class LearningEngineRepository {
 
   async clear(): Promise<void> {
     await this.#store.delete(LEARNING_ENGINE_STATE_KEY)
+  }
+
+  /**
+   * The only destructive recovery path for a corrupt additive growth ledger.
+   * The raw ledger is backed up first; plans, scores, review and all other
+   * engine state are retained byte-for-byte.
+   */
+  async resetCorruptGrowthOnly(): Promise<LearningEngineState> {
+    const record = await this.#store.get<unknown>(LEARNING_ENGINE_STATE_KEY)
+    if (!record || record.schemaVersion !== LEARNING_ENGINE_STORAGE_SCHEMA_VERSION) {
+      throw new TypeError('No current learning engine state is available for growth recovery.')
+    }
+    if (typeof record.value !== 'object' || record.value === null || Array.isArray(record.value)) {
+      throw new TypeError('Stored learning engine state is invalid.')
+    }
+    const raw = record.value as Record<string, unknown>
+    if (raw.growth === undefined) throw new TypeError('Stored learning engine state has no growth ledger to recover.')
+    await this.#store.put(
+      LEARNING_ENGINE_GROWTH_CORRUPT_BACKUP_KEY,
+      { schemaVersion: 1, capturedAt: new Date().toISOString(), growth: raw.growth },
+      1,
+    )
+    const recovered = { ...raw, growth: createGrowthState() } as LearningEngineState
+    assertLearningEngineState(recovered)
+    await this.save(recovered)
+    return recovered
   }
 }

@@ -205,6 +205,7 @@ export {
   applyGrowthEvent,
   assertGrowthState,
   createGrowthState,
+  createGrowthStateForProfile,
   getGrowthEligibility,
   startGrowthUpgradeTest,
   submitGrowthUpgradeAnswer,

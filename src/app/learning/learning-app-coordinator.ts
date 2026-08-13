@@ -61,6 +61,8 @@ import {
 } from '../../config/training-test-mode.ts'
 import {
   vocabularyContentSource,
+  listeningContentSource,
+  speakingContentSource,
 } from './training-production-resources.ts'
 import {
   trainingSupplyProviders,
@@ -69,6 +71,7 @@ import {
   collectEligibleSupplyItemIds,
   type ProductionTrainingSupplyProviders,
 } from './training-supply-providers.ts'
+import { GrowthProductionCoordinator } from './growth-production.ts'
 
 export type LearningAppState =
   | { readonly status: 'loading' }
@@ -182,6 +185,8 @@ export class LearningAppCoordinator {
   readonly extraTraining: ProductionExtraTrainingCoordinator
   readonly extraTrainingTimingSessions:
     ProductionExtraTrainingEffectiveTimingSessionFactory
+  /** Public production facade consumed by the future 02 growth screens. */
+  readonly growth: GrowthProductionCoordinator
   #state: LearningAppState = { status: 'loading' }
   #initializing: Promise<LearningAppState> | null = null
   #dailyRoundWrites = new Map<string, Promise<ReturnType<typeof createTrainingSupplyRound>>>()
@@ -201,6 +206,14 @@ export class LearningAppCoordinator {
       this.#activePlans,
       this.#engineStates,
     )
+    this.growth = new GrowthProductionCoordinator({
+      engineStates: this.#engineStates,
+      sources: {
+        vocabulary: vocabularyContentSource,
+        listening: listeningContentSource,
+        speaking: speakingContentSource,
+      },
+    })
     this.extraTraining = new ProductionExtraTrainingCoordinator({
       activePlans: this.#activePlans,
       engineStates: this.#engineStates,

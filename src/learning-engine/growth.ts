@@ -1,4 +1,6 @@
 import type { AbilityDomain } from './contracts.ts'
+import { normalizeLearningAbilityProfile } from './ability-profile.ts'
+import type { LearningAbilityProfile } from './contracts.ts'
 
 export const GROWTH_SCHEMA_VERSION = 2 as const
 export const GROWTH_MAX_LEVEL_ORDINAL = 14 as const
@@ -94,9 +96,9 @@ export type GrowthEvent =
 
 const DOMAINS: readonly AbilityDomain[] = ['vocabulary', 'listening', 'speaking']
 
-function blankDomain(): DomainGrowthState {
+function blankDomain(currentLevelOrdinal = 0): DomainGrowthState {
   return {
-    currentLevelOrdinal: 0,
+    currentLevelOrdinal,
     levelScoredItemCount: 0,
     eligibleSessionCount: 0,
     sessions: [],
@@ -110,6 +112,27 @@ export function createGrowthState(): GrowthState {
   return {
     schemaVersion: GROWTH_SCHEMA_VERSION,
     domains: { vocabulary: blankDomain(), listening: blankDomain(), speaking: blankDomain() },
+  }
+}
+
+/**
+ * R1 is the only existing assessment with a legal, explicit 15-level result.
+ * Listening and speaking remain at the approved conservative level 0 until
+ * their own formal evidence is earned; vocabulary never lends them a level.
+ */
+export function createGrowthStateForProfile(
+  profile: LearningAbilityProfile,
+): GrowthState {
+  const normalized = normalizeLearningAbilityProfile(profile)
+  const vocabularyOrdinal = normalized.r1VocabularyStartPlacement
+    ?.resultLevelOrdinal ?? 0
+  return {
+    schemaVersion: GROWTH_SCHEMA_VERSION,
+    domains: {
+      vocabulary: blankDomain(vocabularyOrdinal),
+      listening: blankDomain(),
+      speaking: blankDomain(),
+    },
   }
 }
 

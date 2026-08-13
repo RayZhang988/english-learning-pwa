@@ -4,11 +4,13 @@ import {
   assertGrowthState,
   applyGrowthEvent,
   createGrowthState,
+  createGrowthStateForProfile,
   getGrowthEligibility,
   migrateGrowthState,
   startGrowthUpgradeTest,
   submitGrowthUpgradeAnswer,
 } from './growth.ts'
+import { abilityProfileR1 } from './test-fixtures.ts'
 
 const at = (n: number) => `2026-08-${String(n).padStart(2, '0')}T12:00:00.000Z`
 
@@ -27,6 +29,12 @@ function completedSession(id: string, day: number, correct = 10, incorrect = 0) 
 }
 
 describe('growth progression', () => {
+  it('uses only the legal R1 vocabulary placement and keeps listening/speaking conservative', () => {
+    const growth = createGrowthStateForProfile(abilityProfileR1({ id: 'junior-2', ordinal: 8, estimatedWords: 1_400, lower: 1_300, upper: 1_500 }))
+    expect(growth.domains.vocabulary.currentLevelOrdinal).toBe(8)
+    expect(growth.domains.listening.currentLevelOrdinal).toBe(0)
+    expect(growth.domains.speaking.currentLevelOrdinal).toBe(0)
+  })
   it('becomes eligible only after five formal sessions, 50 scored answers and 80% recent accuracy', () => {
     let state = createGrowthState()
     for (let index = 1; index <= 5; index += 1) {
