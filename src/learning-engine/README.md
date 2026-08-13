@@ -378,3 +378,39 @@ contentEstimate = clamp(raw, minimumSeconds, maximumSeconds)
    增加掌握度或学习时长。
 6. 当天结束用 `summarizePlanActivity()` 和 `recordDailyActivity()` 更新连续学习，
    再生成进度快照和阶段复测建议。
+
+## 7. R17｜分专项成长与升级测试
+
+`GrowthState` 是独立的 schema 2 账本，分别保存 vocabulary、listening、speaking
+三项的当前 15 级 ordinal（0–14）。它不读取课程答案，也不创建题目。旧 schema 1
+账本在 `migrateGrowthState()` / `LearningEngineRepository.load()` 时只升级测试快照格式；
+无法严格验证的损坏值拒绝读取，绝不清空其他学习数据。
+
+唯一可计入的事件是 `learning.growth.training.completed.v1`，其 `source` 必须是
+`daily-training` 或 `extra-training`，且必须有至少一道已评分题。错题复习、场景、
+`trainingTest=30`、未提交/退出、不可评分及设备、网络、权限失败没有事件入口，因此不会
+形成成长证据。调用方只能在正式会话真正结束后提交一个稳定 `eventId + source + sessionId`
+摘要；重复事件幂等，冲突的 session identity 或非当前等级摘要会被拒绝。
+
+成长进度和资格是两个独立指标：
+
+```text
+growthProgress = min(100, floor(当前等级累计已评分题数 / 50 × 100))
+recentAccuracy = 最近 5 个当前等级正式会话的正确题数 / 已评分题数
+eligible = 当前非最高级
+        && 最近会话数 >= 5
+        && 当前等级累计已评分题数 >= 50
+        && recentAccuracy >= 80%
+        && growthProgress == 100
+```
+
+失败升级测试后，`retryAvailableAfterEligibleSessionCount` 固定为当前会话计数加 2；
+因此必须再完成两次同专项的正式训练才能重新测试。通过后只提升该专项一级，并把新等级
+的累计题数和会话计数置零；历史会话仍保留。大学六级为最高级，不产生升级测试。
+
+05 向 01 提供“下一等级、同专项”的稳定内容 ID 候选；01 显式传入种子和候选调用
+`startGrowthUpgradeTest()`。04 使用确定性 Fisher–Yates 固化十个 `itemIds`，持久化
+`seed/order/index(answers.length)/draft/feedback/score`，所以刷新、离线恢复与退出不会
+重洗。06/07/08 只负责将用户答案评分为布尔 `correct` 并携带可显示的字符串 draft，
+通过 `submitGrowthUpgradeAnswer()` 逐题写入；04 不猜测答案、翻译或发音。02 只渲染
+`getGrowthEligibility()` 和快照；01 负责串行保存、候选解析和错误恢复。

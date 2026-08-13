@@ -1,6 +1,6 @@
 import type { NamespaceStore } from '../storage/index.ts'
 import type { LearningEngineState } from './contracts.ts'
-import { assertGrowthState } from './growth.ts'
+import { assertGrowthState, migrateGrowthState } from './growth.ts'
 
 export const LEARNING_ENGINE_STORAGE_NAMESPACE = 'learning.engine'
 export const LEARNING_ENGINE_STORAGE_SCHEMA_VERSION = 1
@@ -253,8 +253,17 @@ export class LearningEngineRepository {
         `Unsupported learning engine state version: ${record.schemaVersion}`,
       )
     }
-    assertLearningEngineState(record.value)
-    return record.value
+    const value = record.value
+    // Growth is additive.  Reading an old growth v1 ledger is safe; the
+    // upgraded JSON value is returned and is persisted on the caller's next
+    // normal save rather than rewriting unrelated learning state during load.
+    const migrated =
+      typeof value === 'object' && value !== null && 'growth' in value &&
+      (value as { growth?: unknown }).growth !== undefined
+        ? { ...(value as LearningEngineState), growth: migrateGrowthState((value as { growth: unknown }).growth) }
+        : value
+    assertLearningEngineState(migrated)
+    return migrated
   }
 
   async clear(): Promise<void> {
