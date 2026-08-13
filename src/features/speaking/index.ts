@@ -28,6 +28,12 @@ export {
 } from './errors.ts'
 export { createSpeakingFeatureModule } from './feature-module.ts'
 export {
+  createSpeakingGrowthUpgradeAdapter,
+  type SpeakingGrowthUpgradeAdapter,
+  type SpeakingGrowthUpgradePromptView,
+  type SpeakingGrowthUpgradeSubmission,
+} from './growth-upgrade.ts'
+export {
   matchSpeakingText,
   normalizeSpeakingText,
 } from './matching.ts'
