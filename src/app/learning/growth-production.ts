@@ -23,6 +23,7 @@ import {
   getGrowthEligibility,
   startGrowthUpgradeTest,
   submitGrowthUpgradeAnswer,
+  updateGrowthUpgradeDraft,
   type AbilityDomain,
   type GrowthEligibility,
   type GrowthUpgradeDisplayEvidence,
@@ -159,7 +160,6 @@ export interface GrowthSpeakingMediaSession {
   stopRecording(): Promise<SpeakingGrowthUpgradeSubmission | null>
   playRecording(): Promise<SpeakingGrowthUpgradeMediaView>
   playReference(): Promise<SpeakingGrowthUpgradeMediaView>
-  retryRecognition(): Promise<SpeakingGrowthUpgradeSubmission | null>
   recordAgain(): Promise<SpeakingGrowthUpgradeMediaView>
   dispose(): void
 }
@@ -300,6 +300,10 @@ export class GrowthProductionCoordinator {
     return this.#update((state) => ({ ...state, growth: submitGrowthUpgradeAnswer(state.growth!, input) }))
   }
 
+  saveUpgradeDraft(input: { readonly eventId: string; readonly domain: AbilityDomain; readonly index: number; readonly draft: string | null; readonly savedAt: string }): Promise<LearningEngineState> {
+    return this.#update((state) => ({ ...state, growth: updateGrowthUpgradeDraft(state.growth!, input) }))
+  }
+
   /** Resolves exactly the already persisted item at the current test cursor. */
   async upgradeSession(domain: AbilityDomain): Promise<GrowthUpgradeSessionViewModel> {
     const state = await this.#requireState()
@@ -404,9 +408,6 @@ export class GrowthProductionCoordinator {
   async playSpeakingUpgradeReference(): Promise<GrowthSpeakingMediaViewModel> {
     const context = await this.#requireSpeakingMedia(); context.view = await context.session.playReference(); this.#emitSpeakingMedia(context); return this.#toSpeakingMediaView(context.itemId, context.view)
   }
-  async retrySpeakingUpgradeRecognition(): Promise<GrowthSpeakingMediaViewModel> {
-    const context = await this.#requireSpeakingMedia(); await context.session.retryRecognition(); context.view = context.session.current(); this.#emitSpeakingMedia(context); return this.#toSpeakingMediaView(context.itemId, context.view)
-  }
   async recordSpeakingUpgradeAgain(): Promise<GrowthSpeakingMediaViewModel> {
     const context = await this.#requireSpeakingMedia(); context.view = await context.session.recordAgain(); this.#emitSpeakingMedia(context); return this.#toSpeakingMediaView(context.itemId, context.view)
   }
@@ -477,7 +478,7 @@ export class GrowthProductionCoordinator {
         : { domain, question: await adapters.speaking.resolve({ domain, itemId, expectedDifficultyLevel: R17_GROWTH_DIFFICULTIES[level]!, recordingExists: false }) }
     return {
       domain, targetLevelOrdinal: level, targetLevelLabel: R17_GROWTH_LEVEL_LABELS[level]!,
-      index, total: 10, itemId, score: test.score, draft: test.answers[index]?.draft ?? null,
+      index, total: 10, itemId, score: test.score, draft: test.draft,
       question, feedback: index === 0 ? null : test.answers[index - 1]?.displayEvidence ?? null, busy: false, error: null, retryable: false, canExit: true,
     }
   }

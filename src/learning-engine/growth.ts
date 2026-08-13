@@ -36,6 +36,8 @@ export interface GrowthUpgradeTestSnapshot {
    * resumes the same visible question without recreating it.
    */
   readonly answers: readonly GrowthUpgradeAnswerSnapshot[]
+  /** The current, unsubmitted answer. It is opaque to the growth engine. */
+  readonly draft: string | null
   readonly score: { readonly correctCount: number; readonly answeredCount: number }
   readonly startedAt: string
 }
@@ -68,7 +70,7 @@ export interface GrowthUpgradeFeedbackText {
 export interface GrowthListeningDisclosure {
   readonly transcript: readonly { readonly speaker?: string; readonly text: string; readonly translationZh?: string }[]
   readonly rationaleZh: string
-  readonly choiceTranslations?: readonly { readonly id: string; readonly translationZh?: string }[]
+  readonly choiceTranslations?: readonly { readonly id: string; readonly label: string; readonly translationZh?: string }[]
   readonly dictationReview?: { readonly response: string; readonly standardAnswer: string; readonly targetKeywords: readonly string[] }
 }
 
@@ -145,6 +147,14 @@ export interface SubmitGrowthUpgradeAnswerInput {
   readonly displayEvidence?: GrowthUpgradeDisplayEvidence | null
 }
 
+export interface UpdateGrowthUpgradeDraftInput {
+  readonly eventId: string
+  readonly domain: AbilityDomain
+  readonly index: number
+  readonly draft: string | null
+  readonly savedAt: string
+}
+
 export interface AcknowledgeGrowthUpgradeResultInput {
   readonly eventId: string
   readonly domain: AbilityDomain
@@ -156,6 +166,7 @@ export type GrowthEvent =
   | { readonly type: 'learning.growth.training.completed.v1'; readonly payload: GrowthTrainingSession }
   | { readonly type: 'learning.growth.upgrade-test.started.v1'; readonly payload: StartGrowthUpgradeTestInput }
   | { readonly type: 'learning.growth.upgrade-test.answer.recorded.v1'; readonly payload: SubmitGrowthUpgradeAnswerInput }
+  | { readonly type: 'learning.growth.upgrade-test.draft.updated.v1'; readonly payload: UpdateGrowthUpgradeDraftInput }
   | { readonly type: 'learning.growth.upgrade-test.result.acknowledged.v1'; readonly payload: AcknowledgeGrowthUpgradeResultInput }
 
 const DOMAINS: readonly AbilityDomain[] = ['vocabulary', 'listening', 'speaking']
@@ -260,6 +271,7 @@ function assertSession(session: GrowthTrainingSession): void {
 
 function assertUpgradeTest(value: unknown): asserts value is GrowthUpgradeTestSnapshot {
   if (!isRecord(value) || value.schemaVersion !== 3 || typeof value.testId !== 'string' || value.testId.trim().length === 0 || !Number.isInteger(value.seed) || !Array.isArray(value.itemIds) || value.itemIds.length !== GROWTH_UPGRADE_TEST_ITEM_COUNT || new Set(value.itemIds).size !== value.itemIds.length || value.itemIds.some((id) => typeof id !== 'string' || id.trim().length === 0) || !Array.isArray(value.answers) || value.answers.length >= GROWTH_UPGRADE_TEST_ITEM_COUNT || !isRecord(value.score)) throw new TypeError('growth upgrade test is invalid')
+  if (value.draft !== undefined && value.draft !== null && typeof value.draft !== 'string') throw new TypeError('growth upgrade draft is invalid')
   assertTimestamp(String(value.startedAt), 'upgrade-test startedAt')
   for (const [index, answer] of value.answers.entries()) {
     if (!isRecord(answer) || answer.itemId !== value.itemIds[index] || (answer.draft !== null && typeof answer.draft !== 'string') || !isRecord(answer.feedback) || typeof answer.feedback.correct !== 'boolean' || (answer.displayEvidence !== null && !isGrowthUpgradeDisplayEvidence(answer.displayEvidence))) throw new TypeError('growth upgrade answer is invalid')
@@ -287,7 +299,7 @@ export function isGrowthUpgradeDisplayEvidence(value: unknown): value is GrowthU
   if (value.domain === 'vocabulary') return isFeedbackText(value.feedback)
   if (value.domain === 'listening') {
     const disclosure = value.disclosure
-    return isFeedbackText(value.feedback) && isRecord(disclosure) && Array.isArray(disclosure.transcript) && disclosure.transcript.every((line) => isRecord(line) && isNonEmptyString(line.text) && (line.speaker === undefined || typeof line.speaker === 'string') && (line.translationZh === undefined || typeof line.translationZh === 'string')) && isNonEmptyString(disclosure.rationaleZh) && (disclosure.choiceTranslations === undefined || Array.isArray(disclosure.choiceTranslations)) && (disclosure.dictationReview === undefined || isRecord(disclosure.dictationReview))
+    return isFeedbackText(value.feedback) && isRecord(disclosure) && Array.isArray(disclosure.transcript) && disclosure.transcript.every((line) => isRecord(line) && isNonEmptyString(line.text) && (line.speaker === undefined || typeof line.speaker === 'string') && (line.translationZh === undefined || typeof line.translationZh === 'string')) && isNonEmptyString(disclosure.rationaleZh) && (disclosure.choiceTranslations === undefined || (Array.isArray(disclosure.choiceTranslations) && disclosure.choiceTranslations.every((choice) => isRecord(choice) && isNonEmptyString(choice.id) && isNonEmptyString(choice.label) && (choice.translationZh === undefined || typeof choice.translationZh === 'string')))) && (disclosure.dictationReview === undefined || isRecord(disclosure.dictationReview))
   }
   if (value.domain === 'speaking') {
     const submission = value.submission
@@ -323,7 +335,7 @@ function migrateV1GrowthState(value: Record<string, unknown>): GrowthState {
       if (!isRecord(oldTest) || oldTest.schemaVersion !== 1 || !Array.isArray(oldTest.itemIds) || oldTest.itemIds.some((itemId) => typeof itemId !== 'string') || !Array.isArray(oldTest.answers) || oldTest.answers.some((answer) => typeof answer !== 'boolean')) throw new TypeError('legacy growth upgrade test is invalid')
       const itemIds = oldTest.itemIds as string[]
       const answers = oldTest.answers.map((answer, index) => ({ itemId: itemIds[index]!, draft: null, feedback: { correct: answer as boolean, answeredAt: String(oldTest.startedAt) }, displayEvidence: null }))
-      upgradeTest = { schemaVersion: 3, testId: String(oldTest.testId), seed: Number(oldTest.seed), itemIds, answers, score: { correctCount: answers.filter((answer) => answer.feedback.correct).length, answeredCount: answers.length }, startedAt: String(oldTest.startedAt) }
+      upgradeTest = { schemaVersion: 3, testId: String(oldTest.testId), seed: Number(oldTest.seed), itemIds, answers, draft: null, score: { correctCount: answers.filter((answer) => answer.feedback.correct).length, answeredCount: answers.length }, startedAt: String(oldTest.startedAt) }
     }
     migrated[domain] = { ...entry as unknown as DomainGrowthState, upgradeTest, lastUpgradeResult: null }
   }
@@ -349,7 +361,7 @@ function migrateV2GrowthState(value: Record<string, unknown>): GrowthState {
         if (!isRecord(answer) || answer.itemId !== itemIds[index] || !isRecord(answer.feedback) || typeof answer.feedback.correct !== 'boolean') throw new TypeError('legacy growth upgrade answer is invalid')
         return { itemId: itemIds[index]!, draft: typeof answer.draft === 'string' ? answer.draft : null, feedback: { correct: answer.feedback.correct, answeredAt: String(answer.feedback.answeredAt) }, displayEvidence: null }
       })
-      upgradeTest = { schemaVersion: 3, testId: oldTest.testId as string, seed: oldTest.seed as number, itemIds, answers, score: { correctCount: answers.filter((answer) => answer.feedback.correct).length, answeredCount: answers.length }, startedAt: oldTest.startedAt as string }
+      upgradeTest = { schemaVersion: 3, testId: oldTest.testId as string, seed: oldTest.seed as number, itemIds, answers, draft: null, score: { correctCount: answers.filter((answer) => answer.feedback.correct).length, answeredCount: answers.length }, startedAt: oldTest.startedAt as string }
     }
     migrated[domain] = { ...entry as unknown as DomainGrowthState, upgradeTest, lastUpgradeResult: null }
   }
@@ -428,7 +440,18 @@ export function startGrowthUpgradeTest(state: GrowthState, input: StartGrowthUpg
   if (unique.length !== input.candidateItemIds.length || unique.some((id) => !id.trim()) || unique.length < GROWTH_UPGRADE_TEST_ITEM_COUNT) throw new TypeError('upgrade-test requires at least ten unique candidate items')
   if (computeEligibility(current).status !== 'eligible') throw new TypeError('upgrade-test is not eligible')
   const itemIds = seededShuffle(unique, input.seed).slice(0, GROWTH_UPGRADE_TEST_ITEM_COUNT)
-  return replaceDomain(state, input.domain, { ...current, processedEventIds: [...current.processedEventIds, input.eventId], upgradeTest: { schemaVersion: 3, testId: input.eventId, seed: input.seed, itemIds, answers: [], score: { correctCount: 0, answeredCount: 0 }, startedAt: input.startedAt } })
+  return replaceDomain(state, input.domain, { ...current, processedEventIds: [...current.processedEventIds, input.eventId], upgradeTest: { schemaVersion: 3, testId: input.eventId, seed: input.seed, itemIds, answers: [], draft: null, score: { correctCount: 0, answeredCount: 0 }, startedAt: input.startedAt } })
+}
+
+/** Saves only the current UI draft; it never scores or advances the test. */
+export function updateGrowthUpgradeDraft(state: GrowthState, input: UpdateGrowthUpgradeDraftInput): GrowthState {
+  const current = state.domains[input.domain]
+  if (current.processedEventIds.includes(input.eventId)) return state
+  const test = current.upgradeTest
+  if (!test || input.index !== test.answers.length) throw new TypeError('upgrade-test draft is out of order')
+  if (input.draft !== null && typeof input.draft !== 'string') throw new TypeError('upgrade-test draft is invalid')
+  assertTimestamp(input.savedAt, 'upgrade-test draft savedAt')
+  return replaceDomain(state, input.domain, { ...current, processedEventIds: [...current.processedEventIds, input.eventId], upgradeTest: { ...test, draft: input.draft } })
 }
 
 export function submitGrowthUpgradeAnswer(state: GrowthState, input: SubmitGrowthUpgradeAnswerInput): GrowthState {
@@ -439,10 +462,10 @@ export function submitGrowthUpgradeAnswer(state: GrowthState, input: SubmitGrowt
   if (test === null || input.index !== test.answers.length || input.index < 0 || input.index >= test.itemIds.length) throw new TypeError('upgrade-test answer is out of order')
   if (input.draft !== undefined && input.draft !== null && typeof input.draft !== 'string') throw new TypeError('upgrade-test draft is invalid')
   if (input.displayEvidence !== undefined && input.displayEvidence !== null && (!isGrowthUpgradeDisplayEvidence(input.displayEvidence) || input.displayEvidence.domain !== input.domain)) throw new TypeError('upgrade-test display evidence is invalid')
-  const answers = [...test.answers, { itemId: test.itemIds[input.index]!, draft: input.draft ?? null, feedback: { correct: input.correct, answeredAt: input.answeredAt }, displayEvidence: input.displayEvidence ?? null }]
+  const answers = [...test.answers, { itemId: test.itemIds[input.index]!, draft: input.draft ?? test.draft, feedback: { correct: input.correct, answeredAt: input.answeredAt }, displayEvidence: input.displayEvidence ?? null }]
   const score = { correctCount: test.score.correctCount + (input.correct ? 1 : 0), answeredCount: answers.length }
   const events = [...current.processedEventIds, input.eventId]
-  if (answers.length < GROWTH_UPGRADE_TEST_ITEM_COUNT) return replaceDomain(state, input.domain, { ...current, processedEventIds: events, upgradeTest: { ...test, answers, score } })
+  if (answers.length < GROWTH_UPGRADE_TEST_ITEM_COUNT) return replaceDomain(state, input.domain, { ...current, processedEventIds: events, upgradeTest: { ...test, answers, draft: null, score } })
   const passed = score.correctCount >= GROWTH_UPGRADE_TEST_PASS_COUNT
   const result: GrowthUpgradeResult = {
     sessionId: test.testId, domain: input.domain, seed: test.seed,
@@ -475,5 +498,6 @@ export function applyGrowthEvent(state: GrowthState, event: GrowthEvent): Growth
   if (event.type === 'learning.growth.training.completed.v1') return applyGrowthTrainingCompleted(state, event.payload)
   if (event.type === 'learning.growth.upgrade-test.started.v1') return startGrowthUpgradeTest(state, event.payload)
   if (event.type === 'learning.growth.upgrade-test.answer.recorded.v1') return submitGrowthUpgradeAnswer(state, event.payload)
+  if (event.type === 'learning.growth.upgrade-test.draft.updated.v1') return updateGrowthUpgradeDraft(state, event.payload)
   return acknowledgeGrowthUpgradeResult(state, event.payload)
 }

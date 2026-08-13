@@ -177,13 +177,6 @@ export class SpeakingGrowthUpgradeMediaSession {
     return this.current()
   }
 
-  async retryRecognition(): Promise<SpeakingGrowthUpgradeSubmission | null> {
-    if (!this.#recording) throw new TypeError('没有可重新识别的录音。')
-    // Web speech recognition cannot safely consume a saved MediaRecorder blob.
-    // The honest recovery is a new recording of the same persisted item.
-    return null
-  }
-
   async recordAgain(): Promise<SpeakingGrowthUpgradeMediaView> {
     this.#ensureLive()
     if (this.#busy) throw new TypeError('媒体操作仍在进行。')

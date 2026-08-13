@@ -210,6 +210,7 @@ export {
   getGrowthEligibility,
   startGrowthUpgradeTest,
   submitGrowthUpgradeAnswer,
+  updateGrowthUpgradeDraft,
   migrateGrowthState,
   isGrowthUpgradeDisplayEvidence,
 } from './growth.ts'
@@ -222,6 +223,7 @@ export type {
   GrowthUpgradeAnswerSnapshot,
   GrowthUpgradeDisplayEvidence,
   GrowthUpgradeResult,
+  UpdateGrowthUpgradeDraftInput,
   AcknowledgeGrowthUpgradeResultInput,
   GrowthUpgradeTestSnapshot,
 } from './growth.ts'

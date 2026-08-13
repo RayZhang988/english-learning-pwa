@@ -10,6 +10,7 @@ import {
   acknowledgeGrowthUpgradeResult,
   startGrowthUpgradeTest,
   submitGrowthUpgradeAnswer,
+  updateGrowthUpgradeDraft,
 } from './growth.ts'
 import { abilityProfileR1 } from './test-fixtures.ts'
 
@@ -155,6 +156,16 @@ describe('growth progression', () => {
     assertGrowthState(restored)
     expect(restored.domains.vocabulary.upgradeTest).toMatchObject({ itemIds: order, score: { correctCount: 1, answeredCount: 1 }, answers: [{ itemId: order[0], draft: 'my answer', feedback: { correct: true } }] })
     expect(submitGrowthUpgradeAnswer(restored, { eventId: 'a0', domain: 'vocabulary', index: 0, correct: true, draft: 'my answer', answeredAt: at(11) })).toBe(restored)
+  })
+
+  it('persists an unsubmitted upgrade draft without advancing the score', () => {
+    let state = createGrowthState()
+    for (let index = 1; index <= 5; index += 1) state = applyGrowthTrainingCompleted(state, completedSession(`draft-${index}`, index))
+    state = startGrowthUpgradeTest(state, { eventId: 'draft-start', domain: 'vocabulary', seed: 5, candidateItemIds: Array.from({ length: 10 }, (_, index) => `draft-${index}`), startedAt: at(10) })
+    state = updateGrowthUpgradeDraft(state, { eventId: 'draft-save', domain: 'vocabulary', index: 0, draft: 'platform 7', savedAt: at(11) })
+    const restored = JSON.parse(JSON.stringify(state))
+    assertGrowthState(restored)
+    expect(restored.domains.vocabulary.upgradeTest).toMatchObject({ draft: 'platform 7', score: { answeredCount: 0 } })
   })
 
   it('migrates a valid v1 snapshot without changing stable test order, and rejects corruption', () => {

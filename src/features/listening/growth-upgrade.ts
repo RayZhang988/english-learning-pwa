@@ -50,7 +50,7 @@ export interface ListeningGrowthUpgradeSubmission {
   readonly disclosure: {
     readonly transcript: readonly ListeningTranscriptLine[]
     readonly rationaleZh: string
-    readonly choiceTranslations?: readonly { readonly id: string; readonly translationZh: string | undefined }[]
+    readonly choiceTranslations?: readonly { readonly id: string; readonly label: string; readonly translationZh: string | undefined }[]
     readonly dictationReview?: {
       readonly response: string
       readonly standardAnswer: string
@@ -135,7 +135,7 @@ export function createListeningGrowthUpgradeAdapter(contentSource: ReadonlyDataS
         transcript: unit.transcript, rationaleZh: question.rationaleZh,
         ...(question.type === 'keyword-dictation'
           ? { dictationReview: { response: input.response, standardAnswer: question.standardAnswer, targetKeywords: question.targetKeywords } }
-          : { choiceTranslations: question.options.map((option) => ({ id: option.id, translationZh: option.translationZh })) }),
+          : { choiceTranslations: question.options.map((option) => ({ id: option.id, label: option.label, translationZh: option.translationZh })) }),
       }
       return { itemId: item.itemId, scorable: true, correct, feedback: feedback(question, correct), disclosure }
     },

@@ -17,6 +17,12 @@ describe('Growth upgrade feedback', () => {
     expect(markup).toContain('火车中午出发。')
   })
 
+  it('keeps the English option together with its Chinese translation after listening submission', () => {
+    const markup = renderToStaticMarkup(<Feedback evidence={{ domain: 'listening', feedback: { title: '再听一遍', description: '完成' }, disclosure: { transcript: [{ text: 'The train leaves at noon.' }], rationaleZh: '关注时间。', choiceTranslations: [{ id: 'a', label: 'at noon', translationZh: '中午' }] } }} />)
+    expect(markup).toContain('at noon')
+    expect(markup).toContain('中午')
+  })
+
   it('renders a speaking recognition failure honestly for retry', () => {
     const markup = renderToStaticMarkup(<Feedback evidence={{ domain: 'speaking', submission: { scorable: false, correct: null, retryable: true, recordingId: 'r1', durationMs: 1200, targetText: 'I need help.', targetTranslationZh: '我需要帮助。', message: '未识别到清晰语音。' } }} />)
     expect(markup).toContain('本次无法识别')
