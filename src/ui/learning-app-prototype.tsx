@@ -157,6 +157,20 @@ export interface ProgressViewModel {
   }[]
 }
 
+/** Read-only R17 projection supplied by 01; UI does not derive eligibility. */
+export interface GrowthProgressDomainViewModel {
+  readonly domain: 'vocabulary' | 'listening' | 'speaking'
+  readonly currentLevelLabel: string
+  readonly progressPercent: number
+  readonly recentSessionCount: number
+  readonly scoredItemCount: number
+  readonly recentAccuracyPercent: number | null
+  readonly eligibility: 'eligible' | 'ineligible' | 'cooling-down' | 'highest-level' | 'test-in-progress'
+  readonly remainingCooldownSessions: number
+  readonly action: { readonly label: string; readonly disabled: boolean; readonly busy: boolean }
+  readonly activeTest: { readonly itemIds: readonly string[]; readonly index: number; readonly score: { readonly correctCount: number; readonly answeredCount: number } } | null
+}
+
 export type PracticeModuleViewModel =
   | {
       /**
@@ -179,6 +193,8 @@ export type PracticeModuleViewModel =
 interface LearningAppPrototypeBaseProps {
   readonly plan: DailyPlanViewModel
   readonly progress: ProgressViewModel
+  readonly growth?: readonly GrowthProgressDomainViewModel[]
+  readonly onGrowthActionRequested?: (domain: GrowthProgressDomainViewModel['domain']) => void
   readonly offline?: boolean
   readonly onTaskRequested: (taskId: string) => void
   readonly onExtraTrainingRequested?: (
@@ -300,6 +316,8 @@ const disconnectedPracticeModules: readonly PracticeModuleViewModel[] = [
 export function LearningAppPrototype({
   plan,
   progress,
+  growth,
+  onGrowthActionRequested,
   offline = false,
   onTaskRequested,
   onExtraTrainingRequested,
@@ -408,7 +426,7 @@ export function LearningAppPrototype({
             />
           )
         ) : null}
-        {section === 'progress' ? <ProgressPage progress={progress} /> : null}
+        {section === 'progress' ? <ProgressPage progress={progress} growth={growth} onGrowthActionRequested={onGrowthActionRequested} /> : null}
       </div>
 
       <nav className="bottom-nav" aria-label="主要导航">
@@ -826,7 +844,19 @@ export function PracticeModuleGrid({
   )
 }
 
-function ProgressPage({ progress }: { readonly progress: ProgressViewModel }) {
+function ProgressPage({ progress, growth, onGrowthActionRequested }: { readonly progress: ProgressViewModel; readonly growth?: readonly GrowthProgressDomainViewModel[]; readonly onGrowthActionRequested?: (domain: GrowthProgressDomainViewModel['domain']) => void }) {
+  const [selectedDomain, setSelectedDomain] = useState<GrowthProgressDomainViewModel['domain'] | null>(null)
+  const selected = growth?.find((entry) => entry.domain === selectedDomain)
+  const labels = { vocabulary: '词汇', listening: '听力', speaking: '口语' } as const
+  const status = (entry: GrowthProgressDomainViewModel) => {
+    if (entry.eligibility === 'eligible') return '已满足升级条件'
+    if (entry.eligibility === 'test-in-progress') return '升级测试进行中'
+    if (entry.eligibility === 'cooling-down') return `测试未通过，还需 ${entry.remainingCooldownSessions} 次正式训练`
+    if (entry.eligibility === 'highest-level') return '已达最高等级'
+    if (entry.progressPercent === 100) return '成长进度已满，继续补齐会话或正确率'
+    if (entry.scoredItemCount < 50) return '继续积累可评分题目'
+    return '继续积累最近正式训练成绩'
+  }
   return (
     <>
       <PageHeader eyebrow="PROGRESS" title="学习进度" />
@@ -846,6 +876,29 @@ function ProgressPage({ progress }: { readonly progress: ProgressViewModel }) {
           <span>完成训练</span>
         </article>
       </section>
+
+      {growth ? <section className="weekly-card" aria-label="专项成长进度">
+        <div className="section-heading"><div><span className="eyebrow">R17 GROWTH</span><h2>专项成长</h2></div></div>
+        <p className="page-intro">三个专项独立升级；只有日常和额外训练的正式成绩会计入。</p>
+        <div className="training-card-grid">
+          {growth.map((entry) => <article className="task-card" key={entry.domain}>
+            <span className="eyebrow">{labels[entry.domain]}</span><h3>{entry.currentLevelLabel}</h3>
+            <div role="progressbar" aria-label={`${labels[entry.domain]}成长进度`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={entry.progressPercent} className="daily-brief__progress"><i style={{ width: `${entry.progressPercent}%` }} /></div>
+            <p>成长进度 {entry.progressPercent}% · 最近 {entry.recentSessionCount}/5 次</p>
+            <p>可评分 {entry.scoredItemCount} 题 · 正确率 {entry.recentAccuracyPercent === null ? '暂无' : `${entry.recentAccuracyPercent}%`}</p>
+            <p>{status(entry)}</p>
+            {(entry.eligibility === 'eligible' || entry.eligibility === 'test-in-progress') ? <button type="button" className="primary-button" disabled={entry.action.disabled} aria-busy={entry.action.busy} onClick={() => onGrowthActionRequested?.(entry.domain)}>{entry.action.label}</button> : null}
+            <button type="button" className="secondary-button" onClick={() => setSelectedDomain(entry.domain)}>查看详情</button>
+          </article>)}
+        </div>
+      </section> : null}
+
+      {selected ? <section className="weekly-card" aria-label={`${labels[selected.domain]}成长详情`}>
+        <div className="section-heading"><div><span className="eyebrow">{labels[selected.domain]} GROWTH</span><h2>{selected.currentLevelLabel}</h2></div><button type="button" className="text-button" onClick={() => setSelectedDomain(null)}>关闭</button></div>
+        <p>升级条件：最近 5 次正式训练、累计至少 50 道可评分题、正确率至少 80%，且成长进度达到 100%。</p>
+        {selected.activeTest ? <p>升级测试：第 {selected.activeTest.index + 1}/10 题，当前答对 {selected.activeTest.score.correctCount} 题。退出后会保存进度。</p> : null}
+        <button type="button" className="primary-button" disabled={selected.action.disabled} aria-busy={selected.action.busy} onClick={() => onGrowthActionRequested?.(selected.domain)}>{selected.action.label}</button>
+      </section> : null}
 
       <section className="weekly-card">
         <div className="section-heading">

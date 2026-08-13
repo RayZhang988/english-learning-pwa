@@ -16,6 +16,7 @@ import {
   type PracticeModuleId,
   type PracticeModuleViewModel,
   type ProgressViewModel,
+  type GrowthProgressDomainViewModel,
   type TrainingPracticeModuleId,
 } from './index.ts'
 import type { TrainingAreaScreen } from './training-area-surfaces.tsx'
@@ -25,6 +26,12 @@ const taskIds = {
   listening: 'plan-2026-07-27:task:listening:exact',
   speaking: 'plan-2026-07-27:task:speaking:exact',
 } as const
+
+const growth: readonly GrowthProgressDomainViewModel[] = [
+  { domain: 'vocabulary', currentLevelLabel: '一年级', progressPercent: 100, recentSessionCount: 5, scoredItemCount: 50, recentAccuracyPercent: 82, eligibility: 'eligible', remainingCooldownSessions: 0, action: { label: '参加升级测试', disabled: false, busy: false }, activeTest: null },
+  { domain: 'listening', currentLevelLabel: '幼儿园', progressPercent: 100, recentSessionCount: 3, scoredItemCount: 51, recentAccuracyPercent: 85, eligibility: 'ineligible', remainingCooldownSessions: 0, action: { label: '继续日常训练', disabled: true, busy: false }, activeTest: null },
+  { domain: 'speaking', currentLevelLabel: '二年级', progressPercent: 100, recentSessionCount: 5, scoredItemCount: 60, recentAccuracyPercent: 70, eligibility: 'cooling-down', remainingCooldownSessions: 2, action: { label: '还需完成 2 次训练', disabled: true, busy: false }, activeTest: null },
+]
 
 const taskPresentation = {
   vocabulary: {
@@ -670,5 +677,23 @@ describe('R3 task duration presentation', () => {
     expect(markup).toContain('今日目标约 45 分钟')
     expect(markup).toContain('data-estimate-seconds="59"')
     expect(markup).not.toContain('15 分钟')
+  })
+
+  it('renders the three independent upstream growth states in the real progress entry', () => {
+    const markup = renderToStaticMarkup(
+      <LearningAppPrototype
+        plan={dailyPlan()}
+        progress={progress}
+        growth={growth}
+        initialSection="progress"
+        onTaskRequested={() => undefined}
+        onGrowthActionRequested={() => undefined}
+      />,
+    )
+    expect(markup).toContain('专项成长')
+    expect(markup).toContain('已满足升级条件')
+    expect(markup).toContain('成长进度已满，继续补齐会话或正确率')
+    expect(markup).toContain('测试未通过，还需 2 次正式训练')
+    expect(markup).toContain('参加升级测试')
   })
 })

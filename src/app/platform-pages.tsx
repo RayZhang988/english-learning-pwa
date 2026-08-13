@@ -40,6 +40,7 @@ import {
   trainingAreaScreenFromPath,
 } from './training-area-routing.ts'
 import { wrongAnswerLibraryStore } from './wrong-answer-library-store.ts'
+import { toGrowthDomainViewModel } from './learning/growth-production.ts'
 
 export function PlatformShell() {
   return (
@@ -217,6 +218,11 @@ export function PlatformReadyPage() {
         extraTrainingEligibleModules,
       )}
       progress={toProgressViewModel(state.engineState)}
+      growth={state.engineState.growth === undefined
+        ? undefined
+        : (['vocabulary', 'listening', 'speaking'] as const).map((domain) =>
+          toGrowthDomainViewModel(state.engineState.growth!, domain),
+        )}
       practiceModules={toPracticeModulesViewModel(
         state.runtime.activePlan,
         state.taskAccess,
@@ -240,6 +246,30 @@ export function PlatformReadyPage() {
           state.assessmentProfileSchemaVersion === 3
             ? ASSESSMENT_RESULTS_ROUTE
             : ASSESSMENT_ROUTE,
+        )
+      }}
+      onGrowthActionRequested={(domain) => {
+        const growth = state.engineState.growth?.domains[domain]
+        if (!growth) return
+        if (growth.upgradeTest) {
+          // Do not send the user to an unregistered route or fabricate a generic
+          // question. The domain route must resolve this stable item ID through
+          // its own existing scorer before the saved test can be resumed.
+          setRequestError(
+            new Error('升级测试顺序已保存，但当前版本尚未接入该专项的原题型解析。'),
+          )
+          return
+        }
+        void coordinator.growth.startUpgradeTest({
+          eventId: `growth-start:${domain}:${crypto.randomUUID()}`,
+          domain,
+          seed: Math.floor(Math.random() * 0x7fffffff),
+          startedAt: new Date().toISOString(),
+        }).then(
+          () => setRequestError(
+            new Error('升级测试顺序已保存，但当前版本尚未接入该专项的原题型解析。'),
+          ),
+          (error) => setRequestError(error instanceof Error ? error : new Error('无法保存升级测试。')),
         )
       }}
       onTaskRequested={(taskId) => {

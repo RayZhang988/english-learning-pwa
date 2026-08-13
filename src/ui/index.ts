@@ -10,6 +10,7 @@ export {
   type PracticeModuleId,
   type PracticeModuleViewModel,
   type ProgressViewModel,
+  type GrowthProgressDomainViewModel,
   type StartableTrainingTaskStatus,
   type TrainingPracticeModuleId,
   type TrainingTaskAccessViewModel,
