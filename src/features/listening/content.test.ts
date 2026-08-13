@@ -53,7 +53,7 @@ describe('listening content catalog', () => {
     ).toHaveLength(84)
     expect(
       questions.filter((question) => question.type === 'keyword-dictation'),
-    ).toHaveLength(28)
+    ).toHaveLength(788)
     expect(
       questions.filter((question) => question.type === 'core-information'),
     ).toHaveLength(85)
@@ -83,7 +83,7 @@ describe('listening content catalog', () => {
       .flatMap((unit) => unit.questions)
       .filter((question) => question.type === 'keyword-dictation')
 
-    expect(dictations).toHaveLength(28)
+    expect(dictations).toHaveLength(788)
     expect(dictations.every((question) => (
       question.answerGuidance.answerType.length > 0 &&
       question.answerGuidance.guidanceZh.length > 0 &&
@@ -134,7 +134,7 @@ describe('listening content catalog', () => {
     const catalog = createListeningCatalog(documents())
     const unit = resolveListeningTask(catalog, createListeningTask())
     expect(unit.learningUnitId).toBe('st4w-w1d1-listening')
-    expect(unit.questions).toHaveLength(9)
+    expect(unit.questions).toHaveLength(38)
     expect(() =>
       resolveListeningTask(
         catalog,

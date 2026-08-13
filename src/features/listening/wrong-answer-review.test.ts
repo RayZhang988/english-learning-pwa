@@ -39,8 +39,8 @@ class AtomicState {
 }
 
 describe('released R13-D listening review aliases', () => {
-  it('has exactly 253 unique listening aliases, each resolving to its released original type', () => {
-    expect(aliases).toHaveLength(253)
+  it('has exactly 1013 unique listening aliases, each resolving to its released original type', () => {
+    expect(aliases).toHaveLength(1013)
     const itemIds = new Set<string>()
     const identities = new Set<string>()
     const types = new Set<string>()

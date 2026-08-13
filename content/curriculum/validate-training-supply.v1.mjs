@@ -366,6 +366,7 @@ function expectedCandidates() {
         itemId: `supply-v1-listening-${exercise.exerciseId}`,
         variantFamilyId: `supply-family-v1-listening-${unit.learningUnitId}`,
         ...candidateBase(unit, 'listening', nextOrder('listening')),
+        difficultyLevel: exercise.growthDifficultyLevel ?? unit.difficultyLevel,
         nominalEffectiveSeconds: Math.round(audioSeconds + 19),
         playbackContentId: playbackContentId(audioText),
         source: {

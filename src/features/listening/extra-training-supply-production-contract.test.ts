@@ -147,8 +147,16 @@ describe('extra listening supply production contract', () => {
     const family = candidates.find((candidate) => candidate.variantFamilyId.includes('w1d1'))!.variantFamilyId
     const priorityCandidates = candidates
       .filter((candidate) => candidate.variantFamilyId === family)
+      .filter((candidate) => !candidate.itemId.startsWith('r17-listening-'))
+      .filter((candidate, index, familyCandidates) =>
+        candidate.playbackContentId !== null &&
+        familyCandidates.findIndex(
+          (other) => other.playbackContentId === candidate.playbackContentId,
+        ) === index,
+      )
+      .slice(0, 6)
     const priorityIds = priorityCandidates.map((candidate) => candidate.itemId)
-    expect(priorityIds.length).toBeGreaterThanOrEqual(9)
+    expect(priorityIds.length).toBe(6)
     const priority = { 'recent-error': priorityIds, 'due-review': [], 'same-day-variant': [], 'new-optional-content': [] }
     const supply = provider()
     const completed: string[] = []

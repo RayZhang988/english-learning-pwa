@@ -173,8 +173,8 @@ describe('09 released content acceptance', () => {
       listeningQuestions.filter(
         (question) => question.type === 'keyword-dictation',
       ),
-    ).toHaveLength(28)
-    expect(extensionIndex.totals.exercises).toBe(140)
+    ).toHaveLength(788)
+    expect(extensionIndex.totals.exercises).toBe(900)
     expect(exercises.lessons).toHaveLength(28)
   })
 

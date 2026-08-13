@@ -74,14 +74,14 @@ async function dailySequence(planId: string, count = 30) {
 }
 
 describe('R11 released listening diversity acceptance', () => {
-  it('publishes the expanded 253-item listening pool with 84 short-sentence choices', () => {
+  it('publishes the expanded 1013-item listening pool with 84 short-sentence choices', () => {
     const listeningCandidates = trainingSupplyIndex.candidates.filter(
       (candidate) => candidate.domain === 'listening',
     )
     const questions = catalog.units.flatMap((unit) => unit.questions)
 
-    expect(listeningCandidates).toHaveLength(253)
-    expect(new Set(listeningCandidates.map((item) => item.itemId))).toHaveLength(253)
+    expect(listeningCandidates).toHaveLength(1013)
+    expect(new Set(listeningCandidates.map((item) => item.itemId))).toHaveLength(1013)
     expect(
       questions.filter((question) => question.type === 'short-sentence-choice'),
     ).toHaveLength(84)
