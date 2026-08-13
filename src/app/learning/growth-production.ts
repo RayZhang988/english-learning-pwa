@@ -19,11 +19,14 @@ import {
 } from '../../features/speaking/index.ts'
 import {
   applyGrowthTrainingCompleted,
+  acknowledgeGrowthUpgradeResult,
   getGrowthEligibility,
   startGrowthUpgradeTest,
   submitGrowthUpgradeAnswer,
   type AbilityDomain,
   type GrowthEligibility,
+  type GrowthUpgradeDisplayEvidence,
+  type GrowthUpgradeResult,
   type GrowthState,
   type LearningEngineRepository,
   type LearningEngineState,
@@ -103,7 +106,8 @@ export interface GrowthUpgradeSessionViewModel {
   /** Persisted opaque input for the current/last answered item. */
   readonly draft: string | null
   readonly question: GrowthUpgradeQuestionPayload
-  readonly feedback: GrowthUpgradeFeedback | null
+  /** Persisted feedback for the just-completed item, restored after reload. */
+  readonly feedback: GrowthUpgradeDisplayEvidence | null
   readonly busy: boolean
   readonly error: string | null
   readonly retryable: boolean
@@ -118,6 +122,28 @@ export type GrowthUpgradeSubmitInput =
       readonly recognition: SpeakingRecognitionOutcome
       readonly recording: { readonly recordingId: string; readonly durationMs: number }
     }
+
+function displayEvidenceFor(feedback: GrowthUpgradeFeedback): GrowthUpgradeDisplayEvidence {
+  if (feedback.domain === 'vocabulary') {
+    const value = feedback.submission.feedback
+    return { domain: 'vocabulary', feedback: { title: value.title, description: value.description, ...(value.exampleEn ? { exampleEn: value.exampleEn } : {}), ...(value.explanationZh ? { explanationZh: value.explanationZh } : {}) } }
+  }
+  if (feedback.domain === 'listening') {
+    const value = feedback.submission
+    return {
+      domain: 'listening',
+      feedback: { title: value.feedback.title, description: value.feedback.description },
+      disclosure: {
+        ...value.disclosure,
+        transcript: value.disclosure.transcript.map((line) => ({ text: line.text, ...(line.speaker ? { speaker: line.speaker } : {}), ...(line.translationZh ? { translationZh: line.translationZh } : {}) })),
+      },
+    }
+  }
+  const value = feedback.submission
+  return value.contentMatch.state === 'recognized'
+    ? { domain: 'speaking', submission: { scorable: true, correct: value.correct, retryable: false, recordingId: value.recording.recordingId, durationMs: value.recording.durationMs, targetText: value.contentMatch.targetText, targetTranslationZh: value.contentMatch.targetTranslationZh, recognizedText: value.contentMatch.match.transcript, matchLevel: value.contentMatch.match.level } }
+    : { domain: 'speaking', submission: { scorable: false, correct: null, retryable: true, recordingId: value.recording.recordingId, durationMs: value.recording.durationMs, targetText: value.contentMatch.targetText, targetTranslationZh: value.contentMatch.targetTranslationZh, message: value.contentMatch.message } }
+}
 
 export interface GrowthUpgradeAdapters {
   readonly vocabulary: VocabularyGrowthUpgradeAdapter
@@ -270,7 +296,7 @@ export class GrowthProductionCoordinator {
     })
   }
 
-  submitUpgradeAnswer(input: { readonly eventId: string; readonly domain: AbilityDomain; readonly index: number; readonly correct: boolean; readonly draft?: string | null; readonly answeredAt: string }): Promise<LearningEngineState> {
+  submitUpgradeAnswer(input: { readonly eventId: string; readonly domain: AbilityDomain; readonly index: number; readonly correct: boolean; readonly draft?: string | null; readonly displayEvidence?: GrowthUpgradeDisplayEvidence | null; readonly answeredAt: string }): Promise<LearningEngineState> {
     return this.#update((state) => ({ ...state, growth: submitGrowthUpgradeAnswer(state.growth!, input) }))
   }
 
@@ -280,7 +306,16 @@ export class GrowthProductionCoordinator {
     const test = state.growth!.domains[domain].upgradeTest
     if (!test) throw new TypeError('No saved upgrade test is available.')
     if (test.answers.length >= test.itemIds.length) throw new TypeError('Saved upgrade test has no remaining item.')
-    return this.#sessionView(state.growth!, domain, test.answers.length, null)
+    return this.#sessionView(state.growth!, domain, test.answers.length)
+  }
+
+  /** Latest completed result is retained until explicitly acknowledged. */
+  async upgradeResult(domain: AbilityDomain): Promise<GrowthUpgradeResult | null> {
+    return (await this.#requireState()).growth!.domains[domain].lastUpgradeResult
+  }
+
+  acknowledgeUpgradeResult(input: { readonly eventId: string; readonly domain: AbilityDomain; readonly sessionId: string }): Promise<LearningEngineState> {
+    return this.#update((state) => ({ ...state, growth: acknowledgeGrowthUpgradeResult(state.growth!, input) }))
   }
 
   /**
@@ -319,6 +354,7 @@ export class GrowthProductionCoordinator {
       index,
       correct,
       draft,
+      displayEvidence: displayEvidenceFor(feedback),
       answeredAt: input.answeredAt,
     })
     return { state, feedback, advanced: true }
@@ -427,7 +463,6 @@ export class GrowthProductionCoordinator {
     growth: GrowthState,
     domain: AbilityDomain,
     index: number,
-    feedback: GrowthUpgradeFeedback | null,
   ): Promise<GrowthUpgradeSessionViewModel> {
     const test = growth.domains[domain].upgradeTest
     if (!test) throw new TypeError('No saved upgrade test is available.')
@@ -443,7 +478,7 @@ export class GrowthProductionCoordinator {
     return {
       domain, targetLevelOrdinal: level, targetLevelLabel: R17_GROWTH_LEVEL_LABELS[level]!,
       index, total: 10, itemId, score: test.score, draft: test.answers[index]?.draft ?? null,
-      question, feedback, busy: false, error: null, retryable: false, canExit: true,
+      question, feedback: index === 0 ? null : test.answers[index - 1]?.displayEvidence ?? null, busy: false, error: null, retryable: false, canExit: true,
     }
   }
 

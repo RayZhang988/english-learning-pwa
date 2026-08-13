@@ -7,6 +7,7 @@ import {
   createGrowthStateForProfile,
   getGrowthEligibility,
   migrateGrowthState,
+  acknowledgeGrowthUpgradeResult,
   startGrowthUpgradeTest,
   submitGrowthUpgradeAnswer,
 } from './growth.ts'
@@ -82,6 +83,27 @@ describe('growth progression', () => {
     }
     expect(state.domains.vocabulary.currentLevelOrdinal).toBe(1)
     expect(state.domains.vocabulary.levelScoredItemCount).toBe(0)
+    expect(state.domains.vocabulary.lastUpgradeResult).toMatchObject({
+      domain: 'vocabulary', passed: true, previousLevelOrdinal: 0,
+      resultingLevelOrdinal: 1, score: { correctCount: 8, answeredCount: 10 },
+      answers: expect.arrayContaining([expect.objectContaining({ displayEvidence: null })]),
+    })
+  })
+
+  it('persists structured display evidence through refresh and atomically retains a failed final result until acknowledged', () => {
+    let state = createGrowthState()
+    for (let index = 1; index <= 5; index += 1) state = applyGrowthTrainingCompleted(state, completedSession(`evidence-${index}`, index))
+    state = startGrowthUpgradeTest(state, { eventId: 'evidence-start', domain: 'vocabulary', seed: 11, candidateItemIds: Array.from({ length: 10 }, (_, index) => `evidence-${index}`), startedAt: at(10) })
+    const evidence = { domain: 'vocabulary' as const, feedback: { title: '需要再看一次', description: '正确答案：hello', exampleEn: 'Hello.', explanationZh: '你好。' } }
+    state = submitGrowthUpgradeAnswer(state, { eventId: 'evidence-answer-0', domain: 'vocabulary', index: 0, correct: false, draft: '{"selectedOptionId":"a"}', displayEvidence: evidence, answeredAt: at(11) })
+    expect(JSON.parse(JSON.stringify(state)).domains.vocabulary.upgradeTest?.answers[0]).toMatchObject({ displayEvidence: evidence })
+    for (let index = 1; index < 10; index += 1) state = submitGrowthUpgradeAnswer(state, { eventId: `evidence-answer-${index}`, domain: 'vocabulary', index, correct: false, answeredAt: at(11) })
+    const result = state.domains.vocabulary.lastUpgradeResult
+    expect(result).toMatchObject({ sessionId: 'evidence-start', domain: 'vocabulary', seed: 11, targetLevelOrdinal: 1, previousLevelOrdinal: 0, resultingLevelOrdinal: 0, passed: false, cooldownRequired: 2, score: { correctCount: 0, answeredCount: 10 }, answers: expect.arrayContaining([expect.objectContaining({ displayEvidence: evidence })]) })
+    expect(state.domains.vocabulary.upgradeTest).toBeNull()
+    expect(() => acknowledgeGrowthUpgradeResult(state, { eventId: 'wrong-ack', domain: 'vocabulary', sessionId: 'other' })).toThrow('does not match')
+    state = acknowledgeGrowthUpgradeResult(state, { eventId: 'ack', domain: 'vocabulary', sessionId: 'evidence-start' })
+    expect(state.domains.vocabulary.lastUpgradeResult).toBeNull()
   })
 
   it('does not downgrade after a failed test and waits for two later sessions before retry', () => {
@@ -140,9 +162,23 @@ describe('growth progression', () => {
     v1.schemaVersion = 1
     v1.domains.vocabulary.upgradeTest = { schemaVersion: 1, testId: 'legacy-test', seed: 3, itemIds: Array.from({ length: 10 }, (_, index) => `legacy-${index}`), answers: [true, false], startedAt: at(1) }
     const migrated = migrateGrowthState(v1)
-    expect(migrated.schemaVersion).toBe(2)
-    expect(migrated.domains.vocabulary.upgradeTest).toMatchObject({ schemaVersion: 2, itemIds: v1.domains.vocabulary.upgradeTest.itemIds, score: { correctCount: 1, answeredCount: 2 } })
+    expect(migrated.schemaVersion).toBe(3)
+    expect(migrated.domains.vocabulary.upgradeTest).toMatchObject({ schemaVersion: 3, itemIds: v1.domains.vocabulary.upgradeTest.itemIds, score: { correctCount: 1, answeredCount: 2 } })
     expect(() => assertGrowthState({ ...migrated, domains: { ...migrated.domains, vocabulary: { ...migrated.domains.vocabulary, upgradeTest: { ...migrated.domains.vocabulary.upgradeTest!, score: { correctCount: 2, answeredCount: 2 } } } } })).toThrow('score')
+  })
+
+  it('migrates schema 2 active tests without inventing display evidence or a result', () => {
+    let legacy: any = createGrowthState()
+    legacy.schemaVersion = 2
+    legacy.domains.vocabulary.upgradeTest = {
+      schemaVersion: 2, testId: 'schema-2', seed: 2,
+      itemIds: Array.from({ length: 10 }, (_, index) => `schema-2-${index}`),
+      answers: [{ itemId: 'schema-2-0', draft: 'a', feedback: { correct: true, answeredAt: at(1) } }],
+      score: { correctCount: 1, answeredCount: 1 }, startedAt: at(1),
+    }
+    const migrated = migrateGrowthState(legacy)
+    expect(migrated).toMatchObject({ schemaVersion: 3, domains: { vocabulary: { lastUpgradeResult: null, upgradeTest: { schemaVersion: 3, answers: [{ displayEvidence: null }] } } } })
+    expect(() => assertGrowthState({ ...migrated, domains: { ...migrated.domains, vocabulary: { ...migrated.domains.vocabulary, lastUpgradeResult: { ...migrated.domains.vocabulary.lastUpgradeResult, sessionId: '' } } } })).toThrow('result')
   })
 
   it('rejects an out-of-order answer event instead of guessing its course answer', () => {

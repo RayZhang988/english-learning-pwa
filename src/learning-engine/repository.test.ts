@@ -66,7 +66,7 @@ describe('LearningEngineRepository', () => {
     const legacy = { ...current, growth: { ...current.growth!, schemaVersion: 1 as const } }
     await store.put(LEARNING_ENGINE_STATE_KEY, legacy, 1)
     const loaded = await repository.load()
-    expect(loaded?.growth?.schemaVersion).toBe(2)
+    expect(loaded?.growth?.schemaVersion).toBe(3)
     expect(loaded?.progress).toEqual(current.progress)
     expect(store.records.get(LEARNING_ENGINE_STATE_KEY)?.value).toEqual(legacy)
   })

@@ -203,6 +203,7 @@ export {
 export {
   applyGrowthTrainingCompleted,
   applyGrowthEvent,
+  acknowledgeGrowthUpgradeResult,
   assertGrowthState,
   createGrowthState,
   createGrowthStateForProfile,
@@ -210,6 +211,7 @@ export {
   startGrowthUpgradeTest,
   submitGrowthUpgradeAnswer,
   migrateGrowthState,
+  isGrowthUpgradeDisplayEvidence,
 } from './growth.ts'
 export type {
   DomainGrowthState,
@@ -217,6 +219,10 @@ export type {
   GrowthEvent,
   GrowthState,
   GrowthTrainingSession,
+  GrowthUpgradeAnswerSnapshot,
+  GrowthUpgradeDisplayEvidence,
+  GrowthUpgradeResult,
+  AcknowledgeGrowthUpgradeResultInput,
   GrowthUpgradeTestSnapshot,
 } from './growth.ts'
 export type {

@@ -48,7 +48,7 @@ describe('GrowthProductionCoordinator', () => {
     await repository.save({ ...state, growth: { schemaVersion: 999 } as never })
     const recovered = await repository.resetCorruptGrowthOnly()
     expect(recovered.progress).toEqual(state.progress)
-    expect(recovered.growth?.schemaVersion).toBe(2)
+    expect(recovered.growth?.schemaVersion).toBe(3)
     expect(store.values.get('learning-engine-growth-corrupt-backup')).toBeDefined()
   })
 
@@ -76,7 +76,10 @@ describe('GrowthProductionCoordinator', () => {
     expect(before).toMatchObject({ index: 0, total: 10, question: { domain: 'vocabulary' } })
     const answer = await coordinator.submitUpgradeSessionAnswer({ eventId: 'answer-v-0', domain: 'vocabulary', answer: { domain: 'vocabulary', selectedOptionId: 'a' }, answeredAt: '2026-08-13T02:01:00.000Z' })
     expect(answer).toMatchObject({ advanced: true, feedback: { domain: 'vocabulary', submission: { correct: true } } })
-    expect((await coordinator.upgradeSession('vocabulary')).index).toBe(1)
+    expect(await coordinator.upgradeSession('vocabulary')).toMatchObject({
+      index: 1,
+      feedback: { domain: 'vocabulary', feedback: { title: '回答正确', description: 'ok' } },
+    })
   })
 
   it('keeps speaking recognition failures on the same saved item without adding a growth answer', async () => {
