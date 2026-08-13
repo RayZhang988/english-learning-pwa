@@ -15,6 +15,7 @@ import type {
   LearningAppState,
 } from './learning/learning-app-coordinator.ts'
 import {
+  initialAppSectionFromLocation,
   PlatformReadyPage,
 } from './platform-pages.tsx'
 import {
@@ -128,5 +129,11 @@ describe('R12 training framework route integration', () => {
     expect(trainingAreaScreenFromPath('/practice/%E0%A4%A')).toEqual({
       kind: 'hub',
     })
+  })
+})
+
+describe('R17 growth result return', () => {
+  it('restores the progress tab when an upgrade result returns to the home route', () => {
+    expect(initialAppSectionFromLocation('/', '?section=progress')).toBe('progress')
   })
 })

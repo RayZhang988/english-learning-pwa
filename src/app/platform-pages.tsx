@@ -50,6 +50,19 @@ export function PlatformShell() {
   )
 }
 
+/** Keeps explicit post-flow destinations refreshable on the home route. */
+export function initialAppSectionFromLocation(
+  pathname: string,
+  search: string,
+): AppSection {
+  if (pathname.startsWith('/practice')) {
+    return 'practice'
+  }
+  return new URLSearchParams(search).get('section') === 'progress'
+    ? 'progress'
+    : 'today'
+}
+
 export function PlatformReadyPage() {
   const navigate = useNavigate()
   const location = useLocation()
@@ -187,11 +200,10 @@ export function PlatformReadyPage() {
   }
 
   const now = new Date().toISOString()
-  const initialSection: AppSection = location.pathname.startsWith(
-    '/practice',
+  const initialSection = initialAppSectionFromLocation(
+    location.pathname,
+    location.search,
   )
-    ? 'practice'
-    : 'today'
   const initialTrainingAreaScreen = trainingAreaScreenFromPath(
     location.pathname,
   )
