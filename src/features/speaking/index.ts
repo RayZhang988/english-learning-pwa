@@ -34,6 +34,12 @@ export {
   type SpeakingGrowthUpgradeSubmission,
 } from './growth-upgrade.ts'
 export {
+  SpeakingGrowthUpgradeMediaSession,
+  type SpeakingGrowthUpgradeMediaSessionOptions,
+  type SpeakingGrowthUpgradeMediaStatus,
+  type SpeakingGrowthUpgradeMediaView,
+} from './growth-upgrade-media.ts'
+export {
   matchSpeakingText,
   normalizeSpeakingText,
 } from './matching.ts'
