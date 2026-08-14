@@ -106,6 +106,38 @@ async function bootstrap(page) {
   const databases = await page.dumpIndexedDb()
   assert.ok(record(databases, 'learning.engine', 'current-state'), 'Assessment must create the production learning-engine record.')
   assert.ok(record(databases, 'app.learning-runtime', 'active-plan'), 'Assessment must create the production active-plan record.')
+
+  // QA-R17-001: the expanded vocabulary corpus exposes more than 1,000
+  // eligible candidates.  The real daily route must build its complete round
+  // and render a question instead of rejecting the old enumeration bound.
+  const openedVocabulary = await page.evaluate(`(() => {
+    const button = [...document.querySelectorAll('button.task-row')].find(
+      (candidate) => candidate.dataset.moduleId === 'vocabulary' && !candidate.disabled,
+    )
+    if (!button) return false
+    button.click()
+    return true
+  })()`)
+  assert.equal(openedVocabulary, true, 'The daily vocabulary task was not startable.')
+  await page.waitFor(`location.hash.startsWith('#/vocabulary?taskId=') && (
+    document.body.innerText.includes('提交答案') ||
+    document.body.innerText.includes('检查答案') ||
+    document.body.innerText.includes('无法准备训练题目顺序') ||
+    document.body.innerText.includes('Supply provider exceeded')
+  )`, 20_000)
+  assert.doesNotMatch(
+    await page.bodyText(),
+    /无法准备训练题目顺序|Supply provider exceeded|exceeded the released candidate index/u,
+    'The expanded daily vocabulary round failed to initialize.',
+  )
+  const vocabularyText = await page.bodyText()
+  assert.match(
+    vocabularyText,
+    /提交答案|检查答案/u,
+    `The daily vocabulary question did not render. Body: ${vocabularyText.slice(0, 800)}`,
+  )
+  await page.navigate(new URL('#/', baseUrl).href)
+  await page.waitFor(`document.body.innerText.includes('任选一项开始')`, 20_000)
 }
 
 async function seedEligibleGrowth(page) {
