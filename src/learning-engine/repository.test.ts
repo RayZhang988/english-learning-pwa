@@ -173,6 +173,45 @@ describe('LearningEngineRepository', () => {
     await expect(repository.load()).rejects.toThrow('recentTrainingItemIds is invalid')
   })
 
+  it('round-trips the additive semantic history ledger and keeps an older state without it unchanged', async () => {
+    const store = new MemoryNamespaceStore()
+    const repository = new LearningEngineRepository(store)
+    const current = createLearningEngineState(abilityProfile(), '2026-08-11T00:00:00.000Z')
+    const withSemanticHistory = {
+      ...current,
+      recentTrainingSemanticHistory: {
+        'vocabulary:learn:3': [{
+          itemId: 'item-a', knowledgePointId: 'knowledge-a', semanticCategoryId: 'semantic-a',
+        }],
+      },
+    }
+    await repository.save(withSemanticHistory)
+    await expect(repository.load()).resolves.toEqual(withSemanticHistory)
+
+    const { recentTrainingSemanticHistory: _semantic, ...legacy } = current
+    await store.put(LEARNING_ENGINE_STATE_KEY, legacy, 1)
+    await expect(repository.load()).resolves.toEqual(legacy)
+  })
+
+  it.each([
+    { '': [] },
+    { 'vocabulary:learn: 3': [] },
+    { 'vocabulary:learn:3': Array.from({ length: 13 }, (_, index) => ({
+      itemId: `item-${index}`, knowledgePointId: `knowledge-${index}`, semanticCategoryId: 'semantic',
+    })) },
+    { 'vocabulary:learn:3': [{ itemId: 'item', knowledgePointId: '', semanticCategoryId: 'semantic' }] },
+    { 'vocabulary:learn:3': [{ itemId: 'item', knowledgePointId: 'knowledge', semanticCategoryId: 'semantic', extra: true }] },
+  ])('rejects malformed semantic history ledger %#', async (recentTrainingSemanticHistory) => {
+    const store = new MemoryNamespaceStore()
+    const repository = new LearningEngineRepository(store)
+    await store.put(LEARNING_ENGINE_STATE_KEY, {
+      ...createLearningEngineState(abilityProfile(), '2026-08-11T00:00:00.000Z'),
+      recentTrainingSemanticHistory,
+    }, 1)
+
+    await expect(repository.load()).rejects.toThrow('recentTrainingSemanticHistory is invalid')
+  })
+
   it('rejects legacy scored attempts masquerading as trusted timing samples', async () => {
     const store = new MemoryNamespaceStore()
     const repository = new LearningEngineRepository(store)

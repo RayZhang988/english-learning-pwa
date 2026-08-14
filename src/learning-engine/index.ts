@@ -143,7 +143,9 @@ export {
   acknowledgeSceneTrainingItem,
   createLearningEngineState,
   recordRecentTrainingItem,
+  recordRecentTrainingSemanticIdentity,
   trainingRecentBucket,
+  trainingRecentSemanticHistory,
 } from './engine.ts'
 export {
   isExtraTrainingEvent,

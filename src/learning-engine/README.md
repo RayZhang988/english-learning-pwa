@@ -246,6 +246,13 @@ contentEstimate = clamp(raw, minimumSeconds, maximumSeconds)
 刷新、离线和退出恢复只继续现有顺序，不重洗。旧 schema-1 轮次仍严格校验并
 原样推进，不伪造缺失的语义历史。
 
+`LearningEngineState.recentTrainingSemanticHistory` 使用与 R11 相同的
+`domain:mode:difficultyLevel` 边界，为每个边界保留最近 12 次已确认的
+三字段语义身份。日常与额外训练只在 schema-2 `item.completed` 事件的
+round acknowledgement 通过后，与训练进度在同一纯状态转换中追加它。
+`trainingRecentSemanticHistory()` 是 01 创建新轮时的公开读取入口。旧状态或
+schema-1 轮次继续保持缺省，不从 itemId、题干或课程标签反向伪造语义。
+
 ## 1. 指标定义
 
 所有比例指标均为 `0..1`，能力和内容难度均沿用 03 的 `0..12` 内部等级。

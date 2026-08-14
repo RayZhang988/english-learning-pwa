@@ -206,6 +206,34 @@ function assertLearningEngineState(
   ) {
     throw new TypeError('recentTrainingItemIds is invalid')
   }
+  const semanticHistory =
+    (value as Record<string, unknown>).recentTrainingSemanticHistory
+  if (
+    semanticHistory !== undefined &&
+    (!isRecord(semanticHistory) ||
+      Object.entries(semanticHistory).some(([bucket, entries]) => {
+        const [domain, mode, difficulty, ...rest] = bucket.split(':')
+        const difficultyLevel = Number(difficulty)
+        return rest.length > 0 ||
+          !['vocabulary', 'listening', 'speaking'].includes(domain ?? '') ||
+          !['learn', 'calibration', 'review', 'retry'].includes(mode ?? '') ||
+          difficulty === undefined || difficulty.trim() !== difficulty ||
+          difficulty.length === 0 || `${difficultyLevel}` !== difficulty ||
+          !Number.isFinite(difficultyLevel) ||
+          difficultyLevel < 0 || difficultyLevel > 12 ||
+          !Array.isArray(entries) || entries.length > 12 ||
+          entries.some((entry) =>
+            !isRecord(entry) ||
+            Object.keys(entry).length !== 3 ||
+            !['itemId', 'knowledgePointId', 'semanticCategoryId'].every(
+              (field) => typeof entry[field] === 'string' &&
+                (entry[field] as string).trim().length > 0,
+            ),
+          )
+      }))
+  ) {
+    throw new TypeError('recentTrainingSemanticHistory is invalid')
+  }
   const sceneAcknowledgements =
     (value as Record<string, unknown>).sceneTrainingAcknowledgementIds
   if (

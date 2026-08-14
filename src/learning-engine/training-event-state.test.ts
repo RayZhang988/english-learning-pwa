@@ -14,6 +14,12 @@ import { generateDailyPlan } from './scheduler.ts'
 import { abilityProfile, learningCandidate } from './test-fixtures.ts'
 import { createTrainingSupplyRound } from './training-randomization.ts'
 
+const semanticCandidate = (
+  itemId: string,
+  knowledgePointId: string,
+  semanticCategoryId: string,
+) => ({ itemId, knowledgePointId, semanticCategoryId })
+
 function dailyProgress(localDate = '2026-08-11') {
   const plan = generateDailyPlan({
     planId: `plan-${localDate}`,
@@ -204,5 +210,133 @@ describe('R11 training event state', () => {
     expect(result.engineState.recentTrainingItemIds).toEqual({
       'vocabulary:learn:3': ['extra-vocabulary-item'],
     })
+  })
+})
+
+describe('R15 cross-round semantic history', () => {
+  it('atomically appends the acknowledged daily semantic identity and exposes it to a new round', () => {
+    const progress = dailyProgress()
+    const initialRound = createTrainingSupplyRound({
+      seed: 'daily-semantic',
+      candidates: [
+        semanticCandidate('daily-a', 'knowledge-greeting', 'semantic-social'),
+        semanticCandidate('daily-b', 'knowledge-hotel', 'semantic-lodging'),
+      ],
+      shortTermExcludedItemIds: [],
+      shortTermHistory: [],
+    })
+    const next = initialRound.order[0]!
+    const acknowledged = { ...initialRound, cursor: 1, shortTermHistory: [
+      initialRound.orderAudit[0]!,
+    ] }
+    const result = applyLearningEngineTrainingEvent({
+      engineState: createLearningEngineState(abilityProfile(), '2026-08-11T00:00:00.000Z'),
+      progress,
+      event: planItemEvent(progress, 'semantic-daily-1', next, acknowledged),
+    })
+    const bucket = 'vocabulary:learn:5'
+
+    expect(result.engineState.recentTrainingSemanticHistory?.[bucket]).toEqual([
+      expect.objectContaining({
+        itemId: next,
+        knowledgePointId: initialRound.orderAudit[0]!.knowledgePointId,
+        semanticCategoryId: initialRound.orderAudit[0]!.semanticCategoryId,
+      }),
+    ])
+    const history = result.engineState.recentTrainingSemanticHistory![bucket]!
+    const secondRound = createTrainingSupplyRound({
+      seed: 'next-round',
+      candidates: [
+        semanticCandidate('variant', initialRound.orderAudit[0]!.knowledgePointId, 'semantic-other'),
+        semanticCandidate('fresh', 'knowledge-fresh', 'semantic-fresh'),
+      ],
+      shortTermExcludedItemIds: history.map((entry) => entry.itemId),
+      shortTermHistory: history,
+    })
+    expect(secondRound.order[0]).toBe('fresh')
+  })
+
+  it('bounds cross-round history to 12 and does not duplicate it for replayed events', () => {
+    let engineState = createLearningEngineState(abilityProfile(), '2026-08-11T00:00:00.000Z')
+    for (let index = 0; index < 13; index += 1) {
+      let progress = dailyProgress(`2026-08-${String(index + 1).padStart(2, '0')}`)
+      const round = createTrainingSupplyRound({
+        seed: `round-${index}`,
+        candidates: [semanticCandidate(`item-${index}`, `knowledge-${index}`, `semantic-${index % 3}`)],
+        shortTermExcludedItemIds: [],
+        shortTermHistory: [],
+      })
+      const event = planItemEvent(progress, `semantic-${index}`, `item-${index}`, {
+        ...round,
+        cursor: 1,
+        shortTermHistory: [round.orderAudit[0]!],
+      })
+      const result = applyLearningEngineTrainingEvent({ engineState, progress, event })
+      engineState = result.engineState
+      progress = result.progress
+      if (index === 12) {
+        expect(applyLearningEngineTrainingEvent({ engineState, progress, event }).engineState).toBe(engineState)
+      }
+    }
+    expect(engineState.recentTrainingSemanticHistory?.['vocabulary:learn:5']).toHaveLength(12)
+    expect(engineState.recentTrainingSemanticHistory?.['vocabulary:learn:5']?.[0]?.itemId).toBe('item-1')
+  })
+
+  it('does not invent semantic history for legacy schema-1 rounds', () => {
+    const progress = dailyProgress()
+    const legacy = createTrainingSupplyRound({
+      seed: 'legacy-round', candidateItemIds: ['legacy-item'], shortTermExcludedItemIds: [],
+    })
+    const result = applyLearningEngineTrainingEvent({
+      engineState: createLearningEngineState(abilityProfile(), '2026-08-11T00:00:00.000Z'),
+      progress,
+      event: planItemEvent(progress, 'legacy-semantic', 'legacy-item', { ...legacy, cursor: 1 }),
+    })
+
+    expect(result.engineState.recentTrainingSemanticHistory).toEqual({})
+  })
+
+  it('atomically appends acknowledged semantic identity from extra training', () => {
+    const completed = completedDailyProgress()
+    const extraTraining = createExtraTrainingSession(createExtraTrainingState(), completed, {
+      sessionId: 'semantic-extra', localDate: '2026-08-11', domain: 'vocabulary',
+      targetModuleId: 'vocabulary', targetDifficulty: 3,
+      priorityItemIds: {
+        'recent-error': [], 'due-review': [], 'same-day-variant': [], 'new-optional-content': [],
+      },
+      startedAt: '2026-08-11T01:00:00.000Z',
+    })
+    const round = createTrainingSupplyRound({
+      seed: 'extra-semantic',
+      candidates: [semanticCandidate('extra-semantic-item', 'knowledge-extra', 'semantic-extra')],
+      shortTermExcludedItemIds: [], shortTermHistory: [],
+    })
+    const event = parseExtraTrainingEvent({
+      id: 'semantic-extra-event', type: 'learning.extra-training.item.completed.v1',
+      sourceModuleId: 'vocabulary', schemaVersion: 1, occurredAt: '2026-08-11T01:01:00.000Z',
+      payload: {
+        sessionId: 'semantic-extra', localDate: '2026-08-11', domain: 'vocabulary',
+        targetModuleId: 'vocabulary', mode: 'learn', requestId: 'request-extra',
+        nextSupplyCursor: 'cursor-extra',
+        item: {
+          itemId: 'extra-semantic-item', learningUnitId: 'unit-extra',
+          contentRef: 'lesson://extra', difficultyLevel: 3, tags: [],
+        },
+        supplyRound: { ...round, cursor: 1, shortTermHistory: [round.orderAudit[0]!] },
+      },
+    })
+    const result = applyLearningEngineExtraTrainingEvent({
+      engineState: createLearningEngineState(abilityProfile(), '2026-08-11T00:00:00.000Z'),
+      extraTraining,
+      event,
+    })
+
+    expect(result.engineState.recentTrainingSemanticHistory?.['vocabulary:learn:3']).toEqual([
+      {
+        itemId: 'extra-semantic-item',
+        knowledgePointId: 'knowledge-extra',
+        semanticCategoryId: 'semantic-extra',
+      },
+    ])
   })
 })

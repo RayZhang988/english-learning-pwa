@@ -8,7 +8,10 @@ import type {
   PlatformEvent,
   PortableData,
 } from '../core/index.ts'
-import type { TrainingSupplyRound } from './training-randomization.ts'
+import type {
+  TrainingSupplyCandidateIdentity,
+  TrainingSupplyRound,
+} from './training-randomization.ts'
 
 export type {
   AbilityDomain,
@@ -504,6 +507,13 @@ export interface LearningEngineState {
   readonly wrongAnswerLibrary?: WrongAnswerLibraryState
   /** R11 cooldown history, keyed by domain/mode/difficulty bucket. */
   readonly recentTrainingItemIds?: Readonly<Record<string, readonly string[]>>
+  /**
+   * Additive R15 semantic cooldown history using the same bucket boundary.
+   * Old schema-1 records omit it; missing metadata is never reconstructed.
+   */
+  readonly recentTrainingSemanticHistory?: Readonly<
+    Record<string, readonly TrainingSupplyCandidateIdentity[]>
+  >
   /** Durable R11 scene callback deduplication, independent from review state. */
   readonly sceneTrainingAcknowledgementIds?: readonly string[]
   /**

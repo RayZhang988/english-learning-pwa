@@ -15,6 +15,7 @@ import {
 } from './utils.ts'
 import type { LearningAbilityProfile } from './contracts.ts'
 import { createGrowthStateForProfile } from './growth.ts'
+import type { TrainingSupplyCandidateIdentity } from './training-randomization.ts'
 
 export function createLearningEngineState(
   profile: LearningAbilityProfile,
@@ -25,7 +26,42 @@ export function createLearningEngineState(
     progress: createInitialProgressState(profile, initializedAt),
     reviewItems: {},
     recentTrainingItemIds: {},
+    recentTrainingSemanticHistory: {},
     growth: createGrowthStateForProfile(profile),
+  }
+}
+
+export function trainingRecentSemanticHistory(
+  state: LearningEngineState,
+  bucket: string,
+): readonly TrainingSupplyCandidateIdentity[] {
+  if (bucket.trim().length === 0) throw new TypeError('Recent training bucket must be non-empty')
+  return state.recentTrainingSemanticHistory?.[bucket] ?? []
+}
+
+export function recordRecentTrainingSemanticIdentity(
+  state: LearningEngineState,
+  bucket: string,
+  identity: TrainingSupplyCandidateIdentity,
+): LearningEngineState {
+  if (bucket.trim().length === 0 ||
+    identity.itemId.trim().length === 0 ||
+    identity.knowledgePointId.trim().length === 0 ||
+    identity.semanticCategoryId.trim().length === 0) {
+    throw new TypeError('Recent semantic training identity must be complete')
+  }
+  const current = trainingRecentSemanticHistory(state, bucket)
+  const next = [...current, {
+    itemId: identity.itemId,
+    knowledgePointId: identity.knowledgePointId,
+    semanticCategoryId: identity.semanticCategoryId,
+  }].slice(-12)
+  return {
+    ...state,
+    recentTrainingSemanticHistory: {
+      ...(state.recentTrainingSemanticHistory ?? {}),
+      [bucket]: next,
+    },
   }
 }
 

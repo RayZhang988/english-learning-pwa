@@ -6,7 +6,11 @@ import type {
   PlanProgress,
   SkipHistoryEntry,
 } from './contracts.ts'
-import { recordRecentTrainingItem, trainingRecentBucket } from './engine.ts'
+import {
+  recordRecentTrainingItem,
+  recordRecentTrainingSemanticIdentity,
+  trainingRecentBucket,
+} from './engine.ts'
 import { applyExtraTrainingEvent } from './extra-training.ts'
 import { applyPlanEvent } from './lifecycle.ts'
 
@@ -44,15 +48,23 @@ function withRecentCompletedItem(
     return state
   }
   const { item } = event.payload
-  return recordRecentTrainingItem(
+  const bucket = trainingRecentBucket(
+    event.payload.domain,
+    event.payload.mode,
+    item.difficultyLevel,
+  )
+  const withItem = recordRecentTrainingItem(
     state,
-    trainingRecentBucket(
-      event.payload.domain,
-      event.payload.mode,
-      item.difficultyLevel,
-    ),
+    bucket,
     item.itemId,
   )
+  const round = event.payload.supplyRound
+  if (round === undefined || round.schemaVersion === 1) return withItem
+  const acknowledged = round.orderAudit[round.cursor - 1]
+  if (acknowledged === undefined || acknowledged.itemId !== item.itemId) {
+    throw new TypeError('Semantic supply round does not acknowledge the completed item')
+  }
+  return recordRecentTrainingSemanticIdentity(withItem, bucket, acknowledged)
 }
 
 /**
