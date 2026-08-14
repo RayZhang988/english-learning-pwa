@@ -66,13 +66,33 @@ export interface VocabularySupplyProvider {
   next(request: LearningTaskSupplyRequest): Promise<LearningTaskSupplyResult>
 }
 
+export type VocabularyEligibleItemIdsResult =
+  | {
+      readonly schemaVersion: 1
+      readonly requestId: string
+      readonly status: 'eligible-items'
+      readonly itemIds: readonly string[]
+    }
+  | {
+      readonly schemaVersion: 1
+      readonly requestId: string
+      readonly status: 'invalid-request'
+      readonly reason: 'provider-failure'
+    }
+
+export interface VocabularyEligibleItemIdsProvider {
+  eligibleItemIds(
+    request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
+  ): Promise<VocabularyEligibleItemIdsResult>
+}
+
 /** R6 provider: preserves 05's exact extra-training priority ordering. */
 export interface ExtraVocabularySupplyProvider {
   next(request: ExtraTrainingSupplyRequest): Promise<LearningTaskSupplyResult>
 }
 
 /** Strict, local implementation of the 05 training-supply handoff v1 selection. */
-export class VocabularyCatalogSupplyProvider implements VocabularySupplyProvider, ExtraVocabularySupplyProvider {
+export class VocabularyCatalogSupplyProvider implements VocabularySupplyProvider, ExtraVocabularySupplyProvider, VocabularyEligibleItemIdsProvider {
   private readonly items: readonly IndexedVocabularySupplyItem[]
 
   constructor(index: unknown, catalog: VocabularyCatalog) {
@@ -93,16 +113,30 @@ export class VocabularyCatalogSupplyProvider implements VocabularySupplyProvider
     }
   }
 
+  async eligibleItemIds(
+    request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
+  ): Promise<VocabularyEligibleItemIdsResult> {
+    if (!this.isValidRequest(request)) {
+      return {
+        schemaVersion: 1,
+        requestId: request.requestId,
+        status: 'invalid-request',
+        reason: 'provider-failure',
+      }
+    }
+    return {
+      schemaVersion: 1,
+      requestId: request.requestId,
+      status: 'eligible-items',
+      itemIds: this.eligibleItems(request).map((item) => item.itemId),
+    }
+  }
+
   async next(request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest): Promise<LearningTaskSupplyResult> {
-    if (request.schemaVersion !== 1 || request.domain !== 'vocabulary' || request.targetModuleId !== 'vocabulary') {
+    if (!this.isValidRequest(request)) {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
     }
-    const eligible = this.items.filter((item) =>
-      item.allowedModes.includes(request.mode) &&
-      (request.targetDifficulty < 0.5
-        ? item.difficultyLevel >= 0.5 && item.difficultyLevel <= 2.5
-        : Math.abs(item.difficultyLevel - request.targetDifficulty) <= 1.5),
-    )
+    const eligible = this.eligibleItems(request)
     if (eligible.length === 0) {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'no-eligible-content' }
     }
@@ -162,5 +196,23 @@ export class VocabularyCatalogSupplyProvider implements VocabularySupplyProvider
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'all-eligible-content-recently-used' }
     }
     return { schemaVersion: 1, requestId: request.requestId, status: 'item', item, nextCursor: item.itemId }
+  }
+
+  private isValidRequest(
+    request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
+  ): boolean {
+    return request.schemaVersion === 1 && request.domain === 'vocabulary' &&
+      request.targetModuleId === 'vocabulary' && Number.isFinite(request.targetDifficulty)
+  }
+
+  private eligibleItems(
+    request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
+  ): readonly IndexedVocabularySupplyItem[] {
+    return this.items.filter((item) =>
+      item.allowedModes.includes(request.mode) &&
+      (request.targetDifficulty < 0.5
+        ? item.difficultyLevel >= 0.5 && item.difficultyLevel <= 2.5
+        : Math.abs(item.difficultyLevel - request.targetDifficulty) <= 1.5),
+    )
   }
 }

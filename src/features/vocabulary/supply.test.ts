@@ -7,6 +7,79 @@ import type { VocabularySupplyItem } from './types.ts'
 import { createTrainingSupplyRound } from '../../learning-engine/index.ts'
 
 describe('vocabulary training supply', () => {
+  it('bulk-enumerates the same eligible ids as repeated next calls', async () => {
+    const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
+    const provider = new VocabularyCatalogSupplyProvider(catalog.trainingSupplyIndex, catalog)
+    const request = { schemaVersion: 1 as const, requestId: 'eligible', planId: 'plan', taskId: 'task', domain: 'vocabulary' as const, targetModuleId: 'vocabulary' as const, mode: 'learn' as const, targetDifficulty: 1, cursor: null, excludeItemIds: [] as readonly string[], reason: 'initial' as const }
+    const expected: string[] = []
+
+    while (true) {
+      const result = await provider.next({
+        ...request,
+        requestId: `next-${expected.length}`,
+        excludeItemIds: expected,
+      })
+      if (result.status === 'content-exhausted') break
+      expected.push(result.item.itemId)
+    }
+
+    await expect(provider.eligibleItemIds(request)).resolves.toEqual({
+      schemaVersion: 1,
+      requestId: 'eligible',
+      status: 'eligible-items',
+      itemIds: expected,
+    })
+  })
+
+  it('bulk-enumerates more than 3000 unique ids in stable supply order', async () => {
+    const candidateCount = 3_200
+    const candidates = Array.from({ length: candidateCount }, (_, index) => ({
+      domain: 'vocabulary',
+      targetModuleId: 'vocabulary',
+      itemId: `item-${index}`,
+      learningUnitId: 'unit',
+      contentRef: 'content',
+      difficultyLevel: 1,
+      tags: ['travel'],
+      supplyOrder: candidateCount - index,
+      allowedModes: ['learn'],
+      variantFamilyId: `family-${index}`,
+      source: {
+        sourceType: 'vocabulary-item',
+        sourceId: `source-${index}`,
+        variantId: 'term-to-meaning-choice',
+        distractorItemIds: ['distractor'],
+      },
+    }))
+    const catalog = {
+      getUnit: () => ({}),
+      getItem: () => ({}),
+    } as unknown as ReturnType<typeof createVocabularyCatalog>
+    const provider = new VocabularyCatalogSupplyProvider({ schemaVersion: 1, candidates }, catalog)
+    const result = await provider.eligibleItemIds({ schemaVersion: 1, requestId: 'large', planId: 'plan', taskId: 'task', domain: 'vocabulary', targetModuleId: 'vocabulary', mode: 'learn', targetDifficulty: 1, cursor: null, excludeItemIds: [], reason: 'initial' })
+
+    expect(result.status).toBe('eligible-items')
+    if (result.status !== 'eligible-items') return
+    expect(result.itemIds).toHaveLength(candidateCount)
+    expect(new Set(result.itemIds).size).toBe(candidateCount)
+    expect(result.itemIds.slice(0, 3)).toEqual(['item-3199', 'item-3198', 'item-3197'])
+  })
+
+  it('returns a distinguishable safe failure for invalid bulk requests', async () => {
+    const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
+    const provider = new VocabularyCatalogSupplyProvider(catalog.trainingSupplyIndex, catalog)
+    const result = await provider.eligibleItemIds({ schemaVersion: 1, requestId: 'invalid', planId: 'plan', taskId: 'task', domain: 'listening', targetModuleId: 'listening', mode: 'learn', targetDifficulty: 1, cursor: null, excludeItemIds: [], reason: 'initial' } as never)
+
+    expect(result).toEqual({
+      schemaVersion: 1,
+      requestId: 'invalid',
+      status: 'invalid-request',
+      reason: 'provider-failure',
+    })
+    expect(JSON.stringify(result)).not.toContain('correct')
+    expect(JSON.stringify(result)).not.toContain('answer')
+  })
+
   it('selects stable non-repeating approved vocabulary items', async () => {
     const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
     const task = vocabularyTaskFor(catalog.units[0], { trainingBudget: { schemaVersion: 1, targetEffectiveSeconds: 900 } })

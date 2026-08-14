@@ -68,6 +68,8 @@ export {
 export {
   VocabularyCatalogSupplyProvider,
   type ExtraVocabularySupplyProvider,
+  type VocabularyEligibleItemIdsProvider,
+  type VocabularyEligibleItemIdsResult,
   type VocabularySupplyProvider,
 } from './supply.ts'
 export {
