@@ -22,6 +22,7 @@ interface TrainingSupplyCatalog {
 }
 
 export interface ProductionTrainingSupplyProvider {
+  maximumCandidateCount?(): Promise<number>
   next(
     request:
       | LearningTaskSupplyRequest
@@ -39,8 +40,15 @@ export async function collectEligibleSupplyItemIds(
   request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
 ): Promise<readonly string[]> {
   const itemIds: string[] = []
-  const maximumItems = 1_000
-  while (itemIds.length < maximumItems) {
+  const maximumItems = provider.maximumCandidateCount
+    ? await provider.maximumCandidateCount()
+    : 1_000
+  if (!Number.isSafeInteger(maximumItems) || maximumItems < 0) {
+    throw new TypeError(
+      'Supply provider returned an invalid candidate enumeration bound.',
+    )
+  }
+  while (itemIds.length <= maximumItems) {
     const result = await provider.next({
       ...request,
       requestId: `${request.requestId}:round:${itemIds.length + 1}`,
@@ -53,9 +61,12 @@ export async function collectEligibleSupplyItemIds(
     if (itemIds.includes(result.item.itemId)) {
       throw new TypeError('Supply provider repeated a supposedly excluded item.')
     }
+    if (itemIds.length === maximumItems) {
+      throw new TypeError('Supply provider exceeded the released candidate index.')
+    }
     itemIds.push(result.item.itemId)
   }
-  throw new TypeError('Supply provider exceeded the bounded round enumeration.')
+  throw new TypeError('Supply provider exceeded the released candidate index.')
 }
 
 /**
@@ -74,6 +85,7 @@ class LazyCatalogSupplyProvider<
     catalog: Catalog,
   ) => Provider
   #providerPromise: Promise<Provider> | null = null
+  #maximumCandidateCount: number | null = null
 
   constructor(
     source: ReadonlyDataSource<Catalog>,
@@ -105,6 +117,16 @@ class LazyCatalogSupplyProvider<
     }
   }
 
+  async maximumCandidateCount(): Promise<number> {
+    await this.#provider()
+    if (this.#maximumCandidateCount === null) {
+      throw new TypeError(
+        'Released content package candidate count is unavailable.',
+      )
+    }
+    return this.#maximumCandidateCount
+  }
+
   #provider(): Promise<Provider> {
     if (!this.#providerPromise) {
       this.#providerPromise = this.#source.load().then((catalog) => {
@@ -113,8 +135,20 @@ class LazyCatalogSupplyProvider<
             'Released content package does not contain a training supply index.',
           )
         }
+        const index = catalog.trainingSupplyIndex
+        if (
+          typeof index !== 'object' ||
+          index === null ||
+          !('candidates' in index) ||
+          !Array.isArray(index.candidates)
+        ) {
+          throw new TypeError(
+            'Released content package has an invalid training supply index.',
+          )
+        }
+        this.#maximumCandidateCount = index.candidates.length
         return this.#createProvider(
-          catalog.trainingSupplyIndex,
+          index,
           catalog,
         )
       })

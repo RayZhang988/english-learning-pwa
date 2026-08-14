@@ -91,6 +91,30 @@ describe('production training supply providers', () => {
     await expect(collectEligibleSupplyItemIds(provider, request('vocabulary'))).resolves.toEqual(['one', 'two'])
     expect(seen).toEqual([[], ['one'], ['one', 'two']])
   })
+
+  it('enumerates every eligible identity when the released index contains more than 1,000 candidates', async () => {
+    const releasedItemIds = Array.from(
+      { length: 1_205 },
+      (_, index) => `released-vocabulary-${index + 1}`,
+    )
+    const provider = {
+      async maximumCandidateCount() {
+        return releasedItemIds.length
+      },
+      async next(value: LearningTaskSupplyRequest) {
+        const itemId = releasedItemIds.find(
+          (candidate) => !value.excludeItemIds.includes(candidate),
+        )
+        return itemId === undefined
+          ? { schemaVersion: 1 as const, requestId: value.requestId, status: 'content-exhausted' as const, reason: 'all-eligible-content-recently-used' as const }
+          : { schemaVersion: 1 as const, requestId: value.requestId, status: 'item' as const, item: { itemId, learningUnitId: itemId, contentRef: itemId, difficultyLevel: 1, tags: [] }, nextCursor: itemId }
+      },
+    }
+
+    await expect(
+      collectEligibleSupplyItemIds(provider, request('vocabulary')),
+    ).resolves.toEqual(releasedItemIds)
+  })
   it('loads and parses each released package supply index lazily once', async () => {
     const loads = {
       vocabulary: 0,
