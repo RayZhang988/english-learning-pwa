@@ -23,6 +23,7 @@ import type {
   OfflinePackageRecord,
 } from '../../pwa/index.ts'
 import {
+  collectEligibleSupplyCandidates,
   createProductionTrainingSupplyProviders,
 } from './training-supply-providers.ts'
 
@@ -147,5 +148,44 @@ describe('R6 released production supply integration', () => {
         speakingResult.item as SpeakingSupplyItem,
       ).prompt,
     ).toBeDefined()
+  })
+
+  it('publishes bounded semantic candidate batches for all three production domains', async () => {
+    const providers = createProductionTrainingSupplyProviders({
+      vocabulary: new CurrentVocabularyContentSource(noCache, fileFetcher),
+      listening: new CurrentListeningContentSource(noCache, fileFetcher),
+      speaking: new CurrentSpeakingContentSource(noCache, fileFetcher),
+    })
+
+    for (const moduleId of ['vocabulary', 'listening', 'speaking'] as const) {
+      const baseRequest = request(moduleId)
+      const result = await collectEligibleSupplyCandidates(
+        providers[moduleId],
+        baseRequest,
+      )
+      expect(result.candidates.length).toBeGreaterThan(0)
+      expect(new Set(result.candidates.map((item) => item.itemId)).size)
+        .toBe(result.candidates.length)
+      expect(result.candidates.every((item) =>
+        item.knowledgePointId.length > 0 && item.semanticCategoryId.length > 0,
+      )).toBe(true)
+
+      const priorityItemId = result.candidates[0]!.itemId
+      const prioritized = await collectEligibleSupplyCandidates(
+        providers[moduleId],
+        {
+          ...baseRequest,
+          requestId: `${baseRequest.requestId}:priority`,
+          priorityItemIds: {
+            ...baseRequest.priorityItemIds,
+            'recent-error': [priorityItemId],
+          },
+        },
+      )
+      expect(prioritized.priorityItems).toContainEqual({
+        itemId: priorityItemId,
+        reason: 'recent-error',
+      })
+    }
   })
 })

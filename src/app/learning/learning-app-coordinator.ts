@@ -21,6 +21,7 @@ import {
   REQUIRED_TASK_EFFECTIVE_SECONDS,
   summarizePlanActivity,
   trainingRecentBucket,
+  trainingRecentSemanticHistory,
   type ExtraTrainingSession,
   type LearningEngineState,
   type LearningAbilityProfile,
@@ -78,7 +79,7 @@ import {
   trainingSupplyProviders,
 } from './training-production-resources.ts'
 import {
-  collectEligibleSupplyItemIds,
+  collectEligibleSupplyCandidates,
   type ProductionTrainingSupplyProviders,
 } from './training-supply-providers.ts'
 import { GrowthProductionCoordinator } from './growth-production.ts'
@@ -326,7 +327,22 @@ export class LearningAppCoordinator {
     const request = buildLearningTaskSupplyRequest(execution)
     if (!request) throw new TypeError('taskId cannot request training content.')
     const bucket = trainingRecentBucket(execution.task.domain, execution.task.mode, execution.task.difficultyLevel)
-    const round = createTrainingSupplyRound({ seed: this.#createId(), candidateItemIds: await collectEligibleSupplyItemIds(this.#trainingSupplyProviders[execution.task.targetModuleId], request), shortTermExcludedItemIds: engineState.recentTrainingItemIds?.[bucket] ?? [] })
+    const history = trainingRecentSemanticHistory(engineState, bucket)
+    const excluded = [...new Set([
+      ...(engineState.recentTrainingItemIds?.[bucket] ?? []),
+      ...history.map((identity) => identity.itemId),
+    ])]
+    const eligible = await collectEligibleSupplyCandidates(
+      this.#trainingSupplyProviders[execution.task.targetModuleId],
+      request,
+    )
+    const round = createTrainingSupplyRound({
+      seed: this.#createId(),
+      candidates: eligible.candidates,
+      priorityItems: eligible.priorityItems,
+      shortTermExcludedItemIds: excluded,
+      shortTermHistory: history,
+    })
     const progress = { ...runtime.activePlan, tasks: runtime.activePlan.tasks.map((entry) => entry.task.taskId === taskId ? { ...entry, training: { ...entry.training!, supplyRound: round } } : entry) }
     const nextRuntime = createActiveLearningRuntime(progress, { completedLearningUnitIds: runtime.completedLearningUnitIds, processedEventIds: runtime.processedEventIds, skipHistory: runtime.skipHistory, pendingTrainingAttempts: runtime.pendingTrainingAttempts })
     await this.#activePlans.save(nextRuntime)

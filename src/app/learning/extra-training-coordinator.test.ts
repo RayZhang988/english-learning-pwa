@@ -32,6 +32,18 @@ function setup() {
     })),
   }
   const providerFor = (moduleId: TrainingModuleId) => ({
+    async eligibleCandidateIdentities(request: { readonly requestId: string }) {
+      return {
+        schemaVersion: 2 as const,
+        requestId: request.requestId,
+        status: 'eligible-candidates' as const,
+        candidates: [1, 2].map((index) => ({
+          itemId: `${moduleId}:candidate:${index}`,
+          knowledgePointId: `${moduleId}:knowledge:${index}`,
+          semanticCategoryId: `${moduleId}:semantic:${index}`,
+        })),
+      }
+    },
     async next(request: {
       readonly requestId: string
       readonly excludeItemIds: readonly string[]
@@ -207,6 +219,7 @@ describe('ProductionExtraTrainingCoordinator', () => {
       ),
     )
     for (const session of [vocabulary, listening, speaking]) {
+      expect(session.supplyRound?.schemaVersion).toBe(2)
       expect(session.supplyRound?.order).toHaveLength(2)
       expect(session.supplyRound?.order.every((itemId) =>
         itemId.startsWith(`${session.targetModuleId}:candidate:`),
@@ -233,6 +246,31 @@ describe('ProductionExtraTrainingCoordinator', () => {
     await expect(
       restored.ensureExtraTrainingRound(vocabulary.sessionId, 'vocabulary'),
     ).resolves.toEqual(vocabulary)
+  })
+
+  it('persists provider-authorized priority audit and semantic history for an R6 round', async () => {
+    const { activePlans, engineStates, coordinator } = setup()
+    await activePlans.save(completedExtraTrainingRuntime())
+    const engine = extraTrainingEngineState()
+    await engineStates.save({
+      ...engine,
+      recentTrainingItemIds: { 'vocabulary:learn:5': ['legacy-item'] },
+      recentTrainingSemanticHistory: {
+        'vocabulary:learn:5': [{
+          itemId: 'previous-item',
+          knowledgePointId: 'vocabulary:knowledge:1',
+          semanticCategoryId: 'vocabulary:semantic:1',
+        }],
+      },
+    })
+    const session = await coordinator.start('vocabulary')
+    const completed = await coordinator.ensureExtraTrainingRound(session.sessionId)
+
+    expect(completed.supplyRound).toMatchObject({
+      schemaVersion: 2,
+      shortTermExcludedItemIds: ['legacy-item', 'previous-item'],
+      shortTermHistory: [{ itemId: 'previous-item' }],
+    })
   })
 
   it('does not mutate a session when extra round persistence fails and permits retry', async () => {

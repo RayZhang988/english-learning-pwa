@@ -387,6 +387,18 @@ describe('LearningAppCoordinator', () => {
     currentDate = new Date(2026, 6, 24, 8, 0, 0)
     idSequence = 0
     const providerFor = (moduleId: TrainingModuleId) => ({
+      async eligibleCandidateIdentities(request: { readonly requestId: string }) {
+        return {
+          schemaVersion: 2 as const,
+          requestId: request.requestId,
+          status: 'eligible-candidates' as const,
+          candidates: [1, 2].map((index) => ({
+            itemId: `${moduleId}:eligible:${index}`,
+            knowledgePointId: `${moduleId}:knowledge:${index}`,
+            semanticCategoryId: `${moduleId}:semantic:${index}`,
+          })),
+        }
+      },
       async next(request: { readonly requestId: string; readonly excludeItemIds: readonly string[] }) {
         const ids = [`${moduleId}:eligible:1`, `${moduleId}:eligible:2`]
         const itemId = ids.find((id) => !request.excludeItemIds.includes(id))
@@ -623,6 +635,7 @@ describe('LearningAppCoordinator', () => {
       })),
     )
     for (const { moduleId, round } of rounds) {
+      expect(round.schemaVersion).toBe(2)
       expect(round.order).toHaveLength(2)
       expect(new Set(round.order)).toEqual(new Set([
         `${moduleId}:eligible:1`,
@@ -644,6 +657,36 @@ describe('LearningAppCoordinator', () => {
     expect(
       await restored.ensureDailyTrainingRound(vocabularyTask.taskId),
     ).toEqual(rounds[0]!.round)
+  })
+
+  it('starts a new daily semantic round after the persisted cross-round history', async () => {
+    await profiles.saveLatest(abilityProfile())
+    const app = coordinator()
+    const initialized = await app.initialize()
+    if (initialized.status !== 'ready') throw new Error('Expected a ready plan.')
+    const task = initialized.runtime.activePlan.plan.tasks[0]!
+    const bucket = `${task.domain}:${task.mode}:${task.difficultyLevel}`
+    const engine = await engineStates.load()
+    if (!engine) throw new Error('Expected engine state.')
+    const history = [{
+      itemId: 'vocabulary:previous',
+      knowledgePointId: 'vocabulary:knowledge:1',
+      semanticCategoryId: 'vocabulary:semantic:1',
+    }]
+    await engineStates.save({
+      ...engine,
+      recentTrainingItemIds: { ...engine.recentTrainingItemIds, [bucket]: ['legacy-only'] },
+      recentTrainingSemanticHistory: { ...engine.recentTrainingSemanticHistory, [bucket]: history },
+    })
+
+    const round = await app.ensureDailyTrainingRound(task.taskId)
+
+    expect(round).toMatchObject({
+      schemaVersion: 2,
+      shortTermHistory: history,
+    })
+    expect(round.shortTermExcludedItemIds).toEqual(['legacy-only', 'vocabulary:previous'])
+    expect(round.order[0]).toBe('vocabulary:eligible:2')
   })
 
   it('does not mutate memory or persistence when daily round creation fails, then retries cleanly', async () => {

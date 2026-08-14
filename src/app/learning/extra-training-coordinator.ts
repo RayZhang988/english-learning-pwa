@@ -10,6 +10,7 @@ import {
   type LearningEngineState,
   type TrainingModuleId,
   trainingRecentBucket,
+  trainingRecentSemanticHistory,
 } from '../../learning-engine/index.ts'
 import type { ActivePlanRepository } from './active-plan-repository.ts'
 import type {
@@ -22,7 +23,7 @@ import {
 import { formatLocalDate } from './local-date.ts'
 import { trainingSupplyProviders } from './training-production-resources.ts'
 import {
-  collectEligibleSupplyItemIds,
+  collectEligibleSupplyCandidates,
   type ProductionTrainingSupplyProviders,
 } from './training-supply-providers.ts'
 
@@ -195,22 +196,21 @@ export class ProductionExtraTrainingCoordinator {
       session.mode,
       session.targetDifficulty,
     )
-    const candidateItemIds = await collectEligibleSupplyItemIds(
+    const eligible = await collectEligibleSupplyCandidates(
       this.#trainingSupplyProviders[session.targetModuleId],
       request,
     )
-    const candidateSet = new Set(candidateItemIds)
-    const priorityItemIds = Object.values(
-      session.priorityItemIds ?? {},
-    )
-      .flat()
-      .filter((itemId) => candidateSet.has(itemId))
+    const history = trainingRecentSemanticHistory(engineState, bucket)
+    const excluded = [...new Set([
+      ...(engineState.recentTrainingItemIds?.[bucket] ?? []),
+      ...history.map((identity) => identity.itemId),
+    ])]
     const round = createTrainingSupplyRound({
       seed: this.#createId(),
-      candidateItemIds,
-      shortTermExcludedItemIds:
-        engineState.recentTrainingItemIds?.[bucket] ?? [],
-      priorityItemIds,
+      candidates: eligible.candidates,
+      priorityItems: eligible.priorityItems,
+      shortTermExcludedItemIds: excluded,
+      shortTermHistory: history,
     })
     const updatedSession: ExtraTrainingSession = {
       ...session,

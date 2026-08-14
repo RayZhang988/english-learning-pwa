@@ -12,6 +12,7 @@ import type {
   LearningTaskSupplyRequest,
 } from '../../learning-engine/index.ts'
 import {
+  collectEligibleSupplyCandidates,
   collectEligibleSupplyItemIds,
   createProductionTrainingSupplyProviders,
 } from './training-supply-providers.ts'
@@ -79,6 +80,83 @@ function speakingCatalog(
 }
 
 describe('production training supply providers', () => {
+  it('normalizes semantic candidates and only maps declared extra-training priorities', async () => {
+    const extraRequest = {
+      ...request('vocabulary'),
+      sessionId: 'extra-1',
+      localDate: '2026-08-14',
+      priority: ['recent-error', 'due-review', 'same-day-variant', 'new-optional-content'] as const,
+      priorityItemIds: {
+        'recent-error': ['one'],
+        'due-review': ['missing'],
+        'same-day-variant': [],
+        'new-optional-content': ['two'],
+      },
+    }
+    const provider = {
+      async maximumCandidateCount() { return 2 },
+      async eligibleCandidateIdentities(value: typeof extraRequest) {
+        return {
+          schemaVersion: 2 as const,
+          requestId: value.requestId,
+          status: 'eligible-candidates' as const,
+          candidates: [
+            { itemId: 'one', knowledgePointId: 'knowledge-one', semanticCategoryId: 'semantic-one' },
+            { itemId: 'two', knowledgePointId: 'knowledge-two', semanticCategoryId: 'semantic-two' },
+          ],
+        }
+      },
+      async next() { throw new Error('semantic batch result must be used') },
+    }
+
+    await expect(collectEligibleSupplyCandidates(provider, extraRequest)).resolves.toEqual({
+      candidates: [
+        { itemId: 'one', knowledgePointId: 'knowledge-one', semanticCategoryId: 'semantic-one' },
+        { itemId: 'two', knowledgePointId: 'knowledge-two', semanticCategoryId: 'semantic-two' },
+      ],
+      priorityItems: [
+        { itemId: 'one', reason: 'recent-error' },
+        { itemId: 'two', reason: 'new-optional-content' },
+      ],
+    })
+  })
+
+  it('preserves a module-resolved priority override instead of guessing its source identity', async () => {
+    const provider = {
+      async maximumCandidateCount() { return 1 },
+      async eligibleCandidateIdentities(value: LearningTaskSupplyRequest) {
+        return {
+          schemaVersion: 1 as const,
+          requestId: value.requestId,
+          status: 'eligible-candidates' as const,
+          candidates: [{ itemId: 'variant', knowledgePointId: 'knowledge-variant', semanticCategoryId: 'semantic-variant' }],
+          priorityItems: [{ itemId: 'variant', reason: 'same-day-variant' }],
+        }
+      },
+      async next() { throw new Error('semantic batch result must be used') },
+    }
+
+    await expect(collectEligibleSupplyCandidates(provider, request('listening'))).resolves.toEqual({
+      candidates: [{ itemId: 'variant', knowledgePointId: 'knowledge-variant', semanticCategoryId: 'semantic-variant' }],
+      priorityItems: [{ itemId: 'variant', reason: 'same-day-variant' }],
+    })
+  })
+
+  it.each([
+    { name: 'wrong request id', result: { schemaVersion: 2, requestId: 'wrong', status: 'eligible-candidates', candidates: [] } },
+    { name: 'provider failure status', result: { schemaVersion: 1, requestId: request('vocabulary').requestId, status: 'content-exhausted', reason: 'provider-failure' } },
+    { name: 'duplicate identity', result: { schemaVersion: 2, requestId: request('vocabulary').requestId, status: 'eligible-candidates', candidates: [{ itemId: 'one', knowledgePointId: 'k1', semanticCategoryId: 's1' }, { itemId: 'one', knowledgePointId: 'k2', semanticCategoryId: 's2' }] } },
+    { name: 'invalid priority reason', result: { schemaVersion: 1, requestId: request('vocabulary').requestId, status: 'eligible-candidates', candidates: [{ itemId: 'one', knowledgePointId: 'k1', semanticCategoryId: 's1' }], priorityItems: [{ itemId: 'one', reason: 'invented' }] } },
+    { name: 'priority outside candidates', result: { schemaVersion: 1, requestId: request('vocabulary').requestId, status: 'eligible-candidates', candidates: [{ itemId: 'one', knowledgePointId: 'k1', semanticCategoryId: 's1' }], priorityItems: [{ itemId: 'missing', reason: 'recent-error' }] } },
+  ])('rejects semantic eligibility with $name', async ({ result }) => {
+    const provider = {
+      async maximumCandidateCount() { return 2 },
+      async eligibleCandidateIdentities() { return result },
+      async next() { throw new Error('must not fall back') },
+    }
+    await expect(collectEligibleSupplyCandidates(provider, request('vocabulary'))).rejects.toThrow(TypeError)
+  })
+
   it('collects only the stable eligible identities exposed by a provider', async () => {
     const seen: string[][] = []
     const provider = { async next(value: LearningTaskSupplyRequest) {
