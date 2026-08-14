@@ -156,6 +156,39 @@ async function seedEligibleGrowth(page) {
   }
 }
 
+async function assertLegacyGrowthMigration(page) {
+  const beforeDatabases = await page.dumpIndexedDb()
+  const engine = record(beforeDatabases, 'learning.engine', 'current-state')
+  assert.ok(engine, 'The production engine record must exist before legacy migration.')
+  const legacy = structuredClone(engine)
+  delete legacy.value.growth
+  await putRecords(page, [legacy])
+
+  await page.reload()
+  await page.waitFor(`!document.body.innerText.includes('正在恢复今日学习计划')`, 20_000)
+  await page.navigate(new URL('#/?section=progress', baseUrl).href)
+  await page.waitFor(`Boolean(document.querySelector('section[aria-label="专项成长进度"]'))`, 20_000)
+  const cards = await page.evaluate(`(() =>
+    [...document.querySelectorAll('section[aria-label="专项成长进度"] article.task-card')]
+      .map((card) => card.innerText.trim())
+  )()`)
+  assert.equal(cards.length, 3, `Legacy migration rendered ${cards.length} growth cards instead of three.`)
+  for (const label of ['词汇', '听力', '口语']) {
+    const card = cards.find((text) => text.split('\n')[0] === label)
+    assert.ok(card, `The migrated ${label} growth card is missing.`)
+    assert.match(card, /成长进度 0%/u, `The migrated ${label} card is not at 0%.`)
+  }
+
+  const migrated = record(await page.dumpIndexedDb(), 'learning.engine', 'current-state')
+  assert.equal(migrated?.value?.growth?.schemaVersion, 3, 'The migrated growth ledger was not persisted.')
+  assert.deepEqual(
+    immutableEngineProjection(migrated.value),
+    immutableEngineProjection(legacy.value),
+    'Legacy migration changed learning data outside the additive growth ledger.',
+  )
+  checkpoint('legacy-growth-migration', { cards })
+}
+
 async function clickGrowthAction(page, domain) {
   await page.navigate(new URL('#/?section=progress', baseUrl).href)
   await page.waitFor(`document.body.innerText.includes('成长') || document.body.innerText.includes('进度')`, 20_000)
@@ -337,6 +370,7 @@ async function main() {
   const qa = await launchQaChrome()
   try {
     await bootstrap(qa.page)
+    await assertLegacyGrowthMigration(qa.page)
     const before = await seedEligibleGrowth(qa.page)
     await qa.page.reload()
     for (const domain of domains) await runDomain(qa.page, domain)
