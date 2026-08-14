@@ -11,6 +11,7 @@
     "basePackageVersion",
     "basePackageIndex",
     "targetLocale",
+    "semanticMetadata",
     "supplyPolicy",
     "capacityPolicy",
     "totals",
@@ -19,11 +20,22 @@
   "properties": {
     "schemaVersion": {"const": 1},
     "documentType": {"const": "continuous-training-supply-index"},
-    "supplyVersion": {"const": "1.2.0"},
+    "supplyVersion": {"const": "1.4.0"},
     "baseCourseId": {"const": "survival-travel-american-4w"},
     "basePackageVersion": {"const": "1.0.0"},
     "basePackageIndex": {"const": "content/curriculum/package-index.v1.json"},
     "targetLocale": {"const": "en-US"},
+    "semanticMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["taxonomyFile", "taxonomyVersion", "normalizationVersion", "matchingPolicy"],
+      "properties": {
+        "taxonomyFile": {"const": "content/curriculum/training-supply-semantic-taxonomy.v1.json"},
+        "taxonomyVersion": {"const": "1.0.0"},
+        "normalizationVersion": {"const": "semantic-text-v1"},
+        "matchingPolicy": {"const": "ascending-priority-first-match-then-lexical-concept-fallback"}
+      }
+    },
     "supplyPolicy": {
       "type": "object",
       "additionalProperties": false,
@@ -184,10 +196,12 @@
     "candidate": {
       "type": "object",
       "additionalProperties": false,
-        "required": ["itemId", "variantFamilyId", "supplyOrder", "domain", "targetModuleId", "learningUnitId", "contentRef", "difficultyLevel", "tags", "allowedModes", "nominalEffectiveSeconds", "source"],
+        "required": ["itemId", "variantFamilyId", "knowledgePointId", "semanticCategoryId", "supplyOrder", "domain", "targetModuleId", "learningUnitId", "contentRef", "difficultyLevel", "tags", "allowedModes", "nominalEffectiveSeconds", "source"],
       "properties": {
         "itemId": {"type": "string", "pattern": "^supply-v1-(vocabulary|listening|speaking)-[a-z0-9-]+$"},
         "variantFamilyId": {"type": "string", "pattern": "^supply-family-v1-(vocabulary|listening|speaking)-[a-z0-9-]+$"},
+        "knowledgePointId": {"type": "string", "pattern": "^knowledge-v1-(vocabulary|listening|speaking)-[a-f0-9]{8}$"},
+        "semanticCategoryId": {"type": "string", "pattern": "^semantic-v1(:[a-z0-9-]+|-[a-z0-9-]+-[a-f0-9]{8})$"},
         "supplyOrder": {"type": "integer", "minimum": 1},
         "domain": {"enum": ["vocabulary", "listening", "speaking"]},
         "targetModuleId": {"enum": ["vocabulary", "listening", "speaking"]},

@@ -16,7 +16,8 @@
   "schemaFiles": [
     "content/curriculum/package-index.schema.v1.json",
     "content/curriculum/curriculum-manifest.schema.v1.json",
-    "content/curriculum/lesson-week.schema.v1.json"
+    "content/curriculum/lesson-week.schema.v1.json",
+    "content/curriculum/training-supply-semantic-taxonomy.schema.v1.json"
   ],
   "documentationFiles": [
     "content/curriculum/README.md",
@@ -29,6 +30,7 @@
   "validationFiles": [
     "content/curriculum/validate-duration-baselines.v1.mjs",
     "content/curriculum/validate-training-supply.v1.mjs",
+    "content/curriculum/training-supply-semantic-metadata.v1.mjs",
     "content/curriculum/validate-listening-bilingual-options.v1.mjs",
     "content/curriculum/validate-keyword-dictation-guidance.v1.mjs",
     "content/curriculum/validate-speaking-translations.v1.mjs",

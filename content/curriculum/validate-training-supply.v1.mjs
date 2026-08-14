@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { validateSemanticMetadata } from './training-supply-semantic-metadata.v1.mjs'
 
 const root = fileURLToPath(new URL('../../', import.meta.url))
 const writeMode = process.argv.includes('--write')
@@ -11,6 +12,10 @@ const extensionIndexPath =
   'content/curriculum/listening-exercise-extension-index.v1.json'
 const durationRulesPath =
   'content/curriculum/duration-baseline-authoring.v1.json'
+const semanticTaxonomyPath =
+  'content/curriculum/training-supply-semantic-taxonomy.v1.json'
+const semanticDistributionPath =
+  'content/curriculum/training-supply-semantic-distribution.v1.json'
 const domains = ['vocabulary', 'listening', 'speaking']
 const modes = ['learn', 'calibration', 'review', 'retry']
 
@@ -91,6 +96,19 @@ function digest(value) {
   return `fnv1a32-${deterministicRank('training-supply-v2-digest', JSON.stringify(value)).toString(16).padStart(8, '0')}`
 }
 
+function stableMetadataId(prefix, value) {
+  return `${prefix}-${deterministicRank(prefix, value).toString(16).padStart(8, '0')}`
+}
+
+const knowledgeSignatures = new Map()
+function stableKnowledgeId(domain, signature) {
+  const id = stableMetadataId(`knowledge-v1-${domain}`, signature)
+  const prior = knowledgeSignatures.get(id)
+  assert(prior === undefined || prior === signature, `${id} merges distinct released scoring facts.`)
+  knowledgeSignatures.set(id, signature)
+  return id
+}
+
 function supplyShardPath(domain, bucket = null) {
   const suffix = bucket === null ? domain : `${domain}-${String(bucket).padStart(2, '0')}`
   return `${supplyShardDirectory}/${suffix}.json`
@@ -110,7 +128,7 @@ function shardedSupply(expected) {
     const document = {
       schemaVersion: 1,
       documentType: 'continuous-training-supply-shard',
-      supplyVersion: '1.3.0',
+      supplyVersion: '1.4.0',
       domain,
       bucket,
       candidateCount: candidates.length,
@@ -121,11 +139,12 @@ function shardedSupply(expected) {
   const manifest = {
     schemaVersion: 2,
     documentType: 'continuous-training-supply-manifest',
-    supplyVersion: '1.3.0',
+    supplyVersion: '1.4.0',
     baseCourseId: expected.baseCourseId,
     basePackageVersion: expected.basePackageVersion,
     basePackageIndex: expected.basePackageIndex,
     targetLocale: expected.targetLocale,
+    semanticMetadata: expected.semanticMetadata,
     supplyPolicy: expected.supplyPolicy,
     capacityPolicy: expected.capacityPolicy,
     totals: expected.totals,
@@ -156,11 +175,12 @@ function loadReleasedSupply() {
   return {
     schemaVersion: 1,
     documentType: 'continuous-training-supply-index',
-    supplyVersion: '1.3.0',
+    supplyVersion: '1.4.0',
     baseCourseId: root.baseCourseId,
     basePackageVersion: root.basePackageVersion,
     basePackageIndex: root.basePackageIndex,
     targetLocale: root.targetLocale,
+    semanticMetadata: root.semanticMetadata,
     supplyPolicy: root.supplyPolicy,
     capacityPolicy: root.capacityPolicy,
     totals: root.totals,
@@ -224,6 +244,7 @@ function regexMatches(text, pattern) {
 
 const packageIndex = readJson(packageIndexPath)
 const durationRules = readJson(durationRulesPath)
+const semanticTaxonomy = readJson(semanticTaxonomyPath)
 const lessonDocuments = packageIndex.lessonFiles.map((relativePath) => ({
   relativePath,
   document: readJson(relativePath),
@@ -236,6 +257,76 @@ const extensionLessons = extensionIndex.exerciseBundleFiles
 const extensionsByContentRef = new Map(
   extensionLessons.map((lesson) => [lesson.baseContentRef, lesson]),
 )
+
+assert(
+  semanticTaxonomy.schemaVersion === 1 &&
+    semanticTaxonomy.documentType === 'training-supply-semantic-taxonomy' &&
+    semanticTaxonomy.taxonomyVersion === '1.0.0' &&
+    semanticTaxonomy.normalizationVersion === 'semantic-text-v1' &&
+    Array.isArray(semanticTaxonomy.rules),
+  'Training supply semantic taxonomy is invalid.',
+)
+assert(
+  new Set(semanticTaxonomy.rules.map((rule) => rule.ruleId)).size === semanticTaxonomy.rules.length &&
+    new Set(semanticTaxonomy.rules.map((rule) => rule.categoryId)).size === semanticTaxonomy.rules.length &&
+    semanticTaxonomy.rules.every((rule, index) => rule.priority === index + 1),
+  'Training supply semantic taxonomy repeats an identity or has unstable priority.',
+)
+
+function semanticTextCategory(text, unit, qualifier = '') {
+  const normalized = `${text} ${qualifier}`.toLocaleLowerCase('en-US')
+  for (const rule of semanticTaxonomy.rules) {
+    assert(typeof rule.categoryId === 'string' && rule.categoryId.length > 0 && Array.isArray(rule.patterns), 'Semantic taxonomy contains an invalid rule.')
+    if (rule.patterns.some((pattern) => new RegExp(pattern, 'iu').test(normalized))) {
+      return `semantic-v1:${rule.categoryId}`
+    }
+  }
+  // The inherited scene/focus tags are intentionally not used as a fallback:
+  // later R17 levels reuse a host unit, so those tags are not reliable facts
+  // about the newly authored term.  An unmatched released scoring target keeps
+  // its own deterministic lexical-concept identity instead of being falsely
+  // collapsed into a broad topic.
+  return stableMetadataId(
+    'semantic-v1-lexical-concept',
+    `${normalizedPlaybackText(text)}|${qualifier.toLocaleLowerCase('en-US')}`,
+  )
+}
+
+function vocabularyMetadata(item, unit) {
+  const knowledgeSource = item.dailyKnowledgeId ?? `vocabulary-source:${item.id}`
+  return {
+    knowledgePointId: stableKnowledgeId('vocabulary', knowledgeSource),
+    semanticCategoryId: semanticTextCategory(`${item.term} ${item.meaningZh} ${item.exampleEn ?? ''}`, unit, item.partOfSpeech),
+  }
+}
+
+function listeningExtensionMetadata(exercise, unit, audioText) {
+  const correctOption = exercise.options?.find((option) => option.optionId === exercise.correctOptionId)?.text ?? ''
+  const scoredAnswer = exercise.standardAnswer ?? exercise.targetKeywords?.join(' ') ?? correctOption
+  return {
+    knowledgePointId: stableKnowledgeId('listening', `${normalizedPlaybackText(audioText)}|${normalizedPlaybackText(scoredAnswer)}`),
+    semanticCategoryId: semanticTextCategory(`${audioText} ${exercise.promptZh} ${scoredAnswer}`, unit, exercise.answerGuidance?.answerType ?? exercise.type),
+  }
+}
+
+function listeningChoiceMetadata(audioText, promptZh, answer, unit, qualifier) {
+  return {
+    knowledgePointId: stableKnowledgeId('listening', `${normalizedPlaybackText(audioText)}|${normalizedPlaybackText(answer)}`),
+    semanticCategoryId: semanticTextCategory(`${audioText} ${promptZh} ${answer}`, unit, qualifier),
+  }
+}
+
+function speakingMetadata(value, unit) {
+  const concepts = [...(value.requiredConcepts ?? [])].sort().join(' ')
+  return {
+    knowledgePointId: stableKnowledgeId('speaking', normalizedPlaybackText(value.modelAnswer)),
+    semanticCategoryId: semanticTextCategory(
+      `${concepts} ${value.promptZh ?? value.cueZh ?? ''} ${value.modelAnswer}`,
+      unit,
+      'spoken-response',
+    ),
+  }
+}
 
 function nominalUtteranceSeconds(text) {
   const tts = durationRules.nominalTts
@@ -342,6 +433,7 @@ function expectedCandidates() {
       candidates.push({
         itemId: `supply-v1-vocabulary-${item.id}-${variantId}`,
         variantFamilyId: `supply-family-v1-vocabulary-${item.id}`,
+        ...vocabularyMetadata(item, unit),
         ...candidateBase(unit, 'vocabulary', nextOrder('vocabulary')),
         difficultyLevel: item.growthDifficultyLevel ?? unit.difficultyLevel,
         nominalEffectiveSeconds: 18,
@@ -365,6 +457,7 @@ function expectedCandidates() {
       candidates.push({
         itemId: `supply-v1-listening-${exercise.exerciseId}`,
         variantFamilyId: `supply-family-v1-listening-${unit.learningUnitId}`,
+        ...listeningExtensionMetadata(exercise, unit, audioText),
         ...candidateBase(unit, 'listening', nextOrder('listening')),
         difficultyLevel: exercise.growthDifficultyLevel ?? unit.difficultyLevel,
         nominalEffectiveSeconds: Math.round(audioSeconds + 19),
@@ -385,9 +478,11 @@ function expectedCandidates() {
     assert(typeof corePlaybackText === 'string' && corePlaybackText.length > 0, `${unit.learningUnitId} has no primary playback text.`)
     const coreSeconds = Math.round(nominalUtteranceSeconds(transcriptText) + 19)
     for (const check of unit.activity.checks) {
+      const correctAnswer = check.options[check.correctOptionIndex]
       candidates.push({
         itemId: `supply-v1-listening-${check.id}`,
         variantFamilyId: `supply-family-v1-listening-${unit.learningUnitId}`,
+        ...listeningChoiceMetadata(transcriptText, check.promptZh, correctAnswer, unit, check.skill),
         ...candidateBase(unit, 'listening', nextOrder('listening')),
         nominalEffectiveSeconds: coreSeconds,
         playbackContentId: playbackContentId(corePlaybackText),
@@ -403,6 +498,7 @@ function expectedCandidates() {
     candidates.push({
       itemId: `supply-v1-listening-${sceneQuiz.id}`,
       variantFamilyId: `supply-family-v1-listening-${unit.learningUnitId}`,
+      ...listeningChoiceMetadata(sceneQuiz.audioText, sceneQuiz.promptZh, sceneQuiz.options[sceneQuiz.correctOptionIndex], unit, 'scene-choice'),
       ...candidateBase(unit, 'listening', nextOrder('listening')),
       nominalEffectiveSeconds: Math.round(nominalUtteranceSeconds(sceneQuiz.audioText) + 19),
       playbackContentId: playbackContentId(sceneQuiz.audioText),
@@ -420,6 +516,7 @@ function expectedCandidates() {
       candidates.push({
         itemId: `supply-v1-speaking-${prompt.id}`,
         variantFamilyId: `supply-family-v1-speaking-${unit.learningUnitId}`,
+        ...speakingMetadata(prompt, unit),
         ...candidateBase(unit, 'speaking', nextOrder('speaking')),
         difficultyLevel: prompt.growthDifficultyLevel ?? unit.difficultyLevel,
         nominalEffectiveSeconds: 52,
@@ -435,6 +532,7 @@ function expectedCandidates() {
     candidates.push({
       itemId: `supply-v1-speaking-${sceneQuiz.id}`,
       variantFamilyId: `supply-family-v1-speaking-${unit.learningUnitId}`,
+      ...speakingMetadata(sceneQuiz, unit),
       ...candidateBase(unit, 'speaking', nextOrder('speaking')),
       nominalEffectiveSeconds: 52,
       source: {
@@ -487,11 +585,17 @@ function expectedIndex() {
   return {
     schemaVersion: 1,
     documentType: 'continuous-training-supply-index',
-    supplyVersion: '1.3.0',
+    supplyVersion: '1.4.0',
     baseCourseId: packageIndex.courseId,
     basePackageVersion: packageIndex.packageVersion,
     basePackageIndex: packageIndexPath,
     targetLocale: 'en-US',
+    semanticMetadata: {
+      taxonomyFile: semanticTaxonomyPath,
+      taxonomyVersion: semanticTaxonomy.taxonomyVersion,
+      normalizationVersion: semanticTaxonomy.normalizationVersion,
+      matchingPolicy: 'ascending-priority-first-match-then-lexical-concept-fallback',
+    },
     supplyPolicy: {
       supportedTargetDifficulty: {
         minimum: 0,
@@ -589,6 +693,20 @@ function assertSelectionContract(index) {
       typeof candidate.variantFamilyId === 'string' && candidate.variantFamilyId.length > 0,
       `${candidate.itemId} lacks a stable same-day variant family.`,
     )
+    assert(
+      typeof candidate.knowledgePointId === 'string' && /^knowledge-v1-(vocabulary|listening|speaking)-[a-f0-9]{8}$/u.test(candidate.knowledgePointId),
+      `${candidate.itemId} lacks a stable knowledge point identity.`,
+    )
+    assert(
+      typeof candidate.semanticCategoryId === 'string' && /^semantic-v1(?::[a-z0-9-]+|-[a-z0-9-]+-[a-f0-9]{8})$/u.test(candidate.semanticCategoryId),
+      `${candidate.itemId} lacks a stable semantic category identity.`,
+    )
+  }
+  const vocabularyFamilies = new Map()
+  for (const candidate of index.candidates.filter((value) => value.domain === 'vocabulary')) {
+    const prior = vocabularyFamilies.get(candidate.variantFamilyId)
+    assert(prior === undefined || prior === candidate.knowledgePointId, `${candidate.variantFamilyId} does not share one knowledge point across its three question forms.`)
+    vocabularyFamilies.set(candidate.variantFamilyId, candidate.knowledgePointId)
   }
   for (const candidate of index.candidates) {
     const family = index.candidates.filter((other) =>
@@ -609,6 +727,29 @@ function assertSelectionContract(index) {
     assert(!exactFacts.has(fact), `${candidate.itemId} duplicates an identical listening candidate fact.`)
     exactFacts.add(fact)
   }
+}
+
+function semanticDistributionRows(index) {
+  return Array.from({ length: 12 }, (_, value) => value * 0.5).flatMap((targetDifficulty) =>
+    domains.map((domain) => {
+      const eligible = index.candidates.filter((candidate) => candidate.domain === domain && isDifficultyEligible(candidate, targetDifficulty))
+      const counts = new Map()
+      for (const candidate of eligible) counts.set(candidate.semanticCategoryId, (counts.get(candidate.semanticCategoryId) ?? 0) + 1)
+      const fallbackCount = eligible.filter((candidate) => candidate.semanticCategoryId.startsWith('semantic-v1-lexical-concept-')).length
+      const maximumCategoryCount = Math.max(0, ...counts.values())
+      const row = {
+        domain,
+        targetDifficulty,
+        candidateCount: eligible.length,
+        categoryCount: counts.size,
+        taxonomyMatchRate: Number(((eligible.length - fallbackCount) / eligible.length).toFixed(4)),
+        fallbackRate: Number((fallbackCount / eligible.length).toFixed(4)),
+        maximumCategoryShare: Number((maximumCategoryCount / eligible.length).toFixed(4)),
+      }
+      assert(row.categoryCount > 1 && row.maximumCategoryShare < 1, `${domain} semantic metadata collapses one difficulty pool at ${targetDifficulty} into a single category.`)
+      return row
+    }),
+  )
 }
 
 function selectForAudit(index, request) {
@@ -825,14 +966,22 @@ function assertExtraTrainingPriorityContract(index) {
 
 assertVocabularyDistractorPolicy()
 const expected = expectedIndex()
+const semanticDistribution = validateSemanticMetadata(expected, semanticTaxonomy)
 const vocabularyQuestionFaceCount = assertVocabularyQuestionFaces(expected)
 if (writeMode) {
   const released = shardedSupply(expected)
   writeJson(supplyIndexPath, released.manifest)
   for (const shard of released.shards) writeJson(shard.path, shard.document)
+  writeJson(semanticDistributionPath, {
+    schemaVersion: 1,
+    documentType: 'training-supply-semantic-distribution',
+    supplyVersion: expected.supplyVersion,
+    taxonomyVersion: semanticTaxonomy.taxonomyVersion,
+    rows: semanticDistribution,
+  })
   packageIndex.trainingSupplyTotals = expected.totals
   writeJson(packageIndexPath, packageIndex)
-  console.log(JSON.stringify({ mode: 'write', supplyIndexPath, shards: released.shards.map(({ path, candidateCount }) => ({ path, candidateCount })), totals: expected.totals, vocabularyQuestionFaces: vocabularyQuestionFaceCount, vocabularyQuestionFaceConflicts: 0 }, null, 2))
+  console.log(JSON.stringify({ mode: 'write', supplyIndexPath, shards: released.shards.map(({ path, candidateCount }) => ({ path, candidateCount })), totals: expected.totals, semanticDistribution, vocabularyQuestionFaces: vocabularyQuestionFaceCount, vocabularyQuestionFaceConflicts: 0 }, null, 2))
   process.exit(0)
 }
 
@@ -841,6 +990,13 @@ assert(deepEqual(canonical(observed), canonical(expected)), 'Training supply ind
 assertSelectionContract(observed)
 assertExhaustionContract(observed)
 assertExtraTrainingPriorityContract(observed)
+assert(deepEqual(readJson(semanticDistributionPath), {
+  schemaVersion: 1,
+  documentType: 'training-supply-semantic-distribution',
+  supplyVersion: observed.supplyVersion,
+  taxonomyVersion: semanticTaxonomy.taxonomyVersion,
+  rows: validateSemanticMetadata(observed, semanticTaxonomy),
+}), 'Training supply semantic distribution report has drifted.')
 assert(packageIndex.trainingSupplyIndexFile === supplyIndexPath, 'Package index does not expose the training supply index.')
 assert(
   packageIndex.trainingSupplyIndexSchemaFile ===
@@ -848,4 +1004,4 @@ assert(
   'Package index does not expose the training supply schema.',
 )
 assert(deepEqual(packageIndex.trainingSupplyTotals, observed.totals), 'Package index supply totals have drifted.')
-console.log(JSON.stringify({ schemaVersion: 1, totals: observed.totals, capacityByTargetDifficulty: observed.capacityPolicy.capacityByTargetDifficulty, selectionChecks: 'passed', vocabularyQuestionFaces: vocabularyQuestionFaceCount, vocabularyQuestionFaceConflicts: 0 }, null, 2))
+console.log(JSON.stringify({ schemaVersion: 1, totals: observed.totals, capacityByTargetDifficulty: observed.capacityPolicy.capacityByTargetDifficulty, semanticDistribution: validateSemanticMetadata(observed, semanticTaxonomy), selectionChecks: 'passed', vocabularyQuestionFaces: vocabularyQuestionFaceCount, vocabularyQuestionFaceConflicts: 0 }, null, 2))

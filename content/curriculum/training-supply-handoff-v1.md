@@ -18,6 +18,13 @@
 `candidate.variantFamilyId` 与 `supplyPolicy.extraTrainingPriority`。候选数量仍为 808；
 不存在新增、重复或虚构练习。
 
+`supplyVersion: 1.4.0` 新增 R15 的两个只读内容事实：
+`candidate.knowledgePointId` 将同一正式教学内容的题型变体归一，
+`candidate.semanticCategoryId` 用于语义冷却。它们由
+`training-supply-semantic-taxonomy.v1.json` 和已发布题目事实确定性生成；
+旧的 `itemId`、`variantFamilyId`、`source`、`contentRef`、答案、翻译及
+`playbackContentId` 不变。下游不得用 scene/focus 标签自行重算这两个字段。
+
 ## 固定选择语义
 
 1. 只接受 `schemaVersion: 1`，且 `domain === targetModuleId`；不匹配、未知 mode、

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Training Supply Semantic Taxonomy v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "documentType", "taxonomyVersion", "normalizationVersion", "matchingPolicy", "rules"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "documentType": {"const": "training-supply-semantic-taxonomy"},
+    "taxonomyVersion": {"const": "1.0.0"},
+    "normalizationVersion": {"const": "semantic-text-v1"},
+    "matchingPolicy": {"const": "rules are evaluated in ascending priority; first match wins; unmatched facts use deterministic lexical-concept identity"},
+    "rules": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["ruleId", "priority", "categoryId", "patterns"],
+        "properties": {
+          "ruleId": {"type": "string", "pattern": "^rule-v1-[0-9]{2}$"},
+          "priority": {"type": "integer", "minimum": 1},
+          "categoryId": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+          "patterns": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+        }
+      }
+    }
+  }
+}
