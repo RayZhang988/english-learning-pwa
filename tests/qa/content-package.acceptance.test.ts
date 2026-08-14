@@ -160,7 +160,12 @@ describe('05 released content package acceptance', () => {
       },
     })
     expect(packageIndex.lessonFiles).toHaveLength(4)
-    expect(packageIndex.schemaFiles).toHaveLength(3)
+    expect(packageIndex.schemaFiles).toEqual([
+      'content/curriculum/package-index.schema.v1.json',
+      'content/curriculum/curriculum-manifest.schema.v1.json',
+      'content/curriculum/lesson-week.schema.v1.json',
+      'content/curriculum/training-supply-semantic-taxonomy.schema.v1.json',
+    ])
 
     for (const path of [
       packageIndex.manifestFile,
