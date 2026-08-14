@@ -34,6 +34,117 @@ function catalog() {
 }
 
 describe('listening training supply', () => {
+  it('bulk-enumerates schema-2 identities with published semantic metadata and unique playback', async () => {
+    const current = catalog()
+    const provider = new ListeningCatalogSupplyProvider(current.trainingSupplyIndex, current)
+    const request = { schemaVersion: 1 as const, requestId: 'semantic-eligible', planId: 'plan', taskId: 'task', domain: 'listening' as const, targetModuleId: 'listening' as const, mode: 'learn' as const, targetDifficulty: 1, cursor: null, excludeItemIds: [] as readonly string[], reason: 'initial' as const }
+
+    const result = await provider.eligibleCandidateIdentities(request)
+
+    expect(result.status).toBe('eligible-candidates')
+    if (result.status !== 'eligible-candidates') return
+    expect(result.candidates.length).toBeGreaterThan(300)
+    expect(result.candidates[0]).toEqual({
+      itemId: expect.any(String),
+      knowledgePointId: expect.stringMatching(/^knowledge-v1-listening-/u),
+      semanticCategoryId: expect.stringMatching(/^semantic-v1/u),
+    })
+    expect(Object.keys(result.candidates[0]!)).toEqual([
+      'itemId', 'knowledgePointId', 'semanticCategoryId',
+    ])
+    const itemById = new Map((trainingSupplyIndex.candidates as readonly ListeningSupplyItem[])
+      .map((item) => [item.itemId, item]))
+    const playbackIds = result.candidates.map((identity) =>
+      itemById.get(identity.itemId)!.playbackContentId)
+    expect(new Set(playbackIds)).toHaveLength(playbackIds.length)
+  })
+
+  it('uses schema-2 order as the only order even for an extra-training priority request', async () => {
+    const current = catalog()
+    const provider = new ListeningCatalogSupplyProvider(current.trainingSupplyIndex, current)
+    const base = { schemaVersion: 1 as const, requestId: 'semantic-extra', sessionId: 'extra', localDate: '2026-08-14', domain: 'listening' as const, targetModuleId: 'listening' as const, mode: 'learn' as const, targetDifficulty: 1, cursor: null, excludeItemIds: [] as readonly string[], priority: ['recent-error', 'due-review', 'same-day-variant', 'new-optional-content'] as const, priorityItemIds: { 'recent-error': [] as readonly string[], 'due-review': [] as readonly string[], 'same-day-variant': [] as readonly string[], 'new-optional-content': [] as readonly string[] }, reason: 'initial' as const }
+    const eligible = await provider.eligibleCandidateIdentities(base)
+    expect(eligible.status).toBe('eligible-candidates')
+    if (eligible.status !== 'eligible-candidates') return
+    const [first, second] = eligible.candidates
+    expect(first).toBeDefined(); expect(second).toBeDefined()
+    const round = createTrainingSupplyRound({
+      seed: 'semantic-extra-round', candidates: [second!, first!],
+      shortTermExcludedItemIds: [],
+      priorityItems: [{ itemId: second!.itemId, reason: 'recent-error' }],
+    })
+    const result = await provider.next({
+      ...base,
+      supplyRound: round,
+      priorityItemIds: { ...base.priorityItemIds, 'recent-error': [first!.itemId] },
+    })
+    expect(result).toMatchObject({ status: 'item', item: { itemId: second!.itemId } })
+  })
+
+  it('returns honest priority reasons and replaces a same-day seed with a distinct audio variant', async () => {
+    const current = catalog()
+    const provider = new ListeningCatalogSupplyProvider(current.trainingSupplyIndex, current)
+    const released = (trainingSupplyIndex.candidates as readonly (ListeningSupplyItem & { readonly variantFamilyId: string; readonly allowedModes: readonly string[] })[])
+      .filter((item) => item.domain === 'listening' && item.allowedModes?.includes('learn') && Math.abs(item.difficultyLevel - 1) <= 1.5)
+    const seed = released.find((item) => released.some((other) => other.itemId !== item.itemId && other.variantFamilyId === item.variantFamilyId && other.playbackContentId !== item.playbackContentId))!
+    const result = await provider.eligibleCandidateIdentities({ schemaVersion: 1, requestId: 'eligible-priority', sessionId: 'extra', localDate: '2026-08-14', domain: 'listening', targetModuleId: 'listening', mode: 'learn', targetDifficulty: 1, cursor: null, excludeItemIds: [], priority: ['recent-error', 'due-review', 'same-day-variant', 'new-optional-content'], priorityItemIds: { 'recent-error': [], 'due-review': [], 'same-day-variant': [seed.itemId], 'new-optional-content': [] }, reason: 'initial' })
+    expect(result.status).toBe('eligible-candidates')
+    if (result.status !== 'eligible-candidates') return
+    expect(result.candidates.map((item) => item.itemId)).not.toContain(seed.itemId)
+    expect(result.priorityItems).toHaveLength(1)
+    expect(result.priorityItems[0]?.reason).toBe('same-day-variant')
+    const selected = released.find((item) => item.itemId === result.priorityItems[0]?.itemId)!
+    expect(selected.variantFamilyId).toBe(seed.variantFamilyId)
+    expect(selected.playbackContentId).not.toBe(seed.playbackContentId)
+  })
+
+  it('keeps the first 30 schema-2 items diverse without duplicating knowledge or playback identities', async () => {
+    const current = catalog()
+    const provider = new ListeningCatalogSupplyProvider(current.trainingSupplyIndex, current)
+    const request = { schemaVersion: 1 as const, requestId: 'first-30', planId: 'plan', taskId: 'task', domain: 'listening' as const, targetModuleId: 'listening' as const, mode: 'learn' as const, targetDifficulty: 1, cursor: null, excludeItemIds: [] as readonly string[], reason: 'initial' as const }
+    const eligible = await provider.eligibleCandidateIdentities(request)
+    expect(eligible.status).toBe('eligible-candidates')
+    if (eligible.status !== 'eligible-candidates') return
+    const round = createTrainingSupplyRound({ seed: 'first-30-listening', candidates: eligible.candidates, shortTermExcludedItemIds: [] })
+    const itemsById = new Map((trainingSupplyIndex.candidates as readonly (ListeningSupplyItem & { readonly semanticCategoryId: string; readonly knowledgePointId: string })[])
+      .map((item) => [item.itemId, item]))
+    const firstThirty = round.order.slice(0, 30).map((itemId) => itemsById.get(itemId)!)
+    expect(firstThirty).toHaveLength(30)
+    expect(new Set(firstThirty.map((item) => item.playbackContentId))).toHaveLength(30)
+    expect(new Set(firstThirty.map((item) => item.source.variantId)).size).toBeGreaterThan(1)
+    for (let index = 1; index < firstThirty.length; index += 1) {
+      expect(firstThirty[index]!.knowledgePointId).not.toBe(firstThirty[index - 1]!.knowledgePointId)
+      const semanticRun = firstThirty.slice(Math.max(0, index - 2), index + 1)
+      expect(new Set(semanticRun.map((item) => item.semanticCategoryId)).size).toBeGreaterThan(1)
+    }
+  })
+
+  it('bulk-enumerates the released listening pool without provider iteration', async () => {
+    const current = catalog()
+    const provider = new ListeningCatalogSupplyProvider(current.trainingSupplyIndex, current)
+    const startedAt = performance.now()
+    const result = await provider.eligibleCandidateIdentities({ schemaVersion: 1, requestId: 'bulk-performance', planId: 'plan', taskId: 'task', domain: 'listening', targetModuleId: 'listening', mode: 'learn', targetDifficulty: 1, cursor: null, excludeItemIds: [], reason: 'initial' })
+    expect(result.status).toBe('eligible-candidates')
+    expect(performance.now() - startedAt).toBeLessThan(100)
+  })
+
+  it('rejects missing or malformed semantic metadata at the listening boundary', () => {
+    const current = catalog()
+    const source = (trainingSupplyIndex.candidates as readonly Record<string, unknown>[])
+      .find((candidate) => candidate.domain === 'listening')!
+    for (const patch of [
+      { knowledgePointId: undefined },
+      { knowledgePointId: '' },
+      { semanticCategoryId: undefined },
+      { semanticCategoryId: 'not-published' },
+    ]) {
+      expect(() => new ListeningCatalogSupplyProvider({
+        schemaVersion: 1,
+        candidates: [{ ...source, ...patch }],
+      }, current)).toThrow(/semantic|listening fields/u)
+    }
+  })
+
   it('uses the persisted randomized round instead of its independent session rank', async () => {
     const current = catalog()
     const provider = new ListeningCatalogSupplyProvider(current.trainingSupplyIndex, current)

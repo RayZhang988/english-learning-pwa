@@ -176,6 +176,10 @@ export interface ListeningContentDocuments {
 }
 
 export interface ListeningSupplyItem extends LearningTaskSupplyItem {
+  /** R15 identity shared by variants that assess the same listening knowledge. */
+  readonly knowledgePointId: string
+  /** R15 semantic cooldown category published by 05. */
+  readonly semanticCategoryId: string
   /** Published 05 identity for normalized spoken audio; not a UI-derived value. */
   readonly playbackContentId: string
   readonly source: {

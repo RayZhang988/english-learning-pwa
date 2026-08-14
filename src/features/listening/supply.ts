@@ -2,6 +2,8 @@ import type {
   ExtraTrainingSupplyRequest,
   LearningTaskSupplyRequest,
   LearningTaskSupplyResult,
+  TrainingSupplyCandidateIdentity,
+  TrainingSupplyPriorityItem,
 } from '../../learning-engine/index.ts'
 import { assertTrainingSupplyRound, nextTrainingSupplyItem } from '../../learning-engine/index.ts'
 import { ListeningError } from './errors.ts'
@@ -25,6 +27,21 @@ type IndexedListeningSupplyItem = ListeningSupplyItem & {
   readonly variantFamilyId: string
 }
 
+export type ListeningEligibleCandidateIdentitiesResult =
+  | {
+      readonly schemaVersion: 1
+      readonly requestId: string
+      readonly status: 'eligible-candidates'
+      readonly candidates: readonly TrainingSupplyCandidateIdentity[]
+      readonly priorityItems: readonly TrainingSupplyPriorityItem[]
+    }
+  | {
+      readonly schemaVersion: 1
+      readonly requestId: string
+      readonly status: 'content-exhausted'
+      readonly reason: 'no-eligible-content' | 'all-eligible-content-recently-used' | 'provider-failure'
+    }
+
 function parseItem(value: unknown): IndexedListeningSupplyItem {
   if (!isRecord(value) || !isRecord(value.source)) {
     throw new ListeningError('content-invalid', 'Training supply item must be an object.')
@@ -38,6 +55,10 @@ function parseItem(value: unknown): IndexedListeningSupplyItem {
     !Number.isFinite(value.difficultyLevel) || typeof value.supplyOrder !== 'number' ||
     !Number.isInteger(value.supplyOrder) ||
     typeof value.variantFamilyId !== 'string' ||
+    typeof value.knowledgePointId !== 'string' ||
+    !/^knowledge-v1-listening-[a-f0-9]{8}$/u.test(value.knowledgePointId) ||
+    typeof value.semanticCategoryId !== 'string' ||
+    !/^semantic-v1(?::[a-z0-9-]+|-[a-z0-9-]+-[a-f0-9]{8})$/u.test(value.semanticCategoryId) ||
     (value.playbackContentId !== undefined &&
       (typeof value.playbackContentId !== 'string' ||
         !/^listening-playback-v1-[a-f0-9]{8}$/u.test(value.playbackContentId))) ||
@@ -56,6 +77,8 @@ function parseItem(value: unknown): IndexedListeningSupplyItem {
     supplyOrder: value.supplyOrder,
     allowedModes: modes,
     variantFamilyId: value.variantFamilyId,
+    knowledgePointId: value.knowledgePointId,
+    semanticCategoryId: value.semanticCategoryId,
     // Old isolated fixtures/indexes predate R11. Production accepts only the
     // published identity above; this compatibility marker merely preserves
     // their historical item-id behavior and is never emitted by 05 content.
@@ -212,6 +235,79 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
     this.itemsById = new Map(this.items.map((item) => [item.itemId, item]))
   }
 
+  async eligibleCandidateIdentities(
+    request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
+  ): Promise<ListeningEligibleCandidateIdentitiesResult> {
+    if (request.schemaVersion !== 1 || request.domain !== 'listening' || request.targetModuleId !== 'listening') {
+      return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
+    }
+    const eligible = this.items.filter((item) =>
+      item.allowedModes.includes(request.mode) &&
+      (request.targetDifficulty < 0.5
+        ? item.difficultyLevel >= 0.5 && item.difficultyLevel <= 2.5
+        : Math.abs(item.difficultyLevel - request.targetDifficulty) <= 1.5),
+    )
+    if (eligible.length === 0) {
+      return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'no-eligible-content' }
+    }
+    const excludedPlayback = new Set(request.excludeItemIds
+      .map((itemId) => this.itemsById.get(itemId)?.playbackContentId)
+      .filter((value): value is string => value !== undefined))
+    const priorityIds = isExtraTrainingRequest(request) ? request.priority.flatMap((priority) => request.priorityItemIds[priority]) : []
+    if (priorityIds.some((itemId) => !this.itemsById.has(itemId))) {
+      return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
+    }
+    const priorityReasonById = new Map<string, string>()
+    const priorityCandidates: IndexedListeningSupplyItem[] = []
+    if (isExtraTrainingRequest(request)) {
+      for (const priority of request.priority) {
+        for (const itemId of request.priorityItemIds[priority]) {
+          const declared = this.itemsById.get(itemId)!
+          if (priority === 'same-day-variant') {
+            excludedPlayback.add(declared.playbackContentId)
+            const variant = eligible.find((item) =>
+              item.itemId !== declared.itemId &&
+              item.variantFamilyId === declared.variantFamilyId &&
+              item.playbackContentId !== declared.playbackContentId &&
+              !priorityReasonById.has(item.itemId))
+            if (variant) {
+              priorityCandidates.push(variant)
+              priorityReasonById.set(variant.itemId, priority)
+            }
+          } else if (eligible.includes(declared)) {
+            priorityCandidates.push(declared)
+            priorityReasonById.set(declared.itemId, priority)
+          }
+        }
+      }
+    }
+    const ranked = [
+      ...priorityCandidates,
+      ...eligible,
+    ]
+    const seenItems = new Set<string>()
+    const seenPlayback = new Set<string>()
+    const candidates: TrainingSupplyCandidateIdentity[] = []
+    const priorityItems: TrainingSupplyPriorityItem[] = []
+    for (const item of ranked) {
+      if (!eligible.includes(item) || seenItems.has(item.itemId) ||
+        request.excludeItemIds.includes(item.itemId) || excludedPlayback.has(item.playbackContentId) ||
+        seenPlayback.has(item.playbackContentId)) continue
+      seenItems.add(item.itemId)
+      seenPlayback.add(item.playbackContentId)
+      candidates.push({
+        itemId: item.itemId,
+        knowledgePointId: item.knowledgePointId,
+        semanticCategoryId: item.semanticCategoryId,
+      })
+      const reason = priorityReasonById.get(item.itemId)
+      if (reason !== undefined) priorityItems.push({ itemId: item.itemId, reason })
+    }
+    return candidates.length > 0
+      ? { schemaVersion: 1, requestId: request.requestId, status: 'eligible-candidates', candidates, priorityItems }
+      : { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'all-eligible-content-recently-used' }
+  }
+
   async next(
     request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
   ): Promise<LearningTaskSupplyResult> {
@@ -260,6 +356,16 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
     if (available.length === 0 && !isExtraTrainingRequest(request)) {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'all-eligible-content-recently-used' }
     }
+    if (request.supplyRound !== undefined) {
+      try { assertTrainingSupplyRound(request.supplyRound) } catch {
+        return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
+      }
+      const next = nextTrainingSupplyItem(request.supplyRound)
+      if (next.status === 'content-exhausted') return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: next.reason }
+      const item = available.find((candidate) => candidate.itemId === next.itemId)
+      if (!item) return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
+      return { schemaVersion: 1, requestId: request.requestId, status: 'item', item, nextCursor: item.itemId }
+    }
     if (isExtraTrainingRequest(request)) {
       const allPriorityIds = request.priority.flatMap(
         (priority) => request.priorityItemIds[priority],
@@ -293,16 +399,6 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
           return { schemaVersion: 1, requestId: request.requestId, status: 'item', item: selected, nextCursor: selected.itemId }
         }
       }
-    }
-    if (request.supplyRound !== undefined) {
-      try { assertTrainingSupplyRound(request.supplyRound) } catch {
-        return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
-      }
-      const next = nextTrainingSupplyItem(request.supplyRound)
-      if (next.status === 'content-exhausted') return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: next.reason }
-      const item = available.find((candidate) => candidate.itemId === next.itemId)
-      if (!item) return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
-      return { schemaVersion: 1, requestId: request.requestId, status: 'item', item, nextCursor: item.itemId }
     }
     if (available.length === 0) {
       // A priority tier never gets to replay identical audio under another

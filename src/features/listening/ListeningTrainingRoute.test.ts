@@ -152,12 +152,16 @@ describe('ListeningTrainingRoute wrong-answer ports', () => {
       {
         itemId: 'route-choice', learningUnitId: unit.learningUnitId,
         contentRef: unit.contentRef, difficultyLevel: 2, tags: unit.tags,
+        knowledgePointId: 'knowledge-v1-listening-00000001',
+        semanticCategoryId: 'semantic-v1:greeting-introduction',
         playbackContentId: 'listening-playback-v1-00000001',
         source: { sourceType: 'listening-extension', sourceId: choiceQuestion.id, variantId: 'word-discrimination' },
       },
       {
         itemId: 'route-dictation', learningUnitId: unit.learningUnitId,
         contentRef: unit.contentRef, difficultyLevel: 2, tags: unit.tags,
+        knowledgePointId: 'knowledge-v1-listening-00000002',
+        semanticCategoryId: 'semantic-v1:personal-information',
         playbackContentId: 'listening-playback-v1-00000002',
         source: { sourceType: 'listening-extension', sourceId: dictationQuestion.id, variantId: 'keyword-dictation' },
       },
@@ -183,7 +187,7 @@ describe('ListeningTrainingRoute wrong-answer ports', () => {
         trainingBudgetStatus: () => 'running',
       }), networkStatus).initialize()
 
-    const choiceRound = createTrainingSupplyRound({ seed: 'route-choice', candidateItemIds: ['route-choice'], shortTermExcludedItemIds: [] })
+    const choiceRound = createTrainingSupplyRound({ seed: 'route-choice', candidates: [{ itemId: 'route-choice', knowledgePointId: items[0]!.knowledgePointId, semanticCategoryId: items[0]!.semanticCategoryId }], shortTermExcludedItemIds: [] })
     const choiceStore = new MemoryStore()
     const choice = await initialize(choiceRound, choiceStore)
     expect(choice.failure).toBeNull()
@@ -194,7 +198,7 @@ describe('ListeningTrainingRoute wrong-answer ports', () => {
     const restoredChoice = await initialize(choiceRound, choiceStore)
     expect(restoredChoice.stream?.supplyRound).toEqual(choice.stream?.supplyRound)
 
-    const dictationRound = createTrainingSupplyRound({ seed: 'route-dictation', candidateItemIds: ['route-dictation'], shortTermExcludedItemIds: [] })
+    const dictationRound = createTrainingSupplyRound({ seed: 'route-dictation', candidates: [{ itemId: 'route-dictation', knowledgePointId: items[1]!.knowledgePointId, semanticCategoryId: items[1]!.semanticCategoryId }], shortTermExcludedItemIds: [] })
     const dictation = await initialize(dictationRound, new MemoryStore())
     expect(dictation.questions[0]?.type).toBe('keyword-dictation')
     if (dictation.questions[0]?.type !== 'keyword-dictation') throw new Error('Expected a dictation question.')

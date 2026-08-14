@@ -79,7 +79,9 @@ function supplyItemFor(catalog: ListeningCatalog, domain: string, itemId: string
     throw new ListeningError('content-reference-missing', 'Requested item is not a released daily listening item.')
   }
   if (candidate.difficultyLevel !== expectedDifficultyLevel) throw new ListeningError('task-incompatible', 'Requested listening item does not match the target growth level.')
-  if (typeof candidate.learningUnitId !== 'string' || typeof candidate.contentRef !== 'string' || typeof candidate.playbackContentId !== 'string' || typeof candidate.source.sourceId !== 'string' || typeof candidate.source.variantId !== 'string') {
+  if (typeof candidate.learningUnitId !== 'string' || typeof candidate.contentRef !== 'string' ||
+    typeof candidate.knowledgePointId !== 'string' || typeof candidate.semanticCategoryId !== 'string' ||
+    typeof candidate.playbackContentId !== 'string' || typeof candidate.source.sourceId !== 'string' || typeof candidate.source.variantId !== 'string') {
     throw new ListeningError('content-invalid', 'Released listening growth item is malformed.')
   }
   return {
@@ -88,6 +90,8 @@ function supplyItemFor(catalog: ListeningCatalog, domain: string, itemId: string
     contentRef: candidate.contentRef,
     difficultyLevel: candidate.difficultyLevel as number,
     tags: Array.isArray(candidate.tags) ? candidate.tags.filter((tag): tag is string => typeof tag === 'string') : [],
+    knowledgePointId: candidate.knowledgePointId,
+    semanticCategoryId: candidate.semanticCategoryId,
     playbackContentId: candidate.playbackContentId,
     source: {
       sourceType: candidate.source.sourceType as ListeningSupplyItem['source']['sourceType'],

@@ -32,6 +32,21 @@
 `supplyProvider` 与 `trainingBudgetStatus` props；07 仅声明并消费这两个端口，不能自行读取
 04 状态或修改应用路由。
 
+### R15 语义多样性轮次
+
+- `ListeningCatalogSupplyProvider.eligibleCandidateIdentities(request)` 一次返回 01
+  创建 schema-2 round 所需的 `itemId / knowledgePointId / semanticCategoryId`，
+  以及已解析的 `priorityItems` 与其 reason。07 不自行生成种子或轮次。
+- 批量候选保留本模块的正式难度与 mode 门禁，并在交给 04 前按
+  `playbackContentId` 去重；已完成音频的别名不会混入新轮次。同日种子会换成
+  同 family 但不同音频的真实变式，不会把种子本身伪装成额外练习。
+- 一旦请求携带 schema-2 round，`next()` 只消费其当前 cursor；旧的
+  family/题型排名不再二次洗牌。音频身份仍是发布候选门禁，不是运行时猜测。
+- 每题完成仍在原有单次状态转换中调用
+  `recordTrainingSupplyItem()`，将 cursor、最近知识点和语义历史与 item-completed
+  事件一起持久化。日常、R6 额外训练、刷新和离线恢复不重洗；
+  schema-1 round 仍按原语义恢复。R9、R10 和 Samantha 播放策略未改变。
+
 模块不会修改 `src/app/**`。最终路由注册由 01 在集成步骤完成。
 
 ### R3 有效计时接入

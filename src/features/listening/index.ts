@@ -76,6 +76,7 @@ export {
 export {
   ListeningCatalogSupplyProvider,
   resolveListeningSupplyQuestion,
+  type ListeningEligibleCandidateIdentitiesResult,
   type ListeningSupplyProvider,
 } from './supply.ts'
 export {

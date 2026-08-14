@@ -113,7 +113,11 @@ describe('extra listening commands', () => {
           ...session,
           supplyRound: createTrainingSupplyRound({
             seed: 'extra-listening-round',
-            candidateItemIds: [item.itemId],
+            candidates: [{
+              itemId: item.itemId,
+              knowledgePointId: 'knowledge-v1-listening-00000001',
+              semanticCategoryId: 'semantic-v1:greeting-introduction',
+            }],
             shortTermExcludedItemIds: [],
           }),
         },
@@ -135,10 +139,14 @@ describe('extra listening commands', () => {
         (event) => event.type === 'learning.extra-training.item.completed.v1',
       )
       expect(completion?.payload.supplyRound).toMatchObject({
+        schemaVersion: 2,
         seed: 'extra-listening-round',
         cursor: 1,
         order: [item.itemId],
       })
+      expect(runtime.currentSnapshot?.session.supplyRound).toEqual(
+        completion?.payload.supplyRound,
+      )
     },
   )
 
