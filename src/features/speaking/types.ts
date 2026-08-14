@@ -52,6 +52,8 @@ export interface SpeakingContentDocuments {
 }
 
 export interface SpeakingSupplyItem extends LearningTaskSupplyItem {
+  readonly knowledgePointId: string
+  readonly semanticCategoryId: string
   readonly source: {
     readonly sourceType: 'speaking-prompt' | 'speaking-scene-quiz'
     readonly sourceId: string

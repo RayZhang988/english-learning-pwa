@@ -108,8 +108,8 @@ describe('SpeakingTrainingRoute wrong-answer injection', () => {
     const unit = { ...createSpeakingUnit([speakingPrompt]), scenePrompts: [scenePrompt] }
     const catalog = createSpeakingCatalogFixture(unit)
     const items: readonly SpeakingSupplyItem[] = [
-      { itemId: 'route-prompt', learningUnitId: unit.learningUnitId, contentRef: unit.contentRef, difficultyLevel: 1, tags: unit.tags, source: { sourceType: 'speaking-prompt', sourceId: speakingPrompt.id, variantId: 'activity-prompt' } },
-      { itemId: 'route-scene-item', learningUnitId: unit.learningUnitId, contentRef: unit.contentRef, difficultyLevel: 1, tags: unit.tags, source: { sourceType: 'speaking-scene-quiz', sourceId: scenePrompt.id, variantId: 'scene-fixed-response' } },
+      { itemId: 'route-prompt', knowledgePointId: 'knowledge-route-prompt', semanticCategoryId: 'semantic:introduction', learningUnitId: unit.learningUnitId, contentRef: unit.contentRef, difficultyLevel: 1, tags: unit.tags, source: { sourceType: 'speaking-prompt', sourceId: speakingPrompt.id, variantId: 'activity-prompt' } },
+      { itemId: 'route-scene-item', knowledgePointId: 'knowledge-route-scene', semanticCategoryId: 'semantic:politeness', learningUnitId: unit.learningUnitId, contentRef: unit.contentRef, difficultyLevel: 1, tags: unit.tags, source: { sourceType: 'speaking-scene-quiz', sourceId: scenePrompt.id, variantId: 'scene-fixed-response' } },
     ]
     const supplyProvider: SpeakingSupplyProvider = { async next(request) {
       const item = items.find((candidate) => candidate.itemId === request.supplyRound?.order[request.supplyRound.cursor])

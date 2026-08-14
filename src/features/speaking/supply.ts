@@ -2,6 +2,7 @@ import type {
   ExtraTrainingSupplyRequest,
   LearningTaskSupplyRequest,
   LearningTaskSupplyResult,
+  TrainingSupplyCandidateIdentity,
 } from '../../learning-engine/index.ts'
 import { assertTrainingSupplyRound, nextTrainingSupplyItem } from '../../learning-engine/index.ts'
 import { SpeakingError } from './errors.ts'
@@ -26,6 +27,8 @@ function parseItem(value: unknown): SpeakingSupplyItem | null {
   if (!item || !source || item.domain !== 'speaking' || item.targetModuleId !== 'speaking' ||
     typeof item.itemId !== 'string' || typeof item.supplyOrder !== 'number' ||
     typeof item.learningUnitId !== 'string' || typeof item.contentRef !== 'string' ||
+    typeof item.knowledgePointId !== 'string' || item.knowledgePointId.trim().length === 0 ||
+    typeof item.semanticCategoryId !== 'string' || item.semanticCategoryId.trim().length === 0 ||
     typeof item.difficultyLevel !== 'number' || !Array.isArray(item.tags) ||
     !Array.isArray(item.allowedModes) || typeof item.nominalEffectiveSeconds !== 'number' ||
     (source.sourceType !== 'speaking-prompt' && source.sourceType !== 'speaking-scene-quiz') ||
@@ -82,6 +85,19 @@ export class SpeakingCatalogSupplyProvider implements SpeakingSupplyProvider {
     }
   }
 
+  eligibleCandidateIdentities(
+    request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
+  ): readonly TrainingSupplyCandidateIdentity[] {
+    if (request.domain !== 'speaking' || request.targetModuleId !== 'speaking') return []
+    return this.items
+      .filter((item) => eligible(item, request))
+      .map(({ itemId, knowledgePointId, semanticCategoryId }) => ({
+        itemId,
+        knowledgePointId,
+        semanticCategoryId,
+      }))
+  }
+
   async next(
     request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
   ): Promise<LearningTaskSupplyResult> {
@@ -94,6 +110,23 @@ export class SpeakingCatalogSupplyProvider implements SpeakingSupplyProvider {
     const excluded = new Set(request.excludeItemIds)
     const available = candidates.filter((item) => !excluded.has(item.itemId))
     if (!available.length) return { schemaVersion: 1, ...base, status: 'content-exhausted', reason: 'all-eligible-content-recently-used' }
+    if (request.supplyRound !== undefined) {
+      try { assertTrainingSupplyRound(request.supplyRound) } catch {
+        return { schemaVersion: 1, ...base, status: 'content-exhausted', reason: 'provider-failure' }
+      }
+      const next = nextTrainingSupplyItem(request.supplyRound)
+      if (next.status === 'content-exhausted') return { schemaVersion: 1, ...base, status: 'content-exhausted', reason: next.reason }
+      const item = available.find((candidate) => candidate.itemId === next.itemId)
+      const audit = request.supplyRound.schemaVersion === 2
+        ? request.supplyRound.orderAudit[request.supplyRound.cursor]
+        : undefined
+      if (!item || (audit !== undefined &&
+        (audit.knowledgePointId !== item.knowledgePointId ||
+          audit.semanticCategoryId !== item.semanticCategoryId))) {
+        return { schemaVersion: 1, ...base, status: 'content-exhausted', reason: 'provider-failure' }
+      }
+      return { schemaVersion: 1, ...base, status: 'item', item, nextCursor: item.itemId }
+    }
     if (isExtraTrainingRequest(request)) {
       const allPriorityIds = request.priority.flatMap(
         (priority) => request.priorityItemIds[priority],
@@ -107,16 +140,6 @@ export class SpeakingCatalogSupplyProvider implements SpeakingSupplyProvider {
           .find((candidate) => available.includes(candidate))
         if (item) return { schemaVersion: 1, ...base, status: 'item', item, nextCursor: item.itemId }
       }
-    }
-    if (request.supplyRound !== undefined) {
-      try { assertTrainingSupplyRound(request.supplyRound) } catch {
-        return { schemaVersion: 1, ...base, status: 'content-exhausted', reason: 'provider-failure' }
-      }
-      const next = nextTrainingSupplyItem(request.supplyRound)
-      if (next.status === 'content-exhausted') return { schemaVersion: 1, ...base, status: 'content-exhausted', reason: next.reason }
-      const item = available.find((candidate) => candidate.itemId === next.itemId)
-      if (!item) return { schemaVersion: 1, ...base, status: 'content-exhausted', reason: 'provider-failure' }
-      return { schemaVersion: 1, ...base, status: 'item', item, nextCursor: item.itemId }
     }
     const cursor = request.cursor
     const cursorIndex = cursor === null ? -1 : candidates.findIndex((item) => item.itemId === cursor)

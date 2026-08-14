@@ -470,8 +470,8 @@ describe('speaking training runtime fallbacks', () => {
     const secondPrompt = { ...speakingPrompt, id: 'w1d1-s2', cueZh: '说明你在纽约旅行。', modelAnswer: "I'm visiting New York.", acceptedAnswers: ["I'm visiting New York."] }
     const catalog = createSpeakingCatalogFixture(createSpeakingUnit([speakingPrompt, secondPrompt]))
     const items = [
-      { itemId: 'supply-1', learningUnitId: catalog.units[0].learningUnitId, contentRef: catalog.units[0].contentRef, difficultyLevel: 1, tags: ['scene:introductions'], source: { sourceType: 'speaking-prompt' as const, sourceId: 'w1d1-s1', variantId: 'activity-prompt' as const } },
-      { itemId: 'supply-2', learningUnitId: catalog.units[0].learningUnitId, contentRef: catalog.units[0].contentRef, difficultyLevel: 1, tags: ['scene:introductions'], source: { sourceType: 'speaking-prompt' as const, sourceId: 'w1d1-s2', variantId: 'activity-prompt' as const } },
+      { itemId: 'supply-1', knowledgePointId: 'knowledge-1', semanticCategoryId: 'semantic:introduction', learningUnitId: catalog.units[0].learningUnitId, contentRef: catalog.units[0].contentRef, difficultyLevel: 1, tags: ['scene:introductions'], source: { sourceType: 'speaking-prompt' as const, sourceId: 'w1d1-s1', variantId: 'activity-prompt' as const } },
+      { itemId: 'supply-2', knowledgePointId: 'knowledge-2', semanticCategoryId: 'semantic:travel', learningUnitId: catalog.units[0].learningUnitId, contentRef: catalog.units[0].contentRef, difficultyLevel: 1, tags: ['scene:introductions'], source: { sourceType: 'speaking-prompt' as const, sourceId: 'w1d1-s2', variantId: 'activity-prompt' as const } },
     ]
     const supplyProvider = { async next(request: import('../../learning-engine/index.ts').LearningTaskSupplyRequest) {
       const item = items.find((candidate) => !request.excludeItemIds.includes(candidate.itemId))
@@ -488,9 +488,9 @@ describe('speaking training runtime fallbacks', () => {
       recognition: new FakeRecognition({ status: 'recognized' as const, transcript: "I'm from Shanghai.", alternatives: [] }), now: clock(), createId: ids('stream'), supplyProvider, trainingBudgetStatus: () => budget,
       supplyRound: createTrainingSupplyRound({
         seed: 'daily-speaking-round',
-        candidateItemIds: items.map((item) => item.itemId),
+        candidates: items.map(({ itemId, knowledgePointId, semanticCategoryId }) => ({ itemId, knowledgePointId, semanticCategoryId })),
         shortTermExcludedItemIds: [],
-        priorityItemIds: ['supply-1'],
+        priorityItems: [{ itemId: 'supply-1', reason: 'recent-error' }],
       }),
     }
     const training = new SpeakingTrainingRuntime(options)
@@ -509,8 +509,9 @@ describe('speaking training runtime fallbacks', () => {
     const events = sink.events.map((event) => parseLearningEvent(event))
     expect(events.filter((event) => event.type === 'learning.training.item.completed.v1')).toHaveLength(2)
     expect(events.find((event) => event.type === 'learning.training.item.completed.v1')?.payload.supplyRound).toMatchObject({
-      seed: 'daily-speaking-round', cursor: 1,
+      schemaVersion: 2, seed: 'daily-speaking-round', cursor: 1,
       order: expect.arrayContaining(['supply-1', 'supply-2']),
+      shortTermHistory: [{ itemId: 'supply-1', knowledgePointId: 'knowledge-1', semanticCategoryId: 'semantic:introduction' }],
     })
     expect(events.some((event) => event.type === 'learning.training.budget.completed.v1')).toBe(true)
     expect(events.filter((event) => event.type === 'learning.attempt.completed.v1').every((event) => event.payload.taskCompleted === false)).toBe(true)

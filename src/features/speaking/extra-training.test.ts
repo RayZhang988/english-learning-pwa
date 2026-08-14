@@ -15,7 +15,7 @@ class Store implements NamespaceStore {
 }
 
 const session = { schemaVersion: 1 as const, sessionId: 'extra-speaking', localDate: '2026-07-29', domain: 'speaking' as const, targetModuleId: 'speaking' as const, mode: 'learn' as const, targetDifficulty: 1, completionMode: 'open-ended' as const, effectiveSeconds: 0, status: 'running' as const, nextSupplyCursor: null, excludeItemIds: [], completedItemCount: 0, startedAt: '2026-07-29T00:00:00.000Z', updatedAt: '2026-07-29T00:00:00.000Z', endedAt: null, endReason: null }
-const item = { itemId: 'speaking-supply-1', learningUnitId: 'unit-1', contentRef: 'lesson://unit-1', difficultyLevel: 1, tags: ['travel'], source: { sourceType: 'speaking-prompt' as const, sourceId: 'prompt', variantId: 'activity-prompt' as const } }
+const item = { itemId: 'speaking-supply-1', knowledgePointId: 'knowledge-speaking-1', semanticCategoryId: 'semantic:greeting', learningUnitId: 'unit-1', contentRef: 'lesson://unit-1', difficultyLevel: 1, tags: ['travel'], source: { sourceType: 'speaking-prompt' as const, sourceId: 'prompt', variantId: 'activity-prompt' as const } }
 const sceneItem = { ...item, itemId: 'scene-supply-1', source: { sourceType: 'speaking-scene-quiz' as const, sourceId: 'scene', variantId: 'scene-fixed-response' as const } }
 const prompt = { id: 'prompt', cueZh: '说你好', partnerLine: 'Hello.', modelAnswer: 'Hello.', modelAnswerTranslationZh: '你好。', acceptedAnswers: ['hello'], requiredConcepts: ['hello'] }
 const unit = { learningUnitId: 'unit-1', contentRef: 'lesson://unit-1', difficultyLevel: 1, estimatedSeconds: 12, tags: ['travel'], activityType: 'fixed-response' as const, instructionsZh: '说英语', prompts: [prompt], scenePrompts: [prompt] }
@@ -80,7 +80,7 @@ describe('extra speaking training', () => {
           ...session,
           supplyRound: createTrainingSupplyRound({
             seed: 'extra-speaking-round',
-            candidateItemIds: [item.itemId],
+            candidates: [{ itemId: item.itemId, knowledgePointId: item.knowledgePointId, semanticCategoryId: item.semanticCategoryId }],
             shortTermExcludedItemIds: [],
           }),
         },
@@ -89,7 +89,8 @@ describe('extra speaking training', () => {
       await runtime.initialize(); await runtime.next(); await runtime.startRecording(); await runtime.stopRecording(); await runtime.completeCurrentItem()
       const completion = events.find((event) => event.type === 'learning.extra-training.item.completed.v1')
       expect(completion?.payload.supplyRound).toMatchObject({
-        seed: 'extra-speaking-round', cursor: 1, order: [item.itemId],
+        schemaVersion: 2, seed: 'extra-speaking-round', cursor: 1, order: [item.itemId],
+        shortTermHistory: [{ itemId: item.itemId, knowledgePointId: item.knowledgePointId, semanticCategoryId: item.semanticCategoryId }],
       })
     },
   )

@@ -47,8 +47,11 @@ function supplyItemFor(catalog: SpeakingCatalog, domain: string, itemId: string,
   const value = (index as SupplyIndex).candidates.find((candidate) => isRecord(candidate) && candidate.itemId === itemId)
   if (!isRecord(value) || value.domain !== 'speaking' || value.targetModuleId !== 'speaking' || !isRecord(value.source) || !['speaking-prompt', 'speaking-scene-quiz'].includes(String(value.source.sourceType))) throw new SpeakingError('content-reference-missing', 'Requested item is not a released daily speaking item.')
   if (value.difficultyLevel !== expectedDifficultyLevel) throw new SpeakingError('task-incompatible', 'Requested speaking item does not match the target growth level.')
-  if (typeof value.learningUnitId !== 'string' || typeof value.contentRef !== 'string' || typeof value.source.sourceId !== 'string' || !['activity-prompt', 'scene-fixed-response'].includes(String(value.source.variantId))) throw new SpeakingError('content-invalid', 'Released speaking growth item is malformed.')
-  return { itemId, learningUnitId: value.learningUnitId, contentRef: value.contentRef, difficultyLevel: value.difficultyLevel as number, tags: Array.isArray(value.tags) ? value.tags.filter((tag): tag is string => typeof tag === 'string') : [], source: { sourceType: value.source.sourceType as SpeakingSupplyItem['source']['sourceType'], sourceId: value.source.sourceId, variantId: value.source.variantId as SpeakingSupplyItem['source']['variantId'] } }
+  if (typeof value.learningUnitId !== 'string' || typeof value.contentRef !== 'string' ||
+    typeof value.knowledgePointId !== 'string' || value.knowledgePointId.trim().length === 0 ||
+    typeof value.semanticCategoryId !== 'string' || value.semanticCategoryId.trim().length === 0 ||
+    typeof value.source.sourceId !== 'string' || !['activity-prompt', 'scene-fixed-response'].includes(String(value.source.variantId))) throw new SpeakingError('content-invalid', 'Released speaking growth item is malformed.')
+  return { itemId, knowledgePointId: value.knowledgePointId, semanticCategoryId: value.semanticCategoryId, learningUnitId: value.learningUnitId, contentRef: value.contentRef, difficultyLevel: value.difficultyLevel as number, tags: Array.isArray(value.tags) ? value.tags.filter((tag): tag is string => typeof tag === 'string') : [], source: { sourceType: value.source.sourceType as SpeakingSupplyItem['source']['sourceType'], sourceId: value.source.sourceId, variantId: value.source.variantId as SpeakingSupplyItem['source']['variantId'] } }
 }
 
 function resolvedFor(catalog: SpeakingCatalog, domain: string, itemId: string, expectedDifficultyLevel: number) {
