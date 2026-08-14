@@ -13,6 +13,10 @@ import {
   recordTrainingSupplyItem,
 } from '../../learning-engine/index.ts'
 import type { SpeakingContentDocuments, SpeakingSupplyItem } from './types.ts'
+import type {
+  ExtraTrainingSupplyRequest,
+  LearningTaskSupplyRequest,
+} from '../../learning-engine/index.ts'
 
 function catalog() {
   const lessonPaths = packageIndex.lessonFiles
@@ -53,10 +57,25 @@ function extraRequest(
   }
 }
 
+async function eligibleIdentities(
+  provider: SpeakingCatalogSupplyProvider,
+  value: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest = request(),
+) {
+  const result = await provider.eligibleCandidateIdentities(value)
+  expect(result).toMatchObject({
+    schemaVersion: 1,
+    requestId: value.requestId,
+    status: 'eligible-candidates',
+  })
+  if (result.status !== 'eligible-candidates') throw new Error('Expected eligible speaking identities.')
+  return result
+}
+
 describe('released speaking supply resolver', () => {
-  it('publishes strict eligible semantic identities for application-owned schema-2 rounds', () => {
+  it('publishes request-bound eligible semantic identities for application-owned schema-2 rounds', async () => {
     const provider = new SpeakingCatalogSupplyProvider(trainingSupplyIndex, catalog())
-    const identities = provider.eligibleCandidateIdentities(request())
+    const result = await eligibleIdentities(provider)
+    const identities = result.candidates
     expect(identities.length).toBe(360)
     expect(identities[0]).toEqual({
       itemId: expect.any(String),
@@ -77,11 +96,43 @@ describe('released speaking supply resolver', () => {
     expect(() => new SpeakingCatalogSupplyProvider(blank, catalog())).toThrow(/invalid candidate/i)
   })
 
+  it('returns request-bound failure states for invalid or exhausted enumeration requests', async () => {
+    const provider = new SpeakingCatalogSupplyProvider(trainingSupplyIndex, catalog())
+    await expect(provider.eligibleCandidateIdentities({ ...request(), requestId: 'wrong-domain', domain: 'listening' })).resolves.toEqual({
+      schemaVersion: 1, requestId: 'wrong-domain', status: 'content-exhausted', reason: 'provider-failure',
+    })
+    const all = await eligibleIdentities(provider)
+    await expect(provider.eligibleCandidateIdentities({
+      ...request(), requestId: 'all-excluded', excludeItemIds: all.candidates.map((item) => item.itemId),
+    })).resolves.toEqual({
+      schemaVersion: 1, requestId: 'all-excluded', status: 'content-exhausted', reason: 'all-eligible-content-recently-used',
+    })
+  })
+
+  it('returns formal priority reasons without asking 01 to interpret speaking semantics', async () => {
+    const provider = new SpeakingCatalogSupplyProvider(trainingSupplyIndex, catalog())
+    const value = extraRequest({
+      'recent-error': ['supply-v1-speaking-w1d1-q3'],
+      'due-review': ['supply-v1-speaking-w1d1-s1'],
+      'same-day-variant': [], 'new-optional-content': [],
+    })
+    const result = await eligibleIdentities(provider, value)
+    expect(result.priorityItems).toEqual([
+      { itemId: 'supply-v1-speaking-w1d1-q3', reason: 'recent-error' },
+      { itemId: 'supply-v1-speaking-w1d1-s1', reason: 'due-review' },
+    ])
+    await expect(provider.eligibleCandidateIdentities(extraRequest({
+      'recent-error': ['unknown-speaking-candidate'],
+      'due-review': [], 'same-day-variant': [], 'new-optional-content': [],
+    }))).resolves.toMatchObject({ status: 'content-exhausted', reason: 'provider-failure' })
+  })
+
   it('rejects a schema-2 round whose semantic identity does not match released content', async () => {
     const provider = new SpeakingCatalogSupplyProvider(trainingSupplyIndex, catalog())
+    const eligible = await eligibleIdentities(provider)
     const round = createTrainingSupplyRound({
       seed: 'speaking-r15-tampered',
-      candidates: provider.eligibleCandidateIdentities(request()),
+      candidates: eligible.candidates,
       shortTermExcludedItemIds: [],
     })
     const tampered = {
@@ -97,7 +148,7 @@ describe('released speaking supply resolver', () => {
 
   it('consumes a schema-2 round with no adjacent knowledge point and at most two same semantics in the first 30', async () => {
     const provider = new SpeakingCatalogSupplyProvider(trainingSupplyIndex, catalog())
-    const candidates = provider.eligibleCandidateIdentities(request())
+    const { candidates } = await eligibleIdentities(provider)
     const round = createTrainingSupplyRound({
       seed: 'speaking-r15-first-30', candidates, shortTermExcludedItemIds: [],
     })
@@ -116,9 +167,10 @@ describe('released speaking supply resolver', () => {
 
   it('restores schema-2 order offline and advances only from its acknowledged snapshot', async () => {
     const firstProvider = new SpeakingCatalogSupplyProvider(trainingSupplyIndex, catalog())
+    const eligible = await eligibleIdentities(firstProvider)
     const round = createTrainingSupplyRound({
       seed: 'speaking-r15-resume',
-      candidates: firstProvider.eligibleCandidateIdentities(request()),
+      candidates: eligible.candidates,
       shortTermExcludedItemIds: [],
     })
     const first = await firstProvider.next({ ...request(), supplyRound: round })
@@ -142,13 +194,10 @@ describe('released speaking supply resolver', () => {
       'due-review': ['supply-v1-speaking-w1d1-s1'],
       'same-day-variant': [], 'new-optional-content': [],
     })
-    const candidates = provider.eligibleCandidateIdentities(base)
+    const eligible = await eligibleIdentities(provider, base)
     const round = createTrainingSupplyRound({
-      seed: 'speaking-r15-priority', candidates, shortTermExcludedItemIds: [],
-      priorityItems: [
-        { itemId: 'supply-v1-speaking-w1d1-q3', reason: 'recent-error' },
-        { itemId: 'supply-v1-speaking-w1d1-s1', reason: 'due-review' },
-      ],
+      seed: 'speaking-r15-priority', candidates: eligible.candidates, shortTermExcludedItemIds: [],
+      priorityItems: eligible.priorityItems,
     })
     expect(round.orderAudit.slice(0, 2).map(({ itemId, priorityReason }) => ({ itemId, priorityReason }))).toEqual([
       { itemId: 'supply-v1-speaking-w1d1-q3', priorityReason: 'recent-error' },
@@ -159,13 +208,15 @@ describe('released speaking supply resolver', () => {
     })
   })
 
-  it('validates the 900-item release and enumerates its eligible identities in one bounded bulk pass', () => {
+  it('validates the 900-item release and enumerates its eligible identities in one bounded bulk pass', async () => {
     const startedAt = performance.now()
     const provider = new SpeakingCatalogSupplyProvider(trainingSupplyIndex, catalog())
-    const identities = provider.eligibleCandidateIdentities({ ...request(), targetDifficulty: 5.5 })
+    const result = await provider.eligibleCandidateIdentities({ ...request(), targetDifficulty: 5.5 })
     const elapsed = performance.now() - startedAt
     expect(trainingSupplyIndex.candidates).toHaveLength(900)
-    expect(identities.length).toBeGreaterThanOrEqual(300)
+    expect(result.status).toBe('eligible-candidates')
+    if (result.status !== 'eligible-candidates') throw new Error('Expected bulk identities.')
+    expect(result.candidates.length).toBeGreaterThanOrEqual(300)
     expect(elapsed).toBeLessThan(100)
   })
 

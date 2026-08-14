@@ -3,6 +3,7 @@ import type {
   LearningTaskSupplyRequest,
   LearningTaskSupplyResult,
   TrainingSupplyCandidateIdentity,
+  TrainingSupplyPriorityItem,
 } from '../../learning-engine/index.ts'
 import { assertTrainingSupplyRound, nextTrainingSupplyItem } from '../../learning-engine/index.ts'
 import { SpeakingError } from './errors.ts'
@@ -55,6 +56,27 @@ export interface SpeakingSupplyProvider {
   ): Promise<LearningTaskSupplyResult>
 }
 
+export type SpeakingEligibleCandidateIdentitiesResult =
+  | {
+      readonly schemaVersion: 1
+      readonly requestId: string
+      readonly status: 'eligible-candidates'
+      readonly candidates: readonly TrainingSupplyCandidateIdentity[]
+      readonly priorityItems: readonly TrainingSupplyPriorityItem[]
+    }
+  | {
+      readonly schemaVersion: 1
+      readonly requestId: string
+      readonly status: 'content-exhausted'
+      readonly reason: 'no-eligible-content' | 'all-eligible-content-recently-used' | 'provider-failure'
+    }
+
+export interface SpeakingEligibleCandidateIdentitiesProvider {
+  eligibleCandidateIdentities(
+    request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
+  ): Promise<SpeakingEligibleCandidateIdentitiesResult>
+}
+
 function isExtraTrainingRequest(
   request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
 ): request is ExtraTrainingSupplyRequest {
@@ -62,7 +84,7 @@ function isExtraTrainingRequest(
 }
 
 /** Strict local adapter for the 05 index; it never invents prompts or repeats excluded IDs. */
-export class SpeakingCatalogSupplyProvider implements SpeakingSupplyProvider {
+export class SpeakingCatalogSupplyProvider implements SpeakingSupplyProvider, SpeakingEligibleCandidateIdentitiesProvider {
   private readonly items: readonly SpeakingSupplyItem[]
 
   constructor(index: unknown, catalog: SpeakingCatalog) {
@@ -85,17 +107,44 @@ export class SpeakingCatalogSupplyProvider implements SpeakingSupplyProvider {
     }
   }
 
-  eligibleCandidateIdentities(
+  async eligibleCandidateIdentities(
     request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
-  ): readonly TrainingSupplyCandidateIdentity[] {
-    if (request.domain !== 'speaking' || request.targetModuleId !== 'speaking') return []
-    return this.items
-      .filter((item) => eligible(item, request))
-      .map(({ itemId, knowledgePointId, semanticCategoryId }) => ({
+  ): Promise<SpeakingEligibleCandidateIdentitiesResult> {
+    const base = { schemaVersion: 1, requestId: request.requestId } as const
+    if (request.schemaVersion !== 1 || request.domain !== 'speaking' || request.targetModuleId !== 'speaking') {
+      return { ...base, status: 'content-exhausted', reason: 'provider-failure' }
+    }
+    const eligibleItems = this.items.filter((item) => eligible(item, request))
+    if (eligibleItems.length === 0) {
+      return { ...base, status: 'content-exhausted', reason: 'no-eligible-content' }
+    }
+    const itemsById = new Map(this.items.map((item) => [item.itemId, item]))
+    const priorityReasonById = new Map<string, string>()
+    if (isExtraTrainingRequest(request)) {
+      for (const reason of request.priority) {
+        for (const itemId of request.priorityItemIds[reason]) {
+          if (!itemsById.has(itemId)) {
+            return { ...base, status: 'content-exhausted', reason: 'provider-failure' }
+          }
+          if (!priorityReasonById.has(itemId)) priorityReasonById.set(itemId, reason)
+        }
+      }
+    }
+    const excluded = new Set(request.excludeItemIds)
+    const available = eligibleItems.filter((item) => !excluded.has(item.itemId))
+    if (available.length === 0) {
+      return { ...base, status: 'content-exhausted', reason: 'all-eligible-content-recently-used' }
+    }
+    const candidates = available.map(({ itemId, knowledgePointId, semanticCategoryId }) => ({
         itemId,
         knowledgePointId,
         semanticCategoryId,
       }))
+    const availableIds = new Set(candidates.map((item) => item.itemId))
+    const priorityItems = [...priorityReasonById]
+      .filter(([itemId]) => availableIds.has(itemId))
+      .map(([itemId, reason]) => ({ itemId, reason }))
+    return { ...base, status: 'eligible-candidates', candidates, priorityItems }
   }
 
   async next(

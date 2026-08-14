@@ -20,7 +20,13 @@ export {
   createSpeakingTrainingContentRecoveredEvent,
   createSpeakingTrainingItemCompletedEvent,
 } from './events.ts'
-export { SpeakingCatalogSupplyProvider, resolveSpeakingSupplyPrompt, type SpeakingSupplyProvider } from './supply.ts'
+export {
+  SpeakingCatalogSupplyProvider,
+  resolveSpeakingSupplyPrompt,
+  type SpeakingEligibleCandidateIdentitiesResult,
+  type SpeakingEligibleCandidateIdentitiesProvider,
+  type SpeakingSupplyProvider,
+} from './supply.ts'
 export {
   SpeakingError,
   toSpeakingError,

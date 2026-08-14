@@ -19,8 +19,10 @@
 
 ## R15 语义多样性交接
 
-`SpeakingCatalogSupplyProvider.eligibleCandidateIdentities(request)` 会一次性返回
-全部合格候选的 `itemId`、`knowledgePointId` 和 `semanticCategoryId`。01 必须
+`SpeakingEligibleCandidateIdentitiesProvider.eligibleCandidateIdentities(request)` 异步返回带
+`schemaVersion: 1`、原始 `requestId` 和明确 `status` 的结果。成功结果包含全部合格
+候选的 `itemId`、`knowledgePointId`、`semanticCategoryId` 以及 08 确定的
+`priorityItems`；非法或耗尽结果保留同一 `requestId` 并返回标准 reason。01 必须
 用这个投影创建并持久化 schema-2 `TrainingSupplyRound`；08 只消费该轮次顺序。
 额外训练的旧优先级选择只在没有轮次时作为兼容路径。schema-2 审计身份与
 发布内容不一致时以 `provider-failure` 拒绝，不从题干或标签重算语义。
