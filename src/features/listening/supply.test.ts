@@ -98,6 +98,38 @@ describe('listening training supply', () => {
     expect(selected.playbackContentId).not.toBe(seed.playbackContentId)
   })
 
+  it('allows only an explicit R6 priority to override the short-term exclusion', async () => {
+    const current = catalog()
+    const provider = new ListeningCatalogSupplyProvider(current.trainingSupplyIndex, current)
+    const released = (trainingSupplyIndex.candidates as readonly (ListeningSupplyItem & { readonly allowedModes: readonly string[] })[])
+      .filter((item) => item.domain === 'listening' && item.allowedModes.includes('learn') && Math.abs(item.difficultyLevel - 1) <= 1.5)
+    const priority = released[0]!
+    const ordinaryExcluded = released.find((item) => item.playbackContentId !== priority.playbackContentId)!
+    const request = { schemaVersion: 1 as const, requestId: 'priority-overrides-exclude', sessionId: 'extra', localDate: '2026-08-14', domain: 'listening' as const, targetModuleId: 'listening' as const, mode: 'learn' as const, targetDifficulty: 1, cursor: null, excludeItemIds: [priority.itemId, ordinaryExcluded.itemId], priority: ['recent-error', 'due-review', 'same-day-variant', 'new-optional-content'] as const, priorityItemIds: { 'recent-error': [priority.itemId], 'due-review': [] as readonly string[], 'same-day-variant': [] as readonly string[], 'new-optional-content': [] as readonly string[] }, reason: 'initial' as const }
+
+    const eligible = await provider.eligibleCandidateIdentities(request)
+
+    expect(eligible.status).toBe('eligible-candidates')
+    if (eligible.status !== 'eligible-candidates') return
+    expect(eligible.candidates.map((item) => item.itemId)).toContain(priority.itemId)
+    expect(eligible.candidates.map((item) => item.itemId)).not.toContain(ordinaryExcluded.itemId)
+    expect(eligible.priorityItems).toEqual([{ itemId: priority.itemId, reason: 'recent-error' }])
+    const round = createTrainingSupplyRound({ seed: 'priority-overrides-exclude', candidates: eligible.candidates, shortTermExcludedItemIds: request.excludeItemIds, priorityItems: eligible.priorityItems })
+    const supplied = await provider.next({ ...request, supplyRound: round })
+    expect(supplied).toMatchObject({ status: 'item', item: { itemId: priority.itemId } })
+  })
+
+  it('rejects unknown and difficulty-ineligible explicit R6 priorities', async () => {
+    const current = catalog()
+    const provider = new ListeningCatalogSupplyProvider(current.trainingSupplyIndex, current)
+    const released = (trainingSupplyIndex.candidates as readonly ListeningSupplyItem[])
+      .filter((item) => item.domain === 'listening')
+    const ineligible = released.find((item) => Math.abs(item.difficultyLevel - 5.5) > 1.5)!
+    const base = { schemaVersion: 1 as const, requestId: 'invalid-priority', sessionId: 'extra', localDate: '2026-08-14', domain: 'listening' as const, targetModuleId: 'listening' as const, mode: 'learn' as const, targetDifficulty: 5.5, cursor: null, excludeItemIds: [] as readonly string[], priority: ['recent-error', 'due-review', 'same-day-variant', 'new-optional-content'] as const, priorityItemIds: { 'recent-error': [] as readonly string[], 'due-review': [] as readonly string[], 'same-day-variant': [] as readonly string[], 'new-optional-content': [] as readonly string[] }, reason: 'initial' as const }
+    await expect(provider.eligibleCandidateIdentities({ ...base, priorityItemIds: { ...base.priorityItemIds, 'recent-error': ['missing'] } })).resolves.toMatchObject({ status: 'content-exhausted', reason: 'provider-failure' })
+    await expect(provider.eligibleCandidateIdentities({ ...base, priorityItemIds: { ...base.priorityItemIds, 'recent-error': [ineligible.itemId] } })).resolves.toMatchObject({ status: 'content-exhausted', reason: 'provider-failure' })
+  })
+
   it('keeps the first 30 schema-2 items diverse without duplicating knowledge or playback identities', async () => {
     const current = catalog()
     const provider = new ListeningCatalogSupplyProvider(current.trainingSupplyIndex, current)

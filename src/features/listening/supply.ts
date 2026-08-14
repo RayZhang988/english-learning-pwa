@@ -250,13 +250,22 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
     if (eligible.length === 0) {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'no-eligible-content' }
     }
-    const excludedPlayback = new Set(request.excludeItemIds
-      .map((itemId) => this.itemsById.get(itemId)?.playbackContentId)
-      .filter((value): value is string => value !== undefined))
     const priorityIds = isExtraTrainingRequest(request) ? request.priority.flatMap((priority) => request.priorityItemIds[priority]) : []
     if (priorityIds.some((itemId) => !this.itemsById.has(itemId))) {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
     }
+    const exactPriorityOverrideIds = new Set(isExtraTrainingRequest(request)
+      ? request.priority
+          .filter((priority) => priority !== 'same-day-variant')
+          .flatMap((priority) => request.priorityItemIds[priority])
+      : [])
+    if ([...exactPriorityOverrideIds].some((itemId) => !eligible.includes(this.itemsById.get(itemId)!))) {
+      return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
+    }
+    const excludedPlayback = new Set(request.excludeItemIds
+      .filter((itemId) => !exactPriorityOverrideIds.has(itemId))
+      .map((itemId) => this.itemsById.get(itemId)?.playbackContentId)
+      .filter((value): value is string => value !== undefined))
     const priorityReasonById = new Map<string, string>()
     const priorityCandidates: IndexedListeningSupplyItem[] = []
     if (isExtraTrainingRequest(request)) {
@@ -291,7 +300,8 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
     const priorityItems: TrainingSupplyPriorityItem[] = []
     for (const item of ranked) {
       if (!eligible.includes(item) || seenItems.has(item.itemId) ||
-        request.excludeItemIds.includes(item.itemId) || excludedPlayback.has(item.playbackContentId) ||
+        (request.excludeItemIds.includes(item.itemId) && !exactPriorityOverrideIds.has(item.itemId)) ||
+        excludedPlayback.has(item.playbackContentId) ||
         seenPlayback.has(item.playbackContentId)) continue
       seenItems.add(item.itemId)
       seenPlayback.add(item.playbackContentId)
@@ -362,7 +372,12 @@ export class ListeningCatalogSupplyProvider implements ListeningSupplyProvider {
       }
       const next = nextTrainingSupplyItem(request.supplyRound)
       if (next.status === 'content-exhausted') return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: next.reason }
-      const item = available.find((candidate) => candidate.itemId === next.itemId)
+      let item = available.find((candidate) => candidate.itemId === next.itemId)
+      if (!item && isExtraTrainingRequest(request) && next.priorityReason && next.priorityReason !== 'same-day-variant') {
+        const declared = request.priority.includes(next.priorityReason as typeof request.priority[number]) &&
+          request.priorityItemIds[next.priorityReason as typeof request.priority[number]].includes(next.itemId)
+        if (declared) item = eligible.find((candidate) => candidate.itemId === next.itemId)
+      }
       if (!item) return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
       return { schemaVersion: 1, requestId: request.requestId, status: 'item', item, nextCursor: item.itemId }
     }
