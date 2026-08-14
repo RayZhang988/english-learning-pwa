@@ -23,6 +23,14 @@ interface TrainingSupplyCatalog {
 
 export interface ProductionTrainingSupplyProvider {
   maximumCandidateCount?(): Promise<number>
+  eligibleItemIds?(
+    request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
+  ): Promise<{
+    readonly schemaVersion: 1
+    readonly requestId: string
+    readonly status: 'eligible-items' | 'invalid-request'
+    readonly itemIds?: readonly string[]
+  } | null>
   next(
     request:
       | LearningTaskSupplyRequest
@@ -47,6 +55,34 @@ export async function collectEligibleSupplyItemIds(
     throw new TypeError(
       'Supply provider returned an invalid candidate enumeration bound.',
     )
+  }
+  if (provider.eligibleItemIds) {
+    const result = await provider.eligibleItemIds(request)
+    if (result !== null && (
+      result.schemaVersion !== 1 ||
+      result.requestId !== request.requestId ||
+      result.status !== 'eligible-items' ||
+      !Array.isArray(result.itemIds)
+    )) {
+      throw new TypeError('Supply provider returned an invalid eligible item result.')
+    }
+    if (result !== null) {
+      const eligibleItemIds = result.itemIds as readonly unknown[]
+      if (eligibleItemIds.length > maximumItems) {
+        throw new TypeError('Supply provider exceeded the released candidate index.')
+      }
+      const identities = new Set<string>()
+      for (const itemId of eligibleItemIds) {
+        if (typeof itemId !== 'string' || itemId.length === 0) {
+          throw new TypeError('Supply provider returned an invalid eligible item identity.')
+        }
+        if (identities.has(itemId)) {
+          throw new TypeError('Supply provider repeated an eligible item identity.')
+        }
+        identities.add(itemId)
+      }
+      return [...identities]
+    }
   }
   while (itemIds.length <= maximumItems) {
     const result = await provider.next({
@@ -125,6 +161,21 @@ class LazyCatalogSupplyProvider<
       )
     }
     return this.#maximumCandidateCount
+  }
+
+  async eligibleItemIds(
+    request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
+  ): Promise<{
+    readonly schemaVersion: 1
+    readonly requestId: string
+    readonly status: 'eligible-items' | 'invalid-request'
+    readonly itemIds?: readonly string[]
+  } | null> {
+    const provider = await this.#provider()
+    if (!('eligibleItemIds' in provider) || typeof provider.eligibleItemIds !== 'function') {
+      return null
+    }
+    return provider.eligibleItemIds(request)
   }
 
   #provider(): Promise<Provider> {

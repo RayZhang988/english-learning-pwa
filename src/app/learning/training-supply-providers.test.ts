@@ -101,19 +101,33 @@ describe('production training supply providers', () => {
       async maximumCandidateCount() {
         return releasedItemIds.length
       },
-      async next(value: LearningTaskSupplyRequest) {
-        const itemId = releasedItemIds.find(
-          (candidate) => !value.excludeItemIds.includes(candidate),
-        )
-        return itemId === undefined
-          ? { schemaVersion: 1 as const, requestId: value.requestId, status: 'content-exhausted' as const, reason: 'all-eligible-content-recently-used' as const }
-          : { schemaVersion: 1 as const, requestId: value.requestId, status: 'item' as const, item: { itemId, learningUnitId: itemId, contentRef: itemId, difficultyLevel: 1, tags: [] }, nextCursor: itemId }
+      async eligibleItemIds(value: LearningTaskSupplyRequest) {
+        return { schemaVersion: 1 as const, requestId: value.requestId, status: 'eligible-items' as const, itemIds: releasedItemIds }
+      },
+      async next() {
+        throw new Error('The O(n²) next() fallback must not run when batch eligibility is available.')
       },
     }
 
     await expect(
       collectEligibleSupplyItemIds(provider, request('vocabulary')),
     ).resolves.toEqual(releasedItemIds)
+  })
+
+  it.each([
+    { name: 'invalid status', maximum: 2, result: { schemaVersion: 1 as const, requestId: request('vocabulary').requestId, status: 'invalid-request' as const } },
+    { name: 'an empty identity', maximum: 1, result: { schemaVersion: 1 as const, requestId: request('vocabulary').requestId, status: 'eligible-items' as const, itemIds: [''] } },
+    { name: 'duplicate identities', maximum: 2, result: { schemaVersion: 1 as const, requestId: request('vocabulary').requestId, status: 'eligible-items' as const, itemIds: ['one', 'one'] } },
+    { name: 'more identities than the released index', maximum: 1, result: { schemaVersion: 1 as const, requestId: request('vocabulary').requestId, status: 'eligible-items' as const, itemIds: ['one', 'two'] } },
+  ])('rejects a batch eligibility result with $name', async ({ maximum, result }) => {
+    const provider = {
+      async maximumCandidateCount() { return maximum },
+      async eligibleItemIds() { return result },
+      async next() { throw new Error('Fallback must not run for an invalid batch result.') },
+    }
+    await expect(
+      collectEligibleSupplyItemIds(provider, request('vocabulary')),
+    ).rejects.toThrow(TypeError)
   })
   it('loads and parses each released package supply index lazily once', async () => {
     const loads = {
