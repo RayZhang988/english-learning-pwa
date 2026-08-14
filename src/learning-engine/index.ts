@@ -253,7 +253,12 @@ export {
 } from './training-randomization.ts'
 export type {
   CreateTrainingSupplyRoundInput,
+  LegacyTrainingSupplyRound,
   NextTrainingSupplyItem,
+  SemanticTrainingSupplyRound,
+  TrainingSupplyCandidateIdentity,
+  TrainingSupplyOrderAudit,
+  TrainingSupplyPriorityItem,
   TrainingSupplyRound,
 } from './training-randomization.ts'
 export {

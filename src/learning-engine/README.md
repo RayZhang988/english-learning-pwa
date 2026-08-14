@@ -230,6 +230,22 @@ contentEstimate = clamp(raw, minimumSeconds, maximumSeconds)
 课程内容；`new-optional-content` 始终由上游传空数组。旧持久化会话缺少该新增字段时，读取为
 四组空数组，保持 schema-1 兼容。
 
+### R15 语义多样性轮次
+
+`createTrainingSupplyRound()` 的 schema-2 入口消费 05 发布的 `itemId`、
+`knowledgePointId` 和 `semanticCategoryId`，不从 scene、focus 或题干重算语义。
+普通供题先用可注入 seed 做确定性洗牌，再生成一次性固定顺序：
+同一知识点不相邻，同一语义类别最多连续 2 题。只在剩余合格池无法满足时
+按固定层级放宽：`0` 严格，`1` 仅放宽语义连续，`2` 放宽全部多样性限制。
+该层级按题写入 `orderAudit`，轮次的最高层级写入 `relaxationTier`，不得用
+“内容耗尽”掩盖可放宽的合法候选。
+
+正式错题或到期复习可以通过 `priorityItems` 越过冷却，但每项必须携带
+非空 `reason`，并原样持久化为 `priorityReason`。seed、order、cursor、
+12 项短期身份/语义历史、逐题放宽层级和优先原因均为 JSON 可移植状态；
+刷新、离线和退出恢复只继续现有顺序，不重洗。旧 schema-1 轮次仍严格校验并
+原样推进，不伪造缺失的语义历史。
+
 ## 1. 指标定义
 
 所有比例指标均为 `0..1`，能力和内容难度均沿用 03 的 `0..12` 内部等级。
