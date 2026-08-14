@@ -5,6 +5,7 @@ import {
 } from '../../features/assessment/index.ts'
 import {
   createLearningEngineState,
+  createGrowthState,
   acknowledgeSceneTrainingItem,
   createTrainingSupplyRound,
   buildLearningTaskSupplyRequest,
@@ -540,6 +541,21 @@ export class LearningAppCoordinator {
         engineState = createLearningEngineState(profile, generatedAt)
         await this.#engineStates.save(engineState)
         profileChanged = true
+      }
+      // R17 is additive to the schema-1 engine record. Existing users can
+      // legitimately have a complete profile, plans, scores and timing data
+      // from before the growth ledger existed. Migrate that one missing field
+      // at the application initialization boundary and persist it immediately
+      // so Progress is available before another training event occurs.
+      // A present-but-invalid ledger is deliberately not handled here:
+      // repository validation keeps routing it through the explicit corrupt
+      // growth backup/recovery flow.
+      if (engineState.growth === undefined) {
+        engineState = {
+          ...engineState,
+          growth: createGrowthState(),
+        }
+        await this.#engineStates.save(engineState)
       }
       if (!profileChanged) {
         engineState =

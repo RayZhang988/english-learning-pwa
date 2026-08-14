@@ -547,6 +547,67 @@ describe('LearningAppCoordinator', () => {
     expect(candidates.loadCount).toBe(1)
   })
 
+  it('durably adds an empty growth ledger to a legacy engine without changing learning data', async () => {
+    await profiles.saveLatest(abilityProfile())
+    const original = await coordinator().initialize()
+    if (original.status !== 'ready') {
+      throw new Error('Expected a ready legacy plan fixture.')
+    }
+    const planBeforeMigration = original.runtime
+    const current = original.engineState
+    const legacy = {
+      ...current,
+      recentTrainingItemIds: {
+        'vocabulary:learn:5': ['vocabulary:item:kept'],
+      },
+      sceneTrainingAcknowledgementIds: ['scene:kept'],
+      progress: {
+        ...current.progress,
+        durationSamples: [{
+          sampleId: 'timing:kept',
+          taskId: 'task:kept',
+          learningUnitId: 'unit:kept',
+          domain: 'vocabulary' as const,
+          mode: 'learn' as const,
+          contentType: 'multiple-choice-set',
+          profileKey: 'vocabulary|learn|multiple-choice-set',
+          effectiveSeconds: 90,
+          source: 'timing-segments' as const,
+          reliable: true,
+          completedAt: '2026-07-24T08:10:00.000Z',
+        }],
+      },
+      growth: undefined,
+    }
+    await engineStates.save(legacy)
+
+    const migrated = await coordinator().initialize()
+    if (migrated.status !== 'ready') {
+      throw new Error('Expected the migrated plan to remain ready.')
+    }
+    expect(migrated.engineState.growth).toMatchObject({
+      schemaVersion: 3,
+      domains: {
+        vocabulary: { levelScoredItemCount: 0, sessions: [] },
+        listening: { levelScoredItemCount: 0, sessions: [] },
+        speaking: { levelScoredItemCount: 0, sessions: [] },
+      },
+    })
+    expect(migrated.runtime).toEqual(planBeforeMigration)
+    const { growth: _growth, ...migratedWithoutGrowth } = migrated.engineState
+    const { growth: _legacyGrowth, ...legacyWithoutGrowth } = legacy
+    expect(migratedWithoutGrowth).toEqual(legacyWithoutGrowth)
+
+    const persisted = await engineStates.load()
+    expect(persisted).toEqual(migrated.engineState)
+    const refreshed = await coordinator().initialize()
+    if (refreshed.status !== 'ready') {
+      throw new Error('Expected the migrated plan after refresh.')
+    }
+    expect(refreshed.engineState.growth).toEqual(migrated.engineState.growth)
+    expect(refreshed.runtime).toEqual(planBeforeMigration)
+  })
+
   it('creates one durable randomized round per daily module and restores its exact order', async () => {
     await profiles.saveLatest(abilityProfile())
     const app = coordinator()

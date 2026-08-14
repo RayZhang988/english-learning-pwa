@@ -1,7 +1,7 @@
 import { renderToStaticMarkup } from 'react-dom/server'
 import { MemoryRouter } from 'react-router'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { getPlanTaskAccess } from '../learning-engine/index.ts'
+import { createGrowthState, getPlanTaskAccess } from '../learning-engine/index.ts'
 import {
   completedExtraTrainingRuntime,
   extraTrainingEngineState,
@@ -135,5 +135,41 @@ describe('R12 training framework route integration', () => {
 describe('R17 growth result return', () => {
   it('restores the progress tab when an upgrade result returns to the home route', () => {
     expect(initialAppSectionFromLocation('/', '?section=progress')).toBe('progress')
+  })
+
+  it('passes all three empty migrated growth domains to the Progress page', () => {
+    vi.stubGlobal('navigator', { onLine: true })
+    vi.stubGlobal('window', { location: { pathname: '/', search: '?section=progress' } })
+    const runtime = completedExtraTrainingRuntime()
+    const activePlan = {
+      ...runtime.activePlan,
+      status: 'in-progress' as const,
+      tasks: runtime.activePlan.tasks.map((task, index) =>
+        index === 0
+          ? { ...task, status: 'pending' as const, completionKind: null }
+          : task,
+      ),
+    }
+    const progressRuntime = { ...runtime, activePlan }
+    const engineState = { ...extraTrainingEngineState(), growth: createGrowthState() }
+    const state: LearningAppState = {
+      status: 'ready',
+      localDate: '2026-07-29',
+      runtime: progressRuntime,
+      engineState,
+      assessmentProfileSchemaVersion: 3,
+      taskAccess: getPlanTaskAccess(activePlan),
+    }
+    const markup = renderToStaticMarkup(
+      <LearningAppContext.Provider value={{ state, coordinator: { state } as unknown as LearningAppCoordinator }}>
+        <MemoryRouter initialEntries={['/?section=progress']}><PlatformReadyPage /></MemoryRouter>
+      </LearningAppContext.Provider>,
+    )
+
+    expect(markup).toContain('aria-label="\u4e13\u9879\u6210\u957f\u8fdb\u5ea6"')
+    expect(markup.match(/\u6210\u957f\u8fdb\u5ea6 0%/g)).toHaveLength(3)
+    expect(markup).toContain('aria-label="\u8bcd\u6c47\u6210\u957f\u8fdb\u5ea6"')
+    expect(markup).toContain('aria-label="\u542c\u529b\u6210\u957f\u8fdb\u5ea6"')
+    expect(markup).toContain('aria-label="\u53e3\u8bed\u6210\u957f\u8fdb\u5ea6"')
   })
 })
