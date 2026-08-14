@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "documentType": "daily-level-batch-quality-audit",
+  "auditVersion": "2.0.0-c1",
+  "releaseStatus": "candidate-blocked-until-c2-c5",
+  "records": 200,
+  "combinedRecords": 2200,
+  "level": {
+    "id": "senior-1",
+    "labelZh": "高一",
+    "metrics": {
+      "count": 200,
+      "wordRatio": 0,
+      "completeUtteranceRatio": 0.45,
+      "complexUtteranceRatio": 0.4,
+      "averageTokens": 9.875,
+      "maximumTokens": 12,
+      "tokenDistribution": {
+        "2": 17,
+        "3": 3,
+        "8": 2,
+        "9": 16,
+        "10": 51,
+        "11": 70,
+        "12": 41
+      },
+      "maximumOpeningCluster": 5,
+      "maximumSkeletonCluster": 5
+    }
+  },
+  "crossLevelDuplicateForms": 0,
+  "templateMaximums": {
+    "sharedOpeningFourTokens": 5,
+    "sharedSkeleton": 5
+  },
+  "identityMigration": {
+    "sourceRecords": 202,
+    "retired": 202,
+    "newV2Identities": 200
+  },
+  "remainingWork": {
+    "levels": [
+      "高二",
+      "高三",
+      "大学四级",
+      "大学六级"
+    ],
+    "pendingOldLaterConflictCount": 0,
+    "pendingOldLaterConflicts": [],
+    "formalIndexesRegenerated": false
+  }
+}
