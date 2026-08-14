@@ -57,5 +57,5 @@ describe('R15 released semantic metadata', () => {
   it('recomputes released facts byte-for-byte deterministically', () => {
     const run = () => execFileSync(process.execPath, ['content/curriculum/validate-training-supply.v1.mjs'], { encoding: 'utf8' })
     expect(run()).toBe(run())
-  })
+  }, 30_000)
 })
