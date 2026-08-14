@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "documentType": "daily-travel-english-level-rubric",
+  "rubricVersion": "2.0.0",
+  "identityVersion": "daily-knowledge-v2",
+  "purpose": "Define fifteen user-visible levels by usable travel-English knowledge, not sentence length alone.",
+  "globalRules": {
+    "knowledgePointsPerLevel": 200,
+    "uniqueKnowledgePoints": 3000,
+    "difficultyBoundaries": [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 7, 8],
+    "oneLevelPerKnowledgePoint": true,
+    "dailyAndSceneProgressRemainIndependent": true,
+    "travelUsefulnessRequired": true,
+    "identityRule": "Changing the normalized English answer or Chinese sense creates a new daily-knowledge-v2 identity; an existing daily-knowledge-v1 identity must never silently change answer or sense.",
+    "retirementRule": "Removed v1 identities are retained in an explicit retirement map. Exact unchanged content may map v1-to-v2; rewritten content must be retired and replaced, never aliased as equivalent.",
+    "templateRules": {
+      "maximumSharedOpeningFourTokensPerLevel": 12,
+      "maximumSharedSkeletonPerLevel": 8,
+      "maximumNearDuplicatePairRate": 0.02
+    }
+  },
+  "complexityModel": {
+    "lexicalFrequency": "author-assigned controlled band: core, common, functional, specialized, advanced; reviewed against actual travel use",
+    "abstraction": "concrete, immediate-function, multi-step-function, abstract-risk-or-policy",
+    "surfaceType": "word (1 token), short-phrase (2-4), functional-utterance (complete spoken turn), complex-utterance (subordination or multiple clauses)",
+    "grammarMarkers": ["modal request", "past/future", "condition", "reason", "comparison", "reported information", "qualification"],
+    "automatedLimitsAreCeilings": "Passing token and ratio limits is necessary but does not replace human naturalness and usefulness review."
+  },
+  "levels": [
+    {"ordinal":0,"id":"kindergarten","labelZh":"幼儿园","frequencyBands":["core"],"abstractionBands":["concrete"],"maxTokens":2,"minimumWordRatio":0.85,"maximumCompleteUtteranceRatio":0,"maximumComplexUtteranceRatio":0,"grammarBudget":0,"description":"真零基础：可指认的人、物、颜色、数字和最基本生存词。"},
+    {"ordinal":1,"id":"primary-1","labelZh":"一年级","frequencyBands":["core"],"abstractionBands":["concrete","immediate-function"],"maxTokens":3,"minimumWordRatio":0.65,"maximumCompleteUtteranceRatio":0.05,"maximumComplexUtteranceRatio":0,"grammarBudget":0,"description":"高频单词与固定短语；极少完整句。"},
+    {"ordinal":2,"id":"primary-2","labelZh":"二年级","frequencyBands":["core","common"],"abstractionBands":["concrete","immediate-function"],"maxTokens":4,"minimumWordRatio":0.5,"maximumCompleteUtteranceRatio":0.15,"maximumComplexUtteranceRatio":0,"grammarBudget":1,"description":"短语为主，加入极短即时功能表达。"},
+    {"ordinal":3,"id":"primary-3","labelZh":"三年级","frequencyBands":["core","common"],"abstractionBands":["concrete","immediate-function"],"maxTokens":5,"minimumWordRatio":0.4,"maximumCompleteUtteranceRatio":0.3,"maximumComplexUtteranceRatio":0.02,"grammarBudget":1,"description":"单词、短语与简单主谓句平衡。"},
+    {"ordinal":4,"id":"primary-4","labelZh":"四年级","frequencyBands":["core","common"],"abstractionBands":["concrete","immediate-function"],"maxTokens":6,"minimumWordRatio":0.25,"maximumCompleteUtteranceRatio":0.45,"maximumComplexUtteranceRatio":0.05,"grammarBudget":2,"description":"一步旅行功能句，仍保持短而直接。"},
+    {"ordinal":5,"id":"primary-5","labelZh":"五年级","frequencyBands":["core","common","functional"],"abstractionBands":["concrete","immediate-function"],"maxTokens":7,"minimumWordRatio":0.15,"maximumCompleteUtteranceRatio":0.6,"maximumComplexUtteranceRatio":0.08,"grammarBudget":2,"description":"请求、位置、数量、时间等简单功能句。"},
+    {"ordinal":6,"id":"primary-6","labelZh":"六年级","frequencyBands":["common","functional"],"abstractionBands":["concrete","immediate-function"],"maxTokens":8,"minimumWordRatio":0.1,"maximumCompleteUtteranceRatio":0.7,"maximumComplexUtteranceRatio":0.12,"grammarBudget":3,"description":"可独立完成常见旅行事务的简短轮次。"},
+    {"ordinal":7,"id":"junior-1","labelZh":"初一","frequencyBands":["common","functional"],"abstractionBands":["immediate-function","multi-step-function"],"maxTokens":9,"minimumWordRatio":0.05,"maximumCompleteUtteranceRatio":0.8,"maximumComplexUtteranceRatio":0.18,"grammarBudget":3,"description":"加入过去、将来和礼貌请求。"},
+    {"ordinal":8,"id":"junior-2","labelZh":"初二","frequencyBands":["common","functional"],"abstractionBands":["immediate-function","multi-step-function"],"maxTokens":10,"minimumWordRatio":0.03,"maximumCompleteUtteranceRatio":0.85,"maximumComplexUtteranceRatio":0.25,"grammarBudget":4,"description":"解释问题并完成两步沟通。"},
+    {"ordinal":9,"id":"junior-3","labelZh":"初三","frequencyBands":["common","functional"],"abstractionBands":["immediate-function","multi-step-function"],"maxTokens":11,"minimumWordRatio":0,"maximumCompleteUtteranceRatio":0.9,"maximumComplexUtteranceRatio":0.32,"grammarBudget":4,"description":"条件、原因和替代方案的自然口语。"},
+    {"ordinal":10,"id":"senior-1","labelZh":"高一","frequencyBands":["common","functional","specialized"],"abstractionBands":["multi-step-function"],"maxTokens":12,"minimumWordRatio":0,"maximumCompleteUtteranceRatio":0.92,"maximumComplexUtteranceRatio":0.4,"grammarBudget":5,"description":"处理改签、延误、医疗等多步骤问题。"},
+    {"ordinal":11,"id":"senior-2","labelZh":"高二","frequencyBands":["functional","specialized"],"abstractionBands":["multi-step-function","abstract-risk-or-policy"],"maxTokens":13,"minimumWordRatio":0,"maximumCompleteUtteranceRatio":0.94,"maximumComplexUtteranceRatio":0.48,"grammarBudget":5,"description":"比较方案、澄清责任，但保持真实可说。"},
+    {"ordinal":12,"id":"senior-3","labelZh":"高三","frequencyBands":["functional","specialized"],"abstractionBands":["multi-step-function","abstract-risk-or-policy"],"maxTokens":14,"minimumWordRatio":0,"maximumCompleteUtteranceRatio":0.96,"maximumComplexUtteranceRatio":0.56,"grammarBudget":6,"description":"说明后果、提出条件和协商解决。"},
+    {"ordinal":13,"id":"cet-4-reference","labelZh":"大学四级","frequencyBands":["functional","specialized","advanced"],"abstractionBands":["multi-step-function","abstract-risk-or-policy"],"maxTokens":16,"minimumWordRatio":0,"maximumCompleteUtteranceRatio":0.98,"maximumComplexUtteranceRatio":0.65,"grammarBudget":7,"description":"精确处理复杂旅行事务，拒绝法律公文腔。"},
+    {"ordinal":14,"id":"cet-6-reference","labelZh":"大学六级","frequencyBands":["specialized","advanced"],"abstractionBands":["multi-step-function","abstract-risk-or-policy"],"maxTokens":18,"minimumWordRatio":0,"maximumCompleteUtteranceRatio":1,"maximumComplexUtteranceRatio":0.75,"grammarBudget":8,"description":"高精度协商、风险说明与追问，仍须自然可说。"}
+  ],
+  "kindergartenExclusions": ["ambulance","escalator","stomachache","banknote","between","crosswalk","toothpaste","first aid"]
+}

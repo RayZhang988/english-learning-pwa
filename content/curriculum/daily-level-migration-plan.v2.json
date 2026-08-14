@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "documentType": "daily-level-content-migration-plan",
+  "migrationVersion": "daily-level-v1-to-v2-draft",
+  "status": "blocked-until-v2-content-is-authored",
+  "sourceIdentityVersion": "daily-knowledge-v1",
+  "targetIdentityVersion": "daily-knowledge-v2",
+  "rules": {
+    "unchanged": "Only byte-normalized equivalent English plus the same Chinese sense may carry mastery through an explicit equivalent mapping.",
+    "movedLevel": "An unchanged knowledge point may move level while retaining an explicit equivalent mapping; level movement itself does not create mastery.",
+    "rewritten": "Any changed answer or sense retires the v1 identity and creates a new v2 identity with zero mastery.",
+    "removed": "Retired identities remain resolvable for R13-D history but cannot be selected for new training.",
+    "sceneIsolation": "No daily identity maps to a scene identity, even when text matches.",
+    "wrongAnswers": "Active wrong answers retain their original frozen prompt and answer through the retirement record; they are never silently redirected to changed content.",
+    "growth": "Only exact-equivalent mappings may carry R17 evidence. Replacements start without evidence."
+  },
+  "requiredArtifactsBeforeRelease": [
+    "daily-level-content.v2.json with exactly 3000 authored records",
+    "daily-level-identity-migration.v1.json containing one disposition for every released v1 identity",
+    "regenerated training-supply and review-content indexes",
+    "validator report with zero blocking violations",
+    "application-layer migration tests for R13-D and R17"
+  ],
+  "allowedDispositions": ["equivalent", "moved-equivalent", "retired", "replaced-by-new-identity"],
+  "entries": []
+}
