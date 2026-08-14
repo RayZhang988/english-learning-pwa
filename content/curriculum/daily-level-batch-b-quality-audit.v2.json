@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "documentType": "daily-level-batch-quality-audit",
+  "auditVersion": "2.0.0-b",
+  "releaseStatus": "candidate-blocked-until-batch-c",
+  "records": 1200,
+  "combinedRecordsWithBatchA": 2000,
+  "levels": [
+    {
+      "id": "primary-4",
+      "labelZh": "四年级",
+      "metrics": {
+        "count": 200,
+        "wordRatio": 0.25,
+        "completeUtteranceRatio": 0.35,
+        "complexUtteranceRatio": 0.005,
+        "averageTokens": 3.245,
+        "maximumTokens": 6,
+        "tokenDistribution": {
+          "1": 50,
+          "2": 61,
+          "3": 2,
+          "4": 8,
+          "5": 35,
+          "6": 44
+        },
+        "maximumOpeningCluster": 2,
+        "maximumSkeletonCluster": 6
+      }
+    },
+    {
+      "id": "primary-5",
+      "labelZh": "五年级",
+      "metrics": {
+        "count": 200,
+        "wordRatio": 0.15,
+        "completeUtteranceRatio": 0.5,
+        "complexUtteranceRatio": 0.06,
+        "averageTokens": 4.115,
+        "maximumTokens": 7,
+        "tokenDistribution": {
+          "1": 30,
+          "2": 67,
+          "3": 1,
+          "4": 1,
+          "5": 25,
+          "6": 5,
+          "7": 71
+        },
+        "maximumOpeningCluster": 2,
+        "maximumSkeletonCluster": 6
+      }
+    },
+    {
+      "id": "primary-6",
+      "labelZh": "六年级",
+      "metrics": {
+        "count": 200,
+        "wordRatio": 0.1,
+        "completeUtteranceRatio": 0.6,
+        "complexUtteranceRatio": 0.1,
+        "averageTokens": 5.26,
+        "maximumTokens": 8,
+        "tokenDistribution": {
+          "1": 20,
+          "2": 57,
+          "6": 14,
+          "7": 38,
+          "8": 71
+        },
+        "maximumOpeningCluster": 5,
+        "maximumSkeletonCluster": 4
+      }
+    },
+    {
+      "id": "junior-1",
+      "labelZh": "初一",
+      "metrics": {
+        "count": 200,
+        "wordRatio": 0.05,
+        "completeUtteranceRatio": 0.7,
+        "complexUtteranceRatio": 0.15,
+        "averageTokens": 6.605,
+        "maximumTokens": 9,
+        "tokenDistribution": {
+          "1": 10,
+          "2": 50,
+          "8": 49,
+          "9": 91
+        },
+        "maximumOpeningCluster": 6,
+        "maximumSkeletonCluster": 4
+      }
+    },
+    {
+      "id": "junior-2",
+      "labelZh": "初二",
+      "metrics": {
+        "count": 200,
+        "wordRatio": 0.03,
+        "completeUtteranceRatio": 0.8,
+        "complexUtteranceRatio": 0.2,
+        "averageTokens": 8.045,
+        "maximumTokens": 10,
+        "tokenDistribution": {
+          "1": 6,
+          "2": 34,
+          "7": 17,
+          "8": 7,
+          "10": 136
+        },
+        "maximumOpeningCluster": 6,
+        "maximumSkeletonCluster": 4
+      }
+    },
+    {
+      "id": "junior-3",
+      "labelZh": "初三",
+      "metrics": {
+        "count": 200,
+        "wordRatio": 0,
+        "completeUtteranceRatio": 0.9,
+        "complexUtteranceRatio": 0.26,
+        "averageTokens": 8.44,
+        "maximumTokens": 11,
+        "tokenDistribution": {
+          "2": 20,
+          "8": 15,
+          "9": 125,
+          "10": 37,
+          "11": 3
+        },
+        "maximumOpeningCluster": 3,
+        "maximumSkeletonCluster": 5
+      }
+    }
+  ],
+  "crossLevelDuplicateFormsWithBatchA": 0,
+  "templateMaximums": {
+    "sharedOpeningFourTokens": 6,
+    "sharedSkeleton": 6
+  },
+  "identityMigration": {
+    "sourceRecords": 1203,
+    "retired": 825,
+    "moved-equivalent": 297,
+    "equivalent": 81,
+    "newV2Identities": 822
+  },
+  "remainingWork": {
+    "batchC": "高一至大学六级，1000项",
+    "pendingCrossBatchConflictCount": 1,
+    "pendingCrossBatchConflicts": [
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:fd413905",
+        "term": "reschedule",
+        "levelId": "primary-5"
+      }
+    ],
+    "formalIndexesRegenerated": false,
+    "reason": "R13-D review identity lock forbids replacing released aliases before complete v2 migration is integrated."
+  }
+}

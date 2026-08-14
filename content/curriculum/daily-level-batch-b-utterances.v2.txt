@@ -1,0 +1,366 @@
+If the last train has left, what is the safest alternative?|如果末班车已经开走，最安全的替代方式是什么？
+Could you rebook only the return flight and keep the outbound flight unchanged?|您能只改签返程航班并保留去程航班吗？
+If my luggage arrives tomorrow, can the airline deliver it to this hotel?|如果我的行李明天到，航空公司能送到这家酒店吗？
+Could you confirm whether the refund includes the fare difference and the change fee?|您能确认退款是否包含票价差额和改签费吗？
+If this medicine makes me drowsy, should I avoid taking it before the flight?|如果这种药让我困倦，我是否应避免在飞行前服用？
+Could you explain which part of the journey is no longer covered by the ticket?|您能说明这张票不再涵盖哪一段行程吗？
+If the room is not ready by six, can you arrange somewhere for me to rest?|如果房间六点前还没准备好，您能安排一个让我休息的地方吗？
+Could you check whether my travel insurance covers treatment at this clinic?|您能确认我的旅行保险是否涵盖在这家诊所的治疗吗？
+If I return the car early, will the unused rental days be refunded?|如果我提前还车，未使用的租车天数会退款吗？
+Could you confirm where I should collect the replacement boarding pass after security?|您能确认安检后我应该在哪里领取新的登机牌吗？
+If the ferry is canceled, which bus will get me there before nightfall?|如果渡轮取消，哪辆公交能让我天黑前到达？
+Could you separate the disputed charge from the rest of the hotel bill?|您能把有争议的收费与其他酒店账单分开吗？
+If the elevator is unavailable, is there another accessible way to reach the platform?|如果电梯不可用，还有其他无障碍方式到达站台吗？
+Could you tell me whether I need the original receipt or a digital copy?|您能告诉我需要收据原件还是电子副本吗？
+If my passport is found later, how should I update the police report?|如果之后找回护照，我该如何更新报警记录？
+Could you confirm that the new itinerary leaves enough time for immigration?|您能确认新行程为入境检查留出了足够时间吗？
+If the restaurant cannot avoid cross-contamination, I need a different place to eat.|如果餐厅无法避免交叉污染，我需要换一家餐厅用餐。
+Could you show me which cancellation condition applies to this reservation?|您能指出哪项取消条件适用于这个预订吗？
+If the replacement flight is tomorrow, will the airline provide a hotel tonight?|如果替代航班在明天，航空公司今晚会提供酒店吗？
+Could you confirm whether this train splits before it reaches my destination?|您能确认这趟列车是否会在到达我的目的地前分开运行吗？
+If I accept this voucher, can I still request a cash refund later?|如果我接受这张代金券，之后还能申请现金退款吗？
+Could you explain why the final amount differs from the price in my confirmation?|您能解释最终金额为何与确认单上的价格不同吗？
+If the pharmacy does not have this brand, is the generic version suitable?|如果药店没有这个品牌，通用版本是否合适？
+Could you confirm who will contact me when the missing bag is located?|您能确认找到遗失行李后谁会联系我吗？
+If road conditions get worse, where should we stop for the night?|如果路况恶化，我们今晚应该在哪里停留？
+Could you add the agreed room change to my booking confirmation?|您能把商定的换房安排加入我的预订确认吗？
+If the card payment is reversed, when can I try paying again?|如果刷卡付款被撤销，我什么时候可以再次付款？
+Could you tell me which entrance remains open after the museum closes?|您能告诉我博物馆闭馆后哪个入口仍然开放吗？
+If I miss the connection because of this delay, who should I contact first?|如果我因这次延误错过衔接行程，我应该先联系谁？
+Could you confirm whether the replacement car has the same insurance coverage?|您能确认替代车辆是否有相同的保险范围吗？
+The booking shows breakfast included, but the hotel has charged me separately.|预订显示包含早餐，但酒店又单独向我收费了。
+My connecting flight leaves from another terminal, and I need assistance getting there.|我的转机航班从另一个航站楼出发，我需要帮助前往那里。
+We need a route that avoids steep stairs because one traveler uses a wheelchair.|我们需要一条避开陡峭楼梯的路线，因为有一位同行者使用轮椅。
+The rental agreement lists existing damage that is not marked on the inspection form.|租车合同列有现存损伤，但验车单上没有标注。
+This prescription has a different dosage from the one my doctor gave me.|这张处方的剂量与我的医生给我的不同。
+Our bags were checked through, but the new boarding passes show a different destination.|我们的行李已直挂，但新的登机牌显示了不同的目的地。
+The tour description promised step-free access, yet the meeting point has stairs.|行程说明承诺无台阶通道，但集合点却有楼梯。
+The receipt includes a service that I canceled before the stated deadline.|收据中包含一项我在规定期限前已取消的服务。
+Is there a quieter room available away from the lift and the main road?|是否有远离电梯和主干道的更安静房间？
+Are there any overnight buses that arrive before the airport check-in desks open?|有没有夜间巴士能在机场值机柜台开放前到达？
+Would the clinic accept a digital copy of my insurance certificate for now?|诊所目前可以接受我的保险证明电子版吗？
+Will the replacement ticket remain valid if the second train is also delayed?|如果第二趟列车也晚点，换发的车票仍然有效吗？
+Where should I report a card payment that appears twice on the final bill?|最终账单上出现重复刷卡，我应该在哪里申报？
+How can I reach the emergency assistance line without a local phone number?|没有本地电话号码，我怎样联系紧急援助热线？
+What happens to my checked luggage when the connecting flight is changed?|转机航班变更后，我的托运行李会怎样处理？
+Is breakfast still included after the hotel changes my room?|酒店更换我的房间后，早餐仍然包含吗？
+Are replacement tickets valid on the next available train?|换发的车票可用于下一班有空位的列车吗？
+Would travel insurance cover an emergency visit at this clinic?|旅行保险会涵盖在这家诊所的急诊就诊吗？
+Will my checked bag follow the changed connecting flight automatically?|我的托运行李会自动转到变更后的衔接航班吗？
+Where can I report the duplicate charge on this bill?|我可以在哪里申报这张账单上的重复收费？
+How should I update my booking after renewing my passport?|护照换新后，我应该如何更新预订？
+What should I do if the replacement card never arrives?|如果补发的卡一直没有寄到，我该怎么办？
+Please separate the disputed charge while the hotel investigates it.|酒店调查期间，请先把有争议的收费分开。
+We need an accessible route that avoids stairs and steep slopes.|我们需要一条避开楼梯和陡坡的无障碍路线。
+They changed the departure terminal without updating my boarding pass.|他们更改了出发航站楼，却没有更新我的登机牌。
+This medicine has a different dosage from my doctor's prescription.|这种药的剂量与我的医生处方不同。
+My confirmation includes breakfast, but the hotel charged for it.|我的确认单包含早餐，但酒店却收取了费用。
+Do connecting passengers need to collect their luggage during this transfer?|转机旅客在这次中转时需要领取行李吗？
+Does this refund cover both the canceled flight and my hotel?|这笔退款包含取消的航班和我的酒店费用吗？
+Can the airline deliver my delayed bag to another city?|航空公司能把我延误的行李送到另一个城市吗？
+Could the pharmacy provide written instructions for taking this medicine?|药店能提供这款药的书面服用说明吗？
+Would changing the pickup time affect the total rental price?|更改取车时间会影响租车总价吗？
+My flight was changed, but my seat disappeared.|我的航班变更了，但座位不见了。
+The gate changed after I printed my boarding pass.|我打印登机牌后，登机口变更了。
+Our room key stopped working after breakfast.|我们的房卡在早餐后失效了。
+The driver dropped us at the wrong entrance.|司机把我们送到了错误的入口。
+My suitcase arrived with one wheel missing.|我的行李箱到达时少了一个轮子。
+The train stopped before reaching the final station.|火车在到达终点站前停了。
+This bill includes drinks we did not order.|这张账单包含了我们没点的饮料。
+My card works elsewhere, but not at this machine.|我的卡在别处能用，但这台机器不行。
+The room smells strongly of smoke.|房间里有很重的烟味。
+Our seats are in different rows.|我们的座位在不同排。
+The pharmacy gave me the wrong size.|药店给我的规格不对。
+The museum entrance moved to the side street.|博物馆入口移到了旁边的街上。
+My pickup time changed without a message.|我的接车时间变了，但没有收到通知。
+The menu does not list all the ingredients.|菜单没有列出所有配料。
+This platform has no lift to the street.|这个站台没有通往街面的电梯。
+My passport number is wrong on the booking.|预订上的护照号码错了。
+The luggage tag shows another airport.|行李牌显示的是另一个机场。
+We were charged for an extra night.|我们被多收了一晚的费用。
+The air conditioner keeps turning itself off.|空调一直自动关闭。
+My child needs a seat beside me.|我的孩子需要坐在我旁边。
+Can the hotel hold our bags until evening?|酒店能替我们保管行李到晚上吗？
+Can we change trains without leaving the station?|我们可以不出站直接换乘吗？
+Can you check which gate is open now?|您能确认现在开放的是哪个登机口吗？
+Can I keep this seat after the aircraft changes?|更换飞机后我还能保留这个座位吗？
+Can the driver wait while I collect my bag?|司机能等我取完行李吗？
+Can we pay separately with two cards?|我们可以用两张卡分开付款吗？
+Can the kitchen leave the nuts out completely?|厨房能完全不放坚果吗？
+Can I collect the medicine tomorrow morning?|我可以明天早上来取药吗？
+Can you show me where the shuttle stops?|您能告诉我班车在哪里停吗？
+Can this ticket be used after midnight?|这张票午夜后还能使用吗？
+Does the next bus stop near the old town?|下一班公交在老城附近停吗？
+Does this fare include one checked bag?|这个票价包含一件托运行李吗？
+Does the clinic take walk-in patients today?|这家诊所今天接收直接到访的病人吗？
+Does the room rate change on weekends?|房价在周末会变化吗？
+Does this route avoid the road closure?|这条路线会避开封路路段吗？
+Does the rental include roadside assistance?|租车费用包含道路救援吗？
+Would you check the arrival time again?|您能再确认一下到达时间吗？
+Would another room be quieter at night?|另一间房晚上会更安静吗？
+Would it be faster to take the ferry?|乘渡轮会更快吗？
+Would the airline send the bag to my hotel?|航空公司会把行李送到我的酒店吗？
+Would a later appointment be available today?|今天还有晚一点的预约吗？
+Would this pass cover the airport express?|这张通票包含机场快线吗？
+Please call the room when the taxi arrives.|出租车到时请打房间电话。
+Please keep the receipt with the refund form.|请把收据和退款表放在一起。
+Please mark the damaged corner on the report.|请在报告上标出损坏的角落。
+Please send the new itinerary to my email.|请把新行程发送到我的邮箱。
+Please ask the chef about sesame oil.|请向厨师确认是否使用芝麻油。
+Please hold the reservation until our flight lands.|请保留预订直到我们的航班落地。
+Where do I collect bags from canceled flights?|取消航班的行李在哪里领取？
+Where can we wait until the platform opens?|站台开放前我们可以在哪里等候？
+Where should I return the damaged rental car?|我应该在哪里归还损坏的租赁车辆？
+Where does the night bus leave from?|夜间公交从哪里发车？
+When will the replacement room be ready?|替换房间什么时候准备好？
+When should I take the second dose?|我应该什么时候服用第二剂？
+When does check-in close for this flight?|这趟航班什么时候停止值机？
+How do I reach the airport during the strike?|罢工期间我怎样前往机场？
+How can I add my passport to the booking?|我怎样把护照信息加入预订？
+How long will the baggage search take?|寻找行李需要多长时间？
+How much is the fare difference today?|今天的票价差额是多少？
+What caused the change in departure time?|出发时间为什么变更了？
+What documents does the clinic need from me?|诊所需要我提供哪些文件？
+What happens if the ferry remains canceled tomorrow?|如果明天渡轮仍然取消，会怎样处理？
+What part of the bill is refundable?|账单中的哪一部分可以退款？
+Is the replacement flight leaving from the same terminal?|替代航班从同一个航站楼出发吗？
+Are meals provided while we wait for the delayed flight?|等待延误航班期间会提供餐食吗？
+Will my travel pass remain valid after the route changes?|路线变更后，我的旅行通票仍然有效吗？
+Do I need another prescription to replace the lost medicine?|补配丢失的药物需要另一张处方吗？
+My new flight arrives after the last airport train leaves.|我的新航班在机场末班火车开走后才到达。
+The hotel moved my booking but forgot the accessible room.|酒店转移了我的预订，却忘了无障碍房型。
+Our connection is shorter now because the first flight changed.|因为第一程航班变更，我们的转机时间现在更短了。
+The rental company charged fuel although I returned the tank full.|尽管我满油还车，租车公司仍收取了燃油费。
+My insurance card lists a different emergency telephone number abroad.|我的保险卡列出了另一个境外紧急联系电话。
+The replacement train requires reservations, but ours were not transferred.|替代列车需要预订座位，但我们的预订没有转移。
+This medicine contains an ingredient that caused my previous reaction.|这种药含有曾让我出现不良反应的成分。
+The airline changed our seats and separated the children from us.|航空公司更改了座位，把孩子和我们分开了。
+My room was prepaid, yet the hotel requested payment again.|我的房间已经预付，但酒店又要求付款。
+The baggage office closed before the delayed luggage finally arrived.|延误的行李终于到达前，行李办公室已经关门了。
+Can you confirm the transfer time after the schedule change?|您能确认时刻变更后的转机时间吗？
+Can the hotel guarantee a quiet room for tonight?|酒店能保证今晚提供一间安静的房间吗？
+Can I change the return date without canceling everything?|我可以只更改返程日期而不取消全部行程吗？
+Can the clinic contact my insurer before starting treatment?|诊所能在开始治疗前联系我的保险公司吗？
+Can you check whether this platform has step-free access?|您能确认这个站台是否有无台阶通道吗？
+Can the airline forward my bag to tomorrow's hotel?|航空公司能把我的行李转送到明天入住的酒店吗？
+Could we keep the original fare after changing dates?|更改日期后，我们能保留原来的票价吗？
+Could you compare the two routes during rush hour?|您能比较一下高峰时段的两条路线吗？
+Could the restaurant prepare this without cross-contamination?|餐厅能在避免交叉污染的情况下制作这道菜吗？
+Could you confirm which expenses the insurance will reimburse?|您能确认保险会报销哪些费用吗？
+Could the driver use another road if traffic worsens?|如果交通恶化，司机能走另一条路吗？
+Could you explain the difference between these room rates?|您能说明这些房价之间的区别吗？
+Would the ticket remain valid if we miss this connection?|如果我们错过这次衔接，车票仍然有效吗？
+Would you arrange transport if the shuttle stops running?|如果班车停运，您能安排交通吗？
+Would my policy cover treatment caused by this accident?|我的保单会涵盖这次事故导致的治疗吗？
+Would changing terminals leave enough time for security checks?|更换航站楼后，安检时间还够吗？
+Would the hotel refund tonight if the flight is canceled?|如果航班取消，酒店会退还今晚的费用吗？
+Would a digital receipt be accepted for this claim?|这项理赔可以接受电子收据吗？
+Please keep both flights together when changing the return date.|更改返程日期时，请保留两段航班在同一预订中。
+Please note that I cannot use stairs during the transfer.|请注明我在转机期间不能走楼梯。
+Please check the dosage before replacing my missing medicine.|补配我丢失的药物前，请确认剂量。
+Please send the revised booking before charging my card.|刷我的卡之前，请发送修改后的预订。
+Please confirm where the airline will deliver my delayed bag.|请确认航空公司会把延误行李送到哪里。
+Please explain why the final fare is higher today.|请说明今天的最终票价为什么更高。
+Where can I wait safely if the station closes?|如果车站关闭，我可以在哪里安全等候？
+Where should we meet if our phones stop working?|如果我们的手机无法使用，应该在哪里会合？
+Where will my luggage go after the flight changes?|航班变更后，我的行李会送到哪里？
+Where can I replace medicine using a foreign prescription?|我可以在哪里凭国外处方补配药物？
+When will you confirm whether the missing bag was found?|你们什么时候能确认是否找到了丢失的行李？
+When should we leave if the road is partly closed?|如果道路部分封闭，我们应该什么时候出发？
+When does the refund period begin after a cancellation?|取消后，退款期限从什么时候开始计算？
+How will the airline handle our overnight connection now?|航空公司现在会如何安排我们的过夜转机？
+How can I prove the damage happened before pickup?|我怎样证明损伤在取车前就已存在？
+How should I store this medicine during the flight?|飞行期间我应该怎样保存这种药？
+How long can the hotel hold the changed reservation?|酒店能为变更后的预订保留多久？
+What alternatives are available if this route remains closed?|如果这条路线仍然关闭，还有哪些替代方案？
+What should I keep as proof of the cancellation?|我应该保留什么作为取消的证明？
+What happens to our bags during the overnight transfer?|过夜转机期间我们的行李会怎样处理？
+What support is available if my wheelchair is damaged?|如果我的轮椅损坏，可以获得哪些帮助？
+Is the new connection long enough to clear immigration?|新的转机时间足够完成入境检查吗？
+Is this treatment covered before the insurer gives approval?|保险公司批准前，这项治疗是否在承保范围内？
+Are we entitled to meals during this overnight delay?|这次过夜延误期间，我们可以获得餐食吗？
+Are both drivers included in the rental insurance coverage?|两位驾驶人都包含在租车保险范围内吗？
+Does the refund include taxes paid on the canceled ticket?|退款包含已取消机票所支付的税费吗？
+Does this clinic provide reports in English for insurers?|这家诊所能为保险公司提供英文报告吗？
+Do we need to reclaim our bags during this connection?|这次转机期间我们需要重新领取行李吗？
+Do these replacement tickets include our original seat reservations?|这些换发车票包含我们原来的座位预订吗？
+My revised itinerary leaves no time to collect checked luggage.|修改后的行程没有留出领取托运行李的时间。
+The replacement hotel is farther away than the confirmed one.|替代酒店比原确认的酒店更远。
+Our travel insurance expires before the rescheduled return flight.|我们的旅行保险在改期后的返程航班前到期。
+The new rental car has damage not listed here.|新的租赁车辆有未在这里列出的损伤。
+My medical report uses a name different from my passport.|我的医疗报告所用姓名与护照不同。
+The airline offered a voucher, but I prefer reimbursement.|航空公司提供了代金券，但我更希望退款。
+This route requires stairs despite being marked as accessible.|这条路线虽标为无障碍，却需要走楼梯。
+Our onward tickets disappeared after the booking was changed.|预订变更后，我们的后续车票不见了。
+The hotel charged a deposit that was never disclosed.|酒店收取了一笔从未说明的押金。
+My baggage receipt shows fewer pieces than we checked.|我的行李收据显示的件数少于实际托运件数。
+Can you preserve our seats while changing the flight?|更改航班时，您能保留我们的座位吗？
+Can the insurer confirm coverage directly with this hospital?|保险公司能直接向这家医院确认承保吗？
+Can we avoid another security check during the transfer?|转机期间我们能避免再次安检吗？
+Can the hotel waive tonight's charge after the cancellation?|取消后，酒店能免除今晚的费用吗？
+Can you trace the payment using this transaction number?|您能用这个交易编号追踪付款吗？
+Could you arrange delivery after I change hotels tomorrow?|我明天更换酒店后，您能安排送达吗？
+Could the airline protect my connection on the later flight?|航空公司能为较晚航班保留我的衔接行程吗？
+Could you verify whether the rental includes winter equipment?|您能确认租车是否包含冬季装备吗？
+Could the clinic explain these results before I travel?|诊所能在我出行前解释这些结果吗？
+Could we receive written confirmation of the changed pickup?|我们能收到接车变更的书面确认吗？
+Would the refund change if I accept this alternative?|如果我接受这个替代方案，退款会变化吗？
+Would you notify us before moving the departure gate?|更改登机口前，您会通知我们吗？
+Would another route avoid both traffic and steep stairs?|另一条路线能同时避开拥堵和陡峭楼梯吗？
+Would my existing prescription be valid at this pharmacy?|我现有的处方在这家药店有效吗？
+Please confirm the baggage transfer before issuing new tickets.|签发新票前，请确认行李转运安排。
+Please keep the original booking until the replacement is confirmed.|替代预订确认前，请保留原预订。
+Please record the missing items before closing the report.|关闭报告前，请记录丢失的物品。
+Please check whether tomorrow's ferry accepts this ticket.|请确认明天的渡轮是否接受这张票。
+Where will passengers stay if tonight's flight remains canceled?|如果今晚的航班仍然取消，乘客将住在哪里？
+When will the airline decide whether the flight operates?|航空公司什么时候决定航班是否运行？
+How can we transfer if the station lift is closed?|如果车站电梯关闭，我们怎样换乘？
+What compensation applies when the replacement arrives tomorrow?|替代安排明天才到达时，适用什么补偿？
+Is roadside assistance available outside the city at night?|夜间在城外可以获得道路救援吗？
+Does changing the passenger name require a new ticket?|更改乘客姓名需要重新出票吗？
+Are additional hotel nights covered by this travel policy?|这份旅行保单涵盖额外的酒店住宿吗？
+My replacement flight departs from a different airport tomorrow.|我的替代航班明天从另一个机场出发。
+The airline removed our seats during the schedule change.|航空公司在时刻变更时取消了我们的座位。
+Our hotel confirmation shows the wrong checkout date now.|我们的酒店确认单现在显示了错误的退房日期。
+The clinic needs approval from my insurer before treatment.|诊所在治疗前需要我的保险公司批准。
+My delayed suitcase contains medicine needed for tonight.|我延误的行李箱里有今晚需要的药。
+The rental office recorded damage on the wrong side.|租车门店把损伤记录在了错误的一侧。
+This train reservation disappeared after the timetable update.|这次列车订座在时刻表更新后消失了。
+The final hotel bill includes an unexplained service charge.|最终酒店账单包含一项未说明的服务费。
+My boarding pass no longer matches the revised itinerary.|我的登机牌不再与修改后的行程一致。
+The accessible entrance closes earlier than the main entrance.|无障碍入口比主入口关闭得更早。
+Can you transfer both passengers to the same booking?|您能把两位乘客转到同一个预订吗？
+Can the airline confirm delivery before I leave town?|航空公司能在我离开这座城市前确认送达吗？
+Can this pharmacy replace medicine purchased in another country?|这家药店能补配在另一个国家购买的药吗？
+Could you verify the refund amount before canceling everything?|全部取消前，您能核实退款金额吗？
+Could the hotel honor the rate shown in confirmation?|酒店能按确认单上显示的价格执行吗？
+Could you check the transfer route for wheelchair access?|您能确认转乘路线是否适合轮椅通行吗？
+Would the insurer reimburse transport to another hospital?|保险公司会报销前往另一家医院的交通费吗？
+Would this alternative flight keep our original baggage allowance?|这个替代航班会保留我们原来的行李额度吗？
+Please send the baggage report to my next hotel.|请把行李报告发送到我下一家酒店。
+Please confirm the total charge before extending the rental.|延长租期前，请确认总费用。
+Where can I obtain proof of the flight cancellation?|我在哪里可以取得航班取消证明？
+When will the corrected passenger name appear online?|更正后的乘客姓名什么时候会在线显示？
+How can I update the delivery address for luggage?|我怎样更新行李的送达地址？
+What documents support a claim for delayed baggage?|申请行李延误理赔需要哪些文件？
+Does the revised fare include the original seat selection?|修改后的票价包含原来的选座吗？
+Is overnight accommodation included with this replacement flight?|这个替代航班包含过夜住宿吗？
+My insurance policy requires a report from the treating doctor.|我的保险单要求提供主治医生的报告。
+The changed itinerary removed the assistance requested for boarding.|变更后的行程取消了登机所需的协助。
+Our replacement room has fewer beds than the booking.|我们的替换房间床位少于预订数量。
+Can the rental company send assistance to this location?|租车公司能派救援到这个地点吗？
+Could you confirm the deadline for submitting these receipts?|您能确认提交这些收据的截止时间吗？
+Would the airport provide assistance between these distant terminals?|机场会提供这些较远航站楼之间的协助吗？
+Please verify the destination printed on the new luggage tag.|请核实新行李牌上打印的目的地。
+What coverage applies to medicine lost with checked baggage?|托运行李中丢失的药物适用什么保障？
+My connecting flight now departs before the first flight arrives.|我的衔接航班现在在第一程航班到达前就起飞。
+The replacement booking excludes breakfast included in the original rate.|替代预订不包含原房价中包含的早餐。
+Our revised train tickets place us in separate carriages.|修改后的火车票把我们安排在不同车厢。
+The hospital invoice uses a different name from my insurance.|医院账单使用的姓名与我的保险不同。
+My luggage delivery address changed after we moved hotels.|我们更换酒店后，我的行李送达地址变了。
+The rental agreement excludes the additional driver we requested.|租车合同没有包含我们申请的额外驾驶人。
+Our airport transfer disappeared when the flight number changed.|航班号变更后，我们的机场接送不见了。
+The revised fare includes restrictions missing from the first offer.|修改后的票价包含首次报价中没有的限制。
+My refund was approved but has not reached my card.|我的退款已获批准，但尚未到达银行卡。
+The accessible room has a bathtub instead of a shower.|无障碍房间配的是浴缸而不是淋浴。
+Can the carrier transfer our luggage during the overnight connection?|承运方能在过夜转机期间转运行李吗？
+Can you preserve the wheelchair assistance on the new itinerary?|您能在新行程中保留轮椅协助吗？
+Can the hotel correct the invoice before our departure?|酒店能在我们离店前更正账单吗？
+Can this ticket cover the replacement bus service tonight?|这张票能用于今晚的替代公交服务吗？
+Can the insurer email approval directly to the clinic?|保险公司能把批准邮件直接发给诊所吗？
+Could you retain our original seats on the later flight?|您能在较晚的航班上保留我们的原座位吗？
+Could the rental office revise the damage inspection record?|租车门店能修改车辆损伤检查记录吗？
+Could you confirm the revised arrival time with the driver?|您能和司机确认修改后的到达时间吗？
+Could the pharmacy prepare the correct dosage before closing?|药店能在关门前准备正确剂量的药吗？
+Could you remove the duplicate passenger from this reservation?|您能从这个预订中删除重复的乘客吗？
+Would the airline cover transport between these two airports?|航空公司会承担这两个机场之间的交通吗？
+Would the clinic issue a medical report for my insurer?|诊所会为我的保险公司出具医疗报告吗？
+Would this replacement room keep the same accessibility features?|这间替换房会保留相同的无障碍设施吗？
+Would the later train honor our existing seat reservations?|较晚的列车会保留我们现有的座位预订吗？
+Would roadside assistance reach this mountain road tonight?|道路救援今晚能到达这条山路吗？
+Please transfer the meal request to the replacement flight.|请把餐食要求转到替代航班上。
+Please correct the passport number before issuing the ticket.|出票前请更正护照号码。
+Please send the amended invoice to my insurance provider.|请把修改后的账单发送给我的保险公司。
+Please retain the original booking until payment is confirmed.|付款确认前，请保留原来的预订。
+Please update the delivery address on the baggage report.|请更新行李报告上的送达地址。
+Where will the shuttle collect passengers from the replacement hotel?|班车会在哪里接替代酒店的乘客？
+Where can I verify the status of this reimbursement?|我在哪里可以查询这笔报销的状态？
+Where should we transfer between these separate ticket bookings?|这两份独立购票的行程应该在哪里换乘？
+Where does the insurer list approved medical providers nearby?|保险公司在哪里列出附近获认可的医疗机构？
+Where can the rental company deliver a replacement vehicle?|租车公司可以把替代车辆送到哪里？
+When will the airline restore our original seat selection?|航空公司什么时候会恢复我们原来的选座？
+When does the deadline for submitting this claim expire?|提交这项理赔的截止期限什么时候到期？
+When will the hotel release the duplicated deposit charge?|酒店什么时候会退回重复收取的押金？
+When can the pharmacy obtain this prescribed dosage?|药店什么时候能拿到这个处方剂量的药？
+When will the revised departure gate appear online?|修改后的登机口什么时候会在线显示？
+How can the hotel correct the name on my invoice?|酒店怎样更正我账单上的姓名？
+How will the airline return luggage sent to another airport?|航空公司会怎样归还被送到另一个机场的行李？
+How can we keep our seats during the aircraft change?|更换飞机时，我们怎样保留座位？
+How will the insurer assess these additional accommodation costs?|保险公司会怎样评估这些额外住宿费用？
+How can I amend the police report after finding my passport?|找回护照后，我怎样修改报警记录？
+What documents confirm the airline accepted responsibility for delivery?|哪些文件能证明航空公司接受了送达责任？
+What assistance connects the station platform with street level?|有什么协助可以连接车站站台与街面？
+What charges remain payable after the reservation is canceled?|预订取消后，还有哪些费用需要支付？
+What information must the doctor include in the insurance report?|医生必须在保险报告中包含哪些信息？
+What route avoids the closure near the airport entrance?|哪条路线能避开机场入口附近的封路？
+Is the revised ticket valid for tomorrow's first departure?|修改后的车票可用于明天第一班车吗？
+Is the baggage delivery guaranteed before our hotel checkout?|行李能保证在我们退房前送到吗？
+Is the replacement vehicle covered under the existing agreement?|替代车辆包含在现有合同的保障中吗？
+Is this medical provider recognized by my travel insurer?|这家医疗机构得到我的旅行保险公司认可吗？
+Are our original meal requests attached to the new flights?|我们原来的餐食要求已关联到新航班吗？
+Are these additional taxes included in the quoted fare?|这些额外税费包含在报价票价中吗？
+Does the revised itinerary preserve the minimum connection time?|修改后的行程保留了最低转机时间吗？
+Does this insurance authorization include the prescribed treatment?|这份保险批准包含处方所列治疗吗？
+My original flight included luggage that the replacement excludes.|我的原航班包含行李额度，而替代航班不包含。
+The hotel transferred my deposit to a different reservation.|酒店把我的押金转到了另一个预订。
+Our updated tickets show the correct train but wrong date.|更新后的车票列车正确，但日期错误。
+The insurer requested receipts that the clinic cannot provide.|保险公司要求诊所无法提供的收据。
+My delayed bag will arrive after I leave this city.|我的延误行李会在我离开这座城市后到达。
+The rental company changed the return office without notice.|租车公司在未通知的情况下更改了还车门店。
+Our transfer assistance was removed during the itinerary update.|我们的转乘协助在行程更新时被取消了。
+The final charge differs from the amount shown at checkout.|最终收费与结账时显示的金额不同。
+My new boarding pass omits the priority access purchased.|我的新登机牌遗漏了已购买的优先通行服务。
+The accessible route now closes before our train arrives.|无障碍路线现在在我们的列车到达前关闭。
+Can you restore the baggage allowance from the original ticket?|您能恢复原票中的行李额度吗？
+Can the insurer approve treatment using this digital report?|保险公司能凭这份电子报告批准治疗吗？
+Can we retain the same rental rate after extending?|延长租期后，我们能保留相同的租车价格吗？
+Can the airline deliver our bags to separate hotels?|航空公司能把我们的行李送到不同酒店吗？
+Could you reinstate the assistance noted on my booking?|您能恢复我预订中注明的协助吗？
+Could the hotel transfer the deposit to tonight's room?|酒店能把押金转到今晚的房间吗？
+Could you confirm the tax included in this revised fare?|您能确认这个修改票价中包含的税费吗？
+Could the clinic send the report directly to insurance?|诊所能把报告直接发送给保险公司吗？
+Would the replacement service accept our existing rail passes?|替代运输服务接受我们现有的铁路通票吗？
+Would the airline reimburse transport to the replacement airport?|航空公司会报销前往替代机场的交通费吗？
+Would this policy cover medication inside delayed luggage?|这份保单会保障延误行李中的药物吗？
+Please restore both passengers to the same seat booking.|请把两位乘客恢复到同一座位预订中。
+Please send the corrected rental agreement before pickup.|取车前，请发送更正后的租车合同。
+Please confirm the clinic appears on the approved provider list.|请确认这家诊所在认可医疗机构名单中。
+Where can I challenge the duplicate charge on my statement?|我在哪里可以申诉账单上的重复收费？
+Where will the replacement bus connect with the original route?|替代公交会在哪里接回原路线？
+When will the missing accessibility request be restored?|遗漏的无障碍协助申请什么时候会恢复？
+When can the insurer confirm payment directly with hospital?|保险公司什么时候能直接向医院确认付款？
+How can I keep the booking while disputing this charge?|我怎样在争议这项收费时保留预订？
+How will our baggage transfer between the replacement flights?|我们的行李会怎样在替代航班之间转运？
+What proof shows the hotel accepted our cancellation request?|什么证明显示酒店接受了我们的取消申请？
+What options preserve both the fare and baggage allowance?|哪些方案能同时保留票价和行李额度？
+Is the replacement itinerary compatible with my visa conditions?|替代行程符合我的签证条件吗？
+Are the medical transport costs included in this authorization?|这份批准包含医疗交通费用吗？
+Does the revised rental agreement cover the additional driver?|修改后的租车合同保障额外驾驶人吗？
+My replacement reservation lost the flexible cancellation option.|我的替代预订失去了灵活取消选项。
+The insurer approved treatment but rejected the transport expense.|保险公司批准了治疗，但拒绝了交通费用。
+Can the airline preserve our connection after this delay?|航空公司能在这次延误后保留我们的衔接行程吗？
+Could you reconcile this invoice with the confirmed room rate?|您能核对这张账单与已确认的房价吗？
+Would the new route maintain the promised accessible transfer?|新路线会保留承诺的无障碍转乘吗？
+Please confirm the reimbursement covers tonight's necessary accommodation.|请确认报销涵盖今晚必要的住宿。
+Where can we verify the revised minimum connection time?|我们在哪里可以核实修改后的最低转机时间？
+What documentation supports reimbursement for the replacement transport?|替代交通的报销需要什么证明文件？
+My revised reservation excludes services included in the original confirmation.|我修改后的预订不包含原确认单中的服务。
+The replacement ticket shows a transfer that is physically impossible.|替代车票显示了一次时间上无法完成的换乘。
+Can the airline confirm responsibility for delivering essential medication?|航空公司能确认负责送达必需药物吗？
+Could you verify the cancellation terms attached to this replacement?|您能核实这个替代方案附带的取消条款吗？
+Would the insurer recognize treatment provided during this unexpected stop?|保险公司会认可在这次意外停留期间接受的治疗吗？
+Please preserve the documented accessibility requirements on every replacement booking.|请在每个替代预订中保留已记录的无障碍要求。
+Where can I compare the restrictions on these alternative fares?|我在哪里可以比较这些替代票价的限制？
+How will the carrier protect our onward journey after cancellation?|取消后，承运方会怎样保障我们的后续行程？
+What evidence confirms the vehicle damage existed before collection?|什么证据能确认车辆损伤在取车前就存在？
+Does this revised authorization cover the entire prescribed course of treatment?|这份修改后的批准涵盖整个处方疗程吗？
