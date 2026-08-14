@@ -170,7 +170,11 @@ describe('vocabulary training runtime', () => {
     const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
     const candidates = (catalog.trainingSupplyIndex as { candidates: VocabularySupplyItem[] }).candidates
       .filter((candidate) => candidate.domain === 'vocabulary' && candidate.difficultyLevel === 1)
-    const round = createTrainingSupplyRound({ seed: 'vocabulary-refresh', candidateItemIds: candidates.map((candidate) => candidate.itemId), shortTermExcludedItemIds: [] })
+    const round = createTrainingSupplyRound({
+      seed: 'vocabulary-refresh',
+      candidates: candidates.map(({ itemId, knowledgePointId, semanticCategoryId }) => ({ itemId, knowledgePointId, semanticCategoryId })),
+      shortTermExcludedItemIds: [],
+    })
     const requests: import('../../learning-engine/index.ts').LearningTaskSupplyRequest[] = []
     const supplyProvider: VocabularySupplyProvider = { async next(request) {
       requests.push(request)
@@ -185,7 +189,19 @@ describe('vocabulary training runtime', () => {
     const session = await runtime.initialize()
 
     expect(requests[0]?.supplyRound).toEqual(round)
-    expect(session.stream?.supplyRound).toMatchObject({ seed: 'vocabulary-refresh', cursor: 1 })
+    const activeStream = session.stream
+    expect(activeStream).not.toBeNull()
+    if (activeStream === null) return
+    expect(activeStream.supplyRound).toMatchObject({
+      schemaVersion: 2,
+      seed: 'vocabulary-refresh',
+      cursor: 1,
+      shortTermHistory: [{
+        itemId: activeStream.activeItem.itemId,
+        knowledgePointId: activeStream.activeItem.knowledgePointId,
+        semanticCategoryId: activeStream.activeItem.semanticCategoryId,
+      }],
+    })
 
     const refreshed = new VocabularyTrainingRuntime(options)
     const restored = await refreshed.initialize()
@@ -195,7 +211,7 @@ describe('vocabulary training runtime', () => {
     await refreshed.submit()
     await refreshed.advance()
     expect(sink.events.find((event) => event.type === 'learning.training.item.completed.v1')?.payload).toMatchObject({
-      supplyRound: { seed: 'vocabulary-refresh', cursor: 1 },
+      supplyRound: { schemaVersion: 2, seed: 'vocabulary-refresh', cursor: 1 },
     })
   })
 

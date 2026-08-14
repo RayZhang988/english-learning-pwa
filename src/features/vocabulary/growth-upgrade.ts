@@ -70,7 +70,10 @@ function supplyItemFor(
     throw new VocabularyError('task-incompatible', 'Requested vocabulary item does not match the target growth level.')
   }
   const source = candidate.source
-  if (typeof candidate.learningUnitId !== 'string' || typeof candidate.contentRef !== 'string' || typeof source.sourceId !== 'string' || !Array.isArray(source.distractorItemIds) || !source.distractorItemIds.every((id) => typeof id === 'string') || !['term-to-meaning-choice', 'meaning-to-term-choice', 'example-gap-choice'].includes(String(source.variantId))) {
+  if (typeof candidate.learningUnitId !== 'string' || typeof candidate.contentRef !== 'string' ||
+    typeof candidate.knowledgePointId !== 'string' || candidate.knowledgePointId.trim().length === 0 ||
+    typeof candidate.semanticCategoryId !== 'string' || candidate.semanticCategoryId.trim().length === 0 ||
+    typeof source.sourceId !== 'string' || !Array.isArray(source.distractorItemIds) || !source.distractorItemIds.every((id) => typeof id === 'string') || !['term-to-meaning-choice', 'meaning-to-term-choice', 'example-gap-choice'].includes(String(source.variantId))) {
     throw new VocabularyError('content-invalid', 'Released vocabulary growth item is malformed.')
   }
   const item = catalog.getItem(source.sourceId)
@@ -80,6 +83,8 @@ function supplyItemFor(
   }
   return {
     itemId,
+    knowledgePointId: candidate.knowledgePointId,
+    semanticCategoryId: candidate.semanticCategoryId,
     learningUnitId: candidate.learningUnitId,
     contentRef: candidate.contentRef,
     difficultyLevel: candidate.difficultyLevel as number,

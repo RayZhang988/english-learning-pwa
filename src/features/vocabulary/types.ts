@@ -107,6 +107,8 @@ export type VocabularySupplyVariantId =
   | 'example-gap-choice'
 
 export interface VocabularySupplyItem extends LearningTaskSupplyItem {
+  readonly knowledgePointId: string
+  readonly semanticCategoryId: string
   readonly source: {
     readonly sourceType: 'vocabulary-item'
     readonly sourceId: string

@@ -126,6 +126,20 @@
 - QA-011 覆盖供应索引稳定选择、排除集不回绕、已批准变式映射、逐题事件、跨题不重复及
   `finish-current-item` 后才产生预算完成事件。
 
+### R15 语义多样性接口
+
+- `VocabularySupplyItem` 严格公开 05 发布的 `knowledgePointId` 和
+  `semanticCategoryId`；缺失或非法元数据直接拒绝，06 不自行推断或生成分类。
+- 01 创建 schema 2 轮次时使用
+  `VocabularyEligibleCandidateIdentitiesProvider.eligibleCandidateIdentities()`；返回值只包含
+  `itemId / knowledgePointId / semanticCategoryId`，不泄露题面或答案。旧
+  `eligibleItemIds()` 仅保留给 schema 1 兼容路径。
+- 日常与 R6 额外训练收到 schema 2 `supplyRound` 后，必须严格使用其持久化顺序。
+  R6 的错题、到期复习等显式优先原因由 01 从既有优先来源写入
+  `priorityItems`，06 不再越过轮次重新挑题；可审计原因保留在 `orderAudit`。
+- 题目完成时将 `recordTrainingSupplyItem()` 返回的整个轮次与 item-completed
+  事件一起落盘；刷新、离线和退出恢复不重洗顺序。
+
 ## 已知限制
 
 1. 01 仍须在正式路由注入 04 已恢复的 `trainingBudgetStatus`，并把供应索引列入应用级

@@ -7,6 +7,26 @@ import type { VocabularySupplyItem } from './types.ts'
 import { createTrainingSupplyRound } from '../../learning-engine/index.ts'
 
 describe('vocabulary training supply', () => {
+  it('bulk-enumerates schema-2 identities with published semantic metadata', async () => {
+    const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
+    const provider = new VocabularyCatalogSupplyProvider(catalog.trainingSupplyIndex, catalog)
+    const request = { schemaVersion: 1 as const, requestId: 'semantic-eligible', planId: 'plan', taskId: 'task', domain: 'vocabulary' as const, targetModuleId: 'vocabulary' as const, mode: 'learn' as const, targetDifficulty: 1, cursor: null, excludeItemIds: [] as readonly string[], reason: 'initial' as const }
+
+    const result = await provider.eligibleCandidateIdentities(request)
+
+    expect(result.status).toBe('eligible-candidates')
+    if (result.status !== 'eligible-candidates') return
+    expect(result.candidates.length).toBeGreaterThan(100)
+    expect(result.candidates[0]).toEqual({
+      itemId: expect.any(String),
+      knowledgePointId: expect.stringMatching(/^knowledge-v1-vocabulary-/u),
+      semanticCategoryId: expect.stringMatching(/^semantic-v1/u),
+    })
+    expect(Object.keys(result.candidates[0]!)).toEqual([
+      'itemId', 'knowledgePointId', 'semanticCategoryId',
+    ])
+  })
+
   it('bulk-enumerates the same eligible ids as repeated next calls', async () => {
     const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
     const provider = new VocabularyCatalogSupplyProvider(catalog.trainingSupplyIndex, catalog)
@@ -32,7 +52,7 @@ describe('vocabulary training supply', () => {
   })
 
   it('bulk-enumerates more than 3000 unique ids in stable supply order', async () => {
-    const candidateCount = 3_200
+    const candidateCount = 4_215
     const candidates = Array.from({ length: candidateCount }, (_, index) => ({
       domain: 'vocabulary',
       targetModuleId: 'vocabulary',
@@ -44,6 +64,8 @@ describe('vocabulary training supply', () => {
       supplyOrder: candidateCount - index,
       allowedModes: ['learn'],
       variantFamilyId: `family-${index}`,
+      knowledgePointId: `knowledge-${index}`,
+      semanticCategoryId: `semantic-${index % 19}`,
       source: {
         sourceType: 'vocabulary-item',
         sourceId: `source-${index}`,
@@ -56,13 +78,24 @@ describe('vocabulary training supply', () => {
       getItem: () => ({}),
     } as unknown as ReturnType<typeof createVocabularyCatalog>
     const provider = new VocabularyCatalogSupplyProvider({ schemaVersion: 1, candidates }, catalog)
-    const result = await provider.eligibleItemIds({ schemaVersion: 1, requestId: 'large', planId: 'plan', taskId: 'task', domain: 'vocabulary', targetModuleId: 'vocabulary', mode: 'learn', targetDifficulty: 1, cursor: null, excludeItemIds: [], reason: 'initial' })
+    const startedAt = performance.now()
+    const result = await provider.eligibleCandidateIdentities({ schemaVersion: 1, requestId: 'large', planId: 'plan', taskId: 'task', domain: 'vocabulary', targetModuleId: 'vocabulary', mode: 'learn', targetDifficulty: 1, cursor: null, excludeItemIds: [], reason: 'initial' })
+    const elapsedMs = performance.now() - startedAt
 
-    expect(result.status).toBe('eligible-items')
-    if (result.status !== 'eligible-items') return
-    expect(result.itemIds).toHaveLength(candidateCount)
-    expect(new Set(result.itemIds).size).toBe(candidateCount)
-    expect(result.itemIds.slice(0, 3)).toEqual(['item-3199', 'item-3198', 'item-3197'])
+    expect(result.status).toBe('eligible-candidates')
+    if (result.status !== 'eligible-candidates') return
+    expect(result.candidates).toHaveLength(candidateCount)
+    expect(new Set(result.candidates.map((candidate) => candidate.itemId)).size).toBe(candidateCount)
+    expect(result.candidates.slice(0, 3).map((candidate) => candidate.itemId)).toEqual(['item-4214', 'item-4213', 'item-4212'])
+    expect(elapsedMs).toBeLessThan(1_000)
+  })
+
+  it('rejects missing or malformed semantic metadata instead of inventing it', async () => {
+    const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
+    const index = structuredClone(catalog.trainingSupplyIndex) as { candidates: Array<Record<string, unknown>> }
+    delete index.candidates[0]!.knowledgePointId
+
+    expect(() => new VocabularyCatalogSupplyProvider(index, catalog)).toThrow(/invalid vocabulary fields/u)
   })
 
   it('returns a distinguishable safe failure for invalid bulk requests', async () => {
@@ -144,5 +177,40 @@ describe('vocabulary training supply', () => {
     const request = { schemaVersion: 1 as const, requestId: 'extra-priority', sessionId: 'extra-session', localDate: '2026-07-29', domain: 'vocabulary' as const, targetModuleId: 'vocabulary' as const, mode: 'learn' as const, targetDifficulty: 1, cursor: null, excludeItemIds: [], priority: ['recent-error', 'due-review', 'same-day-variant', 'new-optional-content'] as const, priorityItemIds: { 'recent-error': [recent.itemId], 'due-review': [due.itemId], 'same-day-variant': [], 'new-optional-content': [] }, reason: 'initial' as const }
     await expect(provider.next(request)).resolves.toMatchObject({ status: 'item', item: { itemId: recent.itemId } })
     await expect(provider.next({ ...request, excludeItemIds: [recent.itemId] })).resolves.toMatchObject({ status: 'item', item: { itemId: due.itemId } })
+  })
+
+  it('consumes schema-2 priority order instead of re-selecting from request buckets', async () => {
+    const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
+    const provider = new VocabularyCatalogSupplyProvider(catalog.trainingSupplyIndex, catalog)
+    const eligible = await provider.eligibleCandidateIdentities({ schemaVersion: 1, requestId: 'eligible-priority', sessionId: 'extra-session', localDate: '2026-07-29', domain: 'vocabulary', targetModuleId: 'vocabulary', mode: 'learn', targetDifficulty: 1, cursor: null, excludeItemIds: [], priority: ['recent-error', 'due-review', 'same-day-variant', 'new-optional-content'], priorityItemIds: { 'recent-error': [], 'due-review': [], 'same-day-variant': [], 'new-optional-content': [] }, reason: 'initial' })
+    expect(eligible.status).toBe('eligible-candidates')
+    if (eligible.status !== 'eligible-candidates') return
+    const [ordinary, recentError] = eligible.candidates
+    const round = createTrainingSupplyRound({
+      seed: 'priority-audit',
+      candidates: eligible.candidates,
+      shortTermExcludedItemIds: [],
+      priorityItems: [{ itemId: recentError!.itemId, reason: 'recent-error' }],
+    })
+    const request = { schemaVersion: 1 as const, requestId: 'extra-priority-round', sessionId: 'extra-session', localDate: '2026-07-29', domain: 'vocabulary' as const, targetModuleId: 'vocabulary' as const, mode: 'learn' as const, targetDifficulty: 1, cursor: null, excludeItemIds: [], priority: ['recent-error', 'due-review', 'same-day-variant', 'new-optional-content'] as const, priorityItemIds: { 'recent-error': [ordinary!.itemId], 'due-review': [], 'same-day-variant': [], 'new-optional-content': [] }, supplyRound: round, reason: 'initial' as const }
+
+    await expect(provider.next(request)).resolves.toMatchObject({
+      status: 'item', item: { itemId: recentError!.itemId },
+    })
+    expect(round.orderAudit[0]).toMatchObject({
+      itemId: recentError!.itemId,
+      priorityReason: 'recent-error',
+    })
+  })
+
+  it('rejects a schema-2 priority reason outside the existing R6 priority sources', async () => {
+    const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
+    const provider = new VocabularyCatalogSupplyProvider(catalog.trainingSupplyIndex, catalog)
+    const eligible = await provider.eligibleCandidateIdentities({ schemaVersion: 1, requestId: 'eligible-invalid-priority', sessionId: 'extra-session', localDate: '2026-07-29', domain: 'vocabulary', targetModuleId: 'vocabulary', mode: 'learn', targetDifficulty: 1, cursor: null, excludeItemIds: [], priority: ['recent-error', 'due-review', 'same-day-variant', 'new-optional-content'], priorityItemIds: { 'recent-error': [], 'due-review': [], 'same-day-variant': [], 'new-optional-content': [] }, reason: 'initial' })
+    expect(eligible.status).toBe('eligible-candidates')
+    if (eligible.status !== 'eligible-candidates') return
+    const round = createTrainingSupplyRound({ seed: 'invalid-priority-audit', candidates: eligible.candidates, shortTermExcludedItemIds: [], priorityItems: [{ itemId: eligible.candidates[0]!.itemId, reason: 'invented-priority' }] })
+
+    await expect(provider.next({ schemaVersion: 1, requestId: 'invalid-priority-round', sessionId: 'extra-session', localDate: '2026-07-29', domain: 'vocabulary', targetModuleId: 'vocabulary', mode: 'learn', targetDifficulty: 1, cursor: null, excludeItemIds: [], priority: ['recent-error', 'due-review', 'same-day-variant', 'new-optional-content'], priorityItemIds: { 'recent-error': [], 'due-review': [], 'same-day-variant': [], 'new-optional-content': [] }, supplyRound: round, reason: 'initial' })).resolves.toMatchObject({ status: 'content-exhausted', reason: 'provider-failure' })
   })
 })

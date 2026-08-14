@@ -15,7 +15,7 @@ class Store implements NamespaceStore { records = new Map<string, StoredRecord<u
 class FailNextStore extends Store { failNext = false; override async put<T>(key: string, value: T, schemaVersion = 1) { if (this.failNext) { this.failNext = false; throw new Error('clear save failed') }; return super.put(key, value, schemaVersion) } }
 
 const session = { schemaVersion: 1, sessionId: 'extra-vocabulary', localDate: '2026-07-29', domain: 'vocabulary', targetModuleId: 'vocabulary', mode: 'learn', targetDifficulty: 1, completionMode: 'open-ended', effectiveSeconds: 0, status: 'running', nextSupplyCursor: null, excludeItemIds: [], completedItemCount: 0, startedAt: '2026-07-29T00:00:00.000Z', updatedAt: '2026-07-29T00:00:00.000Z', endedAt: null, endReason: null } as const
-const item = { itemId: 'supply-vocabulary-1', learningUnitId: 'unit-1', contentRef: 'lesson://unit-1', difficultyLevel: 1, tags: [], source: { sourceType: 'vocabulary-item', sourceId: 'word', variantId: 'term-to-meaning-choice', distractorItemIds: [] } } as const
+const item = { itemId: 'supply-vocabulary-1', knowledgePointId: 'knowledge-word', semanticCategoryId: 'semantic-greeting', learningUnitId: 'unit-1', contentRef: 'lesson://unit-1', difficultyLevel: 1, tags: [], source: { sourceType: 'vocabulary-item', sourceId: 'word', variantId: 'term-to-meaning-choice', distractorItemIds: [] } } as const
 
 describe('extra vocabulary commands', () => {
   const question = { id: 'question', type: 'term-to-meaning' as const, instructionZh: '选择', prompt: 'word', promptLocale: 'en-US' as const, partOfSpeech: null, options: [{ id: 'right', label: '对' }, { id: 'wrong', label: '错' }], correctOptionId: 'right', exampleEn: null, explanationZh: null, errorTag: 'meaning-recall' as const }
@@ -45,7 +45,7 @@ describe('extra vocabulary commands', () => {
     await expect(runtime.advanceAfterFeedback()).rejects.toThrow('feedback')
   })
   it('acknowledges the persisted randomized extra-training cursor after an item', async () => {
-    const round = createTrainingSupplyRound({ seed: 'extra-round', candidateItemIds: [item.itemId], shortTermExcludedItemIds: [] })
+    const round = createTrainingSupplyRound({ seed: 'extra-round', candidates: [{ itemId: item.itemId, knowledgePointId: item.knowledgePointId, semanticCategoryId: item.semanticCategoryId }], shortTermExcludedItemIds: [], priorityItems: [{ itemId: item.itemId, reason: 'recent-error' }] })
     const runtime = new ExtraVocabularyTrainingRuntime({
       ...options(),
       session: { ...session, supplyRound: round },
@@ -53,9 +53,9 @@ describe('extra vocabulary commands', () => {
     })
     await runtime.initialize(); await runtime.next(); await runtime.select('right'); await runtime.submit()
     const completed = await runtime.completeCurrentItem()
-    expect(completed.session.supplyRound).toMatchObject({ seed: 'extra-round', cursor: 1, shortTermExcludedItemIds: [item.itemId] })
+    expect(completed.session.supplyRound).toMatchObject({ schemaVersion: 2, seed: 'extra-round', cursor: 1, shortTermExcludedItemIds: [item.itemId], shortTermHistory: [{ itemId: item.itemId, knowledgePointId: item.knowledgePointId, semanticCategoryId: item.semanticCategoryId }] })
     expect(completed.pendingEvents.find((event) => event.type === 'learning.extra-training.item.completed.v1')?.payload).toMatchObject({
-      supplyRound: { seed: 'extra-round', cursor: 1, shortTermExcludedItemIds: [item.itemId] },
+      supplyRound: { schemaVersion: 2, seed: 'extra-round', cursor: 1, shortTermExcludedItemIds: [item.itemId] },
     })
   })
   it('persists exit and replays a failed outbox event with the same identity', async () => {

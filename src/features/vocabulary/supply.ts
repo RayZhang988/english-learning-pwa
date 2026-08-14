@@ -2,6 +2,7 @@ import type {
   ExtraTrainingSupplyRequest,
   LearningTaskSupplyRequest,
   LearningTaskSupplyResult,
+  TrainingSupplyCandidateIdentity,
 } from '../../learning-engine/index.ts'
 import { assertTrainingSupplyRound, nextTrainingSupplyItem } from '../../learning-engine/index.ts'
 import { VocabularyError } from './errors.ts'
@@ -37,7 +38,9 @@ function parseItem(value: unknown): IndexedVocabularySupplyItem {
     typeof value.contentRef !== 'string' || typeof value.difficultyLevel !== 'number' ||
     !Number.isFinite(value.difficultyLevel) || typeof value.supplyOrder !== 'number' ||
     !Number.isInteger(value.supplyOrder) || typeof value.variantFamilyId !== 'string' ||
-    value.variantFamilyId.length === 0 || !tags || !modes ||
+    value.variantFamilyId.length === 0 || typeof value.knowledgePointId !== 'string' ||
+    value.knowledgePointId.trim().length === 0 || typeof value.semanticCategoryId !== 'string' ||
+    value.semanticCategoryId.trim().length === 0 || !tags || !modes ||
     value.source.sourceType !== 'vocabulary-item' || typeof value.source.sourceId !== 'string' ||
     !['term-to-meaning-choice', 'meaning-to-term-choice', 'example-gap-choice'].includes(String(value.source.variantId)) ||
     !distractorItemIds
@@ -53,6 +56,8 @@ function parseItem(value: unknown): IndexedVocabularySupplyItem {
     supplyOrder: value.supplyOrder,
     allowedModes: modes,
     variantFamilyId: value.variantFamilyId,
+    knowledgePointId: value.knowledgePointId,
+    semanticCategoryId: value.semanticCategoryId,
     source: {
       sourceType: 'vocabulary-item',
       sourceId: value.source.sourceId,
@@ -86,13 +91,33 @@ export interface VocabularyEligibleItemIdsProvider {
   ): Promise<VocabularyEligibleItemIdsResult>
 }
 
+export type VocabularyEligibleCandidateIdentitiesResult =
+  | {
+      readonly schemaVersion: 2
+      readonly requestId: string
+      readonly status: 'eligible-candidates'
+      readonly candidates: readonly TrainingSupplyCandidateIdentity[]
+    }
+  | {
+      readonly schemaVersion: 2
+      readonly requestId: string
+      readonly status: 'invalid-request'
+      readonly reason: 'provider-failure'
+    }
+
+export interface VocabularyEligibleCandidateIdentitiesProvider {
+  eligibleCandidateIdentities(
+    request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
+  ): Promise<VocabularyEligibleCandidateIdentitiesResult>
+}
+
 /** R6 provider: preserves 05's exact extra-training priority ordering. */
 export interface ExtraVocabularySupplyProvider {
   next(request: ExtraTrainingSupplyRequest): Promise<LearningTaskSupplyResult>
 }
 
 /** Strict, local implementation of the 05 training-supply handoff v1 selection. */
-export class VocabularyCatalogSupplyProvider implements VocabularySupplyProvider, ExtraVocabularySupplyProvider, VocabularyEligibleItemIdsProvider {
+export class VocabularyCatalogSupplyProvider implements VocabularySupplyProvider, ExtraVocabularySupplyProvider, VocabularyEligibleItemIdsProvider, VocabularyEligibleCandidateIdentitiesProvider {
   private readonly items: readonly IndexedVocabularySupplyItem[]
 
   constructor(index: unknown, catalog: VocabularyCatalog) {
@@ -132,6 +157,24 @@ export class VocabularyCatalogSupplyProvider implements VocabularySupplyProvider
     }
   }
 
+  async eligibleCandidateIdentities(
+    request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest,
+  ): Promise<VocabularyEligibleCandidateIdentitiesResult> {
+    if (!this.isValidRequest(request)) {
+      return { schemaVersion: 2, requestId: request.requestId, status: 'invalid-request', reason: 'provider-failure' }
+    }
+    return {
+      schemaVersion: 2,
+      requestId: request.requestId,
+      status: 'eligible-candidates',
+      candidates: this.eligibleItems(request).map((item) => ({
+        itemId: item.itemId,
+        knowledgePointId: item.knowledgePointId,
+        semanticCategoryId: item.semanticCategoryId,
+      })),
+    }
+  }
+
   async next(request: LearningTaskSupplyRequest | ExtraTrainingSupplyRequest): Promise<LearningTaskSupplyResult> {
     if (!this.isValidRequest(request)) {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
@@ -144,6 +187,26 @@ export class VocabularyCatalogSupplyProvider implements VocabularySupplyProvider
     const available = eligible.filter((item) => !excluded.has(item.itemId))
     if (available.length === 0) {
       return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'all-eligible-content-recently-used' }
+    }
+    if (request.supplyRound !== undefined) {
+      try {
+        assertTrainingSupplyRound(request.supplyRound)
+      } catch {
+        return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
+      }
+      const next = nextTrainingSupplyItem(request.supplyRound)
+      if (next.status === 'content-exhausted') {
+        return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: next.reason }
+      }
+      if (next.priorityReason !== undefined && next.priorityReason !== null &&
+        (!('priority' in request) || !request.priority.includes(next.priorityReason as typeof request.priority[number]))) {
+        return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
+      }
+      const item = available.find((candidate) => candidate.itemId === next.itemId)
+      if (!item) {
+        return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
+      }
+      return { schemaVersion: 1, requestId: request.requestId, status: 'item', item, nextCursor: item.itemId }
     }
     if ('priority' in request) {
       const allIds = request.priority.flatMap((priority) => request.priorityItemIds[priority])
@@ -167,22 +230,6 @@ export class VocabularyCatalogSupplyProvider implements VocabularySupplyProvider
           if (selected) return { schemaVersion: 1, requestId: request.requestId, status: 'item', item: selected, nextCursor: selected.itemId }
         }
       }
-    }
-    if (request.supplyRound !== undefined) {
-      try {
-        assertTrainingSupplyRound(request.supplyRound)
-      } catch {
-        return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
-      }
-      const next = nextTrainingSupplyItem(request.supplyRound)
-      if (next.status === 'content-exhausted') {
-        return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: next.reason }
-      }
-      const item = available.find((candidate) => candidate.itemId === next.itemId)
-      if (!item) {
-        return { schemaVersion: 1, requestId: request.requestId, status: 'content-exhausted', reason: 'provider-failure' }
-      }
-      return { schemaVersion: 1, requestId: request.requestId, status: 'item', item, nextCursor: item.itemId }
     }
     const cursorIndex = request.cursor === null ? -1 : eligible.findIndex((item) => item.itemId === request.cursor)
     if (request.cursor !== null && cursorIndex < 0) {

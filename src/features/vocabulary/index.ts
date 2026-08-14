@@ -70,6 +70,8 @@ export {
   type ExtraVocabularySupplyProvider,
   type VocabularyEligibleItemIdsProvider,
   type VocabularyEligibleItemIdsResult,
+  type VocabularyEligibleCandidateIdentitiesProvider,
+  type VocabularyEligibleCandidateIdentitiesResult,
   type VocabularySupplyProvider,
 } from './supply.ts'
 export {
