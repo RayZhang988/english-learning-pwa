@@ -131,7 +131,9 @@ export class SpeakingCatalogSupplyProvider implements SpeakingSupplyProvider, Sp
       }
     }
     const excluded = new Set(request.excludeItemIds)
-    const available = eligibleItems.filter((item) => !excluded.has(item.itemId))
+    const available = eligibleItems.filter((item) =>
+      !excluded.has(item.itemId) || priorityReasonById.has(item.itemId),
+    )
     if (available.length === 0) {
       return { ...base, status: 'content-exhausted', reason: 'all-eligible-content-recently-used' }
     }
@@ -158,17 +160,21 @@ export class SpeakingCatalogSupplyProvider implements SpeakingSupplyProvider, Sp
     if (!candidates.length) return { schemaVersion: 1, ...base, status: 'content-exhausted', reason: 'no-eligible-content' }
     const excluded = new Set(request.excludeItemIds)
     const available = candidates.filter((item) => !excluded.has(item.itemId))
-    if (!available.length) return { schemaVersion: 1, ...base, status: 'content-exhausted', reason: 'all-eligible-content-recently-used' }
     if (request.supplyRound !== undefined) {
       try { assertTrainingSupplyRound(request.supplyRound) } catch {
         return { schemaVersion: 1, ...base, status: 'content-exhausted', reason: 'provider-failure' }
       }
       const next = nextTrainingSupplyItem(request.supplyRound)
       if (next.status === 'content-exhausted') return { schemaVersion: 1, ...base, status: 'content-exhausted', reason: next.reason }
-      const item = available.find((candidate) => candidate.itemId === next.itemId)
       const audit = request.supplyRound.schemaVersion === 2
         ? request.supplyRound.orderAudit[request.supplyRound.cursor]
         : undefined
+      const item = candidates.find((candidate) => candidate.itemId === next.itemId &&
+        (!excluded.has(candidate.itemId) ||
+          (audit !== undefined && audit.priorityReason !== null &&
+            isExtraTrainingRequest(request) && request.priority.some((reason) =>
+              reason === audit.priorityReason &&
+              request.priorityItemIds[reason].includes(candidate.itemId)))))
       if (!item || (audit !== undefined &&
         (audit.knowledgePointId !== item.knowledgePointId ||
           audit.semanticCategoryId !== item.semanticCategoryId))) {
@@ -176,6 +182,7 @@ export class SpeakingCatalogSupplyProvider implements SpeakingSupplyProvider, Sp
       }
       return { schemaVersion: 1, ...base, status: 'item', item, nextCursor: item.itemId }
     }
+    if (!available.length) return { schemaVersion: 1, ...base, status: 'content-exhausted', reason: 'all-eligible-content-recently-used' }
     if (isExtraTrainingRequest(request)) {
       const allPriorityIds = request.priority.flatMap(
         (priority) => request.priorityItemIds[priority],

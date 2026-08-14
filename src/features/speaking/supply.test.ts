@@ -127,6 +127,42 @@ describe('released speaking supply resolver', () => {
     }))).resolves.toMatchObject({ status: 'content-exhausted', reason: 'provider-failure' })
   })
 
+  it('lets a formal R6 priority override short-term exclusion without releasing ordinary excluded items', async () => {
+    const provider = new SpeakingCatalogSupplyProvider(trainingSupplyIndex, catalog())
+    const priorityId = 'supply-v1-speaking-w1d1-q3'
+    const ordinaryId = 'supply-v1-speaking-w1d1-s2'
+    const value = {
+      ...extraRequest({
+        'recent-error': [priorityId],
+        'due-review': [], 'same-day-variant': [], 'new-optional-content': [],
+      }),
+      requestId: 'priority-overrides-cooldown',
+      excludeItemIds: [priorityId, ordinaryId],
+    }
+    const result = await eligibleIdentities(provider, value)
+    expect(result.candidates.map((item) => item.itemId)).toContain(priorityId)
+    expect(result.candidates.map((item) => item.itemId)).not.toContain(ordinaryId)
+    expect(result.priorityItems).toContainEqual({ itemId: priorityId, reason: 'recent-error' })
+    const round = createTrainingSupplyRound({
+      seed: 'speaking-priority-overrides-cooldown',
+      candidates: result.candidates,
+      shortTermExcludedItemIds: value.excludeItemIds,
+      priorityItems: result.priorityItems,
+    })
+    await expect(provider.next({ ...value, supplyRound: round })).resolves.toMatchObject({
+      status: 'item', item: { itemId: priorityId },
+    })
+    const forgedReason = {
+      ...round,
+      orderAudit: round.orderAudit.map((entry, index) => index === 0
+        ? { ...entry, priorityReason: 'due-review' }
+        : entry),
+    }
+    await expect(provider.next({ ...value, supplyRound: forgedReason })).resolves.toMatchObject({
+      status: 'content-exhausted', reason: 'provider-failure',
+    })
+  })
+
   it('rejects a schema-2 round whose semantic identity does not match released content', async () => {
     const provider = new SpeakingCatalogSupplyProvider(trainingSupplyIndex, catalog())
     const eligible = await eligibleIdentities(provider)
