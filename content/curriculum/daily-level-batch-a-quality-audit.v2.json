@@ -1,0 +1,412 @@
+{
+  "schemaVersion": 1,
+  "documentType": "daily-level-batch-quality-audit",
+  "auditVersion": "2.0.0-a",
+  "releaseStatus": "candidate-blocked-until-batches-b-and-c",
+  "records": 800,
+  "levels": [
+    {
+      "id": "kindergarten",
+      "labelZh": "幼儿园",
+      "metrics": {
+        "count": 200,
+        "wordRatio": 1,
+        "completeUtteranceRatio": 0,
+        "complexUtteranceRatio": 0,
+        "averageTokens": 1,
+        "maximumTokens": 1,
+        "tokenDistribution": {
+          "1": 200
+        },
+        "maximumOpeningCluster": 1,
+        "maximumSkeletonCluster": 1
+      }
+    },
+    {
+      "id": "primary-1",
+      "labelZh": "一年级",
+      "metrics": {
+        "count": 200,
+        "wordRatio": 0.65,
+        "completeUtteranceRatio": 0,
+        "complexUtteranceRatio": 0,
+        "averageTokens": 1.355,
+        "maximumTokens": 3,
+        "tokenDistribution": {
+          "1": 130,
+          "2": 69,
+          "3": 1
+        },
+        "maximumOpeningCluster": 1,
+        "maximumSkeletonCluster": 1
+      }
+    },
+    {
+      "id": "primary-2",
+      "labelZh": "二年级",
+      "metrics": {
+        "count": 200,
+        "wordRatio": 0.5,
+        "completeUtteranceRatio": 0.1,
+        "complexUtteranceRatio": 0,
+        "averageTokens": 1.645,
+        "maximumTokens": 4,
+        "tokenDistribution": {
+          "1": 100,
+          "2": 81,
+          "3": 9,
+          "4": 10
+        },
+        "maximumOpeningCluster": 1,
+        "maximumSkeletonCluster": 2
+      }
+    },
+    {
+      "id": "primary-3",
+      "labelZh": "三年级",
+      "metrics": {
+        "count": 200,
+        "wordRatio": 0.4,
+        "completeUtteranceRatio": 0.25,
+        "complexUtteranceRatio": 0,
+        "averageTokens": 2.845,
+        "maximumTokens": 5,
+        "tokenDistribution": {
+          "1": 80,
+          "2": 10,
+          "3": 20,
+          "4": 41,
+          "5": 49
+        },
+        "maximumOpeningCluster": 2,
+        "maximumSkeletonCluster": 5
+      }
+    }
+  ],
+  "crossLevelDuplicateForms": 0,
+  "templateMaximums": {
+    "sharedOpeningFourTokens": 2,
+    "sharedSkeleton": 5
+  },
+  "identityMigration": {
+    "sourceRecords": 800,
+    "retired": 418,
+    "moved-equivalent": 241,
+    "equivalent": 141,
+    "newV2Identities": 418
+  },
+  "remainingWork": {
+    "batchB": "四年级至初三，1200项",
+    "batchC": "高一至大学六级，1000项",
+    "pendingCrossBatchConflictCount": 61,
+    "pendingCrossBatchConflicts": [
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:bacd2aa5",
+        "term": "stop",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:0b015e86",
+        "term": "wait",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:27317b4d",
+        "term": "left",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:80885553",
+        "term": "right",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:2e7a4679",
+        "term": "straight",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:cd84cbab",
+        "term": "small",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:b78c59c9",
+        "term": "ticket",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:c78b6bc4",
+        "term": "passport",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:249b24c8",
+        "term": "station",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:2d104950",
+        "term": "hospital",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:52bd156a",
+        "term": "corner",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:4f5efa4d",
+        "term": "lost",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:90ac48b8",
+        "term": "weather",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:52029408",
+        "term": "gate",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:4c7bb9b8",
+        "term": "flight",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:410b924d",
+        "term": "floor",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:069eae31",
+        "term": "towel",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:7d26f89b",
+        "term": "blanket",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:5bb0e26d",
+        "term": "menu",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:65b303cd",
+        "term": "table",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:42b28b7d",
+        "term": "size",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:325270c6",
+        "term": "color",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:c82cfded",
+        "term": "cash",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:0f601a7d",
+        "term": "card",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:fe268f73",
+        "term": "change",
+        "levelId": "kindergarten"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:51d06199",
+        "term": "reservation",
+        "levelId": "primary-1"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:cb060af8",
+        "term": "suitcase",
+        "levelId": "primary-1"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:a665ccdb",
+        "term": "platform",
+        "levelId": "primary-1"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:666e6c52",
+        "term": "terminal",
+        "levelId": "primary-1"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:7e9f2a29",
+        "term": "arrival",
+        "levelId": "primary-1"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:32193193",
+        "term": "cancel",
+        "levelId": "primary-1"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:239e2796",
+        "term": "check-in",
+        "levelId": "primary-1"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:2a29dd56",
+        "term": "boarding",
+        "levelId": "primary-1"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:68f818ec",
+        "term": "security",
+        "levelId": "primary-1"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:066ee1c4",
+        "term": "lobby",
+        "levelId": "primary-1"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:796b4539",
+        "term": "elevator",
+        "levelId": "primary-1"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:faee8858",
+        "term": "order",
+        "levelId": "primary-1"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:bfd2ca0a",
+        "term": "tip",
+        "levelId": "primary-1"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:3dc8ff3d",
+        "term": "receipt",
+        "levelId": "primary-1"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:414ba8ad",
+        "term": "sale",
+        "levelId": "primary-1"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:ecc8fa1b",
+        "term": "total",
+        "levelId": "primary-1"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:b0fadd5c",
+        "term": "route",
+        "levelId": "primary-1"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:99307e54",
+        "term": "transfer",
+        "levelId": "primary-1"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:317a1e7e",
+        "term": "ready",
+        "levelId": "primary-1"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:a1b44654",
+        "term": "return",
+        "levelId": "primary-1"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:86c4582e",
+        "term": "fare",
+        "levelId": "primary-1"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:3dfd75a4",
+        "term": "emergency",
+        "levelId": "primary-1"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:5d7a16be",
+        "term": "pharmacy",
+        "levelId": "primary-1"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:3a0baf8e",
+        "term": "connection",
+        "levelId": "primary-2"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:977834d2",
+        "term": "round-trip",
+        "levelId": "primary-2"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:e7a564be",
+        "term": "appetizer",
+        "levelId": "primary-2"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:654b3fff",
+        "term": "refund",
+        "levelId": "primary-2"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:08e19747",
+        "term": "exchange",
+        "levelId": "primary-2"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:c9f0efde",
+        "term": "charge",
+        "levelId": "primary-2"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:583e0a7e",
+        "term": "tax",
+        "levelId": "primary-2"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:784bec5f",
+        "term": "noisy",
+        "levelId": "primary-2"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:c3421b45",
+        "term": "available",
+        "levelId": "primary-2"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:7f326387",
+        "term": "nearby",
+        "levelId": "primary-2"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:a60ce7d3",
+        "term": "confirm",
+        "levelId": "primary-2"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:1f95bf51",
+        "term": "board",
+        "levelId": "primary-2"
+      },
+      {
+        "dailyKnowledgeId": "daily-knowledge-v2:word:37072a5b",
+        "term": "recommend",
+        "levelId": "primary-2"
+      }
+    ],
+    "formalIndexesRegenerated": false,
+    "reason": "R13-D review identity lock forbids replacing released aliases before complete v2 migration is integrated."
+  }
+}

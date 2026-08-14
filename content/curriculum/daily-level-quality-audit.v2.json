@@ -134,16 +134,23 @@
       "labelZh": "幼儿园",
       "metrics": {
         "count": 200,
-        "wordRatio": 0.945,
-        "completeUtteranceRatio": 0.015,
+        "wordRatio": 0.95,
+        "completeUtteranceRatio": 0.005,
         "complexUtteranceRatio": 0,
-        "averageTokens": 1.06,
-        "maximumTokens": 3
+        "averageTokens": 1.055,
+        "maximumTokens": 3,
+        "tokenDistribution": {
+          "1": 190,
+          "2": 9,
+          "3": 1
+        },
+        "maximumOpeningCluster": 1,
+        "maximumSkeletonCluster": 1
       },
       "repairLowerBounds": {
         "countDelta": 0,
         "wordDeficit": 0,
-        "utteranceExcess": 3,
+        "utteranceExcess": 1,
         "complexUtteranceExcess": 0,
         "overTokenLimit": 1,
         "collapsedOpeningExcess": 0,
@@ -152,7 +159,7 @@
         "minimumRecordsRequiringRewriteOrReassignment": 8
       },
       "violations": [
-        "utterance-ratio:0.015",
+        "utterance-ratio:0.005",
         "over-token-limit:1",
         "kindergarten-exclusions:8"
       ],
@@ -177,16 +184,25 @@
         "count": 200,
         "wordRatio": 0.02,
         "completeUtteranceRatio": 0.125,
-        "complexUtteranceRatio": 0.01,
-        "averageTokens": 2.415,
-        "maximumTokens": 5
+        "complexUtteranceRatio": 0.005,
+        "averageTokens": 2.37,
+        "maximumTokens": 5,
+        "tokenDistribution": {
+          "1": 4,
+          "2": 147,
+          "3": 27,
+          "4": 15,
+          "5": 7
+        },
+        "maximumOpeningCluster": 2,
+        "maximumSkeletonCluster": 2
       },
       "repairLowerBounds": {
         "countDelta": 0,
         "wordDeficit": 126,
         "utteranceExcess": 15,
-        "complexUtteranceExcess": 2,
-        "overTokenLimit": 24,
+        "complexUtteranceExcess": 1,
+        "overTokenLimit": 22,
         "collapsedOpeningExcess": 0,
         "collapsedSkeletonExcess": 0,
         "kindergartenExclusions": 0,
@@ -195,13 +211,13 @@
       "violations": [
         "word-ratio:0.02",
         "utterance-ratio:0.125",
-        "complex-ratio:0.01",
-        "over-token-limit:24"
+        "complex-ratio:0.005",
+        "over-token-limit:22"
       ],
       "excluded": [],
       "collapsedOpenings": [],
       "collapsedSkeletons": [],
-      "overTokenLimitCount": 24
+      "overTokenLimitCount": 22
     },
     {
       "id": "primary-2",
@@ -209,48 +225,73 @@
       "metrics": {
         "count": 200,
         "wordRatio": 0.045,
-        "completeUtteranceRatio": 0.755,
+        "completeUtteranceRatio": 0.735,
         "complexUtteranceRatio": 0.03,
-        "averageTokens": 5.19,
-        "maximumTokens": 9
+        "averageTokens": 5.15,
+        "maximumTokens": 8,
+        "tokenDistribution": {
+          "1": 9,
+          "2": 4,
+          "3": 2,
+          "4": 32,
+          "5": 77,
+          "6": 43,
+          "7": 28,
+          "8": 5
+        },
+        "maximumOpeningCluster": 3,
+        "maximumSkeletonCluster": 8
       },
       "repairLowerBounds": {
         "countDelta": 0,
         "wordDeficit": 91,
-        "utteranceExcess": 121,
+        "utteranceExcess": 117,
         "complexUtteranceExcess": 6,
-        "overTokenLimit": 154,
+        "overTokenLimit": 153,
         "collapsedOpeningExcess": 0,
         "collapsedSkeletonExcess": 0,
         "kindergartenExclusions": 0,
-        "minimumRecordsRequiringRewriteOrReassignment": 154
+        "minimumRecordsRequiringRewriteOrReassignment": 153
       },
       "violations": [
         "word-ratio:0.045",
-        "utterance-ratio:0.755",
+        "utterance-ratio:0.735",
         "complex-ratio:0.03",
-        "over-token-limit:154"
+        "over-token-limit:153"
       ],
       "excluded": [],
       "collapsedOpenings": [],
       "collapsedSkeletons": [],
-      "overTokenLimitCount": 154
+      "overTokenLimitCount": 153
     },
     {
       "id": "primary-3",
       "labelZh": "三年级",
       "metrics": {
         "count": 200,
-        "wordRatio": 0.06,
-        "completeUtteranceRatio": 0.755,
+        "wordRatio": 0.065,
+        "completeUtteranceRatio": 0.75,
         "complexUtteranceRatio": 0.11,
-        "averageTokens": 6.09,
-        "maximumTokens": 10
+        "averageTokens": 6.07,
+        "maximumTokens": 10,
+        "tokenDistribution": {
+          "1": 13,
+          "2": 1,
+          "4": 14,
+          "5": 38,
+          "6": 45,
+          "7": 45,
+          "8": 29,
+          "9": 14,
+          "10": 1
+        },
+        "maximumOpeningCluster": 2,
+        "maximumSkeletonCluster": 6
       },
       "repairLowerBounds": {
         "countDelta": 0,
-        "wordDeficit": 68,
-        "utteranceExcess": 91,
+        "wordDeficit": 67,
+        "utteranceExcess": 90,
         "complexUtteranceExcess": 18,
         "overTokenLimit": 134,
         "collapsedOpeningExcess": 0,
@@ -259,8 +300,8 @@
         "minimumRecordsRequiringRewriteOrReassignment": 134
       },
       "violations": [
-        "word-ratio:0.06",
-        "utterance-ratio:0.755",
+        "word-ratio:0.065",
+        "utterance-ratio:0.75",
         "complex-ratio:0.11",
         "over-token-limit:134"
       ],
@@ -277,8 +318,23 @@
         "wordRatio": 0.14,
         "completeUtteranceRatio": 0.78,
         "complexUtteranceRatio": 0.445,
-        "averageTokens": 7.97,
-        "maximumTokens": 14
+        "averageTokens": 7.95,
+        "maximumTokens": 14,
+        "tokenDistribution": {
+          "1": 28,
+          "2": 7,
+          "6": 3,
+          "7": 11,
+          "8": 28,
+          "9": 49,
+          "10": 42,
+          "11": 22,
+          "12": 5,
+          "13": 4,
+          "14": 1
+        },
+        "maximumOpeningCluster": 12,
+        "maximumSkeletonCluster": 3
       },
       "repairLowerBounds": {
         "countDelta": 0,
@@ -307,15 +363,29 @@
       "labelZh": "五年级",
       "metrics": {
         "count": 200,
-        "wordRatio": 0.13,
+        "wordRatio": 0.14,
         "completeUtteranceRatio": 0.825,
         "complexUtteranceRatio": 0.575,
-        "averageTokens": 9.43,
-        "maximumTokens": 15
+        "averageTokens": 9.41,
+        "maximumTokens": 15,
+        "tokenDistribution": {
+          "1": 28,
+          "2": 4,
+          "8": 5,
+          "9": 18,
+          "10": 44,
+          "11": 44,
+          "12": 29,
+          "13": 21,
+          "14": 6,
+          "15": 1
+        },
+        "maximumOpeningCluster": 22,
+        "maximumSkeletonCluster": 3
       },
       "repairLowerBounds": {
         "countDelta": 0,
-        "wordDeficit": 4,
+        "wordDeficit": 2,
         "utteranceExcess": 45,
         "complexUtteranceExcess": 99,
         "overTokenLimit": 168,
@@ -325,7 +395,7 @@
         "minimumRecordsRequiringRewriteOrReassignment": 168
       },
       "violations": [
-        "word-ratio:0.13",
+        "word-ratio:0.14",
         "utterance-ratio:0.825",
         "complex-ratio:0.575",
         "over-token-limit:168",
@@ -346,11 +416,27 @@
       "labelZh": "六年级",
       "metrics": {
         "count": 200,
-        "wordRatio": 0.135,
+        "wordRatio": 0.145,
         "completeUtteranceRatio": 0.815,
         "complexUtteranceRatio": 0.6,
-        "averageTokens": 10.175,
-        "maximumTokens": 16
+        "averageTokens": 10.12,
+        "maximumTokens": 16,
+        "tokenDistribution": {
+          "1": 29,
+          "2": 7,
+          "3": 1,
+          "8": 1,
+          "9": 5,
+          "10": 17,
+          "11": 23,
+          "12": 55,
+          "13": 34,
+          "14": 21,
+          "15": 6,
+          "16": 1
+        },
+        "maximumOpeningCluster": 29,
+        "maximumSkeletonCluster": 4
       },
       "repairLowerBounds": {
         "countDelta": 0,
@@ -391,8 +477,24 @@
         "wordRatio": 0.0348,
         "completeUtteranceRatio": 0.9502,
         "complexUtteranceRatio": 0.6418,
-        "averageTokens": 10.6119,
-        "maximumTokens": 15
+        "averageTokens": 10.597,
+        "maximumTokens": 15,
+        "tokenDistribution": {
+          "1": 7,
+          "2": 2,
+          "4": 1,
+          "6": 1,
+          "8": 4,
+          "9": 17,
+          "10": 41,
+          "11": 60,
+          "12": 42,
+          "13": 17,
+          "14": 6,
+          "15": 3
+        },
+        "maximumOpeningCluster": 46,
+        "maximumSkeletonCluster": 2
       },
       "repairLowerBounds": {
         "countDelta": 1,
@@ -431,8 +533,22 @@
         "wordRatio": 0.0149,
         "completeUtteranceRatio": 0.9801,
         "complexUtteranceRatio": 0.6866,
-        "averageTokens": 10.9204,
-        "maximumTokens": 17
+        "averageTokens": 10.9055,
+        "maximumTokens": 17,
+        "tokenDistribution": {
+          "1": 3,
+          "2": 1,
+          "8": 1,
+          "9": 13,
+          "10": 54,
+          "11": 58,
+          "12": 48,
+          "13": 17,
+          "14": 5,
+          "17": 1
+        },
+        "maximumOpeningCluster": 50,
+        "maximumSkeletonCluster": 4
       },
       "repairLowerBounds": {
         "countDelta": 1,
@@ -475,8 +591,20 @@
         "wordRatio": 0.0199,
         "completeUtteranceRatio": 0.9403,
         "complexUtteranceRatio": 0.3383,
-        "averageTokens": 8.2239,
-        "maximumTokens": 12
+        "averageTokens": 8.2189,
+        "maximumTokens": 12,
+        "tokenDistribution": {
+          "1": 4,
+          "6": 13,
+          "7": 40,
+          "8": 59,
+          "9": 42,
+          "10": 34,
+          "11": 8,
+          "12": 1
+        },
+        "maximumOpeningCluster": 23,
+        "maximumSkeletonCluster": 4
       },
       "repairLowerBounds": {
         "countDelta": 1,
@@ -514,25 +642,36 @@
         "wordRatio": 0.0347,
         "completeUtteranceRatio": 0.9554,
         "complexUtteranceRatio": 0.5941,
-        "averageTokens": 10.2772,
-        "maximumTokens": 14
+        "averageTokens": 10.1139,
+        "maximumTokens": 13,
+        "tokenDistribution": {
+          "1": 7,
+          "2": 2,
+          "9": 67,
+          "10": 6,
+          "11": 74,
+          "12": 43,
+          "13": 3
+        },
+        "maximumOpeningCluster": 40,
+        "maximumSkeletonCluster": 37
       },
       "repairLowerBounds": {
         "countDelta": 2,
         "wordDeficit": 0,
         "utteranceExcess": 9,
         "complexUtteranceExcess": 40,
-        "overTokenLimit": 11,
+        "overTokenLimit": 3,
         "collapsedOpeningExcess": 105,
-        "collapsedSkeletonExcess": 110,
+        "collapsedSkeletonExcess": 138,
         "kindergartenExclusions": 0,
-        "minimumRecordsRequiringRewriteOrReassignment": 110
+        "minimumRecordsRequiringRewriteOrReassignment": 138
       },
       "violations": [
         "count:202",
         "utterance-ratio:0.9554",
         "complex-ratio:0.5941",
-        "over-token-limit:11",
+        "over-token-limit:3",
         "collapsed-openings:4",
         "collapsed-skeletons:5"
       ],
@@ -558,26 +697,26 @@
       "collapsedSkeletons": [
         {
           "skeleton": "{x} {x} the {x} {x} {x} i {x} my {x} {x}",
-          "count": 31
+          "count": 37
         },
         {
           "skeleton": "i {x} to {x} the {x} {x} {x} i {x} this {x}",
-          "count": 31
+          "count": 37
         },
         {
           "skeleton": "{x} you {x} {x} {x} {x} the {x} {x}",
-          "count": 31
+          "count": 37
         },
         {
           "skeleton": "i {x} an {x} {x} the {x} {x} {x} {x} {x}",
-          "count": 31
+          "count": 37
         },
         {
           "skeleton": "{x} {x} {x} the {x} {x} {x} my {x}",
-          "count": 26
+          "count": 30
         }
       ],
-      "overTokenLimitCount": 11
+      "overTokenLimitCount": 3
     },
     {
       "id": "senior-2",
@@ -587,24 +726,33 @@
         "wordRatio": 0,
         "completeUtteranceRatio": 1,
         "complexUtteranceRatio": 0.8,
-        "averageTokens": 11.85,
-        "maximumTokens": 15
+        "averageTokens": 11.675,
+        "maximumTokens": 14,
+        "tokenDistribution": {
+          "10": 37,
+          "11": 40,
+          "12": 77,
+          "13": 43,
+          "14": 3
+        },
+        "maximumOpeningCluster": 40,
+        "maximumSkeletonCluster": 37
       },
       "repairLowerBounds": {
         "countDelta": 0,
         "wordDeficit": 0,
         "utteranceExcess": 12,
         "complexUtteranceExcess": 64,
-        "overTokenLimit": 11,
+        "overTokenLimit": 3,
         "collapsedOpeningExcess": 140,
-        "collapsedSkeletonExcess": 115,
+        "collapsedSkeletonExcess": 145,
         "kindergartenExclusions": 0,
-        "minimumRecordsRequiringRewriteOrReassignment": 140
+        "minimumRecordsRequiringRewriteOrReassignment": 145
       },
       "violations": [
         "utterance-ratio:1",
         "complex-ratio:0.8",
-        "over-token-limit:11",
+        "over-token-limit:3",
         "collapsed-openings:5",
         "collapsed-skeletons:5"
       ],
@@ -634,26 +782,26 @@
       "collapsedSkeletons": [
         {
           "skeleton": "i {x} to {x} {x} the {x} {x} {x} my {x} {x}",
-          "count": 31
+          "count": 37
         },
         {
           "skeleton": "{x} you {x} {x} is {x} for the {x} {x}",
-          "count": 31
+          "count": 37
         },
         {
           "skeleton": "{x} {x} me {x} {x} is {x} for the {x} {x}",
-          "count": 31
+          "count": 37
         },
         {
           "skeleton": "i {x} a {x} {x} {x} the {x} {x} {x} the {x}",
-          "count": 31
+          "count": 37
         },
         {
           "skeleton": "{x} you {x} a {x} that {x} the {x} {x} the {x} {x}",
-          "count": 31
+          "count": 37
         }
       ],
-      "overTokenLimitCount": 11
+      "overTokenLimitCount": 3
     },
     {
       "id": "senior-3",
@@ -663,8 +811,16 @@
         "wordRatio": 0,
         "completeUtteranceRatio": 1,
         "complexUtteranceRatio": 0.4,
-        "averageTokens": 11.25,
-        "maximumTokens": 14
+        "averageTokens": 11.075,
+        "maximumTokens": 13,
+        "tokenDistribution": {
+          "10": 74,
+          "11": 43,
+          "12": 77,
+          "13": 6
+        },
+        "maximumOpeningCluster": 40,
+        "maximumSkeletonCluster": 37
       },
       "repairLowerBounds": {
         "countDelta": 0,
@@ -673,9 +829,9 @@
         "complexUtteranceExcess": 0,
         "overTokenLimit": 0,
         "collapsedOpeningExcess": 140,
-        "collapsedSkeletonExcess": 115,
+        "collapsedSkeletonExcess": 145,
         "kindergartenExclusions": 0,
-        "minimumRecordsRequiringRewriteOrReassignment": 140
+        "minimumRecordsRequiringRewriteOrReassignment": 145
       },
       "violations": [
         "utterance-ratio:1",
@@ -708,23 +864,23 @@
       "collapsedSkeletons": [
         {
           "skeleton": "i {x} {x} to {x} a {x} {x} of the {x} {x}",
-          "count": 31
+          "count": 37
         },
         {
           "skeleton": "{x} {x} {x} the {x} {x} {x} {x} {x} {x}",
-          "count": 31
+          "count": 37
         },
         {
           "skeleton": "i {x} to {x} the {x} {x} the {x} {x} {x} {x}",
-          "count": 31
+          "count": 37
         },
         {
           "skeleton": "{x} you {x} the {x} {x} to the {x} {x}",
-          "count": 31
+          "count": 37
         },
         {
           "skeleton": "i {x} a {x} {x} that {x} for the {x} {x}",
-          "count": 31
+          "count": 37
         }
       ],
       "overTokenLimitCount": 0
@@ -737,8 +893,16 @@
         "wordRatio": 0,
         "completeUtteranceRatio": 1,
         "complexUtteranceRatio": 0.6,
-        "averageTokens": 10.85,
-        "maximumTokens": 14
+        "averageTokens": 10.675,
+        "maximumTokens": 13,
+        "tokenDistribution": {
+          "10": 111,
+          "11": 46,
+          "12": 40,
+          "13": 3
+        },
+        "maximumOpeningCluster": 40,
+        "maximumSkeletonCluster": 37
       },
       "repairLowerBounds": {
         "countDelta": 0,
@@ -747,9 +911,9 @@
         "complexUtteranceExcess": 0,
         "overTokenLimit": 0,
         "collapsedOpeningExcess": 140,
-        "collapsedSkeletonExcess": 115,
+        "collapsedSkeletonExcess": 145,
         "kindergartenExclusions": 0,
-        "minimumRecordsRequiringRewriteOrReassignment": 140
+        "minimumRecordsRequiringRewriteOrReassignment": 145
       },
       "violations": [
         "utterance-ratio:1",
@@ -782,23 +946,23 @@
       "collapsedSkeletons": [
         {
           "skeleton": "{x} {x} the {x} {x} that {x} the {x} {x}",
-          "count": 31
+          "count": 37
         },
         {
           "skeleton": "i {x} to {x} the {x} {x} for the {x} {x}",
-          "count": 31
+          "count": 37
         },
         {
           "skeleton": "{x} you {x} {x} the {x} {x} {x} for {x}",
-          "count": 31
+          "count": 37
         },
         {
           "skeleton": "i {x} to {x} my {x} {x} the {x} {x} is {x}",
-          "count": 31
+          "count": 37
         },
         {
           "skeleton": "{x} {x} the {x} {x} {x} for the {x} {x}",
-          "count": 31
+          "count": 37
         }
       ],
       "overTokenLimitCount": 0
@@ -811,8 +975,19 @@
         "wordRatio": 0,
         "completeUtteranceRatio": 1,
         "complexUtteranceRatio": 0.6,
-        "averageTokens": 13.05,
-        "maximumTokens": 17
+        "averageTokens": 12.875,
+        "maximumTokens": 16,
+        "tokenDistribution": {
+          "10": 37,
+          "11": 3,
+          "12": 37,
+          "13": 40,
+          "14": 40,
+          "15": 40,
+          "16": 3
+        },
+        "maximumOpeningCluster": 40,
+        "maximumSkeletonCluster": 37
       },
       "repairLowerBounds": {
         "countDelta": 0,
@@ -821,9 +996,9 @@
         "complexUtteranceExcess": 0,
         "overTokenLimit": 0,
         "collapsedOpeningExcess": 140,
-        "collapsedSkeletonExcess": 115,
+        "collapsedSkeletonExcess": 145,
         "kindergartenExclusions": 0,
-        "minimumRecordsRequiringRewriteOrReassignment": 140
+        "minimumRecordsRequiringRewriteOrReassignment": 145
       },
       "violations": [
         "collapsed-openings:5",
@@ -855,30 +1030,30 @@
       "collapsedSkeletons": [
         {
           "skeleton": "i {x} to {x} {x} the {x} {x} {x} an {x} in my {x}",
-          "count": 31
+          "count": 37
         },
         {
           "skeleton": "{x} you {x} a {x} {x} {x} the {x} {x}",
-          "count": 31
+          "count": 37
         },
         {
           "skeleton": "i {x} to {x} the {x} {x} of the {x} {x} {x} {x}",
-          "count": 31
+          "count": 37
         },
         {
           "skeleton": "{x} {x} the {x} {x} {x} {x} {x} to the {x} {x}",
-          "count": 31
+          "count": 37
         },
         {
           "skeleton": "i {x} a {x} {x} for the {x} {x} that i {x} {x} on {x}",
-          "count": 31
+          "count": 37
         }
       ],
       "overTokenLimitCount": 0
     }
   ],
   "repairEstimate": {
-    "conservativeMinimumRecordsRequiringRewriteOrReassignment": 1893,
+    "conservativeMinimumRecordsRequiringRewriteOrReassignment": 1940,
     "note": "This is a mathematical lower bound, not a production estimate. Naturalness, lexical frequency, abstraction and travel-use review can only increase the required count."
   },
   "blockingViolations": 81,

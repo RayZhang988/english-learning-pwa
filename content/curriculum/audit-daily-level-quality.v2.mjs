@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 
 const normalize = (value) => value.toLocaleLowerCase('en-US').replace(/[^a-z0-9]+/g, ' ').trim()
-const tokens = (value) => normalize(value).split(' ').filter(Boolean)
+const tokens = (value) => value.toLocaleLowerCase('en-US').trim().split(/\s+/u).map((token) => token.replace(/^[^a-z0-9]+|[^a-z0-9]+$/gu, '')).filter(Boolean)
 const round = (value) => Math.round(value * 10000) / 10000
 
 function read(path) {
@@ -31,11 +31,13 @@ function skeleton(value) {
 }
 
 function looksComplete(value) {
+  if (tokens(value).length < 2) return false
   const first = tokens(value)[0]
   return ['i','you','we','they','he','she','it','is','are','can','could','would','will','do','does','did','please','where','what','when','why','how'].includes(first)
 }
 
 function looksComplex(value) {
+  if (tokens(value).length < 4) return false
   return /\b(if|unless|although|because|whether|while|before|after|which|who|that)\b/iu.test(value) || /[,;]/u.test(value)
 }
 
@@ -102,6 +104,9 @@ export function auditDailyLevelQuality(items, rubric) {
       complexUtteranceRatio: round(complexCount / Math.max(1, levelItems.length)),
       averageTokens: round(tokenCounts.reduce((sum, value) => sum + value, 0) / Math.max(1, tokenCounts.length)),
       maximumTokens: Math.max(0, ...tokenCounts),
+      tokenDistribution: Object.fromEntries([...new Set(tokenCounts)].sort((a, b) => a - b).map((count) => [String(count), tokenCounts.filter((value) => value === count).length])),
+      maximumOpeningCluster: Math.max(0, ...Object.values(Object.groupBy(levelItems, (item) => opening(item.term))).map((values) => values.length)),
+      maximumSkeletonCluster: Math.max(0, ...Object.values(Object.groupBy(levelItems, (item) => skeleton(item.term))).map((values) => values.length)),
     }
     const repairLowerBounds = {
       countDelta: Math.abs(metrics.count - rubric.globalRules.knowledgePointsPerLevel),
