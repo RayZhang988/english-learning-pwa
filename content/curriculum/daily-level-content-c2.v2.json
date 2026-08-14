@@ -1,0 +1,4392 @@
+{
+  "schemaVersion": 1,
+  "documentType": "daily-level-content-batch",
+  "contentVersion": "2.0.0-c2",
+  "identityVersion": "daily-knowledge-v2",
+  "releaseStatus": "candidate-not-deployable-until-c3-c5",
+  "levels": [
+    {
+      "id": "senior-2",
+      "labelZh": "高二",
+      "recordCount": 200
+    }
+  ],
+  "records": [
+    {
+      "sourceItemId": "qa-r17-003-c2:001",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:5b177424",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "comparable alternative",
+      "meaningZh": "可比的替代方案",
+      "partOfSpeech": "short-phrase",
+      "exampleEn": "comparable alternative",
+      "exampleZh": "可比的替代方案",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "short-phrase",
+        "grammarFeatures": [],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:002",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:73cea670",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "coverage limitation",
+      "meaningZh": "保障限制",
+      "partOfSpeech": "short-phrase",
+      "exampleEn": "coverage limitation",
+      "exampleZh": "保障限制",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "short-phrase",
+        "grammarFeatures": [],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:003",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:334ee908",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "documented fare condition",
+      "meaningZh": "有记录的票价条件",
+      "partOfSpeech": "short-phrase",
+      "exampleEn": "documented fare condition",
+      "exampleZh": "有记录的票价条件",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "short-phrase",
+        "grammarFeatures": [],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:004",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:eaaab045",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "service-provider responsibility",
+      "meaningZh": "服务提供方责任",
+      "partOfSpeech": "short-phrase",
+      "exampleEn": "service-provider responsibility",
+      "exampleZh": "服务提供方责任",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "short-phrase",
+        "grammarFeatures": [],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:005",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:945603a4",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "reasonable connection window",
+      "meaningZh": "合理衔接时间",
+      "partOfSpeech": "short-phrase",
+      "exampleEn": "reasonable connection window",
+      "exampleZh": "合理衔接时间",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "short-phrase",
+        "grammarFeatures": [],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:006",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:b88c7573",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "verified delivery commitment",
+      "meaningZh": "经确认的送达承诺",
+      "partOfSpeech": "short-phrase",
+      "exampleEn": "verified delivery commitment",
+      "exampleZh": "经确认的送达承诺",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "short-phrase",
+        "grammarFeatures": [],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:007",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:554c3285",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "partial reimbursement",
+      "meaningZh": "部分报销",
+      "partOfSpeech": "short-phrase",
+      "exampleEn": "partial reimbursement",
+      "exampleZh": "部分报销",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "short-phrase",
+        "grammarFeatures": [],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:008",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:5832a76d",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "material itinerary change",
+      "meaningZh": "实质性行程变更",
+      "partOfSpeech": "short-phrase",
+      "exampleEn": "material itinerary change",
+      "exampleZh": "实质性行程变更",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "short-phrase",
+        "grammarFeatures": [],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:009",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:7c197bfc",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "continuity of assistance",
+      "meaningZh": "协助服务连续性",
+      "partOfSpeech": "short-phrase",
+      "exampleEn": "continuity of assistance",
+      "exampleZh": "协助服务连续性",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "short-phrase",
+        "grammarFeatures": [],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:010",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:76f7aa36",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "equivalent accommodation",
+      "meaningZh": "同等住宿",
+      "partOfSpeech": "short-phrase",
+      "exampleEn": "equivalent accommodation",
+      "exampleZh": "同等住宿",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "short-phrase",
+        "grammarFeatures": [],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:011",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:92a0ab71",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "proportionate refund",
+      "meaningZh": "按比例退款",
+      "partOfSpeech": "short-phrase",
+      "exampleEn": "proportionate refund",
+      "exampleZh": "按比例退款",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "short-phrase",
+        "grammarFeatures": [],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:012",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:0ca63fc8",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "contingency arrangement",
+      "meaningZh": "应急安排",
+      "partOfSpeech": "short-phrase",
+      "exampleEn": "contingency arrangement",
+      "exampleZh": "应急安排",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "short-phrase",
+        "grammarFeatures": [],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:013",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:978020f1",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you clarify how the missed-connection protection changes under the replacement option?",
+      "meaningZh": "您能说明错过衔接保障在替代方案下会怎样变化吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you clarify how the missed-connection protection changes under the replacement option?",
+      "exampleZh": "您能说明错过衔接保障在替代方案下会怎样变化吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:014",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:2638cc1f",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you clarify how the through-checked baggage changes under the replacement option?",
+      "meaningZh": "您能说明直挂行李在替代方案下会怎样变化吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you clarify how the through-checked baggage changes under the replacement option?",
+      "exampleZh": "您能说明直挂行李在替代方案下会怎样变化吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:015",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:e002d4cc",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you clarify how the minimum connection time changes under the replacement option?",
+      "meaningZh": "您能说明最低转机时间在替代方案下会怎样变化吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you clarify how the minimum connection time changes under the replacement option?",
+      "exampleZh": "您能说明最低转机时间在替代方案下会怎样变化吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:016",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:bba22bde",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you clarify how the involuntary rebooking changes under the replacement option?",
+      "meaningZh": "您能说明非自愿改签在替代方案下会怎样变化吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you clarify how the involuntary rebooking changes under the replacement option?",
+      "exampleZh": "您能说明非自愿改签在替代方案下会怎样变化吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:017",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:78efb612",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you clarify how the fare restriction changes under the replacement option?",
+      "meaningZh": "您能说明票价限制在替代方案下会怎样变化吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you clarify how the fare restriction changes under the replacement option?",
+      "exampleZh": "您能说明票价限制在替代方案下会怎样变化吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:018",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:626dd6fa",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "I need to compare the accessible transfer route across both available arrangements.",
+      "meaningZh": "我需要比较两种可选安排中的无障碍转乘路线。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "I need to compare the accessible transfer route across both available arrangements.",
+      "exampleZh": "我需要比较两种可选安排中的无障碍转乘路线。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:019",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:244ad07b",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "I need to compare the medical preauthorization across both available arrangements.",
+      "meaningZh": "我需要比较两种可选安排中的医疗预授权。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "I need to compare the medical preauthorization across both available arrangements.",
+      "exampleZh": "我需要比较两种可选安排中的医疗预授权。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:020",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:8fc5c1cb",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "I need to compare the emergency repatriation across both available arrangements.",
+      "meaningZh": "我需要比较两种可选安排中的紧急遣返。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "I need to compare the emergency repatriation across both available arrangements.",
+      "exampleZh": "我需要比较两种可选安排中的紧急遣返。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:021",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:79b13d6c",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "I need to compare the trip-interruption cover across both available arrangements.",
+      "meaningZh": "我需要比较两种可选安排中的行程中断保障。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "I need to compare the trip-interruption cover across both available arrangements.",
+      "exampleZh": "我需要比较两种可选安排中的行程中断保障。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:022",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:f4c9f19f",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "I need to compare the delayed-baggage reimbursement across both available arrangements.",
+      "meaningZh": "我需要比较两种可选安排中的行李延误报销。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "I need to compare the delayed-baggage reimbursement across both available arrangements.",
+      "exampleZh": "我需要比较两种可选安排中的行李延误报销。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:023",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:0025dc32",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please identify which part of the cross-border rental permission the new booking preserves.",
+      "meaningZh": "请指出新预订保留了跨境租车许可的哪一部分。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please identify which part of the cross-border rental permission the new booking preserves.",
+      "exampleZh": "请指出新预订保留了跨境租车许可的哪一部分。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:024",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:4a962867",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please identify which part of the roadside recovery service the new booking preserves.",
+      "meaningZh": "请指出新预订保留了道路救援拖离服务的哪一部分。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please identify which part of the roadside recovery service the new booking preserves.",
+      "exampleZh": "请指出新预订保留了道路救援拖离服务的哪一部分。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:025",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:dfbc2679",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please identify which part of the security-deposit release the new booking preserves.",
+      "meaningZh": "请指出新预订保留了押金解除的哪一部分。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please identify which part of the security-deposit release the new booking preserves.",
+      "exampleZh": "请指出新预订保留了押金解除的哪一部分。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:026",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:de6e3737",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please identify which part of the duplicate-charge dispute the new booking preserves.",
+      "meaningZh": "请指出新预订保留了重复扣款争议的哪一部分。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please identify which part of the duplicate-charge dispute the new booking preserves.",
+      "exampleZh": "请指出新预订保留了重复扣款争议的哪一部分。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:027",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:2f1ddb94",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please identify which part of the currency-conversion choice the new booking preserves.",
+      "meaningZh": "请指出新预订保留了货币转换选择的哪一部分。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please identify which part of the currency-conversion choice the new booking preserves.",
+      "exampleZh": "请指出新预订保留了货币转换选择的哪一部分。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:028",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:f4485fe0",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Would the same provider remain responsible for the overnight disruption plan after transfer?",
+      "meaningZh": "转交后，仍由同一服务方负责过夜中断安排吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Would the same provider remain responsible for the overnight disruption plan after transfer?",
+      "exampleZh": "转交后，仍由同一服务方负责过夜中断安排吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:029",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:f7c1b429",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Would the same provider remain responsible for the replacement transport after transfer?",
+      "meaningZh": "转交后，仍由同一服务方负责替代交通吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Would the same provider remain responsible for the replacement transport after transfer?",
+      "exampleZh": "转交后，仍由同一服务方负责替代交通吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:030",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:5c7d5ab4",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Would the same provider remain responsible for the step-free boarding request after transfer?",
+      "meaningZh": "转交后，仍由同一服务方负责无台阶登乘申请吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Would the same provider remain responsible for the step-free boarding request after transfer?",
+      "exampleZh": "转交后，仍由同一服务方负责无台阶登乘申请吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:031",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:37dbf12d",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Would the same provider remain responsible for the dietary cross-contact risk after transfer?",
+      "meaningZh": "转交后，仍由同一服务方负责饮食交叉接触风险吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Would the same provider remain responsible for the dietary cross-contact risk after transfer?",
+      "exampleZh": "转交后，仍由同一服务方负责饮食交叉接触风险吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:032",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:ad5863a0",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Would the same provider remain responsible for the prescription replacement after transfer?",
+      "meaningZh": "转交后，仍由同一服务方负责处方药补配吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Would the same provider remain responsible for the prescription replacement after transfer?",
+      "exampleZh": "转交后，仍由同一服务方负责处方药补配吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:033",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:efc3d8cc",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Can you confirm the practical consequence of changing the missed-connection protection today?",
+      "meaningZh": "您能确认今天变更错过衔接保障的实际后果吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Can you confirm the practical consequence of changing the missed-connection protection today?",
+      "exampleZh": "您能确认今天变更错过衔接保障的实际后果吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:034",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:f2ca14ba",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Can you confirm the practical consequence of changing the through-checked baggage today?",
+      "meaningZh": "您能确认今天变更直挂行李的实际后果吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Can you confirm the practical consequence of changing the through-checked baggage today?",
+      "exampleZh": "您能确认今天变更直挂行李的实际后果吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:035",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:0ef547bf",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Can you confirm the practical consequence of changing the minimum connection time today?",
+      "meaningZh": "您能确认今天变更最低转机时间的实际后果吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Can you confirm the practical consequence of changing the minimum connection time today?",
+      "exampleZh": "您能确认今天变更最低转机时间的实际后果吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:036",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:88c3f847",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Can you confirm the practical consequence of changing the involuntary rebooking today?",
+      "meaningZh": "您能确认今天变更非自愿改签的实际后果吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Can you confirm the practical consequence of changing the involuntary rebooking today?",
+      "exampleZh": "您能确认今天变更非自愿改签的实际后果吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:037",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:888aaf27",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Can you confirm the practical consequence of changing the fare restriction today?",
+      "meaningZh": "您能确认今天变更票价限制的实际后果吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Can you confirm the practical consequence of changing the fare restriction today?",
+      "exampleZh": "您能确认今天变更票价限制的实际后果吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:038",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:eabe4877",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Before deciding, I need the total cost of the accessible transfer route.",
+      "meaningZh": "决定前，我需要了解与无障碍转乘路线相关的总费用。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Before deciding, I need the total cost of the accessible transfer route.",
+      "exampleZh": "决定前，我需要了解与无障碍转乘路线相关的总费用。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:039",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:04186370",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Before deciding, I need the total cost of the medical preauthorization.",
+      "meaningZh": "决定前，我需要了解与医疗预授权相关的总费用。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Before deciding, I need the total cost of the medical preauthorization.",
+      "exampleZh": "决定前，我需要了解与医疗预授权相关的总费用。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:040",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:7c03a830",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Before deciding, I need the total cost of the emergency repatriation.",
+      "meaningZh": "决定前，我需要了解与紧急遣返相关的总费用。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Before deciding, I need the total cost of the emergency repatriation.",
+      "exampleZh": "决定前，我需要了解与紧急遣返相关的总费用。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:041",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:943b7365",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Before deciding, I need the total cost of the trip-interruption cover.",
+      "meaningZh": "决定前，我需要了解与行程中断保障相关的总费用。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Before deciding, I need the total cost of the trip-interruption cover.",
+      "exampleZh": "决定前，我需要了解与行程中断保障相关的总费用。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:042",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:7fee65be",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Before deciding, I need the total cost of the delayed-baggage reimbursement.",
+      "meaningZh": "决定前，我需要了解与行李延误报销相关的总费用。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Before deciding, I need the total cost of the delayed-baggage reimbursement.",
+      "exampleZh": "决定前，我需要了解与行李延误报销相关的总费用。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:043",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:16d57ebd",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "If the cross-border rental permission is excluded, which comparable arrangement remains available?",
+      "meaningZh": "如果不包含跨境租车许可，还有哪种可比安排可用？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "If the cross-border rental permission is excluded, which comparable arrangement remains available?",
+      "exampleZh": "如果不包含跨境租车许可，还有哪种可比安排可用？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:044",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:4bfd72f4",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "If the roadside recovery service is excluded, which comparable arrangement remains available?",
+      "meaningZh": "如果不包含道路救援拖离服务，还有哪种可比安排可用？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "If the roadside recovery service is excluded, which comparable arrangement remains available?",
+      "exampleZh": "如果不包含道路救援拖离服务，还有哪种可比安排可用？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:045",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:dc1f23ba",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "If the security-deposit release is excluded, which comparable arrangement remains available?",
+      "meaningZh": "如果不包含押金解除，还有哪种可比安排可用？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "If the security-deposit release is excluded, which comparable arrangement remains available?",
+      "exampleZh": "如果不包含押金解除，还有哪种可比安排可用？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:046",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:f38a3dd4",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "If the duplicate-charge dispute is excluded, which comparable arrangement remains available?",
+      "meaningZh": "如果不包含重复扣款争议，还有哪种可比安排可用？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "If the duplicate-charge dispute is excluded, which comparable arrangement remains available?",
+      "exampleZh": "如果不包含重复扣款争议，还有哪种可比安排可用？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:047",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:e4703939",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "If the currency-conversion choice is excluded, which comparable arrangement remains available?",
+      "meaningZh": "如果不包含货币转换选择，还有哪种可比安排可用？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "If the currency-conversion choice is excluded, which comparable arrangement remains available?",
+      "exampleZh": "如果不包含货币转换选择，还有哪种可比安排可用？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:048",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:5076b71e",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you explain why the overnight disruption plan differs from the written confirmation?",
+      "meaningZh": "您能说明过夜中断安排为何与书面确认不同吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you explain why the overnight disruption plan differs from the written confirmation?",
+      "exampleZh": "您能说明过夜中断安排为何与书面确认不同吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:049",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:841060dd",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you explain why the replacement transport differs from the written confirmation?",
+      "meaningZh": "您能说明替代交通为何与书面确认不同吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you explain why the replacement transport differs from the written confirmation?",
+      "exampleZh": "您能说明替代交通为何与书面确认不同吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:050",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:a2317120",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you explain why the step-free boarding request differs from the written confirmation?",
+      "meaningZh": "您能说明无台阶登乘申请为何与书面确认不同吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you explain why the step-free boarding request differs from the written confirmation?",
+      "exampleZh": "您能说明无台阶登乘申请为何与书面确认不同吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:051",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:40ecbf37",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you explain why the dietary cross-contact risk differs from the written confirmation?",
+      "meaningZh": "您能说明饮食交叉接触风险为何与书面确认不同吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you explain why the dietary cross-contact risk differs from the written confirmation?",
+      "exampleZh": "您能说明饮食交叉接触风险为何与书面确认不同吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:052",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:de625328",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you explain why the prescription replacement differs from the written confirmation?",
+      "meaningZh": "您能说明处方药补配为何与书面确认不同吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you explain why the prescription replacement differs from the written confirmation?",
+      "exampleZh": "您能说明处方药补配为何与书面确认不同吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:053",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:b6b188a9",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "How would accepting this voucher affect my right to the missed-connection protection?",
+      "meaningZh": "接受这张代金券会怎样影响我获得错过衔接保障？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "How would accepting this voucher affect my right to the missed-connection protection?",
+      "exampleZh": "接受这张代金券会怎样影响我获得错过衔接保障？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:054",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d283e1cd",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "How would accepting this voucher affect my right to the through-checked baggage?",
+      "meaningZh": "接受这张代金券会怎样影响我获得直挂行李？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "How would accepting this voucher affect my right to the through-checked baggage?",
+      "exampleZh": "接受这张代金券会怎样影响我获得直挂行李？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:055",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d46a65fa",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "How would accepting this voucher affect my right to the minimum connection time?",
+      "meaningZh": "接受这张代金券会怎样影响我获得最低转机时间？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "How would accepting this voucher affect my right to the minimum connection time?",
+      "exampleZh": "接受这张代金券会怎样影响我获得最低转机时间？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:056",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:4101c39c",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "How would accepting this voucher affect my right to the involuntary rebooking?",
+      "meaningZh": "接受这张代金券会怎样影响我获得非自愿改签？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "How would accepting this voucher affect my right to the involuntary rebooking?",
+      "exampleZh": "接受这张代金券会怎样影响我获得非自愿改签？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:057",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:1d1c620a",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "How would accepting this voucher affect my right to the fare restriction?",
+      "meaningZh": "接受这张代金券会怎样影响我获得票价限制？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "How would accepting this voucher affect my right to the fare restriction?",
+      "exampleZh": "接受这张代金券会怎样影响我获得票价限制？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:058",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:7fcacbda",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please compare the timing and restrictions attached to the accessible transfer route.",
+      "meaningZh": "请比较无障碍转乘路线所附的时间和限制。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please compare the timing and restrictions attached to the accessible transfer route.",
+      "exampleZh": "请比较无障碍转乘路线所附的时间和限制。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:059",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:255b81c1",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please compare the timing and restrictions attached to the medical preauthorization.",
+      "meaningZh": "请比较医疗预授权所附的时间和限制。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please compare the timing and restrictions attached to the medical preauthorization.",
+      "exampleZh": "请比较医疗预授权所附的时间和限制。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:060",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:bd60f62d",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please compare the timing and restrictions attached to the emergency repatriation.",
+      "meaningZh": "请比较紧急遣返所附的时间和限制。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please compare the timing and restrictions attached to the emergency repatriation.",
+      "exampleZh": "请比较紧急遣返所附的时间和限制。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:061",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:ed1505a6",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please compare the timing and restrictions attached to the trip-interruption cover.",
+      "meaningZh": "请比较行程中断保障所附的时间和限制。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please compare the timing and restrictions attached to the trip-interruption cover.",
+      "exampleZh": "请比较行程中断保障所附的时间和限制。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:062",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:f3101ca3",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please compare the timing and restrictions attached to the delayed-baggage reimbursement.",
+      "meaningZh": "请比较行李延误报销所附的时间和限制。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please compare the timing and restrictions attached to the delayed-baggage reimbursement.",
+      "exampleZh": "请比较行李延误报销所附的时间和限制。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:063",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:f8e31f73",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "I need confirmation that the cross-border rental permission continues through the entire journey.",
+      "meaningZh": "我需要确认跨境租车许可在整个行程中持续有效。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "I need confirmation that the cross-border rental permission continues through the entire journey.",
+      "exampleZh": "我需要确认跨境租车许可在整个行程中持续有效。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:064",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d20ccaac",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "I need confirmation that the roadside recovery service continues through the entire journey.",
+      "meaningZh": "我需要确认道路救援拖离服务在整个行程中持续有效。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "I need confirmation that the roadside recovery service continues through the entire journey.",
+      "exampleZh": "我需要确认道路救援拖离服务在整个行程中持续有效。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:065",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:ca551326",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "I need confirmation that the security-deposit release continues through the entire journey.",
+      "meaningZh": "我需要确认押金解除在整个行程中持续有效。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "I need confirmation that the security-deposit release continues through the entire journey.",
+      "exampleZh": "我需要确认押金解除在整个行程中持续有效。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:066",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:f6098af0",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "I need confirmation that the duplicate-charge dispute continues through the entire journey.",
+      "meaningZh": "我需要确认重复扣款争议在整个行程中持续有效。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "I need confirmation that the duplicate-charge dispute continues through the entire journey.",
+      "exampleZh": "我需要确认重复扣款争议在整个行程中持续有效。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:067",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:e7d416fb",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "I need confirmation that the currency-conversion choice continues through the entire journey.",
+      "meaningZh": "我需要确认货币转换选择在整个行程中持续有效。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "I need confirmation that the currency-conversion choice continues through the entire journey.",
+      "exampleZh": "我需要确认货币转换选择在整个行程中持续有效。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:068",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:392bd017",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Which document shows the provider accepted responsibility for the overnight disruption plan?",
+      "meaningZh": "哪份文件显示服务方接受了对过夜中断安排的责任？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Which document shows the provider accepted responsibility for the overnight disruption plan?",
+      "exampleZh": "哪份文件显示服务方接受了对过夜中断安排的责任？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:069",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:cd4bc9ec",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Which document shows the provider accepted responsibility for the replacement transport?",
+      "meaningZh": "哪份文件显示服务方接受了对替代交通的责任？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Which document shows the provider accepted responsibility for the replacement transport?",
+      "exampleZh": "哪份文件显示服务方接受了对替代交通的责任？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:070",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:f8b14071",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Which document shows the provider accepted responsibility for the step-free boarding request?",
+      "meaningZh": "哪份文件显示服务方接受了对无台阶登乘申请的责任？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Which document shows the provider accepted responsibility for the step-free boarding request?",
+      "exampleZh": "哪份文件显示服务方接受了对无台阶登乘申请的责任？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:071",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:ac711480",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Which document shows the provider accepted responsibility for the dietary cross-contact risk?",
+      "meaningZh": "哪份文件显示服务方接受了对饮食交叉接触风险的责任？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Which document shows the provider accepted responsibility for the dietary cross-contact risk?",
+      "exampleZh": "哪份文件显示服务方接受了对饮食交叉接触风险的责任？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:072",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:e6d78d07",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Which document shows the provider accepted responsibility for the prescription replacement?",
+      "meaningZh": "哪份文件显示服务方接受了对处方药补配的责任？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Which document shows the provider accepted responsibility for the prescription replacement?",
+      "exampleZh": "哪份文件显示服务方接受了对处方药补配的责任？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:073",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d5b7cf6d",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you separate the cost of the missed-connection protection from unrelated charges?",
+      "meaningZh": "您能把错过衔接保障的费用与无关收费分开吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you separate the cost of the missed-connection protection from unrelated charges?",
+      "exampleZh": "您能把错过衔接保障的费用与无关收费分开吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:074",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:7b167177",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you separate the cost of the through-checked baggage from unrelated charges?",
+      "meaningZh": "您能把直挂行李的费用与无关收费分开吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you separate the cost of the through-checked baggage from unrelated charges?",
+      "exampleZh": "您能把直挂行李的费用与无关收费分开吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:075",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:961e0188",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you separate the cost of the minimum connection time from unrelated charges?",
+      "meaningZh": "您能把最低转机时间的费用与无关收费分开吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you separate the cost of the minimum connection time from unrelated charges?",
+      "exampleZh": "您能把最低转机时间的费用与无关收费分开吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:076",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:7714e6e2",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you separate the cost of the involuntary rebooking from unrelated charges?",
+      "meaningZh": "您能把非自愿改签的费用与无关收费分开吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you separate the cost of the involuntary rebooking from unrelated charges?",
+      "exampleZh": "您能把非自愿改签的费用与无关收费分开吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:077",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:413bc4a4",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you separate the cost of the fare restriction from unrelated charges?",
+      "meaningZh": "您能把票价限制的费用与无关收费分开吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you separate the cost of the fare restriction from unrelated charges?",
+      "exampleZh": "您能把票价限制的费用与无关收费分开吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:078",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:663a0952",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "What evidence would be sufficient to verify the accessible transfer route?",
+      "meaningZh": "什么证据足以核实无障碍转乘路线？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "What evidence would be sufficient to verify the accessible transfer route?",
+      "exampleZh": "什么证据足以核实无障碍转乘路线？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:079",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:5bc86a4f",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "What evidence would be sufficient to verify the medical preauthorization?",
+      "meaningZh": "什么证据足以核实医疗预授权？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "What evidence would be sufficient to verify the medical preauthorization?",
+      "exampleZh": "什么证据足以核实医疗预授权？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:080",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:5c4921e9",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "What evidence would be sufficient to verify the emergency repatriation?",
+      "meaningZh": "什么证据足以核实紧急遣返？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "What evidence would be sufficient to verify the emergency repatriation?",
+      "exampleZh": "什么证据足以核实紧急遣返？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:081",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:a546daea",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "What evidence would be sufficient to verify the trip-interruption cover?",
+      "meaningZh": "什么证据足以核实行程中断保障？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "What evidence would be sufficient to verify the trip-interruption cover?",
+      "exampleZh": "什么证据足以核实行程中断保障？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:082",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d163fe2d",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "What evidence would be sufficient to verify the delayed-baggage reimbursement?",
+      "meaningZh": "什么证据足以核实行李延误报销？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "What evidence would be sufficient to verify the delayed-baggage reimbursement?",
+      "exampleZh": "什么证据足以核实行李延误报销？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:083",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:e41783ca",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Would a delay tomorrow change the eligibility rules for the cross-border rental permission?",
+      "meaningZh": "明天的延误会改变跨境租车许可的资格规则吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Would a delay tomorrow change the eligibility rules for the cross-border rental permission?",
+      "exampleZh": "明天的延误会改变跨境租车许可的资格规则吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:084",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:2a35396f",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Would a delay tomorrow change the eligibility rules for the roadside recovery service?",
+      "meaningZh": "明天的延误会改变道路救援拖离服务的资格规则吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Would a delay tomorrow change the eligibility rules for the roadside recovery service?",
+      "exampleZh": "明天的延误会改变道路救援拖离服务的资格规则吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:085",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:982542af",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Would a delay tomorrow change the eligibility rules for the security-deposit release?",
+      "meaningZh": "明天的延误会改变押金解除的资格规则吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Would a delay tomorrow change the eligibility rules for the security-deposit release?",
+      "exampleZh": "明天的延误会改变押金解除的资格规则吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:086",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:0c736fd1",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Would a delay tomorrow change the eligibility rules for the duplicate-charge dispute?",
+      "meaningZh": "明天的延误会改变重复扣款争议的资格规则吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Would a delay tomorrow change the eligibility rules for the duplicate-charge dispute?",
+      "exampleZh": "明天的延误会改变重复扣款争议的资格规则吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:087",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:2947c042",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Would a delay tomorrow change the eligibility rules for the currency-conversion choice?",
+      "meaningZh": "明天的延误会改变货币转换选择的资格规则吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Would a delay tomorrow change the eligibility rules for the currency-conversion choice?",
+      "exampleZh": "明天的延误会改变货币转换选择的资格规则吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:088",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:038cfaec",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please explain the difference between promised and actual the overnight disruption plan.",
+      "meaningZh": "请说明承诺的过夜中断安排与实际情况之间的区别。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please explain the difference between promised and actual the overnight disruption plan.",
+      "exampleZh": "请说明承诺的过夜中断安排与实际情况之间的区别。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:089",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:5d190ccb",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please explain the difference between promised and actual the replacement transport.",
+      "meaningZh": "请说明承诺的替代交通与实际情况之间的区别。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please explain the difference between promised and actual the replacement transport.",
+      "exampleZh": "请说明承诺的替代交通与实际情况之间的区别。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:090",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:b780a8f8",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please explain the difference between promised and actual the step-free boarding request.",
+      "meaningZh": "请说明承诺的无台阶登乘申请与实际情况之间的区别。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please explain the difference between promised and actual the step-free boarding request.",
+      "exampleZh": "请说明承诺的无台阶登乘申请与实际情况之间的区别。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:091",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:0d9385a1",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please explain the difference between promised and actual the dietary cross-contact risk.",
+      "meaningZh": "请说明承诺的饮食交叉接触风险与实际情况之间的区别。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please explain the difference between promised and actual the dietary cross-contact risk.",
+      "exampleZh": "请说明承诺的饮食交叉接触风险与实际情况之间的区别。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:092",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:506faa58",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please explain the difference between promised and actual the prescription replacement.",
+      "meaningZh": "请说明承诺的处方药补配与实际情况之间的区别。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please explain the difference between promised and actual the prescription replacement.",
+      "exampleZh": "请说明承诺的处方药补配与实际情况之间的区别。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:093",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:30369945",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Can the revised agreement preserve the missed-connection protection without an additional fee?",
+      "meaningZh": "修改后的协议能否免费保留错过衔接保障？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Can the revised agreement preserve the missed-connection protection without an additional fee?",
+      "exampleZh": "修改后的协议能否免费保留错过衔接保障？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:094",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:83e0e445",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Can the revised agreement preserve the through-checked baggage without an additional fee?",
+      "meaningZh": "修改后的协议能否免费保留直挂行李？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Can the revised agreement preserve the through-checked baggage without an additional fee?",
+      "exampleZh": "修改后的协议能否免费保留直挂行李？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:095",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d0eebc34",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Can the revised agreement preserve the minimum connection time without an additional fee?",
+      "meaningZh": "修改后的协议能否免费保留最低转机时间？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Can the revised agreement preserve the minimum connection time without an additional fee?",
+      "exampleZh": "修改后的协议能否免费保留最低转机时间？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:096",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:c4ccbd6e",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Can the revised agreement preserve the involuntary rebooking without an additional fee?",
+      "meaningZh": "修改后的协议能否免费保留非自愿改签？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Can the revised agreement preserve the involuntary rebooking without an additional fee?",
+      "exampleZh": "修改后的协议能否免费保留非自愿改签？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:097",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:7339b01e",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Can the revised agreement preserve the fare restriction without an additional fee?",
+      "meaningZh": "修改后的协议能否免费保留票价限制？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Can the revised agreement preserve the fare restriction without an additional fee?",
+      "exampleZh": "修改后的协议能否免费保留票价限制？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:098",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:91e5a5f9",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Who can authorize an exception for the accessible transfer route?",
+      "meaningZh": "我需要知道谁能批准无障碍转乘路线的例外处理。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Who can authorize an exception for the accessible transfer route?",
+      "exampleZh": "我需要知道谁能批准无障碍转乘路线的例外处理。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:099",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:2ff2b1ae",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Who can authorize an exception for the medical preauthorization?",
+      "meaningZh": "我需要知道谁能批准医疗预授权的例外处理。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Who can authorize an exception for the medical preauthorization?",
+      "exampleZh": "我需要知道谁能批准医疗预授权的例外处理。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:100",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:981e5be2",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Who can authorize an exception for the emergency repatriation?",
+      "meaningZh": "我需要知道谁能批准紧急遣返的例外处理。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Who can authorize an exception for the emergency repatriation?",
+      "exampleZh": "我需要知道谁能批准紧急遣返的例外处理。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:101",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:55357fa1",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Who can authorize an exception for the trip-interruption cover?",
+      "meaningZh": "我需要知道谁能批准行程中断保障的例外处理。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Who can authorize an exception for the trip-interruption cover?",
+      "exampleZh": "我需要知道谁能批准行程中断保障的例外处理。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:102",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:b456b832",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Who can authorize an exception for the delayed-baggage reimbursement?",
+      "meaningZh": "我需要知道谁能批准行李延误报销的例外处理。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Who can authorize an exception for the delayed-baggage reimbursement?",
+      "exampleZh": "我需要知道谁能批准行李延误报销的例外处理。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:103",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d453692f",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "If the first solution fails, how will you restore the cross-border rental permission?",
+      "meaningZh": "如果第一个方案失败，你们会怎样恢复跨境租车许可？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "If the first solution fails, how will you restore the cross-border rental permission?",
+      "exampleZh": "如果第一个方案失败，你们会怎样恢复跨境租车许可？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:104",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d76cbc38",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "If the first solution fails, how will you restore the roadside recovery service?",
+      "meaningZh": "如果第一个方案失败，你们会怎样恢复道路救援拖离服务？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "If the first solution fails, how will you restore the roadside recovery service?",
+      "exampleZh": "如果第一个方案失败，你们会怎样恢复道路救援拖离服务？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:105",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:1af33f1a",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "If the first solution fails, how will you restore the security-deposit release?",
+      "meaningZh": "如果第一个方案失败，你们会怎样恢复押金解除？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "If the first solution fails, how will you restore the security-deposit release?",
+      "exampleZh": "如果第一个方案失败，你们会怎样恢复押金解除？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:106",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:806b6824",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "If the first solution fails, how will you restore the duplicate-charge dispute?",
+      "meaningZh": "如果第一个方案失败，你们会怎样恢复重复扣款争议？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "If the first solution fails, how will you restore the duplicate-charge dispute?",
+      "exampleZh": "如果第一个方案失败，你们会怎样恢复重复扣款争议？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:107",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:253281d1",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "If the first solution fails, how will you restore the currency-conversion choice?",
+      "meaningZh": "如果第一个方案失败，你们会怎样恢复货币转换选择？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "If the first solution fails, how will you restore the currency-conversion choice?",
+      "exampleZh": "如果第一个方案失败，你们会怎样恢复货币转换选择？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:108",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:32e52718",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could another provider deliver the overnight disruption plan within the same timeframe?",
+      "meaningZh": "另一家服务方能在相同时间内提供过夜中断安排吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could another provider deliver the overnight disruption plan within the same timeframe?",
+      "exampleZh": "另一家服务方能在相同时间内提供过夜中断安排吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:109",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:da378037",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could another provider deliver the replacement transport within the same timeframe?",
+      "meaningZh": "另一家服务方能在相同时间内提供替代交通吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could another provider deliver the replacement transport within the same timeframe?",
+      "exampleZh": "另一家服务方能在相同时间内提供替代交通吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:110",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:7ae4caa6",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could another provider deliver the step-free boarding request within the same timeframe?",
+      "meaningZh": "另一家服务方能在相同时间内提供无台阶登乘申请吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could another provider deliver the step-free boarding request within the same timeframe?",
+      "exampleZh": "另一家服务方能在相同时间内提供无台阶登乘申请吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:111",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:97728497",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could another provider deliver the dietary cross-contact risk within the same timeframe?",
+      "meaningZh": "另一家服务方能在相同时间内提供饮食交叉接触风险吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could another provider deliver the dietary cross-contact risk within the same timeframe?",
+      "exampleZh": "另一家服务方能在相同时间内提供饮食交叉接触风险吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:112",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:fd6fb688",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could another provider deliver the prescription replacement within the same timeframe?",
+      "meaningZh": "另一家服务方能在相同时间内提供处方药补配吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could another provider deliver the prescription replacement within the same timeframe?",
+      "exampleZh": "另一家服务方能在相同时间内提供处方药补配吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:113",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:ed8e5545",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "What limitation should I understand before relying on the missed-connection protection?",
+      "meaningZh": "依赖错过衔接保障之前，我需要了解什么限制？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "What limitation should I understand before relying on the missed-connection protection?",
+      "exampleZh": "依赖错过衔接保障之前，我需要了解什么限制？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:114",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:0d70a7d7",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "What limitation should I understand before relying on the through-checked baggage?",
+      "meaningZh": "依赖直挂行李之前，我需要了解什么限制？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "What limitation should I understand before relying on the through-checked baggage?",
+      "exampleZh": "依赖直挂行李之前，我需要了解什么限制？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:115",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:ab5ebf56",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "What limitation should I understand before relying on the minimum connection time?",
+      "meaningZh": "依赖最低转机时间之前，我需要了解什么限制？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "What limitation should I understand before relying on the minimum connection time?",
+      "exampleZh": "依赖最低转机时间之前，我需要了解什么限制？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:116",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:44281fce",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "What limitation should I understand before relying on the involuntary rebooking?",
+      "meaningZh": "依赖非自愿改签之前，我需要了解什么限制？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "What limitation should I understand before relying on the involuntary rebooking?",
+      "exampleZh": "依赖非自愿改签之前，我需要了解什么限制？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:117",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:0cb238ce",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "What limitation should I understand before relying on the fare restriction?",
+      "meaningZh": "依赖票价限制之前，我需要了解什么限制？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "What limitation should I understand before relying on the fare restriction?",
+      "exampleZh": "依赖票价限制之前，我需要了解什么限制？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:118",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:6c8c722a",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please confirm whether the proposed substitute is equivalent to the accessible transfer route.",
+      "meaningZh": "请确认建议的替代项是否与无障碍转乘路线同等。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please confirm whether the proposed substitute is equivalent to the accessible transfer route.",
+      "exampleZh": "请确认建议的替代项是否与无障碍转乘路线同等。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:119",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:5694aedf",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please confirm whether the proposed substitute is equivalent to the medical preauthorization.",
+      "meaningZh": "请确认建议的替代项是否与医疗预授权同等。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please confirm whether the proposed substitute is equivalent to the medical preauthorization.",
+      "exampleZh": "请确认建议的替代项是否与医疗预授权同等。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:120",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d4730c09",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please confirm whether the proposed substitute is equivalent to the emergency repatriation.",
+      "meaningZh": "请确认建议的替代项是否与紧急遣返同等。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please confirm whether the proposed substitute is equivalent to the emergency repatriation.",
+      "exampleZh": "请确认建议的替代项是否与紧急遣返同等。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:121",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:c1e98092",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please confirm whether the proposed substitute is equivalent to the trip-interruption cover.",
+      "meaningZh": "请确认建议的替代项是否与行程中断保障同等。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please confirm whether the proposed substitute is equivalent to the trip-interruption cover.",
+      "exampleZh": "请确认建议的替代项是否与行程中断保障同等。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:122",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:646192e9",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please confirm whether the proposed substitute is equivalent to the delayed-baggage reimbursement.",
+      "meaningZh": "请确认建议的替代项是否与行李延误报销同等。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please confirm whether the proposed substitute is equivalent to the delayed-baggage reimbursement.",
+      "exampleZh": "请确认建议的替代项是否与行李延误报销同等。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:123",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:c62c0753",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "How does the deadline affect my claim for the cross-border rental permission?",
+      "meaningZh": "修改后的期限会怎样影响我申请跨境租车许可？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "How does the deadline affect my claim for the cross-border rental permission?",
+      "exampleZh": "修改后的期限会怎样影响我申请跨境租车许可？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:124",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:c3ef9356",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "How does the deadline affect my claim for the roadside recovery service?",
+      "meaningZh": "修改后的期限会怎样影响我申请道路救援拖离服务？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "How does the deadline affect my claim for the roadside recovery service?",
+      "exampleZh": "修改后的期限会怎样影响我申请道路救援拖离服务？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:125",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:60bd605a",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "How does the deadline affect my claim for the security-deposit release?",
+      "meaningZh": "修改后的期限会怎样影响我申请押金解除？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "How does the deadline affect my claim for the security-deposit release?",
+      "exampleZh": "修改后的期限会怎样影响我申请押金解除？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:126",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:03667b68",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "How does the deadline affect my claim for the duplicate-charge dispute?",
+      "meaningZh": "修改后的期限会怎样影响我申请重复扣款争议？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "How does the deadline affect my claim for the duplicate-charge dispute?",
+      "exampleZh": "修改后的期限会怎样影响我申请重复扣款争议？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:127",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:dd9ac6f7",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "How does the deadline affect my claim for the currency-conversion choice?",
+      "meaningZh": "修改后的期限会怎样影响我申请货币转换选择？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "How does the deadline affect my claim for the currency-conversion choice?",
+      "exampleZh": "修改后的期限会怎样影响我申请货币转换选择？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:128",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:ce48c96c",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Can you document the reason for reducing the overnight disruption plan?",
+      "meaningZh": "您能记录减少过夜中断安排的原因吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Can you document the reason for reducing the overnight disruption plan?",
+      "exampleZh": "您能记录减少过夜中断安排的原因吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:129",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:1fa15bab",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Can you document the reason for reducing the replacement transport?",
+      "meaningZh": "您能记录减少替代交通的原因吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Can you document the reason for reducing the replacement transport?",
+      "exampleZh": "您能记录减少替代交通的原因吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:130",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:87fe8720",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Can you document the reason for reducing the step-free boarding request?",
+      "meaningZh": "您能记录减少无台阶登乘申请的原因吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Can you document the reason for reducing the step-free boarding request?",
+      "exampleZh": "您能记录减少无台阶登乘申请的原因吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:131",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:351a5ee5",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Can you document the reason for reducing the dietary cross-contact risk?",
+      "meaningZh": "您能记录减少饮食交叉接触风险的原因吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Can you document the reason for reducing the dietary cross-contact risk?",
+      "exampleZh": "您能记录减少饮食交叉接触风险的原因吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:132",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:80087d34",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Can you document the reason for reducing the prescription replacement?",
+      "meaningZh": "您能记录减少处方药补配的原因吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Can you document the reason for reducing the prescription replacement?",
+      "exampleZh": "您能记录减少处方药补配的原因吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:133",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:f32f6f71",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Would preserving the missed-connection protection require changing another part of my trip?",
+      "meaningZh": "保留错过衔接保障是否需要更改行程的其他部分？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Would preserving the missed-connection protection require changing another part of my trip?",
+      "exampleZh": "保留错过衔接保障是否需要更改行程的其他部分？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:134",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:1da42d4f",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Would preserving the through-checked baggage require changing another part of my trip?",
+      "meaningZh": "保留直挂行李是否需要更改行程的其他部分？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Would preserving the through-checked baggage require changing another part of my trip?",
+      "exampleZh": "保留直挂行李是否需要更改行程的其他部分？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:135",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d202a2f6",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Would preserving the minimum connection time require changing another part of my trip?",
+      "meaningZh": "保留最低转机时间是否需要更改行程的其他部分？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Would preserving the minimum connection time require changing another part of my trip?",
+      "exampleZh": "保留最低转机时间是否需要更改行程的其他部分？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:136",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:b45bc49c",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Would preserving the involuntary rebooking require changing another part of my trip?",
+      "meaningZh": "保留非自愿改签是否需要更改行程的其他部分？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Would preserving the involuntary rebooking require changing another part of my trip?",
+      "exampleZh": "保留非自愿改签是否需要更改行程的其他部分？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:137",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d7572e80",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Would preserving the fare restriction require changing another part of my trip?",
+      "meaningZh": "保留票价限制是否需要更改行程的其他部分？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Would preserving the fare restriction require changing another part of my trip?",
+      "exampleZh": "保留票价限制是否需要更改行程的其他部分？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:138",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:88796856",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "I need a realistic estimate for completing the accessible transfer route today.",
+      "meaningZh": "我需要今天完成无障碍转乘路线的实际时间估计。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "I need a realistic estimate for completing the accessible transfer route today.",
+      "exampleZh": "我需要今天完成无障碍转乘路线的实际时间估计。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:139",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d24a27ff",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "I need a realistic estimate for completing the medical preauthorization today.",
+      "meaningZh": "我需要今天完成医疗预授权的实际时间估计。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "I need a realistic estimate for completing the medical preauthorization today.",
+      "exampleZh": "我需要今天完成医疗预授权的实际时间估计。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:140",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:0ca9cfbb",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "I need a realistic estimate for completing the emergency repatriation today.",
+      "meaningZh": "我需要今天完成紧急遣返的实际时间估计。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "I need a realistic estimate for completing the emergency repatriation today.",
+      "exampleZh": "我需要今天完成紧急遣返的实际时间估计。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:141",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:82b8e38a",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "I need a realistic estimate for completing the trip-interruption cover today.",
+      "meaningZh": "我需要今天完成行程中断保障的实际时间估计。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "I need a realistic estimate for completing the trip-interruption cover today.",
+      "exampleZh": "我需要今天完成行程中断保障的实际时间估计。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:142",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:dcd27115",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "I need a realistic estimate for completing the delayed-baggage reimbursement today.",
+      "meaningZh": "我需要今天完成行李延误报销的实际时间估计。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "I need a realistic estimate for completing the delayed-baggage reimbursement today.",
+      "exampleZh": "我需要今天完成行李延误报销的实际时间估计。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:143",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:428d0884",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you confirm every condition attached to the cross-border rental permission?",
+      "meaningZh": "您能确认跨境租车许可附带的所有条件吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you confirm every condition attached to the cross-border rental permission?",
+      "exampleZh": "您能确认跨境租车许可附带的所有条件吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:144",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:f722b92b",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you confirm every condition attached to the roadside recovery service?",
+      "meaningZh": "您能确认道路救援拖离服务附带的所有条件吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you confirm every condition attached to the roadside recovery service?",
+      "exampleZh": "您能确认道路救援拖离服务附带的所有条件吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:145",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:c07991a5",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you confirm every condition attached to the security-deposit release?",
+      "meaningZh": "您能确认押金解除附带的所有条件吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you confirm every condition attached to the security-deposit release?",
+      "exampleZh": "您能确认押金解除附带的所有条件吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:146",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:36889b5b",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you confirm every condition attached to the duplicate-charge dispute?",
+      "meaningZh": "您能确认重复扣款争议附带的所有条件吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you confirm every condition attached to the duplicate-charge dispute?",
+      "exampleZh": "您能确认重复扣款争议附带的所有条件吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:147",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:dc66bcd4",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you confirm every condition attached to the currency-conversion choice?",
+      "meaningZh": "您能确认货币转换选择附带的所有条件吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you confirm every condition attached to the currency-conversion choice?",
+      "exampleZh": "您能确认货币转换选择附带的所有条件吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:148",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d07254e3",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "What alternative protects the same purpose as the overnight disruption plan?",
+      "meaningZh": "哪种替代方案能保障与过夜中断安排相同的目的？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "What alternative protects the same purpose as the overnight disruption plan?",
+      "exampleZh": "哪种替代方案能保障与过夜中断安排相同的目的？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:149",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:af246946",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "What alternative protects the same purpose as the replacement transport?",
+      "meaningZh": "哪种替代方案能保障与替代交通相同的目的？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "What alternative protects the same purpose as the replacement transport?",
+      "exampleZh": "哪种替代方案能保障与替代交通相同的目的？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:150",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:75521183",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "What alternative protects the same purpose as the step-free boarding request?",
+      "meaningZh": "哪种替代方案能保障与无台阶登乘申请相同的目的？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "What alternative protects the same purpose as the step-free boarding request?",
+      "exampleZh": "哪种替代方案能保障与无台阶登乘申请相同的目的？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:151",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d0088cae",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "What alternative protects the same purpose as the dietary cross-contact risk?",
+      "meaningZh": "哪种替代方案能保障与饮食交叉接触风险相同的目的？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "What alternative protects the same purpose as the dietary cross-contact risk?",
+      "exampleZh": "哪种替代方案能保障与饮食交叉接触风险相同的目的？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:152",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:b492863b",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "What alternative protects the same purpose as the prescription replacement?",
+      "meaningZh": "哪种替代方案能保障与处方药补配相同的目的？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "What alternative protects the same purpose as the prescription replacement?",
+      "exampleZh": "哪种替代方案能保障与处方药补配相同的目的？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:153",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:519c2425",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please explain which provider controls the final decision on the missed-connection protection.",
+      "meaningZh": "请说明哪家服务方掌握错过衔接保障的最终决定。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please explain which provider controls the final decision on the missed-connection protection.",
+      "exampleZh": "请说明哪家服务方掌握错过衔接保障的最终决定。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:154",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:4b723645",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please explain which provider controls the final decision on the through-checked baggage.",
+      "meaningZh": "请说明哪家服务方掌握直挂行李的最终决定。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please explain which provider controls the final decision on the through-checked baggage.",
+      "exampleZh": "请说明哪家服务方掌握直挂行李的最终决定。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:155",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:42951592",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please explain which provider controls the final decision on the minimum connection time.",
+      "meaningZh": "请说明哪家服务方掌握最低转机时间的最终决定。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please explain which provider controls the final decision on the minimum connection time.",
+      "exampleZh": "请说明哪家服务方掌握最低转机时间的最终决定。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:156",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:b17e20e0",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please explain which provider controls the final decision on the involuntary rebooking.",
+      "meaningZh": "请说明哪家服务方掌握非自愿改签的最终决定。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please explain which provider controls the final decision on the involuntary rebooking.",
+      "exampleZh": "请说明哪家服务方掌握非自愿改签的最终决定。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:157",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:a45af2a4",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please explain which provider controls the final decision on the fare restriction.",
+      "meaningZh": "请说明哪家服务方掌握票价限制的最终决定。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please explain which provider controls the final decision on the fare restriction.",
+      "exampleZh": "请说明哪家服务方掌握票价限制的最终决定。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:158",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:3bfb26e5",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Can the confirmation state exactly when the accessible transfer route becomes effective?",
+      "meaningZh": "确认单能否准确写明无障碍转乘路线何时生效？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Can the confirmation state exactly when the accessible transfer route becomes effective?",
+      "exampleZh": "确认单能否准确写明无障碍转乘路线何时生效？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:159",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:f5096a26",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Can the confirmation state exactly when the medical preauthorization becomes effective?",
+      "meaningZh": "确认单能否准确写明医疗预授权何时生效？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Can the confirmation state exactly when the medical preauthorization becomes effective?",
+      "exampleZh": "确认单能否准确写明医疗预授权何时生效？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:160",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:ba9498de",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Can the confirmation state exactly when the emergency repatriation becomes effective?",
+      "meaningZh": "确认单能否准确写明紧急遣返何时生效？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Can the confirmation state exactly when the emergency repatriation becomes effective?",
+      "exampleZh": "确认单能否准确写明紧急遣返何时生效？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:161",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:7428ce3d",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Can the confirmation state exactly when the trip-interruption cover becomes effective?",
+      "meaningZh": "确认单能否准确写明行程中断保障何时生效？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Can the confirmation state exactly when the trip-interruption cover becomes effective?",
+      "exampleZh": "确认单能否准确写明行程中断保障何时生效？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:162",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:79dd4538",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Can the confirmation state exactly when the delayed-baggage reimbursement becomes effective?",
+      "meaningZh": "确认单能否准确写明行李延误报销何时生效？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Can the confirmation state exactly when the delayed-baggage reimbursement becomes effective?",
+      "exampleZh": "确认单能否准确写明行李延误报销何时生效？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:163",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:34140c2d",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "If I reject this, will I lose the cross-border rental permission?",
+      "meaningZh": "如果我拒绝这个方案，会失去跨境租车许可吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "If I reject this, will I lose the cross-border rental permission?",
+      "exampleZh": "如果我拒绝这个方案，会失去跨境租车许可吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:164",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:b3ccd340",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "If I reject this, will I lose the roadside recovery service?",
+      "meaningZh": "如果我拒绝这个方案，会失去道路救援拖离服务吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "If I reject this, will I lose the roadside recovery service?",
+      "exampleZh": "如果我拒绝这个方案，会失去道路救援拖离服务吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:165",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:3246010a",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "If I reject this, will I lose the security-deposit release?",
+      "meaningZh": "如果我拒绝这个方案，会失去押金解除吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "If I reject this, will I lose the security-deposit release?",
+      "exampleZh": "如果我拒绝这个方案，会失去押金解除吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:166",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:9bf89668",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "If I reject this, will I lose the duplicate-charge dispute?",
+      "meaningZh": "如果我拒绝这个方案，会失去重复扣款争议吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "If I reject this, will I lose the duplicate-charge dispute?",
+      "exampleZh": "如果我拒绝这个方案，会失去重复扣款争议吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:167",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:b9aa1d9b",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "If I reject this, will I lose the currency-conversion choice?",
+      "meaningZh": "如果我拒绝这个方案，会失去货币转换选择吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "If I reject this, will I lose the currency-conversion choice?",
+      "exampleZh": "如果我拒绝这个方案，会失去货币转换选择吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:168",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:f010dcd7",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "How can I verify that the replacement includes the overnight disruption plan?",
+      "meaningZh": "我怎样核实替代方案包含过夜中断安排？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "How can I verify that the replacement includes the overnight disruption plan?",
+      "exampleZh": "我怎样核实替代方案包含过夜中断安排？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:169",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:15ec4bb2",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "How can I verify that the replacement includes the replacement transport?",
+      "meaningZh": "我怎样核实替代方案包含替代交通？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "How can I verify that the replacement includes the replacement transport?",
+      "exampleZh": "我怎样核实替代方案包含替代交通？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:170",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:9adab2fb",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "How can I verify that the replacement includes the step-free boarding request?",
+      "meaningZh": "我怎样核实替代方案包含无台阶登乘申请？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "How can I verify that the replacement includes the step-free boarding request?",
+      "exampleZh": "我怎样核实替代方案包含无台阶登乘申请？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:171",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:67669510",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "How can I verify that the replacement includes the dietary cross-contact risk?",
+      "meaningZh": "我怎样核实替代方案包含饮食交叉接触风险？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "How can I verify that the replacement includes the dietary cross-contact risk?",
+      "exampleZh": "我怎样核实替代方案包含饮食交叉接触风险？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:172",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:dc41fd55",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "How can I verify that the replacement includes the prescription replacement?",
+      "meaningZh": "我怎样核实替代方案包含处方药补配？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "How can I verify that the replacement includes the prescription replacement?",
+      "exampleZh": "我怎样核实替代方案包含处方药补配？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:173",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:978f3968",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you calculate the unused portion of the missed-connection protection?",
+      "meaningZh": "您能计算错过衔接保障中未使用的部分吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you calculate the unused portion of the missed-connection protection?",
+      "exampleZh": "您能计算错过衔接保障中未使用的部分吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:174",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d6ce0eec",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you calculate the unused portion of the through-checked baggage?",
+      "meaningZh": "您能计算直挂行李中未使用的部分吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you calculate the unused portion of the through-checked baggage?",
+      "exampleZh": "您能计算直挂行李中未使用的部分吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:175",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:f92b5915",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you calculate the unused portion of the minimum connection time?",
+      "meaningZh": "您能计算最低转机时间中未使用的部分吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you calculate the unused portion of the minimum connection time?",
+      "exampleZh": "您能计算最低转机时间中未使用的部分吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:176",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:ac826297",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you calculate the unused portion of the involuntary rebooking?",
+      "meaningZh": "您能计算非自愿改签中未使用的部分吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you calculate the unused portion of the involuntary rebooking?",
+      "exampleZh": "您能计算非自愿改签中未使用的部分吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:177",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:89db6ad3",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you calculate the unused portion of the fare restriction?",
+      "meaningZh": "您能计算票价限制中未使用的部分吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you calculate the unused portion of the fare restriction?",
+      "exampleZh": "您能计算票价限制中未使用的部分吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:178",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:6dae78d5",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please confirm whether the accessible transfer route transfers automatically to the new booking.",
+      "meaningZh": "请确认无障碍转乘路线是否自动转移到新预订。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please confirm whether the accessible transfer route transfers automatically to the new booking.",
+      "exampleZh": "请确认无障碍转乘路线是否自动转移到新预订。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:179",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:130b802c",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please confirm whether the medical preauthorization transfers automatically to the new booking.",
+      "meaningZh": "请确认医疗预授权是否自动转移到新预订。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please confirm whether the medical preauthorization transfers automatically to the new booking.",
+      "exampleZh": "请确认医疗预授权是否自动转移到新预订。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:180",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:f832975e",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please confirm whether the emergency repatriation transfers automatically to the new booking.",
+      "meaningZh": "请确认紧急遣返是否自动转移到新预订。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please confirm whether the emergency repatriation transfers automatically to the new booking.",
+      "exampleZh": "请确认紧急遣返是否自动转移到新预订。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:181",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:2725c3f1",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please confirm whether the trip-interruption cover transfers automatically to the new booking.",
+      "meaningZh": "请确认行程中断保障是否自动转移到新预订。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please confirm whether the trip-interruption cover transfers automatically to the new booking.",
+      "exampleZh": "请确认行程中断保障是否自动转移到新预订。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:182",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:b739342e",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please confirm whether the delayed-baggage reimbursement transfers automatically to the new booking.",
+      "meaningZh": "请确认行李延误报销是否自动转移到新预订。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please confirm whether the delayed-baggage reimbursement transfers automatically to the new booking.",
+      "exampleZh": "请确认行李延误报销是否自动转移到新预订。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:183",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:986fc5a1",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "What happens to the cross-border rental permission during an overnight interruption?",
+      "meaningZh": "过夜中断期间，跨境租车许可会怎样处理？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "What happens to the cross-border rental permission during an overnight interruption?",
+      "exampleZh": "过夜中断期间，跨境租车许可会怎样处理？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:184",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:1de7c30a",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "What happens to the roadside recovery service during an overnight interruption?",
+      "meaningZh": "过夜中断期间，道路救援拖离服务会怎样处理？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "What happens to the roadside recovery service during an overnight interruption?",
+      "exampleZh": "过夜中断期间，道路救援拖离服务会怎样处理？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:185",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:eb48d632",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "What happens to the security-deposit release during an overnight interruption?",
+      "meaningZh": "过夜中断期间，押金解除会怎样处理？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "What happens to the security-deposit release during an overnight interruption?",
+      "exampleZh": "过夜中断期间，押金解除会怎样处理？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:186",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:c07afb24",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "What happens to the duplicate-charge dispute during an overnight interruption?",
+      "meaningZh": "过夜中断期间，重复扣款争议会怎样处理？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "What happens to the duplicate-charge dispute during an overnight interruption?",
+      "exampleZh": "过夜中断期间，重复扣款争议会怎样处理？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:187",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:a62d3205",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "What happens to the currency-conversion choice during an overnight interruption?",
+      "meaningZh": "过夜中断期间，货币转换选择会怎样处理？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "What happens to the currency-conversion choice during an overnight interruption?",
+      "exampleZh": "过夜中断期间，货币转换选择会怎样处理？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:188",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:7c8641dc",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "I need both providers to confirm their responsibility for the overnight disruption plan.",
+      "meaningZh": "我需要两家服务方确认各自对过夜中断安排的责任。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "I need both providers to confirm their responsibility for the overnight disruption plan.",
+      "exampleZh": "我需要两家服务方确认各自对过夜中断安排的责任。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:189",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:6be8d9a3",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "I need both providers to confirm their responsibility for the replacement transport.",
+      "meaningZh": "我需要两家服务方确认各自对替代交通的责任。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "I need both providers to confirm their responsibility for the replacement transport.",
+      "exampleZh": "我需要两家服务方确认各自对替代交通的责任。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:190",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:7919c49e",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "I need both providers to confirm their responsibility for the step-free boarding request.",
+      "meaningZh": "我需要两家服务方确认各自对无台阶登乘申请的责任。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "I need both providers to confirm their responsibility for the step-free boarding request.",
+      "exampleZh": "我需要两家服务方确认各自对无台阶登乘申请的责任。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:191",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:2e50db67",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "I need both providers to confirm their responsibility for the dietary cross-contact risk.",
+      "meaningZh": "我需要两家服务方确认各自对饮食交叉接触风险的责任。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "I need both providers to confirm their responsibility for the dietary cross-contact risk.",
+      "exampleZh": "我需要两家服务方确认各自对饮食交叉接触风险的责任。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:192",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d1491554",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "I need both providers to confirm their responsibility for the prescription replacement.",
+      "meaningZh": "我需要两家服务方确认各自对处方药补配的责任。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "I need both providers to confirm their responsibility for the prescription replacement.",
+      "exampleZh": "我需要两家服务方确认各自对处方药补配的责任。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:193",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:4c80b710",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you outline the next practical step for restoring the missed-connection protection?",
+      "meaningZh": "您能概述恢复错过衔接保障的下一个实际步骤吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you outline the next practical step for restoring the missed-connection protection?",
+      "exampleZh": "您能概述恢复错过衔接保障的下一个实际步骤吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:194",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:4ad84ff8",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you outline the next practical step for restoring the through-checked baggage?",
+      "meaningZh": "您能概述恢复直挂行李的下一个实际步骤吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you outline the next practical step for restoring the through-checked baggage?",
+      "exampleZh": "您能概述恢复直挂行李的下一个实际步骤吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:195",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:b466c63b",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you outline the next practical step for restoring the minimum connection time?",
+      "meaningZh": "您能概述恢复最低转机时间的下一个实际步骤吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you outline the next practical step for restoring the minimum connection time?",
+      "exampleZh": "您能概述恢复最低转机时间的下一个实际步骤吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:196",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:ebd81d13",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you outline the next practical step for restoring the involuntary rebooking?",
+      "meaningZh": "您能概述恢复非自愿改签的下一个实际步骤吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you outline the next practical step for restoring the involuntary rebooking?",
+      "exampleZh": "您能概述恢复非自愿改签的下一个实际步骤吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:197",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:8035d6e5",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Could you outline the next practical step for restoring the fare restriction?",
+      "meaningZh": "您能概述恢复票价限制的下一个实际步骤吗？",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Could you outline the next practical step for restoring the fare restriction?",
+      "exampleZh": "您能概述恢复票价限制的下一个实际步骤吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:198",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:cba37d85",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "The replacement is acceptable only with the same medical assistance.",
+      "meaningZh": "只有保留相同医疗协助时，我才能接受替代方案。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "The replacement is acceptable only with the same medical assistance.",
+      "exampleZh": "只有保留相同医疗协助时，我才能接受替代方案。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:199",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:c993186b",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "I need the revised total before choosing between these two routes.",
+      "meaningZh": "在两条路线中选择前，我需要修改后的总费用。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "I need the revised total before choosing between these two routes.",
+      "exampleZh": "在两条路线中选择前，我需要修改后的总费用。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c2:200",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:8253a40b",
+      "levelId": "senior-2",
+      "labelZh": "高二",
+      "growthDifficultyLevel": 5.5,
+      "term": "Please keep the original booking active during the provider handover.",
+      "meaningZh": "服务方交接期间，请保持原预订有效。",
+      "partOfSpeech": "functional-utterance",
+      "exampleEn": "Please keep the original booking active during the provider handover.",
+      "exampleZh": "服务方交接期间，请保持原预订有效。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "multi-step-function",
+        "surfaceType": "functional-utterance",
+        "grammarFeatures": [
+          "comparison-and-consequence"
+        ],
+        "travelUse": "complex-travel-comparison",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1414 @@
+{
+  "schemaVersion": 1,
+  "documentType": "daily-level-identity-migration",
+  "migrationVersion": "daily-level-v1-to-v2-c2",
+  "releaseStatus": "candidate",
+  "sourceIdentityVersion": "daily-knowledge-v1",
+  "targetIdentityVersion": "daily-knowledge-v2",
+  "sourceRecordCount": 200,
+  "canonicalTargetCount": 200,
+  "entries": [
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:001",
+      "sourceItemId": "r17-daily-s2-001",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:002",
+      "sourceItemId": "r17-daily-s2-002",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:003",
+      "sourceItemId": "r17-daily-s2-003",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:004",
+      "sourceItemId": "r17-daily-s2-004",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:005",
+      "sourceItemId": "r17-daily-s2-005",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:006",
+      "sourceItemId": "r17-daily-s2-006",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:007",
+      "sourceItemId": "r17-daily-s2-007",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:008",
+      "sourceItemId": "r17-daily-s2-008",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:009",
+      "sourceItemId": "r17-daily-s2-009",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:010",
+      "sourceItemId": "r17-daily-s2-010",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:011",
+      "sourceItemId": "r17-daily-s2-011",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:012",
+      "sourceItemId": "r17-daily-s2-012",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:013",
+      "sourceItemId": "r17-daily-s2-013",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:014",
+      "sourceItemId": "r17-daily-s2-014",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:015",
+      "sourceItemId": "r17-daily-s2-015",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:016",
+      "sourceItemId": "r17-daily-s2-016",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:017",
+      "sourceItemId": "r17-daily-s2-017",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:018",
+      "sourceItemId": "r17-daily-s2-018",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:019",
+      "sourceItemId": "r17-daily-s2-019",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:020",
+      "sourceItemId": "r17-daily-s2-020",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:021",
+      "sourceItemId": "r17-daily-s2-021",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:022",
+      "sourceItemId": "r17-daily-s2-022",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:023",
+      "sourceItemId": "r17-daily-s2-023",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:024",
+      "sourceItemId": "r17-daily-s2-024",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:025",
+      "sourceItemId": "r17-daily-s2-025",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:026",
+      "sourceItemId": "r17-daily-s2-026",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:027",
+      "sourceItemId": "r17-daily-s2-027",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:028",
+      "sourceItemId": "r17-daily-s2-028",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:029",
+      "sourceItemId": "r17-daily-s2-029",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:030",
+      "sourceItemId": "r17-daily-s2-030",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:031",
+      "sourceItemId": "r17-daily-s2-031",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:032",
+      "sourceItemId": "r17-daily-s2-032",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:033",
+      "sourceItemId": "r17-daily-s2-033",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:034",
+      "sourceItemId": "r17-daily-s2-034",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:035",
+      "sourceItemId": "r17-daily-s2-035",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:036",
+      "sourceItemId": "r17-daily-s2-036",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:037",
+      "sourceItemId": "r17-daily-s2-037",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:038",
+      "sourceItemId": "r17-daily-s2-038",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:039",
+      "sourceItemId": "r17-daily-s2-039",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:040",
+      "sourceItemId": "r17-daily-s2-040",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:041",
+      "sourceItemId": "r17-daily-s2-041",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:042",
+      "sourceItemId": "r17-daily-s2-042",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:043",
+      "sourceItemId": "r17-daily-s2-043",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:044",
+      "sourceItemId": "r17-daily-s2-044",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:045",
+      "sourceItemId": "r17-daily-s2-045",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:046",
+      "sourceItemId": "r17-daily-s2-046",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:047",
+      "sourceItemId": "r17-daily-s2-047",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:048",
+      "sourceItemId": "r17-daily-s2-048",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:049",
+      "sourceItemId": "r17-daily-s2-049",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:050",
+      "sourceItemId": "r17-daily-s2-050",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:051",
+      "sourceItemId": "r17-daily-s2-051",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:052",
+      "sourceItemId": "r17-daily-s2-052",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:053",
+      "sourceItemId": "r17-daily-s2-053",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:054",
+      "sourceItemId": "r17-daily-s2-054",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:055",
+      "sourceItemId": "r17-daily-s2-055",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:056",
+      "sourceItemId": "r17-daily-s2-056",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:057",
+      "sourceItemId": "r17-daily-s2-057",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:058",
+      "sourceItemId": "r17-daily-s2-058",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:059",
+      "sourceItemId": "r17-daily-s2-059",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:060",
+      "sourceItemId": "r17-daily-s2-060",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:061",
+      "sourceItemId": "r17-daily-s2-061",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:062",
+      "sourceItemId": "r17-daily-s2-062",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:063",
+      "sourceItemId": "r17-daily-s2-063",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:064",
+      "sourceItemId": "r17-daily-s2-064",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:065",
+      "sourceItemId": "r17-daily-s2-065",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:066",
+      "sourceItemId": "r17-daily-s2-066",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:067",
+      "sourceItemId": "r17-daily-s2-067",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:068",
+      "sourceItemId": "r17-daily-s2-068",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:069",
+      "sourceItemId": "r17-daily-s2-069",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:070",
+      "sourceItemId": "r17-daily-s2-070",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:071",
+      "sourceItemId": "r17-daily-s2-071",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:072",
+      "sourceItemId": "r17-daily-s2-072",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:073",
+      "sourceItemId": "r17-daily-s2-073",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:074",
+      "sourceItemId": "r17-daily-s2-074",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:075",
+      "sourceItemId": "r17-daily-s2-075",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:076",
+      "sourceItemId": "r17-daily-s2-076",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:077",
+      "sourceItemId": "r17-daily-s2-077",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:078",
+      "sourceItemId": "r17-daily-s2-078",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:079",
+      "sourceItemId": "r17-daily-s2-079",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:080",
+      "sourceItemId": "r17-daily-s2-080",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:081",
+      "sourceItemId": "r17-daily-s2-081",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:082",
+      "sourceItemId": "r17-daily-s2-082",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:083",
+      "sourceItemId": "r17-daily-s2-083",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:084",
+      "sourceItemId": "r17-daily-s2-084",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:085",
+      "sourceItemId": "r17-daily-s2-085",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:086",
+      "sourceItemId": "r17-daily-s2-086",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:087",
+      "sourceItemId": "r17-daily-s2-087",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:088",
+      "sourceItemId": "r17-daily-s2-088",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:089",
+      "sourceItemId": "r17-daily-s2-089",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:090",
+      "sourceItemId": "r17-daily-s2-090",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:091",
+      "sourceItemId": "r17-daily-s2-091",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:092",
+      "sourceItemId": "r17-daily-s2-092",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:093",
+      "sourceItemId": "r17-daily-s2-093",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:094",
+      "sourceItemId": "r17-daily-s2-094",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:095",
+      "sourceItemId": "r17-daily-s2-095",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:096",
+      "sourceItemId": "r17-daily-s2-096",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:097",
+      "sourceItemId": "r17-daily-s2-097",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:098",
+      "sourceItemId": "r17-daily-s2-098",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:099",
+      "sourceItemId": "r17-daily-s2-099",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:100",
+      "sourceItemId": "r17-daily-s2-100",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:101",
+      "sourceItemId": "r17-daily-s2-101",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:102",
+      "sourceItemId": "r17-daily-s2-102",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:103",
+      "sourceItemId": "r17-daily-s2-103",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:104",
+      "sourceItemId": "r17-daily-s2-104",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:105",
+      "sourceItemId": "r17-daily-s2-105",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:106",
+      "sourceItemId": "r17-daily-s2-106",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:107",
+      "sourceItemId": "r17-daily-s2-107",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:108",
+      "sourceItemId": "r17-daily-s2-108",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:109",
+      "sourceItemId": "r17-daily-s2-109",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:110",
+      "sourceItemId": "r17-daily-s2-110",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:111",
+      "sourceItemId": "r17-daily-s2-111",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:112",
+      "sourceItemId": "r17-daily-s2-112",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:113",
+      "sourceItemId": "r17-daily-s2-113",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:114",
+      "sourceItemId": "r17-daily-s2-114",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:115",
+      "sourceItemId": "r17-daily-s2-115",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:116",
+      "sourceItemId": "r17-daily-s2-116",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:117",
+      "sourceItemId": "r17-daily-s2-117",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:118",
+      "sourceItemId": "r17-daily-s2-118",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:119",
+      "sourceItemId": "r17-daily-s2-119",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:120",
+      "sourceItemId": "r17-daily-s2-120",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:121",
+      "sourceItemId": "r17-daily-s2-121",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:122",
+      "sourceItemId": "r17-daily-s2-122",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:123",
+      "sourceItemId": "r17-daily-s2-123",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:124",
+      "sourceItemId": "r17-daily-s2-124",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:125",
+      "sourceItemId": "r17-daily-s2-125",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:126",
+      "sourceItemId": "r17-daily-s2-126",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:127",
+      "sourceItemId": "r17-daily-s2-127",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:128",
+      "sourceItemId": "r17-daily-s2-128",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:129",
+      "sourceItemId": "r17-daily-s2-129",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:130",
+      "sourceItemId": "r17-daily-s2-130",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:131",
+      "sourceItemId": "r17-daily-s2-131",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:132",
+      "sourceItemId": "r17-daily-s2-132",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:133",
+      "sourceItemId": "r17-daily-s2-133",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:134",
+      "sourceItemId": "r17-daily-s2-134",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:135",
+      "sourceItemId": "r17-daily-s2-135",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:136",
+      "sourceItemId": "r17-daily-s2-136",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:137",
+      "sourceItemId": "r17-daily-s2-137",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:138",
+      "sourceItemId": "r17-daily-s2-138",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:139",
+      "sourceItemId": "r17-daily-s2-139",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:140",
+      "sourceItemId": "r17-daily-s2-140",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:141",
+      "sourceItemId": "r17-daily-s2-141",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:142",
+      "sourceItemId": "r17-daily-s2-142",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:143",
+      "sourceItemId": "r17-daily-s2-143",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:144",
+      "sourceItemId": "r17-daily-s2-144",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:145",
+      "sourceItemId": "r17-daily-s2-145",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:146",
+      "sourceItemId": "r17-daily-s2-146",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:147",
+      "sourceItemId": "r17-daily-s2-147",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:148",
+      "sourceItemId": "r17-daily-s2-148",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:149",
+      "sourceItemId": "r17-daily-s2-149",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:150",
+      "sourceItemId": "r17-daily-s2-150",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:151",
+      "sourceItemId": "r17-daily-s2-151",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:152",
+      "sourceItemId": "r17-daily-s2-152",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:153",
+      "sourceItemId": "r17-daily-s2-153",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:154",
+      "sourceItemId": "r17-daily-s2-154",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:155",
+      "sourceItemId": "r17-daily-s2-155",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:156",
+      "sourceItemId": "r17-daily-s2-156",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:157",
+      "sourceItemId": "r17-daily-s2-157",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:158",
+      "sourceItemId": "r17-daily-s2-158",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:159",
+      "sourceItemId": "r17-daily-s2-159",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:160",
+      "sourceItemId": "r17-daily-s2-160",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:161",
+      "sourceItemId": "r17-daily-s2-161",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:162",
+      "sourceItemId": "r17-daily-s2-162",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:163",
+      "sourceItemId": "r17-daily-s2-163",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:164",
+      "sourceItemId": "r17-daily-s2-164",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:165",
+      "sourceItemId": "r17-daily-s2-165",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:166",
+      "sourceItemId": "r17-daily-s2-166",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:167",
+      "sourceItemId": "r17-daily-s2-167",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:168",
+      "sourceItemId": "r17-daily-s2-168",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:169",
+      "sourceItemId": "r17-daily-s2-169",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:170",
+      "sourceItemId": "r17-daily-s2-170",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:171",
+      "sourceItemId": "r17-daily-s2-171",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:172",
+      "sourceItemId": "r17-daily-s2-172",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:173",
+      "sourceItemId": "r17-daily-s2-173",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:174",
+      "sourceItemId": "r17-daily-s2-174",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:175",
+      "sourceItemId": "r17-daily-s2-175",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:176",
+      "sourceItemId": "r17-daily-s2-176",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:177",
+      "sourceItemId": "r17-daily-s2-177",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:178",
+      "sourceItemId": "r17-daily-s2-178",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:179",
+      "sourceItemId": "r17-daily-s2-179",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:180",
+      "sourceItemId": "r17-daily-s2-180",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:181",
+      "sourceItemId": "r17-daily-s2-181",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:182",
+      "sourceItemId": "r17-daily-s2-182",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:183",
+      "sourceItemId": "r17-daily-s2-183",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:184",
+      "sourceItemId": "r17-daily-s2-184",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:185",
+      "sourceItemId": "r17-daily-s2-185",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:186",
+      "sourceItemId": "r17-daily-s2-186",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:187",
+      "sourceItemId": "r17-daily-s2-187",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:188",
+      "sourceItemId": "r17-daily-s2-188",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:189",
+      "sourceItemId": "r17-daily-s2-189",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:190",
+      "sourceItemId": "r17-daily-s2-190",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:191",
+      "sourceItemId": "r17-daily-s2-191",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:192",
+      "sourceItemId": "r17-daily-s2-192",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:193",
+      "sourceItemId": "r17-daily-s2-193",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:194",
+      "sourceItemId": "r17-daily-s2-194",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:195",
+      "sourceItemId": "r17-daily-s2-195",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:196",
+      "sourceItemId": "r17-daily-s2-196",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:197",
+      "sourceItemId": "r17-daily-s2-197",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:198",
+      "sourceItemId": "r17-daily-s2-198",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:199",
+      "sourceItemId": "r17-daily-s2-199",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    },
+    {
+      "sourceDailyKnowledgeId": "daily-knowledge-v1:s2:200",
+      "sourceItemId": "r17-daily-s2-200",
+      "disposition": "retired",
+      "evidenceTransferAllowed": false
+    }
+  ],
+  "newIdentities": [
+    "daily-knowledge-v2:phrase:5b177424",
+    "daily-knowledge-v2:phrase:73cea670",
+    "daily-knowledge-v2:phrase:334ee908",
+    "daily-knowledge-v2:phrase:eaaab045",
+    "daily-knowledge-v2:phrase:945603a4",
+    "daily-knowledge-v2:phrase:b88c7573",
+    "daily-knowledge-v2:phrase:554c3285",
+    "daily-knowledge-v2:phrase:5832a76d",
+    "daily-knowledge-v2:phrase:7c197bfc",
+    "daily-knowledge-v2:phrase:76f7aa36",
+    "daily-knowledge-v2:phrase:92a0ab71",
+    "daily-knowledge-v2:phrase:0ca63fc8",
+    "daily-knowledge-v2:phrase:978020f1",
+    "daily-knowledge-v2:phrase:2638cc1f",
+    "daily-knowledge-v2:phrase:e002d4cc",
+    "daily-knowledge-v2:phrase:bba22bde",
+    "daily-knowledge-v2:phrase:78efb612",
+    "daily-knowledge-v2:phrase:626dd6fa",
+    "daily-knowledge-v2:phrase:244ad07b",
+    "daily-knowledge-v2:phrase:8fc5c1cb",
+    "daily-knowledge-v2:phrase:79b13d6c",
+    "daily-knowledge-v2:phrase:f4c9f19f",
+    "daily-knowledge-v2:phrase:0025dc32",
+    "daily-knowledge-v2:phrase:4a962867",
+    "daily-knowledge-v2:phrase:dfbc2679",
+    "daily-knowledge-v2:phrase:de6e3737",
+    "daily-knowledge-v2:phrase:2f1ddb94",
+    "daily-knowledge-v2:phrase:f4485fe0",
+    "daily-knowledge-v2:phrase:f7c1b429",
+    "daily-knowledge-v2:phrase:5c7d5ab4",
+    "daily-knowledge-v2:phrase:37dbf12d",
+    "daily-knowledge-v2:phrase:ad5863a0",
+    "daily-knowledge-v2:phrase:efc3d8cc",
+    "daily-knowledge-v2:phrase:f2ca14ba",
+    "daily-knowledge-v2:phrase:0ef547bf",
+    "daily-knowledge-v2:phrase:88c3f847",
+    "daily-knowledge-v2:phrase:888aaf27",
+    "daily-knowledge-v2:phrase:eabe4877",
+    "daily-knowledge-v2:phrase:04186370",
+    "daily-knowledge-v2:phrase:7c03a830",
+    "daily-knowledge-v2:phrase:943b7365",
+    "daily-knowledge-v2:phrase:7fee65be",
+    "daily-knowledge-v2:phrase:16d57ebd",
+    "daily-knowledge-v2:phrase:4bfd72f4",
+    "daily-knowledge-v2:phrase:dc1f23ba",
+    "daily-knowledge-v2:phrase:f38a3dd4",
+    "daily-knowledge-v2:phrase:e4703939",
+    "daily-knowledge-v2:phrase:5076b71e",
+    "daily-knowledge-v2:phrase:841060dd",
+    "daily-knowledge-v2:phrase:a2317120",
+    "daily-knowledge-v2:phrase:40ecbf37",
+    "daily-knowledge-v2:phrase:de625328",
+    "daily-knowledge-v2:phrase:b6b188a9",
+    "daily-knowledge-v2:phrase:d283e1cd",
+    "daily-knowledge-v2:phrase:d46a65fa",
+    "daily-knowledge-v2:phrase:4101c39c",
+    "daily-knowledge-v2:phrase:1d1c620a",
+    "daily-knowledge-v2:phrase:7fcacbda",
+    "daily-knowledge-v2:phrase:255b81c1",
+    "daily-knowledge-v2:phrase:bd60f62d",
+    "daily-knowledge-v2:phrase:ed1505a6",
+    "daily-knowledge-v2:phrase:f3101ca3",
+    "daily-knowledge-v2:phrase:f8e31f73",
+    "daily-knowledge-v2:phrase:d20ccaac",
+    "daily-knowledge-v2:phrase:ca551326",
+    "daily-knowledge-v2:phrase:f6098af0",
+    "daily-knowledge-v2:phrase:e7d416fb",
+    "daily-knowledge-v2:phrase:392bd017",
+    "daily-knowledge-v2:phrase:cd4bc9ec",
+    "daily-knowledge-v2:phrase:f8b14071",
+    "daily-knowledge-v2:phrase:ac711480",
+    "daily-knowledge-v2:phrase:e6d78d07",
+    "daily-knowledge-v2:phrase:d5b7cf6d",
+    "daily-knowledge-v2:phrase:7b167177",
+    "daily-knowledge-v2:phrase:961e0188",
+    "daily-knowledge-v2:phrase:7714e6e2",
+    "daily-knowledge-v2:phrase:413bc4a4",
+    "daily-knowledge-v2:phrase:663a0952",
+    "daily-knowledge-v2:phrase:5bc86a4f",
+    "daily-knowledge-v2:phrase:5c4921e9",
+    "daily-knowledge-v2:phrase:a546daea",
+    "daily-knowledge-v2:phrase:d163fe2d",
+    "daily-knowledge-v2:phrase:e41783ca",
+    "daily-knowledge-v2:phrase:2a35396f",
+    "daily-knowledge-v2:phrase:982542af",
+    "daily-knowledge-v2:phrase:0c736fd1",
+    "daily-knowledge-v2:phrase:2947c042",
+    "daily-knowledge-v2:phrase:038cfaec",
+    "daily-knowledge-v2:phrase:5d190ccb",
+    "daily-knowledge-v2:phrase:b780a8f8",
+    "daily-knowledge-v2:phrase:0d9385a1",
+    "daily-knowledge-v2:phrase:506faa58",
+    "daily-knowledge-v2:phrase:30369945",
+    "daily-knowledge-v2:phrase:83e0e445",
+    "daily-knowledge-v2:phrase:d0eebc34",
+    "daily-knowledge-v2:phrase:c4ccbd6e",
+    "daily-knowledge-v2:phrase:7339b01e",
+    "daily-knowledge-v2:phrase:91e5a5f9",
+    "daily-knowledge-v2:phrase:2ff2b1ae",
+    "daily-knowledge-v2:phrase:981e5be2",
+    "daily-knowledge-v2:phrase:55357fa1",
+    "daily-knowledge-v2:phrase:b456b832",
+    "daily-knowledge-v2:phrase:d453692f",
+    "daily-knowledge-v2:phrase:d76cbc38",
+    "daily-knowledge-v2:phrase:1af33f1a",
+    "daily-knowledge-v2:phrase:806b6824",
+    "daily-knowledge-v2:phrase:253281d1",
+    "daily-knowledge-v2:phrase:32e52718",
+    "daily-knowledge-v2:phrase:da378037",
+    "daily-knowledge-v2:phrase:7ae4caa6",
+    "daily-knowledge-v2:phrase:97728497",
+    "daily-knowledge-v2:phrase:fd6fb688",
+    "daily-knowledge-v2:phrase:ed8e5545",
+    "daily-knowledge-v2:phrase:0d70a7d7",
+    "daily-knowledge-v2:phrase:ab5ebf56",
+    "daily-knowledge-v2:phrase:44281fce",
+    "daily-knowledge-v2:phrase:0cb238ce",
+    "daily-knowledge-v2:phrase:6c8c722a",
+    "daily-knowledge-v2:phrase:5694aedf",
+    "daily-knowledge-v2:phrase:d4730c09",
+    "daily-knowledge-v2:phrase:c1e98092",
+    "daily-knowledge-v2:phrase:646192e9",
+    "daily-knowledge-v2:phrase:c62c0753",
+    "daily-knowledge-v2:phrase:c3ef9356",
+    "daily-knowledge-v2:phrase:60bd605a",
+    "daily-knowledge-v2:phrase:03667b68",
+    "daily-knowledge-v2:phrase:dd9ac6f7",
+    "daily-knowledge-v2:phrase:ce48c96c",
+    "daily-knowledge-v2:phrase:1fa15bab",
+    "daily-knowledge-v2:phrase:87fe8720",
+    "daily-knowledge-v2:phrase:351a5ee5",
+    "daily-knowledge-v2:phrase:80087d34",
+    "daily-knowledge-v2:phrase:f32f6f71",
+    "daily-knowledge-v2:phrase:1da42d4f",
+    "daily-knowledge-v2:phrase:d202a2f6",
+    "daily-knowledge-v2:phrase:b45bc49c",
+    "daily-knowledge-v2:phrase:d7572e80",
+    "daily-knowledge-v2:phrase:88796856",
+    "daily-knowledge-v2:phrase:d24a27ff",
+    "daily-knowledge-v2:phrase:0ca9cfbb",
+    "daily-knowledge-v2:phrase:82b8e38a",
+    "daily-knowledge-v2:phrase:dcd27115",
+    "daily-knowledge-v2:phrase:428d0884",
+    "daily-knowledge-v2:phrase:f722b92b",
+    "daily-knowledge-v2:phrase:c07991a5",
+    "daily-knowledge-v2:phrase:36889b5b",
+    "daily-knowledge-v2:phrase:dc66bcd4",
+    "daily-knowledge-v2:phrase:d07254e3",
+    "daily-knowledge-v2:phrase:af246946",
+    "daily-knowledge-v2:phrase:75521183",
+    "daily-knowledge-v2:phrase:d0088cae",
+    "daily-knowledge-v2:phrase:b492863b",
+    "daily-knowledge-v2:phrase:519c2425",
+    "daily-knowledge-v2:phrase:4b723645",
+    "daily-knowledge-v2:phrase:42951592",
+    "daily-knowledge-v2:phrase:b17e20e0",
+    "daily-knowledge-v2:phrase:a45af2a4",
+    "daily-knowledge-v2:phrase:3bfb26e5",
+    "daily-knowledge-v2:phrase:f5096a26",
+    "daily-knowledge-v2:phrase:ba9498de",
+    "daily-knowledge-v2:phrase:7428ce3d",
+    "daily-knowledge-v2:phrase:79dd4538",
+    "daily-knowledge-v2:phrase:34140c2d",
+    "daily-knowledge-v2:phrase:b3ccd340",
+    "daily-knowledge-v2:phrase:3246010a",
+    "daily-knowledge-v2:phrase:9bf89668",
+    "daily-knowledge-v2:phrase:b9aa1d9b",
+    "daily-knowledge-v2:phrase:f010dcd7",
+    "daily-knowledge-v2:phrase:15ec4bb2",
+    "daily-knowledge-v2:phrase:9adab2fb",
+    "daily-knowledge-v2:phrase:67669510",
+    "daily-knowledge-v2:phrase:dc41fd55",
+    "daily-knowledge-v2:phrase:978f3968",
+    "daily-knowledge-v2:phrase:d6ce0eec",
+    "daily-knowledge-v2:phrase:f92b5915",
+    "daily-knowledge-v2:phrase:ac826297",
+    "daily-knowledge-v2:phrase:89db6ad3",
+    "daily-knowledge-v2:phrase:6dae78d5",
+    "daily-knowledge-v2:phrase:130b802c",
+    "daily-knowledge-v2:phrase:f832975e",
+    "daily-knowledge-v2:phrase:2725c3f1",
+    "daily-knowledge-v2:phrase:b739342e",
+    "daily-knowledge-v2:phrase:986fc5a1",
+    "daily-knowledge-v2:phrase:1de7c30a",
+    "daily-knowledge-v2:phrase:eb48d632",
+    "daily-knowledge-v2:phrase:c07afb24",
+    "daily-knowledge-v2:phrase:a62d3205",
+    "daily-knowledge-v2:phrase:7c8641dc",
+    "daily-knowledge-v2:phrase:6be8d9a3",
+    "daily-knowledge-v2:phrase:7919c49e",
+    "daily-knowledge-v2:phrase:2e50db67",
+    "daily-knowledge-v2:phrase:d1491554",
+    "daily-knowledge-v2:phrase:4c80b710",
+    "daily-knowledge-v2:phrase:4ad84ff8",
+    "daily-knowledge-v2:phrase:b466c63b",
+    "daily-knowledge-v2:phrase:ebd81d13",
+    "daily-knowledge-v2:phrase:8035d6e5",
+    "daily-knowledge-v2:phrase:cba37d85",
+    "daily-knowledge-v2:phrase:c993186b",
+    "daily-knowledge-v2:phrase:8253a40b"
+  ]
+}

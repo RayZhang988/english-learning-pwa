@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "documentType": "daily-level-batch-quality-audit",
+  "auditVersion": "2.0.0-c2",
+  "releaseStatus": "candidate-blocked-until-c3-c5",
+  "records": 200,
+  "combinedRecords": 2400,
+  "level": {
+    "id": "senior-2",
+    "labelZh": "高二",
+    "metrics": {
+      "count": 200,
+      "wordRatio": 0,
+      "completeUtteranceRatio": 0.785,
+      "complexUtteranceRatio": 0.355,
+      "averageTokens": 10.995,
+      "maximumTokens": 13,
+      "tokenDistribution": {
+        "2": 7,
+        "3": 5,
+        "9": 4,
+        "10": 24,
+        "11": 53,
+        "12": 80,
+        "13": 27
+      },
+      "maximumOpeningCluster": 10,
+      "maximumSkeletonCluster": 6
+    }
+  },
+  "crossLevelDuplicateForms": 0,
+  "templateMaximums": {
+    "sharedOpeningFourTokens": 10,
+    "sharedSkeleton": 6
+  },
+  "identityMigration": {
+    "sourceRecords": 200,
+    "retired": 200,
+    "newV2Identities": 200
+  },
+  "formalIndexesRegenerated": false
+}
