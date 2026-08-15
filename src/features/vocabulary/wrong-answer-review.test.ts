@@ -34,12 +34,16 @@ describe('R13-D vocabulary review content', () => {
     const releasedIndex = await loadReleasedReviewContentIndex() as typeof index
     const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
     const daily = (catalog.trainingSupplyIndex as { candidates: readonly VocabularySupplyItem[] }).candidates.filter((candidate) => candidate.domain === 'vocabulary')
-    expect(daily).toHaveLength(9015)
+    // R17 v2 publishes 3 interaction variants for each of 3000 knowledge points.
+    expect(daily).toHaveLength(9000)
+    expect(new Set(daily.map((candidate) => candidate.knowledgePointId)).size).toBe(3000)
     for (const candidate of daily) {
       const resolved = resolveDailyVocabularyReviewContent(releasedIndex, candidate, catalog)
       expect(resolved.identity.originalQuestionType).toContain(candidate.source.variantId.replace('-choice', ''))
       expect(resolved.question.options.some((option) => option.id === resolved.question.correctOptionId)).toBe(true)
     }
+    const retired = { ...daily[0]!, itemId: 'w1d1-v01:term-to-meaning-choice' }
+    expect(() => resolveDailyVocabularyReviewContent(releasedIndex, retired, catalog)).toThrow('missing')
     const bank = createSceneVocabularyQuestionBank(JSON.parse(await readFile(new URL('content/lessons/survival-travel-american-4w/scene-vocabulary-questions.v1.json', root), 'utf8')) as unknown)
     const questions = bank.scenes.flatMap((scene) => scene.questions)
     expect(questions).toHaveLength(612)

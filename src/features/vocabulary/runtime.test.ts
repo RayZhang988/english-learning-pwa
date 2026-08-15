@@ -227,7 +227,11 @@ describe('vocabulary training runtime', () => {
   it('publishes one durable recovery before a retried item and budget completion', async () => {
     const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
     const candidates = (catalog.trainingSupplyIndex as { candidates: VocabularySupplyItem[] }).candidates
-    const [first, second] = candidates.filter((item) => item.itemId.includes('w1d1-v') && item.source.variantId === 'term-to-meaning-choice')
+    // Use published v2 candidates. The retired w1d1-v fixtures are deliberately
+    // absent from the rebuilt 15-level supply index.
+    const [first, second] = candidates.filter((item) => item.source.variantId === 'term-to-meaning-choice')
+    expect(first).toBeDefined()
+    expect(second).toBeDefined()
     let calls = 0
     const supplyProvider: VocabularySupplyProvider = {
       async next(request) {
@@ -275,7 +279,9 @@ describe('vocabulary training runtime', () => {
   it('restores a failed recovery outbox event without generating a second recovery identity', async () => {
     const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
     const candidates = (catalog.trainingSupplyIndex as { candidates: VocabularySupplyItem[] }).candidates
-    const [first, second] = candidates.filter((item) => item.itemId.includes('w1d1-v') && item.source.variantId === 'term-to-meaning-choice')
+    const [first, second] = candidates.filter((item) => item.source.variantId === 'term-to-meaning-choice')
+    expect(first).toBeDefined()
+    expect(second).toBeDefined()
     let calls = 0
     const supplyProvider: VocabularySupplyProvider = { async next(request) {
       calls += 1

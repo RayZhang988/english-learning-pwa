@@ -179,6 +179,20 @@ describe('vocabulary training supply', () => {
     await expect(provider.next({ ...request, excludeItemIds: [recent.itemId] })).resolves.toMatchObject({ status: 'item', item: { itemId: due.itemId } })
   })
 
+  it('keeps a released v2 kindergarten recent-error candidate eligible at difficulty zero', async () => {
+    const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
+    const provider = new VocabularyCatalogSupplyProvider(catalog.trainingSupplyIndex, catalog)
+    const recent = (catalog.trainingSupplyIndex as { candidates: { itemId: string; difficultyLevel: number }[] }).candidates
+      .find((candidate) => candidate.itemId.startsWith('supply-v1-vocabulary-qa-r17-003-a:kindergarten:'))!
+
+    await expect(provider.next({
+      schemaVersion: 1, requestId: 'extra-kindergarten-priority', sessionId: 'extra-session', localDate: '2026-07-29',
+      domain: 'vocabulary', targetModuleId: 'vocabulary', mode: 'learn', targetDifficulty: recent.difficultyLevel,
+      cursor: null, excludeItemIds: [], priority: ['recent-error', 'due-review', 'same-day-variant', 'new-optional-content'],
+      priorityItemIds: { 'recent-error': [recent.itemId], 'due-review': [], 'same-day-variant': [], 'new-optional-content': [] }, reason: 'initial',
+    })).resolves.toMatchObject({ status: 'item', item: { itemId: recent.itemId } })
+  })
+
   it('consumes schema-2 priority order instead of re-selecting from request buckets', async () => {
     const catalog = createVocabularyCatalog(await loadActualVocabularyDocuments())
     const provider = new VocabularyCatalogSupplyProvider(catalog.trainingSupplyIndex, catalog)

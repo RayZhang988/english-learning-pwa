@@ -258,7 +258,7 @@ export class VocabularyCatalogSupplyProvider implements VocabularySupplyProvider
     return this.items.filter((item) =>
       item.allowedModes.includes(request.mode) &&
       (request.targetDifficulty < 0.5
-        ? item.difficultyLevel >= 0.5 && item.difficultyLevel <= 2.5
+        ? item.difficultyLevel >= 0 && item.difficultyLevel <= 2.5
         : Math.abs(item.difficultyLevel - request.targetDifficulty) <= 1.5),
     )
   }
