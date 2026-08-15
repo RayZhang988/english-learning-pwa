@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "documentType": "daily-level-rebuild-complete-handoff",
+  "version": "2.0.0",
+  "releaseStatus": "candidate-awaiting-04-01-09-integration",
+  "sourceRecords": 3005,
+  "candidateRecords": 3000,
+  "uniqueCandidateIdentities": 3000,
+  "levels": {
+    "kindergarten": 200,
+    "primary-1": 200,
+    "primary-2": 200,
+    "primary-3": 200,
+    "primary-4": 200,
+    "primary-5": 200,
+    "primary-6": 200,
+    "junior-1": 200,
+    "junior-2": 200,
+    "junior-3": 200,
+    "senior-1": 200,
+    "senior-2": 200,
+    "senior-3": 200,
+    "cet-4-reference": 200,
+    "cet-6-reference": 200
+  },
+  "migration": {
+    "entries": 3005,
+    "dispositions": {
+      "retired": 2245,
+      "moved-equivalent": 538,
+      "equivalent": 222
+    },
+    "evidenceTransfers": 760,
+    "newIdentityDeclarations": 2240,
+    "mappedTargetIdentities": 760,
+    "completeCoverage": true
+  },
+  "formalIndexesRegenerated": false,
+  "nextOwners": {
+    "04": "validate growth thresholds and migration semantics",
+    "01": "atomically switch daily content, supply, review and storage migration",
+    "09": "full local, deployed and device acceptance"
+  },
+  "partialDeploymentAllowed": false
+}

@@ -1,0 +1,1 @@
+import{describe,it,expect}from'vitest';import{execFileSync}from'node:child_process';describe('QA-R17-003 complete candidate',()=>{it('covers 3005 legacy sources with 3000 uniquely owned candidates',()=>{expect(()=>execFileSync(process.execPath,['content/curriculum/validate-daily-level-rebuild-complete.v2.mjs'])).not.toThrow()})})
