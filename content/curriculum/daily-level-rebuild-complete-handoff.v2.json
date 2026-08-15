@@ -38,6 +38,7 @@
   "formalIndexesRegenerated": true,
   "formalPublicationReport": "content/curriculum/daily-level-formal-publication.v2.json",
   "formalMigrationFile": "content/curriculum/daily-level-identity-migration.v2.json",
+  "wrongAnswerIdentityMigrationFile": "content/curriculum/wrong-answer-review-identity-migration.v1.json",
   "nextOwners": {
     "04": "validate growth thresholds and migration semantics",
     "01": "atomically switch daily content, supply, review and storage migration",

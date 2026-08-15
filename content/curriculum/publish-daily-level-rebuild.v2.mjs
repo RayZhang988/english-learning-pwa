@@ -28,6 +28,7 @@ const curriculum = 'content/curriculum'
 const formalMigrationPath = `${curriculum}/daily-level-identity-migration.v2.json`
 const formalReportPath = `${curriculum}/daily-level-formal-publication.v2.json`
 const handoffPath = `${curriculum}/daily-level-rebuild-complete-handoff.v2.json`
+const wrongAnswerMigrationPath = `${curriculum}/wrong-answer-review-identity-migration.v1.json`
 
 const readJson = (root, relative) => JSON.parse(fs.readFileSync(path.join(root, relative), 'utf8'))
 const writeJson = (root, relative, value, compact = false) => {
@@ -179,6 +180,8 @@ function formalArtifacts(root, lessonFiles) {
     `${curriculum}/review-content-index.v1.json`,
     ...review.shards.map((shard) => shard.path),
     `${curriculum}/review-content-identity-lock.v1.json`,
+    `${curriculum}/wrong-answer-review-identity-source.v1.json`,
+    wrongAnswerMigrationPath,
     formalMigrationPath,
     formalReportPath,
     handoffPath,
@@ -248,6 +251,7 @@ export async function publishDailyLevelRebuild({ workspaceRoot, stagingParent, d
   run(stageRoot, `${curriculum}/generate-review-content-index.v1.mjs`, ['--write'])
   refreshReviewIdentityLock(stageRoot)
   run(stageRoot, `${curriculum}/validate-review-content-identity-lock.v1.mjs`)
+  run(stageRoot, `${curriculum}/generate-wrong-answer-identity-migration.v1.mjs`)
   const packageIndex = readJson(stageRoot, `${curriculum}/package-index.v1.json`)
   const review = readJson(stageRoot, `${curriculum}/review-content-index.v1.json`)
   const report = {

@@ -66,6 +66,7 @@
   },
   "reviewContentIndexFile": "content/curriculum/review-content-index.v1.json",
   "reviewContentIndexSchemaFile": "content/curriculum/review-content-index.schema.v1.json",
+  "wrongAnswerIdentityMigrationFile": "content/curriculum/wrong-answer-review-identity-migration.v1.json",
   "learningCandidateProjection": {
     "staticFields": [
       "learningUnitId",

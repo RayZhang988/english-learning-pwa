@@ -25,6 +25,7 @@
     "trainingSupplyTotals",
     "reviewContentIndexFile",
     "reviewContentIndexSchemaFile",
+    "wrongAnswerIdentityMigrationFile",
     "learningCandidateProjection"
   ],
   "properties": {
@@ -160,6 +161,9 @@
     },
     "reviewContentIndexSchemaFile": {
       "const": "content/curriculum/review-content-index.schema.v1.json"
+    },
+    "wrongAnswerIdentityMigrationFile": {
+      "const": "content/curriculum/wrong-answer-review-identity-migration.v1.json"
     },
     "learningCandidateProjection": {
       "type": "object",
