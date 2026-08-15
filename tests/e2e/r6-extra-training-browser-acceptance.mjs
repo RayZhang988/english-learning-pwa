@@ -261,6 +261,22 @@ function extraFeatureSnapshot(databases, moduleId, sessionId) {
   return record.value
 }
 
+async function extraTrainingRecords(page, moduleId, sessionId) {
+  return page.readAppRecords(appDatabaseName, [
+    { namespace: 'learning.engine', key: 'current-state' },
+    {
+      namespace: `feature.${moduleId}.extra-training`,
+      key: `session:${sessionId}`,
+    },
+  ])
+}
+
+async function engineRecords(page) {
+  return page.readAppRecords(appDatabaseName, [
+    { namespace: 'learning.engine', key: 'current-state' },
+  ])
+}
+
 async function putRecords(page, records) {
   await page.evaluate(`(async () => {
     const records = ${JSON.stringify(records)}
@@ -1571,14 +1587,18 @@ function snapshotIdentity(snapshot) {
 
 async function verifyExitRefreshResume(page, moduleId, rapid = false) {
   const sessionId = await startOrResumeExtra(page, moduleId, rapid)
-  const beforeDatabases = await page.dumpIndexedDb()
+  const beforeDatabases = await extraTrainingRecords(
+    page,
+    moduleId,
+    sessionId,
+  )
   const before = snapshotIdentity(
     extraFeatureSnapshot(beforeDatabases, moduleId, sessionId),
   )
   assert.ok(before.itemId, `${moduleId} has no released active item.`)
   await exitExtra(page, moduleId)
   const exited = extraSession(
-    await page.dumpIndexedDb(),
+    await extraTrainingRecords(page, moduleId, sessionId),
     sessionId,
   )
   assert.equal(exited.status, 'paused')
@@ -1588,7 +1608,7 @@ async function verifyExitRefreshResume(page, moduleId, rapid = false) {
   assert.equal(restoredSessionId, sessionId)
   const after = snapshotIdentity(
     extraFeatureSnapshot(
-      await page.dumpIndexedDb(),
+      await extraTrainingRecords(page, moduleId, sessionId),
       moduleId,
       sessionId,
     ),
@@ -1624,7 +1644,7 @@ async function verifyOpenEndedContinues(
 ) {
   const opened = await startOrResumeExtra(page, moduleId)
   assert.equal(opened, sessionId)
-  const before = extraSession(await page.dumpIndexedDb(), sessionId)
+  const before = extraSession(await engineRecords(page), sessionId)
   const body = await page.bodyText()
   assert.match(body, /不限时额外训练/u)
   assert.doesNotMatch(body, /剩余有效时间|完成本题并结束/u)
@@ -1651,7 +1671,7 @@ async function verifyOpenEndedContinues(
     20_000,
   )
   await waitForExtraQuestion(page, moduleId)
-  const after = extraSession(await page.dumpIndexedDb(), sessionId)
+  const after = extraSession(await engineRecords(page), sessionId)
   assert.equal(after.status, 'running')
   assert.ok(after.completedItemCount > before.completedItemCount)
   assert.equal(after.completionMode, 'open-ended')
@@ -1691,7 +1711,7 @@ export async function completeExtra(page, moduleId, sessionId) {
     await finishControlledSpeech(page)
     assert.equal(
       extraSession(
-        await page.dumpIndexedDb(),
+        await engineRecords(page),
         sessionId,
       ).status,
       'finish-current-item',
@@ -1753,7 +1773,7 @@ export async function completeExtra(page, moduleId, sessionId) {
     20_000,
   )
   const completed = extraSession(
-    await page.dumpIndexedDb(),
+    await engineRecords(page),
     sessionId,
   )
   assert.equal(completed.status, 'completed')
@@ -1796,7 +1816,11 @@ export async function completeExtra(page, moduleId, sessionId) {
 }
 
 async function assertDailyThreeOfThree(page, expectedRuntime) {
-  const runtime = activeRuntime(await page.dumpIndexedDb())
+  const runtime = activeRuntime(
+    await page.readAppRecords(appDatabaseName, [
+      { namespace: 'app.learning-runtime', key: 'active-plan' },
+    ]),
+  )
   assert.deepEqual(runtime.activePlan, expectedRuntime.activePlan)
   assert.equal(runtime.activePlan.status, 'completed')
   assert.equal(runtime.activePlan.tasks.length, 3)
@@ -2194,7 +2218,7 @@ async function run() {
     }
     assert.equal(
       extraSessions(
-        await qa.page.dumpIndexedDb(),
+        await engineRecords(qa.page),
         'vocabulary',
       ).length,
       1,
@@ -2260,7 +2284,7 @@ async function run() {
       recovery.speaking.sessionId,
     )
     const replacedSpeaking = extraSession(
-      await qa.page.dumpIndexedDb(),
+      await engineRecords(qa.page),
       recovery.speaking.sessionId,
     )
     assert.equal(replacedSpeaking.status, 'expired')

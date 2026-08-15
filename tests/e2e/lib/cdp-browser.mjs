@@ -510,6 +510,41 @@ export class QaPage {
       return output
     })()`)
   }
+
+  /**
+   * Read only the named app records.  Large course migrations can make a
+   * whole-database `getAll()` needlessly expensive and mask a browser test
+   * failure as a CDP timeout.
+   */
+  async readAppRecords(databaseName, records) {
+    return this.evaluate(`(async () => {
+      const database = await new Promise((resolve, reject) => {
+        const request = indexedDB.open(${JSON.stringify(databaseName)})
+        request.onsuccess = () => resolve(request.result)
+        request.onerror = () => reject(request.error)
+      })
+      try {
+        const output = await new Promise((resolve, reject) => {
+          const transaction = database.transaction('records', 'readonly')
+          const store = transaction.objectStore('records')
+          const requests = ${JSON.stringify(records)}.map(({ namespace, key }) =>
+            new Promise((resolveRequest, rejectRequest) => {
+              const request = store.index('[namespace+key]').get([namespace, key])
+              request.onsuccess = () => resolveRequest(request.result)
+              request.onerror = () => rejectRequest(request.error)
+            }),
+          )
+          Promise.all(requests).then(resolve, reject)
+        })
+        return [{
+          name: ${JSON.stringify(databaseName)},
+          stores: { records: output.filter(Boolean) },
+        }]
+      } finally {
+        database.close()
+      }
+    })()`)
+  }
 }
 
 export const fakeAssessmentClockScript = `(() => {
