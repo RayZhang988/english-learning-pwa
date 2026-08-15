@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "documentType": "daily-level-batch-quality-audit",
+  "auditVersion": "2.0.0-c3",
+  "releaseStatus": "candidate-blocked-until-c4-c5",
+  "records": 200,
+  "combinedRecords": 2600,
+  "level": {
+    "id": "senior-3",
+    "labelZh": "高三",
+    "metrics": {
+      "count": 200,
+      "wordRatio": 0,
+      "completeUtteranceRatio": 0.57,
+      "complexUtteranceRatio": 0.55,
+      "averageTokens": 11.77,
+      "maximumTokens": 14,
+      "tokenDistribution": {
+        "8": 3,
+        "9": 16,
+        "10": 10,
+        "11": 45,
+        "12": 71,
+        "13": 31,
+        "14": 24
+      },
+      "maximumOpeningCluster": 2,
+      "maximumSkeletonCluster": 3
+    }
+  },
+  "topics": {
+    "complex-rebooking-disruption": 40,
+    "accommodation-dispute-alternative": 40,
+    "transport-connection-safety": 40,
+    "medical-medication-insurance": 40,
+    "payment-document-tracing": 40
+  },
+  "crossLevelDuplicateForms": 0,
+  "templateMaximums": {
+    "sharedOpeningFourTokens": 2,
+    "sharedSkeleton": 3
+  },
+  "identityMigration": {
+    "sourceRecords": 200,
+    "dispositions": {
+      "retired": 200
+    },
+    "evidenceTransfers": 0,
+    "newV2Identities": 200
+  },
+  "formalIndexesRegenerated": false
+}

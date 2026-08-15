@@ -1,0 +1,4616 @@
+{
+  "schemaVersion": 1,
+  "documentType": "daily-level-content-batch",
+  "contentVersion": "2.0.0-c3",
+  "identityVersion": "daily-knowledge-v2",
+  "releaseStatus": "candidate-not-deployable-until-c4-c5",
+  "levels": [
+    {
+      "id": "senior-3",
+      "labelZh": "高三",
+      "recordCount": 200
+    }
+  ],
+  "records": [
+    {
+      "sourceItemId": "qa-r17-003-c3:001",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:4e981cbe",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Will my checked bag follow me onto the later flight automatically?",
+      "meaningZh": "如果我改乘晚班航班，托运行李会自动跟过去吗？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Will my checked bag follow me onto the later flight automatically?",
+      "exampleZh": "如果我改乘晚班航班，托运行李会自动跟过去吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:002",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:a3bdb407",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "What route gives me the safest connection without another overnight stop?",
+      "meaningZh": "哪条路线衔接最稳妥，而且不会增加一次过夜停留？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "What route gives me the safest connection without another overnight stop?",
+      "exampleZh": "哪条路线衔接最稳妥，而且不会增加一次过夜停留？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:003",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:ceb77fc6",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please check the final train schedule prior to rebooking me.",
+      "meaningZh": "给我改签前，请确认末班火车届时是否仍在运行。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please check the final train schedule prior to rebooking me.",
+      "exampleZh": "给我改签前，请确认末班火车届时是否仍在运行。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:004",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:863d70d9",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The new arrival time leaves only twenty minutes for immigration and security.",
+      "meaningZh": "新的到达时间只给我二十分钟办理入境和安检。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The new arrival time leaves only twenty minutes for immigration and security.",
+      "exampleZh": "新的到达时间只给我二十分钟办理入境和安检。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:005",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d464ceb8",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Can you protect tomorrow’s seat during my review of tonight’s alternative?",
+      "meaningZh": "我比较今晚的替代方案时，能先保留明天的座位吗？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Can you protect tomorrow’s seat during my review of tonight’s alternative?",
+      "exampleZh": "我比较今晚的替代方案时，能先保留明天的座位吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:006",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:e572dfdf",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I can accept the detour provided my onward ticket remains valid.",
+      "meaningZh": "只要后续车票仍然有效，我可以接受绕行。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I can accept the detour provided my onward ticket remains valid.",
+      "exampleZh": "只要后续车票仍然有效，我可以接受绕行。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:007",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d5aece85",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Would changing airports make me responsible for the transfer cost?",
+      "meaningZh": "更换机场后，转场费用需要由我承担吗？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Would changing airports make me responsible for the transfer cost?",
+      "exampleZh": "更换机场后，转场费用需要由我承担吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:008",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:f126d50d",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please recheck the connection due to the first flight’s current delay.",
+      "meaningZh": "请重新检查衔接安排，因为第一段航班已经延误。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please recheck the connection due to the first flight’s current delay.",
+      "exampleZh": "请重新检查衔接安排，因为第一段航班已经延误。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:009",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:82fc7191",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "What backup have you arranged for another service cancellation?",
+      "meaningZh": "如果这班也取消，你们安排了什么备用方案？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "What backup have you arranged for another service cancellation?",
+      "exampleZh": "如果这班也取消，你们安排了什么备用方案？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:010",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:68667727",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The replacement reaches my destination sooner but separates me from my luggage.",
+      "meaningZh": "替代路线更早到达，却会让我与行李分开。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The replacement reaches my destination sooner but separates me from my luggage.",
+      "exampleZh": "替代路线更早到达，却会让我与行李分开。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:011",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:280b6983",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Could you keep both segments together so another delay does not break the booking?",
+      "meaningZh": "能否把两段行程保留在同一预订中，避免再次延误时断开？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Could you keep both segments together so another delay does not break the booking?",
+      "exampleZh": "能否把两段行程保留在同一预订中，避免再次延误时断开？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:012",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:a65b350f",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Does accepting this route remove my refund option?",
+      "meaningZh": "我需要知道接受这条路线后是否会失去退款选择。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Does accepting this route remove my refund option?",
+      "exampleZh": "我需要知道接受这条路线后是否会失去退款选择。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:013",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:2742e9eb",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Can the operational delay justify waiving the change fee?",
+      "meaningZh": "既然延误属于运营原因，可以免除改签费吗？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Can the operational delay justify waiving the change fee?",
+      "exampleZh": "既然延误属于运营原因，可以免除改签费吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:014",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:32962b5a",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The proposed arrival misses my hotel’s midnight check-in deadline.",
+      "meaningZh": "酒店午夜停止办理入住，因此建议的到达时间太晚。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The proposed arrival misses my hotel’s midnight check-in deadline.",
+      "exampleZh": "酒店午夜停止办理入住，因此建议的到达时间太晚。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:015",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d60014b0",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please confirm my assistance contact during the six-hour overnight connection.",
+      "meaningZh": "请确认六小时过夜转机期间由谁为我提供协助。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please confirm my assistance contact during the six-hour overnight connection.",
+      "exampleZh": "请确认六小时过夜转机期间由谁为我提供协助。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:016",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:b704e742",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Can the unused rail segment be refunded separately from the replacement flight?",
+      "meaningZh": "未使用的火车段能否与替代航班分开退款？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Can the unused rail segment be refunded separately from the replacement flight?",
+      "exampleZh": "未使用的火车段能否与替代航班分开退款？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:017",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:96b8f1fb",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I would rather travel tomorrow than risk missing two connections tonight.",
+      "meaningZh": "我宁愿明天出发，也不想冒今晚错过两次衔接的风险。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I would rather travel tomorrow than risk missing two connections tonight.",
+      "exampleZh": "我宁愿明天出发，也不想冒今晚错过两次衔接的风险。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:018",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:4c70a5af",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Does this rebooking preserve the assistance already attached to my reservation?",
+      "meaningZh": "这次改签会保留预订中已有的协助服务吗？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Does this rebooking preserve the assistance already attached to my reservation?",
+      "exampleZh": "这次改签会保留预订中已有的协助服务吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:019",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:083ea64f",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The alternative works only with my companion on the same service.",
+      "meaningZh": "只有同行人也改到同一班次，这个替代方案才可行。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The alternative works only with my companion on the same service.",
+      "exampleZh": "只有同行人也改到同一班次，这个替代方案才可行。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:020",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:ac16f2de",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Whom should I contact about a replacement bus missing the terminal?",
+      "meaningZh": "如果替代巴士没有到达航站楼，我该联系谁？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Whom should I contact about a replacement bus missing the terminal?",
+      "exampleZh": "如果替代巴士没有到达航站楼，我该联系谁？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:021",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:bcaa9873",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please show me the complete journey prior to cancelling my original seats.",
+      "meaningZh": "取消原座位前，请先向我展示完整的新行程。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please show me the complete journey prior to cancelling my original seats.",
+      "exampleZh": "取消原座位前，请先向我展示完整的新行程。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:022",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:43583eef",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Can you record my rejection due to the impossible connection?",
+      "meaningZh": "能否注明我拒绝该路线是因为衔接时间根本不可行？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Can you record my rejection due to the impossible connection?",
+      "exampleZh": "能否注明我拒绝该路线是因为衔接时间根本不可行？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:023",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:57be4482",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Does rerouting through another country require a transit visa?",
+      "meaningZh": "改道会经过另一个国家，我在那里需要过境签证吗？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Does rerouting through another country require a transit visa?",
+      "exampleZh": "改道会经过另一个国家，我在那里需要过境签证吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:024",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:4c325f82",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Will another first-leg change update the remaining segments together?",
+      "meaningZh": "如果第一段再次变更，后续各段会一起更新吗？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Will another first-leg change update the remaining segments together?",
+      "exampleZh": "如果第一段再次变更，后续各段会一起更新吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:025",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:9f3043d9",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I need meal support during the wait instead of another travel voucher.",
+      "meaningZh": "等待期间我需要餐食安排，而不是另一张旅行代金券。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I need meal support during the wait instead of another travel voucher.",
+      "exampleZh": "等待期间我需要餐食安排，而不是另一张旅行代金券。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:026",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:fd3019b2",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Could the airline send my revised itinerary prior to my departure?",
+      "meaningZh": "我离开柜台前，航空公司能把修改后的行程发给我吗？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Could the airline send my revised itinerary prior to my departure?",
+      "exampleZh": "我离开柜台前，航空公司能把修改后的行程发给我吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:027",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:fa3b7283",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "This flight arrives after public transport stops and increases my total cost.",
+      "meaningZh": "提供的航班在公共交通停运后降落，会增加我的总费用。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "This flight arrives after public transport stops and increases my total cost.",
+      "exampleZh": "提供的航班在公共交通停运后降落，会增加我的总费用。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:028",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:b375316b",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Would the morning departure include accommodation for tonight’s forced stay?",
+      "meaningZh": "改乘早班航班是否包含今晚被迫滞留的住宿？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Would the morning departure include accommodation for tonight’s forced stay?",
+      "exampleZh": "改乘早班航班是否包含今晚被迫滞留的住宿？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:029",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:520566ce",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please compare actual arrival times including every airport transfer.",
+      "meaningZh": "请把每次机场转场算进去后，再比较实际到达时间。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please compare actual arrival times including every airport transfer.",
+      "exampleZh": "请把每次机场转场算进去后，再比较实际到达时间。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:030",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:1a556769",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The connection requires prior confirmation of the mobility service.",
+      "meaningZh": "除非先确认无障碍协助，否则我无法使用这次衔接。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The connection requires prior confirmation of the mobility service.",
+      "exampleZh": "除非先确认无障碍协助，否则我无法使用这次衔接。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:031",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:c5706cce",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "How would an outbound-only change affect my return journey?",
+      "meaningZh": "如果只更改去程票，我的返程行程会怎样？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "How would an outbound-only change affect my return journey?",
+      "exampleZh": "如果只更改去程票，我的返程行程会怎样？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:032",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:9a4fd1de",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Could you mark the rebooking as involuntary so my benefits remain protected?",
+      "meaningZh": "能否把这次改签标为非自愿，以保留我的权益？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Could you mark the rebooking as involuntary so my benefits remain protected?",
+      "exampleZh": "能否把这次改签标为非自愿，以保留我的权益？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:033",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:981885aa",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The more expensive direct flight avoids two unreliable connections.",
+      "meaningZh": "虽然直飞更贵，但可以避开两次不可靠的衔接。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The more expensive direct flight avoids two unreliable connections.",
+      "exampleZh": "虽然直飞更贵，但可以避开两次不可靠的衔接。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:034",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:54f3cbf0",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I need enough time to collect and recheck my baggage between airports.",
+      "meaningZh": "我需要足够时间在两个机场之间提取并重新托运行李。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I need enough time to collect and recheck my baggage between airports.",
+      "exampleZh": "我需要足够时间在两个机场之间提取并重新托运行李。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:035",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:eec9bf2f",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please explain the consequences of another missed connection on this route.",
+      "meaningZh": "如果我保留这条路线，请说明再次误接会有什么后果。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please explain the consequences of another missed connection on this route.",
+      "exampleZh": "如果我保留这条路线，请说明再次误接会有什么后果。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:036",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d938002e",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Can one agent confirm every segment instead of sending me between counters?",
+      "meaningZh": "能否由一名工作人员确认所有行程段，而不是让我在柜台间奔波？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Can one agent confirm every segment instead of sending me between counters?",
+      "exampleZh": "能否由一名工作人员确认所有行程段，而不是让我在柜台间奔波？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:037",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:484aea0f",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The workable schedule comes with a different baggage allowance.",
+      "meaningZh": "时间安排可行，但新票显示的行李额度不同。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The workable schedule comes with a different baggage allowance.",
+      "exampleZh": "时间安排可行，但新票显示的行李额度不同。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:038",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:8e9e1016",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please record the reason, selected alternative, and claimable costs.",
+      "meaningZh": "请记录原因、选定的替代方案以及我需要索赔的费用。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please record the reason, selected alternative, and claimable costs.",
+      "exampleZh": "请记录原因、选定的替代方案以及我需要索赔的费用。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:039",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:7696251b",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Will an impossible protected connection trigger an alert?",
+      "meaningZh": "如果受保障的衔接变得不可行，我会收到提醒吗？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Will an impossible protected connection trigger an alert?",
+      "exampleZh": "如果受保障的衔接变得不可行，我会收到提醒吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:040",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:8441a0f6",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "A useful same-day reroute requires transfer of all confirmed services.",
+      "meaningZh": "只有所有已确认服务都随之转移，当日改道才有用。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "A useful same-day reroute requires transfer of all confirmed services.",
+      "exampleZh": "只有所有已确认服务都随之转移，当日改道才有用。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "complex-rebooking-disruption",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:041",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:5b24d6bc",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "What rate reduction applies to the smaller substitute room?",
+      "meaningZh": "替代房间更小，因此房价的哪一部分会减免？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "What rate reduction applies to the smaller substitute room?",
+      "exampleZh": "替代房间更小，因此房价的哪一部分会减免？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:042",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:7f72a148",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I can move tonight with staff luggage transfer and breakfast included.",
+      "meaningZh": "如果员工帮我转运行李并保留早餐，我今晚可以换房。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I can move tonight with staff luggage transfer and breakfast included.",
+      "exampleZh": "如果员工帮我转运行李并保留早餐，我今晚可以换房。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:043",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:af3e04d6",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The room remains unsuitable for sleep despite the noise stopping.",
+      "meaningZh": "虽然噪音停了，我仍需要一间能睡觉的房间。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The room remains unsuitable for sleep despite the noise stopping.",
+      "exampleZh": "虽然噪音停了，我仍需要一间能睡觉的房间。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:044",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:0b120f51",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Would accepting one free night prevent me claiming the other unusable nights?",
+      "meaningZh": "接受一晚免费住宿会妨碍我申请其他无法入住夜晚的赔偿吗？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Would accepting one free night prevent me claiming the other unusable nights?",
+      "exampleZh": "接受一晚免费住宿会妨碍我申请其他无法入住夜晚的赔偿吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:045",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:b7377a98",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please inspect the damp wall prior to offering another room here.",
+      "meaningZh": "再提供本层其他房间前，请先检查这面潮湿的墙。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please inspect the damp wall prior to offering another room here.",
+      "exampleZh": "再提供本层其他房间前，请先检查这面潮湿的墙。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:046",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:9b237daf",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Losing the promised kitchen significantly increases my food costs.",
+      "meaningZh": "公寓没有承诺的厨房，这会显著增加我的餐饮费用。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Losing the promised kitchen significantly increases my food costs.",
+      "exampleZh": "公寓没有承诺的厨房，这会显著增加我的餐饮费用。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:047",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:5cb672ac",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Can the hotel arrange equivalent accessible accommodation nearby at the confirmed price?",
+      "meaningZh": "酒店能否按确认价格在附近安排同等无障碍住宿？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Can the hotel arrange equivalent accessible accommodation nearby at the confirmed price?",
+      "exampleZh": "酒店能否按确认价格在附近安排同等无障碍住宿？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:048",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:c8292ba6",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The broken lock remains unsecured despite my report yesterday.",
+      "meaningZh": "我昨天报告了门锁损坏，但至今没人确保房间安全。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The broken lock remains unsecured despite my report yesterday.",
+      "exampleZh": "我昨天报告了门锁损坏，但至今没人确保房间安全。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:049",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:e72e2256",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "How are unused nights calculated for an immediate checkout?",
+      "meaningZh": "如果我现在退房，未入住夜晚的费用如何计算？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "How are unused nights calculated for an immediate checkout?",
+      "exampleZh": "如果我现在退房，未入住夜晚的费用如何计算？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:050",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:0671f0f2",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Who covers the farther hotel’s daily transport difference?",
+      "meaningZh": "建议的酒店更远，额外的每日交通费用由谁承担？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Who covers the farther hotel’s daily transport difference?",
+      "exampleZh": "建议的酒店更远，额外的每日交通费用由谁承担？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:051",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:44dff46a",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please keep my current room until I have inspected the replacement myself.",
+      "meaningZh": "在我亲自查看替代房间前，请保留当前房间。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please keep my current room until I have inspected the replacement myself.",
+      "exampleZh": "在我亲自查看替代房间前，请保留当前房间。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:052",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:5fab60b4",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The unavailable lift makes this upper-floor room unsuitable for my needs.",
+      "meaningZh": "由于电梯停用，这间高层房间不符合我的需求。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The unavailable lift makes this upper-floor room unsuitable for my needs.",
+      "exampleZh": "由于电梯停用，这间高层房间不符合我的需求。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:053",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:2f3eeeb3",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Could you confirm whether the relocation includes taxes, breakfast, and late arrival?",
+      "meaningZh": "能否确认搬迁安排包含税费、早餐和晚到入住？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Could you confirm whether the relocation includes taxes, breakfast, and late arrival?",
+      "exampleZh": "能否确认搬迁安排包含税费、早餐和晚到入住？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:054",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d878ec1f",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I need a written breakdown separating the room refund from incidental charges.",
+      "meaningZh": "我需要一份书面明细，将房费退款与杂费分开。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I need a written breakdown separating the room refund from incidental charges.",
+      "exampleZh": "我需要一份书面明细，将房费退款与杂费分开。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:055",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:b40898eb",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The replacement has two beds, but we booked connecting rooms for childcare.",
+      "meaningZh": "替代房有两张床，但我们因照看孩子预订的是连通房。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The replacement has two beds, but we booked connecting rooms for childcare.",
+      "exampleZh": "替代房有两张床，但我们因照看孩子预订的是连通房。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:056",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:f28ed0a9",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "What can you offer while maintenance checks whether the water is safe?",
+      "meaningZh": "维修人员检查用水是否安全期间，你们能提供什么安排？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "What can you offer while maintenance checks whether the water is safe?",
+      "exampleZh": "维修人员检查用水是否安全期间，你们能提供什么安排？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:057",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:bb1fbca7",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I will accept the downgrade only if the price difference is refunded immediately.",
+      "meaningZh": "只有立即退还差价，我才接受降级房型。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I will accept the downgrade only if the price difference is refunded immediately.",
+      "exampleZh": "只有立即退还差价，我才接受降级房型。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:058",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:dc63cdbe",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Can you arrange secure storage while I wait for the new room?",
+      "meaningZh": "等待新房间期间，能否安排安全的行李寄存？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Can you arrange secure storage while I wait for the new room?",
+      "exampleZh": "等待新房间期间，能否安排安全的行李寄存？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:059",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:55c4b1fc",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The listing showed step-free access, yet every entrance has several stairs.",
+      "meaningZh": "房源页面标注无台阶通道，但每个入口都有几级楼梯。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The listing showed step-free access, yet every entrance has several stairs.",
+      "exampleZh": "房源页面标注无台阶通道，但每个入口都有几级楼梯。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:060",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:4d2b5cbf",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please explain why the confirmed late checkout disappeared after my arrival.",
+      "meaningZh": "请说明为何我抵达后，已确认的延迟退房不见了。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please explain why the confirmed late checkout disappeared after my arrival.",
+      "exampleZh": "请说明为何我抵达后，已确认的延迟退房不见了。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:061",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:de8217a3",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "If repairs continue tomorrow, I need a definite relocation time tonight.",
+      "meaningZh": "如果明天继续维修，我今晚就需要明确的搬迁时间。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "If repairs continue tomorrow, I need a definite relocation time tonight.",
+      "exampleZh": "如果明天继续维修，我今晚就需要明确的搬迁时间。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:062",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:a779f422",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "A voucher for a future stay does not cover tonight’s unusable room.",
+      "meaningZh": "未来住宿券无法补偿今晚无法使用的房间。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "A voucher for a future stay does not cover tonight’s unusable room.",
+      "exampleZh": "未来住宿券无法补偿今晚无法使用的房间。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:063",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:1a165bab",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Could the manager approve a comparable suite instead of splitting our family?",
+      "meaningZh": "经理能否批准同等套房，避免把我们一家分开？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Could the manager approve a comparable suite instead of splitting our family?",
+      "exampleZh": "经理能否批准同等套房，避免把我们一家分开？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:064",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:c4037eb5",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I need confirmation that moving rooms will not create a second deposit.",
+      "meaningZh": "我需要确认换房不会产生第二笔押金。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I need confirmation that moving rooms will not create a second deposit.",
+      "exampleZh": "我需要确认换房不会产生第二笔押金。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:065",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:105e6b77",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The heating fails every evening, despite three visits from maintenance staff.",
+      "meaningZh": "尽管维修人员来过三次，暖气每晚仍然失灵。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The heating fails every evening, despite three visits from maintenance staff.",
+      "exampleZh": "尽管维修人员来过三次，暖气每晚仍然失灵。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:066",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:2d6e4523",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Before I leave, please photograph the damage that existed when I arrived.",
+      "meaningZh": "我离开前，请拍下我入住时已经存在的损坏。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Before I leave, please photograph the damage that existed when I arrived.",
+      "exampleZh": "我离开前，请拍下我入住时已经存在的损坏。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:067",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:4a54d12f",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Who will reimburse the taxi if the alternative property cannot provide transport?",
+      "meaningZh": "如果替代住宿无法提供交通，出租车费由谁报销？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Who will reimburse the taxi if the alternative property cannot provide transport?",
+      "exampleZh": "如果替代住宿无法提供交通，出租车费由谁报销？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:068",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:5f111aad",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The offered room is smoke-free, but smoke still enters through the ventilation.",
+      "meaningZh": "提供的是无烟房，但烟味仍通过通风系统进入。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The offered room is smoke-free, but smoke still enters through the ventilation.",
+      "exampleZh": "提供的是无烟房，但烟味仍通过通风系统进入。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:069",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:f34f7e3f",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Can you preserve our original checkout date after transferring the reservation?",
+      "meaningZh": "转移预订后，能否保留原来的退房日期？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Can you preserve our original checkout date after transferring the reservation?",
+      "exampleZh": "转移预订后，能否保留原来的退房日期？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:070",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:7837be42",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I cannot wait indefinitely; please give me a decision by ten tonight.",
+      "meaningZh": "我不能无限等待，请在今晚十点前给出决定。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I cannot wait indefinitely; please give me a decision by ten tonight.",
+      "exampleZh": "我不能无限等待，请在今晚十点前给出决定。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:071",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:6a3089d5",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Would a partial refund still allow the hotel to fix the issue tomorrow?",
+      "meaningZh": "部分退款后，酒店明天仍会处理这个问题吗？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Would a partial refund still allow the hotel to fix the issue tomorrow?",
+      "exampleZh": "部分退款后，酒店明天仍会处理这个问题吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:072",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:2c242778",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please note that the replacement key also failed at the room door.",
+      "meaningZh": "请记录替换后的房卡在房门处也无法使用。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please note that the replacement key also failed at the room door.",
+      "exampleZh": "请记录替换后的房卡在房门处也无法使用。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:073",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:ff0aae11",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Since the room was double-booked, I should not pay a cancellation charge.",
+      "meaningZh": "由于房间被重复预订，我不应支付取消费用。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Since the room was double-booked, I should not pay a cancellation charge.",
+      "exampleZh": "由于房间被重复预订，我不应支付取消费用。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:074",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:7a5bd905",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The alternative property accepts pets, but does it honor our cleaning agreement?",
+      "meaningZh": "替代住宿允许宠物，但会遵守我们的清洁约定吗？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The alternative property accepts pets, but does it honor our cleaning agreement?",
+      "exampleZh": "替代住宿允许宠物，但会遵守我们的清洁约定吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:075",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:76461d9b",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Can the unused minibar charge be removed before you release my deposit?",
+      "meaningZh": "退还押金前，能否删除这笔未使用的迷你吧费用？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Can the unused minibar charge be removed before you release my deposit?",
+      "exampleZh": "退还押金前，能否删除这笔未使用的迷你吧费用？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:076",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:12f4d51a",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I need the complaint number in case the promised refund does not arrive.",
+      "meaningZh": "我需要投诉编号，以防承诺的退款没有到账。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I need the complaint number in case the promised refund does not arrive.",
+      "exampleZh": "我需要投诉编号，以防承诺的退款没有到账。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:077",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:c88edd2c",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Moving twice would disrupt my treatment, so I need one stable solution.",
+      "meaningZh": "搬两次会影响我的治疗，因此我需要一个稳定方案。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Moving twice would disrupt my treatment, so I need one stable solution.",
+      "exampleZh": "搬两次会影响我的治疗，因此我需要一个稳定方案。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:078",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:e64d0c17",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please confirm the replacement address before my airport transfer is redirected.",
+      "meaningZh": "改派机场接送前，请确认替代住宿的地址。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please confirm the replacement address before my airport transfer is redirected.",
+      "exampleZh": "改派机场接送前，请确认替代住宿的地址。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:079",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:72583f4a",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "If no equivalent room exists, what combination of refund and support is available?",
+      "meaningZh": "如果没有同等房间，可以提供怎样的退款与协助组合？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "If no equivalent room exists, what combination of refund and support is available?",
+      "exampleZh": "如果没有同等房间，可以提供怎样的退款与协助组合？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:080",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:4fbc14ed",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I can leave the property once you confirm where my refund will be sent.",
+      "meaningZh": "只要确认退款会汇到哪里，我就可以离开这处住宿。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I can leave the property once you confirm where my refund will be sent.",
+      "exampleZh": "只要确认退款会汇到哪里，我就可以离开这处住宿。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "accommodation-dispute-alternative",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:081",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:2b239608",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The last ferry arrives after dark; is transport available from the remote pier?",
+      "meaningZh": "末班渡轮天黑后抵达，偏远码头还有交通工具吗？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The last ferry arrives after dark; is transport available from the remote pier?",
+      "exampleZh": "末班渡轮天黑后抵达，偏远码头还有交通工具吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:082",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:55507123",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "If the mountain road closes, where will the coach leave passengers safely?",
+      "meaningZh": "如果山路封闭，长途车会在哪里安全放下乘客？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "If the mountain road closes, where will the coach leave passengers safely?",
+      "exampleZh": "如果山路封闭，长途车会在哪里安全放下乘客？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:083",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:4b456448",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "This connection requires crossing six lanes with luggage in twelve minutes.",
+      "meaningZh": "这次衔接要求我拖着行李在十二分钟内穿过六条车道。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "This connection requires crossing six lanes with luggage in twelve minutes.",
+      "exampleZh": "这次衔接要求我拖着行李在十二分钟内穿过六条车道。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:084",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:0004423e",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Can you confirm the driver is licensed for the overnight border route?",
+      "meaningZh": "能否确认司机具备夜间跨境路线的驾驶资质？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Can you confirm the driver is licensed for the overnight border route?",
+      "exampleZh": "能否确认司机具备夜间跨境路线的驾驶资质？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:085",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:e533eb2d",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The replacement bus has no seat belts, so I need another option.",
+      "meaningZh": "替代巴士没有安全带，因此我需要其他选择。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The replacement bus has no seat belts, so I need another option.",
+      "exampleZh": "替代巴士没有安全带，因此我需要其他选择。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:086",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:66457e04",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Who monitors the transfer when separate companies operate each segment?",
+      "meaningZh": "不同公司分别运营各段时，由谁监督转乘衔接？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Who monitors the transfer when separate companies operate each segment?",
+      "exampleZh": "不同公司分别运营各段时，由谁监督转乘衔接？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:087",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:946d5ec4",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please avoid routing me through a station that closes before my arrival.",
+      "meaningZh": "请不要安排我经过一个在我抵达前就关闭的车站。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please avoid routing me through a station that closes before my arrival.",
+      "exampleZh": "请不要安排我经过一个在我抵达前就关闭的车站。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:088",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:0a2ef884",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Although the route is faster, the walking section is unsafe after midnight.",
+      "meaningZh": "虽然这条路线更快，但午夜后的步行路段不安全。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Although the route is faster, the walking section is unsafe after midnight.",
+      "exampleZh": "虽然这条路线更快，但午夜后的步行路段不安全。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:089",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:0d67b547",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Would missing the reserved shuttle invalidate the rest of my ticket?",
+      "meaningZh": "错过预订的接驳车会使剩余车票失效吗？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Would missing the reserved shuttle invalidate the rest of my ticket?",
+      "exampleZh": "错过预订的接驳车会使剩余车票失效吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:090",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:34f16fb2",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I need a staffed meeting point because the terminal signs are unclear.",
+      "meaningZh": "我需要有人值守的集合点，因为航站楼标识不清。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I need a staffed meeting point because the terminal signs are unclear.",
+      "exampleZh": "我需要有人值守的集合点，因为航站楼标识不清。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:091",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:cfc744d5",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Can the operator hold the connection when this train arrives late?",
+      "meaningZh": "这班火车晚点时，运营方能否等待衔接乘客？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Can the operator hold the connection when this train arrives late?",
+      "exampleZh": "这班火车晚点时，运营方能否等待衔接乘客？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:092",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:10460a52",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The platform change leaves no accessible route between the two services.",
+      "meaningZh": "站台变更后，两班交通之间没有无障碍路线。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The platform change leaves no accessible route between the two services.",
+      "exampleZh": "站台变更后，两班交通之间没有无障碍路线。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:093",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:b41e62f8",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please tell the next driver that my child requires an approved safety seat.",
+      "meaningZh": "请告知下一位司机，我的孩子需要合规安全座椅。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please tell the next driver that my child requires an approved safety seat.",
+      "exampleZh": "请告知下一位司机，我的孩子需要合规安全座椅。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:094",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:35f711a5",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "If severe weather returns, which shelter should passengers use while waiting?",
+      "meaningZh": "如果恶劣天气再次出现，乘客等待时应使用哪个避难处？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "If severe weather returns, which shelter should passengers use while waiting?",
+      "exampleZh": "如果恶劣天气再次出现，乘客等待时应使用哪个避难处？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:095",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:2214b8e1",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The app suggests an unofficial taxi; how can I verify the vehicle?",
+      "meaningZh": "应用推荐了一辆非官方出租车，我怎样核实车辆？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The app suggests an unofficial taxi; how can I verify the vehicle?",
+      "exampleZh": "应用推荐了一辆非官方出租车，我怎样核实车辆？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:096",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:6be70da9",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Could you move my reservation to a daylight departure without a penalty?",
+      "meaningZh": "能否免费把我的预订改到白天出发？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Could you move my reservation to a daylight departure without a penalty?",
+      "exampleZh": "能否免费把我的预订改到白天出发？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:097",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:23cc9bd1",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I cannot carry this wheelchair upstairs during the emergency platform closure.",
+      "meaningZh": "紧急关闭站台期间，我无法把轮椅搬上楼。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I cannot carry this wheelchair upstairs during the emergency platform closure.",
+      "exampleZh": "紧急关闭站台期间，我无法把轮椅搬上楼。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:098",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:dd0b8c0c",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Where will assistance meet me if the arrival gate changes again?",
+      "meaningZh": "如果到达口再次变更，协助人员会在哪里接我？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Where will assistance meet me if the arrival gate changes again?",
+      "exampleZh": "如果到达口再次变更，协助人员会在哪里接我？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:099",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:8f3d4f7f",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The driver ended the trip early, leaving us beside an unlit road.",
+      "meaningZh": "司机提前结束行程，把我们留在没有照明的路边。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The driver ended the trip early, leaving us beside an unlit road.",
+      "exampleZh": "司机提前结束行程，把我们留在没有照明的路边。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:100",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:e696750e",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Before departure, please confirm the boat has enough life jackets for everyone.",
+      "meaningZh": "出发前，请确认船上有足够所有人使用的救生衣。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Before departure, please confirm the boat has enough life jackets for everyone.",
+      "exampleZh": "出发前，请确认船上有足够所有人使用的救生衣。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:101",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:5d8bafb7",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Does the through ticket protect us if border checks delay the connection?",
+      "meaningZh": "如果边检耽误衔接，联程票是否为我们提供保障？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Does the through ticket protect us if border checks delay the connection?",
+      "exampleZh": "如果边检耽误衔接，联程票是否为我们提供保障？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:102",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d3dca4cd",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I need the exact pickup side, not only the street name.",
+      "meaningZh": "我需要准确的上车一侧，而不只是街道名称。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I need the exact pickup side, not only the street name.",
+      "exampleZh": "我需要准确的上车一侧，而不只是街道名称。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:103",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:5af3b1ee",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Can station staff escort me through the construction area to platform nine?",
+      "meaningZh": "车站工作人员能否护送我穿过施工区到九号站台？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Can station staff escort me through the construction area to platform nine?",
+      "exampleZh": "车站工作人员能否护送我穿过施工区到九号站台？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:104",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:022c9918",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The rental car warning light appeared; should I stop driving immediately?",
+      "meaningZh": "租车的警示灯亮了，我是否应立即停止驾驶？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The rental car warning light appeared; should I stop driving immediately?",
+      "exampleZh": "租车的警示灯亮了，我是否应立即停止驾驶？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:105",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:088ebf99",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "If I return the unsafe vehicle here, how will you continue my journey?",
+      "meaningZh": "如果我在这里退还不安全的车辆，你们如何让我继续行程？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "If I return the unsafe vehicle here, how will you continue my journey?",
+      "exampleZh": "如果我在这里退还不安全的车辆，你们如何让我继续行程？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:106",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:b17122c8",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please record that the helmet provided was damaged before the tour began.",
+      "meaningZh": "请记录旅行开始前，提供的头盔已经损坏。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please record that the helmet provided was damaged before the tour began.",
+      "exampleZh": "请记录旅行开始前，提供的头盔已经损坏。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:107",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:a652066e",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "A shorter transfer is useless unless the baggage route is also confirmed.",
+      "meaningZh": "除非行李路线也得到确认，否则更短的转乘没有意义。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "A shorter transfer is useless unless the baggage route is also confirmed.",
+      "exampleZh": "除非行李路线也得到确认，否则更短的转乘没有意义。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:108",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:cc6f853d",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Who is responsible for checking passengers after the unplanned roadside stop?",
+      "meaningZh": "临时路边停车后，由谁负责清点乘客？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Who is responsible for checking passengers after the unplanned roadside stop?",
+      "exampleZh": "临时路边停车后，由谁负责清点乘客？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:109",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:2fb04a51",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The night train compartment will not lock from inside as promised.",
+      "meaningZh": "夜班火车包厢无法像承诺的那样从内部上锁。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The night train compartment will not lock from inside as promised.",
+      "exampleZh": "夜班火车包厢无法像承诺的那样从内部上锁。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:110",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:798f21c6",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Can you separate my booking from the route affected by the strike?",
+      "meaningZh": "能否把我的预订从受罢工影响的路线中分离出来？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Can you separate my booking from the route affected by the strike?",
+      "exampleZh": "能否把我的预订从受罢工影响的路线中分离出来？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:111",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:f7c20822",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "If the cable car stops, what evacuation support is available for children?",
+      "meaningZh": "如果缆车停运，可以为儿童提供什么疏散协助？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "If the cable car stops, what evacuation support is available for children?",
+      "exampleZh": "如果缆车停运，可以为儿童提供什么疏散协助？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:112",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d6815f48",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please confirm whether the replacement driver knows the agreed accessible entrance.",
+      "meaningZh": "请确认替代司机知道约定的无障碍入口。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please confirm whether the replacement driver knows the agreed accessible entrance.",
+      "exampleZh": "请确认替代司机知道约定的无障碍入口。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:113",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:eeb32142",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The connection is technically possible, but only by running across the terminal.",
+      "meaningZh": "这次衔接理论上可行，但必须跑着穿过航站楼。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The connection is technically possible, but only by running across the terminal.",
+      "exampleZh": "这次衔接理论上可行，但必须跑着穿过航站楼。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:114",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d264ea2f",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Would waiting for the escorted route cause my ticket to expire?",
+      "meaningZh": "等待有人护送的路线会导致我的车票过期吗？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Would waiting for the escorted route cause my ticket to expire?",
+      "exampleZh": "等待有人护送的路线会导致我的车票过期吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:115",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:a3f6b6bb",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I need a safe alternative because flooding has covered the pedestrian tunnel.",
+      "meaningZh": "我需要安全替代路线，因为积水已经淹没步行隧道。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I need a safe alternative because flooding has covered the pedestrian tunnel.",
+      "exampleZh": "我需要安全替代路线，因为积水已经淹没步行隧道。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:116",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:784b817f",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Can dispatch track the vehicle while it travels through this isolated area?",
+      "meaningZh": "车辆穿过这片偏僻区域时，调度中心能否追踪它？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Can dispatch track the vehicle while it travels through this isolated area?",
+      "exampleZh": "车辆穿过这片偏僻区域时，调度中心能否追踪它？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:117",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:970fe33c",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The transfer point changed without notice, and several passengers are missing.",
+      "meaningZh": "换乘点未经通知就改变了，还有几名乘客没有到。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The transfer point changed without notice, and several passengers are missing.",
+      "exampleZh": "换乘点未经通知就改变了，还有几名乘客没有到。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:118",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:5d86a3e1",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please arrange onward transport before closing this station for the night.",
+      "meaningZh": "车站夜间关闭前，请安排好后续交通。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please arrange onward transport before closing this station for the night.",
+      "exampleZh": "车站夜间关闭前，请安排好后续交通。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:119",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:ca26d466",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "If the operator refuses boarding, which company must provide the alternative?",
+      "meaningZh": "如果运营方拒绝登乘，应由哪家公司提供替代安排？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "If the operator refuses boarding, which company must provide the alternative?",
+      "exampleZh": "如果运营方拒绝登乘，应由哪家公司提供替代安排？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:120",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:ada44786",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I will take the slower route because it has staffed connections throughout.",
+      "meaningZh": "我会选择较慢的路线，因为全程衔接点都有人值守。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I will take the slower route because it has staffed connections throughout.",
+      "exampleZh": "我会选择较慢的路线，因为全程衔接点都有人值守。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "transport-connection-safety",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:121",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:fab5b3e8",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Before changing this medicine, could you check how it interacts with my regular prescription?",
+      "meaningZh": "更换这种药之前，能否确认它与我长期服用的处方药如何相互作用？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Before changing this medicine, could you check how it interacts with my regular prescription?",
+      "exampleZh": "更换这种药之前，能否确认它与我长期服用的处方药如何相互作用？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:122",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:9e1c7765",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "If the fever rises overnight, which symptoms mean I should return immediately?",
+      "meaningZh": "如果夜间发烧加重，出现哪些症状意味着我应立即回来？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "If the fever rises overnight, which symptoms mean I should return immediately?",
+      "exampleZh": "如果夜间发烧加重，出现哪些症状意味着我应立即回来？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:123",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:60880ba8",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "My insurer requires prior approval, but the clinic says treatment cannot wait.",
+      "meaningZh": "我的保险公司要求事先批准，但诊所说治疗不能等待。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "My insurer requires prior approval, but the clinic says treatment cannot wait.",
+      "exampleZh": "我的保险公司要求事先批准，但诊所说治疗不能等待。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:124",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:2a8da7f7",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Can the doctor explain whether flying tomorrow would make the condition worse?",
+      "meaningZh": "医生能否说明明天乘飞机是否会使病情恶化？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Can the doctor explain whether flying tomorrow would make the condition worse?",
+      "exampleZh": "医生能否说明明天乘飞机是否会使病情恶化？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:125",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:1294c67d",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I need an alternative without the ingredient responsible for my last reaction.",
+      "meaningZh": "我需要一种不含上次引起过敏反应成分的替代药物。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I need an alternative without the ingredient responsible for my last reaction.",
+      "exampleZh": "我需要一种不含上次引起过敏反应成分的替代药物。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:126",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:e7f445a6",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please record when the first dose was given and what reaction followed.",
+      "meaningZh": "请记录第一次给药的时间以及随后出现的反应。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please record when the first dose was given and what reaction followed.",
+      "exampleZh": "请记录第一次给药的时间以及随后出现的反应。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:127",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:2ca5a76a",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The pharmacy has a different brand; how can we confirm the strength is equivalent?",
+      "meaningZh": "药店只有另一个品牌，我们怎样确认剂量强度相同？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The pharmacy has a different brand; how can we confirm the strength is equivalent?",
+      "exampleZh": "药店只有另一个品牌，我们怎样确认剂量强度相同？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:128",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:e54cfcab",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "If I start this treatment here, who will monitor me after I travel onward?",
+      "meaningZh": "如果我在这里开始治疗，继续旅行后由谁监测我的情况？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "If I start this treatment here, who will monitor me after I travel onward?",
+      "exampleZh": "如果我在这里开始治疗，继续旅行后由谁监测我的情况？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:129",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:ff5403bb",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Could you separate the consultation charge from the tests for my insurance claim?",
+      "meaningZh": "能否把问诊费与检查费分开列出，供我申请保险理赔？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Could you separate the consultation charge from the tests for my insurance claim?",
+      "exampleZh": "能否把问诊费与检查费分开列出，供我申请保险理赔？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:130",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:801f369f",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I can manage the pain, but the numbness is spreading farther up my arm.",
+      "meaningZh": "疼痛我还能忍受，但麻木正在沿手臂向上扩散。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I can manage the pain, but the numbness is spreading farther up my arm.",
+      "exampleZh": "疼痛我还能忍受，但麻木正在沿手臂向上扩散。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:131",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:fcba42ca",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Does this prescription need refrigeration during the twelve-hour journey?",
+      "meaningZh": "这张处方中的药物在十二小时行程中需要冷藏吗？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Does this prescription need refrigeration during the twelve-hour journey?",
+      "exampleZh": "这张处方中的药物在十二小时行程中需要冷藏吗？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:132",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:bc40b887",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please confirm whether I should stop the old medicine before taking the new one.",
+      "meaningZh": "请确认服用新药前是否应该停用原来的药。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please confirm whether I should stop the old medicine before taking the new one.",
+      "exampleZh": "请确认服用新药前是否应该停用原来的药。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:133",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:0e6d37a0",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The discharge note lists a test I never received; can you correct the record?",
+      "meaningZh": "出院记录列出了一项我从未做过的检查，能否更正？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The discharge note lists a test I never received; can you correct the record?",
+      "exampleZh": "出院记录列出了一项我从未做过的检查，能否更正？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:134",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:5569a956",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "What follow-up is necessary if the swelling improves but does not disappear?",
+      "meaningZh": "如果肿胀有所缓解但没有消失，需要进行什么复查？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "What follow-up is necessary if the swelling improves but does not disappear?",
+      "exampleZh": "如果肿胀有所缓解但没有消失，需要进行什么复查？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:135",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:78a0b76b",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "My policy covers emergencies abroad, so why was this visit classified as routine?",
+      "meaningZh": "我的保单承保境外急诊，为何这次就诊被归为普通门诊？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "My policy covers emergencies abroad, so why was this visit classified as routine?",
+      "exampleZh": "我的保单承保境外急诊，为何这次就诊被归为普通门诊？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:136",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d9cd7405",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Can you write the generic drug name in case this brand is unavailable later?",
+      "meaningZh": "能否写出药物通用名，以防之后买不到这个品牌？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Can you write the generic drug name in case this brand is unavailable later?",
+      "exampleZh": "能否写出药物通用名，以防之后买不到这个品牌？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:137",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:a07a68bb",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I need enough medication to cover the delay without exceeding the safe dose.",
+      "meaningZh": "我需要足够的药物应对行程延误，但不能超过安全剂量。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I need enough medication to cover the delay without exceeding the safe dose.",
+      "exampleZh": "我需要足够的药物应对行程延误，但不能超过安全剂量。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:138",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d3c44e16",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "If these tablets cause dizziness, should I avoid driving or stop them completely?",
+      "meaningZh": "如果这些药片引起头晕，我应避免驾驶还是完全停药？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "If these tablets cause dizziness, should I avoid driving or stop them completely?",
+      "exampleZh": "如果这些药片引起头晕，我应避免驾驶还是完全停药？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:139",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:db37ed75",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please send the scan results to the hospital that will continue my care.",
+      "meaningZh": "请把扫描结果发送给将继续为我治疗的医院。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please send the scan results to the hospital that will continue my care.",
+      "exampleZh": "请把扫描结果发送给将继续为我治疗的医院。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:140",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:c0044921",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The wound looks cleaner, but the redness has moved beyond the marked line.",
+      "meaningZh": "伤口看起来更干净了，但红肿已经越过标记线。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The wound looks cleaner, but the redness has moved beyond the marked line.",
+      "exampleZh": "伤口看起来更干净了，但红肿已经越过标记线。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:141",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:81619447",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Would waiting until morning change the treatment options available to me?",
+      "meaningZh": "等到早上会不会影响我可选择的治疗方案？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Would waiting until morning change the treatment options available to me?",
+      "exampleZh": "等到早上会不会影响我可选择的治疗方案？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:142",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:3e260a34",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Can the clinic provide a translator before I consent to the procedure?",
+      "meaningZh": "在我同意操作前，诊所能否提供翻译？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Can the clinic provide a translator before I consent to the procedure?",
+      "exampleZh": "在我同意操作前，诊所能否提供翻译？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:143",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:0e330379",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I was charged for an ambulance although the hotel arranged ordinary transport.",
+      "meaningZh": "账单收取了救护车费用，但酒店安排的只是普通车辆。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I was charged for an ambulance although the hotel arranged ordinary transport.",
+      "exampleZh": "账单收取了救护车费用，但酒店安排的只是普通车辆。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:144",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:bb8c1268",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Which part of this treatment is essential now, and which can wait until home?",
+      "meaningZh": "这项治疗中哪些现在必须进行，哪些可以等回国后再做？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Which part of this treatment is essential now, and which can wait until home?",
+      "exampleZh": "这项治疗中哪些现在必须进行，哪些可以等回国后再做？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:145",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:584e5d37",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please note my allergy on every page before another department treats me.",
+      "meaningZh": "在另一个科室为我治疗前，请在每页记录上注明我的过敏情况。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please note my allergy on every page before another department treats me.",
+      "exampleZh": "在另一个科室为我治疗前，请在每页记录上注明我的过敏情况。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:146",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:3abc0cc9",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "If the insurer refuses direct billing, what documents should I collect today?",
+      "meaningZh": "如果保险公司拒绝直接结算，我今天应该收集哪些文件？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "If the insurer refuses direct billing, what documents should I collect today?",
+      "exampleZh": "如果保险公司拒绝直接结算，我今天应该收集哪些文件？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:147",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:30661d4b",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The dosage instructions differ between the label and the doctor’s note.",
+      "meaningZh": "药品标签与医生记录上的剂量说明不一致。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The dosage instructions differ between the label and the doctor’s note.",
+      "exampleZh": "药品标签与医生记录上的剂量说明不一致。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:148",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:7a1a81f3",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Could this medication affect the altitude symptoms I am already experiencing?",
+      "meaningZh": "这种药会不会影响我已经出现的高原反应症状？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Could this medication affect the altitude symptoms I am already experiencing?",
+      "exampleZh": "这种药会不会影响我已经出现的高原反应症状？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:149",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:564d957b",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I need written clearance if you believe continuing the tour is medically safe.",
+      "meaningZh": "如果你认为继续行程在医学上安全，我需要书面许可。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I need written clearance if you believe continuing the tour is medically safe.",
+      "exampleZh": "如果你认为继续行程在医学上安全，我需要书面许可。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:150",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:61b3ea3e",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Who should receive the laboratory invoice when the insurer has two claim numbers?",
+      "meaningZh": "保险公司给了两个理赔编号，化验账单应该提交给谁？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Who should receive the laboratory invoice when the insurer has two claim numbers?",
+      "exampleZh": "保险公司给了两个理赔编号，化验账单应该提交给谁？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:151",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:992dde83",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "My symptoms improved after treatment, then returned more strongly this afternoon.",
+      "meaningZh": "治疗后症状有所改善，但今天下午又更严重地出现了。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "My symptoms improved after treatment, then returned more strongly this afternoon.",
+      "exampleZh": "治疗后症状有所改善，但今天下午又更严重地出现了。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:152",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:0e5b76cc",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Can you explain the risk of delaying this procedure until I return home?",
+      "meaningZh": "能否说明把这项操作推迟到回国后进行有什么风险？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Can you explain the risk of delaying this procedure until I return home?",
+      "exampleZh": "能否说明把这项操作推迟到回国后进行有什么风险？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:153",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:e45d1cf5",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The replacement inhaler feels different; please show me the correct technique.",
+      "meaningZh": "替代吸入器用起来不同，请示范正确的使用方法。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The replacement inhaler feels different; please show me the correct technique.",
+      "exampleZh": "替代吸入器用起来不同，请示范正确的使用方法。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:154",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:1795e90b",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I need the diagnosis code to match the condition described in the medical report.",
+      "meaningZh": "我需要诊断代码与医疗报告中描述的病情一致。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I need the diagnosis code to match the condition described in the medical report.",
+      "exampleZh": "我需要诊断代码与医疗报告中描述的病情一致。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:155",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:653b8bf1",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "How should I safely adjust the next dose after missing one in transit?",
+      "meaningZh": "如果转乘途中漏服一次，下一次应如何安全调整？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "How should I safely adjust the next dose after missing one in transit?",
+      "exampleZh": "如果转乘途中漏服一次，下一次应如何安全调整？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:156",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:64df11f1",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please confirm that this clinic can manage a severe reaction before giving the injection.",
+      "meaningZh": "注射前，请确认这家诊所有能力处理严重反应。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please confirm that this clinic can manage a severe reaction before giving the injection.",
+      "exampleZh": "注射前，请确认这家诊所有能力处理严重反应。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:157",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d688b8c8",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The insurer approved the scan, but not the contrast material required for it.",
+      "meaningZh": "保险公司批准了扫描，却没有批准检查所需的造影剂。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The insurer approved the scan, but not the contrast material required for it.",
+      "exampleZh": "保险公司批准了扫描，却没有批准检查所需的造影剂。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:158",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:3baeabc4",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Could you provide both the original report and an English summary for follow-up?",
+      "meaningZh": "能否提供原始报告和英文摘要，供后续治疗使用？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Could you provide both the original report and an English summary for follow-up?",
+      "exampleZh": "能否提供原始报告和英文摘要，供后续治疗使用？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:159",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:e97687fb",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I will postpone the excursion if rest today reduces the chance of complications.",
+      "meaningZh": "如果今天休息能降低并发症风险，我会推迟游览。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I will postpone the excursion if rest today reduces the chance of complications.",
+      "exampleZh": "如果今天休息能降低并发症风险，我会推迟游览。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:160",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:4bff65ac",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Before discharge, please identify the nearest facility that can handle a relapse.",
+      "meaningZh": "出院前，请指出最近能够处理病情复发的医疗机构。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Before discharge, please identify the nearest facility that can handle a relapse.",
+      "exampleZh": "出院前，请指出最近能够处理病情复发的医疗机构。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "medical-medication-insurance",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:161",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:641ba5d6",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The refund shows as completed here, but my bank cannot trace the reference number.",
+      "meaningZh": "这里显示退款已完成，但我的银行无法追踪该参考号。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The refund shows as completed here, but my bank cannot trace the reference number.",
+      "exampleZh": "这里显示退款已完成，但我的银行无法追踪该参考号。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:162",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:160c33da",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please separate the cancelled service from the charges I actually used.",
+      "meaningZh": "请把已取消的服务与我实际使用的费用分开列出。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please separate the cancelled service from the charges I actually used.",
+      "exampleZh": "请把已取消的服务与我实际使用的费用分开列出。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:163",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:b5df3425",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "If the deposit was released, which date and currency should appear on my statement?",
+      "meaningZh": "如果押金已解冻，账单上应显示哪个日期和币种？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "If the deposit was released, which date and currency should appear on my statement?",
+      "exampleZh": "如果押金已解冻，账单上应显示哪个日期和币种？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:164",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:c2b9413e",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The total is correct despite two tax amounts appearing under wrong items.",
+      "meaningZh": "收据总额正确，但两笔税费被列在了错误项目下。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The total is correct despite two tax amounts appearing under wrong items.",
+      "exampleZh": "收据总额正确，但两笔税费被列在了错误项目下。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:165",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:e3694ceb",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Can you trace the second payment before asking me to pay the balance again?",
+      "meaningZh": "让我再次支付余额前，能否先追踪第二笔付款？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Can you trace the second payment before asking me to pay the balance again?",
+      "exampleZh": "让我再次支付余额前，能否先追踪第二笔付款？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:166",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:79116037",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I need proof of authorization cancellation rather than only booking cancellation.",
+      "meaningZh": "我需要证明商户取消了预授权，而不只是取消了预订。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I need proof of authorization cancellation rather than only booking cancellation.",
+      "exampleZh": "我需要证明商户取消了预授权，而不只是取消了预订。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:167",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:326a1fa4",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Which exchange rate was applied when the original charge was partly refunded?",
+      "meaningZh": "原始扣款部分退款时采用了哪一个汇率？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Which exchange rate was applied when the original charge was partly refunded?",
+      "exampleZh": "原始扣款部分退款时采用了哪一个汇率？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:168",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:1fba7249",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please link this credit note to the invoice it is meant to correct.",
+      "meaningZh": "请把这张贷项通知单关联到它要更正的发票。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please link this credit note to the invoice it is meant to correct.",
+      "exampleZh": "请把这张贷项通知单关联到它要更正的发票。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:169",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:aec595b8",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The card was charged after checkout, so I need the time-stamped supporting record.",
+      "meaningZh": "退房后银行卡又被扣款，因此我需要带时间戳的支持记录。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The card was charged after checkout, so I need the time-stamped supporting record.",
+      "exampleZh": "退房后银行卡又被扣款，因此我需要带时间戳的支持记录。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:170",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:67bf5900",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "If the transfer failed, when will the reserved funds become available again?",
+      "meaningZh": "如果转账失败，预留资金何时会重新可用？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "If the transfer failed, when will the reserved funds become available again?",
+      "exampleZh": "如果转账失败，预留资金何时会重新可用？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:171",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:ed9b1971",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Could you issue one document showing the original amount, adjustment, and final balance?",
+      "meaningZh": "能否出具一份同时显示原金额、调整额和最终余额的文件？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Could you issue one document showing the original amount, adjustment, and final balance?",
+      "exampleZh": "能否出具一份同时显示原金额、调整额和最终余额的文件？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:172",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:27617418",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "My bank recognizes the charge, but the merchant name does not match this property.",
+      "meaningZh": "我的银行识别到这笔扣款，但商户名称与这家住宿不符。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "My bank recognizes the charge, but the merchant name does not match this property.",
+      "exampleZh": "我的银行识别到这笔扣款，但商户名称与这家住宿不符。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:173",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:ea631a98",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please confirm whether the refund returns to the old card or the replacement card.",
+      "meaningZh": "请确认退款会退回旧卡还是补发的新卡。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please confirm whether the refund returns to the old card or the replacement card.",
+      "exampleZh": "请确认退款会退回旧卡还是补发的新卡。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:174",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:79cede63",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The cash receipt has no booking number, making the payment impossible to match.",
+      "meaningZh": "现金收据没有预订编号，导致无法匹配这笔付款。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The cash receipt has no booking number, making the payment impossible to match.",
+      "exampleZh": "现金收据没有预订编号，导致无法匹配这笔付款。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:175",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:c703670c",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Who can correct the passenger name without changing the invoice date?",
+      "meaningZh": "谁能在不改变发票日期的情况下更正乘客姓名？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Who can correct the passenger name without changing the invoice date?",
+      "exampleZh": "谁能在不改变发票日期的情况下更正乘客姓名？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:176",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:96b5ceea",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I paid in local currency, yet the terminal receipt records a converted amount.",
+      "meaningZh": "我用当地货币支付，但终端收据记录的是换算后的金额。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I paid in local currency, yet the terminal receipt records a converted amount.",
+      "exampleZh": "我用当地货币支付，但终端收据记录的是换算后的金额。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:177",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:9d9f619a",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Can the agency explain why its invoice and the airline receipt differ?",
+      "meaningZh": "代理机构能否解释为何其发票与航空公司收据金额不同？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Can the agency explain why its invoice and the airline receipt differ?",
+      "exampleZh": "代理机构能否解释为何其发票与航空公司收据金额不同？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:178",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:f65a6237",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please record the dispute number before the temporary credit expires.",
+      "meaningZh": "临时退款额度到期前，请记录争议编号。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please record the dispute number before the temporary credit expires.",
+      "exampleZh": "临时退款额度到期前，请记录争议编号。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:179",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:5a47f462",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The refund covers the ticket but omits the seat and baggage fees.",
+      "meaningZh": "退款包含票款，却遗漏了选座费和行李费。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The refund covers the ticket but omits the seat and baggage fees.",
+      "exampleZh": "退款包含票款，却遗漏了选座费和行李费。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:180",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:b17a1f12",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "If you cannot reverse the duplicate charge today, what tracking evidence can you provide?",
+      "meaningZh": "如果今天无法撤销重复扣款，你们能提供什么追踪凭证？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "If you cannot reverse the duplicate charge today, what tracking evidence can you provide?",
+      "exampleZh": "如果今天无法撤销重复扣款，你们能提供什么追踪凭证？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:181",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:8cdfea4d",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The final invoice must show the applied deposit rather than a separate refund.",
+      "meaningZh": "我需要最终发票显示押金已抵扣，而不是单独退款。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The final invoice must show the applied deposit rather than a separate refund.",
+      "exampleZh": "我需要最终发票显示押金已抵扣，而不是单独退款。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:182",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:a23a4e7e",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The payment link expired after authorization; did any charge still reach you?",
+      "meaningZh": "付款链接在授权后失效，是否仍有款项到达你们账户？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The payment link expired after authorization; did any charge still reach you?",
+      "exampleZh": "付款链接在授权后失效，是否仍有款项到达你们账户？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:183",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:c70a93c7",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Could you identify which company collected each part of this combined booking?",
+      "meaningZh": "能否说明这个组合预订的每一部分分别由哪家公司收款？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Could you identify which company collected each part of this combined booking?",
+      "exampleZh": "能否说明这个组合预订的每一部分分别由哪家公司收款？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:184",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:d14fffe1",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "My statement shows three small charges before the main transaction.",
+      "meaningZh": "我的账单在主要交易前显示了三笔小额扣款。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "My statement shows three small charges before the main transaction.",
+      "exampleZh": "我的账单在主要交易前显示了三笔小额扣款。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:185",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:c8b083ee",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please provide the cancellation timestamp because the fee depends on that exact time.",
+      "meaningZh": "请提供取消操作的时间戳，因为费用取决于那个确切时间。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please provide the cancellation timestamp because the fee depends on that exact time.",
+      "exampleZh": "请提供取消操作的时间戳，因为费用取决于那个确切时间。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:186",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:5e3e239e",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The voucher reduced the price, but the receipt still shows the unreduced taxable total.",
+      "meaningZh": "代金券降低了价格，但收据仍显示未减免的应税总额。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The voucher reduced the price, but the receipt still shows the unreduced taxable total.",
+      "exampleZh": "代金券降低了价格，但收据仍显示未减免的应税总额。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:187",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:6b44efed",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Can you resend the document with an itemized breakdown instead of one combined line?",
+      "meaningZh": "能否重新发送逐项明细，而不是只列一个合计项目？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Can you resend the document with an itemized breakdown instead of one combined line?",
+      "exampleZh": "能否重新发送逐项明细，而不是只列一个合计项目？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:188",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:c3f2bc0e",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I need confirmation that the chargeback will not cancel the service already delivered.",
+      "meaningZh": "我需要确认拒付不会取消已经提供的服务。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I need confirmation that the chargeback will not cancel the service already delivered.",
+      "exampleZh": "我需要确认拒付不会取消已经提供的服务。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:189",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:c7cb69ab",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Which reference should my bank quote when contacting your payment processor?",
+      "meaningZh": "我的银行联系你们的支付处理机构时应引用哪个编号？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Which reference should my bank quote when contacting your payment processor?",
+      "exampleZh": "我的银行联系你们的支付处理机构时应引用哪个编号？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:190",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:c5d5a9fb",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The receipt was reissued, but the original incorrect version remains in my account.",
+      "meaningZh": "收据已重新开具，但账户中仍保留着原来的错误版本。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The receipt was reissued, but the original incorrect version remains in my account.",
+      "exampleZh": "收据已重新开具，但账户中仍保留着原来的错误版本。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:191",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:fb306212",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "If the merchant settles in another currency, who absorbs the conversion difference?",
+      "meaningZh": "如果商户用另一种货币结算，汇率差额由谁承担？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "If the merchant settles in another currency, who absorbs the conversion difference?",
+      "exampleZh": "如果商户用另一种货币结算，汇率差额由谁承担？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:192",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:5a2d965e",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Please show how the partial cancellation changed each traveler’s share of the total.",
+      "meaningZh": "请说明部分取消后，每位旅客分摊的总额如何变化。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Please show how the partial cancellation changed each traveler’s share of the total.",
+      "exampleZh": "请说明部分取消后，每位旅客分摊的总额如何变化。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:193",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:f366cb56",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The tax refund desk kept my form; how can I track the submission now?",
+      "meaningZh": "退税柜台收走了我的表格，我现在怎样追踪申请？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The tax refund desk kept my form; how can I track the submission now?",
+      "exampleZh": "退税柜台收走了我的表格，我现在怎样追踪申请？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:194",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:0a2d6c7d",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Can you confirm delivery of the corrected invoice to me and the insurer?",
+      "meaningZh": "能否确认更正后的发票已同时发送给我和保险公司？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Can you confirm delivery of the corrected invoice to me and the insurer?",
+      "exampleZh": "能否确认更正后的发票已同时发送给我和保险公司？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:195",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:b6351b04",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "The security deposit and the damage charge use the same transaction description.",
+      "meaningZh": "押金和损坏费用使用了相同的交易描述。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "The security deposit and the damage charge use the same transaction description.",
+      "exampleZh": "押金和损坏费用使用了相同的交易描述。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:196",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:19f8480c",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I need a receipt for the amount retained, not only for the amount returned.",
+      "meaningZh": "我需要被扣留金额的收据，而不只是退回金额的收据。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I need a receipt for the amount retained, not only for the amount returned.",
+      "exampleZh": "我需要被扣留金额的收据，而不只是退回金额的收据。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:197",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:09c01906",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Before closing the case, please verify that every promised refund has a traceable reference.",
+      "meaningZh": "结案前，请核实每笔承诺退款都有可追踪的参考号。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Before closing the case, please verify that every promised refund has a traceable reference.",
+      "exampleZh": "结案前，请核实每笔承诺退款都有可追踪的参考号。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:198",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:677facc4",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Splitting the invoice after payment made its totals differ from my statement.",
+      "meaningZh": "付款后发票被拆分，导致总额与银行卡账单不再一致。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Splitting the invoice after payment made its totals differ from my statement.",
+      "exampleZh": "付款后发票被拆分，导致总额与银行卡账单不再一致。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:199",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:eecab4b4",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "Could you explain which document proves that the disputed charge was withdrawn?",
+      "meaningZh": "能否说明哪份文件可以证明有争议的扣款已撤回？",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "Could you explain which document proves that the disputed charge was withdrawn?",
+      "exampleZh": "能否说明哪份文件可以证明有争议的扣款已撤回？",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    },
+    {
+      "sourceItemId": "qa-r17-003-c3:200",
+      "dailyKnowledgeId": "daily-knowledge-v2:phrase:71cc7806",
+      "levelId": "senior-3",
+      "labelZh": "高三",
+      "growthDifficultyLevel": 6,
+      "term": "I will keep the case open until the corrected amount appears in my account.",
+      "meaningZh": "在更正金额显示到我的账户之前，我会保持案件未结状态。",
+      "partOfSpeech": "complex-utterance",
+      "exampleEn": "I will keep the case open until the corrected amount appears in my account.",
+      "exampleZh": "在更正金额显示到我的账户之前，我会保持案件未结状态。",
+      "authoring": {
+        "lexicalFrequencyBand": "specialized",
+        "abstractionBand": "abstract-risk-or-policy",
+        "surfaceType": "complex-utterance",
+        "grammarFeatures": [
+          "conditions-consequences-and-follow-up"
+        ],
+        "travelUse": "complex-travel-resolution",
+        "topic": "payment-document-tracing",
+        "contentReviewStatus": "candidate-reviewed"
+      }
+    }
+  ]
+}
