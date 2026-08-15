@@ -83,6 +83,9 @@ import {
   type ProductionTrainingSupplyProviders,
 } from './training-supply-providers.ts'
 import { GrowthProductionCoordinator } from './growth-production.ts'
+import { DailyContentV2MigrationCoordinator } from './daily-content-v2-migration.ts'
+import { platformFetch } from '../../platform/index.ts'
+import { reviewContentSource } from '../review-content-source.ts'
 
 export type LearningAppState =
   | { readonly status: 'loading' }
@@ -125,6 +128,8 @@ export interface LearningAppCoordinatorOptions {
   readonly trainingSupplyProviders?: ProductionTrainingSupplyProviders
   readonly now?: () => Date
   readonly createId?: () => string
+  /** Runs the all-or-nothing QA-R17-003 content identity migration before any persisted learning state is read. */
+  readonly contentMigration?: { run(): Promise<unknown> }
 }
 
 export type LearningAppStateListener = (
@@ -186,6 +191,7 @@ export class LearningAppCoordinator {
   readonly #profiles: LearningAppCoordinatorOptions['profiles']
   readonly #activePlans: ActivePlanRepository
   readonly #engineStates: LearningEngineRepository
+  readonly #contentMigration: { run(): Promise<unknown> } | undefined
   readonly #candidates: LearningCandidateSource
   readonly #availableModuleIds: ReadonlySet<TrainingModuleId>
   readonly #now: () => Date
@@ -207,6 +213,7 @@ export class LearningAppCoordinator {
     this.#profiles = options.profiles
     this.#activePlans = options.activePlans
     this.#engineStates = options.engineStates
+    this.#contentMigration = options.contentMigration
     this.#candidates = options.candidates
     this.#availableModuleIds = options.availableModuleIds
     this.#now = options.now ?? (() => new Date())
@@ -539,6 +546,7 @@ export class LearningAppCoordinator {
     const localDate = formatLocalDate(now)
     const generatedAt = now.toISOString()
     try {
+      await this.#contentMigration?.run()
       const profile = await this.#profiles.loadLatest()
       if (!profile) {
         return this.#setState({
@@ -716,6 +724,37 @@ const extraTrainingPriorities =
   new ProductionExtraTrainingPrioritySource(
     vocabularyContentSource,
   )
+const dailyContentMigration = new DailyContentV2MigrationCoordinator({
+  loadResources: async () => {
+    const catalogs = await Promise.all([
+      vocabularyContentSource.load(),
+      listeningContentSource.load(),
+      speakingContentSource.load(),
+    ])
+    const releasedReviewAliases = (await reviewContentSource.load()).aliases
+    const releasedCandidates = catalogs.flatMap((catalog) => {
+      const index = catalog.trainingSupplyIndex as { readonly candidates: readonly { readonly itemId: string; readonly knowledgePointId: string; readonly semanticCategoryId: string }[] }
+      return index.candidates.map(({ itemId, knowledgePointId, semanticCategoryId }) => ({ itemId, knowledgePointId, semanticCategoryId }))
+    })
+    const urls = [
+      new URL('../../../content/curriculum/daily-level-identity-migration.v2.json', import.meta.url).href,
+      new URL('../../../content/curriculum/wrong-answer-review-identity-migration.v1.json', import.meta.url).href,
+      new URL('../../../content/curriculum/daily-level-content-batch-a.v2.json', import.meta.url).href,
+      new URL('../../../content/curriculum/daily-level-content-batch-b.v2.json', import.meta.url).href,
+      new URL('../../../content/curriculum/daily-level-content-c1.v2.json', import.meta.url).href,
+      new URL('../../../content/curriculum/daily-level-content-c2.v2.json', import.meta.url).href,
+      new URL('../../../content/curriculum/daily-level-content-c3.v2.json', import.meta.url).href,
+      new URL('../../../content/curriculum/daily-level-content-c4.v2.json', import.meta.url).href,
+      new URL('../../../content/curriculum/daily-level-content-c5.v2.json', import.meta.url).href,
+    ]
+    const documents = await Promise.all(urls.map(async (url) => {
+      const response = await platformFetch(url)
+      if (!response.ok) throw new TypeError(`Daily-content migration resource returned ${response.status}.`)
+      return response.json() as Promise<unknown>
+    }))
+    return { growthMigration: documents[0], wrongAnswerMigration: documents[1], targetBatches: documents.slice(2), releasedCandidates, releasedReviewAliases }
+  },
+})
 
 export const learningAppCoordinator = new LearningAppCoordinator({
   profiles: assessmentProfiles,
@@ -728,4 +767,5 @@ export const learningAppCoordinator = new LearningAppCoordinator({
     'speaking',
   ]),
   extraTrainingPriorities,
+  contentMigration: dailyContentMigration,
 })

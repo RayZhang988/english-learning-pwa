@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { courseAssetBuildPolicy } from '../../../vite.config.ts'
+import { courseAssetBuildPolicy, pwaUpdatePolicy } from '../../../vite.config.ts'
 
 describe('course asset build policy', () => {
   it('publishes fetchable JSON under a portable base and precaches it', () => {
@@ -13,11 +13,14 @@ describe('course asset build policy', () => {
       'listening-exercise-extension-index.v1.json',
       'training-supply-index.v1.json',
       'review-content-index.v1.json',
+      'daily-level-identity-migration.v2.json',
+      'wrong-answer-review-identity-migration.v1.json',
     ])
     expect(
       courseAssetBuildPolicy.workboxGlobPatterns.some((pattern) =>
         pattern.includes('json'),
       ),
     ).toBe(true)
+    expect(pwaUpdatePolicy.maximumFileSizeToCacheInBytes).toBe(4 * 1024 * 1024)
   })
 })

@@ -88,6 +88,19 @@ assert.ok(
 )
 courseAssetFiles.push(...shardedCourseAssets)
 
+const migrationAssets = files.filter((fileName) =>
+  (fileName.startsWith('assets/daily-level-content-') ||
+    fileName.startsWith('content/curriculum/daily-level-identity-migration.v2-') ||
+    fileName.startsWith('content/curriculum/wrong-answer-review-identity-migration.v1-')) &&
+  fileName.endsWith('.json'),
+)
+assert.equal(
+  migrationAssets.length,
+  9,
+  `Expected seven v2 level batches and two identity mappings, found ${migrationAssets.length}.`,
+)
+courseAssetFiles.push(...migrationAssets)
+
 const packageIndexAssetFile = courseAssetFiles.find((fileName) =>
   fileName.startsWith('content/curriculum/package-index.v1-'),
 )

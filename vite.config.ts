@@ -14,6 +14,8 @@ export const courseAssetBuildPolicy = {
     'listening-exercise-extension-index.v1.json',
     'training-supply-index.v1.json',
     'review-content-index.v1.json',
+    'daily-level-identity-migration.v2.json',
+    'wrong-answer-review-identity-migration.v1.json',
   ],
   workboxGlobPatterns: [
     '**/*.{js,css,html,ico,png,svg,woff2,json}',
@@ -25,6 +27,10 @@ export const pwaUpdatePolicy = {
   cleanupOutdatedCaches: true,
   clientsClaim: true,
   skipWaiting: true,
+  // The versioned QA-R17-003 wrong-answer identity map is 3.14 MB raw but
+  // only ~167 KB compressed. It must be available offline for atomic startup
+  // migration, so keep a narrow 4 MiB ceiling rather than omitting it.
+  maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
 } as const
 
 export default defineConfig({
@@ -98,6 +104,7 @@ export default defineConfig({
         cleanupOutdatedCaches: pwaUpdatePolicy.cleanupOutdatedCaches,
         clientsClaim: pwaUpdatePolicy.clientsClaim,
         skipWaiting: pwaUpdatePolicy.skipWaiting,
+        maximumFileSizeToCacheInBytes: pwaUpdatePolicy.maximumFileSizeToCacheInBytes,
         navigateFallback: 'index.html',
         globPatterns: [...courseAssetBuildPolicy.workboxGlobPatterns],
       },
