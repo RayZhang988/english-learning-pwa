@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "documentType": "daily-level-formal-publication",
+  "publicationVersion": "2.0.0",
+  "mode": "write",
+  "candidateRecords": 3000,
+  "levelOrder": [
+    "kindergarten",
+    "primary-1",
+    "primary-2",
+    "primary-3",
+    "primary-4",
+    "primary-5",
+    "primary-6",
+    "junior-1",
+    "junior-2",
+    "junior-3",
+    "senior-1",
+    "senior-2",
+    "senior-3",
+    "cet-4-reference",
+    "cet-6-reference"
+  ],
+  "levelCounts": {
+    "kindergarten": 200,
+    "primary-1": 200,
+    "primary-2": 200,
+    "primary-3": 200,
+    "primary-4": 200,
+    "primary-5": 200,
+    "primary-6": 200,
+    "junior-1": 200,
+    "junior-2": 200,
+    "junior-3": 200,
+    "senior-1": 200,
+    "senior-2": 200,
+    "senior-3": 200,
+    "cet-4-reference": 200,
+    "cet-6-reference": 200
+  },
+  "migration": {
+    "sourceEntries": 3005,
+    "evidenceTransfers": 760,
+    "retired": 2245,
+    "newIdentities": 2240
+  },
+  "formalIndexesRegenerated": true,
+  "trainingSupplyTotals": {
+    "vocabularyCandidates": 9000,
+    "listeningCandidates": 1013,
+    "speakingCandidates": 900,
+    "allCandidates": 10913
+  },
+  "reviewTotals": {
+    "dailyAliases": 10913,
+    "sceneAliases": 612,
+    "allAliases": 11525,
+    "uniqueCanonicalContents": 11525,
+    "crossSourceSharedCanonicalContents": 0,
+    "byDomainQuestionType": {
+      "vocabulary:vocabulary-example-gap-choice": 3000,
+      "vocabulary:vocabulary-term-to-meaning-choice": 3000,
+      "vocabulary:vocabulary-meaning-to-term-choice": 3000,
+      "listening:listening-word-discrimination": 28,
+      "listening:listening-short-sentence-choice": 84,
+      "listening:listening-keyword-dictation": 788,
+      "listening:listening-full-transcript-detail-choice": 85,
+      "listening:listening-scene-audio-single-choice": 28,
+      "speaking:speaking-activity-prompt": 872,
+      "speaking:speaking-scene-fixed-response": 28,
+      "vocabulary:scene-vocabulary-meaning-choice": 612
+    }
+  }
+}

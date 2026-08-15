@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "documentType": "daily-level-rebuild-complete-handoff",
   "version": "2.0.0",
-  "releaseStatus": "candidate-awaiting-04-01-09-integration",
+  "releaseStatus": "formal-content-generated-awaiting-04-01-09-integration",
   "sourceRecords": 3005,
   "candidateRecords": 3000,
   "uniqueCandidateIdentities": 3000,
@@ -35,7 +35,9 @@
     "mappedTargetIdentities": 760,
     "completeCoverage": true
   },
-  "formalIndexesRegenerated": false,
+  "formalIndexesRegenerated": true,
+  "formalPublicationReport": "content/curriculum/daily-level-formal-publication.v2.json",
+  "formalMigrationFile": "content/curriculum/daily-level-identity-migration.v2.json",
   "nextOwners": {
     "04": "validate growth thresholds and migration semantics",
     "01": "atomically switch daily content, supply, review and storage migration",

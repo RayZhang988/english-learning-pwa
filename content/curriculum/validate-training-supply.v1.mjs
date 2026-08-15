@@ -56,7 +56,7 @@ function canonical(value) {
 
 function normalizedEnglishKnowledge(value) {
   return value.toLocaleLowerCase('en-US')
-    .replace(/\b(a|an|the|one|two|three|four|five|six|seven|eight|nine|ten)\b/g, ' ')
+    .replace(/\b(a|an|the)\b/g, ' ')
     .replace(/[^a-z0-9]+/g, ' ').trim()
 }
 
@@ -212,6 +212,52 @@ export function selectVocabularyDistractors(answer, sources) {
     })
   assert(candidates.length >= 3, `${answer.item.id} has fewer than three non-conflicting vocabulary distractors.`)
   return candidates.slice(0, 3)
+}
+
+export function createVocabularyDistractorSelector(sources) {
+  const byDifficultyAndType = new Map()
+  const byDifficulty = new Map()
+  const byType = new Map()
+  const push = (map, key, source) => {
+    if (!map.has(key)) map.set(key, [])
+    map.get(key).push(source)
+  }
+  for (const source of sources) {
+    const difficulty = vocabularyDifficulty(source)
+    const type = vocabularyType(source)
+    push(byDifficultyAndType, `${difficulty}\0${type}`, source)
+    push(byDifficulty, difficulty, source)
+    push(byType, type, source)
+  }
+  const eligible = (answer, candidate) =>
+    candidate.item.id !== answer.item.id &&
+    !equivalentEnglishKnowledge(candidate.item.term, answer.item.term) &&
+    normalizedChineseKnowledge(candidate.item.meaningZh) !== normalizedChineseKnowledge(answer.item.meaningZh)
+  const ranked = (answer, candidates) => candidates
+    .filter((candidate) => eligible(answer, candidate))
+    .sort((left, right) => deterministicRank(answer.item.id, left.item.id) - deterministicRank(answer.item.id, right.item.id) || left.item.id.localeCompare(right.item.id))
+  return (answer) => {
+    const difficulty = vocabularyDifficulty(answer)
+    const type = vocabularyType(answer)
+    const selected = []
+    const selectedIds = new Set()
+    const append = (candidates) => {
+      for (const candidate of ranked(answer, candidates)) {
+        if (selectedIds.has(candidate.item.id)) continue
+        selected.push(candidate)
+        selectedIds.add(candidate.item.id)
+        if (selected.length === 3) return true
+      }
+      return false
+    }
+    if (!append(byDifficultyAndType.get(`${difficulty}\0${type}`) ?? []) &&
+        !append((byDifficulty.get(difficulty) ?? []).filter((candidate) => vocabularyType(candidate) !== type)) &&
+        !append((byType.get(type) ?? []).filter((candidate) => vocabularyDifficulty(candidate) !== difficulty))) {
+      append(sources.filter((candidate) => vocabularyDifficulty(candidate) !== difficulty && vocabularyType(candidate) !== type))
+    }
+    assert(selected.length >= 3, `${answer.item.id} has fewer than three non-conflicting vocabulary distractors.`)
+    return selected
+  }
 }
 
 function assertVocabularyDistractorPolicy() {
@@ -416,12 +462,15 @@ function expectedCandidates() {
     const unit = unitByDomain(lesson, 'vocabulary')
     return unit.activity.items.map((item) => ({ lesson, unit, item }))
   })
+  const selectIndexedVocabularyDistractors = createVocabularyDistractorSelector(vocabularySources)
+  const generatedDistractors = new Map()
   const distractorsFor = (index, variantId) => {
     const answer = vocabularySources[index]
     const itemId = `supply-v1-vocabulary-${answer.item.id}-${variantId}`
     const prior = releasedDistractors.get(itemId)
     if (prior) return prior
-    return selectVocabularyDistractors(answer, vocabularySources).map(({ item }) => item.id)
+    if (!generatedDistractors.has(answer.item.id)) generatedDistractors.set(answer.item.id, selectIndexedVocabularyDistractors(answer).map(({ item }) => item.id))
+    return generatedDistractors.get(answer.item.id)
   }
 
   for (const [index, { unit, item }] of vocabularySources.entries()) {

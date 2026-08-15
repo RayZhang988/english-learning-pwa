@@ -3,8 +3,9 @@ import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 
 const read = (path: string) => JSON.parse(readFileSync(path, 'utf8'))
+const formalPublished = read('content/curriculum/daily-level-rebuild-complete-handoff.v2.json').formalIndexesRegenerated === true
 
-describe('QA-R17-003 content Batch A', () => {
+describe.skipIf(formalPublished)('QA-R17-003 content Batch A candidate phase', () => {
   it('rebuilds four complete levels and passes the strict candidate gate', () => {
     expect(() => execFileSync(process.execPath, ['content/curriculum/author-daily-level-batch-a.v2.mjs'], { encoding:'utf8' })).not.toThrow()
     expect(() => execFileSync(process.execPath, ['content/curriculum/validate-daily-level-batch-a.v2.mjs'], { encoding:'utf8' })).not.toThrow()

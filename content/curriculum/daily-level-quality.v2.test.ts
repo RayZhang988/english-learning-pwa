@@ -15,13 +15,13 @@ describe('QA-R17-003 daily level quality gate', () => {
     expect(rubric.globalRules.dailyAndSceneProgressRemainIndependent).toBe(true)
   })
 
-  it('detects the released corpus as blocked instead of blessing sentence length as level difficulty', () => {
+  it('confirms the formally published corpus passes every level rubric', () => {
     const actual = createCurrentAudit()
     expect(actual).toEqual(report)
-    expect(actual.releaseStatus).toBe('blocked')
+    expect(actual.releaseStatus).toBe('pass')
     expect(actual.levels).toHaveLength(15)
-    expect(actual.levels.find((level) => level.id === 'kindergarten')?.excluded).toEqual(expect.arrayContaining(['ambulance','escalator','stomachache','banknote','between']))
-    expect(actual.levels.some((level) => level.collapsedOpenings.length > 0)).toBe(true)
+    expect(actual.levels.every((level) => level.violations.length === 0)).toBe(true)
+    expect(actual.crossLevelDuplicateForms).toEqual([])
   })
 
   it('rejects cross-level duplicate forms even when IDs differ', () => {

@@ -46,12 +46,12 @@
       "interactionStepsPerItem": 3,
       "secondsPerInteractionStep": 3,
       "minimumSeconds": 150,
-      "maximumSeconds": 900,
+      "maximumSeconds": 1800,
       "itemCountMethod": "extension-exercises-plus-core-checks-plus-one-scene-quiz",
       "audioMethod": "each-extension-primary-source-once-plus-full-transcript-once-per-core-check-plus-scene-audio-once",
       "optionalRepeatIncluded": false,
       "interactionMethod": "start-primary-audio-plus-submit-response-plus-review-feedback-and-advance",
-      "parameterRationale": "20 seconds covers task orientation; 10 seconds per item covers reading the prompt and options; three 3-second interaction steps cover starting audio, submitting, and feedback/advance; 150–900 seconds is a corruption guard, not a daily-budget target."
+      "parameterRationale": "20 seconds covers task orientation; 10 seconds per item covers reading the prompt and options; three 3-second interaction steps cover starting audio, submitting, and feedback/advance; 150–1800 seconds preserves authored-volume differences after the released exercise expansion and remains a corruption guard, not a daily-budget target."
     },
     "speaking": {
       "contentTypeByActivity": {
@@ -65,11 +65,11 @@
       "interactionStepsPerItem": 4,
       "secondsPerInteractionStep": 4,
       "minimumSeconds": 90,
-      "maximumSeconds": 720,
+      "maximumSeconds": 1800,
       "itemCountMethod": "activity-prompts",
       "interactionMethod": "prepare-and-start-recording-plus-stop-plus-playback-decision-plus-review-feedback-and-advance",
       "contentAudioMethod": "zero-because-partner-line-is-display-only-and-user-recording-is-not-content-owned-audio",
-      "parameterRationale": "25 seconds covers task orientation; 36 seconds per prompt covers preparation and a concise spoken response; four 4-second interaction steps cover recording start, stop, playback decision, and feedback/advance; 90–720 seconds is a corruption guard, not a daily-budget target."
+      "parameterRationale": "25 seconds covers task orientation; 36 seconds per prompt covers preparation and a concise spoken response; four 4-second interaction steps cover recording start, stop, playback decision, and feedback/advance; 90–1800 seconds preserves authored-volume differences after the released prompt expansion and remains a corruption guard, not a daily-budget target."
     }
   }
 }

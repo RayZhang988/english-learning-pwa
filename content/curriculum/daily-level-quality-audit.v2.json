@@ -3,145 +3,57 @@
   "documentType": "daily-level-quality-audit",
   "auditVersion": "2.0.0",
   "rubricVersion": "2.0.0",
-  "currentSourceRecords": 3005,
-  "currentUniqueIdentityCount": 3005,
+  "currentSourceRecords": 3000,
+  "currentUniqueIdentityCount": 3000,
   "expectedUniqueIdentityCount": 3000,
-  "crossLevelDuplicateForms": [
-    {
-      "form": "available",
-      "levels": [
-        "primary-4",
-        "senior-1"
-      ]
-    },
-    {
-      "form": "card",
-      "levels": [
-        "kindergarten",
-        "primary-5"
-      ]
-    },
-    {
-      "form": "confirm",
-      "levels": [
-        "primary-4",
-        "junior-2",
-        "senior-1"
-      ]
-    },
-    {
-      "form": "corner",
-      "levels": [
-        "kindergarten",
-        "primary-4"
-      ]
-    },
-    {
-      "form": "correct",
-      "levels": [
-        "junior-3",
-        "senior-1"
-      ]
-    },
-    {
-      "form": "evening",
-      "levels": [
-        "kindergarten",
-        "primary-3"
-      ]
-    },
-    {
-      "form": "excuse me",
-      "levels": [
-        "kindergarten",
-        "primary-3"
-      ]
-    },
-    {
-      "form": "hurt",
-      "levels": [
-        "kindergarten",
-        "primary-6"
-      ]
-    },
-    {
-      "form": "instead",
-      "levels": [
-        "junior-1",
-        "senior-1"
-      ]
-    },
-    {
-      "form": "lost",
-      "levels": [
-        "kindergarten",
-        "primary-6"
-      ]
-    },
-    {
-      "form": "morning",
-      "levels": [
-        "kindergarten",
-        "primary-3"
-      ]
-    },
-    {
-      "form": "nearby",
-      "levels": [
-        "junior-1",
-        "junior-3"
-      ]
-    },
-    {
-      "form": "plan",
-      "levels": [
-        "primary-4",
-        "junior-1"
-      ]
-    },
-    {
-      "form": "sick",
-      "levels": [
-        "kindergarten",
-        "primary-6"
-      ]
-    },
-    {
-      "form": "small",
-      "levels": [
-        "kindergarten",
-        "primary-4"
-      ]
-    },
-    {
-      "form": "stop",
-      "levels": [
-        "kindergarten",
-        "primary-5"
-      ]
-    },
-    {
-      "form": "table",
-      "levels": [
-        "kindergarten",
-        "primary-4"
-      ]
-    }
-  ],
+  "crossLevelDuplicateForms": [],
   "levels": [
     {
       "id": "kindergarten",
       "labelZh": "幼儿园",
       "metrics": {
         "count": 200,
-        "wordRatio": 0.95,
-        "completeUtteranceRatio": 0.005,
+        "wordRatio": 1,
+        "completeUtteranceRatio": 0,
         "complexUtteranceRatio": 0,
-        "averageTokens": 1.055,
+        "averageTokens": 1,
+        "maximumTokens": 1,
+        "tokenDistribution": {
+          "1": 200
+        },
+        "maximumOpeningCluster": 1,
+        "maximumSkeletonCluster": 1
+      },
+      "repairLowerBounds": {
+        "countDelta": 0,
+        "wordDeficit": 0,
+        "utteranceExcess": 0,
+        "complexUtteranceExcess": 0,
+        "overTokenLimit": 0,
+        "collapsedOpeningExcess": 0,
+        "collapsedSkeletonExcess": 0,
+        "kindergartenExclusions": 0,
+        "minimumRecordsRequiringRewriteOrReassignment": 0
+      },
+      "violations": [],
+      "excluded": [],
+      "collapsedOpenings": [],
+      "collapsedSkeletons": [],
+      "overTokenLimitCount": 0
+    },
+    {
+      "id": "primary-1",
+      "labelZh": "一年级",
+      "metrics": {
+        "count": 200,
+        "wordRatio": 0.65,
+        "completeUtteranceRatio": 0,
+        "complexUtteranceRatio": 0,
+        "averageTokens": 1.355,
         "maximumTokens": 3,
         "tokenDistribution": {
-          "1": 190,
-          "2": 9,
+          "1": 130,
+          "2": 69,
           "3": 1
         },
         "maximumOpeningCluster": 1,
@@ -150,573 +62,355 @@
       "repairLowerBounds": {
         "countDelta": 0,
         "wordDeficit": 0,
-        "utteranceExcess": 1,
+        "utteranceExcess": 0,
         "complexUtteranceExcess": 0,
-        "overTokenLimit": 1,
-        "collapsedOpeningExcess": 0,
-        "collapsedSkeletonExcess": 0,
-        "kindergartenExclusions": 8,
-        "minimumRecordsRequiringRewriteOrReassignment": 8
-      },
-      "violations": [
-        "utterance-ratio:0.005",
-        "over-token-limit:1",
-        "kindergarten-exclusions:8"
-      ],
-      "excluded": [
-        "crosswalk",
-        "ambulance",
-        "toothpaste",
-        "stomachache",
-        "banknote",
-        "escalator",
-        "between",
-        "first aid"
-      ],
-      "collapsedOpenings": [],
-      "collapsedSkeletons": [],
-      "overTokenLimitCount": 1
-    },
-    {
-      "id": "primary-1",
-      "labelZh": "一年级",
-      "metrics": {
-        "count": 200,
-        "wordRatio": 0.02,
-        "completeUtteranceRatio": 0.125,
-        "complexUtteranceRatio": 0.005,
-        "averageTokens": 2.37,
-        "maximumTokens": 5,
-        "tokenDistribution": {
-          "1": 4,
-          "2": 147,
-          "3": 27,
-          "4": 15,
-          "5": 7
-        },
-        "maximumOpeningCluster": 2,
-        "maximumSkeletonCluster": 2
-      },
-      "repairLowerBounds": {
-        "countDelta": 0,
-        "wordDeficit": 126,
-        "utteranceExcess": 15,
-        "complexUtteranceExcess": 1,
-        "overTokenLimit": 22,
+        "overTokenLimit": 0,
         "collapsedOpeningExcess": 0,
         "collapsedSkeletonExcess": 0,
         "kindergartenExclusions": 0,
-        "minimumRecordsRequiringRewriteOrReassignment": 126
+        "minimumRecordsRequiringRewriteOrReassignment": 0
       },
-      "violations": [
-        "word-ratio:0.02",
-        "utterance-ratio:0.125",
-        "complex-ratio:0.005",
-        "over-token-limit:22"
-      ],
+      "violations": [],
       "excluded": [],
       "collapsedOpenings": [],
       "collapsedSkeletons": [],
-      "overTokenLimitCount": 22
+      "overTokenLimitCount": 0
     },
     {
       "id": "primary-2",
       "labelZh": "二年级",
       "metrics": {
         "count": 200,
-        "wordRatio": 0.045,
-        "completeUtteranceRatio": 0.735,
-        "complexUtteranceRatio": 0.03,
-        "averageTokens": 5.15,
-        "maximumTokens": 8,
+        "wordRatio": 0.5,
+        "completeUtteranceRatio": 0.1,
+        "complexUtteranceRatio": 0,
+        "averageTokens": 1.645,
+        "maximumTokens": 4,
         "tokenDistribution": {
-          "1": 9,
-          "2": 4,
-          "3": 2,
-          "4": 32,
-          "5": 77,
-          "6": 43,
-          "7": 28,
-          "8": 5
+          "1": 100,
+          "2": 81,
+          "3": 9,
+          "4": 10
         },
-        "maximumOpeningCluster": 3,
-        "maximumSkeletonCluster": 8
+        "maximumOpeningCluster": 1,
+        "maximumSkeletonCluster": 2
       },
       "repairLowerBounds": {
         "countDelta": 0,
-        "wordDeficit": 91,
-        "utteranceExcess": 117,
-        "complexUtteranceExcess": 6,
-        "overTokenLimit": 153,
+        "wordDeficit": 0,
+        "utteranceExcess": 0,
+        "complexUtteranceExcess": 0,
+        "overTokenLimit": 0,
         "collapsedOpeningExcess": 0,
         "collapsedSkeletonExcess": 0,
         "kindergartenExclusions": 0,
-        "minimumRecordsRequiringRewriteOrReassignment": 153
+        "minimumRecordsRequiringRewriteOrReassignment": 0
       },
-      "violations": [
-        "word-ratio:0.045",
-        "utterance-ratio:0.735",
-        "complex-ratio:0.03",
-        "over-token-limit:153"
-      ],
+      "violations": [],
       "excluded": [],
       "collapsedOpenings": [],
       "collapsedSkeletons": [],
-      "overTokenLimitCount": 153
+      "overTokenLimitCount": 0
     },
     {
       "id": "primary-3",
       "labelZh": "三年级",
       "metrics": {
         "count": 200,
-        "wordRatio": 0.065,
-        "completeUtteranceRatio": 0.75,
-        "complexUtteranceRatio": 0.11,
-        "averageTokens": 6.07,
-        "maximumTokens": 10,
+        "wordRatio": 0.4,
+        "completeUtteranceRatio": 0.25,
+        "complexUtteranceRatio": 0,
+        "averageTokens": 2.845,
+        "maximumTokens": 5,
         "tokenDistribution": {
-          "1": 13,
-          "2": 1,
-          "4": 14,
-          "5": 38,
-          "6": 45,
-          "7": 45,
-          "8": 29,
-          "9": 14,
-          "10": 1
+          "1": 80,
+          "2": 10,
+          "3": 20,
+          "4": 41,
+          "5": 49
         },
         "maximumOpeningCluster": 2,
-        "maximumSkeletonCluster": 6
+        "maximumSkeletonCluster": 5
       },
       "repairLowerBounds": {
         "countDelta": 0,
-        "wordDeficit": 67,
-        "utteranceExcess": 90,
-        "complexUtteranceExcess": 18,
-        "overTokenLimit": 134,
+        "wordDeficit": 0,
+        "utteranceExcess": 0,
+        "complexUtteranceExcess": 0,
+        "overTokenLimit": 0,
         "collapsedOpeningExcess": 0,
         "collapsedSkeletonExcess": 0,
         "kindergartenExclusions": 0,
-        "minimumRecordsRequiringRewriteOrReassignment": 134
+        "minimumRecordsRequiringRewriteOrReassignment": 0
       },
-      "violations": [
-        "word-ratio:0.065",
-        "utterance-ratio:0.75",
-        "complex-ratio:0.11",
-        "over-token-limit:134"
-      ],
+      "violations": [],
       "excluded": [],
       "collapsedOpenings": [],
       "collapsedSkeletons": [],
-      "overTokenLimitCount": 134
+      "overTokenLimitCount": 0
     },
     {
       "id": "primary-4",
       "labelZh": "四年级",
       "metrics": {
         "count": 200,
-        "wordRatio": 0.14,
-        "completeUtteranceRatio": 0.78,
-        "complexUtteranceRatio": 0.445,
-        "averageTokens": 7.95,
-        "maximumTokens": 14,
+        "wordRatio": 0.25,
+        "completeUtteranceRatio": 0.35,
+        "complexUtteranceRatio": 0.005,
+        "averageTokens": 3.245,
+        "maximumTokens": 6,
         "tokenDistribution": {
-          "1": 28,
-          "2": 7,
-          "6": 3,
-          "7": 11,
-          "8": 28,
-          "9": 49,
-          "10": 42,
-          "11": 22,
-          "12": 5,
-          "13": 4,
-          "14": 1
+          "1": 50,
+          "2": 61,
+          "3": 2,
+          "4": 8,
+          "5": 35,
+          "6": 44
         },
-        "maximumOpeningCluster": 12,
-        "maximumSkeletonCluster": 3
+        "maximumOpeningCluster": 2,
+        "maximumSkeletonCluster": 6
       },
       "repairLowerBounds": {
         "countDelta": 0,
-        "wordDeficit": 22,
-        "utteranceExcess": 66,
-        "complexUtteranceExcess": 79,
-        "overTokenLimit": 162,
+        "wordDeficit": 0,
+        "utteranceExcess": 0,
+        "complexUtteranceExcess": 0,
+        "overTokenLimit": 0,
         "collapsedOpeningExcess": 0,
         "collapsedSkeletonExcess": 0,
         "kindergartenExclusions": 0,
-        "minimumRecordsRequiringRewriteOrReassignment": 162
+        "minimumRecordsRequiringRewriteOrReassignment": 0
       },
-      "violations": [
-        "word-ratio:0.14",
-        "utterance-ratio:0.78",
-        "complex-ratio:0.445",
-        "over-token-limit:162"
-      ],
+      "violations": [],
       "excluded": [],
       "collapsedOpenings": [],
       "collapsedSkeletons": [],
-      "overTokenLimitCount": 162
+      "overTokenLimitCount": 0
     },
     {
       "id": "primary-5",
       "labelZh": "五年级",
       "metrics": {
         "count": 200,
-        "wordRatio": 0.14,
-        "completeUtteranceRatio": 0.825,
-        "complexUtteranceRatio": 0.575,
-        "averageTokens": 9.41,
-        "maximumTokens": 15,
+        "wordRatio": 0.15,
+        "completeUtteranceRatio": 0.5,
+        "complexUtteranceRatio": 0.06,
+        "averageTokens": 4.115,
+        "maximumTokens": 7,
         "tokenDistribution": {
-          "1": 28,
-          "2": 4,
-          "8": 5,
-          "9": 18,
-          "10": 44,
-          "11": 44,
-          "12": 29,
-          "13": 21,
-          "14": 6,
-          "15": 1
+          "1": 30,
+          "2": 67,
+          "3": 1,
+          "4": 1,
+          "5": 25,
+          "6": 5,
+          "7": 71
         },
-        "maximumOpeningCluster": 22,
-        "maximumSkeletonCluster": 3
+        "maximumOpeningCluster": 2,
+        "maximumSkeletonCluster": 6
       },
       "repairLowerBounds": {
         "countDelta": 0,
-        "wordDeficit": 2,
-        "utteranceExcess": 45,
-        "complexUtteranceExcess": 99,
-        "overTokenLimit": 168,
-        "collapsedOpeningExcess": 10,
+        "wordDeficit": 0,
+        "utteranceExcess": 0,
+        "complexUtteranceExcess": 0,
+        "overTokenLimit": 0,
+        "collapsedOpeningExcess": 0,
         "collapsedSkeletonExcess": 0,
         "kindergartenExclusions": 0,
-        "minimumRecordsRequiringRewriteOrReassignment": 168
+        "minimumRecordsRequiringRewriteOrReassignment": 0
       },
-      "violations": [
-        "word-ratio:0.14",
-        "utterance-ratio:0.825",
-        "complex-ratio:0.575",
-        "over-token-limit:168",
-        "collapsed-openings:1"
-      ],
+      "violations": [],
       "excluded": [],
-      "collapsedOpenings": [
-        {
-          "opening": "i need to know",
-          "count": 22
-        }
-      ],
+      "collapsedOpenings": [],
       "collapsedSkeletons": [],
-      "overTokenLimitCount": 168
+      "overTokenLimitCount": 0
     },
     {
       "id": "primary-6",
       "labelZh": "六年级",
       "metrics": {
         "count": 200,
-        "wordRatio": 0.145,
-        "completeUtteranceRatio": 0.815,
-        "complexUtteranceRatio": 0.6,
-        "averageTokens": 10.12,
-        "maximumTokens": 16,
+        "wordRatio": 0.1,
+        "completeUtteranceRatio": 0.6,
+        "complexUtteranceRatio": 0.1,
+        "averageTokens": 5.26,
+        "maximumTokens": 8,
         "tokenDistribution": {
-          "1": 29,
-          "2": 7,
-          "3": 1,
-          "8": 1,
-          "9": 5,
-          "10": 17,
-          "11": 23,
-          "12": 55,
-          "13": 34,
-          "14": 21,
-          "15": 6,
-          "16": 1
+          "1": 20,
+          "2": 57,
+          "6": 14,
+          "7": 38,
+          "8": 71
         },
-        "maximumOpeningCluster": 29,
+        "maximumOpeningCluster": 5,
         "maximumSkeletonCluster": 4
       },
       "repairLowerBounds": {
         "countDelta": 0,
         "wordDeficit": 0,
-        "utteranceExcess": 23,
-        "complexUtteranceExcess": 96,
-        "overTokenLimit": 162,
-        "collapsedOpeningExcess": 22,
+        "utteranceExcess": 0,
+        "complexUtteranceExcess": 0,
+        "overTokenLimit": 0,
+        "collapsedOpeningExcess": 0,
         "collapsedSkeletonExcess": 0,
         "kindergartenExclusions": 0,
-        "minimumRecordsRequiringRewriteOrReassignment": 162
+        "minimumRecordsRequiringRewriteOrReassignment": 0
       },
-      "violations": [
-        "utterance-ratio:0.815",
-        "complex-ratio:0.6",
-        "over-token-limit:162",
-        "collapsed-openings:2"
-      ],
+      "violations": [],
       "excluded": [],
-      "collapsedOpenings": [
-        {
-          "opening": "i need to know",
-          "count": 29
-        },
-        {
-          "opening": "could you explain the",
-          "count": 17
-        }
-      ],
+      "collapsedOpenings": [],
       "collapsedSkeletons": [],
-      "overTokenLimitCount": 162
+      "overTokenLimitCount": 0
     },
     {
       "id": "junior-1",
       "labelZh": "初一",
       "metrics": {
-        "count": 201,
-        "wordRatio": 0.0348,
-        "completeUtteranceRatio": 0.9502,
-        "complexUtteranceRatio": 0.6418,
-        "averageTokens": 10.597,
-        "maximumTokens": 15,
+        "count": 200,
+        "wordRatio": 0.05,
+        "completeUtteranceRatio": 0.7,
+        "complexUtteranceRatio": 0.15,
+        "averageTokens": 6.605,
+        "maximumTokens": 9,
         "tokenDistribution": {
-          "1": 7,
-          "2": 2,
-          "4": 1,
-          "6": 1,
-          "8": 4,
-          "9": 17,
-          "10": 41,
-          "11": 60,
-          "12": 42,
-          "13": 17,
-          "14": 6,
-          "15": 3
+          "1": 10,
+          "2": 50,
+          "8": 49,
+          "9": 91
         },
-        "maximumOpeningCluster": 46,
-        "maximumSkeletonCluster": 2
+        "maximumOpeningCluster": 6,
+        "maximumSkeletonCluster": 4
       },
       "repairLowerBounds": {
-        "countDelta": 1,
-        "wordDeficit": 3,
-        "utteranceExcess": 31,
-        "complexUtteranceExcess": 93,
-        "overTokenLimit": 169,
-        "collapsedOpeningExcess": 34,
+        "countDelta": 0,
+        "wordDeficit": 0,
+        "utteranceExcess": 0,
+        "complexUtteranceExcess": 0,
+        "overTokenLimit": 0,
+        "collapsedOpeningExcess": 0,
         "collapsedSkeletonExcess": 0,
         "kindergartenExclusions": 0,
-        "minimumRecordsRequiringRewriteOrReassignment": 169
+        "minimumRecordsRequiringRewriteOrReassignment": 0
       },
-      "violations": [
-        "count:201",
-        "word-ratio:0.0348",
-        "utterance-ratio:0.9502",
-        "complex-ratio:0.6418",
-        "over-token-limit:169",
-        "collapsed-openings:1"
-      ],
+      "violations": [],
       "excluded": [],
-      "collapsedOpenings": [
-        {
-          "opening": "i need to know",
-          "count": 46
-        }
-      ],
+      "collapsedOpenings": [],
       "collapsedSkeletons": [],
-      "overTokenLimitCount": 169
+      "overTokenLimitCount": 0
     },
     {
       "id": "junior-2",
       "labelZh": "初二",
       "metrics": {
-        "count": 201,
-        "wordRatio": 0.0149,
-        "completeUtteranceRatio": 0.9801,
-        "complexUtteranceRatio": 0.6866,
-        "averageTokens": 10.9055,
-        "maximumTokens": 17,
+        "count": 200,
+        "wordRatio": 0.03,
+        "completeUtteranceRatio": 0.8,
+        "complexUtteranceRatio": 0.2,
+        "averageTokens": 8.045,
+        "maximumTokens": 10,
         "tokenDistribution": {
-          "1": 3,
-          "2": 1,
-          "8": 1,
-          "9": 13,
-          "10": 54,
-          "11": 58,
-          "12": 48,
-          "13": 17,
-          "14": 5,
-          "17": 1
+          "1": 6,
+          "2": 34,
+          "7": 17,
+          "8": 7,
+          "10": 136
         },
-        "maximumOpeningCluster": 50,
+        "maximumOpeningCluster": 6,
         "maximumSkeletonCluster": 4
       },
       "repairLowerBounds": {
-        "countDelta": 1,
-        "wordDeficit": 3,
-        "utteranceExcess": 27,
-        "complexUtteranceExcess": 88,
-        "overTokenLimit": 129,
-        "collapsedOpeningExcess": 43,
+        "countDelta": 0,
+        "wordDeficit": 0,
+        "utteranceExcess": 0,
+        "complexUtteranceExcess": 0,
+        "overTokenLimit": 0,
+        "collapsedOpeningExcess": 0,
         "collapsedSkeletonExcess": 0,
         "kindergartenExclusions": 0,
-        "minimumRecordsRequiringRewriteOrReassignment": 129
+        "minimumRecordsRequiringRewriteOrReassignment": 0
       },
-      "violations": [
-        "count:201",
-        "word-ratio:0.0149",
-        "utterance-ratio:0.9801",
-        "complex-ratio:0.6866",
-        "over-token-limit:129",
-        "collapsed-openings:2"
-      ],
+      "violations": [],
       "excluded": [],
-      "collapsedOpenings": [
-        {
-          "opening": "i need to know",
-          "count": 50
-        },
-        {
-          "opening": "could you confirm that",
-          "count": 17
-        }
-      ],
+      "collapsedOpenings": [],
       "collapsedSkeletons": [],
-      "overTokenLimitCount": 129
+      "overTokenLimitCount": 0
     },
     {
       "id": "junior-3",
       "labelZh": "初三",
       "metrics": {
-        "count": 201,
-        "wordRatio": 0.0199,
-        "completeUtteranceRatio": 0.9403,
-        "complexUtteranceRatio": 0.3383,
-        "averageTokens": 8.2189,
-        "maximumTokens": 12,
+        "count": 200,
+        "wordRatio": 0,
+        "completeUtteranceRatio": 0.9,
+        "complexUtteranceRatio": 0.26,
+        "averageTokens": 8.44,
+        "maximumTokens": 11,
         "tokenDistribution": {
-          "1": 4,
-          "6": 13,
-          "7": 40,
-          "8": 59,
-          "9": 42,
-          "10": 34,
-          "11": 8,
-          "12": 1
+          "2": 20,
+          "8": 15,
+          "9": 125,
+          "10": 37,
+          "11": 3
         },
-        "maximumOpeningCluster": 23,
-        "maximumSkeletonCluster": 4
+        "maximumOpeningCluster": 3,
+        "maximumSkeletonCluster": 5
       },
       "repairLowerBounds": {
-        "countDelta": 1,
+        "countDelta": 0,
         "wordDeficit": 0,
-        "utteranceExcess": 9,
-        "complexUtteranceExcess": 4,
-        "overTokenLimit": 1,
-        "collapsedOpeningExcess": 11,
+        "utteranceExcess": 0,
+        "complexUtteranceExcess": 0,
+        "overTokenLimit": 0,
+        "collapsedOpeningExcess": 0,
         "collapsedSkeletonExcess": 0,
         "kindergartenExclusions": 0,
-        "minimumRecordsRequiringRewriteOrReassignment": 11
+        "minimumRecordsRequiringRewriteOrReassignment": 0
       },
-      "violations": [
-        "count:201",
-        "utterance-ratio:0.9403",
-        "complex-ratio:0.3383",
-        "over-token-limit:1",
-        "collapsed-openings:1"
-      ],
+      "violations": [],
       "excluded": [],
-      "collapsedOpenings": [
-        {
-          "opening": "i need to know",
-          "count": 23
-        }
-      ],
+      "collapsedOpenings": [],
       "collapsedSkeletons": [],
-      "overTokenLimitCount": 1
+      "overTokenLimitCount": 0
     },
     {
       "id": "senior-1",
       "labelZh": "高一",
       "metrics": {
-        "count": 202,
-        "wordRatio": 0.0347,
-        "completeUtteranceRatio": 0.9554,
-        "complexUtteranceRatio": 0.5941,
-        "averageTokens": 10.1139,
-        "maximumTokens": 13,
+        "count": 200,
+        "wordRatio": 0,
+        "completeUtteranceRatio": 0.45,
+        "complexUtteranceRatio": 0.4,
+        "averageTokens": 9.875,
+        "maximumTokens": 12,
         "tokenDistribution": {
-          "1": 7,
-          "2": 2,
-          "9": 67,
-          "10": 6,
-          "11": 74,
-          "12": 43,
-          "13": 3
+          "2": 17,
+          "3": 3,
+          "8": 2,
+          "9": 16,
+          "10": 51,
+          "11": 70,
+          "12": 41
         },
-        "maximumOpeningCluster": 40,
-        "maximumSkeletonCluster": 37
+        "maximumOpeningCluster": 5,
+        "maximumSkeletonCluster": 5
       },
       "repairLowerBounds": {
-        "countDelta": 2,
+        "countDelta": 0,
         "wordDeficit": 0,
-        "utteranceExcess": 9,
-        "complexUtteranceExcess": 40,
-        "overTokenLimit": 3,
-        "collapsedOpeningExcess": 105,
-        "collapsedSkeletonExcess": 138,
+        "utteranceExcess": 0,
+        "complexUtteranceExcess": 0,
+        "overTokenLimit": 0,
+        "collapsedOpeningExcess": 0,
+        "collapsedSkeletonExcess": 0,
         "kindergartenExclusions": 0,
-        "minimumRecordsRequiringRewriteOrReassignment": 138
+        "minimumRecordsRequiringRewriteOrReassignment": 0
       },
-      "violations": [
-        "count:202",
-        "utterance-ratio:0.9554",
-        "complex-ratio:0.5941",
-        "over-token-limit:3",
-        "collapsed-openings:4",
-        "collapsed-skeletons:5"
-      ],
+      "violations": [],
       "excluded": [],
-      "collapsedOpenings": [
-        {
-          "opening": "i need to understand",
-          "count": 40
-        },
-        {
-          "opening": "could you provide written",
-          "count": 40
-        },
-        {
-          "opening": "i need an alternative",
-          "count": 40
-        },
-        {
-          "opening": "please explain how the",
-          "count": 33
-        }
-      ],
-      "collapsedSkeletons": [
-        {
-          "skeleton": "{x} {x} the {x} {x} {x} i {x} my {x} {x}",
-          "count": 37
-        },
-        {
-          "skeleton": "i {x} to {x} the {x} {x} {x} i {x} this {x}",
-          "count": 37
-        },
-        {
-          "skeleton": "{x} you {x} {x} {x} {x} the {x} {x}",
-          "count": 37
-        },
-        {
-          "skeleton": "i {x} an {x} {x} the {x} {x} {x} {x} {x}",
-          "count": 37
-        },
-        {
-          "skeleton": "{x} {x} {x} the {x} {x} {x} my {x}",
-          "count": 30
-        }
-      ],
-      "overTokenLimitCount": 3
+      "collapsedOpenings": [],
+      "collapsedSkeletons": [],
+      "overTokenLimitCount": 0
     },
     {
       "id": "senior-2",
@@ -724,84 +418,38 @@
       "metrics": {
         "count": 200,
         "wordRatio": 0,
-        "completeUtteranceRatio": 1,
-        "complexUtteranceRatio": 0.8,
-        "averageTokens": 11.675,
-        "maximumTokens": 14,
+        "completeUtteranceRatio": 0.785,
+        "complexUtteranceRatio": 0.355,
+        "averageTokens": 10.995,
+        "maximumTokens": 13,
         "tokenDistribution": {
-          "10": 37,
-          "11": 40,
-          "12": 77,
-          "13": 43,
-          "14": 3
+          "2": 7,
+          "3": 5,
+          "9": 4,
+          "10": 24,
+          "11": 53,
+          "12": 80,
+          "13": 27
         },
-        "maximumOpeningCluster": 40,
-        "maximumSkeletonCluster": 37
+        "maximumOpeningCluster": 10,
+        "maximumSkeletonCluster": 6
       },
       "repairLowerBounds": {
         "countDelta": 0,
         "wordDeficit": 0,
-        "utteranceExcess": 12,
-        "complexUtteranceExcess": 64,
-        "overTokenLimit": 3,
-        "collapsedOpeningExcess": 140,
-        "collapsedSkeletonExcess": 145,
+        "utteranceExcess": 0,
+        "complexUtteranceExcess": 0,
+        "overTokenLimit": 0,
+        "collapsedOpeningExcess": 0,
+        "collapsedSkeletonExcess": 0,
         "kindergartenExclusions": 0,
-        "minimumRecordsRequiringRewriteOrReassignment": 145
+        "minimumRecordsRequiringRewriteOrReassignment": 0
       },
-      "violations": [
-        "utterance-ratio:1",
-        "complex-ratio:0.8",
-        "over-token-limit:3",
-        "collapsed-openings:5",
-        "collapsed-skeletons:5"
-      ],
+      "violations": [],
       "excluded": [],
-      "collapsedOpenings": [
-        {
-          "opening": "i need to verify",
-          "count": 40
-        },
-        {
-          "opening": "could you explain who",
-          "count": 40
-        },
-        {
-          "opening": "please tell me what",
-          "count": 40
-        },
-        {
-          "opening": "i need a written",
-          "count": 40
-        },
-        {
-          "opening": "could you offer a",
-          "count": 40
-        }
-      ],
-      "collapsedSkeletons": [
-        {
-          "skeleton": "i {x} to {x} {x} the {x} {x} {x} my {x} {x}",
-          "count": 37
-        },
-        {
-          "skeleton": "{x} you {x} {x} is {x} for the {x} {x}",
-          "count": 37
-        },
-        {
-          "skeleton": "{x} {x} me {x} {x} is {x} for the {x} {x}",
-          "count": 37
-        },
-        {
-          "skeleton": "i {x} a {x} {x} {x} the {x} {x} {x} the {x}",
-          "count": 37
-        },
-        {
-          "skeleton": "{x} you {x} a {x} that {x} the {x} {x} the {x} {x}",
-          "count": 37
-        }
-      ],
-      "overTokenLimitCount": 3
+      "collapsedOpenings": [],
+      "collapsedSkeletons": [],
+      "overTokenLimitCount": 0
     },
     {
       "id": "senior-3",
@@ -809,80 +457,37 @@
       "metrics": {
         "count": 200,
         "wordRatio": 0,
-        "completeUtteranceRatio": 1,
-        "complexUtteranceRatio": 0.4,
-        "averageTokens": 11.075,
-        "maximumTokens": 13,
+        "completeUtteranceRatio": 0.57,
+        "complexUtteranceRatio": 0.55,
+        "averageTokens": 11.77,
+        "maximumTokens": 14,
         "tokenDistribution": {
-          "10": 74,
-          "11": 43,
-          "12": 77,
-          "13": 6
+          "8": 3,
+          "9": 16,
+          "10": 10,
+          "11": 45,
+          "12": 71,
+          "13": 31,
+          "14": 24
         },
-        "maximumOpeningCluster": 40,
-        "maximumSkeletonCluster": 37
+        "maximumOpeningCluster": 2,
+        "maximumSkeletonCluster": 3
       },
       "repairLowerBounds": {
         "countDelta": 0,
         "wordDeficit": 0,
-        "utteranceExcess": 8,
+        "utteranceExcess": 0,
         "complexUtteranceExcess": 0,
         "overTokenLimit": 0,
-        "collapsedOpeningExcess": 140,
-        "collapsedSkeletonExcess": 145,
+        "collapsedOpeningExcess": 0,
+        "collapsedSkeletonExcess": 0,
         "kindergartenExclusions": 0,
-        "minimumRecordsRequiringRewriteOrReassignment": 145
+        "minimumRecordsRequiringRewriteOrReassignment": 0
       },
-      "violations": [
-        "utterance-ratio:1",
-        "collapsed-openings:5",
-        "collapsed-skeletons:5"
-      ],
+      "violations": [],
       "excluded": [],
-      "collapsedOpenings": [
-        {
-          "opening": "i would like to",
-          "count": 40
-        },
-        {
-          "opening": "please document why the",
-          "count": 40
-        },
-        {
-          "opening": "i need to know",
-          "count": 40
-        },
-        {
-          "opening": "could you escalate the",
-          "count": 40
-        },
-        {
-          "opening": "i need a contingency",
-          "count": 40
-        }
-      ],
-      "collapsedSkeletons": [
-        {
-          "skeleton": "i {x} {x} to {x} a {x} {x} of the {x} {x}",
-          "count": 37
-        },
-        {
-          "skeleton": "{x} {x} {x} the {x} {x} {x} {x} {x} {x}",
-          "count": 37
-        },
-        {
-          "skeleton": "i {x} to {x} the {x} {x} the {x} {x} {x} {x}",
-          "count": 37
-        },
-        {
-          "skeleton": "{x} you {x} the {x} {x} to the {x} {x}",
-          "count": 37
-        },
-        {
-          "skeleton": "i {x} a {x} {x} that {x} for the {x} {x}",
-          "count": 37
-        }
-      ],
+      "collapsedOpenings": [],
+      "collapsedSkeletons": [],
       "overTokenLimitCount": 0
     },
     {
@@ -891,80 +496,38 @@
       "metrics": {
         "count": 200,
         "wordRatio": 0,
-        "completeUtteranceRatio": 1,
-        "complexUtteranceRatio": 0.6,
-        "averageTokens": 10.675,
-        "maximumTokens": 13,
+        "completeUtteranceRatio": 0.46,
+        "complexUtteranceRatio": 0.65,
+        "averageTokens": 12,
+        "maximumTokens": 15,
         "tokenDistribution": {
-          "10": 111,
-          "11": 46,
-          "12": 40,
-          "13": 3
+          "8": 1,
+          "9": 11,
+          "10": 32,
+          "11": 36,
+          "12": 31,
+          "13": 49,
+          "14": 32,
+          "15": 8
         },
-        "maximumOpeningCluster": 40,
-        "maximumSkeletonCluster": 37
+        "maximumOpeningCluster": 3,
+        "maximumSkeletonCluster": 3
       },
       "repairLowerBounds": {
         "countDelta": 0,
         "wordDeficit": 0,
-        "utteranceExcess": 4,
+        "utteranceExcess": 0,
         "complexUtteranceExcess": 0,
         "overTokenLimit": 0,
-        "collapsedOpeningExcess": 140,
-        "collapsedSkeletonExcess": 145,
+        "collapsedOpeningExcess": 0,
+        "collapsedSkeletonExcess": 0,
         "kindergartenExclusions": 0,
-        "minimumRecordsRequiringRewriteOrReassignment": 145
+        "minimumRecordsRequiringRewriteOrReassignment": 0
       },
-      "violations": [
-        "utterance-ratio:1",
-        "collapsed-openings:5",
-        "collapsed-skeletons:5"
-      ],
+      "violations": [],
       "excluded": [],
-      "collapsedOpenings": [
-        {
-          "opening": "please provide the official",
-          "count": 40
-        },
-        {
-          "opening": "i need to compare",
-          "count": 40
-        },
-        {
-          "opening": "could you clarify whether",
-          "count": 40
-        },
-        {
-          "opening": "i need to preserve",
-          "count": 40
-        },
-        {
-          "opening": "please identify the next",
-          "count": 40
-        }
-      ],
-      "collapsedSkeletons": [
-        {
-          "skeleton": "{x} {x} the {x} {x} that {x} the {x} {x}",
-          "count": 37
-        },
-        {
-          "skeleton": "i {x} to {x} the {x} {x} for the {x} {x}",
-          "count": 37
-        },
-        {
-          "skeleton": "{x} you {x} {x} the {x} {x} {x} for {x}",
-          "count": 37
-        },
-        {
-          "skeleton": "i {x} to {x} my {x} {x} the {x} {x} is {x}",
-          "count": 37
-        },
-        {
-          "skeleton": "{x} {x} the {x} {x} {x} for the {x} {x}",
-          "count": 37
-        }
-      ],
+      "collapsedOpenings": [],
+      "collapsedSkeletons": [],
       "overTokenLimitCount": 0
     },
     {
@@ -973,21 +536,22 @@
       "metrics": {
         "count": 200,
         "wordRatio": 0,
-        "completeUtteranceRatio": 1,
-        "complexUtteranceRatio": 0.6,
-        "averageTokens": 12.875,
-        "maximumTokens": 16,
+        "completeUtteranceRatio": 0.35,
+        "complexUtteranceRatio": 0.74,
+        "averageTokens": 13.13,
+        "maximumTokens": 17,
         "tokenDistribution": {
-          "10": 37,
-          "11": 3,
-          "12": 37,
-          "13": 40,
-          "14": 40,
-          "15": 40,
-          "16": 3
+          "10": 11,
+          "11": 28,
+          "12": 36,
+          "13": 32,
+          "14": 47,
+          "15": 35,
+          "16": 10,
+          "17": 1
         },
-        "maximumOpeningCluster": 40,
-        "maximumSkeletonCluster": 37
+        "maximumOpeningCluster": 2,
+        "maximumSkeletonCluster": 3
       },
       "repairLowerBounds": {
         "countDelta": 0,
@@ -995,67 +559,22 @@
         "utteranceExcess": 0,
         "complexUtteranceExcess": 0,
         "overTokenLimit": 0,
-        "collapsedOpeningExcess": 140,
-        "collapsedSkeletonExcess": 145,
+        "collapsedOpeningExcess": 0,
+        "collapsedSkeletonExcess": 0,
         "kindergartenExclusions": 0,
-        "minimumRecordsRequiringRewriteOrReassignment": 145
+        "minimumRecordsRequiringRewriteOrReassignment": 0
       },
-      "violations": [
-        "collapsed-openings:5",
-        "collapsed-skeletons:5"
-      ],
+      "violations": [],
       "excluded": [],
-      "collapsedOpenings": [
-        {
-          "opening": "i need to determine",
-          "count": 40
-        },
-        {
-          "opening": "could you provide a",
-          "count": 40
-        },
-        {
-          "opening": "i need to assess",
-          "count": 40
-        },
-        {
-          "opening": "please confirm the authority",
-          "count": 40
-        },
-        {
-          "opening": "i need a documented",
-          "count": 40
-        }
-      ],
-      "collapsedSkeletons": [
-        {
-          "skeleton": "i {x} to {x} {x} the {x} {x} {x} an {x} in my {x}",
-          "count": 37
-        },
-        {
-          "skeleton": "{x} you {x} a {x} {x} {x} the {x} {x}",
-          "count": 37
-        },
-        {
-          "skeleton": "i {x} to {x} the {x} {x} of the {x} {x} {x} {x}",
-          "count": 37
-        },
-        {
-          "skeleton": "{x} {x} the {x} {x} {x} {x} {x} to the {x} {x}",
-          "count": 37
-        },
-        {
-          "skeleton": "i {x} a {x} {x} for the {x} {x} that i {x} {x} on {x}",
-          "count": 37
-        }
-      ],
+      "collapsedOpenings": [],
+      "collapsedSkeletons": [],
       "overTokenLimitCount": 0
     }
   ],
   "repairEstimate": {
-    "conservativeMinimumRecordsRequiringRewriteOrReassignment": 1940,
+    "conservativeMinimumRecordsRequiringRewriteOrReassignment": 0,
     "note": "This is a mathematical lower bound, not a production estimate. Naturalness, lexical frequency, abstraction and travel-use review can only increase the required count."
   },
-  "blockingViolations": 81,
-  "releaseStatus": "blocked"
+  "blockingViolations": 0,
+  "releaseStatus": "pass"
 }

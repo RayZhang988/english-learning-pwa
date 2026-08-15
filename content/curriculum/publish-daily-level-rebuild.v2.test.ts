@@ -19,17 +19,17 @@ afterEach(() => {
 })
 
 describe('QA-R17-003 atomic formal publisher', () => {
-  it('validates the complete candidate and migration deterministically before generation', async () => {
-    const first = await publishDailyLevelRebuild({ workspaceRoot, stagingParent: temporaryDirectory(), dryRun: true, validateOnly: true })
-    const second = await publishDailyLevelRebuild({ workspaceRoot, stagingParent: temporaryDirectory(), dryRun: true, validateOnly: true })
+  it('builds the complete release in staging and produces the same digest twice', async () => {
+    const first = await publishDailyLevelRebuild({ workspaceRoot, stagingParent: temporaryDirectory(), dryRun: true })
+    const second = await publishDailyLevelRebuild({ workspaceRoot, stagingParent: temporaryDirectory(), dryRun: true })
 
-    expect(first.formalIndexesRegenerated).toBe(false)
+    expect(first.formalIndexesRegenerated).toBe(true)
     expect(first.candidateRecords).toBe(3000)
     expect(first.levelCounts).toEqual(Object.fromEntries(first.levelOrder.map((level) => [level, 200])))
-    expect(first.candidateDigest).toBe(second.candidateDigest)
-    expect(first.migration.retired).toBe(2245)
-    expect(first.migration.evidenceTransfers).toBe(760)
-  })
+    expect(first.releaseDigest).toBe(second.releaseDigest)
+    expect(first.trainingSupplyTotals.vocabularyCandidates).toBe(9000)
+    expect(first.reviewTotals.dailyAliases).toBe(first.trainingSupplyTotals.allCandidates)
+  }, 30_000)
 
   it('does not change a formal file when a staged generation fault is injected', async () => {
     const before = readFileSync(join(workspaceRoot, packageIndex), 'utf8')
@@ -38,9 +38,9 @@ describe('QA-R17-003 atomic formal publisher', () => {
       workspaceRoot,
       stagingParent: temporaryDirectory(),
       dryRun: false,
-      faultAfter: 'candidate-validation',
-    })).rejects.toThrow('Injected publish fault after candidate-validation')
+      faultAfter: 'training-supply',
+    })).rejects.toThrow('Injected publish fault after training-supply')
 
     expect(readFileSync(join(workspaceRoot, packageIndex), 'utf8')).toBe(before)
-  })
+  }, 30_000)
 })

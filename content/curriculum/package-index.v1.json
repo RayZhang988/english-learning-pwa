@@ -51,18 +51,18 @@
   "durationBaselinePolicyFile": "content/curriculum/duration-baseline-authoring.v1.json",
   "durationBaselineTotals": {
     "learningUnits": 84,
-    "vocabularySeconds": 5217,
-    "listeningSeconds": 8516,
-    "speakingSeconds": 5588,
-    "allUnitsSeconds": 19321
+    "vocabularySeconds": 16773,
+    "listeningSeconds": 25615,
+    "speakingSeconds": 46044,
+    "allUnitsSeconds": 88432
   },
   "trainingSupplyIndexFile": "content/curriculum/training-supply-index.v1.json",
   "trainingSupplyIndexSchemaFile": "content/curriculum/training-supply-index.schema.v1.json",
   "trainingSupplyTotals": {
-    "vocabularyCandidates": 9015,
+    "vocabularyCandidates": 9000,
     "listeningCandidates": 1013,
     "speakingCandidates": 900,
-    "allCandidates": 10928
+    "allCandidates": 10913
   },
   "reviewContentIndexFile": "content/curriculum/review-content-index.v1.json",
   "reviewContentIndexSchemaFile": "content/curriculum/review-content-index.schema.v1.json",
