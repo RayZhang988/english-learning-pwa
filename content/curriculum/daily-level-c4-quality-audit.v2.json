@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "documentType": "daily-level-batch-quality-audit",
+  "auditVersion": "2.0.0-c4",
+  "releaseStatus": "candidate-blocked-until-c5",
+  "records": 200,
+  "combinedRecords": 2800,
+  "level": {
+    "id": "cet-4-reference",
+    "labelZh": "大学四级",
+    "metrics": {
+      "count": 200,
+      "wordRatio": 0,
+      "completeUtteranceRatio": 0.46,
+      "complexUtteranceRatio": 0.65,
+      "averageTokens": 12,
+      "maximumTokens": 15,
+      "tokenDistribution": {
+        "8": 1,
+        "9": 11,
+        "10": 32,
+        "11": 36,
+        "12": 31,
+        "13": 49,
+        "14": 32,
+        "15": 8
+      },
+      "maximumOpeningCluster": 3,
+      "maximumSkeletonCluster": 3
+    }
+  },
+  "crossLevelDuplicateForms": 0,
+  "templateMaximums": {
+    "sharedOpeningFourTokens": 3,
+    "sharedSkeleton": 3
+  },
+  "identityMigration": {
+    "sourceRecords": 200,
+    "retired": 200,
+    "equivalent": 0,
+    "evidenceTransfers": 0,
+    "newV2Identities": 200
+  },
+  "formalIndexesRegenerated": false
+}
