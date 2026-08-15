@@ -404,7 +404,7 @@ schema-1 轮次继续保持缺省，不从 itemId、题干或课程标签反向�
 
 ## 7. R17｜分专项成长与升级测试
 
-`GrowthState` 是独立的 schema 2 账本，分别保存 vocabulary、listening、speaking
+`GrowthState` 是独立的 schema 3 账本，分别保存 vocabulary、listening、speaking
 三项的当前 15 级 ordinal（0–14）。它不读取课程答案，也不创建题目。旧 schema 1
 账本在 `migrateGrowthState()` / `LearningEngineRepository.load()` 时只升级测试快照格式；
 无法严格验证的损坏值拒绝读取，绝不清空其他学习数据。
@@ -437,3 +437,19 @@ eligible = 当前非最高级
 重洗。06/07/08 只负责将用户答案评分为布尔 `correct` 并携带可显示的字符串 draft，
 通过 `submitGrowthUpgradeAnswer()` 逐题写入；04 不猜测答案、翻译或发音。02 只渲染
 `getGrowthEligibility()` 和快照；01 负责串行保存、候选解析和错误恢复。
+
+### QA-R17-003 内容身份迁移
+
+15级内容重建不改变上述升级门槛。每一级都有200个已发布候选，下一等级的10题升级
+测试容量充足；等级只会在8/10升级测试通过后增加，题库换版本身不能升级或降级用户。
+
+01 使用 `migrateDailyGrowthEvidence()` 原子迁移可按内容身份追溯的旧证据。只有05映射
+中 `evidenceTransferAllowed=true` 的严格语义等价项可以转移：同级 `equivalent` 保留
+升级窗口资格；`moved-equivalent` 改挂到新等级但标记
+`countsTowardUpgradeWindow=false`，只能作为历史证据，必须在新等级重新完成正式训练才
+能获得升级资格；`retired` 只进入退休历史，不进入活动证据。缺失、重复、目标不存在或
+disposition与权限矛盾的映射全部拒绝。重复执行同一迁移版本幂等。
+
+现有三专项 `currentLevelOrdinal`、累计进度和会话不因内容换版静默清零或降级；这些
+聚合值不包含可供04拆分的内容身份，因此迁移器也不会猜测性重算。即使旧进度已经解锁
+升级测试，真正升级仍必须通过新题库下一等级的10题测试。

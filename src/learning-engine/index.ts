@@ -216,6 +216,20 @@ export {
   migrateGrowthState,
   isGrowthUpgradeDisplayEvidence,
 } from './growth.ts'
+export {
+  DAILY_GROWTH_EVIDENCE_MIGRATION_SCHEMA_VERSION,
+  migrateDailyGrowthEvidence,
+} from './growth-content-migration.ts'
+export type {
+  DailyGrowthEvidenceMigrationV1,
+  DailyGrowthEvidenceMigrationV2,
+  DailyGrowthIdentityMigrationEntry,
+  DailyGrowthTargetIdentity,
+  LegacyDailyGrowthEvidence,
+  MigratedDailyGrowthEvidence,
+  MigrateDailyGrowthEvidenceInput,
+  RetiredDailyGrowthEvidence,
+} from './growth-content-migration.ts'
 export type {
   DomainGrowthState,
   GrowthEligibility,
