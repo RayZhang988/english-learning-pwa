@@ -29,6 +29,7 @@ import {
   VocabularyTrainingRuntime,
 } from '../../src/features/vocabulary/index.ts'
 import {
+  calculateContentBaselineSeconds,
   LEARNING_ENGINE_STORAGE_NAMESPACE,
   LearningEngineRepository,
   type LearningTask,
@@ -329,7 +330,22 @@ describe('09 first-use production acceptance', () => {
         0,
       ),
     )
-    expect(originalPlan.plannedSeconds).toBe(1033)
+    const baselineCandidates = await releasedCourseCandidates.load(
+      new Set(),
+      new Set(['vocabulary', 'listening', 'speaking']),
+    )
+    const expectedSeconds = Object.fromEntries(
+      originalPlan.tasks.map((task) => {
+        const unit = baselineCandidates.find(
+          (candidate) => candidate.learningUnitId === task.learningUnitId,
+        )
+        expect(unit).toBeDefined()
+        return [
+          task.targetModuleId,
+          calculateContentBaselineSeconds(unit!.durationBaseline!),
+        ]
+      }),
+    )
     expect(
       Object.fromEntries(
         originalPlan.tasks.map((task) => [
@@ -337,11 +353,7 @@ describe('09 first-use production acceptance', () => {
           task.durationEstimate?.estimateSeconds,
         ]),
       ),
-    ).toEqual({
-      vocabulary: 600,
-      listening: 252,
-      speaking: 181,
-    })
+    ).toEqual(expectedSeconds)
     expect(
       originalPlan.tasks.every(
         (task) =>

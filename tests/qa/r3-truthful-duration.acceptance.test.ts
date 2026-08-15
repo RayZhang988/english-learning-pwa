@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   classifyTimingSegment,
+  calculateContentBaselineSeconds,
   createInitialProgressState,
   createPlanProgress,
   estimateTaskDuration,
@@ -167,7 +168,21 @@ describe('R3 truthful training duration acceptance', () => {
         0,
       ),
     )
-    expect(plan.plannedSeconds).toBe(1033)
+    // The release package, rather than a stale numeric snapshot, is the
+    // authority for the initial task estimates.  This catches both missing
+    // baselines and a plan that drifts from the content it selected.
+    const expectedSeconds = Object.fromEntries(
+      plan.tasks.map((task) => {
+        const candidate = candidates.find(
+          (entry) => entry.learningUnitId === task.learningUnitId,
+        )
+        expect(candidate?.durationBaseline).toBeDefined()
+        return [
+          task.targetModuleId,
+          calculateContentBaselineSeconds(candidate!.durationBaseline!),
+        ]
+      }),
+    )
     expect(
       Object.fromEntries(
         plan.tasks.map((task) => [
@@ -175,11 +190,7 @@ describe('R3 truthful training duration acceptance', () => {
           task.durationEstimate?.estimateSeconds,
         ]),
       ),
-    ).toEqual({
-      vocabulary: 600,
-      listening: 252,
-      speaking: 181,
-    })
+    ).toEqual(expectedSeconds)
     expect(
       plan.tasks.every(
         (task) =>

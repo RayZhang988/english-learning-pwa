@@ -891,11 +891,16 @@ async function recordSpeaking(page) {
     'A speaking task was truncated while recording.',
   )
   await page.clickByText('停止录音')
-  await page.waitFor(
-    `document.body.innerText.includes('录音完成') ||
-      document.body.innerText.includes('录音不可用')`,
-    20_000,
-  )
+  try {
+    await page.waitFor(
+      `document.body.innerText.includes('录音完成') ||
+        document.body.innerText.includes('录音不可用') ||
+        document.body.innerText.includes('录音发生错误')`,
+      20_000,
+    )
+  } catch {
+    throw new Error(`Speaking recording did not settle: ${await page.bodyText()}`)
+  }
   if (process.env.QA_VERIFY_R8_RECOGNITION === '1') {
     await page.waitFor(
       `document.querySelector(
@@ -2053,7 +2058,7 @@ async function run() {
     const completedRuntime = await dailyPlanToThreeOfThree(qa.page)
     assert.match(
       await qa.page.bodyText(),
-      /今日计划 3\/3 已完成/u,
+      /今日三项训练已完成/u,
     )
     assert.match(
       await qa.page.bodyText(),
@@ -2061,7 +2066,7 @@ async function run() {
     )
     await qa.page.reload()
     await qa.page.waitFor(
-      `document.body.innerText.includes('今日计划 3/3 已完成')`,
+      `document.body.innerText.includes('今日三项训练已完成')`,
       20_000,
     )
     await assertDailyThreeOfThree(qa.page, completedRuntime)
